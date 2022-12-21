@@ -16,6 +16,23 @@
       "message": "This CL can\u0027t be traced to a specific chromium revision at the current moment and will not be used in production by all means until copybara has been used to update `external/cronet` with a specific revision from `chromium` which can be verified.",
       "revId": "db713cc90b2013c18db2dacb3bf4e933ec2c1c7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33ade69a_83a18ebc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2022-12-21T16:25:01Z",
+      "side": 1,
+      "message": "Oh, awesome!! Gerrit has timed out multiple times last night when I tried this.",
+      "revId": "db713cc90b2013c18db2dacb3bf4e933ec2c1c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
