@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e468fbd8_5a7d7909",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2022-12-21T15:20:51Z",
+      "side": 1,
+      "message": "This CL can\u0027t be traced to a specific chromium revision at the current moment and will not be used in production by all means until copybara has been used to update `external/cronet` with a specific revision from `chromium` which can be verified.",
+      "revId": "db713cc90b2013c18db2dacb3bf4e933ec2c1c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
