@@ -4714,6 +4714,7 @@ java_library {
         "framework-tethering.stubs.module_lib",
         "framework-wifi.stubs.module_lib",
         "jsr305",
+        "modules-utils-build_system",
     ],
     aidl: {
         include_dirs: [
