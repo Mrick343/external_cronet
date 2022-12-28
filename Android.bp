@@ -1649,48 +1649,6 @@ cc_genrule {
     ],
 }
 
-// GN: //base/numerics:base_numerics
-cc_object {
-    name: "cronet_aml_base_numerics_base_numerics",
-    defaults: [
-        "cronet_aml_defaults",
-    ],
-    cflags: [
-        "-DANDROID",
-        "-DANDROID_NDK_VERSION_ROLL=r23_1",
-        "-DCR_CLANG_REVISION=\"llvmorg-16-init-6578-g0d30e92f-2\"",
-        "-DCR_LIBCXX_REVISION=64d36e572d3f9719c5d75011a718f33f11126851",
-        "-DDCHECK_ALWAYS_ON=1",
-        "-DDYNAMIC_ANNOTATIONS_ENABLED=1",
-        "-DHAVE_SYS_UIO_H",
-        "-D_DEBUG",
-        "-D_GNU_SOURCE",
-        "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
-        "-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS",
-        "-D__STDC_CONSTANT_MACROS",
-        "-D__STDC_FORMAT_MACROS",
-    ],
-    local_include_dirs: [
-        "./",
-        "buildtools/third_party/libc++/",
-        "buildtools/third_party/libc++/trunk/include",
-        "buildtools/third_party/libc++abi/trunk/include",
-    ],
-    cpp_std: "c++17",
-    target: {
-        android_x86: {
-            cflags: [
-                "-msse3",
-            ],
-        },
-        android_x86_64: {
-            cflags: [
-                "-msse3",
-            ],
-        },
-    },
-}
-
 // GN: //base:orderfile_buildflags
 cc_genrule {
     name: "cronet_aml_base_orderfile_buildflags",
@@ -4714,6 +4672,9 @@ java_library {
         "framework-tethering.stubs.module_lib",
         "framework-wifi.stubs.module_lib",
         "jsr305",
+    ],
+    static_libs: [
+        "modules-utils-build_system",
     ],
     aidl: {
         include_dirs: [
