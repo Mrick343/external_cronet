@@ -16,6 +16,24 @@
       "message": "This was already reverted here https://android-review.git.corp.google.com/c/platform/external/cronet/+/2369889",
       "revId": "6ba20e98a1d0ace23c888724190c541b8ecf942a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "128684aa_27401c9b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1970910
+      },
+      "writtenOn": "2022-12-28T13:07:30Z",
+      "side": 1,
+      "message": "Oh - thanks. I guess some stale builds are failing then.",
+      "parentUuid": "32c32238_fef01b7a",
+      "revId": "6ba20e98a1d0ace23c888724190c541b8ecf942a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
