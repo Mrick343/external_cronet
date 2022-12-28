@@ -18,11 +18,12 @@ import android.text.TextUtils;
 
 import androidx.annotation.OptIn;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.os.BuildCompat;
 
 import org.chromium.base.annotations.CalledByNative;
 import org.chromium.base.compat.ApiHelperForP;
 import org.chromium.build.BuildConfig;
+
+import com.android.modules.utils.build.SdkLevel;
 
 /**
  * BuildInfo is a utility class providing easy access to {@link PackageInfo} information. This is
@@ -251,11 +252,10 @@ public class BuildInfo {
     }
 
     /**
-     * Wrap BuildCompat.isAtLeastT. This enables it to be shadowed in Robolectric tests.
+     * Wrap SdkLevel.isAtLeastT. This enables it to be shadowed in Robolectric tests.
      */
-    @OptIn(markerClass = androidx.core.os.BuildCompat.PrereleaseSdkCheck.class)
     public static boolean isAtLeastT() {
-        return BuildCompat.isAtLeastT();
+        return SdkLevel.isAtLeastT();
     }
 
     /**
@@ -263,22 +263,9 @@ public class BuildInfo {
      * This must be manually maintained as the SDK goes through finalization!
      * Avoid depending on this if possible; this is only intended for WebView.
      */
-    @OptIn(markerClass = androidx.core.os.BuildCompat.PrereleaseSdkCheck.class)
     public static boolean targetsAtLeastT() {
         int target = ContextUtils.getApplicationContext().getApplicationInfo().targetSdkVersion;
 
-        // Logic for pre-API-finalization:
-        // return BuildCompat.isAtLeastT() && target == Build.VERSION_CODES.CUR_DEVELOPMENT;
-
-        // Logic for after API finalization but before public SDK release has to
-        // just hardcode the appropriate SDK integer. This will include Android
-        // builds with the finalized SDK, and also pre-API-finalization builds
-        // (because CUR_DEVELOPMENT == 10000).
-        // return target >= 33;
-
-        // Once the public SDK is upstreamed we can use the defined constant,
-        // deprecate this, then eventually inline this at all callsites and
-        // remove it.
         return target >= Build.VERSION_CODES.TIRAMISU;
     }
 
