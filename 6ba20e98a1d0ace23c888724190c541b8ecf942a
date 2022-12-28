@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32c32238_fef01b7a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2022-12-28T13:04:36Z",
+      "side": 1,
+      "message": "This was already reverted here https://android-review.git.corp.google.com/c/platform/external/cronet/+/2369889",
+      "revId": "6ba20e98a1d0ace23c888724190c541b8ecf942a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
