@@ -4715,6 +4715,9 @@ java_library {
         "framework-wifi.stubs.module_lib",
         "jsr305",
     ],
+    static_libs: [
+        "modules-utils-build_system",
+    ],
     aidl: {
         include_dirs: [
             "frameworks/base/core/java/",
