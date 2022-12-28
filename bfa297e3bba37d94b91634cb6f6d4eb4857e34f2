@@ -16,6 +16,24 @@
       "message": "Now external/cronet is added to the manifest.\nWe should not add Android.bp which can not pass `analyzing Android.bp files and generating ninja file at out/soong/build.ninja` stage.\n\nCurrently, aosp/2368191 is required to pass this stage.",
       "revId": "bfa297e3bba37d94b91634cb6f6d4eb4857e34f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4334b404_5857e423",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2022-12-28T11:52:36Z",
+      "side": 1,
+      "message": "This has been resolved and we can add Android.bp back again to Cronet",
+      "parentUuid": "5b082c35_421adf62",
+      "revId": "bfa297e3bba37d94b91634cb6f6d4eb4857e34f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
