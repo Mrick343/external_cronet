@@ -42,7 +42,8 @@ def _Generate(java_file_paths,
               proxy_opts,
               header_path=None,
               namespace='',
-              include_test_only=True):
+              include_test_only=True,
+              package_prefix=''):
   """Generates files required to perform JNI registration.
 
   Generates a srcjar containing a single class, GEN_JNI, that contains all
@@ -68,7 +69,8 @@ def _Generate(java_file_paths,
             use_proxy_hash=proxy_opts.use_hash,
             enable_jni_multiplexing=proxy_opts.enable_jni_multiplexing,
             namespace=namespace,
-            include_test_only=include_test_only), java_file_paths):
+            include_test_only=include_test_only,
+            package_prefix=package_prefix), java_file_paths):
       if d:
         results.append(d)
 
@@ -108,7 +110,8 @@ def _Generate(java_file_paths,
         combined_dict,
         proxy_opts.use_hash,
         enable_jni_multiplexing=proxy_opts.enable_jni_multiplexing,
-        manual_jni_registration=proxy_opts.manual_jni_registration)
+        manual_jni_registration=proxy_opts.manual_jni_registration,
+        package_prefix=package_prefix)
     with build_utils.AtomicOutput(header_path, mode='w') as f:
       f.write(header_content)
 
@@ -119,33 +122,34 @@ def _Generate(java_file_paths,
         build_utils.AddToZipHermetic(
             srcjar,
             '%s.java' % jni_generator.ProxyHelpers.GetQualifiedClass(True),
-            data=CreateProxyJavaFromDict(combined_dict, proxy_opts))
+            data=CreateProxyJavaFromDict(combined_dict, proxy_opts, package_prefix=package_prefix))
         # org/chromium/base/natives/GEN_JNI.java
         build_utils.AddToZipHermetic(
             srcjar,
             '%s.java' % jni_generator.ProxyHelpers.GetQualifiedClass(False),
             data=CreateProxyJavaFromDict(
-                combined_dict, proxy_opts, forwarding=True))
+                combined_dict, proxy_opts, forwarding=True, package_prefix=package_prefix))
       else:
         # org/chromium/base/natives/GEN_JNI.java
         build_utils.AddToZipHermetic(
             srcjar,
             '%s.java' % jni_generator.ProxyHelpers.GetQualifiedClass(False),
-            data=CreateProxyJavaFromDict(combined_dict, proxy_opts))
+            data=CreateProxyJavaFromDict(combined_dict, proxy_opts, package_prefix=package_prefix))
 
 
 def _DictForPath(path,
                  use_proxy_hash=False,
                  enable_jni_multiplexing=False,
                  namespace='',
-                 include_test_only=True):
+                 include_test_only=True,
+                 package_prefix=''):
   with open(path) as f:
     contents = jni_generator.RemoveComments(f.read())
     if '@JniIgnoreNatives' in contents:
       return None
 
   fully_qualified_class = jni_generator.ExtractFullyQualifiedJavaClassName(
-      path, contents)
+      path, contents, package_prefix)
   natives = jni_generator.ExtractNatives(contents, 'long')
 
   natives += jni_generator.ProxyHelpers.ExtractStaticProxyNatives(
@@ -216,7 +220,8 @@ ${CLASS_NAME}_${PROXY_SIGNATURE} was called with an invalid switch number: "\
 
 def _SetProxyRegistrationFields(registration_dict, use_hash,
                                 enable_jni_multiplexing,
-                                manual_jni_registration):
+                                manual_jni_registration,
+                                package_prefix=''):
   registration_template = string.Template("""\
 
 static const JNINativeMethod kMethods_${ESCAPED_PROXY_CLASS}[] = {
@@ -283,16 +288,16 @@ ${REGISTER_NON_MAIN_DEX_NATIVES}
       'ESCAPED_PROXY_CLASS':
       jni_generator.EscapeClassName(
           jni_generator.ProxyHelpers.GetQualifiedClass(
-              use_hash or enable_jni_multiplexing)),
+              use_hash or enable_jni_multiplexing, package_prefix)),
       'PROXY_CLASS':
       jni_generator.ProxyHelpers.GetQualifiedClass(use_hash
-                                                   or enable_jni_multiplexing),
+                                                   or enable_jni_multiplexing, package_prefix),
       'KMETHODS':
       registration_dict['PROXY_NATIVE_METHOD_ARRAY'],
       'REGISTRATION_NAME':
       jni_generator.GetRegistrationFunctionName(
           jni_generator.ProxyHelpers.GetQualifiedClass(
-              use_hash or enable_jni_multiplexing)),
+              use_hash or enable_jni_multiplexing, package_prefix)),
   }
 
   if registration_dict['PROXY_NATIVE_METHOD_ARRAY']:
@@ -323,7 +328,7 @@ ${REGISTER_NON_MAIN_DEX_NATIVES}
     registration_dict['MANUAL_REGISTRATION'] = ''
 
 
-def CreateProxyJavaFromDict(registration_dict, proxy_opts, forwarding=False):
+def CreateProxyJavaFromDict(registration_dict, proxy_opts, forwarding=False, package_prefix=''):
   template = string.Template("""\
 // Copyright 2018 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
@@ -374,7 +379,8 @@ ${METHODS}
 def CreateFromDict(registration_dict,
                    use_hash,
                    enable_jni_multiplexing=False,
-                   manual_jni_registration=False):
+                   manual_jni_registration=False,
+                   package_prefix=''):
   """Returns the content of the header file."""
 
   template = string.Template("""\
@@ -408,8 +414,8 @@ ${FORWARDING_CALLS}
 ${MANUAL_REGISTRATION}
 #endif  // ${HEADER_GUARD}
 """)
-  _SetProxyRegistrationFields(registration_dict, use_hash,
-                              enable_jni_multiplexing, manual_jni_registration)
+  _SetProxyRegistrationFields(registration_dict, use_hash, enable_jni_multiplexing,
+                              manual_jni_registration, package_prefix=package_prefix)
   if not enable_jni_multiplexing:
     registration_dict['FORWARDING_CALLS'] = ''
   if len(registration_dict['FORWARD_DECLARATIONS']) == 0:
@@ -927,6 +933,11 @@ def main(argv):
   arg_parser.add_argument('--include_test_only',
                           action='store_true',
                           help='Whether to maintain ForTesting JNI methods.')
+  arg_parser.add_argument(
+      '--package_prefix',
+      default="",
+      help='Adds a prefix to every package with JNI. '
+           'This is important if you are jarjaring the code')
   args = arg_parser.parse_args(build_utils.ExpandFileArgs(argv[1:]))
 
   if not args.enable_proxy_mocks and args.require_mocks:
@@ -958,7 +969,8 @@ def main(argv):
             proxy_opts=proxy_opts,
             header_path=args.header_path,
             namespace=args.namespace,
-            include_test_only=args.include_test_only)
+            include_test_only=args.include_test_only,
+            package_prefix=args.package_prefix)
 
   if args.depfile:
     build_utils.WriteDepfile(args.depfile, args.srcjar_path,

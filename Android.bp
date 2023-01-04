@@ -383,7 +383,9 @@ cc_genrule {
          "--input_file " +
          "java/lang/Runtime.class " +
          "--javap " +
-         "$$(find out/.path -name javap)",
+         "$$(find out/.path -name javap) " +
+         "--package_prefix " +
+         "com.android.net.http",
     out: [
         "base/android_runtime_jni_headers/Runnable_jni.h",
         "base/android_runtime_jni_headers/Runtime_jni.h",
@@ -1275,7 +1277,9 @@ cc_genrule {
          "--input_file " +
          "$(location base/android/java/src/org/chromium/base/task/PostTask.java) " +
          "--input_file " +
-         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java)",
+         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java) " +
+         "--package_prefix " +
+         "com.android.net.http",
     out: [
         "base/base_jni_headers/ApkAssets_jni.h",
         "base/base_jni_headers/ApplicationStatus_jni.h",
@@ -2507,7 +2511,9 @@ cc_genrule {
          "--input_file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java) " +
          "--input_file " +
-         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java)",
+         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java) " +
+         "--package_prefix " +
+         "com.android.net.http",
     out: [
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
         "components/cronet/android/cronet_jni_headers/CronetLibraryLoader_jni.h",
@@ -2783,6 +2789,8 @@ cc_genrule {
          "--header-path " +
          "$(genDir)/components/cronet/android/cronet_jni_registration.h " +
          "--manual_jni_registration " +
+         "--package_prefix " +
+         "com.android.net.http " +
          ";sed -i -e 's/OUT_SOONG_.TEMP_SBOX_.*_OUT/GEN/g'  " +
          "$(genDir)/components/cronet/android/cronet_jni_registration.h",
     out: [
@@ -3057,6 +3065,8 @@ java_genrule {
          "--header-path " +
          "$(genDir)/components/cronet/android/cronet_jni_registration.h " +
          "--manual_jni_registration " +
+         "--package_prefix " +
+         "com.android.net.http " +
          ";sed -i -e 's/OUT_SOONG_.TEMP_SBOX_.*_OUT/GEN/g'  " +
          "$(genDir)/components/cronet/android/cronet_jni_registration.h",
     out: [
@@ -3895,7 +3905,9 @@ cc_genrule {
          "--output_name " +
          "PrefService_jni.h " +
          "--input_file " +
-         "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java)",
+         "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java) " +
+         "--package_prefix " +
+         "com.android.net.http",
     out: [
         "components/prefs/android/jni_headers/PrefService_jni.h",
     ],
@@ -4453,6 +4465,7 @@ java_library {
     sdk_version: "module_current",
     javacflags: [
         "-Aorg.chromium.chrome.skipGenJni",
+        "-Apackage_prefix=com.android.net.http",
     ],
 }
 
@@ -4660,6 +4673,32 @@ cc_genrule {
     ],
     tool_files: [
         "build/write_buildflag_header.py",
+    ],
+    apex_available: [
+        "com.android.tethering",
+    ],
+}
+
+// GN: //net/data/ssl/chrome_root_store:gen_root_store_inc
+cc_genrule {
+    name: "cronet_aml_net_data_ssl_chrome_root_store_gen_root_store_inc",
+    cmd: "$(location build/gn_run_binary.py) clang_x64/root_store_tool " +
+         "--root-store " +
+         "../../net/data/ssl/chrome_root_store/root_store.textproto " +
+         "--certs " +
+         "../../net/data/ssl/chrome_root_store/root_store.certs " +
+         "--write-cpp-root-store " +
+         "gen/net/data/ssl/chrome_root_store/chrome-root-store-inc.cc " +
+         "--write-cpp-ev-roots " +
+         "gen/net/data/ssl/chrome_root_store/chrome-ev-roots-inc.cc",
+    out: [
+        "net/data/ssl/chrome_root_store/chrome-ev-roots-inc.cc",
+        "net/data/ssl/chrome_root_store/chrome-root-store-inc.cc",
+    ],
+    tool_files: [
+        "build/gn_run_binary.py",
+        "net/data/ssl/chrome_root_store/root_store.certs",
+        "net/data/ssl/chrome_root_store/root_store.textproto",
     ],
     apex_available: [
         "com.android.tethering",
@@ -5858,7 +5897,9 @@ cc_genrule {
          "--input_file " +
          "$(location net/android/java/src/org/chromium/net/ProxyChangeListener.java) " +
          "--input_file " +
-         "$(location net/android/java/src/org/chromium/net/X509Util.java)",
+         "$(location net/android/java/src/org/chromium/net/X509Util.java) " +
+         "--package_prefix " +
+         "com.android.net.http",
     out: [
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
         "net/net_jni_headers/AndroidKeyStore_jni.h",
@@ -10860,7 +10901,9 @@ cc_genrule {
          "--input_file " +
          "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java) " +
          "--input_file " +
-         "$(location url/android/java/src/org/chromium/url/Origin.java)",
+         "$(location url/android/java/src/org/chromium/url/Origin.java) " +
+         "--package_prefix " +
+         "com.android.net.http",
     out: [
         "url/url_jni_headers/IDNStringUtil_jni.h",
         "url/url_jni_headers/Origin_jni.h",
