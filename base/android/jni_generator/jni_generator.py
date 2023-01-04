@@ -524,12 +524,15 @@ def ExtractJNINamespace(contents):
   return m[0]
 
 
-def ExtractFullyQualifiedJavaClassName(java_file_name, contents):
+def ExtractFullyQualifiedJavaClassName(java_file_name, contents, package_prefix=''):
   re_package = re.compile('.*?package (.*?);')
   matches = re.findall(re_package, contents)
   if not matches:
     raise SyntaxError('Unable to find "package" line in %s' % java_file_name)
-  class_path = matches[0].replace('.', '/')
+  class_path = matches[0]
+  if package_prefix:
+      class_path = "%s.%s" % (package_prefix, class_path)
+  class_path = class_path.replace('.', '/')
   class_name = os.path.splitext(os.path.basename(java_file_name))[0]
   return class_path + '/' + class_name
 
@@ -882,8 +885,12 @@ class ProxyHelpers(object):
     return 'J' if use_hash else 'org/chromium/base/natives'
 
   @staticmethod
-  def GetQualifiedClass(use_hash):
-    return '%s/%s' % (ProxyHelpers.GetPackage(use_hash),
+  def GetQualifiedClass(use_hash, package_prefix=''):
+    if package_prefix:
+        return '%s/%s/%s' % (package_prefix.replace(".","/"),ProxyHelpers.GetPackage(use_hash),
+                          ProxyHelpers.GetClass(use_hash))
+    else:
+        return '%s/%s' % (ProxyHelpers.GetPackage(use_hash),
                       ProxyHelpers.GetClass(use_hash))
 
   @staticmethod
@@ -995,7 +1002,7 @@ class JNIFromJavaSource(object):
     with open(java_file_name) as f:
       contents = f.read()
     fully_qualified_class = ExtractFullyQualifiedJavaClassName(
-        java_file_name, contents)
+        java_file_name, contents, options.package_prefix)
     return JNIFromJavaSource(contents, fully_qualified_class, options)
 
 
@@ -1654,6 +1661,11 @@ See SampleForTests.java for more details.
   parser.add_argument(
       '--split_name',
       help='Split name that the Java classes should be loaded from.')
+  parser.add_argument(
+      '--package_prefix',
+      default="",
+      help='Adds a prefix to every package with JNI. '
+           'This is important if you are jarjaring the code')
   # TODO(agrieve): --stamp used only to make incremental builds work.
   #     Remove --stamp at some point after 2022.
   parser.add_argument('--stamp',

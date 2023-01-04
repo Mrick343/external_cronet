@@ -116,13 +116,13 @@ public abstract class CronetProvider {
      * Name of the Java {@link CronetProvider} class.
      */
     private static final String JAVA_CRONET_PROVIDER_CLASS =
-            "org.chromium.net.impl.JavaCronetProvider";
+            "android.net.http.internal.org.chromium.net.impl.JavaCronetProvider";
 
     /**
      * Name of the native {@link CronetProvider} class.
      */
     private static final String NATIVE_CRONET_PROVIDER_CLASS =
-            "org.chromium.net.impl.NativeCronetProvider";
+            "android.net.http.internal.org.chromium.net.impl.NativeCronetProvider";
 
     /**
      * {@link CronetProvider} class that is packaged with Google Play Services.
