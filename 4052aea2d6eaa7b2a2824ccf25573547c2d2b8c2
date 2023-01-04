@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e5f81e9_3c3c8b01",
+        "filename": "Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4430,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-04T15:27:11Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be updated manually. It will just be overwritten the next time we update the file using the script. You\u0027ll have to update gen_android_bp\u0027s [create_java_module](https://source.corp.google.com/aosp-master/packages/modules/Connectivity/tools/gn2bp/gen_android_bp;l\u003d1515?q\u003dgen_android_bp).",
+      "range": {
+        "startLine": 4428,
+        "startChar": 3,
+        "endLine": 4430,
+        "endChar": 6
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d77a0ae5_e3dbe1a1",
+        "filename": "Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4436,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-04T15:27:11Z",
+      "side": 1,
+      "message": "can this be removed, or is it still required?",
+      "range": {
+        "startLine": 4436,
+        "startChar": 9,
+        "endLine": 4436,
+        "endChar": 36
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d29282e9_d78632ec",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-04T15:27:11Z",
+      "side": 1,
+      "message": "Would it make more sense to use a shim or something that\u0027s closer to being upstreamable?",
+      "range": {
+        "startLine": 254,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 5
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
