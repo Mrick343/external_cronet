@@ -1,0 +1,70 @@
+From 6134dfa8c0d59cbc3865227af309287a593fdd60 Mon Sep 17 00:00:00 2001
+From: Stefano Duo <stefanoduo@google.com>
+Date: Wed, 4 Jan 2023 13:52:15 +0000
+Subject: [PATCH] cronet: Use Mainline's SdkLevel instead of AndroidX's
+ BuildCompat
+
+Test: none
+---
+ Android.bp                                             | 3 +++
+ base/android/java/src/org/chromium/base/BuildInfo.java | 9 ++++-----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/Android.bp b/Android.bp
+index 60af5f75..64b7e6c2 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -4425,6 +4425,9 @@ java_library {
+         "//apex_available:platform",
+         "com.android.tethering",
+     ],
++    static_libs: [
++        "modules-utils-build_system",
++    ],
+     libs: [
+         "android-support-multidex",
+         "androidx.annotation_annotation",
+diff --git a/base/android/java/src/org/chromium/base/BuildInfo.java b/base/android/java/src/org/chromium/base/BuildInfo.java
+index fee8007c..824b5e51 100644
+--- a/base/android/java/src/org/chromium/base/BuildInfo.java
++++ b/base/android/java/src/org/chromium/base/BuildInfo.java
+@@ -18,12 +18,13 @@ import android.text.TextUtils;
+ 
+ import androidx.annotation.OptIn;
+ import androidx.annotation.VisibleForTesting;
+-import androidx.core.os.BuildCompat;
+ 
+ import org.chromium.base.annotations.CalledByNative;
+ import org.chromium.base.compat.ApiHelperForP;
+ import org.chromium.build.BuildConfig;
+ 
++import com.android.modules.utils.build.SdkLevel;
++
+ /**
+  * BuildInfo is a utility class providing easy access to {@link PackageInfo} information. This is
+  * primarily of use for accessing package information from native code.
+@@ -251,11 +252,10 @@ public class BuildInfo {
+     }
+ 
+     /**
+-     * Wrap BuildCompat.isAtLeastT. This enables it to be shadowed in Robolectric tests.
++     * Wrap SdkLevel.isAtLeastT. This enables it to be shadowed in Robolectric tests.
+      */
+-    @OptIn(markerClass = androidx.core.os.BuildCompat.PrereleaseSdkCheck.class)
+     public static boolean isAtLeastT() {
+-        return BuildCompat.isAtLeastT();
++        return SdkLevel.isAtLeastT();
+     }
+ 
+     /**
+@@ -263,7 +263,6 @@ public class BuildInfo {
+      * This must be manually maintained as the SDK goes through finalization!
+      * Avoid depending on this if possible; this is only intended for WebView.
+      */
+-    @OptIn(markerClass = androidx.core.os.BuildCompat.PrereleaseSdkCheck.class)
+     public static boolean targetsAtLeastT() {
+         int target = ContextUtils.getApplicationContext().getApplicationInfo().targetSdkVersion;
+ 
+-- 
+2.39.0.314.g84b9a713c41-goog
+

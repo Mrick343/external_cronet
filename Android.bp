@@ -4425,6 +4425,9 @@ java_library {
         "//apex_available:platform",
         "com.android.tethering",
     ],
+    static_libs: [
+        "modules-utils-build_system",
+    ],
     libs: [
         "android-support-multidex",
         "androidx.annotation_annotation",
