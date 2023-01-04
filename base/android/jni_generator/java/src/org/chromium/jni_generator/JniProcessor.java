@@ -56,10 +56,11 @@ import javax.tools.Diagnostic;
  * containing an interface annotated with NativeMethods.
  *
  */
-@SupportedOptions({JniProcessor.SKIP_GEN_JNI_ARG})
+@SupportedOptions({JniProcessor.SKIP_GEN_JNI_ARG, JniProcessor.PACKAGE_PREFIX_ARG})
 @AutoService(Processor.class)
 public class JniProcessor extends AbstractProcessor {
     static final String SKIP_GEN_JNI_ARG = "org.chromium.chrome.skipGenJni";
+    static final String PACKAGE_PREFIX_ARG = "package_prefix";
     private static final Class<NativeMethods> JNI_STATIC_NATIVES_CLASS = NativeMethods.class;
     private static final Class<MainDex> MAIN_DEX_CLASS = MainDex.class;
     private static final Class<CheckDiscard> CHECK_DISCARD_CLASS = CheckDiscard.class;
@@ -222,9 +223,15 @@ public class JniProcessor extends AbstractProcessor {
     String getNativeMethodName(String packageName, String className, String oldMethodName) {
         // e.g. org.chromium.base.Foo_Class.bar
         // => org_chromium_base_Foo_1Class_bar()
-        return String.format("%s.%s.%s", packageName, className, oldMethodName)
-                .replaceAll("_", "_1")
-                .replaceAll("\\.", "_");
+        String packagePrefix = processingEnv.getOptions().getOrDefault(PACKAGE_PREFIX_ARG, "");
+        if(packagePrefix.length() > 0)
+            return String.format("%s.%s.%s.%s", packagePrefix, packageName, className, oldMethodName)
+                    .replaceAll("_", "_1")
+                    .replaceAll("\\.", "_");
+        else
+            return String.format("%s.%s.%s", packageName, className, oldMethodName)
+                    .replaceAll("_", "_1")
+                    .replaceAll("\\.", "_");
     }
 
     /**
