@@ -34,6 +34,24 @@
       "parentUuid": "b8787359_3eeb9053",
       "revId": "a800b4b127a5c8b7d3c9e8cd32c7144ec560a841",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86345750_8fa320fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T15:52:21Z",
+      "side": 1,
+      "message": "This actually seems to break the build:\n\nerror: external/cronet/Android.bp:30:1: module \"cronet_aml_api_sources\": module source path \"external/cronet/out/cronet/gen/components/cronet/android/templates/org/chromium/net/ApiVersion.java\" does not exist\nerror: external/cronet/Android.bp:2802:1: module \"cronet_aml_components_cronet_android_cronet_jni_registration__java\" variant \"android_common\": module source path \"external/cronet/out/cronet/gen/components/cronet/android/templates/org/chromium/net/impl/ImplVersion.java\" does not exist\nerror: external/cronet/Android.bp:2532:1: module \"cronet_aml_components_cronet_android_cronet_jni_registration\" variant \"android_x86_64_silvermont\": module source path \"external/cronet/out/cronet/gen/components/cronet/android/templates/org/chromium/net/impl/ImplVersion.java\" does not exist\n07:48:53 soong bootstrap failed with: exit status 1",
+      "parentUuid": "111f4901_1b88eaf9",
+      "revId": "a800b4b127a5c8b7d3c9e8cd32c7144ec560a841",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
