@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e2f49a8_81763dd7",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "Should just be:\n```\nfinal packagePrefix \u003d processingEnv.getOptions().getOrDefault(PACKAGE_PREFIX_ARG, \"\");\n```",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 9
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d3e8b0b_279ca930",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "This currently adds a leading period if the if statement above is false.",
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b312f70_a27d80ad",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "Consider making this a required parameter to prevent potential issues (one caller might forget to specify the prefix). This is especially true if upstream does not take this change.",
+      "range": {
+        "startLine": 888,
+        "startChar": 34,
+        "endLine": 888,
+        "endChar": 51
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7ceb0f1_8eca9908",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "nit: adding package_prefix to GetPackage() would make a bit more sense (also just in case GetPackage were to be called from somewhere else).",
+      "range": {
+        "startLine": 889,
+        "startChar": 7,
+        "endLine": 889,
+        "endChar": 21
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd7bb616_e03e8d2b",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1666,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "nit: maybe just use None instead of an empty string?",
+      "range": {
+        "startLine": 1666,
+        "startChar": 6,
+        "endLine": 1666,
+        "endChar": 16
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a50d84e4_43b9bdda",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "same here, this probably doesn\u0027t need to be optional.",
+      "range": {
+        "startLine": 224,
+        "startChar": 32,
+        "endLine": 224,
+        "endChar": 49
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa327a1c_0a5f9efd",
+        "filename": "components/cronet/android/api/src/org/chromium/net/CronetProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T12:34:17Z",
+      "side": 1,
+      "message": "This doesn\u0027t belong in this CL. Can you move into a separate change on top of this one?",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 125,
+        "endChar": 83
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
