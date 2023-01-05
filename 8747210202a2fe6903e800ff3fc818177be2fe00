@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1644a4eb_e3f20f1b",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "That is very weird. I think when I tried adding `getOrDefault` intelliJ complained saying that this was only usable in API 24 while the minimum API was 18. However, this code was host-machine but I didn\u0027t notice that. Thanks for the comment.",
+      "parentUuid": "7e2f49a8_81763dd7",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 9
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4d3e8b0b_279ca930",
@@ -41,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "350742e6_d65fd256",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d3e8b0b_279ca930",
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b312f70_a27d80ad",
@@ -54,6 +96,30 @@
       "writtenOn": "2023-01-05T12:34:17Z",
       "side": 1,
       "message": "Consider making this a required parameter to prevent potential issues (one caller might forget to specify the prefix). This is especially true if upstream does not take this change.",
+      "range": {
+        "startLine": 888,
+        "startChar": 34,
+        "endLine": 888,
+        "endChar": 51
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b151e464_96945c38",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b312f70_a27d80ad",
       "range": {
         "startLine": 888,
         "startChar": 34,
@@ -89,6 +155,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "09c0690d_b24268d3",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "I\u0027m not sure what do you mean by `GetPackage()` where would such a method be implemented? It seems that there\u0027s no way central source of truth in the files to do this?",
+      "parentUuid": "d7ceb0f1_8eca9908",
+      "range": {
+        "startLine": 889,
+        "startChar": 7,
+        "endLine": 889,
+        "endChar": 21
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd7bb616_e03e8d2b",
         "filename": "base/android/jni_generator/jni_generator.py",
         "patchSetId": 3
@@ -100,6 +190,30 @@
       "writtenOn": "2023-01-05T12:34:17Z",
       "side": 1,
       "message": "nit: maybe just use None instead of an empty string?",
+      "range": {
+        "startLine": 1666,
+        "startChar": 6,
+        "endLine": 1666,
+        "endChar": 16
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "498e2f3f_d95a5aa0",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1666,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd7bb616_e03e8d2b",
       "range": {
         "startLine": 1666,
         "startChar": 6,
@@ -133,6 +247,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d89ca8b_c460598b",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a50d84e4_43b9bdda",
+      "range": {
+        "startLine": 224,
+        "startChar": 32,
+        "endLine": 224,
+        "endChar": 49
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa327a1c_0a5f9efd",
@@ -146,6 +284,30 @@
       "writtenOn": "2023-01-05T12:34:17Z",
       "side": 1,
       "message": "This doesn\u0027t belong in this CL. Can you move into a separate change on top of this one?",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 125,
+        "endChar": 83
+      },
+      "revId": "8747210202a2fe6903e800ff3fc818177be2fe00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbd2feae_138ef113",
+        "filename": "components/cronet/android/api/src/org/chromium/net/CronetProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-05T16:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa327a1c_0a5f9efd",
       "range": {
         "startLine": 118,
         "startChar": 4,
