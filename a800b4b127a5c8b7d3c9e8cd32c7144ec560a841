@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8787359_3eeb9053",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-05T06:55:35Z",
+      "side": 1,
+      "message": "Addressed Stefano\u0027s open comment on crrev/c/4120382, but have not regenerating the gn desc files and building yet.",
+      "revId": "a800b4b127a5c8b7d3c9e8cd32c7144ec560a841",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
