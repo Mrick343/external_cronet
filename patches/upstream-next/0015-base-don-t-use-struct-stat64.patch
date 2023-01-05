@@ -1,0 +1,111 @@
+From 894860e3b6099b5e8df5c1d5905d376ca0dfe64b Mon Sep 17 00:00:00 2001
+From: Elly Fong-Jones <ellyjones@chromium.org>
+Date: Thu, 5 Jan 2023 14:56:02 +0000
+Subject: [PATCH] base: don't use struct stat64
+
+This struct was introduced to match the stat64() syscall, which was
+necessary on 32-bit Linux systems because some members of struct
+stat were not large enough - in particular, st_size. These days, the
+"correct" way to work around this problem is instead to define
+_FILE_OFFSET_BITS to 64 and use stat() and struct stat as normal, and
+stat64 and friends (which are not standard) are missing from some
+libcs.
+
+This change has Chromium use _FILE_OFFSET_BITS=64 when needed, and
+asserts statically that we really do get a 64-bit st_size field. This
+relies on the Android NDK being >= version 15 (we require 24).
+
+Cherry-picked from https://chromium-review.googlesource.com/c/chromium/src/+/4134763
+
+Test: m USE_HOST_MUSL=true out/soong/.intermediates/external/cronet/cronet_aml_base_base__testing/linux_musl_x86_64_static/cronet_aml_base_base__testing.a
+Change-Id: Ic933d8840db6eb6e9a6487c16168b477959a736e
+---
+ base/files/file.h        | 13 ++-----------
+ base/files/file_posix.cc | 24 ++++++++----------------
+ 2 files changed, 10 insertions(+), 27 deletions(-)
+
+diff --git a/base/files/file.h b/base/files/file.h
+index c252375e..3f16453d 100644
+--- a/base/files/file.h
++++ b/base/files/file.h
+@@ -18,21 +18,12 @@
+ #include "base/trace_event/base_tracing_forward.h"
+ #include "build/build_config.h"
+ 
+-#if BUILDFLAG(IS_BSD) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_NACL) || \
+-    BUILDFLAG(IS_FUCHSIA) || (BUILDFLAG(IS_ANDROID) && __ANDROID_API__ < 21)
+ struct stat;
+-namespace base {
+-typedef struct stat stat_wrapper_t;
+-}
+-#elif BUILDFLAG(IS_POSIX)
+-struct stat64;
+-namespace base {
+-typedef struct stat64 stat_wrapper_t;
+-}
+-#endif
+ 
+ namespace base {
+ 
++using stat_wrapper_t = struct stat;
++
+ // Thin wrapper around an OS-level file.
+ // Note that this class does not provide any support for asynchronous IO, other
+ // than the ability to create asynchronous handles on Windows.
+diff --git a/base/files/file_posix.cc b/base/files/file_posix.cc
+index 034ad690..0808bb0e 100644
+--- a/base/files/file_posix.cc
++++ b/base/files/file_posix.cc
+@@ -4,12 +4,20 @@
+ 
+ #include "base/files/file.h"
+ 
++// The only 32-bit platform that uses this file is Android. On Android APIs
++// >= 21, this standard define is the right way to express that you want a
++// 64-bit offset in struct stat, and the stat64 struct and functions aren't
++// useful.
++#define _FILE_OFFSET_BITS 64
++
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <stdint.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+ 
++static_assert(sizeof(base::stat_wrapper_t::st_size) >= 8);
++
+ #include "base/check_op.h"
+ #include "base/notreached.h"
+ #include "base/numerics/safe_conversions.h"
+@@ -594,8 +602,6 @@ File::Error File::GetLastFileError() {
+   return base::File::OSErrorToFileError(errno);
+ }
+ 
+-#if BUILDFLAG(IS_BSD) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_NACL) || \
+-    BUILDFLAG(IS_FUCHSIA) || (BUILDFLAG(IS_ANDROID) && __ANDROID_API__ < 21)
+ int File::Stat(const char* path, stat_wrapper_t* sb) {
+   ScopedBlockingCall scoped_blocking_call(FROM_HERE, BlockingType::MAY_BLOCK);
+   return stat(path, sb);
+@@ -608,19 +614,5 @@ int File::Lstat(const char* path, stat_wrapper_t* sb) {
+   ScopedBlockingCall scoped_blocking_call(FROM_HERE, BlockingType::MAY_BLOCK);
+   return lstat(path, sb);
+ }
+-#else
+-int File::Stat(const char* path, stat_wrapper_t* sb) {
+-  ScopedBlockingCall scoped_blocking_call(FROM_HERE, BlockingType::MAY_BLOCK);
+-  return stat64(path, sb);
+-}
+-int File::Fstat(int fd, stat_wrapper_t* sb) {
+-  ScopedBlockingCall scoped_blocking_call(FROM_HERE, BlockingType::MAY_BLOCK);
+-  return fstat64(fd, sb);
+-}
+-int File::Lstat(const char* path, stat_wrapper_t* sb) {
+-  ScopedBlockingCall scoped_blocking_call(FROM_HERE, BlockingType::MAY_BLOCK);
+-  return lstat64(path, sb);
+-}
+-#endif
+ 
+ }  // namespace base
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
+
