@@ -17,15 +17,15 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeClassQualifiedName;
 import org.chromium.base.annotations.NativeMethods;
 import org.chromium.build.annotations.UsedByReflection;
-import org.chromium.net.BidirectionalStream;
-import org.chromium.net.CronetEngine;
+import android.net.http.BidirectionalStream;
+import android.net.http.CronetEngine;
 import org.chromium.net.EffectiveConnectionType;
-import org.chromium.net.ExperimentalBidirectionalStream;
-import org.chromium.net.NetworkQualityRttListener;
-import org.chromium.net.NetworkQualityThroughputListener;
-import org.chromium.net.RequestFinishedInfo;
+import android.net.http.ExperimentalBidirectionalStream;
+import android.net.http.NetworkQualityRttListener;
+import android.net.http.NetworkQualityThroughputListener;
+import android.net.http.RequestFinishedInfo;
 import org.chromium.net.RttThroughputValues;
-import org.chromium.net.UrlRequest;
+import android.net.http.UrlRequest;
 import org.chromium.net.impl.CronetLogger.CronetEngineBuilderInfo;
 import org.chromium.net.impl.CronetLogger.CronetSource;
 import org.chromium.net.impl.CronetLogger.CronetVersion;
@@ -185,9 +185,9 @@ public class CronetUrlRequestContext extends CronetEngineBase {
         mThroughputListenerList.disableThreadAsserts();
         mNetworkQualityEstimatorEnabled = builder.networkQualityEstimatorEnabled();
         CronetLibraryLoader.ensureInitialized(builder.getContext(), builder);
-        if (!IntegratedModeState.INTEGRATED_MODE_ENABLED) {
-            CronetUrlRequestContextJni.get().setMinLogLevel(getLoggingLevel());
-        }
+
+        CronetUrlRequestContextJni.get().setMinLogLevel(getLoggingLevel());
+
         if (builder.httpCacheMode() == HttpCacheType.DISK) {
             mInUseStoragePath = builder.storagePath();
             synchronized (sInUseStoragePaths) {
@@ -688,11 +688,9 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     private void initNetworkThread() {
         mNetworkThread = Thread.currentThread();
         mInitCompleted.open();
-        if (!IntegratedModeState.INTEGRATED_MODE_ENABLED) {
-            // In integrated mode, network thread is shared from the host.
-            // Cronet shouldn't change the property of the thread.
-            Thread.currentThread().setName("ChromiumNet");
-        }
+        // In integrated mode, network thread is shared from the host.
+        // Cronet shouldn't change the property of the thread.
+        Thread.currentThread().setName("ChromiumNet");
     }
 
     @SuppressWarnings("unused")

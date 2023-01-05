@@ -17,6 +17,14 @@ import static org.chromium.net.CronetTestRule.SERVER_KEY_PKCS8_PEM;
 import static org.chromium.net.CronetTestRule.assertContains;
 import static org.chromium.net.CronetTestRule.getContext;
 
+import android.net.http.BidirectionalStream;
+import android.net.http.CronetEngine;
+import android.net.http.CronetException;
+import android.net.http.ExperimentalBidirectionalStream;
+import android.net.http.ExperimentalCronetEngine;
+import android.net.http.NetworkException;
+import android.net.http.RequestFinishedInfo;
+import android.net.http.UrlResponseInfo;
 import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
@@ -150,14 +158,6 @@ public class BidirectionalStreamTest {
     @SmallTest
     @Feature({"Cronet"})
     public void testBuilderCheck() throws Exception {
-        if (mTestRule.testingJavaImpl()) {
-            runBuilderCheckJavaImpl();
-        } else {
-            runBuilderCheckNativeImpl();
-        }
-    }
-
-    private void runBuilderCheckNativeImpl() throws Exception {
         TestBidirectionalStreamCallback callback = new TestBidirectionalStreamCallback();
         try {
             mCronetEngine.newBidirectionalStreamBuilder(null, callback, callback.getExecutor());
@@ -199,20 +199,6 @@ public class BidirectionalStreamTest {
             fail("Method name is not null-checked");
         } catch (NullPointerException e) {
             assertEquals("Method is required.", e.getMessage());
-        }
-    }
-
-    private void runBuilderCheckJavaImpl() {
-        try {
-            TestBidirectionalStreamCallback callback = new TestBidirectionalStreamCallback();
-            CronetTestRule.createJavaEngineBuilder(CronetTestRule.getContext())
-                    .build()
-                    .newBidirectionalStreamBuilder(
-                            Http2TestServer.getServerUrl(), callback, callback.getExecutor());
-            fail("JavaCronetEngine doesn't support BidirectionalStream."
-                    + " Expected UnsupportedOperationException");
-        } catch (UnsupportedOperationException e) {
-            // Expected.
         }
     }
 

@@ -6,6 +6,9 @@ package org.chromium.net;
 
 import static org.junit.Assume.assumeTrue;
 
+import android.net.http.CronetEngine;
+import android.net.http.ExperimentalCronetEngine;
+import android.net.http.UrlResponseInfo;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
@@ -19,10 +22,6 @@ import org.junit.runners.model.Statement;
 import org.chromium.base.ContextUtils;
 import org.chromium.base.Log;
 import org.chromium.base.PathUtils;
-import org.chromium.net.impl.JavaCronetEngine;
-import org.chromium.net.impl.JavaCronetProvider;
-import org.chromium.net.impl.NativeCronetProvider;
-import org.chromium.net.impl.UserAgent;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -54,7 +53,6 @@ public class CronetTestRule implements TestRule {
     private CronetTestFramework mCronetTestFramework;
 
     private boolean mTestingSystemHttpURLConnection;
-    private boolean mTestingJavaImpl;
     private StrictMode.VmPolicy mOldVmPolicy;
 
     /**
@@ -65,30 +63,20 @@ public class CronetTestRule implements TestRule {
         public ExperimentalCronetEngine.Builder mBuilder;
 
         private Context mContext;
-        private boolean mIsTestingJavaImpl;
 
-        private CronetTestFramework(Context context, boolean isTestingJavaImpl) {
+        private CronetTestFramework(Context context) {
             mContext = context;
-            mIsTestingJavaImpl = isTestingJavaImpl;
-            mBuilder = mIsTestingJavaImpl ? createJavaEngineBuilder() : createNativeEngineBuilder();
-        }
-
-        private static CronetTestFramework createUsingJavaImpl(Context context) {
-            return new CronetTestFramework(context, true /* isTestingJavaImpl */);
+            mBuilder = createNativeEngineBuilder();
         }
 
         private static CronetTestFramework createUsingNativeImpl(Context context) {
-            return new CronetTestFramework(context, false /* isTestingJavaImpl */);
+            return new CronetTestFramework(context);
         }
 
         public ExperimentalCronetEngine startEngine() {
             assert mCronetEngine == null;
 
             mCronetEngine = mBuilder.build();
-            if (mIsTestingJavaImpl) {
-                // Make sure that the instantiated engine is JavaCronetEngine.
-                assert mCronetEngine.getClass() == JavaCronetEngine.class;
-            }
 
             // Start collecting metrics.
             mCronetEngine.getGlobalMetricsDeltas();
@@ -100,12 +88,6 @@ public class CronetTestRule implements TestRule {
             if (mCronetEngine == null) return;
             mCronetEngine.shutdown();
             mCronetEngine = null;
-        }
-
-        private ExperimentalCronetEngine.Builder createJavaEngineBuilder() {
-            return CronetTestRule.createJavaEngineBuilder(mContext)
-                    .setUserAgent(UserAgent.from(getContext()))
-                    .enableQuic(true);
         }
 
         private ExperimentalCronetEngine.Builder createNativeEngineBuilder() {
@@ -152,13 +134,12 @@ public class CronetTestRule implements TestRule {
      * Returns {@code true} when test is being run against the java implementation of CronetEngine.
      */
     public boolean testingJavaImpl() {
-        return mTestingJavaImpl;
+        return false;
     }
 
     // TODO(yolandyan): refactor this using parameterize framework
     private void runBase(Statement base, Description desc) throws Throwable {
         setTestingSystemHttpURLConnection(false);
-        setTestingJavaImpl(false);
         String packageName = desc.getTestClass().getPackage().getName();
 
         boolean onlyRunTestForNative = desc.getAnnotation(OnlyRunNativeCronet.class) != null;
@@ -169,7 +150,6 @@ public class CronetTestRule implements TestRule {
                     + "OnlyRunNativeCronet and OnlyRunJavaCronet annotations");
         }
         boolean doRunTestForNative = onlyRunTestForNative || !onlyRunTestForJava;
-        boolean doRunTestForJava = onlyRunTestForJava || !onlyRunTestForNative;
 
         // Find the API version required by the test.
         int requiredApiVersion = getMaximumAvailableApiLevel();
@@ -222,11 +202,6 @@ public class CronetTestRule implements TestRule {
             try {
                 if (doRunTestForNative) {
                     Log.i(TAG, "Running test against Native implementation.");
-                    base.evaluate();
-                }
-                if (doRunTestForJava) {
-                    Log.i(TAG, "Running test against Java implementation.");
-                    setTestingJavaImpl(true);
                     base.evaluate();
                 }
             } catch (Throwable e) {
@@ -294,22 +269,12 @@ public class CronetTestRule implements TestRule {
 
     /**
      * Creates and returns {@link ExperimentalCronetEngine.Builder} that creates
-     * Java (platform) based {@link CronetEngine.Builder}.
-     *
-     * @return the {@code CronetEngine.Builder} that builds Java-based {@code Cronet engine}.
-     */
-    public static ExperimentalCronetEngine.Builder createJavaEngineBuilder(Context context) {
-        return (ExperimentalCronetEngine.Builder) new JavaCronetProvider(context).createBuilder();
-    }
-
-    /**
-     * Creates and returns {@link ExperimentalCronetEngine.Builder} that creates
      * Chromium (native) based {@link CronetEngine.Builder}.
      *
      * @return the {@code CronetEngine.Builder} that builds Chromium-based {@code Cronet engine}.
      */
     public static ExperimentalCronetEngine.Builder createNativeEngineBuilder(Context context) {
-        return (ExperimentalCronetEngine.Builder) new NativeCronetProvider(context).createBuilder();
+        return (ExperimentalCronetEngine.Builder) CronetEngine.builder(context);
     }
 
     public void assertResponseEquals(UrlResponseInfo expected, UrlResponseInfo actual) {
@@ -468,6 +433,5 @@ public class CronetTestRule implements TestRule {
     }
 
     private void setTestingJavaImpl(boolean value) {
-        mTestingJavaImpl = value;
     }
 }

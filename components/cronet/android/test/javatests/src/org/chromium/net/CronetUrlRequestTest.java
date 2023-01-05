@@ -14,6 +14,14 @@ import static org.junit.Assert.fail;
 import static org.chromium.net.CronetTestRule.assertContains;
 import static org.chromium.net.CronetTestRule.getContext;
 
+import android.net.http.CronetException;
+import android.net.http.ExperimentalUrlRequest;
+import android.net.http.NetworkException;
+import android.net.http.QuicException;
+import android.net.http.UploadDataProvider;
+import android.net.http.UploadDataSink;
+import android.net.http.UrlRequest;
+import android.net.http.UrlResponseInfo;
 import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
@@ -22,6 +30,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import androidx.test.filters.SmallTest;
 
+import android.net.http.apihelpers.UploadDataProviders;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
