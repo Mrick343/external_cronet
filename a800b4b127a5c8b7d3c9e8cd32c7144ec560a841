@@ -52,6 +52,24 @@
       "parentUuid": "111f4901_1b88eaf9",
       "revId": "a800b4b127a5c8b7d3c9e8cd32c7144ec560a841",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a12bedc7_3b3649bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-01-06T03:00:39Z",
+      "side": 1,
+      "message": "I think Android.bp in aosp/2374718 hits these errors.\nCurrent gen_android_bp assumes desc.json is generated with \"out/test\" build directory.\nI have uploaded CL to update gn_utils.py to use \"out\" prefix for src filtering.\naosp/2375257.",
+      "parentUuid": "86345750_8fa320fc",
+      "revId": "a800b4b127a5c8b7d3c9e8cd32c7144ec560a841",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
