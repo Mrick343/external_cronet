@@ -68,6 +68,30 @@
       },
       "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76b71c89_0571f2a1",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-06T11:14:22Z",
+      "side": 1,
+      "message": "Regarding the implementation, can we just evaluate android.os.Build.VERSION.SDK_INT to avoid pulling in additional dependencies completely?",
+      "parentUuid": "d29282e9_d78632ec",
+      "range": {
+        "startLine": 254,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 5
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
