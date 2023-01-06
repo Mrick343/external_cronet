@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3456a646_b7e4371d",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "This should be final",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 226,
+        "endChar": 14
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05396b0e_340f2a24",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "this line is too long, should be a max of 100 characters.",
+      "range": {
+        "startLine": 228,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 101
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37d806c1_b75c30a3",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "maybe get rid of the code duplication",
+      "range": {
+        "startLine": 233,
+        "startChar": 19,
+        "endLine": 234,
+        "endChar": 44
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51c5f53a_828cfa59",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "re other comment: I meant this function 😊",
+      "range": {
+        "startLine": 884,
+        "startChar": 6,
+        "endLine": 884,
+        "endChar": 27
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29743f2e_1c1dbe9c",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1667,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "(I think it defaults to None, doesn\u0027t it?)",
+      "range": {
+        "startLine": 1667,
+        "startChar": 6,
+        "endLine": 1667,
+        "endChar": 18
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f76f5768_8e3c5f89",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "if below should actually be none, this doesn\u0027t need to be passed.",
+      "range": {
+        "startLine": 46,
+        "startChar": 14,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad49d685_1436546e",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-06T12:51:28Z",
+      "side": 1,
+      "message": "should this not be: `package_prefix\u003dpackage_prefix`? (If it\u0027s correct as None, maybe leave a comment on why. It\u0027s not obvious if this parameter is the name of the existing file).",
+      "range": {
+        "startLine": 124,
+        "startChar": 90,
+        "endLine": 124,
+        "endChar": 94
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
