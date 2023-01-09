@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2e3143b_75a0468c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-09T09:34:49Z",
+      "side": 1,
+      "message": "I removed the Android.bp and added the changes to the BUILD.gn. Also added the .patch file.",
+      "revId": "46b6b751b929b276b6b759d09ec9fad4b3cdb9e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
