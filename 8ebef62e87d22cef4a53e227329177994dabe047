@@ -16,6 +16,24 @@
       "message": "Can you also add a .patch file to //patches/upstream-next (assuming this will be upstreamed).",
       "revId": "8ebef62e87d22cef4a53e227329177994dabe047",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af74df5d_0c12134d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-09T06:19:49Z",
+      "side": 1,
+      "message": "Actually, I have a feeling the whole //patches/upstream-next and //patches/local concept will break down as the final rename is a local change that\u0027s based on top of the upstream patches. So maybe it\u0027s just better to put everything inside //patches/local for now and maybe we can prefix CLs with UPSTREAM or something.",
+      "parentUuid": "df94afb8_95552074",
+      "revId": "8ebef62e87d22cef4a53e227329177994dabe047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
