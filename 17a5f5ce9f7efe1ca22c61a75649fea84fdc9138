@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7b2ddaf_d80ae58f",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3456a646_b7e4371d",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 226,
+        "endChar": 14
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05396b0e_340f2a24",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-01-06T12:51:28Z",
       "side": 1,
       "message": "this line is too long, should be a max of 100 characters.",
+      "range": {
+        "startLine": 228,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 101
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfc4f952_f3c651d5",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05396b0e_340f2a24",
       "range": {
         "startLine": 228,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6f720ea_02cc2546",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37d806c1_b75c30a3",
+      "range": {
+        "startLine": 233,
+        "startChar": 19,
+        "endLine": 234,
+        "endChar": 44
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51c5f53a_828cfa59",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-01-06T12:51:28Z",
       "side": 1,
       "message": "re other comment: I meant this function 😊",
+      "range": {
+        "startLine": 884,
+        "startChar": 6,
+        "endLine": 884,
+        "endChar": 27
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e9241ff_f8028695",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51c5f53a_828cfa59",
       "range": {
         "startLine": 884,
         "startChar": 6,
@@ -116,6 +212,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "05bcfe56_c9152546",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1667,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29743f2e_1c1dbe9c",
+      "range": {
+        "startLine": 1667,
+        "startChar": 6,
+        "endLine": 1667,
+        "endChar": 18
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f76f5768_8e3c5f89",
@@ -139,6 +259,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0719590c_cca176d8",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f76f5768_8e3c5f89",
+      "range": {
+        "startLine": 46,
+        "startChar": 14,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ad49d685_1436546e",
@@ -152,6 +296,30 @@
       "writtenOn": "2023-01-06T12:51:28Z",
       "side": 1,
       "message": "should this not be: `package_prefix\u003dpackage_prefix`? (If it\u0027s correct as None, maybe leave a comment on why. It\u0027s not obvious if this parameter is the name of the existing file).",
+      "range": {
+        "startLine": 124,
+        "startChar": 90,
+        "endLine": 124,
+        "endChar": 94
+      },
+      "revId": "17a5f5ce9f7efe1ca22c61a75649fea84fdc9138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc37fda1_7e96600f",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-09T15:17:36Z",
+      "side": 1,
+      "message": "This is correct as `None`. If this changed then the importing of java will be corrupted and lead to errors. This CL only seeks to change the `constants` inside the java files and not the actual java classes/importing [This is done by the actual jarjaring process].\n\nAdding a prefix will be complicate the jarjar side as we\u0027ll have to exclude the J/N from jarjaring process. So keeping the package and file name as is.",
+      "parentUuid": "ad49d685_1436546e",
       "range": {
         "startLine": 124,
         "startChar": 90,
