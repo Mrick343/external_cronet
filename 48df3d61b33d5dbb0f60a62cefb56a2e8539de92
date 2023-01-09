@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "798d1356_2045874c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-09T07:02:43Z",
+      "side": 1,
+      "message": "I added the .patch file, then removed the Android.bp from the change and updated desc_*.json, Android.bp.swp, and moved generated Android.bp file to a separate change.",
+      "revId": "48df3d61b33d5dbb0f60a62cefb56a2e8539de92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
