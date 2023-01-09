@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f72da762_48d47742",
+        "filename": "Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4430,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-09T14:38:12Z",
+      "side": 1,
+      "message": "https://android-review.git.corp.google.com/c/platform/packages/modules/Connectivity/+/2376238.\n\nI\u0027ll keep the manual update here to simplify my life.",
+      "parentUuid": "4e5f81e9_3c3c8b01",
+      "range": {
+        "startLine": 4428,
+        "startChar": 3,
+        "endLine": 4430,
+        "endChar": 6
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d77a0ae5_e3dbe1a1",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-01-04T15:27:11Z",
       "side": 1,
       "message": "can this be removed, or is it still required?",
+      "range": {
+        "startLine": 4436,
+        "startChar": 9,
+        "endLine": 4436,
+        "endChar": 36
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fcac03c_625a917c",
+        "filename": "Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4436,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-09T14:38:12Z",
+      "side": 1,
+      "message": "This is not enough, we need to patch all the CLs related to https://bugs.chromium.org/p/chromium/issues/detail?id\u003d1404728 (some are yet to be merged upstream). I\u0027ll create a single merge for those next.",
+      "parentUuid": "d77a0ae5_e3dbe1a1",
       "range": {
         "startLine": 4436,
         "startChar": 9,
@@ -84,6 +132,30 @@
       "side": 1,
       "message": "Regarding the implementation, can we just evaluate android.os.Build.VERSION.SDK_INT to avoid pulling in additional dependencies completely?",
       "parentUuid": "d29282e9_d78632ec",
+      "range": {
+        "startLine": 254,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 5
+      },
+      "revId": "4052aea2d6eaa7b2a2824ccf25573547c2d2b8c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "617d7c46_5bb09ee3",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-09T14:38:12Z",
+      "side": 1,
+      "message": "Discussed offline.\n\nRight now we could do that, but in the future we might update Cronet while isAtLeastX still makes use of some magic to handle a pre-release version. Not inlining will hopefully remind us of the proper way of doing this if that were to happen.",
+      "parentUuid": "76b71c89_0571f2a1",
       "range": {
         "startLine": 254,
         "startChar": 4,
