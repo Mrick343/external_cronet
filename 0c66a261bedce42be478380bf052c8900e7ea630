@@ -1,5 +1,63 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6097bf6_88b93697",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4425,
+      "author": {
+        "id": 1060959
+      },
+      "writtenOn": "2023-01-09T10:07:44Z",
+      "side": 1,
+      "message": "How come it\u0027s available to the platform?",
+      "revId": "0c66a261bedce42be478380bf052c8900e7ea630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c851f73_ca7d08af",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4433,
+      "author": {
+        "id": 1060959
+      },
+      "writtenOn": "2023-01-09T10:07:44Z",
+      "side": 1,
+      "message": "Any news on getting rid of these?",
+      "range": {
+        "startLine": 4430,
+        "startChar": 0,
+        "endLine": 4433,
+        "endChar": 36
+      },
+      "revId": "0c66a261bedce42be478380bf052c8900e7ea630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "321c60f7_5627dac5",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4444,
+      "author": {
+        "id": 1060959
+      },
+      "writtenOn": "2023-01-09T10:07:44Z",
+      "side": 1,
+      "message": "This essentially means \"depend on hidden apis\". You should be getting your AIDL deps from the SDK. Can this be removed?",
+      "revId": "0c66a261bedce42be478380bf052c8900e7ea630",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
