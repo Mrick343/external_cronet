@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc3fc530_1e003f5a",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-10T10:25:03Z",
+      "side": 0,
+      "message": "could you make this change in the respective BUILD.gn as well?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 86
+      },
+      "revId": "11530ecf97af4d7f405eb8b118e12526e5945ae4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
