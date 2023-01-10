@@ -4,7 +4,6 @@
 
 package org.chromium.net.impl;
 
-import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
 
@@ -21,8 +20,6 @@ import android.net.http.BidirectionalStream;
 import android.net.http.CronetEngine;
 import org.chromium.net.EffectiveConnectionType;
 import android.net.http.ExperimentalBidirectionalStream;
-import android.net.http.NetworkQualityRttListener;
-import android.net.http.NetworkQualityThroughputListener;
 import android.net.http.RequestFinishedInfo;
 import org.chromium.net.RttThroughputValues;
 import android.net.http.UrlRequest;
@@ -36,6 +33,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -265,7 +263,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
         }
         for (CronetEngineBuilderImpl.Pkp pkp : builder.publicKeyPins()) {
             CronetUrlRequestContextJni.get().addPkp(urlRequestContextConfig, pkp.mHost, pkp.mHashes,
-                    pkp.mIncludeSubdomains, pkp.mExpirationDate.getTime());
+                    pkp.mIncludeSubdomains, pkp.mExpirationInsant.toEpochMilli());
         }
         return urlRequestContextConfig;
     }
@@ -547,12 +545,8 @@ public class CronetUrlRequestContext extends CronetEngineBase {
         synchronized (mNetworkQualityLock) {
             for (final VersionSafeCallbacks.NetworkQualityRttListenerWrapper listener :
                     mRttListenerList) {
-                Runnable task = new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onRttObservation(rttMs, whenMs, source);
-                    }
-                };
+                Runnable task = () ->
+                        listener.onRttObservation(rttMs, Instant.ofEpochMilli(whenMs), source);
                 postObservationTaskToExecutor(listener.getExecutor(), task);
             }
         }
@@ -565,12 +559,8 @@ public class CronetUrlRequestContext extends CronetEngineBase {
         synchronized (mNetworkQualityLock) {
             for (final VersionSafeCallbacks.NetworkQualityThroughputListenerWrapper listener :
                     mThroughputListenerList) {
-                Runnable task = new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onThroughputObservation(throughputKbps, whenMs, source);
-                    }
-                };
+                Runnable task = () -> listener.onThroughputObservation(
+                        throughputKbps, Instant.ofEpochMilli(whenMs), source);
                 postObservationTaskToExecutor(listener.getExecutor(), task);
             }
         }
