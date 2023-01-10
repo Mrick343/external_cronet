@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e760955c_788688c9",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-10T10:15:11Z",
+      "side": 1,
+      "message": "How about:\n```\nfinal String packagePrefix \u003d ...;\nreturn ((packagePrefix.length() \u003e 0) ?\n        String.format(\"%s.%s.%s.%s\", packagePrefix, packageName, className, oldMethodName) : \n        String.format(\"%s.%s.%s\", packageName, className, oldMethodName))\n                .replaceAll(\"_\", \"_1\")\n                .replaceAll(\"\\\\.\", \"_\");\n```\n\nThis is way it stays concise without introducing an extra string.",
+      "range": {
+        "startLine": 226,
+        "startChar": 0,
+        "endLine": 235,
+        "endChar": 40
+      },
+      "revId": "e3ad2cce6d1ac2baf31a7c02000e2260e30573fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
