@@ -4,7 +4,6 @@
 
 package org.chromium.net.impl;
 
-import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
 
@@ -21,8 +20,6 @@ import android.net.http.BidirectionalStream;
 import android.net.http.CronetEngine;
 import org.chromium.net.EffectiveConnectionType;
 import android.net.http.ExperimentalBidirectionalStream;
-import android.net.http.NetworkQualityRttListener;
-import android.net.http.NetworkQualityThroughputListener;
 import android.net.http.RequestFinishedInfo;
 import org.chromium.net.RttThroughputValues;
 import android.net.http.UrlRequest;
@@ -265,7 +262,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
         }
         for (CronetEngineBuilderImpl.Pkp pkp : builder.publicKeyPins()) {
             CronetUrlRequestContextJni.get().addPkp(urlRequestContextConfig, pkp.mHost, pkp.mHashes,
-                    pkp.mIncludeSubdomains, pkp.mExpirationDate.getTime());
+                    pkp.mIncludeSubdomains, pkp.mExpirationInsant.toEpochMilli());
         }
         return urlRequestContextConfig;
     }
