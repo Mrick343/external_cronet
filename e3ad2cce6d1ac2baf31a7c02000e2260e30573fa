@@ -22,6 +22,30 @@
       },
       "revId": "e3ad2cce6d1ac2baf31a7c02000e2260e30573fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f54cd676_057bb9d8",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-10T11:46:36Z",
+      "side": 1,
+      "message": "Sounds good and looks quite compact to me.",
+      "parentUuid": "e760955c_788688c9",
+      "range": {
+        "startLine": 226,
+        "startChar": 0,
+        "endLine": 235,
+        "endChar": 40
+      },
+      "revId": "e3ad2cce6d1ac2baf31a7c02000e2260e30573fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
