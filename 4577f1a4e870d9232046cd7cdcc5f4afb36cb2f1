@@ -69,6 +69,24 @@
       "parentUuid": "45efa21a_baf0a95b",
       "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6209229_d22603a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-11T14:03:33Z",
+      "side": 1,
+      "message": "Early send:\n[...] feel free to correct me and I won\u0027t block you further :P",
+      "parentUuid": "372fd709_34dce878",
+      "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
