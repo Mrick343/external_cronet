@@ -48,7 +48,7 @@ index 77b718ddfef20..d0970b05dba1e 100644
 +                postToInitThread(CronetLibraryLoader::ensureInitializedOnInitThread);
              }
              if (!sLibraryLoaded) {
-                 if (builder.libraryLoader() != null) {
+                 System.loadLibrary(LIBRARY_NAME);
 @@ -101,19 +93,16 @@ public class CronetLibraryLoader {
          if (sInitThreadInitDone) {
              return;
