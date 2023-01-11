@@ -1,0 +1,81 @@
+From 074ca62df3ae004c101e68d75e9ffec799d9e62b Mon Sep 17 00:00:00 2001
+From: Dan Stahr <danstahr@google.com>
+Date: Wed, 11 Jan 2023 16:06:48 +0000
+Subject: [PATCH] Upstream: bring https://crrev.com/c/4156471 over
+
+Test: m
+Change-Id: Iae1059c6b923afef48c682885512966c8669dfa9
+---
+ base/BUILD.gn                                       |  1 +
+ .../java/src/org/chromium/base/PiiElider.java       |  4 ++--
+ base/android/jni_android.cc                         | 13 +++----------
+ 3 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/base/BUILD.gn b/base/BUILD.gn
+index a56c5fc8..0650b5f2 100644
+--- a/base/BUILD.gn
++++ b/base/BUILD.gn
+@@ -4097,6 +4097,7 @@ if (is_android) {
+       "android/java/src/org/chromium/base/MemoryPressureListener.java",
+       "android/java/src/org/chromium/base/PathService.java",
+       "android/java/src/org/chromium/base/PathUtils.java",
++      "android/java/src/org/chromium/base/PiiElider.java",
+       "android/java/src/org/chromium/base/PowerMonitor.java",
+       "android/java/src/org/chromium/base/RadioUtils.java",
+       "android/java/src/org/chromium/base/SysUtils.java",
+diff --git a/base/android/java/src/org/chromium/base/PiiElider.java b/base/android/java/src/org/chromium/base/PiiElider.java
+index c24e6d17..9e919da3 100644
+--- a/base/android/java/src/org/chromium/base/PiiElider.java
++++ b/base/android/java/src/org/chromium/base/PiiElider.java
+@@ -7,7 +7,7 @@ package org.chromium.base;
+ import android.text.TextUtils;
+ import android.util.Patterns;
+ 
+-import org.chromium.build.annotations.UsedByReflection;
++import org.chromium.build.annotations.CalledByNative;
+ 
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+@@ -217,7 +217,7 @@ public class PiiElider {
+      * @param stacktrace Multiline stacktrace as a string.
+      * @return Stacktrace with elided URLs.
+      */
+-    @UsedByReflection("jni_android.cc")
++    @CalledByNative
+     public static String sanitizeStacktrace(String stacktrace) {
+         String[] frames = stacktrace.split("\\n");
+         // Sanitize first stacktrace line which contains the exception message.
+diff --git a/base/android/jni_android.cc b/base/android/jni_android.cc
+index f0c58588..849e75c5 100644
+--- a/base/android/jni_android.cc
++++ b/base/android/jni_android.cc
+@@ -12,6 +12,7 @@
+ #include "base/android/java_exception_reporter.h"
+ #include "base/android/jni_string.h"
+ #include "base/android/jni_utils.h"
++#include "base/base_jni_headers/PiiElider_jni.h"
+ #include "base/containers/flat_map.h"
+ #include "base/debug/debugging_buildflags.h"
+ #include "base/lazy_instance.h"
+@@ -318,16 +319,8 @@ std::string GetJavaExceptionInfo(JNIEnv* env, jthrowable java_throwable) {
+                log_clazz.obj(), log_getstacktracestring, java_throwable)));
+   CheckException(env);
+ 
+-  ScopedJavaLocalRef<jclass> piielider_clazz =
+-      GetClass(env, "org/chromium/base/PiiElider");
+-  jmethodID piielider_sanitize_stacktrace =
+-      MethodID::Get<MethodID::TYPE_STATIC>(
+-          env, piielider_clazz.obj(), "sanitizeStacktrace",
+-          "(Ljava/lang/String;)Ljava/lang/String;");
+-  ScopedJavaLocalRef<jstring> sanitized_exception_string(
+-      env, static_cast<jstring>(env->CallStaticObjectMethod(
+-               piielider_clazz.obj(), piielider_sanitize_stacktrace,
+-               exception_string.obj())));
++  ScopedJavaLocalRef<jstring> sanitized_exception_string =
++      Java_PiiElider_sanitizeStacktrace(env, exception_string);
+   CheckException(env);
+ 
+   return ConvertJavaStringToUTF8(sanitized_exception_string);
+-- 
+2.39.0.314.g84b9a713c41-goog
+
