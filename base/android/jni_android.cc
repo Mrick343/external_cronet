@@ -12,6 +12,7 @@
 #include "base/android/java_exception_reporter.h"
 #include "base/android/jni_string.h"
 #include "base/android/jni_utils.h"
+#include "base/base_jni_headers/PiiElider_jni.h"
 #include "base/containers/flat_map.h"
 #include "base/debug/debugging_buildflags.h"
 #include "base/lazy_instance.h"
@@ -318,16 +319,8 @@ std::string GetJavaExceptionInfo(JNIEnv* env, jthrowable java_throwable) {
                log_clazz.obj(), log_getstacktracestring, java_throwable)));
   CheckException(env);
 
-  ScopedJavaLocalRef<jclass> piielider_clazz =
-      GetClass(env, "org/chromium/base/PiiElider");
-  jmethodID piielider_sanitize_stacktrace =
-      MethodID::Get<MethodID::TYPE_STATIC>(
-          env, piielider_clazz.obj(), "sanitizeStacktrace",
-          "(Ljava/lang/String;)Ljava/lang/String;");
-  ScopedJavaLocalRef<jstring> sanitized_exception_string(
-      env, static_cast<jstring>(env->CallStaticObjectMethod(
-               piielider_clazz.obj(), piielider_sanitize_stacktrace,
-               exception_string.obj())));
+  ScopedJavaLocalRef<jstring> sanitized_exception_string =
+      Java_PiiElider_sanitizeStacktrace(env, exception_string);
   CheckException(env);
 
   return ConvertJavaStringToUTF8(sanitized_exception_string);

@@ -7,7 +7,7 @@ package org.chromium.base;
 import android.text.TextUtils;
 import android.util.Patterns;
 
-import org.chromium.build.annotations.UsedByReflection;
+import org.chromium.build.annotations.CalledByNative;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -217,7 +217,7 @@ public class PiiElider {
      * @param stacktrace Multiline stacktrace as a string.
      * @return Stacktrace with elided URLs.
      */
-    @UsedByReflection("jni_android.cc")
+    @CalledByNative
     public static String sanitizeStacktrace(String stacktrace) {
         String[] frames = stacktrace.split("\\n");
         // Sanitize first stacktrace line which contains the exception message.
