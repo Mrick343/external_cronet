@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e7fdaf3_889711b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-11T10:38:57Z",
+      "side": 1,
+      "message": "Can you add the patch file for this to patches/upstream-next?",
+      "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
