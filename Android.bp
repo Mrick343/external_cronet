@@ -1090,6 +1090,7 @@ cc_genrule {
         "base/android/java/src/org/chromium/base/MemoryPressureListener.java",
         "base/android/java/src/org/chromium/base/PathService.java",
         "base/android/java/src/org/chromium/base/PathUtils.java",
+        "base/android/java/src/org/chromium/base/PiiElider.java",
         "base/android/java/src/org/chromium/base/PowerMonitor.java",
         "base/android/java/src/org/chromium/base/RadioUtils.java",
         "base/android/java/src/org/chromium/base/SysUtils.java",
