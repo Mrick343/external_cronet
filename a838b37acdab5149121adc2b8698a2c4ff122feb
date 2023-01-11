@@ -34,6 +34,24 @@
       "parentUuid": "6e7fdaf3_889711b2",
       "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a27a4de_180fce15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-11T12:39:55Z",
+      "side": 1,
+      "message": "Ack, will do once the CL is (formally or informally) LGTM\u0027d to avoid regenerating the patch if changes are needed.",
+      "parentUuid": "18bdd4cc_444e4bb6",
+      "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
