@@ -22,19 +22,14 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 
 /**
- * {@link CronetEngine} that exposes experimental features. To obtain an instance of this class,
- * cast a {@code CronetEngine} to this type. Every instance of {@code CronetEngine} can be cast to
- * an instance of this class, as they are backed by the same implementation and hence perform
- * identically. Instances of this class are not meant for general use, but instead only to access
- * experimental features. Experimental features may be deprecated in the future. Use at your own
- * risk.
+ * {@link HttpEngine} that exposes experimental features.
  *
  * <p>{@hide since this class exposes experimental features that should be hidden.}
  *
  * @deprecated scheduled for deletion, don't use in new code.
  */
 @Deprecated
-public abstract class ExperimentalCronetEngine extends CronetEngine {
+public abstract class ExperimentalHttpEngine extends HttpEngine {
     /**
      * The value of a connection metric is unknown.
      */
@@ -86,17 +81,17 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
     public static final long UNBIND_NETWORK_HANDLE = -1;
 
     /**
-     * A version of {@link CronetEngine.Builder} that exposes experimental features. Instances of
+     * A version of {@link HttpEngine.Builder} that exposes experimental features. Instances of
      * this class are not meant for general use, but instead only to access experimental features.
      * Experimental features may be deprecated in the future. Use at your own risk.
      */
-    public static class Builder extends CronetEngine.Builder {
+    public static class Builder extends HttpEngine.Builder {
         private JSONObject mParsedExperimentalOptions;
         private final List<ExperimentalOptionsPatch> mExperimentalOptionsPatches =
                 new ArrayList<>();
 
         /**
-         * Constructs a {@link Builder} object that facilitates creating a {@link CronetEngine}. The
+         * Constructs a {@link Builder} object that facilitates creating a {@link HttpEngine}. The
          * default configuration enables HTTP/2 and disables QUIC, SDCH and the HTTP cache.
          *
          * @param context Android {@link Context}, which is used by the Builder to retrieve the
@@ -115,12 +110,12 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
          * @param builderDelegate delegate that provides the actual implementation.
          *     <p>{@hide}
          */
-        public Builder(ICronetEngineBuilder builderDelegate) {
+        public Builder(IHttpEngineBuilder builderDelegate) {
             super(builderDelegate);
         }
 
         /**
-         * Sets experimental options to be used in Cronet.
+         * Sets experimental options to be used.
          *
          * @param options JSON formatted experimental options.
          * @return the builder to facilitate chaining.
@@ -140,7 +135,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
          * @hide
          */
         @VisibleForTesting
-        public ICronetEngineBuilder getBuilderDelegate() {
+        public IHttpEngineBuilder getBuilderDelegate() {
             return mBuilderDelegate;
         }
 
@@ -176,7 +171,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         public Builder setQuicOptions(QuicOptions options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    ICronetEngineBuilder.QUIC_OPTIONS)) {
+                    IHttpEngineBuilder.QUIC_OPTIONS)) {
                 mBuilderDelegate.setQuicOptions(options);
                 return this;
             }
@@ -279,7 +274,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         public Builder setDnsOptions(DnsOptions options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    ICronetEngineBuilder.DNS_OPTIONS)) {
+                    IHttpEngineBuilder.DNS_OPTIONS)) {
                 mBuilderDelegate.setDnsOptions(options);
                 return this;
             }
@@ -345,7 +340,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         public Builder setConnectionMigrationOptions(ConnectionMigrationOptions options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    ICronetEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
+                    IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
                 mBuilderDelegate.setConnectionMigrationOptions(options);
                 return this;
             }
@@ -446,7 +441,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         }
 
         @Override
-        public ExperimentalCronetEngine build() {
+        public ExperimentalHttpEngine build() {
             if (mParsedExperimentalOptions == null && mExperimentalOptionsPatches.isEmpty()) {
                 return mBuilderDelegate.build();
             }
@@ -531,12 +526,12 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
 
     /**
      * Establishes a new connection to the resource specified by the {@link URL} {@code url} using
-     * the given proxy. <p> <b>Note:</b> Cronet's {@link java.net.HttpURLConnection} implementation
+     * the given proxy. <p> <b>Note:</b> This {@link java.net.HttpURLConnection} implementation
      * is subject to certain limitations, see {@link #createURLStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @param proxy proxy to use when establishing connection.
-     * @return an {@link java.net.HttpURLConnection} instance implemented by this CronetEngine.
+     * @return {@link java.net.HttpURLConnection} instance implemented by this {@link HttpEngine}.
      * @throws IOException if an error occurs while opening the connection.
      */
     // TODO(pauljensen): Expose once implemented, http://crbug.com/418111
