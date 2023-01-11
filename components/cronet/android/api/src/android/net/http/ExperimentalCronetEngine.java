@@ -543,4 +543,74 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
     public URLConnection openConnection(URL url, Proxy proxy) throws IOException {
         return url.openConnection(proxy);
     }
+<<<<<<< HEAD   (76e771 Port config options Chromium CLs to AOSP.)
+=======
+
+    /**
+     * Registers a listener that gets called after the end of each request with the request info.
+     *
+     * <p>The listener is called on an {@link java.util.concurrent.Executor} provided by the
+     * listener.
+     *
+     * @param listener the listener for finished requests.
+     */
+    public void addRequestFinishedListener(RequestFinishedInfo.Listener listener) {}
+
+    /**
+     * Removes a finished request listener.
+     *
+     * @param listener the listener to remove.
+     */
+    public void removeRequestFinishedListener(RequestFinishedInfo.Listener listener) {}
+
+    /**
+     * Returns the HTTP RTT estimate (in milliseconds) computed by the network
+     * quality estimator. Set to {@link #CONNECTION_METRIC_UNKNOWN} if the value
+     * is unavailable. This must be called after
+     * {@link Builder#enableNetworkQualityEstimator}, and will throw an
+     * exception otherwise.
+     * @return Estimate of the HTTP RTT in milliseconds.
+     */
+    public int getHttpRttMs() {
+        return CONNECTION_METRIC_UNKNOWN;
+    }
+
+    /**
+     * Returns the transport RTT estimate (in milliseconds) computed by the
+     * network quality estimator. Set to {@link #CONNECTION_METRIC_UNKNOWN} if
+     * the value is unavailable. This must be called after
+     * {@link Builder#enableNetworkQualityEstimator}, and will throw an
+     * exception otherwise.
+     * @return Estimate of the transport RTT in milliseconds.
+     */
+    public int getTransportRttMs() {
+        return CONNECTION_METRIC_UNKNOWN;
+    }
+
+    /**
+     * Returns the downstream throughput estimate (in kilobits per second)
+     * computed by the network quality estimator. Set to
+     * {@link #CONNECTION_METRIC_UNKNOWN} if the value is
+     * unavailable. This must be called after
+     * {@link Builder#enableNetworkQualityEstimator}, and will
+     * throw an exception otherwise.
+     * @return Estimate of the downstream throughput in kilobits per second.
+     */
+    public int getDownstreamThroughputKbps() {
+        return CONNECTION_METRIC_UNKNOWN;
+    }
+
+    /**
+     * Binds the engine to the specified network handle. All requests created through this engine
+     * will use the network associated to this handle. If this network disconnects all requests will
+     * fail, the exact error will depend on the stage of request processing when the network
+     * disconnects. Network handles can be obtained through {@code Network#getNetworkHandle}.
+     * Only available starting from Android Marshmallow.
+     *
+     * @param networkHandle the network handle to bind the engine to. Specify
+     *        {@link #UNBIND_NETWORK_HANDLE} to unbind.
+     */
+    public void bindToNetwork(long networkHandle) {}
+}
+>>>>>>> BRANCH (c43530 Port config options Chromium CLs to AOSP.)
 }
