@@ -51,6 +51,24 @@
       "parentUuid": "29aa2204_d94673cb",
       "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "372fd709_34dce878",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-11T14:02:25Z",
+      "side": 1,
+      "message": "\u003e Do we still want to do this given the patches don\u0027t paint the whole picture?\n\nIMHO, if we stop storing patches we\u0027ve given up on updating this again.\n\nIIRC, yesterday we agreed not to retrofit everything into gntobp, but to try to keep the BUILD.gn files updated (hence, we should do the same with .patch files)?\n\nIf that\u0027s not the case,",
+      "parentUuid": "45efa21a_baf0a95b",
+      "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
