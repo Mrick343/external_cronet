@@ -52,6 +52,46 @@
       "parentUuid": "18bdd4cc_444e4bb6",
       "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8daf2520_6839ac58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-11T12:47:58Z",
+      "side": 1,
+      "message": "I don\u0027t really know how to review this change, will leave it up to Stefano to +2. I looked at the Android.bp and BUILD.gn.",
+      "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c612817e_8298c0f4",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4332,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-11T12:47:58Z",
+      "side": 1,
+      "message": "this looks unrelated, can it live in its own change for documentation purposes?",
+      "range": {
+        "startLine": 4332,
+        "startChar": 0,
+        "endLine": 4332,
+        "endChar": 26
+      },
+      "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
