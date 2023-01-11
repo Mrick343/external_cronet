@@ -6,12 +6,12 @@ package android.net.http;
 
 /**
  * Exception passed to {@link UrlRequest.Callback#onFailed UrlRequest.Callback.onFailed()} when
- * Cronet fails to process a network request. In this case {@link #getErrorCode} and
- * {@link #getCronetInternalErrorCode} can be used to get more information about the specific
+ * the HTTP stack fails to process a network request. In this case {@link #getErrorCode} and
+ * {@link #getInternalErrorCode} can be used to get more information about the specific
  * type of failure. If {@link #getErrorCode} returns {@link #ERROR_QUIC_PROTOCOL_FAILED},
  * this exception can be cast to a {@link QuicException} which can provide further details.
  */
-public abstract class NetworkException extends CronetException {
+public abstract class NetworkException extends HttpException {
     /**
      * Error code indicating the host being sent the request could not be resolved to an IP address.
      */
@@ -61,7 +61,7 @@ public abstract class NetworkException extends CronetException {
     public static final int ERROR_QUIC_PROTOCOL_FAILED = 10;
     /**
      * Error code indicating another type of error was encountered.
-     * {@link #getCronetInternalErrorCode} can be consulted to get a more specific cause.
+     * {@link #getInternalErrorCode} can be consulted to get a more specific cause.
      */
     public static final int ERROR_OTHER = 11;
 
@@ -85,15 +85,17 @@ public abstract class NetworkException extends CronetException {
     public abstract int getErrorCode();
 
     /**
-     * Returns a Cronet internal error code. This may provide more specific error
+     * Returns an internal error code. This may provide more specific error
      * diagnosis than {@link #getErrorCode}, but the constant values are not exposed to Java and
      * may change over time. See
      * <a href=https://chromium.googlesource.com/chromium/src/+/main/net/base/net_error_list.h>
      * here</a> for the lastest list of values.
      *
-     * @return Cronet internal error code.
+     * @return internal error code.
+     *
+     * {@hide as semantics aren't stable}
      */
-    public abstract int getCronetInternalErrorCode();
+    public abstract int getInternalErrorCode();
 
     /**
      * Returns {@code true} if retrying this request right away might succeed, {@code false}
