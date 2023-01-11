@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95297642_ae8225b9",
+        "filename": "patches/local/0010-Remove-references-to-integrated-mode-in-AOSP-Cronet.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-11T07:45:32Z",
+      "side": 1,
+      "message": "do you know why this happened? Did I miss a commit somewhere, or would this have been resolved by doing something like `git am --3way`?",
+      "range": {
+        "startLine": 51,
+        "startChar": 17,
+        "endLine": 51,
+        "endChar": 50
+      },
+      "revId": "d0e91f31d9284903624951e53bd82e001d3daea5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
