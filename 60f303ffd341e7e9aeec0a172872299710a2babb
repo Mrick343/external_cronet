@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1889c252_661e1b97",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-11T14:23:13Z",
+      "side": 0,
+      "message": "Is all of this supposed to be gone?",
+      "range": {
+        "startLine": 426,
+        "startChar": 0,
+        "endLine": 585,
+        "endChar": 0
+      },
+      "revId": "60f303ffd341e7e9aeec0a172872299710a2babb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
