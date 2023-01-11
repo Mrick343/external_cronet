@@ -33,6 +33,24 @@
       "message": "(Note that API changes are possible until the end of March, so it shouldn\u0027t be a big deal to make these sorts of changes even post IC date.)",
       "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45efa21a_baf0a95b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-11T13:36:07Z",
+      "side": 1,
+      "message": "After the discussion we had in the standup yesterday I stopped adding the patch files and we\u0027ve merged over 10 CLs without reflecting their content in patches. Do we still want to do this given the patches don\u0027t paint the whole picture?",
+      "parentUuid": "29aa2204_d94673cb",
+      "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
