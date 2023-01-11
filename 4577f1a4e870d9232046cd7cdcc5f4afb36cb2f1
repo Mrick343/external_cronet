@@ -87,6 +87,24 @@
       "parentUuid": "372fd709_34dce878",
       "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41e1a5ba_1be45923",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-11T14:10:52Z",
+      "side": 1,
+      "message": "My main reasoning is that git history serves the same purpose for bookkeeping what happened with the tree for now. Yes, it\u0027s not a long term solution and will need revisiting once we start fleshing out the long term updatability plans, but so will a folder with tens of patches IMO. \n\nMind you this is a perspective of someone who\u0027s been working in this repo for \u003c1 week so I\u0027m happy to be corrected [:)].",
+      "parentUuid": "a6209229_d22603a4",
+      "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
