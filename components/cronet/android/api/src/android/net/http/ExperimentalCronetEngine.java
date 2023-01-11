@@ -518,21 +518,97 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
             String url, BidirectionalStream.Callback callback, Executor executor);
 
     /**
-     * Binds the engine to the specified network handle. All requests created through this engine
-     * will use the network associated to this handle. If this network disconnects all requests will
-     * fail, the exact error will depend on the stage of request processing when the network
-     * disconnects. Network handles can be obtained through {@code Network#getNetworkHandle}. Only
-     * available starting from Android Marshmallow.
-     *
-     * @param networkHandle the network handle to bind the engine to. Specify {@link
-     * #UNBIND_NETWORK_HANDLE} to unbind.
+     * Starts NetLog logging to a specified directory with a bounded size. The NetLog will contain
+     * events emitted by all live CronetEngines. The NetLog is useful for debugging.
+     * Once logging has stopped {@link #stopNetLog}, the data will be written
+     * to netlog.json in {@code dirPath}. If logging is interrupted, you can
+     * stitch the files found in .inprogress subdirectory manually using:
+     * https://chromium.googlesource.com/chromium/src/+/main/net/tools/stitch_net_log_files.py.
+     * The log can be viewed using a Chrome browser navigated to chrome://net-internals/#import.
+     * @param dirPath the directory where the netlog.json file will be created. dirPath must
+     *            already exist. NetLog files must not exist in the directory. If actively
+     *            logging, this method is ignored.
+     * @param logAll {@code true} to include basic events, user cookies,
+     *            credentials and all transferred bytes in the log. This option presents a
+     *            privacy risk, since it exposes the user's credentials, and should only be
+     *            used with the user's consent and in situations where the log won't be public.
+     *            {@code false} to just include basic events.
+     * @param maxSize the maximum total disk space in bytes that should be used by NetLog. Actual
+     *            disk space usage may exceed this limit slightly.
      */
-    public void bindToNetwork(long networkHandle) {}
+    public void startNetLogToDisk(String dirPath, boolean logAll, int maxSize) {}
 
     /**
-     * Establishes a new connection to the resource specified by the {@link URL} {@code url} using
-     * the given proxy. <p> <b>Note:</b> Cronet's {@link java.net.HttpURLConnection} implementation
-     * is subject to certain limitations, see {@link #createURLStreamHandlerFactory} for details.
+     * Returns an estimate of the effective connection type computed by the network quality
+     * estimator. Call {@link Builder#enableNetworkQualityEstimator} to begin computing this
+     * value.
+     *
+     * @return the estimated connection type. The returned value is one of
+     * {@link #EFFECTIVE_CONNECTION_TYPE_UNKNOWN EFFECTIVE_CONNECTION_TYPE_* }.
+     */
+    public int getEffectiveConnectionType() {
+        return EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+    }
+
+    /**
+     * Configures the network quality estimator for testing. This must be called
+     * before round trip time and throughput listeners are added, and after the
+     * network quality estimator has been enabled.
+     * @param useLocalHostRequests include requests to localhost in estimates.
+     * @param useSmallerResponses include small responses in throughput estimates.
+     * @param disableOfflineCheck when set to true, disables the device offline checks when
+     *        computing the effective connection type or when writing the prefs.
+     */
+    public void configureNetworkQualityEstimatorForTesting(boolean useLocalHostRequests,
+            boolean useSmallerResponses, boolean disableOfflineCheck) {}
+
+    /**
+     * Registers a listener that gets called whenever the network quality
+     * estimator witnesses a sample round trip time. This must be called
+     * after {@link Builder#enableNetworkQualityEstimator}, and with throw an
+     * exception otherwise. Round trip times may be recorded at various layers
+     * of the network stack, including TCP, QUIC, and at the URL request layer.
+     * The listener is called on the {@link java.util.concurrent.Executor} that
+     * is passed to {@link Builder#enableNetworkQualityEstimator}.
+     * @param listener the listener of round trip times.
+     */
+    public void addRttListener(NetworkQualityRttListener listener) {}
+
+    /**
+     * Removes a listener of round trip times if previously registered with
+     * {@link #addRttListener}. This should be called after a
+     * {@link NetworkQualityRttListener} is added in order to stop receiving
+     * observations.
+     * @param listener the listener of round trip times.
+     */
+    public void removeRttListener(NetworkQualityRttListener listener) {}
+
+    /**
+     * Registers a listener that gets called whenever the network quality
+     * estimator witnesses a sample throughput measurement. This must be called
+     * after {@link Builder#enableNetworkQualityEstimator}. Throughput observations
+     * are computed by measuring bytes read over the active network interface
+     * at times when at least one URL response is being received. The listener
+     * is called on the {@link java.util.concurrent.Executor} that is passed to
+     * {@link Builder#enableNetworkQualityEstimator}.
+     * @param listener the listener of throughput.
+     */
+    public void addThroughputListener(NetworkQualityThroughputListener listener) {}
+
+    /**
+     * Removes a listener of throughput. This should be called after a
+     * {@link NetworkQualityThroughputListener} is added with
+     * {@link #addThroughputListener} in order to stop receiving observations.
+     * @param listener the listener of throughput.
+     */
+    public void removeThroughputListener(NetworkQualityThroughputListener listener) {}
+
+    /**
+     * Establishes a new connection to the resource specified by the {@link URL} {@code url}
+     * using the given proxy.
+     * <p>
+     * <b>Note:</b> Cronet's {@link java.net.HttpURLConnection} implementation is subject to certain
+     * limitations, see {@link #createURLStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @param proxy proxy to use when establishing connection.
@@ -543,4 +619,71 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
     public URLConnection openConnection(URL url, Proxy proxy) throws IOException {
         return url.openConnection(proxy);
     }
+
+    /**
+     * Registers a listener that gets called after the end of each request with the request info.
+     *
+     * <p>The listener is called on an {@link java.util.concurrent.Executor} provided by the
+     * listener.
+     *
+     * @param listener the listener for finished requests.
+     */
+    public void addRequestFinishedListener(RequestFinishedInfo.Listener listener) {}
+
+    /**
+     * Removes a finished request listener.
+     *
+     * @param listener the listener to remove.
+     */
+    public void removeRequestFinishedListener(RequestFinishedInfo.Listener listener) {}
+
+    /**
+     * Returns the HTTP RTT estimate (in milliseconds) computed by the network
+     * quality estimator. Set to {@link #CONNECTION_METRIC_UNKNOWN} if the value
+     * is unavailable. This must be called after
+     * {@link Builder#enableNetworkQualityEstimator}, and will throw an
+     * exception otherwise.
+     * @return Estimate of the HTTP RTT in milliseconds.
+     */
+    public int getHttpRttMs() {
+        return CONNECTION_METRIC_UNKNOWN;
+    }
+
+    /**
+     * Returns the transport RTT estimate (in milliseconds) computed by the
+     * network quality estimator. Set to {@link #CONNECTION_METRIC_UNKNOWN} if
+     * the value is unavailable. This must be called after
+     * {@link Builder#enableNetworkQualityEstimator}, and will throw an
+     * exception otherwise.
+     * @return Estimate of the transport RTT in milliseconds.
+     */
+    public int getTransportRttMs() {
+        return CONNECTION_METRIC_UNKNOWN;
+    }
+
+    /**
+     * Returns the downstream throughput estimate (in kilobits per second)
+     * computed by the network quality estimator. Set to
+     * {@link #CONNECTION_METRIC_UNKNOWN} if the value is
+     * unavailable. This must be called after
+     * {@link Builder#enableNetworkQualityEstimator}, and will
+     * throw an exception otherwise.
+     * @return Estimate of the downstream throughput in kilobits per second.
+     */
+    public int getDownstreamThroughputKbps() {
+        return CONNECTION_METRIC_UNKNOWN;
+    }
+
+    /**
+     * Binds the engine to the specified network handle. All requests created through this engine
+     * will use the network associated to this handle. If this network disconnects all requests will
+     * fail, the exact error will depend on the stage of request processing when the network
+     * disconnects. Network handles can be obtained through {@code Network#getNetworkHandle}.
+     * Only available starting from Android Marshmallow.
+     *
+     * @param networkHandle the network handle to bind the engine to. Specify
+     *        {@link #UNBIND_NETWORK_HANDLE} to unbind.
+     */
+    public void bindToNetwork(long networkHandle) {}
+}
 }
