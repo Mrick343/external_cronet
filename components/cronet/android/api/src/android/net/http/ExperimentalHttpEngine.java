@@ -22,19 +22,14 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 
 /**
- * {@link CronetEngine} that exposes experimental features. To obtain an instance of this class,
- * cast a {@code CronetEngine} to this type. Every instance of {@code CronetEngine} can be cast to
- * an instance of this class, as they are backed by the same implementation and hence perform
- * identically. Instances of this class are not meant for general use, but instead only to access
- * experimental features. Experimental features may be deprecated in the future. Use at your own
- * risk.
+ * {@link HttpEngine} that exposes experimental features.
  *
  * <p>{@hide since this class exposes experimental features that should be hidden.}
  *
  * @deprecated scheduled for deletion, don't use in new code.
  */
 @Deprecated
-public abstract class ExperimentalCronetEngine extends CronetEngine {
+public abstract class ExperimentalHttpEngine extends HttpEngine {
     /**
      * The value of a connection metric is unknown.
      */
@@ -86,17 +81,17 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
     public static final long UNBIND_NETWORK_HANDLE = -1;
 
     /**
-     * A version of {@link CronetEngine.Builder} that exposes experimental features. Instances of
+     * A version of {@link HttpEngine.Builder} that exposes experimental features. Instances of
      * this class are not meant for general use, but instead only to access experimental features.
      * Experimental features may be deprecated in the future. Use at your own risk.
      */
-    public static class Builder extends CronetEngine.Builder {
+    public static class Builder extends HttpEngine.Builder {
         private JSONObject mParsedExperimentalOptions;
         private final List<ExperimentalOptionsPatch> mExperimentalOptionsPatches =
                 new ArrayList<>();
 
         /**
-         * Constructs a {@link Builder} object that facilitates creating a {@link CronetEngine}. The
+         * Constructs a {@link Builder} object that facilitates creating a {@link HttpEngine}. The
          * default configuration enables HTTP/2 and disables QUIC, SDCH and the HTTP cache.
          *
          * @param context Android {@link Context}, which is used by the Builder to retrieve the
@@ -115,12 +110,12 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
          * @param builderDelegate delegate that provides the actual implementation.
          *     <p>{@hide}
          */
-        public Builder(ICronetEngineBuilder builderDelegate) {
+        public Builder(IHttpEngineBuilder builderDelegate) {
             super(builderDelegate);
         }
 
         /**
-         * Sets experimental options to be used in Cronet.
+         * Sets experimental options to be used.
          *
          * @param options JSON formatted experimental options.
          * @return the builder to facilitate chaining.
@@ -140,7 +135,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
          * @hide
          */
         @VisibleForTesting
-        public ICronetEngineBuilder getBuilderDelegate() {
+        public IHttpEngineBuilder getBuilderDelegate() {
             return mBuilderDelegate;
         }
 
@@ -176,7 +171,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         public Builder setQuicOptions(QuicOptions options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    ICronetEngineBuilder.QUIC_OPTIONS)) {
+                    IHttpEngineBuilder.QUIC_OPTIONS)) {
                 mBuilderDelegate.setQuicOptions(options);
                 return this;
             }
@@ -279,7 +274,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         public Builder setDnsOptions(DnsOptions options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    ICronetEngineBuilder.DNS_OPTIONS)) {
+                    IHttpEngineBuilder.DNS_OPTIONS)) {
                 mBuilderDelegate.setDnsOptions(options);
                 return this;
             }
@@ -345,7 +340,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         public Builder setConnectionMigrationOptions(ConnectionMigrationOptions options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    ICronetEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
+                    IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
                 mBuilderDelegate.setConnectionMigrationOptions(options);
                 return this;
             }
@@ -446,7 +441,7 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
         }
 
         @Override
-        public ExperimentalCronetEngine build() {
+        public ExperimentalHttpEngine build() {
             if (mParsedExperimentalOptions == null && mExperimentalOptionsPatches.isEmpty()) {
                 return mBuilderDelegate.build();
             }
@@ -518,97 +513,21 @@ public abstract class ExperimentalCronetEngine extends CronetEngine {
             String url, BidirectionalStream.Callback callback, Executor executor);
 
     /**
-     * Starts NetLog logging to a specified directory with a bounded size. The NetLog will contain
-     * events emitted by all live CronetEngines. The NetLog is useful for debugging.
-     * Once logging has stopped {@link #stopNetLog}, the data will be written
-     * to netlog.json in {@code dirPath}. If logging is interrupted, you can
-     * stitch the files found in .inprogress subdirectory manually using:
-     * https://chromium.googlesource.com/chromium/src/+/main/net/tools/stitch_net_log_files.py.
-     * The log can be viewed using a Chrome browser navigated to chrome://net-internals/#import.
-     * @param dirPath the directory where the netlog.json file will be created. dirPath must
-     *            already exist. NetLog files must not exist in the directory. If actively
-     *            logging, this method is ignored.
-     * @param logAll {@code true} to include basic events, user cookies,
-     *            credentials and all transferred bytes in the log. This option presents a
-     *            privacy risk, since it exposes the user's credentials, and should only be
-     *            used with the user's consent and in situations where the log won't be public.
-     *            {@code false} to just include basic events.
-     * @param maxSize the maximum total disk space in bytes that should be used by NetLog. Actual
-     *            disk space usage may exceed this limit slightly.
-     */
-    public void startNetLogToDisk(String dirPath, boolean logAll, int maxSize) {}
-
-    /**
-     * Returns an estimate of the effective connection type computed by the network quality
-     * estimator. Call {@link Builder#enableNetworkQualityEstimator} to begin computing this
-     * value.
+     * Binds the engine to the specified network handle. All requests created through this engine
+     * will use the network associated to this handle. If this network disconnects all requests will
+     * fail, the exact error will depend on the stage of request processing when the network
+     * disconnects. Network handles can be obtained through {@code Network#getNetworkHandle}. Only
+     * available starting from Android Marshmallow.
      *
-     * @return the estimated connection type. The returned value is one of
-     * {@link #EFFECTIVE_CONNECTION_TYPE_UNKNOWN EFFECTIVE_CONNECTION_TYPE_* }.
+     * @param networkHandle the network handle to bind the engine to. Specify {@link
+     * #UNBIND_NETWORK_HANDLE} to unbind.
      */
-    public int getEffectiveConnectionType() {
-        return EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
-    }
+    public void bindToNetwork(long networkHandle) {}
 
     /**
-     * Configures the network quality estimator for testing. This must be called
-     * before round trip time and throughput listeners are added, and after the
-     * network quality estimator has been enabled.
-     * @param useLocalHostRequests include requests to localhost in estimates.
-     * @param useSmallerResponses include small responses in throughput estimates.
-     * @param disableOfflineCheck when set to true, disables the device offline checks when
-     *        computing the effective connection type or when writing the prefs.
-     */
-    public void configureNetworkQualityEstimatorForTesting(boolean useLocalHostRequests,
-            boolean useSmallerResponses, boolean disableOfflineCheck) {}
-
-    /**
-     * Registers a listener that gets called whenever the network quality
-     * estimator witnesses a sample round trip time. This must be called
-     * after {@link Builder#enableNetworkQualityEstimator}, and with throw an
-     * exception otherwise. Round trip times may be recorded at various layers
-     * of the network stack, including TCP, QUIC, and at the URL request layer.
-     * The listener is called on the {@link java.util.concurrent.Executor} that
-     * is passed to {@link Builder#enableNetworkQualityEstimator}.
-     * @param listener the listener of round trip times.
-     */
-    public void addRttListener(NetworkQualityRttListener listener) {}
-
-    /**
-     * Removes a listener of round trip times if previously registered with
-     * {@link #addRttListener}. This should be called after a
-     * {@link NetworkQualityRttListener} is added in order to stop receiving
-     * observations.
-     * @param listener the listener of round trip times.
-     */
-    public void removeRttListener(NetworkQualityRttListener listener) {}
-
-    /**
-     * Registers a listener that gets called whenever the network quality
-     * estimator witnesses a sample throughput measurement. This must be called
-     * after {@link Builder#enableNetworkQualityEstimator}. Throughput observations
-     * are computed by measuring bytes read over the active network interface
-     * at times when at least one URL response is being received. The listener
-     * is called on the {@link java.util.concurrent.Executor} that is passed to
-     * {@link Builder#enableNetworkQualityEstimator}.
-     * @param listener the listener of throughput.
-     */
-    public void addThroughputListener(NetworkQualityThroughputListener listener) {}
-
-    /**
-     * Removes a listener of throughput. This should be called after a
-     * {@link NetworkQualityThroughputListener} is added with
-     * {@link #addThroughputListener} in order to stop receiving observations.
-     * @param listener the listener of throughput.
-     */
-    public void removeThroughputListener(NetworkQualityThroughputListener listener) {}
-
-    /**
-     * Establishes a new connection to the resource specified by the {@link URL} {@code url}
-     * using the given proxy.
-     * <p>
-     * <b>Note:</b> Cronet's {@link java.net.HttpURLConnection} implementation is subject to certain
-     * limitations, see {@link #createURLStreamHandlerFactory} for details.
+     * Establishes a new connection to the resource specified by the {@link URL} {@code url} using
+     * the given proxy. <p> <b>Note:</b> Cronet's {@link java.net.HttpURLConnection} implementation
+     * is subject to certain limitations, see {@link #createURLStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @param proxy proxy to use when establishing connection.
