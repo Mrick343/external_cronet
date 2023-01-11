@@ -22,6 +22,30 @@
       },
       "revId": "d0e91f31d9284903624951e53bd82e001d3daea5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61dc2036_7d43905d",
+        "filename": "patches/local/0010-Remove-references-to-integrated-mode-in-AOSP-Cronet.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-01-11T08:11:57Z",
+      "side": 1,
+      "message": "`git am --3way` solves the error.\nI did not know this option, thanks.",
+      "parentUuid": "95297642_ae8225b9",
+      "range": {
+        "startLine": 51,
+        "startChar": 17,
+        "endLine": 51,
+        "endChar": 50
+      },
+      "revId": "d0e91f31d9284903624951e53bd82e001d3daea5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
