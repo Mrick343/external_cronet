@@ -123,6 +123,24 @@
       "parentUuid": "41e1a5ba_1be45923",
       "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64ea6066_1212bb84",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-11T14:53:02Z",
+      "side": 1,
+      "message": "Whatever you decide, I will keep trying to keep up to date with the patches, so if you add them directly in the CL, you\u0027ll just make my life easier. As I found out last night, it\u0027s actually quite painful to do this (as gerrit seems to sometimes, but not always merge CLs as merge commits).",
+      "parentUuid": "1a7783fe_e61f9729",
+      "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
