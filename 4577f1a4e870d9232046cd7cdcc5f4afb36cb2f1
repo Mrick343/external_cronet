@@ -105,6 +105,24 @@
       "parentUuid": "a6209229_d22603a4",
       "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a7783fe_e61f9729",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-11T14:31:00Z",
+      "side": 1,
+      "message": "\u003e My main reasoning is that git history serves the same purpose for bookkeeping what happened with the tree for now.\n\nThat\u0027s true, though it would be more difficult to keep track of what\u0027s local and what\u0027s upstream-next this way.\n\nI think I have a slight preference towards patches, but it\u0027s not that strong. As long as we all agree on doing the same thing that\u0027s ok by me.",
+      "parentUuid": "41e1a5ba_1be45923",
+      "revId": "4577f1a4e870d9232046cd7cdcc5f4afb36cb2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
