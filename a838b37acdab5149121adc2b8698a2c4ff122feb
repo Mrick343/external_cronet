@@ -16,6 +16,24 @@
       "message": "Can you add the patch file for this to patches/upstream-next?",
       "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18bdd4cc_444e4bb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-11T10:44:50Z",
+      "side": 1,
+      "message": "(and if you are doing that, preferably move the Android.bp into its own CL or remove it from the .patch)",
+      "parentUuid": "6e7fdaf3_889711b2",
+      "revId": "a838b37acdab5149121adc2b8698a2c4ff122feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
