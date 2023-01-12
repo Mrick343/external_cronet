@@ -50,6 +50,121 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "20f20829_6a2c0e4f",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "s/Cronet\u0027s/the?",
+      "range": {
+        "startLine": 135,
+        "startChar": 50,
+        "endLine": 135,
+        "endChar": 56
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdded99f_0c428b14",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "Is Mohannad\u0027s CL taking care of renaming this (due to the jarjar\u0027ing)?",
+      "range": {
+        "startLine": 359,
+        "startChar": 25,
+        "endLine": 359,
+        "endChar": 76
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5fc675d2_3942ed6c",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "Should we remove/rename also these occurences?",
+      "range": {
+        "startLine": 412,
+        "startChar": 51,
+        "endLine": 412,
+        "endChar": 57
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0a30c82_3104c5e9",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "Http",
+      "range": {
+        "startLine": 419,
+        "startChar": 60,
+        "endLine": 419,
+        "endChar": 66
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cd6f932_3b9f5248",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "Http",
+      "range": {
+        "startLine": 421,
+        "startChar": 36,
+        "endLine": 421,
+        "endChar": 42
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3535022b_92dd78ec",
         "filename": "components/cronet/android/api/src/android/net/http/apihelpers/UploadDataProviders.java",
         "patchSetId": 5
@@ -91,6 +206,46 @@
         "endLine": 190,
         "endChar": 21
       },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8cca71b_40410d97",
+        "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "Oh, this is annoying...\n\nShould we just drop this altogether?\n\nI remember we talked about this and said that we weren\u0027t planning on providing an implementation of HttpURLConnection (or something along these lines).",
+      "range": {
+        "startLine": 40,
+        "startChar": 13,
+        "endLine": 40,
+        "endChar": 23
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bed11a4_2c77020a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/BidirectionalStreamQuicTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T14:08:51Z",
+      "side": 1,
+      "message": "Are we exposing bidi streams?",
       "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
