@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51516d09_165f9d6d",
+        "filename": "Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4214,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-12T13:43:44Z",
+      "side": 1,
+      "message": "hasn\u0027t this already been merged separately?",
+      "range": {
+        "startLine": 4213,
+        "startChar": 6,
+        "endLine": 4214,
+        "endChar": 26
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3535022b_92dd78ec",
+        "filename": "components/cronet/android/api/src/android/net/http/apihelpers/UploadDataProviders.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-12T13:43:44Z",
+      "side": 1,
+      "message": "nit: does it need to return buffer?",
+      "range": {
+        "startLine": 190,
+        "startChar": 8,
+        "endLine": 190,
+        "endChar": 21
+      },
+      "revId": "b8ecfb49e897eb58a2da96db953de8c6fa8bca62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
