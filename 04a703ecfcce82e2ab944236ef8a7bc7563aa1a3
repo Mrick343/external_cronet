@@ -39,6 +39,30 @@
       },
       "revId": "04a703ecfcce82e2ab944236ef8a7bc7563aa1a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "061fe8f4_1fc23490",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4304,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-12T11:11:38Z",
+      "side": 1,
+      "message": "There\u0027s a CL for it already (https://r.android.com/2384119).",
+      "parentUuid": "8881d25d_16cd1dd9",
+      "range": {
+        "startLine": 4304,
+        "startChar": 4,
+        "endLine": 4304,
+        "endChar": 26
+      },
+      "revId": "04a703ecfcce82e2ab944236ef8a7bc7563aa1a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
