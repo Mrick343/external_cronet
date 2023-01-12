@@ -16,6 +16,29 @@
       "message": "Let\u0027s wait for https://chromium-review.googlesource.com/c/chromium/src/+/4156471 to pass all presubmit just to be safe.",
       "revId": "04a703ecfcce82e2ab944236ef8a7bc7563aa1a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8881d25d_16cd1dd9",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4304,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-12T08:38:11Z",
+      "side": 1,
+      "message": "optional nit: you might want to split this into a separate CL",
+      "range": {
+        "startLine": 4304,
+        "startChar": 4,
+        "endLine": 4304,
+        "endChar": 26
+      },
+      "revId": "04a703ecfcce82e2ab944236ef8a7bc7563aa1a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
