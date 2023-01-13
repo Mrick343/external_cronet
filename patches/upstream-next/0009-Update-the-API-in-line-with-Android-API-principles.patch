@@ -1,0 +1,667 @@
+From 5728f3367c9c0b2b3421f2b0f7cdc017a222466d Mon Sep 17 00:00:00 2001
+From: Dan Stahr <danstahr@google.com>
+Date: Fri, 13 Jan 2023 11:37:18 +0000
+Subject: [PATCH] Update the API in line with Android API principles.
+
+Vast majority of the changes should be upstreamable.
+
+Change-Id: I39890bdcc78e6f5d1dbc83ef0349bde7559991cf
+---
+ .../net/http/ConnectionMigrationOptions.java  |  7 +++-
+ .../api/src/android/net/http/DnsOptions.java  | 34 +++++++++------
+ .../net/http/ExperimentalHttpEngine.java      | 12 +++---
+ .../api/src/android/net/http/HttpEngine.java  | 42 +++++++++++++------
+ .../src/android/net/http/HttpException.java   |  2 +-
+ .../api/src/android/net/http/QuicOptions.java |  6 ++-
+ .../api/src/android/net/http/UrlRequest.java  |  6 +++
+ .../net/BidirectionalStreamQuicTest.java      |  2 +-
+ .../src/org/chromium/net/BrotliTest.java      |  4 +-
+ .../src/org/chromium/net/CronetTestRule.java  |  4 +-
+ .../net/CronetUrlRequestContextTest.java      | 14 +++----
+ .../src/org/chromium/net/DiskStorageTest.java |  8 ++--
+ .../chromium/net/ExperimentalOptionsTest.java |  2 +-
+ .../src/org/chromium/net/PkpTest.java         |  2 +-
+ .../src/org/chromium/net/QuicTest.java        |  6 +--
+ .../chromium/net/impl/CronetLoggerTest.java   |  8 ++--
+ .../net/urlconnection/QuicUploadTest.java     |  2 +-
+ 17 files changed, 99 insertions(+), 62 deletions(-)
+
+diff --git a/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java b/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
+index 5ccc7441..0e2fb6ac 100644
+--- a/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
++++ b/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
+@@ -191,7 +191,7 @@ public class ConnectionMigrationOptions {
+         @Nullable
+         private Integer mMaxPathDegradingNonDefaultMigrationsCount;
+ 
+-        Builder() {}
++        public Builder() {}
+ 
+         /**
+          * Enables the possibility of migrating connections on default network change. If enabled,
+@@ -375,6 +375,11 @@ public class ConnectionMigrationOptions {
+         }
+     }
+ 
++    /**
++     * Creates a new builder for {@link ConnectionMigrationOptions}.
++     *
++     * {@hide}
++     */
+     public static Builder builder() {
+         return new Builder();
+     }
+diff --git a/components/cronet/android/api/src/android/net/http/DnsOptions.java b/components/cronet/android/api/src/android/net/http/DnsOptions.java
+index 287b671d..731f1f08 100644
+--- a/components/cronet/android/api/src/android/net/http/DnsOptions.java
++++ b/components/cronet/android/api/src/android/net/http/DnsOptions.java
+@@ -61,7 +61,7 @@ public final class DnsOptions {
+     }
+ 
+     /**
+-     * See {@link Builder#useBuiltInDnsResolver}
++     * See {@link Builder#setUseBuiltInDnsResolver}
+      */
+     @Nullable
+     public Boolean getUseBuiltInDnsResolver() {
+@@ -69,7 +69,7 @@ public final class DnsOptions {
+     }
+ 
+     /**
+-     * See {@link Builder#persistHostCache}
++     * See {@link Builder#setPersistHostCache}
+      */
+     @Nullable
+     public Boolean getPersistHostCache() {
+@@ -77,7 +77,7 @@ public final class DnsOptions {
+     }
+ 
+     /**
+-     * See {@link Builder#enableStaleDns}
++     * See {@link Builder#setEnableStaleDns}
+      *
+      * {@hide}
+      */
+@@ -96,7 +96,7 @@ public final class DnsOptions {
+     }
+ 
+     /**
+-     * See {@link Builder#preestablishConnectionsToStaleDnsResults}
++     * See {@link Builder#setPreestablishConnectionsToStaleDnsResults}
+      *
+      * {@hide}
+      */
+@@ -117,6 +117,11 @@ public final class DnsOptions {
+         return mStaleDnsOptions;
+     }
+ 
++    /**
++     * Returns a new builder for {@link DnsOptions}.
++     *
++     * @hide
++     */
+     public static Builder builder() {
+         return new Builder();
+     }
+@@ -249,7 +254,7 @@ public final class DnsOptions {
+              *
+              * @return the builder for chaining
+              */
+-            public Builder allowCrossNetworkUsage(boolean allowCrossNetworkUsage) {
++            public Builder setAllowCrossNetworkUsage(boolean allowCrossNetworkUsage) {
+                 this.mAllowCrossNetworkUsage = allowCrossNetworkUsage;
+                 return this;
+             }
+@@ -297,9 +302,12 @@ public final class DnsOptions {
+         @Nullable
+         private Boolean mPreestablishConnectionsToStaleDnsResults;
+ 
+-        Builder() {}
++        public Builder() {}
+ 
+-        public Builder useBuiltInDnsResolver(boolean enable) {
++        /**
++         * {@hide}
++         */
++        public Builder setUseBuiltInDnsResolver(boolean enable) {
+             this.mUseBuiltInDnsResolver = enable;
+             return this;
+         }
+@@ -312,7 +320,7 @@ public final class DnsOptions {
+          * {@hide}
+          */
+         @Experimental
+-        public Builder enableStaleDns(boolean enable) {
++        public Builder setEnableStaleDns(boolean enable) {
+             this.mEnableStaleDns = enable;
+             return this;
+         }
+@@ -320,7 +328,7 @@ public final class DnsOptions {
+         /**
+          * Sets detailed configuration for stale DNS.
+          *
+-         * Only relevant if {@link #enableStaleDns(boolean)} is set.
++         * Only relevant if {@link #setEnableStaleDns(boolean)} is set.
+          *
+          * @return this builder for chaining.
+          *
+@@ -350,7 +358,7 @@ public final class DnsOptions {
+          * expired. Such connections won't be used further until a new DNS lookup confirms the
+          * cached record was up to date.
+          *
+-         * <p>To use cached DNS records straight away, use {@link #enableStaleDns} and {@link
++         * <p>To use cached DNS records straight away, use {@link #setEnableStaleDns} and {@link
+          * StaleDnsOptions} configuration options.
+          *
+          * <p>This option may not be available for all networking protocols.
+@@ -360,7 +368,7 @@ public final class DnsOptions {
+          * {@hide}
+          */
+         @Experimental
+-        public Builder preestablishConnectionsToStaleDnsResults(boolean enable) {
++        public Builder setPreestablishConnectionsToStaleDnsResults(boolean enable) {
+             this.mPreestablishConnectionsToStaleDnsResults = enable;
+             return this;
+         }
+@@ -373,7 +381,7 @@ public final class DnsOptions {
+          *
+          * @return the builder for chaining
+          */
+-        public Builder persistHostCache(boolean persistHostCache) {
++        public Builder setPersistHostCache(boolean persistHostCache) {
+             this.mPersistHostCache = persistHostCache;
+             return this;
+         }
+@@ -381,7 +389,7 @@ public final class DnsOptions {
+         /**
+          * Sets the minimum period between subsequent writes to disk for DNS cache persistence.
+          *
+-         * <p>Only relevant if {@link #persistHostCache(boolean)} is set to true.
++         * <p>Only relevant if {@link #setPersistHostCache(boolean)} is set to true.
+          *
+          * @return the builder for chaining
+          */
+diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+index cfc9b71d..82f03225 100644
+--- a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+@@ -172,14 +172,14 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
+         }
+ 
+         @Override
+-        public Builder enableQuic(boolean value) {
+-            super.enableQuic(value);
++        public Builder setEnableQuic(boolean value) {
++            super.setEnableQuic(value);
+             return this;
+         }
+ 
+         @Override
+-        public Builder enableHttp2(boolean value) {
+-            super.enableHttp2(value);
++        public Builder setEnableHttp2(boolean value) {
++            super.setEnableHttp2(value);
+             return this;
+         }
+ 
+@@ -428,8 +428,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
+         }
+ 
+         @Override
+-        public Builder enableHttpCache(int cacheMode, long maxSize) {
+-            super.enableHttpCache(cacheMode, maxSize);
++        public Builder setEnableHttpCache(int cacheMode, long maxSize) {
++            super.setEnableHttpCache(cacheMode, maxSize);
+             return this;
+         }
+ 
+diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+index 886e9344..58142e17 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+@@ -23,6 +23,16 @@ import javax.net.ssl.HttpsURLConnection;
+  */
+ public abstract class HttpEngine {
+ 
++    /**
++     * {@hide}
++     */
++    protected HttpEngine() {}
++
++    /**
++     * Returns a new {@link Builder} object that facilitates creating a {@link HttpEngine}.
++     *
++     * {@hide}
++     */
+     public static Builder builder(Context context) {
+         return new Builder(context);
+     }
+@@ -53,7 +63,7 @@ public abstract class HttpEngine {
+          *                context will be kept, so as to avoid extending
+          *                the lifetime of {@code context} unnecessarily.
+          */
+-        Builder(Context context) {
++        public Builder(Context context) {
+             this(createBuilderDelegate(context));
+         }
+ 
+@@ -117,7 +127,7 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable QUIC, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder enableQuic(boolean value) {
++        public Builder setEnableQuic(boolean value) {
+             mBuilderDelegate.enableQuic(value);
+             return this;
+         }
+@@ -128,7 +138,7 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable HTTP/2, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder enableHttp2(boolean value) {
++        public Builder setEnableHttp2(boolean value) {
+             mBuilderDelegate.enableHttp2(value);
+             return this;
+         }
+@@ -140,34 +150,34 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable Brotli, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder enableBrotli(boolean value) {
++        public Builder setEnableBrotli(boolean value) {
+             mBuilderDelegate.enableBrotli(value);
+             return this;
+         }
+ 
+         /**
+          * Setting to disable HTTP cache. Some data may still be temporarily stored in memory.
+-         * Passed to {@link #enableHttpCache}.
++         * Passed to {@link #setEnableHttpCache}.
+          */
+         public static final int HTTP_CACHE_DISABLED = 0;
+ 
+         /**
+          * Setting to enable in-memory HTTP cache, including HTTP data.
+-         * Passed to {@link #enableHttpCache}.
++         * Passed to {@link #setEnableHttpCache}.
+          */
+         public static final int HTTP_CACHE_IN_MEMORY = 1;
+ 
+         /**
+          * Setting to enable on-disk cache, excluding HTTP data.
+          * {@link #setStoragePath} must be called prior to passing this constant to
+-         * {@link #enableHttpCache}.
++         * {@link #setEnableHttpCache}.
+          */
+         public static final int HTTP_CACHE_DISK_NO_HTTP = 2;
+ 
+         /**
+          * Setting to enable on-disk cache, including HTTP data.
+          * {@link #setStoragePath} must be called prior to passing this constant to
+-         * {@link #enableHttpCache}.
++         * {@link #setEnableHttpCache}.
+          */
+         public static final int HTTP_CACHE_DISK = 3;
+ 
+@@ -180,14 +190,14 @@ public abstract class HttpEngine {
+          * exceeded at times).
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder enableHttpCache(int cacheMode, long maxSize) {
++        public Builder setEnableHttpCache(int cacheMode, long maxSize) {
+             mBuilderDelegate.enableHttpCache(cacheMode, maxSize);
+             return this;
+         }
+ 
+         /**
+          * Adds hint that {@code host} supports QUIC.
+-         * Note that {@link #enableHttpCache enableHttpCache}
++         * Note that {@link #setEnableHttpCache enableHttpCache}
+          * ({@link #HTTP_CACHE_DISK}) is needed to take advantage of 0-RTT
+          * connection establishment between sessions.
+          *
+@@ -272,7 +282,7 @@ public abstract class HttpEngine {
+          * documentation of {@link QuicOptions} and the individual methods
+          * of {@link QuicOptions.Builder}.
+          *
+-         * <p>Only relevant if {@link #enableQuic(boolean)} is enabled.
++         * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
+          *
+          * @return the builder to facilitate chaining.
+          */
+@@ -284,6 +294,8 @@ public abstract class HttpEngine {
+ 
+         /**
+          * @see #setQuicOptions(QuicOptions)
++         *
++         * {@hide}
+          */
+         @QuicOptions.Experimental
+         public Builder setQuicOptions(QuicOptions.Builder quicOptionsBuilder) {
+@@ -294,7 +306,7 @@ public abstract class HttpEngine {
+          * Configures the behavior of hostname lookup. For more details, see documentation
+          * of {@link DnsOptions} and the individual methods of {@link DnsOptions.Builder}.
+          *
+-         * <p>Only relevant if {@link #enableQuic(boolean)} is enabled.
++         * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
+          *
+          * @return the builder to facilitate chaining.
+          */
+@@ -306,6 +318,8 @@ public abstract class HttpEngine {
+ 
+         /**
+          * @see #setDnsOptions(DnsOptions)
++         *
++         * {@hide}
+          */
+         @DnsOptions.Experimental
+         public Builder setDnsOptions(DnsOptions.Builder dnsOptions) {
+@@ -317,7 +331,7 @@ public abstract class HttpEngine {
+          * of {@link ConnectionMigrationOptions} and the individual methods of {@link
+          * ConnectionMigrationOptions.Builder}.
+          *
+-         * <p>Only relevant if {@link #enableQuic(boolean)} is enabled.
++         * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
+          *
+          * @return the builder to facilitate chaining.
+          */
+@@ -330,6 +344,8 @@ public abstract class HttpEngine {
+ 
+         /**
+          * @see #setConnectionMigrationOptions(ConnectionMigrationOptions)
++         *
++         * {@hide}
+          */
+         @ConnectionMigrationOptions.Experimental
+         public Builder setConnectionMigrationOptions(
+diff --git a/components/cronet/android/api/src/android/net/http/HttpException.java b/components/cronet/android/api/src/android/net/http/HttpException.java
+index 273eefb8..4f3d4497 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpException.java
++++ b/components/cronet/android/api/src/android/net/http/HttpException.java
+@@ -18,7 +18,7 @@ public class HttpException extends IOException {
+      *         java.io.IOException#getCause getCause()} method). A null value is permitted, and
+      *         indicates that the cause is nonexistent or unknown.
+      */
+-    protected HttpException(String message, Throwable cause) {
++    public HttpException(String message, Throwable cause) {
+         super(message, cause);
+     }
+ }
+diff --git a/components/cronet/android/api/src/android/net/http/QuicOptions.java b/components/cronet/android/api/src/android/net/http/QuicOptions.java
+index 9b46d236..7d71f887 100644
+--- a/components/cronet/android/api/src/android/net/http/QuicOptions.java
++++ b/components/cronet/android/api/src/android/net/http/QuicOptions.java
+@@ -15,7 +15,7 @@ import java.util.Set;
+  * Configuration options for QUIC.
+  *
+  * <p>The settings in this class are only relevant if QUIC is enabled. Use
+- * {@link HttpEngine.Builder#enableQuic(boolean)} to enable / disable QUIC for
++ * {@link HttpEngine.Builder#setEnableQuic(boolean)} to enable / disable QUIC for
+  * the HTTP engine.
+  */
+ public class QuicOptions {
+@@ -270,6 +270,8 @@ public class QuicOptions {
+ 
+     /**
+      * Create a new {@code QuicOptions} builder.
++     *
++     * {@hide}
+      */
+     public static Builder builder() {
+         return new Builder();
+@@ -311,7 +313,7 @@ public class QuicOptions {
+         private Boolean mDelayJobsWithAvailableSpdySession;
+         private final Set<String> mExtraQuicheFlags = new LinkedHashSet<>();
+ 
+-        Builder() {}
++        public Builder() {}
+ 
+         /**
+          * Adds a host to the QUIC allowlist.
+diff --git a/components/cronet/android/api/src/android/net/http/UrlRequest.java b/components/cronet/android/api/src/android/net/http/UrlRequest.java
+index b29951c7..97be78b8 100644
+--- a/components/cronet/android/api/src/android/net/http/UrlRequest.java
++++ b/components/cronet/android/api/src/android/net/http/UrlRequest.java
+@@ -15,12 +15,18 @@ import java.util.concurrent.Executor;
+  * {@link HttpEngine#newUrlRequestBuilder}.
+  */
+ public abstract class UrlRequest {
++
++    UrlRequest() {}
++
+     /**
+      * Builder for {@link UrlRequest}s. Allows configuring requests before constructing them
+      * with {@link Builder#build}. The builder can be created by calling
+      * {@link HttpEngine#newUrlRequestBuilder}.
+      */
+     public abstract static class Builder {
++
++        Builder() {}
++
+         /**
+          * Sets the HTTP method verb to use for this request.
+          *
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/BidirectionalStreamQuicTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/BidirectionalStreamQuicTest.java
+index 241e0d8c..d3ba6d1a 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/BidirectionalStreamQuicTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/BidirectionalStreamQuicTest.java
+@@ -58,7 +58,7 @@ public class BidirectionalStreamQuicTest {
+ 
+         QuicTestServer.startQuicTestServer(getContext());
+ 
+-        builder.enableQuic(true);
++        builder.setEnableQuic(true);
+         JSONObject quicParams = new JSONObject();
+         if (enabled == QuicBidirectionalStreams.DISABLED) {
+             quicParams.put("quic_disable_bidirectional_streams", true);
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java
+index 1a81e10c..64ac8ceb 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java
+@@ -62,7 +62,7 @@ public class BrotliTest {
+     public void testBrotliAdvertised() throws Exception {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+-        builder.enableBrotli(true);
++        builder.setEnableBrotli(true);
+         CronetTestUtil.setMockCertVerifierForTesting(
+                 builder, QuicTestServer.createMockCertVerifier());
+         mCronetEngine = builder.build();
+@@ -95,7 +95,7 @@ public class BrotliTest {
+     public void testBrotliDecoded() throws Exception {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+-        builder.enableBrotli(true);
++        builder.setEnableBrotli(true);
+         CronetTestUtil.setMockCertVerifierForTesting(
+                 builder, QuicTestServer.createMockCertVerifier());
+         mCronetEngine = builder.build();
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
+index 5af7f00f..7547a1b6 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
+@@ -91,7 +91,7 @@ public class CronetTestRule implements TestRule {
+         }
+ 
+         private ExperimentalHttpEngine.Builder createNativeEngineBuilder() {
+-            return CronetTestRule.createNativeEngineBuilder(mContext).enableQuic(true);
++            return CronetTestRule.createNativeEngineBuilder(mContext).setEnableQuic(true);
+         }
+     }
+ 
+@@ -303,7 +303,7 @@ public class CronetTestRule implements TestRule {
+ 
+     public HttpEngine.Builder enableDiskCache(HttpEngine.Builder cronetEngineBuilder) {
+         cronetEngineBuilder.setStoragePath(getTestStorage(getContext()));
+-        cronetEngineBuilder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1000 * 1024);
++        cronetEngineBuilder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1000 * 1024);
+         return cronetEngineBuilder;
+     }
+ 
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java
+index d670ad01..08428353 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java
+@@ -712,7 +712,7 @@ public class CronetUrlRequestContextTest {
+                 || cacheType == HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP) {
+             builder.setStoragePath(getTestStorage(getContext()));
+         }
+-        builder.enableHttpCache(cacheType, 100 * 1024);
++        builder.setEnableHttpCache(cacheType, 100 * 1024);
+         // Don't check the return value here, because startNativeTestServer() returns false when the
+         // NativeTestServer is already running and this method needs to be called twice without
+         // shutting down the NativeTestServer in between.
+@@ -1366,10 +1366,10 @@ public class CronetUrlRequestContextTest {
+         // Verify CronetEngine.Builder config is passed down accurately to native code.
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+-        builder.enableHttp2(false);
+-        builder.enableQuic(true);
++        builder.setEnableHttp2(false);
++        builder.setEnableQuic(true);
+         builder.addQuicHint("example.com", 12, 34);
+-        builder.enableHttpCache(HTTP_CACHE_IN_MEMORY, 54321);
++        builder.setEnableHttpCache(HTTP_CACHE_IN_MEMORY, 54321);
+         builder.setUserAgent("efgh");
+         builder.setExperimentalOptions("");
+         builder.setStoragePath(getTestStorage(getContext()));
+@@ -1393,11 +1393,11 @@ public class CronetUrlRequestContextTest {
+         // Verify CronetEngine.Builder config is passed down accurately to native code.
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+-        builder.enableHttp2(false);
++        builder.setEnableHttp2(false);
+         // QUIC is on by default. Disabling it here to make sure the built config can correctly
+         // reflect the change.
+-        builder.enableQuic(false);
+-        builder.enableHttpCache(HTTP_CACHE_IN_MEMORY, 54321);
++        builder.setEnableQuic(false);
++        builder.setEnableHttpCache(HTTP_CACHE_IN_MEMORY, 54321);
+         builder.setExperimentalOptions("");
+         builder.setUserAgent("efgh");
+         builder.setStoragePath(getTestStorage(getContext()));
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/DiskStorageTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/DiskStorageTest.java
+index 2caf67e6..ce87333c 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/DiskStorageTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/DiskStorageTest.java
+@@ -75,7 +75,7 @@ public class DiskStorageTest {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+         builder.setStoragePath(mReadOnlyStoragePath);
+-        builder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
++        builder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
+ 
+         HttpEngine cronetEngine = builder.build();
+         TestUrlRequestCallback callback = new TestUrlRequestCallback();
+@@ -139,7 +139,7 @@ public class DiskStorageTest {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+         builder.setStoragePath(getTestStorage(getContext()));
+-        builder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
++        builder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
+ 
+         HttpEngine cronetEngine = builder.build();
+         TestUrlRequestCallback callback = new TestUrlRequestCallback();
+@@ -181,7 +181,7 @@ public class DiskStorageTest {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+         builder.setStoragePath(getTestStorage(getContext()));
+-        builder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
++        builder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
+ 
+         HttpEngine cronetEngine = builder.build();
+         TestUrlRequestCallback callback = new TestUrlRequestCallback();
+@@ -244,7 +244,7 @@ public class DiskStorageTest {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+         try {
+-            builder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
++            builder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1024 * 1024);
+             fail("Enabling http cache without a storage path should throw an exception");
+         } catch (IllegalArgumentException e) {
+             // Expected
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java
+index 1da41043..99ff8288 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java
+@@ -198,7 +198,7 @@ public class ExperimentalOptionsTest {
+         String testUrl = new URL("http", testHost, realPort, javaUrl.getPath()).toString();
+ 
+         mBuilder.setStoragePath(getTestStorage(getContext()))
+-                .enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 0);
++                .setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 0);
+ 
+         // Set a short delay so the pref gets written quickly.
+         JSONObject staleDns = new JSONObject()
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/PkpTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/PkpTest.java
+index 351fad9f..9afcccdd 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/PkpTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/PkpTest.java
+@@ -432,7 +432,7 @@ public class PkpTest {
+                                                  .put("HostResolverRules", hostResolverParams);
+         mBuilder.setExperimentalOptions(experimentalOptions.toString());
+         mBuilder.setStoragePath(getTestStorage(getContext()));
+-        mBuilder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, 1000 * 1024);
++        mBuilder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, 1000 * 1024);
+         final String[] server_certs = {SERVER_CERT_PEM};
+         CronetTestUtil.setMockCertVerifierForTesting(
+                 mBuilder, MockCertVerifier.createMockCertVerifier(server_certs, knownRoot));
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/QuicTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/QuicTest.java
+index 6a28e6bf..856f486d 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/QuicTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/QuicTest.java
+@@ -81,7 +81,7 @@ public class QuicTest {
+                                                  .put("NetworkQualityEstimator", nqeParams);
+         mBuilder.setExperimentalOptions(experimentalOptions.toString());
+         mBuilder.setStoragePath(getTestStorage(getContext()));
+-        mBuilder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, 1000 * 1024);
++        mBuilder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, 1000 * 1024);
+         CronetTestUtil.setMockCertVerifierForTesting(
+                 mBuilder, QuicTestServer.createMockCertVerifier());
+     }
+@@ -137,8 +137,8 @@ public class QuicTest {
+         ExperimentalHttpEngine.Builder builder =
+                 new ExperimentalHttpEngine.Builder(getContext());
+         builder.setStoragePath(getTestStorage(getContext()));
+-        builder.enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1000 * 1024);
+-        builder.enableQuic(true);
++        builder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1000 * 1024);
++        builder.setEnableQuic(true);
+         JSONObject hostResolverParams = CronetTestUtil.generateHostResolverRules();
+         JSONObject experimentalOptions = new JSONObject()
+                                                  .put("HostResolverRules", hostResolverParams);
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java
+index 04f63209..d552694b 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java
+@@ -284,10 +284,10 @@ public final class CronetLoggerTest {
+                 isPublicKeyPinningBypassForLocalTrustAnchorsEnabled);
+         builder.setUserAgent(userAgent);
+         builder.setStoragePath(storagePath);
+-        builder.enableQuic(isQuicEnabled);
+-        builder.enableHttp2(isHttp2Enabled);
+-        builder.enableBrotli(isBrotliEnabled);
+-        builder.enableHttpCache(cacheMode, 0);
++        builder.setEnableQuic(isQuicEnabled);
++        builder.setEnableHttp2(isHttp2Enabled);
++        builder.setEnableBrotli(isBrotliEnabled);
++        builder.setEnableHttpCache(cacheMode, 0);
+         builder.enableNetworkQualityEstimator(isNetworkQualityEstimatorEnabled);
+         builder.setThreadPriority(threadPriority);
+ 
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/urlconnection/QuicUploadTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/urlconnection/QuicUploadTest.java
+index 7f944bff..03748299 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/urlconnection/QuicUploadTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/urlconnection/QuicUploadTest.java
+@@ -50,7 +50,7 @@ public class QuicUploadTest {
+ 
+         QuicTestServer.startQuicTestServer(getContext());
+ 
+-        builder.enableQuic(true);
++        builder.setEnableQuic(true);
+         JSONObject hostResolverParams = CronetTestUtil.generateHostResolverRules();
+         JSONObject experimentalOptions = new JSONObject()
+                                                  .put("HostResolverRules", hostResolverParams);
+-- 
+2.39.0.314.g84b9a713c41-goog
+

@@ -191,7 +191,7 @@ public class ConnectionMigrationOptions {
         @Nullable
         private Integer mMaxPathDegradingNonDefaultMigrationsCount;
 
-        Builder() {}
+        public Builder() {}
 
         /**
          * Enables the possibility of migrating connections on default network change. If enabled,
@@ -375,6 +375,11 @@ public class ConnectionMigrationOptions {
         }
     }
 
+    /**
+     * Creates a new builder for {@link ConnectionMigrationOptions}.
+     *
+     * {@hide}
+     */
     public static Builder builder() {
         return new Builder();
     }
