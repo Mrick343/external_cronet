@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9056dcee_8b7f4dca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-13T16:44:22Z",
+      "side": 1,
+      "message": "LGTM, though I\u0027m not too familiar with Android API principles (so, I might have missed something).",
+      "revId": "d962868769c7410960156d1db005462c1aca6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fcf48fe_c91d112c",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-13T16:44:22Z",
+      "side": 1,
+      "message": "Should this also be public like ConnectionMigrationOptions.Builder#Builder etc?",
+      "range": {
+        "startLine": 206,
+        "startChar": 12,
+        "endLine": 206,
+        "endChar": 24
+      },
+      "revId": "d962868769c7410960156d1db005462c1aca6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
