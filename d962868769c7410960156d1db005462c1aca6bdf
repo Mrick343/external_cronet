@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55f818ef_8ae3cf60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-13T18:43:25Z",
+      "side": 1,
+      "message": "This CL is addressing Lorenzo\u0027s comments in https://r.android.com/2384137.",
+      "parentUuid": "9056dcee_8b7f4dca",
+      "revId": "d962868769c7410960156d1db005462c1aca6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3fcf48fe_c91d112c",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-01-13T16:44:22Z",
       "side": 1,
       "message": "Should this also be public like ConnectionMigrationOptions.Builder#Builder etc?",
+      "range": {
+        "startLine": 206,
+        "startChar": 12,
+        "endLine": 206,
+        "endChar": 24
+      },
+      "revId": "d962868769c7410960156d1db005462c1aca6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "162b3945_c58bea67",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-13T18:43:25Z",
+      "side": 1,
+      "message": "StaleDnsOptions as a whole is hidden so it doesn\u0027t matter at this point. I\u0027ll keep it as-is to minimize the scope of the changes.",
+      "parentUuid": "3fcf48fe_c91d112c",
       "range": {
         "startLine": 206,
         "startChar": 12,
