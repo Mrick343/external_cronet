@@ -15,7 +15,7 @@ import java.util.Set;
  * Configuration options for QUIC.
  *
  * <p>The settings in this class are only relevant if QUIC is enabled. Use
- * {@link HttpEngine.Builder#enableQuic(boolean)} to enable / disable QUIC for
+ * {@link HttpEngine.Builder#setEnableQuic(boolean)} to enable / disable QUIC for
  * the HTTP engine.
  */
 public class QuicOptions {
@@ -270,6 +270,8 @@ public class QuicOptions {
 
     /**
      * Create a new {@code QuicOptions} builder.
+     *
+     * {@hide}
      */
     public static Builder builder() {
         return new Builder();
@@ -311,7 +313,7 @@ public class QuicOptions {
         private Boolean mDelayJobsWithAvailableSpdySession;
         private final Set<String> mExtraQuicheFlags = new LinkedHashSet<>();
 
-        Builder() {}
+        public Builder() {}
 
         /**
          * Adds a host to the QUIC allowlist.

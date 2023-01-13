@@ -15,12 +15,18 @@ import java.util.concurrent.Executor;
  * {@link HttpEngine#newUrlRequestBuilder}.
  */
 public abstract class UrlRequest {
+
+    UrlRequest() {}
+
     /**
      * Builder for {@link UrlRequest}s. Allows configuring requests before constructing them
      * with {@link Builder#build}. The builder can be created by calling
      * {@link HttpEngine#newUrlRequestBuilder}.
      */
     public abstract static class Builder {
+
+        Builder() {}
+
         /**
          * Sets the HTTP method verb to use for this request.
          *
