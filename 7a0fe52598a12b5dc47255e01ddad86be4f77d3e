@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "210ed641_962287b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-01-16T07:59:31Z",
+      "side": 1,
+      "message": "Thanks for adding those! This should be an upstream-next patch, it corresponds to Chromium CLs mentioned in the original description.",
+      "revId": "7a0fe52598a12b5dc47255e01ddad86be4f77d3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
