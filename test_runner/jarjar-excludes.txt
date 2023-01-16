@@ -1,0 +1,11 @@
+org\.chromium\.base\.multidex\.ChromiumMultiDexInstaller(\$.+)?
+org\.chromium\.base\.test\.util\.UrlUtils(\$.+)?
+org\.chromium\.build\.gtest_apk\.NativeTestInstrumentationTestRunner(\$.+)?
+org\.chromium\.build\.gtest_apk\.NativeTestIntent(\$.+)?
+org\.chromium\.build\.gtest_apk\.TestStatusIntent(\$.+)?
+org\.chromium\.build\.gtest_apk\.TestStatusReceiver(\$.+)?
+org\.chromium\.native_test\.NativeTestApplication(\$.+)?
+org\.chromium\.native_test\.NativeUnitTest(\$.+)?
+org\.chromium\.native_test\.NativeUnitTestActivity(\$.+)?
+org\.chromium\.native_test\.NativeUnitTestNativeActivity(\$.+)?
+org\.chromium\.test\.reporter\.TestStatusReporter(\$.+)?
