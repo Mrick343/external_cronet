@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e315b2ab_48e32199",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-01-17T12:29:51Z",
+      "side": 1,
+      "message": "This is a temporally workaround for ag/20986209",
+      "revId": "db54b06d7743fe65aa1e2b9015f0c3aa1bfe72b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
