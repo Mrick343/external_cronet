@@ -280,7 +280,7 @@ public final class CronetLoggerTest {
                 (ExperimentalHttpEngine.Builder) mTestFramework.mBuilder;
 
         builder.setExperimentalOptions(experimentalOptions);
-        builder.setEnablePublicKeyPinningBypassForLocalTrustAnchors(
+        builder.enablePublicKeyPinningBypassForLocalTrustAnchors(
                 isPublicKeyPinningBypassForLocalTrustAnchorsEnabled);
         builder.setUserAgent(userAgent);
         builder.setStoragePath(storagePath);

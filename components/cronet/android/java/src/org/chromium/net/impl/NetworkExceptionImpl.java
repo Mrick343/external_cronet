@@ -43,7 +43,7 @@ public class NetworkExceptionImpl extends NetworkException {
     }
 
     @Override
-    public boolean isImmediatelyRetryable() {
+    public boolean immediatelyRetryable() {
         switch (mErrorCode) {
             case ERROR_HOSTNAME_NOT_RESOLVED:
             case ERROR_INTERNET_DISCONNECTED:
@@ -68,7 +68,7 @@ public class NetworkExceptionImpl extends NetworkException {
         if (mCronetInternalErrorCode != 0) {
             b.append(", InternalErrorCode=").append(mCronetInternalErrorCode);
         }
-        b.append(", Retryable=").append(isImmediatelyRetryable());
+        b.append(", Retryable=").append(immediatelyRetryable());
         return b.toString();
     }
 }

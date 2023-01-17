@@ -6,8 +6,6 @@ package android.net.http;
 
 import android.annotation.IntDef;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executor;
 
@@ -239,8 +237,6 @@ public abstract class UrlRequest {
         public void onCanceled(UrlRequest request, UrlResponseInfo info) {}
     }
 
-    /** @hide */
-    @Retention(RetentionPolicy.SOURCE)
     @IntDef({
             Status.INVALID,
             Status.IDLE,

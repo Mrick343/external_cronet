@@ -2310,7 +2310,7 @@ public class CronetUrlRequestTest {
         assertEquals(netError, ((NetworkException) callback.mError).getInternalErrorCode());
         assertEquals(errorCode, ((NetworkException) callback.mError).getErrorCode());
         assertEquals(
-                immediatelyRetryable, ((NetworkException) callback.mError).isImmediatelyRetryable());
+                immediatelyRetryable, ((NetworkException) callback.mError).immediatelyRetryable());
         assertContains(
                 "Exception in CronetUrlRequest: net::ERR_" + name, callback.mError.getMessage());
         assertEquals(0, callback.mRedirectCount);

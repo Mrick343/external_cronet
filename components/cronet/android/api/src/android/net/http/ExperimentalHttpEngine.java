@@ -447,8 +447,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        public Builder setEnablePublicKeyPinningBypassForLocalTrustAnchors(boolean value) {
-            super.setEnablePublicKeyPinningBypassForLocalTrustAnchors(value);
+        public Builder enablePublicKeyPinningBypassForLocalTrustAnchors(boolean value) {
+            super.enablePublicKeyPinningBypassForLocalTrustAnchors(value);
             return this;
         }
 
