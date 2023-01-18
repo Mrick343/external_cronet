@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f3232f7_06f87e06",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-18T12:29:15Z",
+      "side": 1,
+      "message": "Actually, I think this can be dropped altogether as it\u0027s related to Cronet\u0027s java impl.",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 70
+      },
+      "revId": "a7fdfb95ea9c56479c77465e1b2059a346707836",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
