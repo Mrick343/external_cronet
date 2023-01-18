@@ -78,6 +78,15 @@ filegroup {
     ],
 }
 
+// TODO: add this filegroup to the gn2bp script.
+filegroup {
+    name: "cronet_aml_proguard_cfg",
+    srcs: [
+        "components/cronet/android/cronet_impl_common_proguard.cfg",
+        "components/cronet/android/cronet_impl_native_proguard.cfg",
+    ],
+}
+
 // GN: //base/allocator:buildflags
 cc_genrule {
     name: "cronet_aml_base_allocator_buildflags",
