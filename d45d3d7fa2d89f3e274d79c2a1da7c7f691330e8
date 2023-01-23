@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74851c7e_af4e3202",
+        "filename": "Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-01-23T11:36:53Z",
+      "side": 1,
+      "message": "@aymanm@google.com\nIt seems adding license made gts fail.\n\nhttps://android-review.git.corp.google.com/c/platform/external/cronet/+/2398772?checksPatchset\u003d3\u0026tab\u003dchecks",
+      "revId": "d45d3d7fa2d89f3e274d79c2a1da7c7f691330e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
