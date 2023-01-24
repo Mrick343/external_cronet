@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78822c52_56119c54",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-01-24T09:11:01Z",
+      "side": 1,
+      "message": "This tells it to run all the tests in Connectivity module. Is there a different way to reduce the scope of tests to just cronet-related ones eg CtsNet{Http}TestCases?\n\nTo reduce the time taken to run presubmit.",
+      "revId": "7f2b871a152e3bebc5158377c7a7b982a84b5279",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
