@@ -34,6 +34,24 @@
       "parentUuid": "74851c7e_af4e3202",
       "revId": "d45d3d7fa2d89f3e274d79c2a1da7c7f691330e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "053cd3cd_8c9d1e5b",
+        "filename": "Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-24T07:45:10Z",
+      "side": 1,
+      "message": "Run GTS on a GMS build (on Pixel or CF) and look at the gts-shared-report output. It\u0027s unfortunate that tradefed doesn\u0027t already pull these files for you.",
+      "parentUuid": "4821fd07_3d128db5",
+      "revId": "d45d3d7fa2d89f3e274d79c2a1da7c7f691330e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
