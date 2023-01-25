@@ -1,0 +1,73 @@
+From 73282f3a81025df6005387bce956a337baa8f27e Mon Sep 17 00:00:00 2001
+From: Mohannad Farrag <aymanm@google.com>
+Date: Wed, 25 Jan 2023 14:54:56 +0000
+Subject: [PATCH] Remove xdg_mime from BUILD.gn
+
+* xdg_mime can't exist in android codebase.
+---
+ base/BUILD.gn                      |  6 +++---
+ base/third_party/xdg_mime/BUILD.gn | 28 ----------------------------
+ 2 files changed, 3 insertions(+), 31 deletions(-)
+ delete mode 100644 base/third_party/xdg_mime/BUILD.gn
+
+diff --git a/base/BUILD.gn b/base/BUILD.gn
+index 02c761086527d..deacbc795771b 100644
+--- a/base/BUILD.gn
++++ b/base/BUILD.gn
+@@ -2194,8 +2194,8 @@ mixed_component("base") {
+     all_dependent_configs += linux_configs
+ 
+     sources += [
+-      "nix/mime_util_xdg.cc",
+-      "nix/mime_util_xdg.h",
++      # "nix/mime_util_xdg.cc",
++      # "nix/mime_util_xdg.h",
+       "nix/xdg_util.cc",
+       "nix/xdg_util.h",
+       "system/sys_info_linux.cc",
+@@ -2207,7 +2207,7 @@ mixed_component("base") {
+     # of xdg_mime must be excluded due to licensing restrictions.
+     deps += [
+       "//base/third_party/symbolize",
+-      "//base/third_party/xdg_mime",
++      # "//base/third_party/xdg_mime",
+       "//base/third_party/xdg_user_dirs",
+     ]
+   } else {
+diff --git a/base/third_party/xdg_mime/BUILD.gn b/base/third_party/xdg_mime/BUILD.gn
+deleted file mode 100644
+index 7d58530a804f2..0000000000000
+--- a/base/third_party/xdg_mime/BUILD.gn
++++ /dev/null
+@@ -1,28 +0,0 @@
+-# Copyright 2013 The Chromium Authors
+-# Use of this source code is governed by a BSD-style license that can be
+-# found in the LICENSE file.
+-
+-static_library("xdg_mime") {
+-  visibility = [ "//base/*" ]
+-  sources = [
+-    "xdgmime.c",
+-    "xdgmime.h",
+-    "xdgmimealias.c",
+-    "xdgmimealias.h",
+-    "xdgmimecache.c",
+-    "xdgmimecache.h",
+-    "xdgmimeglob.c",
+-    "xdgmimeglob.h",
+-    "xdgmimeicon.c",
+-    "xdgmimeicon.h",
+-    "xdgmimeint.c",
+-    "xdgmimeint.h",
+-    "xdgmimemagic.c",
+-    "xdgmimemagic.h",
+-    "xdgmimeparent.c",
+-    "xdgmimeparent.h",
+-  ]
+-
+-  configs -= [ "//build/config/compiler:chromium_code" ]
+-  configs += [ "//build/config/compiler:no_chromium_code" ]
+-}
+-- 
+2.39.1.405.gd4c25cc71f-goog
+
