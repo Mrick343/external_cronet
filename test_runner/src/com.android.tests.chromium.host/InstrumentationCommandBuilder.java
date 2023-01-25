@@ -27,17 +27,13 @@ public class InstrumentationCommandBuilder {
     // Instrument and wait until execution has finished before returning
     private static final String BASE_CMD = "am instrument -w ";
 
-    public InstrumentationCommandBuilder() {
+    public InstrumentationCommandBuilder(String activity) {
+        this.activityName = activity;
         this.arguments = new ArrayList<>();
     }
 
     public InstrumentationCommandBuilder addArgument(String key, String value) {
         arguments.add(new Pair<>(key, value));
-        return this;
-    }
-
-    public InstrumentationCommandBuilder addInstrumentationActivity(String activityName) {
-        this.activityName = activityName;
         return this;
     }
 
@@ -48,7 +44,6 @@ public class InstrumentationCommandBuilder {
     }
 
     public String build() {
-        assert activityName != null;
         StringBuilder commandAsString = new StringBuilder(BASE_CMD);
         for (Pair<String, String> arg : arguments) {
             appendTupleToCommand(commandAsString, arg.first, arg.second);
