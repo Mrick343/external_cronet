@@ -891,13 +891,13 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -2377,6 +2377,7 @@ cc_library_shared {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -2390,7 +2391,6 @@ cc_library_shared {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -3053,6 +3053,7 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3066,7 +3067,6 @@ cc_object {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -3422,6 +3422,7 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3435,7 +3436,6 @@ cc_object {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -3533,6 +3533,7 @@ cc_object {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3540,7 +3541,6 @@ cc_object {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -3599,6 +3599,7 @@ cc_object {
         "libandroid",
         "liblog",
         "libprotobuf-cpp-lite",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3606,7 +3607,6 @@ cc_object {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -3725,6 +3725,7 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3732,7 +3733,6 @@ cc_library_static {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -3842,6 +3842,7 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3849,7 +3850,6 @@ cc_library_static {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -3908,6 +3908,7 @@ cc_defaults {
     name: "cronet_aml_defaults",
     cflags: [
         "-DGOOGLE_PROTOBUF_NO_RTTI",
+        "-DBORINGSSL_SHARED_LIBRARY",
         "-O2",
         "-Wno-ambiguous-reversed-operator",
         "-Wno-deprecated-non-prototype",
@@ -4473,6 +4474,7 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -4484,7 +4486,6 @@ cc_object {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -4575,6 +4576,7 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -4586,7 +4588,6 @@ cc_object {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -4689,6 +4690,7 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -4700,7 +4702,6 @@ cc_object {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -5336,6 +5337,7 @@ cc_library_static {
         "libandroid",
         "liblog",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5347,7 +5349,6 @@ cc_library_static {
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -5468,6 +5469,7 @@ cc_object {
         "liblog",
         "libprotobuf-cpp-lite",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5476,7 +5478,6 @@ cc_object {
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_net_preload_decoder",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -5702,6 +5703,7 @@ cc_object {
         "liblog",
         "libprotobuf-cpp-lite",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5712,7 +5714,6 @@ cc_object {
         "cronet_aml_crypto_crypto",
         "cronet_aml_net_third_party_quiche_quiche",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -5784,6 +5785,7 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5791,7 +5793,6 @@ cc_library_static {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -6266,6 +6267,7 @@ cc_library_static {
         "liblog",
         "libprotobuf-cpp-lite",
         "libz",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -6274,7 +6276,6 @@ cc_library_static {
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_net_uri_template",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -6349,6 +6350,7 @@ cc_object {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -6356,7 +6358,6 @@ cc_object {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -6415,6 +6416,7 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -6422,7 +6424,6 @@ cc_library_static {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -8750,10 +8751,12 @@ cc_object {
 }
 
 // GN: //third_party/boringssl:boringssl
-cc_library_static {
+cc_library_shared {
     name: "cronet_aml_third_party_boringssl_boringssl",
     srcs: [
         ":cronet_aml_third_party_boringssl_boringssl_asm",
+        ":cronet_aml_buildtools_third_party_libc___libc__",
+        ":cronet_aml_buildtools_third_party_libc__abi_libc__abi",
         "third_party/boringssl/err_data.c",
         "third_party/boringssl/src/crypto/asn1/a_bitstr.c",
         "third_party/boringssl/src/crypto/asn1/a_bool.c",
@@ -9029,7 +9032,6 @@ cc_library_static {
         "-DANDROID_NDK_VERSION_ROLL=r23_1",
         "-DBORINGSSL_ALLOW_CXX_RUNTIME",
         "-DBORINGSSL_IMPLEMENTATION",
-        "-DBORINGSSL_NO_STATIC_INITIALIZER",
         "-DCR_CLANG_REVISION=\"llvmorg-16-init-6578-g0d30e92f-2\"",
         "-DCR_LIBCXX_REVISION=64d36e572d3f9719c5d75011a718f33f11126851",
         "-DDCHECK_ALWAYS_ON=1",
@@ -10533,6 +10535,7 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
+        "cronet_aml_third_party_boringssl_boringssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -10540,7 +10543,6 @@ cc_library_static {
         "cronet_aml_base_base_static",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
-        "cronet_aml_third_party_boringssl_boringssl",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
