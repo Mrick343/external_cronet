@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42f95ea9_c57d3e1e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1293738
+      },
+      "writtenOn": "2023-01-25T21:56:35Z",
+      "side": 1,
+      "message": "Note for reviewers: This bug was not seen with OUT_DIR unset or relative OUT_DIR, bceause the path resolved and passed to the tool does not include the sandbox directory prefix. However, with abspath OUT_DIR, which is supported and documented by the Android build system, this issue arises.",
+      "revId": "d74b9f44fdcea39d9773272a35901a846f0038f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
