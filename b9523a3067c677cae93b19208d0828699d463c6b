@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bc18662_865c9f21",
+        "filename": "test_runner/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40a3944e_37b55e3c",
+      "range": {
+        "startLine": 1,
+        "startChar": 17,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a532579_a2335429",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-01-24T11:52:37Z",
       "side": 1,
       "message": "This shouldn\u0027t be needed as it\u0027s already being done by the RunCommandTargetPreparer?",
+      "range": {
+        "startLine": 81,
+        "startChar": 12,
+        "endLine": 81,
+        "endChar": 60
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "436a3a5b_0ba45784",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a532579_a2335429",
       "range": {
         "startLine": 81,
         "startChar": 12,
@@ -89,6 +137,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ae304816_fd9249ae",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Well.. I\u0027d say yes because future tests will need to access /data/local/tmp/ in order to read test data as it\u0027s a hardcoded destination for chromium.\n\nI\u0027d be open to suggestions about different files destination but so far, I can\u0027t find a better one.",
+      "parentUuid": "da392cc0_db24619b",
+      "range": {
+        "startLine": 97,
+        "startChar": 41,
+        "endLine": 97,
+        "endChar": 69
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0e93d7e0_4da1b03c",
         "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
         "patchSetId": 2
@@ -100,6 +172,30 @@
       "writtenOn": "2023-01-24T11:52:37Z",
       "side": 1,
       "message": "Can this also be implemented by using a target preparer?",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 98,
+        "endChar": 77
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9f28244_5adf6f49",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "I\u0027ve changed the creation of files to the targetPreparer. What do you think now?",
+      "parentUuid": "0e93d7e0_4da1b03c",
       "range": {
         "startLine": 97,
         "startChar": 8,
@@ -133,6 +229,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2b3dd83_27757025",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bfc7189_4fed6261",
+      "range": {
+        "startLine": 102,
+        "startChar": 17,
+        "endLine": 102,
+        "endChar": 37
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2083ba18_9cb9a745",
@@ -146,6 +266,30 @@
       "writtenOn": "2023-01-24T11:52:37Z",
       "side": 1,
       "message": "nit: final to make these immutable?",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 58
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef19dcb5_b0a5c24e",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2083ba18_9cb9a745",
       "range": {
         "startLine": 35,
         "startChar": 8,
@@ -179,6 +323,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aec32884_1fb82b0a",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3dafb90_da86cb7e",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 12
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "586f437a_9cfed877",
@@ -192,6 +360,30 @@
       "writtenOn": "2023-01-24T11:52:37Z",
       "side": 1,
       "message": "nit: I think this is unnecessary, as it doesn\u0027t make the list itself immutable.",
+      "range": {
+        "startLine": 49,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 17
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d636fa6_98fbf85b",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "586f437a_9cfed877",
       "range": {
         "startLine": 49,
         "startChar": 12,
@@ -225,6 +417,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "413fd6e9_67acddf3",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16d7cb4d_09ac87ee",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 10
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff2e7d06_5f46e4d4",
@@ -238,6 +454,30 @@
       "writtenOn": "2023-01-24T11:52:37Z",
       "side": 1,
       "message": "Right now, if this somehow fails, tests will silently be ignored.\n\nI don\u0027t think we want that. Ideally, something in `GTestsMetaData` state should reflect that this happened.",
+      "range": {
+        "startLine": 59,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 13
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4acb3f13_6f432926",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff2e7d06_5f46e4d4",
       "range": {
         "startLine": 59,
         "startChar": 12,
@@ -271,6 +511,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7224d14_497ec9cb",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf3dc4d3_6817759d",
+      "range": {
+        "startLine": 62,
+        "startChar": 12,
+        "endLine": 62,
+        "endChar": 17
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38121158_286dc3c8",
@@ -284,6 +548,30 @@
       "writtenOn": "2023-01-24T11:52:37Z",
       "side": 1,
       "message": "Related to my comment above, we probably want to also confirm that something has been run.",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 36
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "696bff45_989a4441",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-26T16:55:41Z",
+      "side": 1,
+      "message": "I\u0027ve provided some booleans to check if any test has ran at all. Or maybe if the tests wasn\u0027t parsed correctly.",
+      "parentUuid": "38121158_286dc3c8",
       "range": {
         "startLine": 89,
         "startChar": 8,
