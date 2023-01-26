@@ -381,7 +381,7 @@ cc_genrule {
          "--input_file " +
          "java/lang/Runtime.class " +
          "--javap " +
-         "$$(find $${OUT_DIR:-out}/.path -name javap) " +
+         "$$(find out/.path -name javap) " +
          "--package_prefix " +
          "android.net.http.internal",
     out: [
@@ -3910,7 +3910,6 @@ cc_defaults {
         "-DGOOGLE_PROTOBUF_NO_RTTI",
         "-O2",
         "-Wno-ambiguous-reversed-operator",
-        "-Wno-deprecated-non-prototype",
         "-Wno-error=return-type",
         "-Wno-macro-redefined",
         "-Wno-missing-field-initializers",
