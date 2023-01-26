@@ -9032,6 +9032,7 @@ cc_library_shared {
         "-DANDROID_NDK_VERSION_ROLL=r23_1",
         "-DBORINGSSL_ALLOW_CXX_RUNTIME",
         "-DBORINGSSL_IMPLEMENTATION",
+        "-DBORINGSSL_FIPS",
         "-DCR_CLANG_REVISION=\"llvmorg-16-init-6578-g0d30e92f-2\"",
         "-DCR_LIBCXX_REVISION=64d36e572d3f9719c5d75011a718f33f11126851",
         "-DDCHECK_ALWAYS_ON=1",
@@ -9042,6 +9043,11 @@ cc_library_shared {
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS",
+        "-fno-data-sections",
+        "-fno-function-sections",
+    ],
+    linker_scripts: [
+        "third_party/boringssl/src/crypto/fipsmodule/fips_shared.lds",
     ],
     local_include_dirs: [
         "./",
