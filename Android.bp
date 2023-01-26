@@ -9042,6 +9042,11 @@ cc_library_shared {
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS",
+        "-fno-data-sections",
+        "-fno-function-sections",
+    ],
+    linker_scripts: [
+        "third_party/boringssl/src/crypto/fipsmodule/fips_shared.lds",
     ],
     local_include_dirs: [
         "./",
