@@ -1,0 +1,37 @@
+From ab35a64debd3a6427772ff74fe1caefb6a0351cf Mon Sep 17 00:00:00 2001
+From: Motomu Utsumi <motomuman@google.com>
+Date: Fri, 27 Jan 2023 15:29:14 +0900
+Subject: [PATCH] cronet: Remove androidx dependency for cronet build
+
+base_java doesn't use androidx_core_core if is_cronet_build is true.
+So, androidx_core_core can be removed from the deps if is_cronet_build
+is true.
+This change depends on local patch aosp/2369503
+
+Test: m
+Change-Id: Icb251c4c4446aa3b072312e722fa4241ba96f847
+---
+ base/BUILD.gn | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/base/BUILD.gn b/base/BUILD.gn
+index 02c76108..1dbbb845 100644
+--- a/base/BUILD.gn
++++ b/base/BUILD.gn
+@@ -4209,9 +4209,12 @@ if (is_android) {
+       "//third_party/androidx:androidx_annotation_annotation_experimental_java",
+       "//third_party/androidx:androidx_annotation_annotation_java",
+       "//third_party/androidx:androidx_collection_collection_java",
+-      "//third_party/androidx:androidx_core_core_java",
+     ]
+ 
++    if (!is_cronet_build) {
++      deps += [ "//third_party/androidx:androidx_core_core_java" ]
++    }
++
+     sources = [
+       "android/java/src/org/chromium/base/ActivityState.java",
+       "android/java/src/org/chromium/base/ApiCompatibilityUtils.java",
+-- 
+2.39.1.456.gfc5497dd1b-goog
+
