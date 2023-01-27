@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aae8cae0_714f97b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:29:46Z",
+      "side": 1,
+      "message": "I\u0027ve skimmed through the subdirs and I think that a bunch can be removed (I\u0027ve left a couple of comments).\n\nIs this something we care about?",
+      "revId": "357b3ef755706e8871300dbed2a8eb3fd21b88d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "262cb510_8e24800a",
+        "filename": "testing/buildbot/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:29:46Z",
+      "side": 1,
+      "message": "The buildbot subdir shouldn\u0027t be needed (AFAIU, it\u0027s just metadata for Chromium\u0027s testing infra).",
+      "revId": "357b3ef755706e8871300dbed2a8eb3fd21b88d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e07449cc_57865da5",
+        "filename": "testing/chromoting/browser_test_commands_linux.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:29:46Z",
+      "side": 1,
+      "message": "chromoting subdir is probably also redundant.",
+      "revId": "357b3ef755706e8871300dbed2a8eb3fd21b88d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
