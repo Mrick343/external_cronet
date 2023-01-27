@@ -891,7 +891,9 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -2225,11 +2227,13 @@ cc_object {
             ],
         },
     },
+    min_sdk_version: "29",
 }
 
 // GN: //buildtools/third_party/libc++abi:libc++abi
 cc_object {
     name: "cronet_aml_buildtools_third_party_libc__abi_libc__abi",
+    min_sdk_version: "29",
     srcs: [
         "buildtools/third_party/libc++abi/trunk/src/abort_message.cpp",
         "buildtools/third_party/libc++abi/trunk/src/cxa_aux_runtime.cpp",
@@ -2377,7 +2381,9 @@ cc_library_shared {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3053,7 +3059,9 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3422,7 +3430,9 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3533,7 +3543,9 @@ cc_object {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3599,7 +3611,9 @@ cc_object {
         "libandroid",
         "liblog",
         "libprotobuf-cpp-lite",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3725,7 +3739,9 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -3842,7 +3858,9 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -4474,7 +4492,9 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -4576,7 +4596,9 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -4690,7 +4712,9 @@ cc_object {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5337,7 +5361,9 @@ cc_library_static {
         "libandroid",
         "liblog",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5469,7 +5495,9 @@ cc_object {
         "liblog",
         "libprotobuf-cpp-lite",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5703,7 +5731,9 @@ cc_object {
         "liblog",
         "libprotobuf-cpp-lite",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -5785,7 +5815,9 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -6267,7 +6299,9 @@ cc_library_static {
         "liblog",
         "libprotobuf-cpp-lite",
         "libz",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -6350,7 +6384,9 @@ cc_object {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -6416,7 +6452,9 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -10541,7 +10579,9 @@ cc_library_static {
     shared_libs: [
         "libandroid",
         "liblog",
-        "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_bssl",
+        "cronet_libcrypto",
+        "cronet_libssl",
     ],
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
@@ -10699,6 +10739,235 @@ license {
         "third_party/modp_b64/LICENSE",
         "third_party/protobuf/LICENSE",
         "third_party/protobuf/third_party/utf8_range/LICENSE",
+    ],
+}
+
+build = ["sources.bp"]
+
+cc_defaults {
+    name: "cronet_defaults",
+    cflags: [
+        "-DGOOGLE_PROTOBUF_NO_RTTI",
+        "-DBORINGSSL_SHARED_LIBRARY",
+        "-O2",
+        "-Wno-ambiguous-reversed-operator",
+        "-Wno-deprecated-non-prototype",
+        "-Wno-error=return-type",
+        "-Wno-macro-redefined",
+        "-Wno-missing-field-initializers",
+        "-Wno-non-virtual-dtor",
+        "-Wno-null-pointer-subtraction",
+        "-Wno-sign-compare",
+        "-Wno-sign-promo",
+        "-Wno-unreachable-code-loop-increment",
+        "-Wno-unused-parameter",
+        "-fPIC",
+        "-fvisibility=hidden",
+    ],
+    stl: "none",
+    apex_available: [
+        "com.android.tethering",
+    ],  
+    min_sdk_version: "29",
+    local_include_dirs: [
+        "buildtools/third_party/libc++/",
+        "buildtools/third_party/libc++/trunk/include",
+        "buildtools/third_party/libc++abi/trunk/include",
+    ],    
+}
+
+cc_defaults {
+    name: "cronet_boringssl_flags",
+
+    cflags: [
+        "-fvisibility=hidden",
+        "-DBORINGSSL_SHARED_LIBRARY",
+        "-DBORINGSSL_ANDROID_SYSTEM",
+        "-DOPENSSL_SMALL",
+        "-Werror",
+        "-Wno-unused-parameter",
+    ],      
+
+    cppflags: [
+        "-Wall",
+        "-Werror",
+    ],      
+
+    // Build BoringSSL and its tests against the same STL.
+//    sdk_version: "9",
+    stl: "none",
+}
+    
+cc_defaults {
+    name: "cronet_boringssl_defaults",
+
+    local_include_dirs: ["third_party/boringssl/src/include"],
+    export_include_dirs: ["third_party/boringssl/src/include"],
+    cflags: [
+        "-DBORINGSSL_IMPLEMENTATION",
+        "-DBORINGSSL_SHARED_LIBRARY",
+    ],
+}
+
+cc_defaults {
+    name: "cronet_libcrypto_defaults",
+
+    // Windows and Macs both have problems with assembly files
+    target: {
+//        windows: {
+//            enabled: true,
+//            cflags: ["-DOPENSSL_NO_ASM"],
+//            host_ldlibs: ["-lws2_32"],
+//        },
+//        darwin: {
+//            cflags: ["-DOPENSSL_NO_ASM"],
+//        },
+//        host: {
+//            host_ldlibs: ["-lpthread"],
+//        },
+        android: {
+            // On FIPS builds (i.e. Android only) prevent other libraries
+            // from pre-empting symbols in libcrypto which could affect FIPS
+            // compliance and cause integrity checks to fail. See b/160231064.
+            ldflags: ["-Wl,-Bsymbolic"],
+        },
+    },
+
+    cflags: [
+        "-DBORINGSSL_SHARED_LIBRARY",
+
+    ],
+
+    local_include_dirs: ["third_party/boringssl/src/crypto"],
+    stl: "none",
+}   
+    
+
+cc_object {
+    name: "cronet_bcm_object",
+    defaults: [
+        "cronet_libcrypto_bcm_sources",
+        "cronet_libcrypto_defaults",
+        "cronet_boringssl_defaults",
+        "cronet_boringssl_flags",
+        "cronet_defaults",
+    ],
+    sanitize: {
+        address: false,
+        hwaddress: false,
+        memtag_stack: false,
+        fuzzer: false,
+    },
+    target: {
+        android: {
+            cflags: [
+                "-DBORINGSSL_FIPS",
+                "-fPIC",
+                // -fno[data|text]-sections required to ensure a
+                // single text and data section for FIPS integrity check
+                "-fno-data-sections",
+                "-fno-function-sections",
+            ],
+            linker_script: "third_party/boringssl/src/crypto/fipsmodule/fips_shared.lds",
+        },
+        // Temporary hack to let BoringSSL build with a new compiler.
+        // This doesn't enable HWASAN unconditionally, it just causes
+        // BoringSSL's asm code to unconditionally use a HWASAN-compatible
+        // global variable reference so that the non-HWASANified (because of
+        // sanitize: { hwaddress: false } above) code in the BCM can
+        // successfully link against the HWASANified code in the rest of
+        // BoringSSL in HWASAN builds.
+        android_arm64: {
+            asflags: [
+                "-fsanitize=hwaddress",
+            ],
+        },
+    },
+    apex_available: [
+        "com.android.tethering",
+    ],
+    min_sdk_version: "29",
+}
+
+cc_library_shared {
+    name: "cronet_libcrypto",
+    visibility: ["//visibility:public"],
+    defaults: [
+        "cronet_libcrypto_sources",
+        "cronet_libcrypto_defaults",
+        "cronet_boringssl_defaults",
+        "cronet_boringssl_flags",
+        "cronet_defaults",
+    ],
+    unique_host_soname: true,
+    srcs: [
+        ":cronet_bcm_object",
+    ],
+    target: {
+        android: {
+            cflags: [
+                "-DBORINGSSL_FIPS",
+            ],
+            sanitize: {
+                // Disable address sanitizing otherwise libcrypto will not report
+                // itself as being in FIPS mode, which causes boringssl_self_test
+                // to fail.
+                address: false,
+            },
+//            inject_bssl_hash: true,
+        },
+    },
+    apex_available: [
+        "com.android.tethering",
+    ],
+    min_sdk_version: "29",
+}
+
+cc_library_shared {
+    name: "cronet_libssl",
+    visibility: ["//visibility:public"],
+    defaults: [
+        "cronet_libssl_sources",
+        "cronet_boringssl_defaults",
+        "cronet_boringssl_flags",
+        "cronet_defaults",
+    ],
+    target: {
+        windows: {
+            enabled: true,
+        },
+    },
+    unique_host_soname: true,
+
+    shared_libs: ["cronet_libcrypto"],
+
+    apex_available: [
+        "com.android.tethering",
+    ],
+    min_sdk_version: "29",
+}
+
+cc_library_shared {
+    name: "cronet_bssl",
+    defaults: [
+        "cronet_bssl_sources",
+        "cronet_boringssl_flags",
+        "cronet_defaults",
+    ],
+
+    srcs: [
+        ":cronet_aml_buildtools_third_party_libc___libc__",
+        ":cronet_aml_buildtools_third_party_libc__abi_libc__abi",
+    ],
+
+    shared_libs: [
+        "cronet_libcrypto",
+        "cronet_libssl",
+    ],
+    min_sdk_version: "29",
+//    sdk_version: "module_current",
+    cflags: [
+        "-DBORINGSSL_SHARED_LIBRARY",
     ],
 }
 
