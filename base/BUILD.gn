@@ -4209,8 +4209,10 @@ if (is_android) {
       "//third_party/androidx:androidx_annotation_annotation_experimental_java",
       "//third_party/androidx:androidx_annotation_annotation_java",
       "//third_party/androidx:androidx_collection_collection_java",
-      "//third_party/androidx:androidx_core_core_java",
     ]
+    if (!is_cronet_build) {
+      deps += [ "//third_party/androidx:androidx_core_core_java" ]
+    }
 
     sources = [
       "android/java/src/org/chromium/base/ActivityState.java",
