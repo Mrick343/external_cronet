@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f45fad28_c12f7479",
+        "filename": "test_runner/src/com.android.tests.chromium.host/InstrumentationCommandBuilder.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:22:07Z",
+      "side": 1,
+      "message": "If this is mandatory it think it would be better to requires this in InstrumentationCommandBuilder\u0027s constructor (and throw there if it\u0027s null or it doesn\u0027t \"represent\" an activity name).",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 36
+      },
+      "revId": "6caad951a680d0f35dd2630f6a9ffaf15a02574f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

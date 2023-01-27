@@ -159,6 +159,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b85eeda0_85a59794",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:22:07Z",
+      "side": 1,
+      "message": "Oh, if there are additional files passed around then yes, we can\u0027t do much about it. Let\u0027s keep this as is.",
+      "parentUuid": "ae304816_fd9249ae",
+      "range": {
+        "startLine": 97,
+        "startChar": 41,
+        "endLine": 97,
+        "endChar": 69
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e93d7e0_4da1b03c",
@@ -206,6 +230,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1524562_e6b4a656",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:22:07Z",
+      "side": 1,
+      "message": "LG, thanks!",
+      "parentUuid": "d9f28244_5adf6f49",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 98,
+        "endChar": 77
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7bfc7189_4fed6261",
@@ -243,6 +291,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "7bfc7189_4fed6261",
+      "range": {
+        "startLine": 102,
+        "startChar": 17,
+        "endLine": 102,
+        "endChar": 37
+      },
+      "revId": "b9523a3067c677cae93b19208d0828699d463c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12532c28_5fb2cc15",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-27T11:22:07Z",
+      "side": 1,
+      "message": "Ideally we would have a Builder method for each of these option, that way you could do something like\n```\nInstrumentationCommand.Builder builder \u003d new InstrumentationCommandBuilder()\n    // [...]\n    .setNativeTestActivityKey(NATIVE_UNIT_TEST_ACTIVITY_KEY);\nInstrumentationCommand cmd \u003d builder.build();\ncmd.run();\n```\n\nI don\u0027t think we will often need to change this, so what we have is good enough (this was a readability-nit to begin with).",
+      "parentUuid": "e2b3dd83_27757025",
       "range": {
         "startLine": 102,
         "startChar": 17,
