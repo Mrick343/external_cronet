@@ -6,6 +6,9 @@ package android.net.http;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -63,7 +66,7 @@ public abstract class HttpEngine {
          *                context will be kept, so as to avoid extending
          *                the lifetime of {@code context} unnecessarily.
          */
-        public Builder(Context context) {
+        public Builder(@NonNull Context context) {
             this(createBuilderDelegate(context));
         }
 
@@ -86,6 +89,7 @@ public abstract class HttpEngine {
          *
          * @return User-Agent string.
          */
+        @NonNull
         public String getDefaultUserAgent() {
             return mBuilderDelegate.getDefaultUserAgent();
         }
@@ -99,7 +103,8 @@ public abstract class HttpEngine {
          * @param userAgent the User-Agent string to use for all requests.
          * @return the builder to facilitate chaining.
          */
-        public Builder setUserAgent(String userAgent) {
+        @NonNull
+        public Builder setUserAgent(@Nullable String userAgent) {
             mBuilderDelegate.setUserAgent(userAgent);
             return this;
         }
@@ -115,7 +120,8 @@ public abstract class HttpEngine {
          * @param value path to existing directory.
          * @return the builder to facilitate chaining.
          */
-        public Builder setStoragePath(String value) {
+        @NonNull
+        public Builder setStoragePath(@NonNull String value) {
             mBuilderDelegate.setStoragePath(value);
             return this;
         }
@@ -127,6 +133,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable QUIC, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         public Builder setEnableQuic(boolean value) {
             mBuilderDelegate.enableQuic(value);
             return this;
@@ -138,6 +145,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable HTTP/2, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         public Builder setEnableHttp2(boolean value) {
             mBuilderDelegate.enableHttp2(value);
             return this;
@@ -150,6 +158,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable Brotli, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         public Builder setEnableBrotli(boolean value) {
             mBuilderDelegate.enableBrotli(value);
             return this;
@@ -190,6 +199,7 @@ public abstract class HttpEngine {
          * exceeded at times).
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         public Builder setEnableHttpCache(int cacheMode, long maxSize) {
             mBuilderDelegate.enableHttpCache(cacheMode, maxSize);
             return this;
@@ -206,7 +216,8 @@ public abstract class HttpEngine {
          * @param alternatePort alternate port to use for QUIC.
          * @return the builder to facilitate chaining.
          */
-        public Builder addQuicHint(String host, int port, int alternatePort) {
+        @NonNull
+        public Builder addQuicHint(@NonNull String host, int port, int alternatePort) {
             mBuilderDelegate.addQuicHint(host, port, alternatePort);
             return this;
         }
@@ -252,8 +263,9 @@ public abstract class HttpEngine {
          *                                  contains a byte array that does not represent a valid
          *                                  SHA-256 hash.
          */
-        public Builder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
-                boolean includeSubdomains, Instant expirationInstant) {
+        @NonNull
+        public Builder addPublicKeyPins(@NonNull String hostName, @NonNull Set<byte[]> pinsSha256,
+                boolean includeSubdomains, @NonNull Instant expirationInstant) {
             mBuilderDelegate.addPublicKeyPins(
                     hostName, pinsSha256, includeSubdomains, expirationInstant);
             return this;
@@ -272,6 +284,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable the bypass, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         public Builder setEnablePublicKeyPinningBypassForLocalTrustAnchors(boolean value) {
             mBuilderDelegate.enablePublicKeyPinningBypassForLocalTrustAnchors(value);
             return this;
@@ -286,8 +299,9 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions quicOptions) {
+        public Builder setQuicOptions(@NonNull QuicOptions quicOptions) {
             mBuilderDelegate.setQuicOptions(quicOptions);
             return this;
         }
@@ -310,8 +324,9 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions dnsOptions) {
+        public Builder setDnsOptions(@NonNull DnsOptions dnsOptions) {
             mBuilderDelegate.setDnsOptions(dnsOptions);
             return this;
         }
@@ -335,9 +350,10 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
+        @NonNull
         @ConnectionMigrationOptions.Experimental
         public Builder setConnectionMigrationOptions(
-                ConnectionMigrationOptions connectionMigrationOptions) {
+                @NonNull ConnectionMigrationOptions connectionMigrationOptions) {
             mBuilderDelegate.setConnectionMigrationOptions(connectionMigrationOptions);
             return this;
         }
@@ -347,9 +363,10 @@ public abstract class HttpEngine {
          *
          * {@hide}
          */
+        @NonNull
         @ConnectionMigrationOptions.Experimental
         public Builder setConnectionMigrationOptions(
-                ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
+                @NonNull ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
             return setConnectionMigrationOptions(connectionMigrationOptionsBuilder.build());
         }
 
@@ -357,6 +374,7 @@ public abstract class HttpEngine {
          * Build a {@link HttpEngine} using this builder's configuration.
          * @return constructed {@link HttpEngine}.
          */
+        @NonNull
         public HttpEngine build() {
             return mBuilderDelegate.build();
         }
@@ -384,6 +402,7 @@ public abstract class HttpEngine {
     /**
      * @return a human-readable version string of the engine.
      */
+    @NonNull
     public abstract String getVersionString();
 
     /**
@@ -462,7 +481,8 @@ public abstract class HttpEngine {
      *     by this {@link HttpEngine}.
      * @throws IOException if an error occurs while opening the connection.
      */
-    public abstract URLConnection openConnection(URL url) throws IOException;
+    @NonNull
+    public abstract URLConnection openConnection(@NonNull URL url) throws IOException;
 
     /**
      * Creates a {@link URLStreamHandlerFactory} to handle HTTP and HTTPS
@@ -495,6 +515,7 @@ public abstract class HttpEngine {
      * @return an {@link URLStreamHandlerFactory} instance implemented by this
      *         {@link HttpEngine}.
      */
+    @NonNull
     public abstract URLStreamHandlerFactory createURLStreamHandlerFactory();
 
     /**
@@ -508,6 +529,7 @@ public abstract class HttpEngine {
      * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
      */
+    @NonNull
     public abstract UrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor);
+            @NonNull String url, @NonNull UrlRequest.Callback callback, @NonNull Executor executor);
 }

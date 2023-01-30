@@ -1,0 +1,393 @@
+From 741f6e84fd4a4a0d25f1247f5b2811eadfe6c8f6 Mon Sep 17 00:00:00 2001
+From: Chidera Olibie <colibie@google.com>
+Date: Mon, 30 Jan 2023 16:49:36 +0000
+Subject: [PATCH] Fix some api linter issues for cronet
+
+Test: th
+Change-Id: I11dcd703d162817c2d1010d8d901c1626d0ea6cf
+---
+ .../android/net/http/CallbackException.java   |  4 +-
+ .../net/http/ConnectionMigrationOptions.java  | 16 ++++++-
+ .../api/src/android/net/http/DnsOptions.java  |  7 ++-
+ .../api/src/android/net/http/HttpEngine.java  | 46 ++++++++++++++-----
+ 4 files changed, 57 insertions(+), 16 deletions(-)
+
+diff --git a/components/cronet/android/api/src/android/net/http/CallbackException.java b/components/cronet/android/api/src/android/net/http/CallbackException.java
+index a114d8a9..93f27e33 100644
+--- a/components/cronet/android/api/src/android/net/http/CallbackException.java
++++ b/components/cronet/android/api/src/android/net/http/CallbackException.java
+@@ -4,6 +4,8 @@
+ 
+ package android.net.http;
+ 
++import androidx.annotation.Nullable;
++
+ /**
+  * Exception passed to {@link UrlRequest.Callback#onFailed UrlRequest.Callback.onFailed()} when
+  * {@link UrlRequest.Callback} or {@link UploadDataProvider} method throws an exception. In this
+@@ -18,7 +20,7 @@ public abstract class CallbackException extends HttpException {
+       * @param cause exception thrown by {@link UrlRequest.Callback} that's being wrapped. It is
+       *        saved for later retrieval by the {@link java.io.IOException#getCause getCause()}.
+       */
+-    protected CallbackException(String message, Throwable cause) {
++    protected CallbackException(@Nullable String message, @Nullable Throwable cause) {
+         super(message, cause);
+     }
+ }
+diff --git a/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java b/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
+index c9ea9c78..cb37525c 100644
+--- a/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
++++ b/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
+@@ -4,6 +4,7 @@
+ 
+ package android.net.http;
+ 
++import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ 
+ import java.time.Duration;
+@@ -203,6 +204,7 @@ public class ConnectionMigrationOptions {
+          *
+          * @return this builder for chaining
+          */
++        @NonNull
+         public Builder setEnableDefaultNetworkMigration(
+                 boolean enableDefaultNetworkConnectionMigration) {
+             this.mEnableDefaultNetworkMigration = enableDefaultNetworkConnectionMigration;
+@@ -218,6 +220,7 @@ public class ConnectionMigrationOptions {
+          *
+          * @return this builder for chaining
+          */
++        @NonNull
+         public Builder setEnablePathDegradationMigration(boolean enable) {
+             this.mEnablePathDegradationMigration = enable;
+             return this;
+@@ -232,6 +235,7 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setAllowServerMigration(boolean allowServerMigration) {
+             this.mAllowServerMigration = allowServerMigration;
+             return this;
+@@ -250,6 +254,7 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setMigrateIdleConnections(boolean migrateIdleConnections) {
+             this.mMigrateIdleConnections = migrateIdleConnections;
+             return this;
+@@ -266,8 +271,9 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setIdleMigrationPeriodSeconds(
+-                Duration idleConnectionMigrationPeriod) {
++                @Nullable Duration idleConnectionMigrationPeriod) {
+             this.mIdleConnectionMigrationPeriod = idleConnectionMigrationPeriod;
+             return this;
+         }
+@@ -287,6 +293,7 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setAllowNonDefaultNetworkUsage(boolean enable) {
+             this.mAllowNonDefaultNetworkUsage = enable;
+             return this;
+@@ -304,8 +311,9 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setMaxTimeOnNonDefaultNetworkSeconds(
+-                Duration maxTimeOnNonDefaultNetwork) {
++                @Nullable Duration maxTimeOnNonDefaultNetwork) {
+             this.mMaxTimeOnNonDefaultNetwork = maxTimeOnNonDefaultNetwork;
+             return this;
+         }
+@@ -321,6 +329,7 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setMaxWriteErrorNonDefaultNetworkMigrationsCount(
+                 int maxWriteErrorNonDefaultMigrationsCount) {
+             this.mMaxWriteErrorNonDefaultNetworkMigrationsCount = maxWriteErrorNonDefaultMigrationsCount;
+@@ -338,6 +347,7 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setMaxPathDegradingNonDefaultNetworkMigrationsCount(
+                 int maxPathDegradingNonDefaultMigrationsCount) {
+             this.mMaxPathDegradingNonDefaultMigrationsCount = maxPathDegradingNonDefaultMigrationsCount;
+@@ -359,6 +369,7 @@ public class ConnectionMigrationOptions {
+          * {@hide}
+          */
+         @Experimental
++        @NonNull
+         public Builder setRetryPreHandshakeErrorsOnNonDefaultNetwork(
+                 boolean retryPreHandshakeErrorsOnAlternateNetwork) {
+             this.mRetryPreHandshakeErrorsOnAlternateNetwork =
+@@ -370,6 +381,7 @@ public class ConnectionMigrationOptions {
+          * Creates and returns the final {@link ConnectionMigrationOptions} instance, based on the
+          * values in this builder.
+          */
++        @NonNull
+         public ConnectionMigrationOptions build() {
+             return new ConnectionMigrationOptions(this);
+         }
+diff --git a/components/cronet/android/api/src/android/net/http/DnsOptions.java b/components/cronet/android/api/src/android/net/http/DnsOptions.java
+index ebf9b178..d2ad9d2a 100644
+--- a/components/cronet/android/api/src/android/net/http/DnsOptions.java
++++ b/components/cronet/android/api/src/android/net/http/DnsOptions.java
+@@ -6,6 +6,7 @@ package android.net.http;
+ 
+ import android.os.Build.VERSION_CODES;
+ 
++import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ import androidx.annotation.RequiresApi;
+ 
+@@ -309,6 +310,7 @@ public final class DnsOptions {
+         /**
+          * {@hide}
+          */
++        @NonNull
+         public Builder setUseBuiltInDnsResolver(boolean enable) {
+             this.mUseBuiltInDnsResolver = enable;
+             return this;
+@@ -383,6 +385,7 @@ public final class DnsOptions {
+          *
+          * @return the builder for chaining
+          */
++        @NonNull
+         public Builder setPersistHostCache(boolean persistHostCache) {
+             this.mPersistHostCache = persistHostCache;
+             return this;
+@@ -395,7 +398,8 @@ public final class DnsOptions {
+          *
+          * @return the builder for chaining
+          */
+-        public Builder setPersistHostCachePeriod(Duration persistHostCachePeriod) {
++        @NonNull
++        public Builder setPersistHostCachePeriod(@NonNull Duration persistHostCachePeriod) {
+             this.mPersistHostCachePeriod = persistHostCachePeriod;
+             return this;
+         }
+@@ -404,6 +408,7 @@ public final class DnsOptions {
+          * Creates and returns the final {@link DnsOptions} instance, based on the values in this
+          * builder.
+          */
++        @NonNull
+         public DnsOptions build() {
+             return new DnsOptions(this);
+         }
+diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+index e4c543b1..e43d44bb 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+@@ -6,6 +6,9 @@ package android.net.http;
+ 
+ import android.content.Context;
+ 
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++
+ import java.io.IOException;
+ import java.lang.reflect.InvocationTargetException;
+ import java.net.URL;
+@@ -63,7 +66,7 @@ public abstract class HttpEngine {
+          *                context will be kept, so as to avoid extending
+          *                the lifetime of {@code context} unnecessarily.
+          */
+-        public Builder(Context context) {
++        public Builder(@NonNull Context context) {
+             this(createBuilderDelegate(context));
+         }
+ 
+@@ -86,6 +89,7 @@ public abstract class HttpEngine {
+          *
+          * @return User-Agent string.
+          */
++        @NonNull
+         public String getDefaultUserAgent() {
+             return mBuilderDelegate.getDefaultUserAgent();
+         }
+@@ -99,7 +103,8 @@ public abstract class HttpEngine {
+          * @param userAgent the User-Agent string to use for all requests.
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder setUserAgent(String userAgent) {
++        @NonNull
++        public Builder setUserAgent(@Nullable String userAgent) {
+             mBuilderDelegate.setUserAgent(userAgent);
+             return this;
+         }
+@@ -115,7 +120,8 @@ public abstract class HttpEngine {
+          * @param value path to existing directory.
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder setStoragePath(String value) {
++        @NonNull
++        public Builder setStoragePath(@NonNull String value) {
+             mBuilderDelegate.setStoragePath(value);
+             return this;
+         }
+@@ -127,6 +133,7 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable QUIC, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         public Builder setEnableQuic(boolean value) {
+             mBuilderDelegate.enableQuic(value);
+             return this;
+@@ -138,6 +145,7 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable HTTP/2, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         public Builder setEnableHttp2(boolean value) {
+             mBuilderDelegate.enableHttp2(value);
+             return this;
+@@ -150,6 +158,7 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable Brotli, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         public Builder setEnableBrotli(boolean value) {
+             mBuilderDelegate.enableBrotli(value);
+             return this;
+@@ -190,6 +199,7 @@ public abstract class HttpEngine {
+          * exceeded at times).
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         public Builder setEnableHttpCache(int cacheMode, long maxSize) {
+             mBuilderDelegate.enableHttpCache(cacheMode, maxSize);
+             return this;
+@@ -206,7 +216,8 @@ public abstract class HttpEngine {
+          * @param alternatePort alternate port to use for QUIC.
+          * @return the builder to facilitate chaining.
+          */
+-        public Builder addQuicHint(String host, int port, int alternatePort) {
++        @NonNull
++        public Builder addQuicHint(@NonNull String host, int port, int alternatePort) {
+             mBuilderDelegate.addQuicHint(host, port, alternatePort);
+             return this;
+         }
+@@ -252,8 +263,9 @@ public abstract class HttpEngine {
+          *                                  contains a byte array that does not represent a valid
+          *                                  SHA-256 hash.
+          */
+-        public Builder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
+-                boolean includeSubdomains, Instant expirationInstant) {
++        @NonNull
++        public Builder addPublicKeyPins(@NonNull String hostName, @NonNull Set<byte[]> pinsSha256,
++                boolean includeSubdomains, @NonNull Instant expirationInstant) {
+             mBuilderDelegate.addPublicKeyPins(
+                     hostName, pinsSha256, includeSubdomains, expirationInstant);
+             return this;
+@@ -272,6 +284,7 @@ public abstract class HttpEngine {
+          * @param value {@code true} to enable the bypass, {@code false} to disable.
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         public Builder setEnablePublicKeyPinningBypassForLocalTrustAnchors(boolean value) {
+             mBuilderDelegate.enablePublicKeyPinningBypassForLocalTrustAnchors(value);
+             return this;
+@@ -286,8 +299,9 @@ public abstract class HttpEngine {
+          *
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         @QuicOptions.Experimental
+-        public Builder setQuicOptions(QuicOptions quicOptions) {
++        public Builder setQuicOptions(@NonNull QuicOptions quicOptions) {
+             mBuilderDelegate.setQuicOptions(quicOptions);
+             return this;
+         }
+@@ -310,8 +324,9 @@ public abstract class HttpEngine {
+          *
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         @DnsOptions.Experimental
+-        public Builder setDnsOptions(DnsOptions dnsOptions) {
++        public Builder setDnsOptions(@NonNull DnsOptions dnsOptions) {
+             mBuilderDelegate.setDnsOptions(dnsOptions);
+             return this;
+         }
+@@ -335,9 +350,10 @@ public abstract class HttpEngine {
+          *
+          * @return the builder to facilitate chaining.
+          */
++        @NonNull
+         @ConnectionMigrationOptions.Experimental
+         public Builder setConnectionMigrationOptions(
+-                ConnectionMigrationOptions connectionMigrationOptions) {
++                @NonNull ConnectionMigrationOptions connectionMigrationOptions) {
+             mBuilderDelegate.setConnectionMigrationOptions(connectionMigrationOptions);
+             return this;
+         }
+@@ -347,9 +363,10 @@ public abstract class HttpEngine {
+          *
+          * {@hide}
+          */
++        @NonNull
+         @ConnectionMigrationOptions.Experimental
+         public Builder setConnectionMigrationOptions(
+-                ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
++                @NonNull ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
+             return setConnectionMigrationOptions(connectionMigrationOptionsBuilder.build());
+         }
+ 
+@@ -357,6 +374,7 @@ public abstract class HttpEngine {
+          * Build a {@link HttpEngine} using this builder's configuration.
+          * @return constructed {@link HttpEngine}.
+          */
++        @NonNull
+         public HttpEngine build() {
+             return mBuilderDelegate.build();
+         }
+@@ -384,6 +402,7 @@ public abstract class HttpEngine {
+     /**
+      * @return a human-readable version string of the engine.
+      */
++    @NonNull
+     public abstract String getVersionString();
+ 
+     /**
+@@ -462,7 +481,8 @@ public abstract class HttpEngine {
+      *     by this {@link HttpEngine}.
+      * @throws IOException if an error occurs while opening the connection.
+      */
+-    public abstract URLConnection openConnection(URL url) throws IOException;
++    @NonNull
++    public abstract URLConnection openConnection(@NonNull URL url) throws IOException;
+ 
+     /**
+      * Creates a {@link URLStreamHandlerFactory} to handle HTTP and HTTPS
+@@ -495,6 +515,7 @@ public abstract class HttpEngine {
+      * @return an {@link URLStreamHandlerFactory} instance implemented by this
+      *         {@link HttpEngine}.
+      */
++    @NonNull
+     public abstract URLStreamHandlerFactory createURLStreamHandlerFactory();
+ 
+     /**
+@@ -508,6 +529,7 @@ public abstract class HttpEngine {
+      * @param callback callback object that gets invoked on different events.
+      * @param executor {@link Executor} on which all callbacks will be invoked.
+      */
++    @NonNull
+     public abstract UrlRequest.Builder newUrlRequestBuilder(
+-            String url, UrlRequest.Callback callback, Executor executor);
++            @NonNull String url, @NonNull UrlRequest.Callback callback, @NonNull Executor executor);
+ }
+-- 
+2.39.1.581.gbfd45094c4-goog
+
