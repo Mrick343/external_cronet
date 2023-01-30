@@ -16,6 +16,24 @@
       "message": "You have most likely already tried this but I\u0027ll ask just to confirm: isn\u0027t there a way to proguard then jarjar?",
       "revId": "99034671e90efef65e0cdd5b979295b6af27e0a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84f84c81_5131c733",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-30T17:22:15Z",
+      "side": 1,
+      "message": "From what I understand, no.\nSee https://source.corp.google.com/android-internal/build/soong/java/base.go;l\u003d1490;rcl\u003d932225e162c9889d82880da2489fc9ea7cc71840.\n\nIn function compile:\njarjar\u0027ing happens on lines 1398-1414, and proguard / R8 runs as part of compileDex on line 1490.",
+      "parentUuid": "6783c64e_0e185fc2",
+      "revId": "99034671e90efef65e0cdd5b979295b6af27e0a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
