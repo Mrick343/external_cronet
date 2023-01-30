@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6783c64e_0e185fc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-30T10:15:13Z",
+      "side": 1,
+      "message": "You have most likely already tried this but I\u0027ll ask just to confirm: isn\u0027t there a way to proguard then jarjar?",
+      "revId": "99034671e90efef65e0cdd5b979295b6af27e0a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
