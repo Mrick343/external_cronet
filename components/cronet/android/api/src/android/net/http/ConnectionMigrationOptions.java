@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import android.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 
 import java.time.Duration;
@@ -203,6 +205,7 @@ public class ConnectionMigrationOptions {
          *
          * @return this builder for chaining
          */
+        @NonNull
         public Builder setEnableDefaultNetworkMigration(
                 boolean enableDefaultNetworkConnectionMigration) {
             this.mEnableDefaultNetworkMigration = enableDefaultNetworkConnectionMigration;
@@ -218,6 +221,7 @@ public class ConnectionMigrationOptions {
          *
          * @return this builder for chaining
          */
+        @NonNull
         public Builder setEnablePathDegradationMigration(boolean enable) {
             this.mEnablePathDegradationMigration = enable;
             return this;
@@ -232,6 +236,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setAllowServerMigration(boolean allowServerMigration) {
             this.mAllowServerMigration = allowServerMigration;
             return this;
@@ -250,6 +255,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setMigrateIdleConnections(boolean migrateIdleConnections) {
             this.mMigrateIdleConnections = migrateIdleConnections;
             return this;
@@ -266,8 +272,9 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setIdleMigrationPeriodSeconds(
-                Duration idleConnectionMigrationPeriod) {
+                @Nullable Duration idleConnectionMigrationPeriod) {
             this.mIdleConnectionMigrationPeriod = idleConnectionMigrationPeriod;
             return this;
         }
@@ -287,6 +294,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setAllowNonDefaultNetworkUsage(boolean enable) {
             this.mAllowNonDefaultNetworkUsage = enable;
             return this;
@@ -304,6 +312,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setMaxTimeOnNonDefaultNetworkSeconds(
                 Duration maxTimeOnNonDefaultNetwork) {
             this.mMaxTimeOnNonDefaultNetwork = maxTimeOnNonDefaultNetwork;
@@ -321,6 +330,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setMaxWriteErrorNonDefaultNetworkMigrationsCount(
                 int maxWriteErrorNonDefaultMigrationsCount) {
             this.mMaxWriteErrorNonDefaultNetworkMigrationsCount = maxWriteErrorNonDefaultMigrationsCount;
@@ -338,6 +348,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setMaxPathDegradingNonDefaultNetworkMigrationsCount(
                 int maxPathDegradingNonDefaultMigrationsCount) {
             this.mMaxPathDegradingNonDefaultMigrationsCount = maxPathDegradingNonDefaultMigrationsCount;
@@ -359,6 +370,7 @@ public class ConnectionMigrationOptions {
          * {@hide}
          */
         @Experimental
+        @NonNull
         public Builder setRetryPreHandshakeErrorsOnNonDefaultNetwork(
                 boolean retryPreHandshakeErrorsOnAlternateNetwork) {
             this.mRetryPreHandshakeErrorsOnAlternateNetwork =
@@ -370,6 +382,7 @@ public class ConnectionMigrationOptions {
          * Creates and returns the final {@link ConnectionMigrationOptions} instance, based on the
          * values in this builder.
          */
+        @NonNull
         public ConnectionMigrationOptions build() {
             return new ConnectionMigrationOptions(this);
         }
