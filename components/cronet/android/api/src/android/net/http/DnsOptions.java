@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import android.annotation.NonNull;
 import android.os.Build.VERSION_CODES;
 
 import androidx.annotation.Nullable;
@@ -309,6 +310,7 @@ public final class DnsOptions {
         /**
          * {@hide}
          */
+        @NonNull
         public Builder setUseBuiltInDnsResolver(boolean enable) {
             this.mUseBuiltInDnsResolver = enable;
             return this;
@@ -383,6 +385,7 @@ public final class DnsOptions {
          *
          * @return the builder for chaining
          */
+        @NonNull
         public Builder setPersistHostCache(boolean persistHostCache) {
             this.mPersistHostCache = persistHostCache;
             return this;
@@ -395,7 +398,8 @@ public final class DnsOptions {
          *
          * @return the builder for chaining
          */
-        public Builder setPersistHostCachePeriod(Duration persistHostCachePeriod) {
+        @NonNull
+        public Builder setPersistHostCachePeriod(@NonNull Duration persistHostCachePeriod) {
             this.mPersistHostCachePeriod = persistHostCachePeriod;
             return this;
         }
@@ -404,6 +408,7 @@ public final class DnsOptions {
          * Creates and returns the final {@link DnsOptions} instance, based on the values in this
          * builder.
          */
+        @NonNull
         public DnsOptions build() {
             return new DnsOptions(this);
         }

@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import android.annotation.NonNull;
+
 /**
  * Exception passed to {@link UrlRequest.Callback#onFailed UrlRequest.Callback.onFailed()} when
  * {@link UrlRequest.Callback} or {@link UploadDataProvider} method throws an exception. In this
@@ -18,7 +20,7 @@ public abstract class CallbackException extends HttpException {
       * @param cause exception thrown by {@link UrlRequest.Callback} that's being wrapped. It is
       *        saved for later retrieval by the {@link java.io.IOException#getCause getCause()}.
       */
-    protected CallbackException(String message, Throwable cause) {
+    protected CallbackException(@NonNull String message, @NonNull Throwable cause) {
         super(message, cause);
     }
 }
