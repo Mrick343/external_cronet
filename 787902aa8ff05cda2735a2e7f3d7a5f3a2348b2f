@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86c82518_a9be80b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-01-31T11:06:50Z",
+      "side": 1,
+      "message": "FYI, boringssl (\u0026 friends) build target will need to be treated in a special way to build in FIPS mode (this CL still needs to be cleanup but should give you an idea of what the end result will look like).\n\nCC\u0027ing you in case you have opinions on how we can integrate that in gn2bp.",
+      "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
