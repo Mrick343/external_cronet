@@ -33,6 +33,47 @@
       "message": "From my own perspective, I\u0027d prefer to have all of BoringSSLs\u0027 modules in a different Android.bp file. Preferably inside third_party/boringssl. As those are a lot of manual changes that aren\u0027t bound to change. The sources is bound to change and we can reflect that in the script to generate a filegroup to be used in the other Android.bp. \n\nThis will make it easier to integrate with the script.",
       "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c24ac544_c6747160",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-31T16:54:49Z",
+      "side": 1,
+      "message": "Generally, gn2bp does what it advertises, so I think the way to approach this is to first make these changes to the BUILD.gn files.",
+      "parentUuid": "86c82518_a9be80b5",
+      "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec8af00c_74d00762",
+        "filename": "Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 10836,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-01-31T16:54:49Z",
+      "side": 1,
+      "message": "presumably, we won\u0027t actually need these, right?",
+      "range": {
+        "startLine": 10826,
+        "startChar": 0,
+        "endLine": 10836,
+        "endChar": 10
+      },
+      "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
