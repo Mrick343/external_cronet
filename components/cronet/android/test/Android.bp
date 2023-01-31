@@ -20,5 +20,18 @@ package {
 
 filegroup {
     name: "cronet_aml_javatests_sources",
-    srcs: ["javatests/**/UrlResponseInfoTest.java"],
+    srcs: [
+        "android/test/javatests/**/UrlResponseInfoTest.java",
+        "android/test/javatests/**/CronetTestRule.java",
+        "android/test/javatests/**/CronetTestRuleTest.java",
+    ],
+}
+
+filegroup {
+    name: "cronet_aml_nativetestserver_data_sources",
+    srcs: [
+        "testing/test_server/data/**/*.txt",
+        "testing/test_server/data/**/*.mock-http-headers",
+        "testing/test_server/data/**/*.html",
+    ],
 }
