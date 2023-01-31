@@ -16,6 +16,23 @@
       "message": "FYI, boringssl (\u0026 friends) build target will need to be treated in a special way to build in FIPS mode (this CL still needs to be cleanup but should give you an idea of what the end result will look like).\n\nCC\u0027ing you in case you have opinions on how we can integrate that in gn2bp.",
       "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46a1aa70_3e9269d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-01-31T11:44:32Z",
+      "side": 1,
+      "message": "From my own perspective, I\u0027d prefer to have all of BoringSSLs\u0027 modules in a different Android.bp file. Preferably inside third_party/boringssl. As those are a lot of manual changes that aren\u0027t bound to change. The sources is bound to change and we can reflect that in the script to generate a filegroup to be used in the other Android.bp. \n\nThis will make it easier to integrate with the script.",
+      "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
