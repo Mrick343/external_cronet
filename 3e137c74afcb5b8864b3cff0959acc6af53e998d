@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e14eb82a_ffd80649",
+        "filename": "components/cronet/android/test/AndroidManifest.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-01T14:06:55Z",
+      "side": 0,
+      "message": "Have you confirmed that this is legally allowed?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 3
+      },
+      "revId": "3e137c74afcb5b8864b3cff0959acc6af53e998d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dee6cb2_a5ed34a8",
+        "filename": "components/cronet/android/test/AndroidManifest.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-01T14:06:55Z",
+      "side": 0,
+      "message": "Why do we need to modify/drop this stuff?",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 63
+      },
+      "revId": "3e137c74afcb5b8864b3cff0959acc6af53e998d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14b2d0d2_461709f0",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/UrlResponseInfoTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-01T14:06:55Z",
+      "side": 0,
+      "message": "Can these changes also be ported upstream?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 49
+      },
+      "revId": "3e137c74afcb5b8864b3cff0959acc6af53e998d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e808e81_6c5fe1a3",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/UrlResponseInfoTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-01T14:06:55Z",
+      "side": 0,
+      "message": "Does this cause any issues? If not, I would leave as to differ as less as possible from upstream.",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "3e137c74afcb5b8864b3cff0959acc6af53e998d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
