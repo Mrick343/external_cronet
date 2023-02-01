@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "98072900_017f0f7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-01T20:35:52Z",
+      "side": 1,
+      "message": "All of this should be moved to packages/modules/Connectivity. Please talk to Remi on the best way to do this.",
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9ecd88e_6b74417d",
         "filename": "components/cronet/android/test/Android.bp",
         "patchSetId": 2
@@ -19,6 +36,29 @@
         "startChar": 17,
         "endLine": 1,
         "endChar": 21
+      },
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90ccfc50_c33c709f",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-01T20:35:52Z",
+      "side": 1,
+      "message": "this should live inside packages/modules/Connectivity.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 0
       },
       "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
