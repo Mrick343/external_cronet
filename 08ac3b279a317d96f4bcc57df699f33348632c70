@@ -83,6 +83,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d19a58cd_7d82cf0d",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1288034
+      },
+      "writtenOn": "2023-02-02T01:53:34Z",
+      "side": 1,
+      "message": "(or is it actually necessary for code in //external ?)",
+      "parentUuid": "ad6ebe6f_3a2209fd",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 33,
+        "endChar": 21
+      },
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "90ccfc50_c33c709f",
         "filename": "components/cronet/android/test/Android.bp",
         "patchSetId": 2
