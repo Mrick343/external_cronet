@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28196294_4135adf7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T18:50:49Z",
+      "side": 1,
+      "message": "I cant move the test classes themselves to packages because they\u0027ll be periodically imported with the rest of cronet source plus I\u0027m not sure what the license policy will be.\n\nwhat I can do is to export them as a filegroup eg `cronet_aml_java_test_classes` which ill then use to create the test target in packages.\n\nwdyt?",
+      "parentUuid": "98072900_017f0f7d",
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9ecd88e_6b74417d",
         "filename": "components/cronet/android/test/Android.bp",
         "patchSetId": 2
@@ -129,6 +147,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9662597_743cb51d",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T18:50:49Z",
+      "side": 1,
+      "message": "Interesting, it works without the full target path. You cant do that in bazel.",
+      "parentUuid": "d19a58cd_7d82cf0d",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 33,
+        "endChar": 21
+      },
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "088cd3ba_39089c51",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T18:50:49Z",
+      "side": 1,
+      "message": "Interesting, thanks for explaining the reasoning behind applying jarjar rules to the last target.",
+      "parentUuid": "3fd67425_2fd8e5b3",
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "90ccfc50_c33c709f",
@@ -142,6 +202,30 @@
       "writtenOn": "2023-02-01T20:35:52Z",
       "side": 1,
       "message": "this should live inside packages/modules/Connectivity.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 0
+      },
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e826804_e3b79742",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T18:50:49Z",
+      "side": 1,
+      "message": "ditto",
+      "parentUuid": "90ccfc50_c33c709f",
       "range": {
         "startLine": 19,
         "startChar": 0,
