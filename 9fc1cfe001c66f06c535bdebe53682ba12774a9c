@@ -167,6 +167,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "15be6409_0500f7eb",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-02T14:27:53Z",
+      "side": 1,
+      "message": "If we\u0027re planning on maintaining backward compatibility we cannot do that, unless we handle this in the `org.chromium.net -\u003e android.net.http` adapter.\n\nAnyway, agreed. Let\u0027s defer this decision to next week (when Dan is back etc.etc.).",
+      "parentUuid": "f64ec13f_1fc6fa32",
+      "range": {
+        "startLine": 106,
+        "startChar": 36,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4cc9c903_f1758681",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 2
@@ -214,6 +238,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d2d7e946_285b1acb",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-02T14:27:53Z",
+      "side": 1,
+      "message": "I\u0027m guessing the getter should be marked as `@NonNull` and throw something like an `java.lang.IllegalStateException` if it\u0027s called before setting this?\n\ngo/android-api-guidelines#classes-avoid-optional says to do that for primitive types, but I guess it can also be applied to this case?",
+      "parentUuid": "3209fdbb_2c02d1cb",
+      "range": {
+        "startLine": 123,
+        "startChar": 38,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c2c0a6b_528b2dcb",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 2
@@ -249,6 +297,30 @@
       "side": 1,
       "message": "I don\u0027t think we need to if we are already annotating as nonNull? Not sure what the guideline is",
       "parentUuid": "0c2c0a6b_528b2dcb",
+      "range": {
+        "startLine": 219,
+        "startChar": 35,
+        "endLine": 219,
+        "endChar": 55
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9c5bb62_e81db1c1",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-02T14:27:53Z",
+      "side": 1,
+      "message": "I\u0027m basing this on\n```\nMethods are recommended to perform input validation for @NonNull parameters via\nObjects.requireNonNull() and throw a NullPointerException when the parameters are\nnull\n```\nfrom go/android-api-guidelines#nullability.",
+      "parentUuid": "ae1c556b_7005cf11",
       "range": {
         "startLine": 219,
         "startChar": 35,
