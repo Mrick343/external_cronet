@@ -43,6 +43,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ad6ebe6f_3a2209fd",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1288034
+      },
+      "writtenOn": "2023-02-02T01:53:11Z",
+      "side": 1,
+      "message": "I didn\u0027t know you could use this syntax; but typically I think we just write \":framework-tethering-jarjar-rules\"",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 33,
+        "endChar": 21
+      },
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fd67425_2fd8e5b3",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1288034
+      },
+      "writtenOn": "2023-02-02T01:53:11Z",
+      "side": 1,
+      "message": "With core networking tests we\u0027ve learned painfully that jarjar rules should be applied to the \"last artifact\" in the build, not intermediate libraries. So this should be applied on users of NetHttpTestsLib, not on NetHttpTestsLib itself (you could rename it to NetHttpTestsLibPreJarjar to make it clear maybe). Meaning that here, the jarjar_rules should be on NetHttpCoverageTests and NetHttpTests.\n\nOne typical problem is NetHttpTestsLib using some static lib (say net-tests-utils), and being included in SomeTestTarget which also uses net-tests-utils and framework-tethering-pre-jarjar. SomeTestTarget also needs to apply the jarjar rules (since it also uses framework-tethering-pre-jarjar), but that will fail because when jarjaring the net-tests-utils copy of SomeTestTarget, jarjar will find that it clashes with existing classes from NetHttpTestsLib (which also ships a jarjared copy of net-tests-utils).",
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "90ccfc50_c33c709f",
         "filename": "components/cronet/android/test/Android.bp",
         "patchSetId": 2
