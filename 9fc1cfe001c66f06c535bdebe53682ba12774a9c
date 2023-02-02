@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c5f65e4_06dbf5d9",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fae724ac_9ab4f219",
+      "range": {
+        "startLine": 275,
+        "startChar": 8,
+        "endLine": 275,
+        "endChar": 16
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4f71f90_5009de79",
@@ -70,6 +94,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb1b39cf_4fa0bfbd",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bff29b86_9a8dbc9c",
+      "range": {
+        "startLine": 68,
+        "startChar": 32,
+        "endLine": 68,
+        "endChar": 33
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "82215ab5_9c4c9780",
@@ -83,6 +131,30 @@
       "writtenOn": "2023-02-01T13:58:51Z",
       "side": 1,
       "message": "This makes to me since internally we set the user agent to the default one when `userAgent \u003d\u003d null`. Though Android API Council doesn\u0027t agree with this[1]: we currently have the setter accept a nullable parameter but the getter is always non-null.\n\nI\u0027m not sure if we should change the API or just live with this discrepancy?\n\n[1] go/android-api-guidelines#symmetric-nullability",
+      "range": {
+        "startLine": 106,
+        "startChar": 36,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f64ec13f_1fc6fa32",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "I feel like we should make it non-null. We dont expect users to call setter here with a null argument.\n\nwill leave this open for the api reviewer",
+      "parentUuid": "82215ab5_9c4c9780",
       "range": {
         "startLine": 106,
         "startChar": 36,
@@ -118,6 +190,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3209fdbb_2c02d1cb",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "this also brings up the symmetric-nullability question. ie when we add getStoragePath, setting it as NonNull wouldn\u0027t work because if setStoragePath is never called, the storage path will be null.\nWe can add a null check to the method itself to fix this.",
+      "parentUuid": "4cc9c903_f1758681",
+      "range": {
+        "startLine": 123,
+        "startChar": 38,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c2c0a6b_528b2dcb",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 2
@@ -129,6 +225,30 @@
       "writtenOn": "2023-02-01T13:58:51Z",
       "side": 1,
       "message": "Should we add a null check in the impl code https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBuilderImpl.java;l\u003d303;drc\u003dbb3b4d73e56f7c6d8494b398a703c13fa5d08d2f;bpv\u003d1;bpt\u003d1?",
+      "range": {
+        "startLine": 219,
+        "startChar": 35,
+        "endLine": 219,
+        "endChar": 55
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae1c556b_7005cf11",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to if we are already annotating as nonNull? Not sure what the guideline is",
+      "parentUuid": "0c2c0a6b_528b2dcb",
       "range": {
         "startLine": 219,
         "startChar": 35,
@@ -162,6 +282,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "397fd1b9_dac7323f",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6be3557f_57646d58",
+      "range": {
+        "startLine": 303,
+        "startChar": 38,
+        "endLine": 303,
+        "endChar": 49
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b9949f3_729a6889",
@@ -185,6 +329,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "125d245e_3a2d1750",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b9949f3_729a6889",
+      "range": {
+        "startLine": 406,
+        "startChar": 4,
+        "endLine": 406,
+        "endChar": 13
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10eb2841_9a5af605",
@@ -198,6 +366,30 @@
       "writtenOn": "2023-02-01T13:58:51Z",
       "side": 1,
       "message": "`@NonNull`?",
+      "range": {
+        "startLine": 486,
+        "startChar": 49,
+        "endLine": 486,
+        "endChar": 52
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dba1196d_202f122e",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-02T14:05:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10eb2841_9a5af605",
       "range": {
         "startLine": 486,
         "startChar": 49,
