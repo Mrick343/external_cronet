@@ -2528,6 +2528,7 @@ cc_library_shared {
     cpp_std: "c++17",
     ldflags: [
         "-Wl,--script,external/cronet/base/android/library_loader/anchor_functions.lds",
+        "-Wl,-z,muldefs",
     ],
     stem: "libcronet.108.0.5359.128",
     target: {
