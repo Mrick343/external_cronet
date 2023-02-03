@@ -20,7 +20,7 @@
 # BoringSSL checkout.
 #
 # On Android static binaries are not built using FIPS mode, so in device mode each
-# test makes changes to libcrypto.so rather than the test binary, test_fips.
+# test makes changes to cronet_libcrypto.so rather than the test binary, test_fips.
 
 set -e
 
@@ -87,9 +87,9 @@ run_test_on_device() {
 }
 
 device_integrity_break_test() {
-    go run $BORINGSSL/util/fipstools/break-hash.go $LIBCRYPTO_BIN ./libcrypto.so
-    $RUN $TEST_FIPS_BIN ./libcrypto.so
-    rm ./libcrypto.so
+    go run $BORINGSSL/util/fipstools/break-hash.go $LIBCRYPTO_BIN ./cronet_libcrypto.so
+    $RUN $TEST_FIPS_BIN ./cronet_libcrypto.so
+    rm ./cronet_libcrypto.so
 }
 
 local_integrity_break_test() {
@@ -103,9 +103,9 @@ local_integrity_break_test() {
 # separate functions for each.
 device_kat_break_test() {
     KAT="$1"
-    go run $BORINGSSL/util/fipstools/break-kat.go $LIBCRYPTO_BIN $KAT > ./libcrypto.so
-    $RUN $TEST_FIPS_BIN ./libcrypto.so
-    rm ./libcrypto.so
+    go run $BORINGSSL/util/fipstools/break-kat.go $LIBCRYPTO_BIN $KAT > ./cronet_libcrypto.so
+    $RUN $TEST_FIPS_BIN ./cronet_libcrypto.so
+    rm ./cronet_libcrypto.so
 }
 
 local_kat_break_test() {
@@ -123,7 +123,7 @@ pause () {
 
 if [ "$MODE" = "local" ]
 then
-    TEST_FIPS_BIN="build/util/fipstools/test_fips"
+    TEST_FIPS_BIN="build/util/fipstools/cronet_test_fips"
     BORINGSSL=.
     RUN=run_test_locally
     BREAK_TEST=local_break_test
@@ -139,9 +139,9 @@ else # Device mode
     test "$ANDROID_BUILD_TOP" || die "'lunch aosp_arm64-eng' first"
     check_directory "$ANDROID_PRODUCT_OUT"
 
-    TEST_FIPS_BIN="$ANDROID_PRODUCT_OUT/system/bin/test_fips"
+    TEST_FIPS_BIN="$ANDROID_PRODUCT_OUT/system/bin/cronet_test_fips"
     check_file "$TEST_FIPS_BIN"
-    LIBCRYPTO_BIN="$ANDROID_PRODUCT_OUT/system/lib64/libcrypto.so"
+    LIBCRYPTO_BIN="$ANDROID_PRODUCT_OUT/system_ext/apex/com.android.tethering/lib/cronet_libcrypto.so"
     check_file "$LIBCRYPTO_BIN"
 
     test "$ANDROID_SERIAL" || die "ANDROID_SERIAL not set"

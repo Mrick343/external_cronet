@@ -49,7 +49,7 @@ filegroup {
         "components/cronet/android/api/src/android/net/http/ExperimentalUrlRequest.java",
         "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "components/cronet/android/api/src/android/net/http/HttpException.java",
-        "components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java",
+        components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java",
         "components/cronet/android/api/src/android/net/http/InlineExecutionProhibitedException.java",
         "components/cronet/android/api/src/android/net/http/NetworkException.java",
         "components/cronet/android/api/src/android/net/http/NetworkQualityRttListener.java",
@@ -3936,7 +3936,7 @@ cc_defaults {
         "-DGOOGLE_PROTOBUF_NO_RTTI",
         "-O2",
         "-Wno-ambiguous-reversed-operator",
-        "-Wno-deprecated-non-prototype",
+//        "-Wno-deprecated-non-prototype",
         "-Wno-error=return-type",
         "-Wno-macro-redefined",
         "-Wno-missing-field-initializers",
@@ -10762,7 +10762,7 @@ cc_defaults {
         "-DBORINGSSL_SHARED_LIBRARY",
         "-O2",
         "-Wno-ambiguous-reversed-operator",
-        "-Wno-deprecated-non-prototype",
+//        "-Wno-deprecated-non-prototype",
         "-Wno-error=return-type",
         "-Wno-macro-redefined",
         "-Wno-missing-field-initializers",
@@ -11085,4 +11085,3 @@ cc_binary {
         "cronet_libcrypto_for_testing",
     ],
 }
-
