@@ -192,6 +192,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4a520944_195c23f1",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/UrlResponseInfoTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-03T00:19:26Z",
+      "side": 0,
+      "message": "It looks like it might still be better to bring in crrev/c/4218251 once ready. Doesn\u0027t seem like it\u0027s too far from being done?",
+      "parentUuid": "cb9b2f99_132229ec",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 49
+      },
+      "revId": "3e137c74afcb5b8864b3cff0959acc6af53e998d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9e808e81_6c5fe1a3",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/UrlResponseInfoTest.java",
         "patchSetId": 2
@@ -227,6 +251,30 @@
       "side": 0,
       "message": "removed from upstream. see https://chromium-review.googlesource.com/c/chromium/src/+/4214772",
       "parentUuid": "9e808e81_6c5fe1a3",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "3e137c74afcb5b8864b3cff0959acc6af53e998d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01a4b17c_e9d2320e",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/UrlResponseInfoTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-03T00:19:26Z",
+      "side": 0,
+      "message": "Can you bring in the entirety of crrev/c/4214772 as its own change and create a .patch file in patches/upstream-next (as part of the same change)?",
+      "parentUuid": "23696644_51c28ea2",
       "range": {
         "startLine": 34,
         "startChar": 4,
