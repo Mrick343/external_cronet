@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f1806d70_b3f0e0f4",
+        "filename": "testing/buildbot/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-02-03T17:46:03Z",
+      "side": 1,
+      "message": "I can\u0027t give a precise answer right now. But what we need from //testing doesn\u0027t exceed 3% of the files there. \n\nThere\u0027re no LICENSE file inside //testing. It\u0027s pure chromium",
+      "parentUuid": "13d886da_ec7dd337",
+      "revId": "357b3ef755706e8871300dbed2a8eb3fd21b88d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e07449cc_57865da5",
         "filename": "testing/chromoting/browser_test_commands_linux.txt",
         "patchSetId": 6
