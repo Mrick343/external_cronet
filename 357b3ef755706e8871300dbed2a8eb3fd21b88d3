@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "13d886da_ec7dd337",
+        "filename": "testing/buildbot/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-03T17:44:24Z",
+      "side": 1,
+      "message": "How large are these subdirs? //testing, //testing/buildbot?\nIf they are generally pretty small (and there are no licensing issues), I am in favor of just bringing in whole directories. We can always skim them down once we have import automation set up.",
+      "parentUuid": "bfe6bdd4_d2f327d4",
+      "revId": "357b3ef755706e8871300dbed2a8eb3fd21b88d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e07449cc_57865da5",
         "filename": "testing/chromoting/browser_test_commands_linux.txt",
         "patchSetId": 6
