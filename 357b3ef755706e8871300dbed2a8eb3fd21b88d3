@@ -109,6 +109,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "56b897e3_cc7f6fdc",
+        "filename": "testing/buildbot/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-03T17:49:47Z",
+      "side": 1,
+      "message": "Just checked:\n\n17M     ./testing\n\nand within //testing:\n440K    ./android\n12M     ./buildbot\n4.0K    ./BUILD.gn\n56K     ./chromoting\n32K     ./clusterfuzz\n4.0K    ./coverage_util_ios.h\n4.0K    ./coverage_util_ios.mm\n24K     ./data_driven_testing\n4.0K    ./DIR_METADATA\n4.0K    ./empty_main.cc\n132K    ./flake_suppressor_common\n4.0K    ./generate_location_tags.py\n32K     ./gmock\n48K     ./gtest\n24K     ./gtest_ios\n8.0K    ./gtest_mac.h\n8.0K    ./gtest_mac.mm\n4.0K    ./gtest_mac_unittest.mm\n0       ./__init__.py\n32K     ./iossim\n1.9M    ./libfuzzer\n396K    ./location_tags.json\n236K    ./merge_scripts\n4.0K    ./multiprocess_func_list.cc\n4.0K    ./multiprocess_func_list.h\n4.0K    ./OWNERS\n68K     ./perf\n4.0K    ./platform_test.h\n4.0K    ./platform_test_mac.mm\n4.0K    ./PRESUBMIT.py\n24K     ./pytype_common\n4.0K    ./run_pytype.py\n4.0K    ./run_with_dummy_home.py\n88K     ./rust_gtest_interop\n824K    ./scripts\n16K     ./test_env.py\n4.0K    ./test_env_test_script.py\n4.0K    ./test_env_unittest.py\n4.0K    ./test_env_user_script.py\n40K     ./test.gni\n84K     ./trigger_scripts\n400K    ./unexpected_passes_common\n428K    ./variations\n20K     ./xvfb.py\n4.0K    ./xvfb_test_script.py\n4.0K    ./xvfb_unittest.py\n\nSo maybe it makes sense to exclude //testing/buildbot, since it\u0027s 12 megs. I wouldn\u0027t bother with excluding anything else though.",
+      "parentUuid": "f1806d70_b3f0e0f4",
+      "revId": "357b3ef755706e8871300dbed2a8eb3fd21b88d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e07449cc_57865da5",
         "filename": "testing/chromoting/browser_test_commands_linux.txt",
         "patchSetId": 6
