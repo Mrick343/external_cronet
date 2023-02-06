@@ -46,6 +46,30 @@
       },
       "revId": "298c60f67a792953a77e4165e532cfcc82d6b326",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61600c5a_436ed5eb",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-06T20:14:31Z",
+      "side": 1,
+      "message": "You can safely disregard that linter warning. The LICENSE file covers the imported code, of which the Android.bp files are not part of.",
+      "parentUuid": "79532780_3ed49b0b",
+      "range": {
+        "startLine": 17,
+        "startChar": 35,
+        "endLine": 17,
+        "endChar": 53
+      },
+      "revId": "298c60f67a792953a77e4165e532cfcc82d6b326",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
