@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e89ca2b8_0d694ef0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T10:55:59Z",
+      "side": 1,
+      "message": "decided not to use the exclude_srcs as it didnt look clean. Will iteratively merge the patches together till I\u0027m done.",
+      "revId": "d1cd4cf6f6cb88e8f7f4be1264a7eeb796c52236",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
