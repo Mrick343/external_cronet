@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "70589687_904be3ed",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T18:16:20Z",
+      "side": 1,
+      "message": "This did not look nice. There\u0027s nothing like exclude_srcs_except\nSo I would have to do:\n\nexlude_srcs: [\"\\*\\*/\\*/A\\*.java\", \\*\\*/\\*/B\\*.java\",  \\*\\*/\\*/C\\*.java\", etc]\n\nI do not mind working across repository for each changes and we might end up not adding all the tests eventually.",
+      "parentUuid": "8b6366d4_22f86a8b",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 49
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cca7266e_f17945b7",
         "filename": "components/cronet/android/test/Android.bp",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2023-02-06T18:01:59Z",
       "side": 1,
       "message": "Also, maybe add a visibility annotation to make this visible to everything in packages/modules/Connectivity?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "068467d7_d88f2ad4",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T18:16:20Z",
+      "side": 1,
+      "message": "True, missed this.",
+      "parentUuid": "cca7266e_f17945b7",
       "range": {
         "startLine": 23,
         "startChar": 0,
@@ -60,6 +108,30 @@
       "writtenOn": "2023-02-06T18:01:59Z",
       "side": 1,
       "message": "I wouldn\u0027t add a local patch for the Android.bp as it\u0027s a Android-specific file that only exists downstream. This would also be consistent of how external/cronet/Android.bp is treated.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 4
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38c49c83_b8503c71",
+        "filename": "patches/local/0023-Add-Androidbp-for-java-test-sources.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T18:16:20Z",
+      "side": 1,
+      "message": "Oh, as I\u0027d misunderstood how the imports work. Thought it would override all files, just realized it only overrides matching files.",
+      "parentUuid": "bd8775e8_cd68fa7c",
       "range": {
         "startLine": 1,
         "startChar": 0,
