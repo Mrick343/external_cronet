@@ -22,6 +22,30 @@
       },
       "revId": "298c60f67a792953a77e4165e532cfcc82d6b326",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79532780_3ed49b0b",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T20:12:35Z",
+      "side": 1,
+      "message": "Oh, just realized the linter is complaining that I added Apache license here and it\u0027s not included in our LICENSE text. Do I fix this here ie include it to the LICENSE text(not sure what the policy is) or leave it for when we fix our LICENSE issue.",
+      "parentUuid": "91d7ad41_605dc5c5",
+      "range": {
+        "startLine": 17,
+        "startChar": 35,
+        "endLine": 17,
+        "endChar": 53
+      },
+      "revId": "298c60f67a792953a77e4165e532cfcc82d6b326",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
