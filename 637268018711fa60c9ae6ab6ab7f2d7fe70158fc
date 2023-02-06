@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b6366d4_22f86a8b",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-06T18:01:59Z",
+      "side": 1,
+      "message": "As discussed, it\u0027s probably better to add everything and use exclude_srcs on the test target. That way, all your future changes can be contained to one repository.",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 49
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cca7266e_f17945b7",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-06T18:01:59Z",
+      "side": 1,
+      "message": "Also, maybe add a visibility annotation to make this visible to everything in packages/modules/Connectivity?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd8775e8_cd68fa7c",
+        "filename": "patches/local/0023-Add-Androidbp-for-java-test-sources.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-06T18:01:59Z",
+      "side": 1,
+      "message": "I wouldn\u0027t add a local patch for the Android.bp as it\u0027s a Android-specific file that only exists downstream. This would also be consistent of how external/cronet/Android.bp is treated.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 4
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
