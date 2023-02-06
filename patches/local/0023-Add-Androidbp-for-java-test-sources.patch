@@ -1,0 +1,45 @@
+From e4b08da4f900953e689e7c813de40c1498d61c60 Mon Sep 17 00:00:00 2001
+From: My Name <colibie@google.com>
+Date: Mon, 6 Feb 2023 10:48:12 +0000
+Subject: [PATCH] Add Androidbp for java test sources.
+
+Bug: 267353182
+Test: th
+Change-Id: I24c69d050ec58c2a32a1a07ec057d82dd8ee34b7
+---
+ components/cronet/android/test/Android.bp | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 components/cronet/android/test/Android.bp
+
+diff --git a/components/cronet/android/test/Android.bp b/components/cronet/android/test/Android.bp
+new file mode 100644
+index 00000000..1919a8ba
+--- /dev/null
++++ b/components/cronet/android/test/Android.bp
+@@ -0,0 +1,23 @@
++// Copyright (C) 2023 The Android Open Source Project
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++
++package {
++    // See: http://go/android-license-faq
++    default_applicable_licenses: ["Android-Apache-2.0"],
++}
++
++filegroup {
++    name: "cronet_aml_javatests_sources",
++    srcs: ["javatests/**/UrlResponseInfoTest.java"],
++}
+-- 
+2.39.1.519.gcb327c4b5f-goog
+
