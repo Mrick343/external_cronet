@@ -191,6 +191,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "23b0696e_f6e1f7da",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-06T14:44:10Z",
+      "side": 1,
+      "message": "Handling similar changes in the adapter is a perfectly valid course of action.\n\nI\u0027m in favor of keeping the annotations as they are - that is, accepting a Nullable parameter and returning a NonNull value. Note that the recommendation only applies to methods of the same class, and not to builders (recommendations for builders are covered separately under 6.6).",
+      "parentUuid": "15be6409_0500f7eb",
+      "range": {
+        "startLine": 106,
+        "startChar": 36,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4cc9c903_f1758681",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 2
