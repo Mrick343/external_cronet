@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27e08aa8_4fcfdb79",
+        "filename": "Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T17:42:23Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "85aa54d9_4b8bbd68",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 1
+      },
+      "revId": "0e07fcc486c16f21cd604c2bcadb052193f0ccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2f72ec74_f5e6698b",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-02-03T00:19:26Z",
       "side": 1,
       "message": "this looks like a regression.",
+      "range": {
+        "startLine": 384,
+        "startChar": 10,
+        "endLine": 384,
+        "endChar": 44
+      },
+      "revId": "0e07fcc486c16f21cd604c2bcadb052193f0ccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc10fadb_778b2227",
+        "filename": "Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T17:42:23Z",
+      "side": 1,
+      "message": "Remove",
+      "parentUuid": "2f72ec74_f5e6698b",
       "range": {
         "startLine": 384,
         "startChar": 10,

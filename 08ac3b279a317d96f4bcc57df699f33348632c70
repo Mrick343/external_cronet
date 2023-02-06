@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e800f16a_2f3529e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-06T17:42:23Z",
+      "side": 1,
+      "message": "Done. See aosp/2419324",
+      "parentUuid": "8d052dbe_b8eb7d43",
+      "revId": "08ac3b279a317d96f4bcc57df699f33348632c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9ecd88e_6b74417d",
