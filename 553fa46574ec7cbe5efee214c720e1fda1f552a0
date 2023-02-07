@@ -16,6 +16,29 @@
       "message": "ping",
       "revId": "553fa46574ec7cbe5efee214c720e1fda1f552a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09ae3278_5b008b63",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 9
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-07T17:38:12Z",
+      "side": 1,
+      "message": "nit: can you revert the whitespace change to decrease the probability of conflicts when we merge upstream?",
+      "range": {
+        "startLine": 954,
+        "startChar": 4,
+        "endLine": 975,
+        "endChar": 4
+      },
+      "revId": "553fa46574ec7cbe5efee214c720e1fda1f552a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
