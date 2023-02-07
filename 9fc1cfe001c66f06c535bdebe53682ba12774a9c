@@ -405,6 +405,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a3f7ccee_887b8194",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-07T16:05:26Z",
+      "side": 1,
+      "message": "I don\u0027t think we discussed this explicitly. In my experience in google3, it\u0027s fairly common to checkNonNull() any non-nullable parameter which doesn\u0027t immediately blow up with NPE but might later (typically constructor parameters and setters). \n\nThat being said, having such checks is more of a nice-to-have than a hard requirement. The IDEs will warn you if you attempt to pass a potentially null object to a NonNull parameter and the difference is ultimately *how* things blow up, not *if* they do. This is also reflected in that the checks are recommended, not a hard requirement. \n\nLet\u0027s file a backlog bug to keep track of this, but not spend time on going through all the code right now.",
+      "parentUuid": "21bb182e_f5f88f7b",
+      "range": {
+        "startLine": 219,
+        "startChar": 35,
+        "endLine": 219,
+        "endChar": 55
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6be3557f_57646d58",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 2
