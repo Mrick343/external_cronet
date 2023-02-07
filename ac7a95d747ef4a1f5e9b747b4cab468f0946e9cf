@@ -22,6 +22,30 @@
       },
       "revId": "ac7a95d747ef4a1f5e9b747b4cab468f0946e9cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f053adf_bc243e78",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-07T09:53:03Z",
+      "side": 1,
+      "message": "Done. I cannot depend on the license_kind directly. Either create a license module separately or depend on external_cronet_license. I did the former.",
+      "parentUuid": "37c39d42_10aeacc5",
+      "range": {
+        "startLine": 18,
+        "startChar": 9,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "ac7a95d747ef4a1f5e9b747b4cab468f0946e9cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

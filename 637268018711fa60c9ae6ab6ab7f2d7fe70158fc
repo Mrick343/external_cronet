@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6301e0a8_15fc8d90",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-07T09:53:03Z",
+      "side": 1,
+      "message": "Resolving",
+      "parentUuid": "70589687_904be3ed",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 49
+      },
+      "revId": "637268018711fa60c9ae6ab6ab7f2d7fe70158fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cca7266e_f17945b7",
