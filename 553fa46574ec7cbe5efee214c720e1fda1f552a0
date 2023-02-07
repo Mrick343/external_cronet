@@ -39,6 +39,30 @@
       },
       "revId": "553fa46574ec7cbe5efee214c720e1fda1f552a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acdc03c5_bb5cc0a7",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 9
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-07T18:32:59Z",
+      "side": 1,
+      "message": "Upstream reformated the indentations when I added the concatenation.",
+      "parentUuid": "09ae3278_5b008b63",
+      "range": {
+        "startLine": 954,
+        "startChar": 4,
+        "endLine": 975,
+        "endChar": 4
+      },
+      "revId": "553fa46574ec7cbe5efee214c720e1fda1f552a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
