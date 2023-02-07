@@ -46,6 +46,30 @@
       },
       "revId": "ac7a95d747ef4a1f5e9b747b4cab468f0946e9cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e092ec08_7d20253b",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-07T17:27:10Z",
+      "side": 1,
+      "message": "Ah just saw this. I don\u0027t think we should be duplicating the LICENSE, especially not downstream, let\u0027s go with the former.",
+      "parentUuid": "0f053adf_bc243e78",
+      "range": {
+        "startLine": 18,
+        "startChar": 9,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "ac7a95d747ef4a1f5e9b747b4cab468f0946e9cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

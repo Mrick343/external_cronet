@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54cad2d5_cd17c970",
+        "filename": "components/cronet/android/test/Android.bp",
+        "patchSetId": 10
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-07T17:27:10Z",
+      "side": 1,
+      "message": "Maybe this should just be external_cronet_license. There is already a LICENSE file that covers this directory, so I wouldn\u0027t create a new one. Since external_cronet_license covers everything in external/cronet, we should be good to use it here too.",
+      "range": {
+        "startLine": 17,
+        "startChar": 35,
+        "endLine": 17,
+        "endChar": 63
+      },
+      "revId": "b896bb0450b92e0120adca890f48afbfb8fba5b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
