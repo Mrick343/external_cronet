@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c1dc673_a8c04cec",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-07T18:01:41Z",
+      "side": 1,
+      "message": "Can you add more details to the commit message to explain why it is okay to remove the licenses below?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "866a6a2c3639d8b368a9145c01303b92f0736836",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
