@@ -213,6 +213,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "278ba7a1_76452a84",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-07T14:30:59Z",
+      "side": 1,
+      "message": "\u003e Note that the recommendation only applies to methods of the same class\n\nThat\u0027s a good point. Let\u0027s keep as is!",
+      "parentUuid": "23b0696e_f6e1f7da",
+      "range": {
+        "startLine": 106,
+        "startChar": 36,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4cc9c903_f1758681",
@@ -345,6 +369,30 @@
       "side": 1,
       "message": "I\u0027m basing this on\n```\nMethods are recommended to perform input validation for @NonNull parameters via\nObjects.requireNonNull() and throw a NullPointerException when the parameters are\nnull\n```\nfrom go/android-api-guidelines#nullability.",
       "parentUuid": "ae1c556b_7005cf11",
+      "range": {
+        "startLine": 219,
+        "startChar": 35,
+        "endLine": 219,
+        "endChar": 55
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21bb182e_f5f88f7b",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-07T14:30:59Z",
+      "side": 1,
+      "message": "@danstahr@google.com, was there ever discussed? Did we decide what to do within Cronet\u0027s code?",
+      "parentUuid": "e9c5bb62_e81db1c1",
       "range": {
         "startLine": 219,
         "startChar": 35,
