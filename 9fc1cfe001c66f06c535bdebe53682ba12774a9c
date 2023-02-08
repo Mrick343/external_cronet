@@ -71,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "742fdfc6_1744c26c",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-08T14:59:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4f71f90_5009de79",
+      "range": {
+        "startLine": 315,
+        "startChar": 9,
+        "endLine": 315,
+        "endChar": 16
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bff29b86_9a8dbc9c",
@@ -322,6 +346,30 @@
       "side": 1,
       "message": "Re: discussion below. I\u0027ve filed crbug.com/1414047.\n\nThough, this should still be reflected in the nullability of the argument (i.e., it should be `@NonNull`).",
       "parentUuid": "d2d7e946_285b1acb",
+      "range": {
+        "startLine": 123,
+        "startChar": 38,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "170abcc0_a62db544",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-08T14:59:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab6c2db5_90501269",
       "range": {
         "startLine": 123,
         "startChar": 38,
