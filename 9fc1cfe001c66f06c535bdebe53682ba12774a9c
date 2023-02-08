@@ -310,6 +310,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ab6c2db5_90501269",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-08T13:45:31Z",
+      "side": 1,
+      "message": "Re: discussion below. I\u0027ve filed crbug.com/1414047.\n\nThough, this should still be reflected in the nullability of the argument (i.e., it should be `@NonNull`).",
+      "parentUuid": "d2d7e946_285b1acb",
+      "range": {
+        "startLine": 123,
+        "startChar": 38,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c2c0a6b_528b2dcb",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 2
@@ -417,6 +441,30 @@
       "side": 1,
       "message": "I don\u0027t think we discussed this explicitly. In my experience in google3, it\u0027s fairly common to checkNonNull() any non-nullable parameter which doesn\u0027t immediately blow up with NPE but might later (typically constructor parameters and setters). \n\nThat being said, having such checks is more of a nice-to-have than a hard requirement. The IDEs will warn you if you attempt to pass a potentially null object to a NonNull parameter and the difference is ultimately *how* things blow up, not *if* they do. This is also reflected in that the checks are recommended, not a hard requirement. \n\nLet\u0027s file a backlog bug to keep track of this, but not spend time on going through all the code right now.",
       "parentUuid": "21bb182e_f5f88f7b",
+      "range": {
+        "startLine": 219,
+        "startChar": 35,
+        "endLine": 219,
+        "endChar": 55
+      },
+      "revId": "9fc1cfe001c66f06c535bdebe53682ba12774a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d55d7dfe_de7bd770",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-08T13:45:31Z",
+      "side": 1,
+      "message": "Agreed. For this specific case we blow up immediately so it should be fine.",
+      "parentUuid": "a3f7ccee_887b8194",
       "range": {
         "startLine": 219,
         "startChar": 35,
