@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.time.Duration;
@@ -52,7 +53,7 @@ public class ConnectionMigrationOptions {
      * See {@link Builder#setEnableDefaultNetworkMigration}
      */
     @Nullable
-    public Boolean getEnableDefaultNetworkMigration() {
+    public Boolean isEnableDefaultNetworkMigration() {
         return mEnableDefaultNetworkMigration;
     }
 
@@ -60,7 +61,7 @@ public class ConnectionMigrationOptions {
      * See {@link Builder#setEnablePathDegradationMigration}
      */
     @Nullable
-    public Boolean getEnablePathDegradationMigration() {
+    public Boolean isEnablePathDegradationMigration() {
         return mEnablePathDegradationMigration;
     }
 
@@ -169,7 +170,7 @@ public class ConnectionMigrationOptions {
     /**
      * Builder for {@link ConnectionMigrationOptions}.
      */
-    public static class Builder {
+    public static final class Builder {
         @Nullable
         private Boolean mEnableDefaultNetworkMigration;
         @Nullable
@@ -203,6 +204,7 @@ public class ConnectionMigrationOptions {
          *
          * @return this builder for chaining
          */
+        @NonNull
         public Builder setEnableDefaultNetworkMigration(
                 boolean enableDefaultNetworkConnectionMigration) {
             this.mEnableDefaultNetworkMigration = enableDefaultNetworkConnectionMigration;
@@ -218,6 +220,7 @@ public class ConnectionMigrationOptions {
          *
          * @return this builder for chaining
          */
+        @NonNull
         public Builder setEnablePathDegradationMigration(boolean enable) {
             this.mEnablePathDegradationMigration = enable;
             return this;
@@ -370,6 +373,7 @@ public class ConnectionMigrationOptions {
          * Creates and returns the final {@link ConnectionMigrationOptions} instance, based on the
          * values in this builder.
          */
+        @NonNull
         public ConnectionMigrationOptions build() {
             return new ConnectionMigrationOptions(this);
         }

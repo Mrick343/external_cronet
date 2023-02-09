@@ -199,9 +199,9 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
 
                 // Note: using the experimental APIs always overwrites what's in the experimental
                 // JSON, even though "repeated" fields could in theory be additive.
-                if (!options.getQuicHostAllowlist().isEmpty()) {
+                if (!options.getAllowedQuicHosts().isEmpty()) {
                     quicOptions.put(
-                            "host_whitelist", String.join(",", options.getQuicHostAllowlist()));
+                            "host_whitelist", String.join(",", options.getAllowedQuicHosts()));
                 }
                 if (!options.getEnabledQuicVersions().isEmpty()) {
                     quicOptions.put(
@@ -310,8 +310,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                     staleDnsOptions.put("enable", options.getEnableStaleDns());
                 }
 
-                if (options.getPersistHostCache() != null) {
-                    staleDnsOptions.put("persist_to_disk", options.getPersistHostCache());
+                if (options.isPersistHostCache() != null) {
+                    staleDnsOptions.put("persist_to_disk", options.isPersistHostCache());
                 }
 
                 if (options.getPersistHostCachePeriod() != null) {
@@ -366,9 +366,9 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
                 JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
 
-                if (options.getEnableDefaultNetworkMigration() != null) {
+                if (options.isEnableDefaultNetworkMigration() != null) {
                     quicOptions.put("migrate_sessions_on_network_change_v2",
-                            options.getEnableDefaultNetworkMigration());
+                            options.isEnableDefaultNetworkMigration());
                 }
                 if (options.getAllowServerMigration() != null) {
                     quicOptions.put("allow_server_migration", options.getAllowServerMigration());
@@ -396,8 +396,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                     quicOptions.put("max_migrations_to_non_default_network_on_write_error",
                             options.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
                 }
-                if (options.getEnablePathDegradationMigration() != null) {
-                    boolean pathDegradationValue = options.getEnablePathDegradationMigration();
+                if (options.isEnablePathDegradationMigration() != null) {
+                    boolean pathDegradationValue = options.isEnablePathDegradationMigration();
 
                     boolean skipPortMigrationFlag = false;
 
@@ -615,7 +615,7 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
      * using the given proxy.
      * <p>
      * <b>Note:</b> this {@link java.net.HttpURLConnection} implementation is subject to certain
-     * limitations, see {@link #createURLStreamHandlerFactory} for details.
+     * limitations, see {@link #createUrlStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @param proxy proxy to use when establishing connection.

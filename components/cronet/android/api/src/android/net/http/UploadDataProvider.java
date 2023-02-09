@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import androidx.annotation.NonNull;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -49,7 +51,7 @@ public abstract class UploadDataProvider implements Closeable {
      *         thrown exception set as the cause of the
      *         {@link CallbackException}.
      */
-    public abstract void read(UploadDataSink uploadDataSink, ByteBuffer byteBuffer)
+    public abstract void read(@NonNull UploadDataSink uploadDataSink, @NonNull ByteBuffer byteBuffer)
             throws IOException;
 
     /**
@@ -75,7 +77,7 @@ public abstract class UploadDataProvider implements Closeable {
      *         thrown exception set as the cause of the
      *         {@link CallbackException}.
      */
-    public abstract void rewind(UploadDataSink uploadDataSink) throws IOException;
+    public abstract void rewind(@NonNull UploadDataSink uploadDataSink) throws IOException;
 
     /**
      * Called when this UploadDataProvider is no longer needed by a request, so that resources

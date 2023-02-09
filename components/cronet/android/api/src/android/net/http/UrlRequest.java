@@ -5,6 +5,10 @@
 package android.net.http;
 
 import android.annotation.IntDef;
+import android.annotation.SuppressLint;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -40,7 +44,9 @@ public abstract class UrlRequest {
          * @param method "GET", "HEAD", "DELETE", "POST" or "PUT".
          * @return the builder to facilitate chaining.
          */
-        public abstract Builder setHttpMethod(String method);
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public abstract Builder setHttpMethod(@NonNull String method);
 
         /**
          * Adds a request header.
@@ -49,14 +55,16 @@ public abstract class UrlRequest {
          * @param value header value.
          * @return the builder to facilitate chaining.
          */
-        public abstract Builder addHeader(String header, String value);
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public abstract Builder addHeader(@NonNull String header, @NonNull String value);
 
         /**
          * Disables cache for the request. If context is not set up to use cache,
          * this call has no effect.
          * @return the builder to facilitate chaining.
          */
-        public abstract Builder disableCache();
+        @NonNull public abstract Builder disableCache();
 
         /**
          * Lowest request priority. Passed to {@link #setPriority}.
@@ -90,7 +98,8 @@ public abstract class UrlRequest {
          *         {@link #REQUEST_PRIORITY_IDLE REQUEST_PRIORITY_*} values.
          * @return the builder to facilitate chaining.
          */
-        public abstract Builder setPriority(int priority);
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull public abstract Builder setPriority(int priority);
 
         /**
          * Sets upload data provider. Switches method to "POST" if not
@@ -103,8 +112,10 @@ public abstract class UrlRequest {
          *     {@code Executor} the request itself is using.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
         public abstract Builder setUploadDataProvider(
-                UploadDataProvider uploadDataProvider, Executor executor);
+                @NonNull UploadDataProvider uploadDataProvider, @NonNull Executor executor);
 
         /**
          * Marks that the executors this request will use to notify callbacks (for
@@ -116,7 +127,9 @@ public abstract class UrlRequest {
          * It should not be used if your callbacks perform disk I/O, acquire locks, or call into
          * other code you don't carefully control and audit.
          */
-        public abstract Builder allowDirectExecutor();
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public abstract Builder setAllowDirectExecutor();
 
         /**
          * Creates a {@link UrlRequest} using configuration within this
@@ -126,6 +139,7 @@ public abstract class UrlRequest {
          * @return constructed {@link UrlRequest} using configuration within
          *         this {@link Builder}.
          */
+        @NonNull
         public abstract UrlRequest build();
     }
 
@@ -158,7 +172,7 @@ public abstract class UrlRequest {
          *         {@link CallbackException}.
          */
         public abstract void onRedirectReceived(
-                UrlRequest request, UrlResponseInfo info, String newLocationUrl) throws Exception;
+                @NonNull UrlRequest request, @NonNull UrlResponseInfo info, @NonNull String newLocationUrl) throws Exception;
 
         /**
          * Invoked when the final set of headers, after all redirects, is received.
@@ -177,7 +191,7 @@ public abstract class UrlRequest {
          *         will be called with the thrown exception set as the cause of the
          *         {@link CallbackException}.
          */
-        public abstract void onResponseStarted(UrlRequest request, UrlResponseInfo info)
+        public abstract void onResponseStarted(@NonNull UrlRequest request, @NonNull UrlResponseInfo info)
                 throws Exception;
 
         /**
@@ -203,7 +217,7 @@ public abstract class UrlRequest {
          *         the {@link CallbackException}.
          */
         public abstract void onReadCompleted(
-                UrlRequest request, UrlResponseInfo info, ByteBuffer byteBuffer) throws Exception;
+                @NonNull UrlRequest request, @NonNull UrlResponseInfo info, @NonNull ByteBuffer byteBuffer) throws Exception;
 
         /**
          * Invoked when request is completed successfully. Once invoked, no other
@@ -212,7 +226,7 @@ public abstract class UrlRequest {
          * @param request Request that succeeded.
          * @param info Response information.
          */
-        public abstract void onSucceeded(UrlRequest request, UrlResponseInfo info);
+        public abstract void onSucceeded(@NonNull UrlRequest request, @NonNull UrlResponseInfo info);
 
         /**
          * Invoked if request failed for any reason after {@link UrlRequest#start}.
@@ -225,7 +239,7 @@ public abstract class UrlRequest {
          * @param error information about error.
          */
         public abstract void onFailed(
-                UrlRequest request, UrlResponseInfo info, HttpException error);
+                @NonNull UrlRequest request, @Nullable UrlResponseInfo info, @NonNull HttpException error);
 
         /**
          * Invoked if request was canceled via {@link UrlRequest#cancel}. Once
@@ -236,7 +250,7 @@ public abstract class UrlRequest {
          * @param info Response information. May be {@code null} if no response was
          *         received.
          */
-        public void onCanceled(UrlRequest request, UrlResponseInfo info) {}
+        public void onCanceled(@NonNull UrlRequest request, @Nullable UrlResponseInfo info) {}
     }
 
     /** @hide */
@@ -375,14 +389,14 @@ public abstract class UrlRequest {
      * Listener class used with {@link #getStatus} to receive the status of a
      * {@link UrlRequest}.
      */
-    public abstract static class StatusListener {
+    public interface StatusListener {
         /**
          * Invoked on {@link UrlRequest}'s {@link Executor}'s thread when request
          * status is obtained.
          * @param status integer representing the status of the request. It is
          *         one of the values defined in {@link Status}.
          */
-        public abstract void onStatus(@UrlRequestStatus int status);
+        void onStatus(@UrlRequestStatus int status);
     }
 
     /**
@@ -415,7 +429,7 @@ public abstract class UrlRequest {
      *     position, limit, or data between its position and limit until the
      *     request calls back into the {@link Callback}.
      */
-    public abstract void read(ByteBuffer buffer);
+    public abstract void read(@NonNull ByteBuffer buffer);
 
     /**
      * Cancels the request. Can be called at any time.
@@ -453,7 +467,7 @@ public abstract class UrlRequest {
      * @param listener a {@link StatusListener} that will be invoked with
      *         the request's current status.
      */
-    public abstract void getStatus(final StatusListener listener);
+    public abstract void getStatus(@NonNull final StatusListener listener);
 
     // Note:  There are deliberately no accessors for the results of the request
     // here. Having none removes any ambiguity over when they are populated,

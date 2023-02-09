@@ -4,7 +4,12 @@
 
 package android.net.http;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.CloseGuard;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +26,7 @@ import javax.net.ssl.HttpsURLConnection;
  * available on the current platform. An instance of this class can be created
  * using {@link Builder}.
  */
-public abstract class HttpEngine {
+public abstract class HttpEngine implements AutoCloseable {
 
     /**
      * {@hide}
@@ -63,7 +68,7 @@ public abstract class HttpEngine {
          *                context will be kept, so as to avoid extending
          *                the lifetime of {@code context} unnecessarily.
          */
-        public Builder(Context context) {
+        public Builder(@NonNull Context context) {
             this(createBuilderDelegate(context));
         }
 
@@ -76,7 +81,7 @@ public abstract class HttpEngine {
          *
          * {@hide}
          */
-        Builder(IHttpEngineBuilder builderDelegate) {
+        Builder(@NonNull IHttpEngineBuilder builderDelegate) {
             mBuilderDelegate = builderDelegate;
         }
 
@@ -86,7 +91,7 @@ public abstract class HttpEngine {
          *
          * @return User-Agent string.
          */
-        public String getDefaultUserAgent() {
+        @NonNull public String getDefaultUserAgent() {
             return mBuilderDelegate.getDefaultUserAgent();
         }
 
@@ -99,7 +104,9 @@ public abstract class HttpEngine {
          * @param userAgent the User-Agent string to use for all requests.
          * @return the builder to facilitate chaining.
          */
-        public Builder setUserAgent(String userAgent) {
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public Builder setUserAgent(@Nullable String userAgent) {
             mBuilderDelegate.setUserAgent(userAgent);
             return this;
         }
@@ -115,7 +122,9 @@ public abstract class HttpEngine {
          * @param value path to existing directory.
          * @return the builder to facilitate chaining.
          */
-        public Builder setStoragePath(String value) {
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public Builder setStoragePath(@NonNull String value) {
             mBuilderDelegate.setStoragePath(value);
             return this;
         }
@@ -127,6 +136,8 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable QUIC, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
         public Builder setEnableQuic(boolean value) {
             mBuilderDelegate.enableQuic(value);
             return this;
@@ -138,6 +149,8 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable HTTP/2, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
         public Builder setEnableHttp2(boolean value) {
             mBuilderDelegate.enableHttp2(value);
             return this;
@@ -150,6 +163,8 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable Brotli, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
         public Builder setEnableBrotli(boolean value) {
             mBuilderDelegate.enableBrotli(value);
             return this;
@@ -190,6 +205,8 @@ public abstract class HttpEngine {
          * exceeded at times).
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
         public Builder setEnableHttpCache(int cacheMode, long maxSize) {
             mBuilderDelegate.enableHttpCache(cacheMode, maxSize);
             return this;
@@ -206,7 +223,9 @@ public abstract class HttpEngine {
          * @param alternatePort alternate port to use for QUIC.
          * @return the builder to facilitate chaining.
          */
-        public Builder addQuicHint(String host, int port, int alternatePort) {
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public Builder addQuicHint(@NonNull String host, int port, int alternatePort) {
             mBuilderDelegate.addQuicHint(host, port, alternatePort);
             return this;
         }
@@ -252,8 +271,10 @@ public abstract class HttpEngine {
          *                                  contains a byte array that does not represent a valid
          *                                  SHA-256 hash.
          */
-        public Builder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
-                boolean includeSubdomains, Instant expirationInstant) {
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
+        public Builder addPublicKeyPins(@NonNull String hostName, @NonNull Set<byte[]> pinsSha256,
+                boolean includeSubdomains, @NonNull Instant expirationInstant) {
             mBuilderDelegate.addPublicKeyPins(
                     hostName, pinsSha256, includeSubdomains, expirationInstant);
             return this;
@@ -272,6 +293,8 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable the bypass, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
+        @NonNull
         public Builder setEnablePublicKeyPinningBypassForLocalTrustAnchors(boolean value) {
             mBuilderDelegate.enablePublicKeyPinningBypassForLocalTrustAnchors(value);
             return this;
@@ -286,8 +309,10 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions quicOptions) {
+        @NonNull
+        public Builder setQuicOptions(@NonNull QuicOptions quicOptions) {
             mBuilderDelegate.setQuicOptions(quicOptions);
             return this;
         }
@@ -298,7 +323,8 @@ public abstract class HttpEngine {
          * {@hide}
          */
         @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions.Builder quicOptionsBuilder) {
+        @NonNull
+        public Builder setQuicOptions(@NonNull QuicOptions.Builder quicOptionsBuilder) {
             return setQuicOptions(quicOptionsBuilder.build());
         }
 
@@ -310,8 +336,10 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions dnsOptions) {
+        @NonNull
+        public Builder setDnsOptions(@NonNull DnsOptions dnsOptions) {
             mBuilderDelegate.setDnsOptions(dnsOptions);
             return this;
         }
@@ -322,7 +350,8 @@ public abstract class HttpEngine {
          * {@hide}
          */
         @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions.Builder dnsOptions) {
+        @NonNull
+        public Builder setDnsOptions(@NonNull DnsOptions.Builder dnsOptions) {
             return setDnsOptions(dnsOptions.build());
         }
 
@@ -335,9 +364,11 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         @ConnectionMigrationOptions.Experimental
+        @NonNull
         public Builder setConnectionMigrationOptions(
-                ConnectionMigrationOptions connectionMigrationOptions) {
+                @NonNull ConnectionMigrationOptions connectionMigrationOptions) {
             mBuilderDelegate.setConnectionMigrationOptions(connectionMigrationOptions);
             return this;
         }
@@ -348,8 +379,9 @@ public abstract class HttpEngine {
          * {@hide}
          */
         @ConnectionMigrationOptions.Experimental
+        @NonNull
         public Builder setConnectionMigrationOptions(
-                ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
+                @NonNull ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
             return setConnectionMigrationOptions(connectionMigrationOptionsBuilder.build());
         }
 
@@ -357,6 +389,7 @@ public abstract class HttpEngine {
          * Build a {@link HttpEngine} using this builder's configuration.
          * @return constructed {@link HttpEngine}.
          */
+        @NonNull
         public HttpEngine build() {
             return mBuilderDelegate.build();
         }
@@ -384,6 +417,7 @@ public abstract class HttpEngine {
     /**
      * @return a human-readable version string of the engine.
      */
+    @NonNull
     public abstract String getVersionString();
 
     /**
@@ -395,6 +429,11 @@ public abstract class HttpEngine {
      * callbacks on). May block until all the {@link HttpEngine} resources have been cleaned up.
      */
     public abstract void shutdown();
+
+    @Override
+    public final void close() {
+        shutdown();
+    }
 
     /**
      * Starts NetLog logging to a file. The NetLog will contain events emitted
@@ -455,14 +494,15 @@ public abstract class HttpEngine {
      * Establishes a new connection to the resource specified by the {@link URL} {@code url}.
      * <p>
      * <b>Note:</b> This {@link java.net.HttpURLConnection} implementation is subject to certain
-     * limitations, see {@link #createURLStreamHandlerFactory} for details.
+     * limitations, see {@link #createUrlStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @return an {@link java.net.HttpURLConnection} instance implemented
      *     by this {@link HttpEngine}.
      * @throws IOException if an error occurs while opening the connection.
      */
-    public abstract URLConnection openConnection(URL url) throws IOException;
+    @NonNull
+    public abstract URLConnection openConnection(@SuppressLint("AndroidUri") @NonNull URL url) throws IOException;
 
     /**
      * Creates a {@link URLStreamHandlerFactory} to handle HTTP and HTTPS
@@ -495,7 +535,8 @@ public abstract class HttpEngine {
      * @return an {@link URLStreamHandlerFactory} instance implemented by this
      *         {@link HttpEngine}.
      */
-    public abstract URLStreamHandlerFactory createURLStreamHandlerFactory();
+    @NonNull
+    public abstract URLStreamHandlerFactory createUrlStreamHandlerFactory();
 
     /**
      * Creates a builder for {@link UrlRequest}. All callbacks for
@@ -508,6 +549,7 @@ public abstract class HttpEngine {
      * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
      */
+    @NonNull
     public abstract UrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor);
+            @NonNull String url, @NonNull UrlRequest.Callback callback, @NonNull Executor executor);
 }

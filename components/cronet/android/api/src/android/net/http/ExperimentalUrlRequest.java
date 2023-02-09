@@ -169,7 +169,7 @@ public abstract class ExperimentalUrlRequest extends UrlRequest {
                 UploadDataProvider uploadDataProvider, Executor executor);
 
         @Override
-        public abstract Builder allowDirectExecutor();
+        public abstract Builder setAllowDirectExecutor();
 
         @Override
         public abstract ExperimentalUrlRequest build();

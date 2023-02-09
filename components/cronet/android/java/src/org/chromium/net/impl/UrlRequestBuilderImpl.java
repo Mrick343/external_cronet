@@ -168,7 +168,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     }
 
     @Override
-    public UrlRequestBuilderImpl allowDirectExecutor() {
+    public UrlRequestBuilderImpl setAllowDirectExecutor() {
         mAllowDirectExecutor = true;
         return this;
     }

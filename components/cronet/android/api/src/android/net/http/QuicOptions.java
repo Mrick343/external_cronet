@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.time.Duration;
@@ -87,7 +88,8 @@ public class QuicOptions {
     /**
      * See {@link Builder#addAllowedQuicHost}
      */
-    public Set<String> getQuicHostAllowlist() {
+    @NonNull
+    public Set<String> getAllowedQuicHosts() {
         return mQuicHostAllowlist;
     }
 
@@ -280,7 +282,7 @@ public class QuicOptions {
     /**
      * Builder for {@link QuicOptions}.
      */
-    public static class Builder {
+    public static final class Builder {
         private final Set<String> mQuicHostAllowlist = new LinkedHashSet<>();
         private final Set<String> mEnabledQuicVersions = new LinkedHashSet<>();
         private final Set<String> mConnectionOptions = new LinkedHashSet<>();
@@ -323,7 +325,8 @@ public class QuicOptions {
          *
          * @return the builder for chaining
          */
-        public Builder addAllowedQuicHost(String quicHost) {
+        @NonNull
+        public Builder addAllowedQuicHost(@NonNull String quicHost) {
             mQuicHostAllowlist.add(quicHost);
             return this;
         }
@@ -394,6 +397,7 @@ public class QuicOptions {
          *
          * @return the builder for chaining
          */
+        @NonNull
         public Builder setInMemoryServerConfigsCacheSize(int inMemoryServerConfigsCacheSize) {
             this.mInMemoryServerConfigsCacheSize = inMemoryServerConfigsCacheSize;
             return this;
@@ -408,7 +412,8 @@ public class QuicOptions {
          *
          * @return the builder for chaining
          */
-        public Builder setHandshakeUserAgent(String handshakeUserAgent) {
+        @NonNull
+        public Builder setHandshakeUserAgent(@NonNull String handshakeUserAgent) {
             this.mHandshakeUserAgent = handshakeUserAgent;
             return this;
         }
@@ -621,6 +626,7 @@ public class QuicOptions {
          * Creates and returns the final {@link QuicOptions} instance, based on the values
          * in this builder.
          */
+        @NonNull
         public QuicOptions build() {
             return new QuicOptions(this);
         }
