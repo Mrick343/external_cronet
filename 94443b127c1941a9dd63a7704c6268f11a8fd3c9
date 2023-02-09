@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ec2d973_260c4f78",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-09T17:40:27Z",
+      "side": 1,
+      "message": "approximate baseline (from google3/third_party/java/android_libs/cronet/gmscore_v108_0_5359_61):\n\narm: 3.1M\narm64: 4.8M\nx86: 5.0M\nx64: 4.6M\n\nDo you know why we are still 1-2MB above that (despite having removed perfetto)?",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 35
+      },
+      "revId": "94443b127c1941a9dd63a7704c6268f11a8fd3c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
