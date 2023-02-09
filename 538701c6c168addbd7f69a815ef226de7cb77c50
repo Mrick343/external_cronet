@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3482759_727fd403",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-09T11:55:38Z",
+      "side": 1,
+      "message": "Discussed with Lorenzo that this should be exposed.",
+      "revId": "538701c6c168addbd7f69a815ef226de7cb77c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
