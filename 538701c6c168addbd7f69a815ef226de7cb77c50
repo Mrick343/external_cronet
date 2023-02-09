@@ -16,6 +16,29 @@
       "message": "Discussed with Lorenzo that this should be exposed.",
       "revId": "538701c6c168addbd7f69a815ef226de7cb77c50",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97d5aecf_024ee95a",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-09T13:07:28Z",
+      "side": 1,
+      "message": "Is this needed? As far as I can tell, all this CL is doing is to depend on android.net.Network. But that\u0027s a public API class so this shouldn\u0027t be necessary.\n\nPerhaps it\u0027s because this target has sdk_version module_current, and that implicitly removes dependencies from the public API stubs?",
+      "range": {
+        "startLine": 33,
+        "startChar": 9,
+        "endLine": 33,
+        "endChar": 48
+      },
+      "revId": "538701c6c168addbd7f69a815ef226de7cb77c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
