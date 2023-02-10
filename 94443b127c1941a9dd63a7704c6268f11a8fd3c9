@@ -46,6 +46,30 @@
       },
       "revId": "94443b127c1941a9dd63a7704c6268f11a8fd3c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ba83a62_a9b61241",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-10T10:12:50Z",
+      "side": 1,
+      "message": "Added some numbers to aosp/upstream comparison in aosp/2429634",
+      "parentUuid": "108be30c_666e7a23",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 35
+      },
+      "revId": "94443b127c1941a9dd63a7704c6268f11a8fd3c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
