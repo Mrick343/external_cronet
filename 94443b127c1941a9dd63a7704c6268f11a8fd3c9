@@ -22,6 +22,30 @@
       },
       "revId": "94443b127c1941a9dd63a7704c6268f11a8fd3c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "108be30c_666e7a23",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-10T03:22:35Z",
+      "side": 1,
+      "message": "I think biggest reason is mini_debuginfo, if we specify strip:{all:true} in aosp, size decrease by around 1M.\nI will investigate this and comment an update.\n\nLet me merge this CL to avoid merge conflict.",
+      "parentUuid": "6ec2d973_260c4f78",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 35
+      },
+      "revId": "94443b127c1941a9dd63a7704c6268f11a8fd3c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
