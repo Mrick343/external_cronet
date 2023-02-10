@@ -46,6 +46,30 @@
       },
       "revId": "0eb4b1da374def7672bf7ebf152bab3fdc8c039b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3d87fee_a6424b32",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-10T17:23:15Z",
+      "side": 1,
+      "message": "Thanks for creating this bug. Maybe we should schedule a few hours to sit together and actually compare the two builds, specifically with respect to cflags / linker flags. I am worried about subtle differences that might trigger weird issues.",
+      "parentUuid": "73871928_929aa06d",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "0eb4b1da374def7672bf7ebf152bab3fdc8c039b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
