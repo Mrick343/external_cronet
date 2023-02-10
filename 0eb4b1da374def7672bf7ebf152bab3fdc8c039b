@@ -22,6 +22,30 @@
       },
       "revId": "0eb4b1da374def7672bf7ebf152bab3fdc8c039b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73871928_929aa06d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-10T10:11:11Z",
+      "side": 1,
+      "message": "to pass more flags to Android.bp",
+      "parentUuid": "c0979bc4_4e0a7a81",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "0eb4b1da374def7672bf7ebf152bab3fdc8c039b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
