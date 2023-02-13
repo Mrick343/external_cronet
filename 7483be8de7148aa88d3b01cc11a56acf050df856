@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36454f46_148deba0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-13T08:37:28Z",
+      "side": 1,
+      "message": "I saw fix api lint changes depend on local patches.\nAlso, api lint issue must be fixed before the API freeze.\nSo, I think it\u0027s fine to fix the issue in aosp first.\nwe can upstream in pararell or later.",
+      "parentUuid": "0bc71337_af2565e7",
+      "revId": "7483be8de7148aa88d3b01cc11a56acf050df856",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49ae5e64_3181f78a",
