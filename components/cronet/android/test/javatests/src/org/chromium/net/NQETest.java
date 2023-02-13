@@ -27,11 +27,9 @@ import org.junit.runner.RunWith;
 
 import org.chromium.base.Log;
 import org.chromium.base.metrics.UmaRecorderHolder;
-import org.chromium.base.test.util.DisabledTest;
 import org.chromium.base.test.util.MetricsUtils.HistogramDelta;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import org.chromium.net.MetricsTestUtil.TestExecutor;
-import org.chromium.net.test.EmbeddedTestServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,7 +49,6 @@ public class NQETest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();
 
-    private EmbeddedTestServer mTestServer;
     private String mUrl;
 
     // Thread on which network quality listeners should be notified.
@@ -59,8 +56,8 @@ public class NQETest {
 
     @Before
     public void setUp() throws Exception {
-        mTestServer = EmbeddedTestServer.createAndStartServer(getContext());
-        mUrl = mTestServer.getURL("/echo?status=200");
+        assertTrue(NativeTestServer.startNativeTestServer(getContext()));
+        mUrl = mTestServer.getSuccessURL();
     }
 
     @After
@@ -164,7 +161,7 @@ public class NQETest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    @DisabledTest(message = "crbug.com/796260")
+    @Ignore // (message = "crbug.com/796260")
     public void testQuicDisabled() throws Exception {
         ExperimentalHttpEngine.Builder cronetEngineBuilder =
                 new ExperimentalHttpEngine.Builder(getContext());
@@ -357,7 +354,7 @@ public class NQETest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    @DisabledTest(message = "crbug.com/796260")
+    @Ignore // message = "crbug.com/796260")
     public void testQuicDisabledWithParams() throws Exception {
         ExperimentalHttpEngine.Builder cronetEngineBuilder =
                 new ExperimentalHttpEngine.Builder(getContext());

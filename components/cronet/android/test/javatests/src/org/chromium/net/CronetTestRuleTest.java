@@ -50,7 +50,7 @@ public class CronetTestRuleTest {
     @After
     public void tearDown() throws Exception {
         if (mTestName.getMethodName().contains("MustRun") && !mTestWasRun) {
-            fail(mTestName.getMethodName() + " should have run but didn't.");
+            fail(mTestName.getMethodName() + " should have run but didn't." + mTestRule.getMaximumAvailableApiLevel());
         }
     }
 
@@ -67,8 +67,6 @@ public class CronetTestRuleTest {
     public void testRequiresMinApiMustRun() {
         mTestWasRun = true;
     }
-
-}
 
     @Test
     @SmallTest

@@ -104,7 +104,7 @@ public abstract class InMemoryTransformCallback<T> extends ImplicitFlowControlCa
      * Returns the numerical value of the Content-Header length, or -1 if not set or invalid.
      */
     private static long getBodyLength(UrlResponseInfo info) {
-        List<String> contentLengthHeader = info.getAllHeaders().get(CONTENT_LENGTH_HEADER_NAME);
+        List<String> contentLengthHeader = info.getHeaders().getAsMap().get(CONTENT_LENGTH_HEADER_NAME);
         if (contentLengthHeader == null || contentLengthHeader.size() != 1) {
             return -1;
         }

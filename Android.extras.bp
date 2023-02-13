@@ -149,8 +149,12 @@ java_library {
         "junit",
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental-nodeps",
+
     ],
 }
+
+
+// ----------------------------- TEST TARGETS -------------------------
 
 filegroup {
     name: "net_unittests_data",
@@ -158,5 +162,73 @@ filegroup {
         "net/data/**/*",
         "net/third_party/nist-pkits/**/*",
         "net/third_party/quiche/src/quiche/common/platform/api/testdir/**/*"
+    ]
+}
+
+filegroup {
+    name: "cronet_aml_javatests_sources",
+    srcs: [
+        "components/cronet/android/test/javatests/**/*.java",
+        "components/cronet/android/test/src/**/TestUploadDataStreamHandler.java",
+        "components/cronet/android/test/src/**/MockUrlRequestJobFactory.java",
+        // ":cronet_aml_non_cronet_test_utils_sources",
+        ":cronet_aml_java_apihelpers",
+    ],
+    exclude_srcs: [
+        "components/cronet/android/test/**/urlconnection/*.java",
+        "components/cronet/android/test/**/impl/*.java",
+        "components/cronet/android/test/**/apihelpers/*.java", // haven't enabled this and above
+        "components/cronet/android/test/**/NetworkChangeNotifierTest.java", // reflash and run with changes to make ConnectivityManager public
+        "components/cronet/android/test/**/NQETest.java", // api removed from HttpEngine
+        "components/cronet/android/test/**/TestNetworkQualityThroughputListener.java",
+        "components/cronet/android/test/**/TestNetworkQualityRttListener.java",
+
+        // Needs Http2TestServer
+        "components/cronet/android/test/**/BidirectionalStream*.java",
+        "components/cronet/android/test/**/TestBidirectionalStream*.java",
+        "components/cronet/android/test/**/BrotliTest.java",
+        "components/cronet/android/test/**/ExperimentalOptionsTest.java",
+        "components/cronet/android/test/**/MockCertVerifierTest.java",
+        "components/cronet/android/test/**/NetworkErrorLoggingTest.java",
+        "components/cronet/android/test/**/PkpTest.java",
+        "components/cronet/android/test/**/MetricsTestUtil.java",
+        "components/cronet/android/test/**/RequestFinishedInfoTest.java",
+    ]
+}
+
+filegroup {
+    name: "cronet_aml_non_cronet_test_utils_sources",
+    srcs: [
+        "base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java",
+    ],
+}
+
+
+filegroup {
+    name: "cronet_aml_java_apihelpers",
+    srcs: ["components/cronet/android/**/http/apihelpers/*.java"]
+}
+
+android_library {
+    name: "cronet_testserver_utils",
+    asset_dirs: [
+          "components/cronet/testing/test_server/data"
+    ],
+    manifest: "components/cronet/android/test/src/org/chromium/net/AndroidManifest.xml",
+    srcs: [
+        "components/cronet/android/test/**/NativeTestServer.java",
+        "components/cronet/android/test/**/QuicTestServer.java",
+        "components/cronet/android/test/**/TestFilesInstaller.java",
+        "components/cronet/android/test/**/CronetTestUtil.java",
+        "components/cronet/android/test/**/MockCertVerifier.java",
+        "base/test/android/javatests/**/UrlUtils.java",
+    ],
+    static_libs: [
+        "androidx.test.ext.junit",
+        "junit",
+    ],
+    libs: [
+        "android.test.base",
+        "framework-tethering-pre-jarjar"
     ],
 }

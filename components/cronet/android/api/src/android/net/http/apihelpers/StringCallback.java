@@ -34,7 +34,7 @@ public abstract class StringCallback extends InMemoryTransformCallback<String> {
     }
 
     private Charset getCharsetFromHeaders(UrlResponseInfo info) {
-        List<String> contentTypeHeaders = info.getAllHeaders().get(CONTENT_TYPE_HEADER_NAME);
+        List<String> contentTypeHeaders = info.getHeaders().getAsMap().get(CONTENT_TYPE_HEADER_NAME);
 
         String charset = null;
 
