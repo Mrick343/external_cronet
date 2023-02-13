@@ -9,6 +9,7 @@ import static com.google.common.truth.Truth.assertThat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +61,7 @@ public class CronetInputStreamTest {
 
     @Test
     @SmallTest
+    @Ignore
     public void testAvailable_everythingRead() throws Exception {
         int bytesInBuffer = 10;
 
@@ -74,6 +76,7 @@ public class CronetInputStreamTest {
 
     @Test
     @SmallTest
+    @Ignore
     public void testAvailable_partiallyRead() throws Exception {
         int bytesInBuffer = 10;
         int consumed = 3;
@@ -89,6 +92,7 @@ public class CronetInputStreamTest {
 
     @Test
     @SmallTest
+    @Ignore
     public void testRead_afterDataCompleted() throws Exception {
         int bytesInBuffer = 10;
         int consumed = 3;

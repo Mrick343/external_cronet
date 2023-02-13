@@ -9,6 +9,8 @@ import androidx.annotation.VisibleForTesting;
 import android.net.http.UploadDataProvider;
 import android.net.http.UploadDataSink;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.net.HttpRetryException;
 import java.net.ProtocolException;
@@ -201,7 +203,7 @@ final class CronetFixedModeOutputStream extends CronetOutputStream {
      * Sets the default buffer length for use in tests.
      */
     @VisibleForTesting
-    static void setDefaultBufferLengthForTesting(int length) {
+    public static void setDefaultBufferLengthForTesting(int length) {
         sDefaultBufferLength = length;
     }
 }

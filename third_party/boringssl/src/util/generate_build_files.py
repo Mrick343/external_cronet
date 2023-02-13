@@ -88,7 +88,7 @@ class Android(object):
     out.write('\n')
 
   def WriteFiles(self, files, asm_outputs):
-    # New Android.bp format
+    # New leavealone.bp format
     with open('sources.bp', 'w+') as blueprint:
       blueprint.write(self.header.replace('#', '//'))
 

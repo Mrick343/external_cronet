@@ -1,6 +1,18 @@
-// Copyright 2017 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+/*
+ * Copyright (C) 2023 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.chromium.net;
 
@@ -27,11 +39,9 @@ import org.junit.runner.RunWith;
 
 import org.chromium.base.Log;
 import org.chromium.base.metrics.UmaRecorderHolder;
-import org.chromium.base.test.util.DisabledTest;
 import org.chromium.base.test.util.MetricsUtils.HistogramDelta;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import org.chromium.net.MetricsTestUtil.TestExecutor;
-import org.chromium.net.test.EmbeddedTestServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,7 +61,6 @@ public class NQETest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();
 
-    private EmbeddedTestServer mTestServer;
     private String mUrl;
 
     // Thread on which network quality listeners should be notified.
@@ -59,8 +68,8 @@ public class NQETest {
 
     @Before
     public void setUp() throws Exception {
-        mTestServer = EmbeddedTestServer.createAndStartServer(getContext());
-        mUrl = mTestServer.getURL("/echo?status=200");
+        assertTrue(NativeTestServer.startNativeTestServer(getContext()));
+        mUrl = mTestServer.getSuccessURL();
     }
 
     @After
@@ -164,7 +173,7 @@ public class NQETest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    @DisabledTest(message = "crbug.com/796260")
+    @Ignore // (message = "crbug.com/796260")
     public void testQuicDisabled() throws Exception {
         ExperimentalHttpEngine.Builder cronetEngineBuilder =
                 new ExperimentalHttpEngine.Builder(getContext());
@@ -357,7 +366,7 @@ public class NQETest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    @DisabledTest(message = "crbug.com/796260")
+    @Ignore // message = "crbug.com/796260")
     public void testQuicDisabledWithParams() throws Exception {
         ExperimentalHttpEngine.Builder cronetEngineBuilder =
                 new ExperimentalHttpEngine.Builder(getContext());
