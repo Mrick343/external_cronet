@@ -69,6 +69,24 @@
       "message": "nits: I think message and cause can be Nullable.\nAt the end, this goes to Throwable which accepts null.",
       "revId": "7483be8de7148aa88d3b01cc11a56acf050df856",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2769fc30_63c13c86",
+        "filename": "components/cronet/android/api/src/android/net/http/CallbackException.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-13T15:49:47Z",
+      "side": 1,
+      "message": "Yeah true. Done.",
+      "parentUuid": "49ae5e64_3181f78a",
+      "revId": "7483be8de7148aa88d3b01cc11a56acf050df856",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

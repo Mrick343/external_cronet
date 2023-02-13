@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "304bc502_525fa291",
+        "filename": "patches/upstream-next/0013-Fix-some-api-linter-issues-for-cronet.patch",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-02-13T15:49:47Z",
+      "side": 1,
+      "message": "Deleting this patch since it\u0027ll never work because it depends on local changes.",
+      "revId": "7cf480e65066207515979f748e1e069bc3c83bd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
