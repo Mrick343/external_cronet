@@ -1,9 +1,24 @@
-// Copyright 2014 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+/*
+ * Copyright (C) 2023 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.chromium.net;
 
+import android.net.http.ExperimentalHttpEngine;
+import android.net.http.HttpEngine;
+import android.net.http.UrlRequest;
 import android.net.Network;
 
 import org.json.JSONException;
@@ -60,7 +75,7 @@ public class CronetTestUtil {
     public static class NetworkThreadTestConnector {
         private final CronetUrlRequestContext mRequestContext;
 
-        public NetworkThreadTestConnector(CronetEngine cronetEngine) {
+        public NetworkThreadTestConnector(HttpEngine cronetEngine) {
             mRequestContext = (CronetUrlRequestContext) cronetEngine;
             nativePrepareNetworkThread(mRequestContext.getUrlRequestContextAdapter());
         }
@@ -79,19 +94,19 @@ public class CronetTestUtil {
     }
 
     public static boolean doesURLRequestContextExistForTesting(
-            CronetEngine engine, Network network) {
+            HttpEngine engine, Network network) {
         CronetUrlRequestContext context = (CronetUrlRequestContext) engine;
         return nativeURLRequestContextExistsForTesting(
                 context.getUrlRequestContextAdapter(), network.getNetworkHandle());
     }
 
     public static void setMockCertVerifierForTesting(
-            ExperimentalCronetEngine.Builder builder, long mockCertVerifier) {
+            ExperimentalHttpEngine.Builder builder, long mockCertVerifier) {
         getCronetEngineBuilderImpl(builder).setMockCertVerifierForTesting(mockCertVerifier);
     }
 
     public static CronetEngineBuilderImpl getCronetEngineBuilderImpl(
-            ExperimentalCronetEngine.Builder builder) {
+            ExperimentalHttpEngine.Builder builder) {
         return (CronetEngineBuilderImpl) builder.getBuilderDelegate();
     }
 

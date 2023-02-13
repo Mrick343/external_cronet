@@ -31,6 +31,7 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import android.net.http.HeaderBlock;
 import android.net.http.HttpEngine;
 import org.chromium.net.CronetLoggerTestRule;
 import org.chromium.net.CronetTestRule;
@@ -174,8 +175,8 @@ public final class CronetLoggerTest {
         assertEquals(builder.brotliEnabled(), builderInfo.isBrotliEnabled());
         assertEquals(builder.publicBuilderHttpCacheMode(), builderInfo.getHttpCacheMode());
         assertEquals(builder.experimentalOptions(), builderInfo.getExperimentalOptions());
-        assertEquals(builder.networkQualityEstimatorEnabled(),
-                builderInfo.isNetworkQualityEstimatorEnabled());
+//        assertEquals(builder.networkQualityEstimatorEnabled(),
+//                builderInfo.isNetworkQualityEstimatorEnabled());
         assertEquals(builder.threadPriority(THREAD_PRIORITY_BACKGROUND),
                 builderInfo.getThreadPriority());
     }
@@ -232,7 +233,7 @@ public final class CronetLoggerTest {
         JSONObject jsonExperimentalOptions = new JSONObject().put("skip_logging", true);
         final String experimentalOptions = jsonExperimentalOptions.toString();
         ExperimentalHttpEngine.Builder builder =
-                (ExperimentalHttpEngine.Builder) mTestFramework.mBuilder;
+                new ExperimentalHttpEngine.Builder(mContext);
         builder.setExperimentalOptions(experimentalOptions);
         HttpEngine engine = builder.build();
 
@@ -270,7 +271,7 @@ public final class CronetLoggerTest {
         final int threadPriority = THREAD_PRIORITY_DEFAULT;
 
         ExperimentalHttpEngine.Builder builder =
-                (ExperimentalHttpEngine.Builder) mTestFramework.mBuilder;
+                new ExperimentalHttpEngine.Builder(mContext);
 
         builder.setExperimentalOptions(experimentalOptions);
         builder.setEnablePublicKeyPinningBypassForLocalTrustAnchors(
@@ -281,7 +282,7 @@ public final class CronetLoggerTest {
         builder.setEnableHttp2(isHttp2Enabled);
         builder.setEnableBrotli(isBrotliEnabled);
         builder.setEnableHttpCache(cacheMode, 0);
-        builder.enableNetworkQualityEstimator(isNetworkQualityEstimatorEnabled);
+//        builder.enableNetworkQualityEstimator(isNetworkQualityEstimatorEnabled);
         builder.setThreadPriority(threadPriority);
 
         HttpEngine engine = builder.build();
@@ -298,8 +299,8 @@ public final class CronetLoggerTest {
         assertEquals(isBrotliEnabled, builderInfo.isBrotliEnabled());
         assertEquals(cacheMode, builderInfo.getHttpCacheMode());
         assertEquals(experimentalOptions, builderInfo.getExperimentalOptions());
-        assertEquals(
-                isNetworkQualityEstimatorEnabled, builderInfo.isNetworkQualityEstimatorEnabled());
+//        assertEquals(
+//                isNetworkQualityEstimatorEnabled, builderInfo.isNetworkQualityEstimatorEnabled());
         assertEquals(threadPriority, builderInfo.getThreadPriority());
         assertEquals(ImplVersion.getCronetVersion(), version.toString());
         if (mTestRule.testingJavaImpl()) {
@@ -494,7 +495,7 @@ public final class CronetLoggerTest {
         headers = null;
         assertEquals(0, CronetUrlRequest.estimateHeadersSizeInBytes(headers));
 
-        CronetUrlRequest.HeadersList headersList = new CronetUrlRequest.HeadersList();
+        HeaderBlock headersList = new HeaderBlockImpl(new CronetUrlRequest.HeadersList());
         assertEquals(0, CronetUrlRequest.estimateHeadersSizeInBytes(headersList));
         headersList = null;
         assertEquals(0, CronetUrlRequest.estimateHeadersSizeInBytes(headersList));
@@ -527,7 +528,7 @@ public final class CronetLoggerTest {
         headersList.add(
                 new AbstractMap.SimpleImmutableEntry<String, String>(null, "") // 33 + 0 + 0 = 33
         );
-        assertEquals(33, CronetUrlRequest.estimateHeadersSizeInBytes(headersList));
+        assertEquals(33, CronetUrlRequest.estimateHeadersSizeInBytes(new HeaderBlockImpl(headersList)));
     }
 
 }

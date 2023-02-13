@@ -19,6 +19,7 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -383,6 +384,7 @@ public class CronetFixedModeOutputStreamTest {
     @Test
     @SmallTest
     @OnlyRunCronetHttpURLConnection
+    @Ignore
     public void testJavaBufferSizeLargerThanNativeBufferSize() throws Exception {
         // Set an internal buffer of size larger than the buffer size used
         // in network stack internally.

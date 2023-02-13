@@ -4,6 +4,8 @@
 
 package org.chromium.net.urlconnection;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.SocketTimeoutException;
@@ -38,7 +40,7 @@ class MessageLoop implements Executor {
     private static final long INVALID_THREAD_ID = -1;
     private long mThreadId = INVALID_THREAD_ID;
 
-    MessageLoop() {
+    public MessageLoop() {
         mQueue = new LinkedBlockingQueue<Runnable>();
     }
 

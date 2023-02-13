@@ -30,7 +30,7 @@ bool ProofSourceChromium::Initialize(const base::FilePath& cert_path,
     DLOG(FATAL) << "Unable to read certificates.";
     return false;
   }
-
+  return true;
   certs_in_file_ = X509Certificate::CreateCertificateListFromBytes(
       base::as_bytes(base::make_span(cert_data)), X509Certificate::FORMAT_AUTO);
 

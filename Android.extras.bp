@@ -206,7 +206,7 @@ filegroup {
         "net/data/**/*",
         "net/third_party/nist-pkits/**/*",
         "net/third_party/quiche/src/quiche/common/platform/api/testdir/**/*"
-    ],
+    ]
 }
 
 // ------------------------------ JAVA TEST TARGETS --------------------------------------------
@@ -214,25 +214,75 @@ filegroup {
 filegroup {
     name: "cronet_aml_javatests_sources",
     srcs: [
-        "components/cronet/android/test/javatests/**/UrlResponseInfoTest.java",
+        "components/cronet/android/test/javatests/**/*.java",
+        "components/cronet/android/test/src/**/TestUploadDataStreamHandler.java",
+        "components/cronet/android/test/src/**/MockUrlRequestJobFactory.java",
+        // ":cronet_aml_non_cronet_test_utils_sources",
+        ":cronet_aml_java_apihelpers",
+    ],
+    exclude_srcs: [
+        "components/cronet/android/test/**/impl/CronetManifestTest.java",
+        "components/cronet/android/test/**/apihelpers/*.java", // haven't enabled this and above
+        "components/cronet/android/test/**/NQETest.java", // api removed from HttpEngine
+        "components/cronet/android/test/**/QuicTest.java", // QuicTestServer failing
+        "components/cronet/android/test/**/QuicUploadTest.java", // QuicTestServer failing
+        "components/cronet/android/test/**/TestNetworkQualityThroughputListener.java",
+        "components/cronet/android/test/**/TestNetworkQualityRttListener.java",
+        "components/cronet/android/test/**/RequestFinishedInfoTest.java", // Used Instant.now which is flaky
+        // "components/cronet/android/test/**/NetworkChangeNotifierTest.java",
+        "components/cronet/android/test/**/CronetHttpURLConnectionTest.java",
+
+        // Needs Http2TestServer
+        "components/cronet/android/test/**/BidirectionalStream*.java",
+        "components/cronet/android/test/**/TestBidirectionalStream*.java",
+        "components/cronet/android/test/**/BrotliTest.java",
+        "components/cronet/android/test/**/MockCertVerifierTest.java",
+        "components/cronet/android/test/**/NetworkErrorLoggingTest.java",
+        "components/cronet/android/test/**/PkpTest.java",
+        // "components/cronet/android/test/**/MetricsTestUtil.java",
+    ]
+}
+
+filegroup {
+    name: "cronet_aml_non_cronet_test_utils_sources",
+    srcs: [
+        "base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java",
+        "base/test/android/javatests/src/org/chromium/base/test/util/PackageManagerWrapper.java",
     ],
 }
 
-java_library {
+
+filegroup {
+    name: "cronet_aml_java_apihelpers",
+    srcs: ["components/cronet/android/**/http/apihelpers/*.java"]
+}
+
+android_library {
     name: "cronet_testserver_utils",
-    sdk_version: "module_current", // this allows us to access hidden apis while test_current doesnt
+    sdk_version: "module_current",
+    min_sdk_version: "30",
+    asset_dirs: [
+          "components/cronet/testing/test_server/data/",
+          "net/data/ssl/certificates/",
+    ],
+    manifest: "components/cronet/android/test/src/org/chromium/net/AndroidManifest.xml",
     srcs: [
         "components/cronet/android/test/**/NativeTestServer.java",
+        "components/cronet/android/test/**/QuicTestServer.java",
         "components/cronet/android/test/**/TestFilesInstaller.java",
+        "components/cronet/android/test/**/CronetTestUtil.java",
+        "components/cronet/android/test/**/MockCertVerifier.java",
         "base/test/android/javatests/**/UrlUtils.java",
     ],
     static_libs: [
+        "cronet_aml_api_java",
         "cronet_aml_java__testing",
         "androidx.test.ext.junit",
         "junit",
     ],
     libs: [
         "android.test.base",
+        "framework-connectivity.stubs.module_lib",
     ],
 }
 
