@@ -54,7 +54,8 @@ static jlong JNI_MockCertVerifier_CreateMockCertVerifier(
     const JavaParamRef<jstring>& jtest_data_dir) {
   base::FilePath test_data_dir(
       base::android::ConvertJavaStringToUTF8(env, jtest_data_dir));
-  base::InitAndroidTestPaths(test_data_dir);
+//  base::InitAndroidTestPaths(test_data_dir);
+//   base::InitAndroidTestPaths(test_data_dir);
 
   std::vector<std::string> certs;
   base::android::AppendJavaStringArrayToStringVector(env, jcerts, &certs);
@@ -62,7 +63,8 @@ static jlong JNI_MockCertVerifier_CreateMockCertVerifier(
   for (const auto& cert : certs) {
     net::CertVerifyResult verify_result;
     verify_result.verified_cert =
-        net::ImportCertFromFile(net::GetTestCertsDirectory(), cert);
+//        net::ImportCertFromFile(net::GetTestCertsDirectory(), cert);
+        net::ImportCertFromFile(test_data_dir, cert);
 
     // By default, HPKP verification is enabled for known trust roots only.
     verify_result.is_issued_by_known_root = jknown_root;

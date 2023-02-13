@@ -4,6 +4,8 @@
 
 package org.chromium.net.urlconnection;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -77,7 +79,7 @@ class CronetInputStream extends InputStream {
      * @param exception if not {@code null}, it is the exception to throw when caller
      *            tries to read more data.
      */
-    void setResponseDataCompleted(IOException exception) {
+    public void setResponseDataCompleted(IOException exception) {
         mException = exception;
         mResponseDataCompleted = true;
         // Nothing else to read, so can free the buffer.

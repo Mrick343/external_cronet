@@ -7,6 +7,8 @@ package org.chromium.net.urlconnection;
 import android.net.http.UploadDataProvider;
 import android.net.http.UploadDataSink;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.net.HttpRetryException;
 import java.nio.ByteBuffer;

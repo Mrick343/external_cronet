@@ -16,14 +16,19 @@
 
 package org.chromium.net;
 
-/**
- * Provides a means for validating whether some condition/criteria has been met.
- */
-public interface Criteria {
+import androidx.annotation.IntDef;
 
-    /**
-     * @return Whether the criteria this is testing has been satisfied.
-     */
-    public boolean isSatisfied();
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
+@IntDef({
+        FailurePhase.START, FailurePhase.READ_SYNC, FailurePhase.READ_ASYNC,
+        FailurePhase.MAX_FAILURE_PHASE
+})
+@Retention(RetentionPolicy.SOURCE)
+public @interface FailurePhase {
+    int START = 0;
+    int READ_SYNC = 1;
+    int READ_ASYNC = 2;
+    int MAX_FAILURE_PHASE = 3;
 }

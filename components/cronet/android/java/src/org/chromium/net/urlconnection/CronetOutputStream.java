@@ -6,6 +6,8 @@ package org.chromium.net.urlconnection;
 
 import android.net.http.UploadDataProvider;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.io.OutputStream;
 

@@ -15,6 +15,7 @@ import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.DexModuleRegisterCallback;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
@@ -542,4 +543,10 @@ public class PackageManagerWrapper extends PackageManager {
     protected Drawable getUserBadgeForDensity(UserHandle userHandle, int i) {
         return null;
     }
+
+    @Override
+    public void registerDexModule(String dexModulePath, DexModuleRegisterCallback callback) {}
+
+    @Override
+    public ComponentName getInstantAppInstallerComponent() {}
 }
