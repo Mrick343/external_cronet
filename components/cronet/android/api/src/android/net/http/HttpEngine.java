@@ -418,6 +418,7 @@ public abstract class HttpEngine {
             try {
                 Class<?> clazz = context.getClassLoader().loadClass(
                         "android.net.http.internal.org.chromium.net.impl.NativeCronetEngineBuilderImpl");
+//                "android.net.http.connectivity.org.chromium.net.impl.NativeCronetEngineBuilderImpl");
 
                 return (IHttpEngineBuilder) clazz.getConstructor(Context.class).newInstance(
                         context);

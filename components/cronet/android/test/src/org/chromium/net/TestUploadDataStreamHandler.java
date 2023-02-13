@@ -1,9 +1,22 @@
-// Copyright 2015 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+/*
+ * Copyright (C) 2023 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.chromium.net;
 
+import android.net.http.HttpEngine;
 import android.content.Context;
 import android.os.ConditionVariable;
 
@@ -20,8 +33,9 @@ import org.chromium.net.impl.CronetUrlRequestContext;
  */
 @JNINamespace("cronet")
 public final class TestUploadDataStreamHandler {
+
     private final CronetTestUtil.NetworkThreadTestConnector mNetworkThreadTestConnector;
-    private final CronetEngine mCronetEngine;
+    private final HttpEngine mHttpEngine;
     private long mTestUploadDataStreamHandler;
     private ConditionVariable mWaitInitCalled = new ConditionVariable();
     private ConditionVariable mWaitInitComplete = new ConditionVariable();
@@ -36,9 +50,9 @@ public final class TestUploadDataStreamHandler {
     private String mData = "";
 
     public TestUploadDataStreamHandler(Context context, final long uploadDataStream) {
-        mCronetEngine = new CronetEngine.Builder(context).build();
-        mNetworkThreadTestConnector = new CronetTestUtil.NetworkThreadTestConnector(mCronetEngine);
-        CronetUrlRequestContext requestContext = (CronetUrlRequestContext) mCronetEngine;
+        mHttpEngine = new HttpEngine.Builder(context).build();
+        mNetworkThreadTestConnector = new CronetTestUtil.NetworkThreadTestConnector(mHttpEngine);
+        CronetUrlRequestContext requestContext = (CronetUrlRequestContext) mHttpEngine;
         mTestUploadDataStreamHandler = nativeCreateTestUploadDataStreamHandler(
                 uploadDataStream, requestContext.getUrlRequestContextAdapter());
     }
@@ -48,7 +62,7 @@ public final class TestUploadDataStreamHandler {
             nativeDestroy(mTestUploadDataStreamHandler);
             mTestUploadDataStreamHandler = 0;
             mNetworkThreadTestConnector.shutdown();
-            mCronetEngine.shutdown();
+            mHttpEngine.shutdown();
         }
     }
 
