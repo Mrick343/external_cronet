@@ -21,17 +21,31 @@ package {
 filegroup {
     name: "cronet_aml_javatests_sources",
     srcs: [
-        "android/test/javatests/**/UrlResponseInfoTest.java",
-        "android/test/javatests/**/CronetTestRule.java",
-        "android/test/javatests/**/CronetTestRuleTest.java",
+        "javatests/**/*.java",
+        "src/**/TestUploadDataStreamHandler.java",
+        "src/**/MockUrlRequestJobFactory.java",
+        ":cronet_aml_non_cronet_test_utils_sources",
+        ":cronet_aml_java_apihelpers",
     ],
+    exclude_srcs: [
+        "javatests/**/urlconnection/*.java",
+        "javatests/**/impl/*.java",
+        "javatests/**/apihelpers/*.java", // haven't enabled this and above
+        "javatests/**/NetworkChangeNotifierTest.java", // reflash and run with changes to make ConnectivityManager public
+        "javatests/**/NQETest.java", // api removed from HttpEngine
+        "javatests/**/TestNetworkQualityThroughputListener.java",
+        "javatests/**/TestNetworkQualityRttListener.java",
+
+        // Needs Http2TestServer
+        "javatests/**/BidirectionalStream*.java",
+        "javatests/**/TestBidirectionalStream*.java",
+        "javatests/**/BrotliTest.java",
+        "javatests/**/ExperimentalOptionsTest.java",
+        "javatests/**/MockCertVerifierTest.java",
+        "javatests/**/NetworkErrorLoggingTest.java",
+        "javatests/**/PkpTest.java",
+        "javatests/**/MetricsTestUtil.java",
+        "javatests/**/RequestFinishedInfoTest.java",
+    ]
 }
 
-filegroup {
-    name: "cronet_aml_nativetestserver_data_sources",
-    srcs: [
-        "testing/test_server/data/**/*.txt",
-        "testing/test_server/data/**/*.mock-http-headers",
-        "testing/test_server/data/**/*.html",
-    ],
-}

@@ -56,7 +56,7 @@ public class CronetStressTest {
         for (int i = 0; i < kNumRequest; i++) {
             TestUrlRequestCallback callback = new TestUrlRequestCallback();
             UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                    NativeTestServer.getEchoAllHeadersURL(), callback, callback.getExecutor());
+                    NativeTestServer.getEchoAllHeadersURL(), callback.getExecutor(), callback);
             for (int j = 0; j < kNumRequestHeaders; j++) {
                 builder.addHeader("header" + j, Integer.toString(j));
             }

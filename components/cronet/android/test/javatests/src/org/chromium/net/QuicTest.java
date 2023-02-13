@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 
 import org.chromium.base.Log;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
-import org.chromium.net.MetricsTestUtil.TestRequestFinishedListener;
+//import org.chromium.net.MetricsTestUtil.TestRequestFinishedListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,7 +56,7 @@ public class QuicTest {
         QuicTestServer.startQuicTestServer(getContext());
 
         mBuilder = new ExperimentalHttpEngine.Builder(getContext());
-        mBuilder.enableNetworkQualityEstimator(true).enableQuic(true);
+        mBuilder.setEnableQuic(true); // .enableNetworkQualityEstimator(true)
         mBuilder.addQuicHint(QuicTestServer.getServerHost(), QuicTestServer.getServerPort(),
                 QuicTestServer.getServerPort());
 
@@ -146,7 +146,7 @@ public class QuicTest {
         cronetEngine = builder.build();
         TestUrlRequestCallback callback2 = new TestUrlRequestCallback();
         requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback2, callback2.getExecutor());
+                cronetEngine.newUrlRequestBuilder(quicURL, callback2.getExecutor(), callback2);
         requestBuilder.build().start();
         callback2.blockForDone();
         assertEquals(200, callback2.mResponseInfo.getHttpStatusCode());
@@ -168,136 +168,136 @@ public class QuicTest {
         return new String(data, "UTF-8").contains(content);
     }
 
-    /**
-     * Tests that the network quality listeners are propoerly notified when QUIC is enabled.
-     */
-    @Test
-    @LargeTest
-    @OnlyRunNativeCronet
-    @SuppressWarnings("deprecation")
-    public void testNQEWithQuic() throws Exception {
-        ExperimentalHttpEngine cronetEngine = mBuilder.build();
-        String quicURL = QuicTestServer.getServerURL() + "/simple.txt";
-
-        TestNetworkQualityRttListener rttListener =
-                new TestNetworkQualityRttListener(Executors.newSingleThreadExecutor());
-        TestNetworkQualityThroughputListener throughputListener =
-                new TestNetworkQualityThroughputListener(Executors.newSingleThreadExecutor());
-
-        cronetEngine.addRttListener(rttListener);
-        cronetEngine.addThroughputListener(throughputListener);
-
-        cronetEngine.configureNetworkQualityEstimatorForTesting(true, true, true);
-        TestUrlRequestCallback callback = new TestUrlRequestCallback();
-
-        // Although the native stack races QUIC and SPDY for the first request,
-        // since there is no http server running on the corresponding TCP port,
-        // QUIC will always succeed with a 200 (see
-        // net::HttpStreamFactoryImpl::Request::OnStreamFailed).
-        UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
-        requestBuilder.build().start();
-        callback.blockForDone();
-
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
-        String expectedContent = "This is a simple text file served by QUIC.\n";
-        assertEquals(expectedContent, callback.mResponseAsString);
-        assertIsQuic(callback.mResponseInfo);
-
-        // Throughput observation is posted to the network quality estimator on the network thread
-        // after the UrlRequest is completed. The observations are then eventually posted to
-        // throughput listeners on the executor provided to network quality.
-        throughputListener.waitUntilFirstThroughputObservationReceived();
-
-        // Wait for RTT observation (at the URL request layer) to be posted.
-        rttListener.waitUntilFirstUrlRequestRTTReceived();
-
-        assertTrue(throughputListener.throughputObservationCount() > 0);
-
-        // Check RTT observation count after throughput observation has been received. This ensures
-        // that executor has finished posting the RTT observation to the RTT listeners.
-        // NETWORK_QUALITY_OBSERVATION_SOURCE_URL_REQUEST
-        assertTrue(rttListener.rttObservationCount(0) > 0);
-
-        // NETWORK_QUALITY_OBSERVATION_SOURCE_QUIC
-        assertTrue(rttListener.rttObservationCount(2) > 0);
-
-        // Verify that effective connection type callback is received and
-        // effective connection type is correctly set.
-        assertTrue(
-                cronetEngine.getEffectiveConnectionType() != EffectiveConnectionType.TYPE_UNKNOWN);
-
-        // Verify that the HTTP RTT, transport RTT and downstream throughput
-        // estimates are available.
-        assertTrue(cronetEngine.getHttpRttMs() >= 0);
-        assertTrue(cronetEngine.getTransportRttMs() >= 0);
-        assertTrue(cronetEngine.getDownstreamThroughputKbps() >= 0);
-
-        // Verify that the cached estimates were written to the prefs.
-        while (true) {
-            Log.i(TAG, "Still waiting for pref file update.....");
-            Thread.sleep(10000);
-            try {
-                if (fileContainsString("local_prefs.json", "network_qualities")) {
-                    break;
-                }
-            } catch (FileNotFoundException e) {
-                // Ignored this exception since the file will only be created when updates are
-                // flushed to the disk.
-            }
-        }
-        assertTrue(fileContainsString("local_prefs.json", "network_qualities"));
-        cronetEngine.shutdown();
-    }
-
-    @Test
-    @SmallTest
-    @OnlyRunNativeCronet
-    public void testMetricsWithQuic() throws Exception {
-        ExperimentalHttpEngine cronetEngine = mBuilder.build();
-        TestRequestFinishedListener requestFinishedListener = new TestRequestFinishedListener();
-        cronetEngine.addRequestFinishedListener(requestFinishedListener);
-
-        String quicURL = QuicTestServer.getServerURL() + "/simple.txt";
-        TestUrlRequestCallback callback = new TestUrlRequestCallback();
-
-        UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
-        Date startTime = new Date();
-        requestBuilder.build().start();
-        callback.blockForDone();
-        requestFinishedListener.blockUntilDone();
-        Date endTime = new Date();
-
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
-        assertIsQuic(callback.mResponseInfo);
-
-        RequestFinishedInfo requestInfo = requestFinishedListener.getRequestInfo();
-        MetricsTestUtil.checkRequestFinishedInfo(requestInfo, quicURL, startTime, endTime);
-        assertEquals(RequestFinishedInfo.SUCCEEDED, requestInfo.getFinishedReason());
-        MetricsTestUtil.checkHasConnectTiming(requestInfo.getMetrics(), startTime, endTime, true);
-
-        // Second request should use the same connection and not have ConnectTiming numbers
-        callback = new TestUrlRequestCallback();
-        requestFinishedListener.reset();
-        requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
-        startTime = new Date();
-        requestBuilder.build().start();
-        callback.blockForDone();
-        requestFinishedListener.blockUntilDone();
-        endTime = new Date();
-
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
-        assertIsQuic(callback.mResponseInfo);
-
-        requestInfo = requestFinishedListener.getRequestInfo();
-        MetricsTestUtil.checkRequestFinishedInfo(requestInfo, quicURL, startTime, endTime);
-        assertEquals(RequestFinishedInfo.SUCCEEDED, requestInfo.getFinishedReason());
-        MetricsTestUtil.checkNoConnectTiming(requestInfo.getMetrics());
-
-        cronetEngine.shutdown();
-    }
+//    /**
+//     * Tests that the network quality listeners are propoerly notified when QUIC is enabled.
+//     */
+//    @Test
+//    @LargeTest
+//    @OnlyRunNativeCronet
+//    @SuppressWarnings("deprecation")
+//    public void testNQEWithQuic() throws Exception {
+//        ExperimentalHttpEngine cronetEngine = mBuilder.build();
+//        String quicURL = QuicTestServer.getServerURL() + "/simple.txt";
+//
+//        TestNetworkQualityRttListener rttListener =
+//                new TestNetworkQualityRttListener(Executors.newSingleThreadExecutor());
+//        TestNetworkQualityThroughputListener throughputListener =
+//                new TestNetworkQualityThroughputListener(Executors.newSingleThreadExecutor());
+//
+//        cronetEngine.addRttListener(rttListener);
+//        cronetEngine.addThroughputListener(throughputListener);
+//
+//        cronetEngine.configureNetworkQualityEstimatorForTesting(true, true, true);
+//        TestUrlRequestCallback callback = new TestUrlRequestCallback();
+//
+//        // Although the native stack races QUIC and SPDY for the first request,
+//        // since there is no http server running on the corresponding TCP port,
+//        // QUIC will always succeed with a 200 (see
+//        // net::HttpStreamFactoryImpl::Request::OnStreamFailed).
+//        UrlRequest.Builder requestBuilder =
+//                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
+//        requestBuilder.build().start();
+//        callback.blockForDone();
+//
+//        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+//        String expectedContent = "This is a simple text file served by QUIC.\n";
+//        assertEquals(expectedContent, callback.mResponseAsString);
+//        assertIsQuic(callback.mResponseInfo);
+//
+//        // Throughput observation is posted to the network quality estimator on the network thread
+//        // after the UrlRequest is completed. The observations are then eventually posted to
+//        // throughput listeners on the executor provided to network quality.
+//        throughputListener.waitUntilFirstThroughputObservationReceived();
+//
+//        // Wait for RTT observation (at the URL request layer) to be posted.
+//        rttListener.waitUntilFirstUrlRequestRTTReceived();
+//
+//        assertTrue(throughputListener.throughputObservationCount() > 0);
+//
+//        // Check RTT observation count after throughput observation has been received. This ensures
+//        // that executor has finished posting the RTT observation to the RTT listeners.
+//        // NETWORK_QUALITY_OBSERVATION_SOURCE_URL_REQUEST
+//        assertTrue(rttListener.rttObservationCount(0) > 0);
+//
+//        // NETWORK_QUALITY_OBSERVATION_SOURCE_QUIC
+//        assertTrue(rttListener.rttObservationCount(2) > 0);
+//
+//        // Verify that effective connection type callback is received and
+//        // effective connection type is correctly set.
+//        assertTrue(
+//                cronetEngine.getEffectiveConnectionType() != EffectiveConnectionType.TYPE_UNKNOWN);
+//
+//        // Verify that the HTTP RTT, transport RTT and downstream throughput
+//        // estimates are available.
+//        assertTrue(cronetEngine.getHttpRttMs() >= 0);
+//        assertTrue(cronetEngine.getTransportRttMs() >= 0);
+//        assertTrue(cronetEngine.getDownstreamThroughputKbps() >= 0);
+//
+//        // Verify that the cached estimates were written to the prefs.
+//        while (true) {
+//            Log.i(TAG, "Still waiting for pref file update.....");
+//            Thread.sleep(10000);
+//            try {
+//                if (fileContainsString("local_prefs.json", "network_qualities")) {
+//                    break;
+//                }
+//            } catch (FileNotFoundException e) {
+//                // Ignored this exception since the file will only be created when updates are
+//                // flushed to the disk.
+//            }
+//        }
+//        assertTrue(fileContainsString("local_prefs.json", "network_qualities"));
+//        cronetEngine.shutdown();
+//    }
+//
+//    @Test
+//    @SmallTest
+//    @OnlyRunNativeCronet
+//    public void testMetricsWithQuic() throws Exception {
+//        ExperimentalHttpEngine cronetEngine = mBuilder.build();
+//        TestRequestFinishedListener requestFinishedListener = new TestRequestFinishedListener();
+//        cronetEngine.addRequestFinishedListener(requestFinishedListener);
+//
+//        String quicURL = QuicTestServer.getServerURL() + "/simple.txt";
+//        TestUrlRequestCallback callback = new TestUrlRequestCallback();
+//
+//        UrlRequest.Builder requestBuilder =
+//                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
+//        Date startTime = new Date();
+//        requestBuilder.build().start();
+//        callback.blockForDone();
+//        requestFinishedListener.blockUntilDone();
+//        Date endTime = new Date();
+//
+//        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+//        assertIsQuic(callback.mResponseInfo);
+//
+//        RequestFinishedInfo requestInfo = requestFinishedListener.getRequestInfo();
+//        MetricsTestUtil.checkRequestFinishedInfo(requestInfo, quicURL, startTime, endTime);
+//        assertEquals(RequestFinishedInfo.SUCCEEDED, requestInfo.getFinishedReason());
+//        MetricsTestUtil.checkHasConnectTiming(requestInfo.getMetrics(), startTime, endTime, true);
+//
+//        // Second request should use the same connection and not have ConnectTiming numbers
+//        callback = new TestUrlRequestCallback();
+//        requestFinishedListener.reset();
+//        requestBuilder =
+//                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
+//        startTime = new Date();
+//        requestBuilder.build().start();
+//        callback.blockForDone();
+//        requestFinishedListener.blockUntilDone();
+//        endTime = new Date();
+//
+//        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+//        assertIsQuic(callback.mResponseInfo);
+//
+//        requestInfo = requestFinishedListener.getRequestInfo();
+//        MetricsTestUtil.checkRequestFinishedInfo(requestInfo, quicURL, startTime, endTime);
+//        assertEquals(RequestFinishedInfo.SUCCEEDED, requestInfo.getFinishedReason());
+//        MetricsTestUtil.checkNoConnectTiming(requestInfo.getMetrics());
+//
+//        cronetEngine.shutdown();
+//    }
 
     // Helper method to assert that the request is negotiated over QUIC.
     private void assertIsQuic(UrlResponseInfo responseInfo) {

@@ -6,7 +6,7 @@ found in the LICENSE file.
 -->
   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            package="org.chromium.net.tests"
+            package="android.net.http.internal.org.chromium.net.tests"
             android:versionCode="1"
             android:versionName="1.0"
             tools:ignore="ScopedStorage">
@@ -24,7 +24,7 @@ found in the LICENSE file.
     -->
     <queries>
       <intent>
-        <action android:name="org.chromium.net.test.EMBEDDED_TEST_SERVER_SERVICE" />
+        <action android:name="android.net.http.internal.org.chromium.net.test.EMBEDDED_TEST_SERVER_SERVICE" />
       </intent>
     </queries>
 
@@ -33,13 +33,13 @@ found in the LICENSE file.
          storage which is no longer accessible by default.
          https://developer.android.com/training/data-storage/use-cases#opt-out-scoped-storage
          Once we start testing Android 11+, this "hack" might no longer be sufficient. -->
-    <application android:name="org.chromium.net.CronetTestApplication"
+    <application android:name="android.net.http.internal.org.chromium.net.CronetTestApplication"
                  android:label="Cronet Test"
                  android:networkSecurityConfig="@xml/network_security_config"
                  android:requestLegacyExternalStorage="true" />
     <!-- Does not use BaseChromiumAndroidJUnitRunner so that it's easy to run
          tests when dropped into non-chromium repositories. -->
     <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
-                     android:targetPackage="org.chromium.net.tests"
+                     android:targetPackage="android.net.http.internal.org.chromium.net.tests"
                      android:label="Tests for org.chromium.net" />
 </manifest>

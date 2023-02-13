@@ -56,3 +56,32 @@ java_library {
     ],
     sdk_version: "module_current",
 }
+
+filegroup {
+    name: "cronet_aml_java_apihelpers",
+    srcs: ["components/cronet/android/**/http/apihelpers/*.java"]
+}
+
+android_library {
+    name: "cronet_testserver_utils",
+    asset_dirs: [
+          "components/cronet/testing/test_server/data"
+    ],
+    manifest: "components/cronet/android/test/src/org/chromium/net/AndroidManifest.xml",
+    srcs: [
+        "components/cronet/android/test/**/NativeTestServer.java",
+        "components/cronet/android/test/**/QuicTestServer.java",
+        "components/cronet/android/test/**/TestFilesInstaller.java",
+        "components/cronet/android/test/**/CronetTestUtil.java",
+        "components/cronet/android/test/**/MockCertVerifier.java",
+        "base/test/android/javatests/**/UrlUtils.java",
+    ],
+    static_libs: [
+        "androidx.test.ext.junit",
+        "junit",
+    ],
+    libs: [
+        "android.test.base",
+        "framework-tethering-pre-jarjar"
+    ],
+}
