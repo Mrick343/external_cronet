@@ -16,7 +16,6 @@ import java.util.Map;
 public abstract class UrlResponseInfo {
     /**
      * Unmodifiable container of response headers or trailers.
-     * {@hide}.
      */
     public abstract static class HeaderBlock {
         /**
@@ -30,7 +29,7 @@ public abstract class UrlResponseInfo {
         /**
          * Returns an unmodifiable map from response-header field names to lists of values.
          * Each list of values for a single header field is in the same order they
-         * were received over the wire.
+         * were received over the wire. The iteration order of keys is unspecified.
          *
          * @return an unmodifiable map from response-header field names to lists of values
          */
@@ -66,19 +65,37 @@ public abstract class UrlResponseInfo {
     public abstract String getHttpStatusText();
 
     /**
+     * Returns the response headers.
+     */
+    public abstract HeaderBlock getHeaders();
+
+    /**
      * Returns an unmodifiable list of response header field and value pairs.
      * The headers are in the same order they are received over the wire.
      * @return an unmodifiable list of response header field and value pairs.
+     *
+     * @deprecated use {@link #getHeaders()} instead
+     *
+     * {@hide}
      */
-    public abstract List<Map.Entry<String, String>> getAllHeadersAsList();
+    @Deprecated
+    public final List<Map.Entry<String, String>> getAllHeadersAsList() {
+        return getHeaders().getAsList();
+    }
 
     /**
      * Returns an unmodifiable map of the response-header fields and values.
      * Each list of values for a single header field is in the same order they
      * were received over the wire.
-     * @return an unmodifiable map of the response-header fields and values.
+     *
+     * @return an unmodifiable map of the response-header fields and values.     *
+     * @deprecated use {@link #getHeaders()}
+     *
+     * {@hide}
      */
-    public abstract Map<String, List<String>> getAllHeaders();
+    public final Map<String, List<String>> getAllHeaders() {
+        return getHeaders().getAsMap();
+    }
 
     /**
      * Returns {@code true} if the response came from the cache, including
