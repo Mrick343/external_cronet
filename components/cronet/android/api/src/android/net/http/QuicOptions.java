@@ -479,12 +479,9 @@ public class QuicOptions {
          * TODO what happens to connection that are idle for too long?
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
-        @Experimental
-        public Builder setIdleConnectionTimeout(Duration idleConnectionTimeoutSeconds) {
-            this.mIdleConnectionTimeout = idleConnectionTimeoutSeconds;
+        public Builder setIdleConnectionTimeout(Duration idleConnectionTimeout) {
+            this.mIdleConnectionTimeout = idleConnectionTimeout;
             return this;
         }
 

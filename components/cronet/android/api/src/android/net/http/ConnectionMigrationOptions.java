@@ -99,8 +99,6 @@ public class ConnectionMigrationOptions {
 
     /**
      * See {@link Builder#setRetryPreHandshakeErrorsOnNonDefaultNetwork}
-     *
-     * {@hide}
      */
     @Experimental
     @Nullable
@@ -110,8 +108,6 @@ public class ConnectionMigrationOptions {
 
     /**
      * See {@link Builder#setAllowNonDefaultNetworkUsage}
-     *
-     * {@hide}
      */
     @Experimental
     @Nullable
@@ -283,8 +279,6 @@ public class ConnectionMigrationOptions {
          * networks.
          *
          * @return this builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
         public Builder setAllowNonDefaultNetworkUsage(boolean enable) {
@@ -355,8 +349,6 @@ public class ConnectionMigrationOptions {
          * result in requests being sent on non-default metered networks. Use with caution!
          *
          * @return this builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
         public Builder setRetryPreHandshakeErrorsOnNonDefaultNetwork(
