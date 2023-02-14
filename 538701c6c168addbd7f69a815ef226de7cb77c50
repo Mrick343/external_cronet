@@ -64,6 +64,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de988ffe_44df7574",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-14T14:56:13Z",
+      "side": 1,
+      "message": "See above.",
+      "parentUuid": "5db06fee_e703bfd1",
+      "range": {
+        "startLine": 33,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 50
+      },
+      "revId": "538701c6c168addbd7f69a815ef226de7cb77c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e10c891d_1ece373e",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-14T14:56:13Z",
+      "side": 1,
+      "message": "That\u0027s possible. Without it, the target doesn\u0027t compile and complains about missing Network.\n\nGiven I have other API changes in the pipeline I\u0027ll merge the CL as-is to build on top of, and I\u0027ll address this in a separate cleanup CL.",
+      "parentUuid": "97d5aecf_024ee95a",
+      "range": {
+        "startLine": 33,
+        "startChar": 9,
+        "endLine": 33,
+        "endChar": 48
+      },
+      "revId": "538701c6c168addbd7f69a815ef226de7cb77c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4abacbdf_2a6c8c03",
@@ -77,6 +125,30 @@
       "writtenOn": "2023-02-09T13:09:22Z",
       "side": 1,
       "message": "nit: this already defaults to `DEFAULT_NETWORK_HANDLE` (which is the same as `UNBIND_NETWORK_HANDLE`). So, you could remove one branch of the if (same thing for the Engine.bind code path).",
+      "range": {
+        "startLine": 215,
+        "startChar": 12,
+        "endLine": 215,
+        "endChar": 51
+      },
+      "revId": "538701c6c168addbd7f69a815ef226de7cb77c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb896ff9_31fdc371",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-14T14:56:13Z",
+      "side": 1,
+      "message": "You may still need to unset the field, this becomes especially useful once you have some kind of global decorator which creates the requests you then specialize: \n\n    bindToNetwork(something)\n        .bindToNetwork(somethingElse)\n        .bindToNetwork(/*actually not*/null).",
+      "parentUuid": "4abacbdf_2a6c8c03",
       "range": {
         "startLine": 215,
         "startChar": 12,
