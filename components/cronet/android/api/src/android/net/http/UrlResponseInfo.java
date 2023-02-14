@@ -16,7 +16,6 @@ import java.util.Map;
 public abstract class UrlResponseInfo {
     /**
      * Unmodifiable container of response headers or trailers.
-     * {@hide}.
      */
     public abstract static class HeaderBlock {
         /**
@@ -30,7 +29,7 @@ public abstract class UrlResponseInfo {
         /**
          * Returns an unmodifiable map from response-header field names to lists of values.
          * Each list of values for a single header field is in the same order they
-         * were received over the wire.
+         * were received over the wire. The iteration order of keys is unspecified.
          *
          * @return an unmodifiable map from response-header field names to lists of values
          */
