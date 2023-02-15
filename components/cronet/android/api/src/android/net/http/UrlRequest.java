@@ -5,6 +5,7 @@
 package android.net.http;
 
 import android.annotation.IntDef;
+import android.annotation.SuppressLint;
 import android.net.Network;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public abstract class UrlRequest {
      * with {@link Builder#build}. The builder can be created by calling
      * {@link HttpEngine#newUrlRequestBuilder}.
      */
+    @SuppressLint("StaticFinalBuilder")
     public abstract static class Builder {
 
         Builder() {}
