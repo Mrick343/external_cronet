@@ -353,56 +353,56 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @ConnectionMigrationOptions.Experimental
-        public Builder setConnectionMigrationOptions(ConnectionMigrationOptions options) {
+        @ConnectionMigrationParams.Experimental
+        public Builder setConnectionMigrationParams(ConnectionMigrationParams params) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
-                mBuilderDelegate.setConnectionMigrationOptions(options);
+                    IHttpEngineBuilder.CONNECTION_MIGRATION_PARAMS)) {
+                mBuilderDelegate.setConnectionMigrationParams(params);
                 return this;
             }
 
             // If not, we'll have to work around it by modifying the experimental options JSON.
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
-                JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
+                JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
 
-                if (options.getEnableDefaultNetworkMigration() != null) {
-                    quicOptions.put("migrate_sessions_on_network_change_v2",
-                            options.getEnableDefaultNetworkMigration());
+                if (params.getEnableDefaultNetworkMigration() != null) {
+                    quicParams.put("migrate_sessions_on_network_change_v2",
+                            params.getEnableDefaultNetworkMigration());
                 }
-                if (options.getAllowServerMigration() != null) {
-                    quicOptions.put("allow_server_migration", options.getAllowServerMigration());
+                if (params.getAllowServerMigration() != null) {
+                    quicParams.put("allow_server_migration", params.getAllowServerMigration());
                 }
-                if (options.getMigrateIdleConnections() != null) {
-                    quicOptions.put("migrate_idle_sessions", options.getMigrateIdleConnections());
+                if (params.getMigrateIdleConnections() != null) {
+                    quicParams.put("migrate_idle_sessions", params.getMigrateIdleConnections());
                 }
-                if (options.getIdleMigrationPeriod() != null) {
-                    quicOptions.put("idle_session_migration_period_seconds",
-                            options.getIdleMigrationPeriod().toSeconds());
+                if (params.getIdleMigrationPeriod() != null) {
+                    quicParams.put("idle_session_migration_period_seconds",
+                            params.getIdleMigrationPeriod().toSeconds());
                 }
-                if (options.getRetryPreHandshakeErrorsOnNonDefaultNetwork() != null) {
-                    quicOptions.put("retry_on_alternate_network_before_handshake",
-                            options.getRetryPreHandshakeErrorsOnNonDefaultNetwork());
+                if (params.getRetryPreHandshakeErrorsOnNonDefaultNetwork() != null) {
+                    quicParams.put("retry_on_alternate_network_before_handshake",
+                            params.getRetryPreHandshakeErrorsOnNonDefaultNetwork());
                 }
-                if (options.getMaxTimeOnNonDefaultNetwork() != null) {
-                    quicOptions.put("max_time_on_non_default_network_seconds",
-                            options.getMaxTimeOnNonDefaultNetwork().toSeconds());
+                if (params.getMaxTimeOnNonDefaultNetwork() != null) {
+                    quicParams.put("max_time_on_non_default_network_seconds",
+                            params.getMaxTimeOnNonDefaultNetwork().toSeconds());
                 }
-                if (options.getMaxPathDegradingNonDefaultMigrationsCount() != null) {
-                    quicOptions.put("max_migrations_to_non_default_network_on_path_degrading",
-                            options.getMaxPathDegradingNonDefaultMigrationsCount());
+                if (params.getMaxPathDegradingNonDefaultMigrationsCount() != null) {
+                    quicParams.put("max_migrations_to_non_default_network_on_path_degrading",
+                            params.getMaxPathDegradingNonDefaultMigrationsCount());
                 }
-                if (options.getMaxWriteErrorNonDefaultNetworkMigrationsCount() != null) {
-                    quicOptions.put("max_migrations_to_non_default_network_on_write_error",
-                            options.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
+                if (params.getMaxWriteErrorNonDefaultNetworkMigrationsCount() != null) {
+                    quicParams.put("max_migrations_to_non_default_network_on_write_error",
+                            params.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
                 }
-                if (options.getEnablePathDegradationMigration() != null) {
-                    boolean pathDegradationValue = options.getEnablePathDegradationMigration();
+                if (params.getEnablePathDegradationMigration() != null) {
+                    boolean pathDegradationValue = params.getEnablePathDegradationMigration();
 
                     boolean skipPortMigrationFlag = false;
 
-                    if (options.getAllowNonDefaultNetworkUsage() != null) {
-                        boolean nonDefaultNetworkValue = options.getAllowNonDefaultNetworkUsage();
+                    if (params.getAllowNonDefaultNetworkUsage() != null) {
+                        boolean nonDefaultNetworkValue = params.getAllowNonDefaultNetworkUsage();
                         if (!pathDegradationValue && nonDefaultNetworkValue) {
                             // Misconfiguration which doesn't translate easily to the JSON flags
                             throw new IllegalArgumentException(
@@ -411,15 +411,15 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                         } else if (pathDegradationValue && nonDefaultNetworkValue) {
                             // Both values being true results in the non-default network migration
                             // being enabled.
-                            quicOptions.put("migrate_sessions_early_v2", true);
+                            quicParams.put("migrate_sessions_early_v2", true);
                             skipPortMigrationFlag = true;
                         } else {
-                            quicOptions.put("migrate_sessions_early_v2", false);
+                            quicParams.put("migrate_sessions_early_v2", false);
                         }
                     }
 
                     if (!skipPortMigrationFlag) {
-                        quicOptions.put("allow_port_migration", pathDegradationValue);
+                        quicParams.put("allow_port_migration", pathDegradationValue);
                     }
                 }
             });
