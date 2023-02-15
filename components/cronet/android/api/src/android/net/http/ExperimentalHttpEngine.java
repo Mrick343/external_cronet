@@ -353,12 +353,12 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @ConnectionMigrationOptions.Experimental
-        public Builder setConnectionMigrationOptions(ConnectionMigrationOptions options) {
+        @ConnectionMigrationParams.Experimental
+        public Builder setConnectionMigrationParams(ConnectionMigrationParams params) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
                     IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
-                mBuilderDelegate.setConnectionMigrationOptions(options);
+                mBuilderDelegate.setConnectionMigrationParams(params);
                 return this;
             }
 
@@ -366,43 +366,43 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
                 JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
 
-                if (options.getEnableDefaultNetworkMigration() != null) {
+                if (params.getEnableDefaultNetworkMigration() != null) {
                     quicOptions.put("migrate_sessions_on_network_change_v2",
-                            options.getEnableDefaultNetworkMigration());
+                            params.getEnableDefaultNetworkMigration());
                 }
-                if (options.getAllowServerMigration() != null) {
-                    quicOptions.put("allow_server_migration", options.getAllowServerMigration());
+                if (params.getAllowServerMigration() != null) {
+                    quicOptions.put("allow_server_migration", params.getAllowServerMigration());
                 }
-                if (options.getMigrateIdleConnections() != null) {
-                    quicOptions.put("migrate_idle_sessions", options.getMigrateIdleConnections());
+                if (params.getMigrateIdleConnections() != null) {
+                    quicOptions.put("migrate_idle_sessions", params.getMigrateIdleConnections());
                 }
-                if (options.getIdleMigrationPeriod() != null) {
+                if (params.getIdleMigrationPeriod() != null) {
                     quicOptions.put("idle_session_migration_period_seconds",
-                            options.getIdleMigrationPeriod().toSeconds());
+                            params.getIdleMigrationPeriod().toSeconds());
                 }
-                if (options.getRetryPreHandshakeErrorsOnNonDefaultNetwork() != null) {
+                if (params.getRetryPreHandshakeErrorsOnNonDefaultNetwork() != null) {
                     quicOptions.put("retry_on_alternate_network_before_handshake",
-                            options.getRetryPreHandshakeErrorsOnNonDefaultNetwork());
+                            params.getRetryPreHandshakeErrorsOnNonDefaultNetwork());
                 }
-                if (options.getMaxTimeOnNonDefaultNetwork() != null) {
+                if (params.getMaxTimeOnNonDefaultNetwork() != null) {
                     quicOptions.put("max_time_on_non_default_network_seconds",
-                            options.getMaxTimeOnNonDefaultNetwork().toSeconds());
+                            params.getMaxTimeOnNonDefaultNetwork().toSeconds());
                 }
-                if (options.getMaxPathDegradingNonDefaultMigrationsCount() != null) {
+                if (params.getMaxPathDegradingNonDefaultMigrationsCount() != null) {
                     quicOptions.put("max_migrations_to_non_default_network_on_path_degrading",
-                            options.getMaxPathDegradingNonDefaultMigrationsCount());
+                            params.getMaxPathDegradingNonDefaultMigrationsCount());
                 }
-                if (options.getMaxWriteErrorNonDefaultNetworkMigrationsCount() != null) {
+                if (params.getMaxWriteErrorNonDefaultNetworkMigrationsCount() != null) {
                     quicOptions.put("max_migrations_to_non_default_network_on_write_error",
-                            options.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
+                            params.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
                 }
-                if (options.getEnablePathDegradationMigration() != null) {
-                    boolean pathDegradationValue = options.getEnablePathDegradationMigration();
+                if (params.getEnablePathDegradationMigration() != null) {
+                    boolean pathDegradationValue = params.getEnablePathDegradationMigration();
 
                     boolean skipPortMigrationFlag = false;
 
-                    if (options.getAllowNonDefaultNetworkUsage() != null) {
-                        boolean nonDefaultNetworkValue = options.getAllowNonDefaultNetworkUsage();
+                    if (params.getAllowNonDefaultNetworkUsage() != null) {
+                        boolean nonDefaultNetworkValue = params.getAllowNonDefaultNetworkUsage();
                         if (!pathDegradationValue && nonDefaultNetworkValue) {
                             // Misconfiguration which doesn't translate easily to the JSON flags
                             throw new IllegalArgumentException(
