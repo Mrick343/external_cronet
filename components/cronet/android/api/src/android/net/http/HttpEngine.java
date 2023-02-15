@@ -335,29 +335,29 @@ public abstract class HttpEngine {
 
         /**
          * Configures the behavior of connection migration. For more details, see documentation
-         * of {@link ConnectionMigrationOptions} and the individual methods of {@link
-         * ConnectionMigrationOptions.Builder}.
+         * of {@link ConnectionMigrationParams} and the individual methods of {@link
+         * ConnectionMigrationParams.Builder}.
          *
          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
          *
          * @return the builder to facilitate chaining.
          */
-        @ConnectionMigrationOptions.Experimental
-        public Builder setConnectionMigrationOptions(
-                ConnectionMigrationOptions connectionMigrationOptions) {
-            mBuilderDelegate.setConnectionMigrationOptions(connectionMigrationOptions);
+        @ConnectionMigrationParams.Experimental
+        public Builder setConnectionMigrationParams(
+                ConnectionMigrationParams connectionMigrationParams) {
+            mBuilderDelegate.setConnectionMigrationParams(connectionMigrationParams);
             return this;
         }
 
         /**
-         * @see #setConnectionMigrationOptions(ConnectionMigrationOptions)
+         * @see #setConnectionMigrationParams(ConnectionMigrationParams)
          *
          * {@hide}
          */
-        @ConnectionMigrationOptions.Experimental
-        public Builder setConnectionMigrationOptions(
-                ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
-            return setConnectionMigrationOptions(connectionMigrationOptionsBuilder.build());
+        @ConnectionMigrationParams.Experimental
+        public Builder setConnectionMigrationParams(
+                ConnectionMigrationParams.Builder connectionMigrationParamsBuilder) {
+            return setConnectionMigrationParams(connectionMigrationParamsBuilder.build());
         }
 
         /**
