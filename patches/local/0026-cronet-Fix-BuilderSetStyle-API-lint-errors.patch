@@ -1,0 +1,120 @@
+From fadb3e181b1b319feb535f5944bf4675e7c36b27 Mon Sep 17 00:00:00 2001
+From: Motomu Utsumi <motomuman@google.com>
+Date: Wed, 15 Feb 2023 16:51:22 +0900
+Subject: [PATCH] cronet: Fix BuilderSetStyle API lint errors
+
+Test: TH
+Change-Id: I875291d99093f0697a4af94d05adfa4c6cd58ab5
+---
+ .../src/android/net/http/ExperimentalUrlRequest.java   |  4 ++--
+ .../android/api/src/android/net/http/UrlRequest.java   |  6 +++---
+ .../org/chromium/net/impl/UrlRequestBuilderImpl.java   | 10 +++++-----
+ .../net/urlconnection/CronetHttpURLConnection.java     |  4 +---
+ 4 files changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalUrlRequest.java b/components/cronet/android/api/src/android/net/http/ExperimentalUrlRequest.java
+index 5ee553f6..c5f56ad3 100644
+--- a/components/cronet/android/api/src/android/net/http/ExperimentalUrlRequest.java
++++ b/components/cronet/android/api/src/android/net/http/ExperimentalUrlRequest.java
+@@ -144,7 +144,7 @@ public abstract class ExperimentalUrlRequest extends UrlRequest {
+         public abstract Builder addHeader(String header, String value);
+ 
+         @Override
+-        public abstract Builder disableCache();
++        public abstract Builder setDisableCache(boolean disableCache);
+ 
+         @Override
+         public abstract Builder setPriority(int priority);
+@@ -154,7 +154,7 @@ public abstract class ExperimentalUrlRequest extends UrlRequest {
+                 UploadDataProvider uploadDataProvider, Executor executor);
+ 
+         @Override
+-        public abstract Builder allowDirectExecutor();
++        public abstract Builder setAllowDirectExecutor(boolean allowDirectExecutor);
+ 
+         @Override
+         public abstract ExperimentalUrlRequest build();
+diff --git a/components/cronet/android/api/src/android/net/http/UrlRequest.java b/components/cronet/android/api/src/android/net/http/UrlRequest.java
+index 53fe7d66..30e28aa3 100644
+--- a/components/cronet/android/api/src/android/net/http/UrlRequest.java
++++ b/components/cronet/android/api/src/android/net/http/UrlRequest.java
+@@ -63,7 +63,7 @@ public abstract class UrlRequest {
+          * @return the builder to facilitate chaining.
+          */
+         @NonNull
+-        public abstract Builder disableCache();
++        public abstract Builder setDisableCache(boolean disableCache);
+ 
+         /**
+          * Lowest request priority. Passed to {@link #setPriority}.
+@@ -126,7 +126,7 @@ public abstract class UrlRequest {
+          * other code you don't carefully control and audit.
+          */
+         @NonNull
+-        public abstract Builder allowDirectExecutor();
++        public abstract Builder setAllowDirectExecutor(boolean allowDirectExecutor);
+ 
+         /**
+          * Binds the request to the specified network. The HTTP stack will send this request
+@@ -138,7 +138,7 @@ public abstract class UrlRequest {
+          * @return the builder to facilitate chaining.
+          */
+         @NonNull
+-        public abstract Builder bindToNetwork(@Nullable Network network);
++        public abstract Builder setBindNetwork(@Nullable Network network);
+ 
+         /**
+          * Creates a {@link UrlRequest} using configuration within this
+diff --git a/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java b/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java
+index f90111dd..df454bce 100644
+--- a/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java
++++ b/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java
+@@ -131,8 +131,8 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
+     }
+ 
+     @Override
+-    public UrlRequestBuilderImpl disableCache() {
+-        mDisableCache = true;
++    public UrlRequestBuilderImpl setDisableCache(boolean disableCache) {
++        mDisableCache = disableCache;
+         return this;
+     }
+ 
+@@ -172,8 +172,8 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
+     }
+ 
+     @Override
+-    public UrlRequestBuilderImpl allowDirectExecutor() {
+-        mAllowDirectExecutor = true;
++    public UrlRequestBuilderImpl setAllowDirectExecutor(boolean allowDirectExecutor) {
++        mAllowDirectExecutor = allowDirectExecutor;
+         return this;
+     }
+ 
+@@ -210,7 +210,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
+     }
+ 
+     @Override
+-    public UrlRequestBuilderImpl bindToNetwork(@Nullable Network network) {
++    public UrlRequestBuilderImpl setBindNetwork(@Nullable Network network) {
+         if (network == null) {
+             mNetworkHandle = UNBIND_NETWORK_HANDLE;
+         } else {
+diff --git a/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java b/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java
+index d692ebd4..ad2f0248 100644
+--- a/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java
++++ b/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java
+@@ -286,9 +286,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
+         for (Pair<String, String> requestHeader : mRequestHeaders) {
+             requestBuilder.addHeader(requestHeader.first, requestHeader.second);
+         }
+-        if (!getUseCaches()) {
+-            requestBuilder.disableCache();
+-        }
++        requestBuilder.setDisableCache(!getUseCaches());
+         // Set HTTP method.
+         requestBuilder.setHttpMethod(method);
+         if (checkTrafficStatsTag()) {
+-- 
+2.39.1.581.gbfd45094c4-goog
+
