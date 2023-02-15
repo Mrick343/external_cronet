@@ -517,7 +517,7 @@ public class QuicOptions {
          * Sets whether QUIC sessions should be closed on IP address change.
          *
          * <p>Don't use in combination with connection migration
-         * (configured using {@link ConnectionMigrationOptions}).
+         * (configured using {@link ConnectionMigrationParams}).
          *
          * @return the builder for chaining
          *
@@ -533,7 +533,7 @@ public class QuicOptions {
          * Sets whether QUIC sessions should be goaway'd on IP address change.
          *
          * <p>Don't use in combination with connection migration
-         * (configured using {@link ConnectionMigrationOptions}).
+         * (configured using {@link ConnectionMigrationParams}).
          *
          * @return the builder for chaining
          *
