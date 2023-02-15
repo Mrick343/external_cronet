@@ -169,7 +169,7 @@ public class ConnectionMigrationOptions {
     /**
      * Builder for {@link ConnectionMigrationOptions}.
      */
-    public static class Builder {
+    public static final class Builder {
         @Nullable
         private Boolean mEnableDefaultNetworkMigration;
         @Nullable
