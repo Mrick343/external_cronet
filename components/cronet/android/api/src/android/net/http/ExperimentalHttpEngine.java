@@ -353,8 +353,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @ConnectionMigrationOptions.Experimental
-        public Builder setConnectionMigrationOptions(ConnectionMigrationOptions options) {
+        @ConnectionMigrationParams.Experimental
+        public Builder setConnectionMigrationParams(ConnectionMigrationParams options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
                     IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
