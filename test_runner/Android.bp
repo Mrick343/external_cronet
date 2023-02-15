@@ -28,3 +28,19 @@ java_test_host {
         "general-tests",
     ],
 }
+
+java_test_host {
+    name: "cronet_unittests_tester",
+    srcs: ["src/**/*.java"],
+    auto_gen_config: false,
+    test_config: "AndroidTest.xml",
+    libs: [
+        "tradefed",
+    ],
+    data: [
+        ":cronet_tester_app",
+    ],
+    test_suites: [
+        "general-tests",
+    ],
+}
