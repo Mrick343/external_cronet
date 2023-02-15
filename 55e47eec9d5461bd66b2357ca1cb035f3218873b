@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55f8b960_6bac3104",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-15T08:56:44Z",
+      "side": 1,
+      "message": "Since final class can not be inherited.\nhttps://source.corp.google.com/aosp-master/external/cronet/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java;l\u003d88?q\u003d%22HttpEngine.Builder%22\u0026ss\u003dpiper%2FGoogle%2Faosp-master",
+      "revId": "55e47eec9d5461bd66b2357ca1cb035f3218873b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7852f593_7860eb2c",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-15T08:56:44Z",
+      "side": 1,
+      "message": "Since class can not be abstract and final.\nAlso, this class is inherited from others.",
+      "revId": "55e47eec9d5461bd66b2357ca1cb035f3218873b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
