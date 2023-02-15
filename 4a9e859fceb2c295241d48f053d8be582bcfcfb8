@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61f6556b_d7c2152e",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T11:17:25Z",
+      "side": 1,
+      "message": "Do you have any specific reason to make this Nullable?",
+      "range": {
+        "startLine": 416,
+        "startChar": 45,
+        "endLine": 416,
+        "endChar": 54
+      },
+      "revId": "4a9e859fceb2c295241d48f053d8be582bcfcfb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
