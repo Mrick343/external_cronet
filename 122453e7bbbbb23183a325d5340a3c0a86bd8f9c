@@ -26,6 +26,98 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7d543dba_c90c267c",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:07:09Z",
+      "side": 1,
+      "message": "nit: `s/Disables/Whether to disable`, since this now accepts a boolean",
+      "range": {
+        "startLine": 61,
+        "startChar": 11,
+        "endLine": 61,
+        "endChar": 19
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d47f02eb_8f0bac95",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:07:09Z",
+      "side": 1,
+      "message": "nit: `s/that/whether`, since this now accepts a boolean",
+      "range": {
+        "startLine": 119,
+        "startChar": 17,
+        "endLine": 119,
+        "endChar": 21
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "089567dd_f0b1989b",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:07:09Z",
+      "side": 1,
+      "message": "nit: add `If set to true:`, since this now accepts a boolean",
+      "range": {
+        "startLine": 124,
+        "startChar": 30,
+        "endLine": 124,
+        "endChar": 34
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32e8ce7f_eb3fbecc",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:07:09Z",
+      "side": 1,
+      "message": "nit: `s/It should not be used/This should not be done`",
+      "range": {
+        "startLine": 125,
+        "startChar": 11,
+        "endLine": 125,
+        "endChar": 32
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d0e043d_87d37ebc",
         "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
         "patchSetId": 3
@@ -49,6 +141,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5880b1ae_c1209797",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:07:09Z",
+      "side": 1,
+      "message": "I also prefer the active form as it also follows the pre-existing `android.net.Network`[1] (e.g., bindSocket, openConnection, etc.) style.\n\n[1] https://developer.android.com/reference/kotlin/android/net/Network",
+      "parentUuid": "7d0e043d_87d37ebc",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 74
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5f7c34b6_193322fc",
         "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java",
         "patchSetId": 3
@@ -60,6 +176,30 @@
       "writtenOn": "2023-02-15T11:27:13Z",
       "side": 1,
       "message": "There\u0027s a slight change to the semantics with this change. Previously, if getUseCaches returned true, we didn\u0027t set disableCache at all, meaning we wouldn\u0027t override values set previously (possibly by default). I\u0027m inclined to keep that behavior for consistency.",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 56
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5af7bd63_5bb64e00",
+        "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:07:09Z",
+      "side": 1,
+      "message": "`mDisableCache` defaults to false and from what I can tell there are no other ways to modify it other than through `disableCache`. So, this should be semantically equivalent?",
+      "parentUuid": "5f7c34b6_193322fc",
       "range": {
         "startLine": 289,
         "startChar": 0,
