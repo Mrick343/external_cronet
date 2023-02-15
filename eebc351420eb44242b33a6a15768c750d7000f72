@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ba72c0b_3d1b4649",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T13:10:16Z",
+      "side": 1,
+      "message": "Should we add a comment regarding why we\u0027re suppressing the warning? I\u0027m not sure if it\u0027s common practice in AOSP.",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 39
+      },
+      "revId": "eebc351420eb44242b33a6a15768c750d7000f72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
