@@ -89,6 +89,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40dee63d_07c9005d",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T16:39:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34681b8e_73b632d0",
+      "range": {
+        "startLine": 272,
+        "startChar": 76,
+        "endLine": 273,
+        "endChar": 53
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e3e1224_a28bcdd4",
@@ -112,6 +136,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37855460_6ce09156",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T16:39:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e3e1224_a28bcdd4",
+      "range": {
+        "startLine": 277,
+        "startChar": 19,
+        "endLine": 277,
+        "endChar": 70
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d34fdf16_957c99c4",
@@ -125,6 +173,30 @@
       "writtenOn": "2023-02-15T15:10:49Z",
       "side": 1,
       "message": "Perhaps not for this CL, but before ship we might want to mention some of the disadvantages as well:\n- No centralized query caching (i.e., cannot share cached results with other apps)\n- May not observe the user\u0027s private DNS settings\n- No support for DNS-over-TLS",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 2
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7243728f_3dca1e6b",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T16:39:03Z",
+      "side": 1,
+      "message": "Acknowledged - I\u0027ll address this separately.",
+      "parentUuid": "d34fdf16_957c99c4",
       "range": {
         "startLine": 35,
         "startChar": 1,
@@ -172,6 +244,30 @@
       "side": 1,
       "message": "+1. This is definitely an interesting option to save battery life but it would be good to know what it does.",
       "parentUuid": "638b777d_2b7ea9f3",
+      "range": {
+        "startLine": 479,
+        "startChar": 11,
+        "endLine": 479,
+        "endChar": 70
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec922c30_20781558",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T16:39:03Z",
+      "side": 1,
+      "message": "Did some research and added more details to the javadoc.",
+      "parentUuid": "eb93fd01_9cc35b4f",
       "range": {
         "startLine": 479,
         "startChar": 11,
