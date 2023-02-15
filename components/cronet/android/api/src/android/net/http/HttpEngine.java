@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Network;
 
@@ -47,6 +48,7 @@ public abstract class HttpEngine {
      */
     // NOTE(kapishnikov): In order to avoid breaking the existing API clients, all future methods
     // added to this class and other API classes must have default implementation.
+    @SuppressLint("StaticFinalBuilder")
     public static class Builder {
 
         /**
