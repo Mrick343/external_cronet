@@ -1,0 +1,193 @@
+From a6b5f041d01187d97eb4a1a7807a6ed8a5f9890c Mon Sep 17 00:00:00 2001
+From: Motomu Utsumi <motomuman@google.com>
+Date: Wed, 15 Feb 2023 18:17:02 +0900
+Subject: [PATCH] cronet: Rename ConnectionMigrationOptions to
+ ConnectionMigrationParams
+
+To solve UserHandleName API linter error
+
+Test: TH
+Change-Id: I322d249ace28a3941673c998de011878a15362d3
+---
+ components/cronet/android/BUILD.gn            |  2 +-
+ ...ns.java => ConnectionMigrationParams.java} | 14 ++++++------
+ .../net/http/ExperimentalHttpEngine.java      |  6 ++---
+ .../api/src/android/net/http/HttpEngine.java  | 22 +++++++++----------
+ .../android/net/http/IHttpEngineBuilder.java  |  4 ++--
+ .../api/src/android/net/http/QuicOptions.java |  4 ++--
+ 6 files changed, 26 insertions(+), 26 deletions(-)
+ rename components/cronet/android/api/src/android/net/http/{ConnectionMigrationOptions.java => ConnectionMigrationParams.java} (97%)
+
+diff --git a/components/cronet/android/BUILD.gn b/components/cronet/android/BUILD.gn
+index 84ddf551..89a1335d 100644
+--- a/components/cronet/android/BUILD.gn
++++ b/components/cronet/android/BUILD.gn
+@@ -228,7 +228,7 @@ android_library("cronet_api_java") {
+   sources = [
+     "api/src/android/net/http/BidirectionalStream.java",
+     "api/src/android/net/http/CallbackException.java",
+-    "api/src/android/net/http/ConnectionMigrationOptions.java",
++    "api/src/android/net/http/ConnectionMigrationParams.java",
+     "api/src/android/net/http/HttpEngine.java",
+     "api/src/android/net/http/HttpException.java",
+     "api/src/android/net/http/DnsOptions.java",
+diff --git a/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java b/components/cronet/android/api/src/android/net/http/ConnectionMigrationParams.java
+similarity index 97%
+rename from components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
+rename to components/cronet/android/api/src/android/net/http/ConnectionMigrationParams.java
+index c814907b..583cd34a 100644
+--- a/components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java
++++ b/components/cronet/android/api/src/android/net/http/ConnectionMigrationParams.java
+@@ -26,7 +26,7 @@ import java.time.Duration;
+  * @see <a href="https://www.rfc-editor.org/rfc/rfc9000.html#section-9">Connection
+  *     Migration specification</a>
+  */
+-public class ConnectionMigrationOptions {
++public class ConnectionMigrationParams {
+     @Nullable
+     private final Boolean mEnableDefaultNetworkMigration;
+     @Nullable
+@@ -152,7 +152,7 @@ public class ConnectionMigrationOptions {
+         return mMaxPathDegradingNonDefaultMigrationsCount;
+     }
+ 
+-    ConnectionMigrationOptions(Builder builder) {
++    ConnectionMigrationParams(Builder builder) {
+         this.mEnableDefaultNetworkMigration = builder.mEnableDefaultNetworkMigration;
+         this.mEnablePathDegradationMigration = builder.mEnablePathDegradationMigration;
+         this.mAllowServerMigration = builder.mAllowServerMigration;
+@@ -167,7 +167,7 @@ public class ConnectionMigrationOptions {
+     }
+ 
+     /**
+-     * Builder for {@link ConnectionMigrationOptions}.
++     * Builder for {@link ConnectionMigrationParams}.
+      */
+     public static final class Builder {
+         @Nullable
+@@ -367,16 +367,16 @@ public class ConnectionMigrationOptions {
+         }
+ 
+         /**
+-         * Creates and returns the final {@link ConnectionMigrationOptions} instance, based on the
++         * Creates and returns the final {@link ConnectionMigrationParams} instance, based on the
+          * values in this builder.
+          */
+-        public ConnectionMigrationOptions build() {
+-            return new ConnectionMigrationOptions(this);
++        public ConnectionMigrationParams build() {
++            return new ConnectionMigrationParams(this);
+         }
+     }
+ 
+     /**
+-     * Creates a new builder for {@link ConnectionMigrationOptions}.
++     * Creates a new builder for {@link ConnectionMigrationParams}.
+      *
+      * {@hide}
+      */
+diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+index e6b40e52..5f26adc9 100644
+--- a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+@@ -353,12 +353,12 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
+         }
+ 
+         @Override
+-        @ConnectionMigrationOptions.Experimental
+-        public Builder setConnectionMigrationOptions(ConnectionMigrationOptions options) {
++        @ConnectionMigrationParams.Experimental
++        public Builder setConnectionMigrationParams(ConnectionMigrationParams params) {
+             // If the delegate builder supports enabling connection migration directly, just use it
+             if (mBuilderDelegate.getSupportedConfigOptions().contains(
+                     IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS)) {
+-                mBuilderDelegate.setConnectionMigrationOptions(options);
++                mBuilderDelegate.setConnectionMigrationParams(params);
+                 return this;
+             }
+ 
+diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+index 71489cb3..2155e350 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+@@ -333,29 +333,29 @@ public abstract class HttpEngine {
+ 
+         /**
+          * Configures the behavior of connection migration. For more details, see documentation
+-         * of {@link ConnectionMigrationOptions} and the individual methods of {@link
+-         * ConnectionMigrationOptions.Builder}.
++         * of {@link ConnectionMigrationParams} and the individual methods of {@link
++         * ConnectionMigrationParams.Builder}.
+          *
+          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
+          *
+          * @return the builder to facilitate chaining.
+          */
+-        @ConnectionMigrationOptions.Experimental
+-        public Builder setConnectionMigrationOptions(
+-                ConnectionMigrationOptions connectionMigrationOptions) {
+-            mBuilderDelegate.setConnectionMigrationOptions(connectionMigrationOptions);
++        @ConnectionMigrationParams.Experimental
++        public Builder setConnectionMigrationParams(
++                ConnectionMigrationParams connectionMigrationParams) {
++            mBuilderDelegate.setConnectionMigrationParams(connectionMigrationParams);
+             return this;
+         }
+ 
+         /**
+-         * @see #setConnectionMigrationOptions(ConnectionMigrationOptions)
++         * @see #setConnectionMigrationParams(ConnectionMigrationParams)
+          *
+          * {@hide}
+          */
+-        @ConnectionMigrationOptions.Experimental
+-        public Builder setConnectionMigrationOptions(
+-                ConnectionMigrationOptions.Builder connectionMigrationOptionsBuilder) {
+-            return setConnectionMigrationOptions(connectionMigrationOptionsBuilder.build());
++        @ConnectionMigrationParams.Experimental
++        public Builder setConnectionMigrationParams(
++                ConnectionMigrationParams.Builder connectionMigrationParamsBuilder) {
++            return setConnectionMigrationParams(connectionMigrationParamsBuilder.build());
+         }
+ 
+         /**
+diff --git a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+index 3c8395b0..80e244ce 100644
+--- a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
++++ b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+@@ -58,8 +58,8 @@ public abstract class IHttpEngineBuilder {
+         return this;
+     }
+ 
+-    public IHttpEngineBuilder setConnectionMigrationOptions(
+-            ConnectionMigrationOptions connectionMigrationOptions) {
++    public IHttpEngineBuilder setConnectionMigrationParams(
++            ConnectionMigrationParams connectionMigrationParams) {
+         return this;
+     }
+ 
+diff --git a/components/cronet/android/api/src/android/net/http/QuicOptions.java b/components/cronet/android/api/src/android/net/http/QuicOptions.java
+index a4232a9c..13f76429 100644
+--- a/components/cronet/android/api/src/android/net/http/QuicOptions.java
++++ b/components/cronet/android/api/src/android/net/http/QuicOptions.java
+@@ -516,7 +516,7 @@ public class QuicOptions {
+          * Sets whether QUIC sessions should be closed on IP address change.
+          *
+          * <p>Don't use in combination with connection migration
+-         * (configured using {@link ConnectionMigrationOptions}).
++         * (configured using {@link ConnectionMigrationParams}).
+          *
+          * @return the builder for chaining
+          *
+@@ -532,7 +532,7 @@ public class QuicOptions {
+          * Sets whether QUIC sessions should be goaway'd on IP address change.
+          *
+          * <p>Don't use in combination with connection migration
+-         * (configured using {@link ConnectionMigrationOptions}).
++         * (configured using {@link ConnectionMigrationParams}).
+          *
+          * @return the builder for chaining
+          *
+-- 
+2.39.1.581.gbfd45094c4-goog
+
