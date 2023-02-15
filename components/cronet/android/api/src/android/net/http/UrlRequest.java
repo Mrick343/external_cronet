@@ -32,6 +32,9 @@ public abstract class UrlRequest {
      * with {@link Builder#build}. The builder can be created by calling
      * {@link HttpEngine#newUrlRequestBuilder}.
      */
+    // Builder can not be final since this is abstract and inherited
+    // e.g. {@link ExperimentalUrlRequest.Builder}
+    @SuppressLint("StaticFinalBuilder")
     public abstract static class Builder {
 
         Builder() {}
