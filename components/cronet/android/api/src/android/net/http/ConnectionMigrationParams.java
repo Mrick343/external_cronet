@@ -26,7 +26,7 @@ import java.time.Duration;
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9000.html#section-9">Connection
  *     Migration specification</a>
  */
-public class ConnectionMigrationOptions {
+public class ConnectionMigrationParams {
     @Nullable
     private final Boolean mEnableDefaultNetworkMigration;
     @Nullable
@@ -137,7 +137,7 @@ public class ConnectionMigrationOptions {
         return mMaxPathDegradingNonDefaultMigrationsCount;
     }
 
-    ConnectionMigrationOptions(Builder builder) {
+    ConnectionMigrationParams(Builder builder) {
         this.mEnableDefaultNetworkMigration = builder.mEnableDefaultNetworkMigration;
         this.mEnablePathDegradationMigration = builder.mEnablePathDegradationMigration;
         this.mAllowServerMigration = builder.mAllowServerMigration;
@@ -150,7 +150,7 @@ public class ConnectionMigrationOptions {
     }
 
     /**
-     * Builder for {@link ConnectionMigrationOptions}.
+     * Builder for {@link ConnectionMigrationParams}.
      */
     public static final class Builder {
         @Nullable
@@ -323,16 +323,16 @@ public class ConnectionMigrationOptions {
         }
 
         /**
-         * Creates and returns the final {@link ConnectionMigrationOptions} instance, based on the
+         * Creates and returns the final {@link ConnectionMigrationParams} instance, based on the
          * values in this builder.
          */
-        public ConnectionMigrationOptions build() {
-            return new ConnectionMigrationOptions(this);
+        public ConnectionMigrationParams build() {
+            return new ConnectionMigrationParams(this);
         }
     }
 
     /**
-     * Creates a new builder for {@link ConnectionMigrationOptions}.
+     * Creates a new builder for {@link ConnectionMigrationParams}.
      *
      * {@hide}
      */
