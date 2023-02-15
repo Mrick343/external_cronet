@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "34681b8e_73b632d0",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T15:41:45Z",
+      "side": 1,
+      "message": "I\u0027ll clarify the javadoc. setEnablePathDegradationMigration controls whether requests can be migrated at all once path degradation is detected. This setting then controls whether the particular connection can only be migrated within the same network to a different port (when set to false, or unset), or whether it\u0027s permitted to use non-default networks as well (when true).",
+      "parentUuid": "fa5d0870_d77179c2",
+      "range": {
+        "startLine": 272,
+        "startChar": 76,
+        "endLine": 273,
+        "endChar": 53
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8e3e1224_a28bcdd4",
         "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
         "patchSetId": 1
