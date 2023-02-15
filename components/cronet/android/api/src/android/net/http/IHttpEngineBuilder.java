@@ -58,8 +58,8 @@ public abstract class IHttpEngineBuilder {
         return this;
     }
 
-    public IHttpEngineBuilder setConnectionMigrationOptions(
-            ConnectionMigrationOptions connectionMigrationOptions) {
+    public IHttpEngineBuilder setConnectionMigrationParams(
+            ConnectionMigrationParams connectionMigrationParams) {
         return this;
     }
 
