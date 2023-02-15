@@ -16,8 +16,6 @@ import android.os.Process;
 import android.system.ErrnoException;
 import android.system.Os;
 
-import com.google.common.util.concurrent.Uninterruptibles;
-
 import org.chromium.base.Log;
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.test.util.UrlUtils;
@@ -25,7 +23,6 @@ import org.chromium.build.gtest_apk.NativeTestIntent;
 import org.chromium.test.reporter.TestStatusReporter;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Helper to run tests inside Activity or NativeActivity.
@@ -230,23 +227,23 @@ public class NativeTest {
     private void maybeDumpNativeCoverage() {
         SignalMaskInfo siginfo = new SignalMaskInfo();
         if (!siginfo.isValid()) {
-            org.chromium.base.Log.e(LOG_TAG, "Invalid signal info");
+            Log.e(LOG_TAG, "Invalid signal info");
             return;
         }
 
         if (!siginfo.isCaught(COVERAGE_SIGNAL)) {
             // Process is not instrumented for coverage
-            org.chromium.base.Log.i(LOG_TAG, "Not dumping coverage, no handler installed");
+            Log.i(LOG_TAG, "Not dumping coverage, no handler installed");
             return;
         }
 
-        org.chromium.base.Log.i(LOG_TAG, "Sending coverage dump signal %d to pid %d uid %d",
-                COVERAGE_SIGNAL,
-                Os.getpid(), Os.getuid());
+        Log.i(LOG_TAG,
+                String.format("Sending coverage dump signal %d to pid %d uid %d", COVERAGE_SIGNAL,
+                        Os.getpid(), Os.getuid()));
         try {
             Os.kill(Os.getpid(), COVERAGE_SIGNAL);
         } catch (ErrnoException e) {
-            org.chromium.base.Log.e(LOG_TAG, "Unable to send coverage signal", e);
+            Log.e(LOG_TAG, "Unable to send coverage signal", e);
             return;
         }
 
@@ -254,20 +251,24 @@ public class NativeTest {
         long deadline = start + 60 * 1000L;
         while (System.currentTimeMillis() < deadline) {
             siginfo.refresh();
-            if (siginfo.isValid() && siginfo.isBlocked(COVERAGE_SIGNAL)) {
-                // Signal is currently blocked so assume a handler is running
-                Uninterruptibles.sleepUninterruptibly(2000L, TimeUnit.MILLISECONDS);
-                siginfo.refresh();
-                if (siginfo.isValid() && !siginfo.isBlocked(COVERAGE_SIGNAL)) {
-                    // Coverage handler exited while we were asleep
-                    org.chromium.base.Log.i(LOG_TAG,
-                            "Coverage dump detected finished after %dms",
-                            System.currentTimeMillis() - start);
-                    break;
+            try {
+                if (siginfo.isValid() && siginfo.isBlocked(COVERAGE_SIGNAL)) {
+                    // Signal is currently blocked so assume a handler is running
+                    Thread.sleep(2000L);
+                    siginfo.refresh();
+                    if (siginfo.isValid() && !siginfo.isBlocked(COVERAGE_SIGNAL)) {
+                        // Coverage handler exited while we were asleep
+                        Log.i(LOG_TAG,
+                                String.format("Coverage dump detected finished after %dms",
+                                        System.currentTimeMillis() - start));
+                        break;
+                    }
+                } else {
+                    // Coverage signal handler not yet started or invalid siginfo
+                    Thread.sleep(100L);
                 }
-            } else {
-                // Coverage signal handler not yet started or invalid siginfo
-                Uninterruptibles.sleepUninterruptibly(100L, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                // ignored
             }
         }
     }

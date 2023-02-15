@@ -23,7 +23,7 @@ import java.util.List;
 
 public class InstrumentationCommandBuilder {
     private final List<Pair<String, String>> arguments;
-    private String activityName;
+    private final String activityName;
     // Instrument and wait until execution has finished before returning
     private static final String BASE_CMD = "am instrument -w ";
 
