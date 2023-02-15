@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0f7f158d_c6564f17",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T15:41:21Z",
+      "side": 1,
+      "message": "This is slightly trickier. `setEnablePathDegradationMigration` allows the networking stack to migrate connections when it thinks they\u0027re currently performing poorly (usually some alarm_function(connection_rtt) fired).\n\nOnce the stack has decided to migrate, it can do so through two main mechanism: port migration and network migration. `setAllowNonDefaultNetworkUsage(true)` enables the latter mechanism,  `setAllowNonDefaultNetworkUsage(false)` the former (since migrating ports does not change the underlying network). Currently, the two mechanism cannot be enabled at the same time.",
+      "parentUuid": "fa5d0870_d77179c2",
+      "range": {
+        "startLine": 272,
+        "startChar": 76,
+        "endLine": 273,
+        "endChar": 53
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8e3e1224_a28bcdd4",
         "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
         "patchSetId": 1
