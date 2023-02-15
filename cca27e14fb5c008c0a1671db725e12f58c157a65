@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f278d2b5_826fe7c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T10:50:50Z",
+      "side": 1,
+      "message": "Cronet +1. I\u0027ll let Lorenzo +2 as you\u0027ve been discussing how to approach this mainly with him.",
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "638b777d_2b7ea9f3",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-15T10:50:50Z",
+      "side": 1,
+      "message": "Should we drop the TODO as this is going in the public javadoc?",
+      "range": {
+        "startLine": 479,
+        "startChar": 11,
+        "endLine": 479,
+        "endChar": 70
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
