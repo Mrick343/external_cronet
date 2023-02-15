@@ -63,7 +63,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder disableCache();
+        public abstract Builder setDisableCache(boolean disableCache);
 
         /**
          * Lowest request priority. Passed to {@link #setPriority}.
@@ -126,7 +126,7 @@ public abstract class UrlRequest {
          * other code you don't carefully control and audit.
          */
         @NonNull
-        public abstract Builder allowDirectExecutor();
+        public abstract Builder setAllowDirectExecutor(boolean allowDirectExecutor);
 
         /**
          * Binds the request to the specified network. The HTTP stack will send this request
@@ -138,7 +138,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder bindToNetwork(@Nullable Network network);
+        public abstract Builder setBindNetwork(@Nullable Network network);
 
         /**
          * Creates a {@link UrlRequest} using configuration within this
