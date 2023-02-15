@@ -20,6 +20,75 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fa5d0870_d77179c2",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-15T15:10:49Z",
+      "side": 1,
+      "message": "This sounds awfully similar to setEnablePathDegradationMigration just above. Do we need both? Can we say that if you called setEnablePathDegradationMigration(true) then this is implicitly set to true as well?",
+      "range": {
+        "startLine": 272,
+        "startChar": 76,
+        "endLine": 273,
+        "endChar": 53
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e3e1224_a28bcdd4",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-15T15:10:49Z",
+      "side": 1,
+      "message": "These options don\u0027t exist in the Android API surface. So I\u0027d expect this @link tag to be unresolved and fail the build. Does this code compile? If it does I wonder what the javadoc actually says...",
+      "range": {
+        "startLine": 277,
+        "startChar": 19,
+        "endLine": 277,
+        "endChar": 70
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d34fdf16_957c99c4",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-15T15:10:49Z",
+      "side": 1,
+      "message": "Perhaps not for this CL, but before ship we might want to mention some of the disadvantages as well:\n- No centralized query caching (i.e., cannot share cached results with other apps)\n- May not observe the user\u0027s private DNS settings\n- No support for DNS-over-TLS",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 2
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "638b777d_2b7ea9f3",
         "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
         "patchSetId": 1
@@ -31,6 +100,30 @@
       "writtenOn": "2023-02-15T10:50:50Z",
       "side": 1,
       "message": "Should we drop the TODO as this is going in the public javadoc?",
+      "range": {
+        "startLine": 479,
+        "startChar": 11,
+        "endLine": 479,
+        "endChar": 70
+      },
+      "revId": "cca27e14fb5c008c0a1671db725e12f58c157a65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb93fd01_9cc35b4f",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-15T15:10:49Z",
+      "side": 1,
+      "message": "+1. This is definitely an interesting option to save battery life but it would be good to know what it does.",
+      "parentUuid": "638b777d_2b7ea9f3",
       "range": {
         "startLine": 479,
         "startChar": 11,
