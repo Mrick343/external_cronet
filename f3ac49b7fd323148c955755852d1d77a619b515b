@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98430db6_8767f33d",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-15T06:20:23Z",
+      "side": 1,
+      "message": "There is a case that `getProxyServer` returns null.\nhttp://cs/aosp-master/external/cronet/components/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java;l\u003d759;rcl\u003d2a948859a59e6c1027559a48b1a35fd7b0b285fd",
+      "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
