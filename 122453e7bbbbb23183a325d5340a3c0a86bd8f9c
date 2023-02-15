@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db7938c4_70208a2a",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T11:27:13Z",
+      "side": 1,
+      "message": "Unrelated nit: can you also s/context/the engine?",
+      "range": {
+        "startLine": 61,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 53
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d0e043d_87d37ebc",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T11:27:13Z",
+      "side": 1,
+      "message": "I don\u0027t like this rename and I think the old name reflects the purpose of the method more clearly. The active form in the original feels more appropriate for the effect the method has.\n\nI\u0027ll let Stefano chime in with the final call.",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 74
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f7c34b6_193322fc",
+        "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-15T11:27:13Z",
+      "side": 1,
+      "message": "There\u0027s a slight change to the semantics with this change. Previously, if getUseCaches returned true, we didn\u0027t set disableCache at all, meaning we wouldn\u0027t override values set previously (possibly by default). I\u0027m inclined to keep that behavior for consistency.",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 56
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
