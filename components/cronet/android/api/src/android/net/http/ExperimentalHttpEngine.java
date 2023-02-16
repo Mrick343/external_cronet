@@ -4,7 +4,7 @@
 package android.net.http;
 
 import android.content.Context;
-import android.net.http.DnsOptions.StaleDnsOptions;
+import android.net.http.DnsParams.StaleDnsParams;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -287,8 +287,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions options) {
+        @DnsParams.Experimental
+        public Builder setDnsParams(DnsParams options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
                     IHttpEngineBuilder.DNS_OPTIONS)) {
@@ -319,8 +319,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                             "persist_delay_ms", options.getPersistHostCachePeriod().toMillis());
                 }
 
-                if (options.getStaleDnsOptions() != null) {
-                    StaleDnsOptions staleDnsOptionsJava = options.getStaleDnsOptions();
+                if (options.getStaleDnsParams() != null) {
+                    StaleDnsParams staleDnsOptionsJava = options.getStaleDnsParams();
 
                     if (staleDnsOptionsJava.getAllowCrossNetworkUsage() != null) {
                         staleDnsOptions.put("allow_other_network",
