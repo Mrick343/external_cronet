@@ -286,27 +286,27 @@ public abstract class HttpEngine {
 
         /**
          * Configures the behavior of the HTTP stack when using QUIC. For more details, see
-         * documentation of {@link QuicOptions} and the individual methods
-         * of {@link QuicOptions.Builder}.
+         * documentation of {@link QuicParams} and the individual methods
+         * of {@link QuicParams.Builder}.
          *
          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
          *
          * @return the builder to facilitate chaining.
          */
-        @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions quicOptions) {
-            mBuilderDelegate.setQuicOptions(quicOptions);
+        @QuicParams.Experimental
+        public Builder setQuicParams(QuicParams quicParams) {
+            mBuilderDelegate.setQuicOptions(quicParams);
             return this;
         }
 
         /**
-         * @see #setQuicOptions(QuicOptions)
+         * @see #setQuicParams(QuicParams)
          *
          * {@hide}
          */
-        @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions.Builder quicOptionsBuilder) {
-            return setQuicOptions(quicOptionsBuilder.build());
+        @QuicParams.Experimental
+        public Builder setQuicParams(QuicParams.Builder quicParamsBuilder) {
+            return setQuicParams(quicParamsBuilder.build());
         }
 
         /**
