@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7b7835c_71dc9e59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Thanks for pointing out.\nI totally missed updating the javadocs.",
+      "parentUuid": "52192be5_6398819b",
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db7938c4_70208a2a",
@@ -64,6 +82,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18270e78_abc50097",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db7938c4_70208a2a",
+      "range": {
+        "startLine": 61,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 53
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bddb14e_6e9b95a1",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d543dba_c90c267c",
+      "range": {
+        "startLine": 61,
+        "startChar": 11,
+        "endLine": 61,
+        "endChar": 19
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d47f02eb_8f0bac95",
@@ -77,6 +143,30 @@
       "writtenOn": "2023-02-15T13:07:09Z",
       "side": 1,
       "message": "nit: `s/that/whether`, since this now accepts a boolean",
+      "range": {
+        "startLine": 119,
+        "startChar": 17,
+        "endLine": 119,
+        "endChar": 21
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce8edf37_5475a7ae",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d47f02eb_8f0bac95",
       "range": {
         "startLine": 119,
         "startChar": 17,
@@ -110,6 +200,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cbd9b35_51df0594",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "089567dd_f0b1989b",
+      "range": {
+        "startLine": 124,
+        "startChar": 30,
+        "endLine": 124,
+        "endChar": 34
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32e8ce7f_eb3fbecc",
@@ -123,6 +237,30 @@
       "writtenOn": "2023-02-15T13:07:09Z",
       "side": 1,
       "message": "nit: `s/It should not be used/This should not be done`",
+      "range": {
+        "startLine": 125,
+        "startChar": 11,
+        "endLine": 125,
+        "endChar": 32
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e22acf8d_77357320",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32e8ce7f_eb3fbecc",
       "range": {
         "startLine": 125,
         "startChar": 11,
@@ -180,6 +318,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97baacd9_b3fde706",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "Done. Reverted renaming and suppressed linter error.",
+      "parentUuid": "5880b1ae_c1209797",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 74
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f7c34b6_193322fc",
@@ -217,6 +379,30 @@
       "side": 1,
       "message": "`mDisableCache` defaults to false and from what I can tell there are no other ways to modify it other than through `disableCache`. So, this should be semantically equivalent?",
       "parentUuid": "5f7c34b6_193322fc",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 56
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "240d65d1_ccff8485",
+        "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T03:47:59Z",
+      "side": 1,
+      "message": "With the current code, this part is not called multiple times for the same Builder, so it looks this does not change the behavior.\nBut I don\u0027t have strong opinion for this change. So if you still prefer having `if (!getUseCaches())`, I can update.",
+      "parentUuid": "5af7bd63_5bb64e00",
       "range": {
         "startLine": 289,
         "startChar": 0,
