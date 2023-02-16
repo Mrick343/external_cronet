@@ -35,7 +35,7 @@ import java.time.Duration;
  *
  * <p>Most configuration in this class is only applicable if the built-in DNS resolver is used.
  */
-public final class DnsOptions {
+public final class DnsParams {
     @Nullable
     private final Boolean mUseHttpStackDnsResolver;
     @Nullable
@@ -48,9 +48,9 @@ public final class DnsOptions {
     @Nullable
     private final Boolean mPreestablishConnectionsToStaleDnsResults;
     @Nullable
-    private final StaleDnsOptions mStaleDnsOptions;
+    private final StaleDnsParams mStaleDnsOptions;
 
-    DnsOptions(Builder builder) {
+    DnsParams(Builder builder) {
         this.mEnableStaleDns = builder.mEnableStaleDns;
         this.mStaleDnsOptions = builder.mStaleDnsOptions;
         this.mPersistHostCachePeriod = builder.mPersistHostCachePeriod;
@@ -103,16 +103,16 @@ public final class DnsOptions {
     }
 
     /**
-     * See {@link Builder#setStaleDnsOptions}
+     * See {@link Builder#setStaleDnsParams}
      */
     @Experimental
     @Nullable
-    public StaleDnsOptions getStaleDnsOptions() {
+    public StaleDnsParams getStaleDnsParams() {
         return mStaleDnsOptions;
     }
 
     /**
-     * Returns a new builder for {@link DnsOptions}.
+     * Returns a new builder for {@link DnsParams}.
      *
      * @hide
      */
@@ -136,11 +136,11 @@ public final class DnsOptions {
      *   <li>results returned from a different network's DNS server, whether expired or not.
      * </ul>
      *
-     * <p>For detailed explanation of the configuration options see javadoc on
-     * {@link StaleDnsOptions.Builder} methods.
+     * <p>For detailed explanation of the configuration params see javadoc on
+     * {@link StaleDnsParams.Builder} methods.
      */
     @Experimental
-    public static class StaleDnsOptions {
+    public static class StaleDnsParams {
         @Nullable
         public Long getFreshLookupTimeoutMillis() {
             return mFreshLookupTimeoutMillis;
@@ -177,7 +177,7 @@ public final class DnsOptions {
         @Nullable
         private final Boolean mUseStaleOnNameNotResolved;
 
-        StaleDnsOptions(Builder builder) {
+        StaleDnsParams(Builder builder) {
             this.mFreshLookupTimeoutMillis = builder.mFreshLookupTimeoutMillis;
             this.mMaxExpiredDelayMillis = builder.mMaxExpiredDelayMillis;
             this.mAllowCrossNetworkUsage = builder.mAllowCrossNetworkUsage;
@@ -185,7 +185,7 @@ public final class DnsOptions {
         }
 
         /**
-         * Builder for {@link StaleDnsOptions}.
+         * Builder for {@link StaleDnsParams}.
          */
         public static final class Builder {
             private Long mFreshLookupTimeoutMillis;
@@ -247,17 +247,17 @@ public final class DnsOptions {
             }
 
             /**
-             * Creates and returns the final {@link StaleDnsOptions} instance, based on the values
+             * Creates and returns the final {@link StaleDnsParams} instance, based on the values
              * in this builder.
              */
-            public StaleDnsOptions build() {
-                return new StaleDnsOptions(this);
+            public StaleDnsParams build() {
+                return new StaleDnsParams(this);
             }
         }
     }
 
     /**
-     * Builder for {@link DnsOptions}.
+     * Builder for {@link DnsParams}.
      */
     public static final class Builder {
         @Nullable
@@ -265,7 +265,7 @@ public final class DnsOptions {
         @Nullable
         private Boolean mEnableStaleDns;
         @Nullable
-        private StaleDnsOptions mStaleDnsOptions;
+        private StaleDnsParams mStaleDnsOptions;
         @Nullable
         private Boolean mPersistHostCache;
         @Nullable
@@ -306,19 +306,19 @@ public final class DnsOptions {
          * @return this builder for chaining.
          */
         @Experimental
-        public Builder setStaleDnsOptions(StaleDnsOptions staleDnsOptions) {
-            this.mStaleDnsOptions = staleDnsOptions;
+        public Builder setStaleDnsParams(StaleDnsParams staleDnsParams) {
+            this.mStaleDnsOptions = staleDnsParams;
             return this;
         }
 
         /**
-         * @see #setStaleDnsOptions(StaleDnsOptions)
+         * @see #setStaleDnsParams(StaleDnsParams)
          *
          * {@hide}
          */
         @Experimental
-        public Builder setStaleDnsOptions(StaleDnsOptions.Builder staleDnsOptionsBuilder) {
-            return setStaleDnsOptions(staleDnsOptionsBuilder.build());
+        public Builder setStaleDnsParams(StaleDnsParams.Builder staleDnsParamsBuilder) {
+            return setStaleDnsParams(staleDnsParamsBuilder.build());
         }
 
         /**
@@ -330,7 +330,7 @@ public final class DnsOptions {
          * cached record was up to date.
          *
          * <p>To use cached DNS records straight away, use {@link #setEnableStaleDns} and {@link
-         * StaleDnsOptions} configuration options.
+         * StaleDnsParams} configuration params.
          *
          * <p>This option may not be available for all networking protocols.
          *
@@ -368,11 +368,11 @@ public final class DnsOptions {
         }
 
         /**
-         * Creates and returns the final {@link DnsOptions} instance, based on the values in this
+         * Creates and returns the final {@link DnsParams} instance, based on the values in this
          * builder.
          */
-        public DnsOptions build() {
-            return new DnsOptions(this);
+        public DnsParams build() {
+            return new DnsParams(this);
         }
     }
 
