@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb6e52b2_9fa5bcfe",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-16T15:26:10Z",
+      "side": 1,
+      "message": "Do I remember correctly that this option will cause the connection to continually have one ping packet outstanding,? That\u0027s very bad for battery life (the modem will never go to sleep) so perhaps we should mention here that this is only for short-lived requests where responsiveness is important?",
+      "range": {
+        "startLine": 195,
+        "startChar": 17,
+        "endLine": 195,
+        "endChar": 18
+      },
+      "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08ba22f6_b6c76e2d",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-16T15:26:10Z",
+      "side": 1,
+      "message": "IIRC the stack had some timers to force return to the default network even if migration succeeded, and also had some data limits for non-default network usage. Do those still exist? If so it might be worth mentioning here that they do.\n\nActually I see setMaxTimeOnNonDefaultNetworkSeconds below, and that we\u0027re not planning to expose  presumably since nobody uses it. Maybe, though, we could set that to a reasonable value (30 seconds?) and mention that here?\n\nWas there a data usage limit too? Or do I misremember? I guess for the data limit we should probably use getMultipathPreference.\n\nAlso, spurious trailing space.",
+      "range": {
+        "startLine": 263,
+        "startChar": 28,
+        "endLine": 263,
+        "endChar": 37
+      },
+      "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
