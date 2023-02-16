@@ -19,7 +19,7 @@ import java.util.Set;
  * {@link HttpEngine.Builder#setEnableQuic(boolean)} to enable / disable QUIC for
  * the HTTP engine.
  */
-public class QuicOptions {
+public class QuicParams {
     private final Set<String> mQuicHostAllowlist;
     private final Set<String> mEnabledQuicVersions;
 
@@ -58,7 +58,7 @@ public class QuicOptions {
 
     private final Set<String> mExtraQuicheFlags;
 
-    QuicOptions(Builder builder) {
+    QuicParams(Builder builder) {
         this.mQuicHostAllowlist =
                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mQuicHostAllowlist));
         this.mEnabledQuicVersions =
@@ -271,7 +271,7 @@ public class QuicOptions {
     }
 
     /**
-     * Create a new {@code QuicOptions} builder.
+     * Create a new {@code QuicParams} builder.
      *
      * {@hide}
      */
@@ -280,7 +280,7 @@ public class QuicOptions {
     }
 
     /**
-     * Builder for {@link QuicOptions}.
+     * Builder for {@link QuicParams}.
      */
     public static final class Builder {
         private final Set<String> mQuicHostAllowlist = new LinkedHashSet<>();
@@ -624,12 +624,12 @@ public class QuicOptions {
         }
 
         /**
-         * Creates and returns the final {@link QuicOptions} instance, based on the values
+         * Creates and returns the final {@link QuicParams} instance, based on the values
          * in this builder.
          */
         @NonNull
-        public QuicOptions build() {
-            return new QuicOptions(this);
+        public QuicParams build() {
+            return new QuicParams(this);
         }
     }
 
