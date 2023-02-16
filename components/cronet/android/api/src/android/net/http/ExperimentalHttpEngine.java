@@ -184,103 +184,103 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions options) {
+        @QuicParams.Experimental
+        public Builder setQuicParams(QuicParams params) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    IHttpEngineBuilder.QUIC_OPTIONS)) {
-                mBuilderDelegate.setQuicOptions(options);
+                    IHttpEngineBuilder.QUIC_PARAMS)) {
+                mBuilderDelegate.setQuicParams(params);
                 return this;
             }
 
             // If not, we'll have to work around it by modifying the experimental options JSON.
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
-                JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
+                JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
 
                 // Note: using the experimental APIs always overwrites what's in the experimental
                 // JSON, even though "repeated" fields could in theory be additive.
-                if (!options.getQuicHostAllowlist().isEmpty()) {
-                    quicOptions.put(
-                            "host_whitelist", String.join(",", options.getQuicHostAllowlist()));
+                if (!params.getQuicHostAllowlist().isEmpty()) {
+                    quicParams.put(
+                            "host_whitelist", String.join(",", params.getQuicHostAllowlist()));
                 }
-                if (!options.getEnabledQuicVersions().isEmpty()) {
-                    quicOptions.put(
-                            "quic_version", String.join(",", options.getEnabledQuicVersions()));
+                if (!params.getEnabledQuicVersions().isEmpty()) {
+                    quicParams.put(
+                            "quic_version", String.join(",", params.getEnabledQuicVersions()));
                 }
-                if (!options.getConnectionOptions().isEmpty()) {
-                    quicOptions.put(
-                            "connection_options", String.join(",", options.getConnectionOptions()));
+                if (!params.getConnectionOptions().isEmpty()) {
+                    quicParams.put(
+                            "connection_options", String.join(",", params.getConnectionOptions()));
                 }
-                if (!options.getClientConnectionOptions().isEmpty()) {
-                    quicOptions.put("client_connection_options",
-                            String.join(",", options.getClientConnectionOptions()));
+                if (!params.getClientConnectionOptions().isEmpty()) {
+                    quicParams.put("client_connection_options",
+                            String.join(",", params.getClientConnectionOptions()));
                 }
-                if (!options.getExtraQuicheFlags().isEmpty()) {
-                    quicOptions.put(
-                            "set_quic_flags", String.join(",", options.getExtraQuicheFlags()));
-                }
-
-                if (options.getInMemoryServerConfigsCacheSize() != null) {
-                    quicOptions.put("max_server_configs_stored_in_properties",
-                            options.getInMemoryServerConfigsCacheSize());
+                if (!params.getExtraQuicheFlags().isEmpty()) {
+                    quicParams.put(
+                            "set_quic_flags", String.join(",", params.getExtraQuicheFlags()));
                 }
 
-                if (options.getHandshakeUserAgent() != null) {
-                    quicOptions.put("user_agent_id", options.getHandshakeUserAgent());
+                if (params.getInMemoryServerConfigsCacheSize() != null) {
+                    quicParams.put("max_server_configs_stored_in_properties",
+                            params.getInMemoryServerConfigsCacheSize());
                 }
 
-                if (options.getRetryWithoutAltSvcOnQuicErrors() != null) {
-                    quicOptions.put("retry_without_alt_svc_on_quic_errors",
-                            options.getRetryWithoutAltSvcOnQuicErrors());
+                if (params.getHandshakeUserAgent() != null) {
+                    quicParams.put("user_agent_id", params.getHandshakeUserAgent());
                 }
 
-                if (options.getEnableTlsZeroRtt() != null) {
-                    quicOptions.put("disable_tls_zero_rtt", !options.getEnableTlsZeroRtt());
+                if (params.getRetryWithoutAltSvcOnQuicErrors() != null) {
+                    quicParams.put("retry_without_alt_svc_on_quic_errors",
+                            params.getRetryWithoutAltSvcOnQuicErrors());
                 }
 
-                if (options.getPreCryptoHandshakeIdleTimeout() != null) {
-                    quicOptions.put("max_idle_time_before_crypto_handshake_seconds",
-                            options.getPreCryptoHandshakeIdleTimeout().toSeconds());
+                if (params.getEnableTlsZeroRtt() != null) {
+                    quicParams.put("disable_tls_zero_rtt", !params.getEnableTlsZeroRtt());
                 }
 
-                if (options.getCryptoHandshakeTimeout() != null) {
-                    quicOptions.put("max_time_before_crypto_handshake_seconds",
-                            options.getCryptoHandshakeTimeout().toSeconds());
+                if (params.getPreCryptoHandshakeIdleTimeout() != null) {
+                    quicParams.put("max_idle_time_before_crypto_handshake_seconds",
+                            params.getPreCryptoHandshakeIdleTimeout().toSeconds());
                 }
 
-                if (options.getIdleConnectionTimeout() != null) {
-                    quicOptions.put("idle_connection_timeout_seconds",
-                            options.getIdleConnectionTimeout().toSeconds());
+                if (params.getCryptoHandshakeTimeout() != null) {
+                    quicParams.put("max_time_before_crypto_handshake_seconds",
+                            params.getCryptoHandshakeTimeout().toSeconds());
                 }
 
-                if (options.getRetransmittableOnWireTimeout() != null) {
-                    quicOptions.put("retransmittable_on_wire_timeout_milliseconds",
-                            options.getRetransmittableOnWireTimeout().toMillis());
+                if (params.getIdleConnectionTimeout() != null) {
+                    quicParams.put("idle_connection_timeout_seconds",
+                            params.getIdleConnectionTimeout().toSeconds());
                 }
 
-                if (options.getCloseSessionsOnIpChange() != null) {
-                    quicOptions.put(
-                            "close_sessions_on_ip_change", options.getCloseSessionsOnIpChange());
+                if (params.getRetransmittableOnWireTimeout() != null) {
+                    quicParams.put("retransmittable_on_wire_timeout_milliseconds",
+                            params.getRetransmittableOnWireTimeout().toMillis());
                 }
 
-                if (options.getGoawaySessionsOnIpChange() != null) {
-                    quicOptions.put(
-                            "goaway_sessions_on_ip_change", options.getGoawaySessionsOnIpChange());
+                if (params.getCloseSessionsOnIpChange() != null) {
+                    quicParams.put(
+                            "close_sessions_on_ip_change", params.getCloseSessionsOnIpChange());
                 }
 
-                if (options.getInitialBrokenServicePeriod() != null) {
-                    quicOptions.put("initial_delay_for_broken_alternative_service_seconds",
-                            options.getInitialBrokenServicePeriod().toSeconds());
+                if (params.getGoawaySessionsOnIpChange() != null) {
+                    quicParams.put(
+                            "goaway_sessions_on_ip_change", params.getGoawaySessionsOnIpChange());
                 }
 
-                if (options.getIncreaseBrokenServicePeriodExponentially() != null) {
-                    quicOptions.put("exponential_backoff_on_initial_delay",
-                            options.getIncreaseBrokenServicePeriodExponentially());
+                if (params.getInitialBrokenServicePeriod() != null) {
+                    quicParams.put("initial_delay_for_broken_alternative_service_seconds",
+                            params.getInitialBrokenServicePeriod().toSeconds());
                 }
 
-                if (options.getDelayJobsWithAvailableSpdySession() != null) {
-                    quicOptions.put("delay_main_job_with_available_spdy_session",
-                            options.getDelayJobsWithAvailableSpdySession());
+                if (params.getIncreaseBrokenServicePeriodExponentially() != null) {
+                    quicParams.put("exponential_backoff_on_initial_delay",
+                            params.getIncreaseBrokenServicePeriodExponentially());
+                }
+
+                if (params.getDelayJobsWithAvailableSpdySession() != null) {
+                    quicParams.put("delay_main_job_with_available_spdy_session",
+                            params.getDelayJobsWithAvailableSpdySession());
                 }
             });
             return this;

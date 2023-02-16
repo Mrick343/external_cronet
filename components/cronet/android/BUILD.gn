@@ -241,7 +241,7 @@ android_library("cronet_api_java") {
     "api/src/android/net/http/NetworkQualityRttListener.java",
     "api/src/android/net/http/NetworkQualityThroughputListener.java",
     "api/src/android/net/http/QuicException.java",
-    "api/src/android/net/http/QuicOptions.java",
+    "api/src/android/net/http/QuicParams.java",
     "api/src/android/net/http/RequestFinishedInfo.java",
     "api/src/android/net/http/UploadDataProvider.java",
     "api/src/android/net/http/UploadDataSink.java",
