@@ -45,6 +45,30 @@
       },
       "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e8edb36_5d927000",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-16T16:10:18Z",
+      "side": 1,
+      "message": "\u003e IIRC the stack had some timers to force return to the default network even if migration succeeded, and also had some data limits for non-default network usage. Do those still exist? If so it might be worth mentioning here that they do.\n\nThat\u0027s right, by default the maximum time to be spent on non-default networks is set to 128 seconds (https://source.chromium.org/chromium/chromium/src/+/main:net/quic/quic_context.h;drc\u003df37b11fe3cfd8d5f8294ef27d5c6c723a4028d89;l\u003d52). \n\n\u003e Was there a data usage limit too? Or do I misremember? I guess for the data limit we should probably use getMultipathPreference.\n\nI don\u0027t see anything related to the number of bytes transfered in the migration code: https://source.chromium.org/chromium/chromium/src/+/main:net/quic/quic_chromium_client_session.cc;l\u003d3308;drc\u003df37b11fe3cfd8d5f8294ef27d5c6c723a4028d89;bpv\u003d1;bpt\u003d1, or any toggles that would imply such a value exists.\n\n\u003e Also, spurious trailing space.\n\nFixed.",
+      "parentUuid": "08ba22f6_b6c76e2d",
+      "range": {
+        "startLine": 263,
+        "startChar": 28,
+        "endLine": 263,
+        "endChar": 37
+      },
+      "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
