@@ -26,7 +26,7 @@ public abstract class IHttpEngineBuilder {
     // structures, hence we resort to plain old good ints.
     public static final int CONNECTION_MIGRATION_PARAMS = 1;
     public static final int DNS_PARAMS = 2;
-    public static final int QUIC_OPTIONS = 3;
+    public static final int QUIC_PARAMS = 3;
 
     // Public API methods.
     public abstract IHttpEngineBuilder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
@@ -50,7 +50,7 @@ public abstract class IHttpEngineBuilder {
         return this;
     }
 
-    public IHttpEngineBuilder setQuicOptions(QuicOptions quicOptions) {
+    public IHttpEngineBuilder setQuicParams(QuicParams quicParams) {
         return this;
     }
 

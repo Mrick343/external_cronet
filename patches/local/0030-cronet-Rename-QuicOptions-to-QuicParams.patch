@@ -1,0 +1,674 @@
+From f3adc5e0d7963a344f0e134c8dcad0fe6ced5ab5 Mon Sep 17 00:00:00 2001
+From: Motomu Utsumi <motomuman@google.com>
+Date: Thu, 16 Feb 2023 17:00:01 +0900
+Subject: [PATCH] cronet: Rename QuicOptions to QuicParams
+
+Fix UserHandleName API linter error for QuicOptions
+```
+QuicOptions.java:22: error: Classes holding a set of parameters should be
+called `FooParams`, was `QuicOptions` [UserHandleName]
+```
+
+Test: TH
+Bug: 265674359
+Change-Id: I67e7300c5a96e0a18563186ebee79ed2ecd35e1d
+---
+ components/cronet/android/BUILD.gn            |   2 +-
+ .../net/http/ExperimentalHttpEngine.java      | 114 +++---
+ .../api/src/android/net/http/HttpEngine.java  |  18 +-
+ .../android/net/http/IHttpEngineBuilder.java  |   4 +-
+ .../{QuicOptions.java => QuicParams.java}     |  14 +-
+ ...net-Rename-QuicOptions-to-QuicParams.patch | 340 ++++++++++++++++++
+ 6 files changed, 416 insertions(+), 76 deletions(-)
+ rename components/cronet/android/api/src/android/net/http/{QuicOptions.java => QuicParams.java} (98%)
+ create mode 100644 patches/local/0030-cronet-Rename-QuicOptions-to-QuicParams.patch
+
+diff --git a/components/cronet/android/BUILD.gn b/components/cronet/android/BUILD.gn
+index db1ee1bb..5263b996 100644
+--- a/components/cronet/android/BUILD.gn
++++ b/components/cronet/android/BUILD.gn
+@@ -241,7 +241,7 @@ android_library("cronet_api_java") {
+     "api/src/android/net/http/NetworkQualityRttListener.java",
+     "api/src/android/net/http/NetworkQualityThroughputListener.java",
+     "api/src/android/net/http/QuicException.java",
+-    "api/src/android/net/http/QuicOptions.java",
++    "api/src/android/net/http/QuicParams.java",
+     "api/src/android/net/http/RequestFinishedInfo.java",
+     "api/src/android/net/http/UploadDataProvider.java",
+     "api/src/android/net/http/UploadDataSink.java",
+diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+index 1faa6678..8b4418e4 100644
+--- a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+@@ -184,103 +184,103 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
+         }
+ 
+         @Override
+-        @QuicOptions.Experimental
+-        public Builder setQuicOptions(QuicOptions options) {
++        @QuicParams.Experimental
++        public Builder setQuicParams(QuicParams params) {
+             // If the delegate builder supports enabling connection migration directly, just use it
+             if (mBuilderDelegate.getSupportedConfigOptions().contains(
+-                    IHttpEngineBuilder.QUIC_OPTIONS)) {
+-                mBuilderDelegate.setQuicOptions(options);
++                    IHttpEngineBuilder.QUIC_PARAMS)) {
++                mBuilderDelegate.setQuicParams(params);
+                 return this;
+             }
+ 
+             // If not, we'll have to work around it by modifying the experimental options JSON.
+             mExperimentalOptionsPatches.add((experimentalOptions) -> {
+-                JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
++                JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
+ 
+                 // Note: using the experimental APIs always overwrites what's in the experimental
+                 // JSON, even though "repeated" fields could in theory be additive.
+-                if (!options.getQuicHostAllowlist().isEmpty()) {
+-                    quicOptions.put(
+-                            "host_whitelist", String.join(",", options.getQuicHostAllowlist()));
++                if (!params.getQuicHostAllowlist().isEmpty()) {
++                    quicParams.put(
++                            "host_whitelist", String.join(",", params.getQuicHostAllowlist()));
+                 }
+-                if (!options.getEnabledQuicVersions().isEmpty()) {
+-                    quicOptions.put(
+-                            "quic_version", String.join(",", options.getEnabledQuicVersions()));
++                if (!params.getEnabledQuicVersions().isEmpty()) {
++                    quicParams.put(
++                            "quic_version", String.join(",", params.getEnabledQuicVersions()));
+                 }
+-                if (!options.getConnectionOptions().isEmpty()) {
+-                    quicOptions.put(
+-                            "connection_options", String.join(",", options.getConnectionOptions()));
++                if (!params.getConnectionOptions().isEmpty()) {
++                    quicParams.put(
++                            "connection_options", String.join(",", params.getConnectionOptions()));
+                 }
+-                if (!options.getClientConnectionOptions().isEmpty()) {
+-                    quicOptions.put("client_connection_options",
+-                            String.join(",", options.getClientConnectionOptions()));
++                if (!params.getClientConnectionOptions().isEmpty()) {
++                    quicParams.put("client_connection_options",
++                            String.join(",", params.getClientConnectionOptions()));
+                 }
+-                if (!options.getExtraQuicheFlags().isEmpty()) {
+-                    quicOptions.put(
+-                            "set_quic_flags", String.join(",", options.getExtraQuicheFlags()));
++                if (!params.getExtraQuicheFlags().isEmpty()) {
++                    quicParams.put(
++                            "set_quic_flags", String.join(",", params.getExtraQuicheFlags()));
+                 }
+ 
+-                if (options.getInMemoryServerConfigsCacheSize() != null) {
+-                    quicOptions.put("max_server_configs_stored_in_properties",
+-                            options.getInMemoryServerConfigsCacheSize());
++                if (params.getInMemoryServerConfigsCacheSize() != null) {
++                    quicParams.put("max_server_configs_stored_in_properties",
++                            params.getInMemoryServerConfigsCacheSize());
+                 }
+ 
+-                if (options.getHandshakeUserAgent() != null) {
+-                    quicOptions.put("user_agent_id", options.getHandshakeUserAgent());
++                if (params.getHandshakeUserAgent() != null) {
++                    quicParams.put("user_agent_id", params.getHandshakeUserAgent());
+                 }
+ 
+-                if (options.getRetryWithoutAltSvcOnQuicErrors() != null) {
+-                    quicOptions.put("retry_without_alt_svc_on_quic_errors",
+-                            options.getRetryWithoutAltSvcOnQuicErrors());
++                if (params.getRetryWithoutAltSvcOnQuicErrors() != null) {
++                    quicParams.put("retry_without_alt_svc_on_quic_errors",
++                            params.getRetryWithoutAltSvcOnQuicErrors());
+                 }
+ 
+-                if (options.getEnableTlsZeroRtt() != null) {
+-                    quicOptions.put("disable_tls_zero_rtt", !options.getEnableTlsZeroRtt());
++                if (params.getEnableTlsZeroRtt() != null) {
++                    quicParams.put("disable_tls_zero_rtt", !params.getEnableTlsZeroRtt());
+                 }
+ 
+-                if (options.getPreCryptoHandshakeIdleTimeout() != null) {
+-                    quicOptions.put("max_idle_time_before_crypto_handshake_seconds",
+-                            options.getPreCryptoHandshakeIdleTimeout().toSeconds());
++                if (params.getPreCryptoHandshakeIdleTimeout() != null) {
++                    quicParams.put("max_idle_time_before_crypto_handshake_seconds",
++                            params.getPreCryptoHandshakeIdleTimeout().toSeconds());
+                 }
+ 
+-                if (options.getCryptoHandshakeTimeout() != null) {
+-                    quicOptions.put("max_time_before_crypto_handshake_seconds",
+-                            options.getCryptoHandshakeTimeout().toSeconds());
++                if (params.getCryptoHandshakeTimeout() != null) {
++                    quicParams.put("max_time_before_crypto_handshake_seconds",
++                            params.getCryptoHandshakeTimeout().toSeconds());
+                 }
+ 
+-                if (options.getIdleConnectionTimeout() != null) {
+-                    quicOptions.put("idle_connection_timeout_seconds",
+-                            options.getIdleConnectionTimeout().toSeconds());
++                if (params.getIdleConnectionTimeout() != null) {
++                    quicParams.put("idle_connection_timeout_seconds",
++                            params.getIdleConnectionTimeout().toSeconds());
+                 }
+ 
+-                if (options.getRetransmittableOnWireTimeout() != null) {
+-                    quicOptions.put("retransmittable_on_wire_timeout_milliseconds",
+-                            options.getRetransmittableOnWireTimeout().toMillis());
++                if (params.getRetransmittableOnWireTimeout() != null) {
++                    quicParams.put("retransmittable_on_wire_timeout_milliseconds",
++                            params.getRetransmittableOnWireTimeout().toMillis());
+                 }
+ 
+-                if (options.getCloseSessionsOnIpChange() != null) {
+-                    quicOptions.put(
+-                            "close_sessions_on_ip_change", options.getCloseSessionsOnIpChange());
++                if (params.getCloseSessionsOnIpChange() != null) {
++                    quicParams.put(
++                            "close_sessions_on_ip_change", params.getCloseSessionsOnIpChange());
+                 }
+ 
+-                if (options.getGoawaySessionsOnIpChange() != null) {
+-                    quicOptions.put(
+-                            "goaway_sessions_on_ip_change", options.getGoawaySessionsOnIpChange());
++                if (params.getGoawaySessionsOnIpChange() != null) {
++                    quicParams.put(
++                            "goaway_sessions_on_ip_change", params.getGoawaySessionsOnIpChange());
+                 }
+ 
+-                if (options.getInitialBrokenServicePeriod() != null) {
+-                    quicOptions.put("initial_delay_for_broken_alternative_service_seconds",
+-                            options.getInitialBrokenServicePeriod().toSeconds());
++                if (params.getInitialBrokenServicePeriod() != null) {
++                    quicParams.put("initial_delay_for_broken_alternative_service_seconds",
++                            params.getInitialBrokenServicePeriod().toSeconds());
+                 }
+ 
+-                if (options.getIncreaseBrokenServicePeriodExponentially() != null) {
+-                    quicOptions.put("exponential_backoff_on_initial_delay",
+-                            options.getIncreaseBrokenServicePeriodExponentially());
++                if (params.getIncreaseBrokenServicePeriodExponentially() != null) {
++                    quicParams.put("exponential_backoff_on_initial_delay",
++                            params.getIncreaseBrokenServicePeriodExponentially());
+                 }
+ 
+-                if (options.getDelayJobsWithAvailableSpdySession() != null) {
+-                    quicOptions.put("delay_main_job_with_available_spdy_session",
+-                            options.getDelayJobsWithAvailableSpdySession());
++                if (params.getDelayJobsWithAvailableSpdySession() != null) {
++                    quicParams.put("delay_main_job_with_available_spdy_session",
++                            params.getDelayJobsWithAvailableSpdySession());
+                 }
+             });
+             return this;
+diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+index 80869c7c..a1dd3377 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+@@ -286,27 +286,27 @@ public abstract class HttpEngine {
+ 
+         /**
+          * Configures the behavior of the HTTP stack when using QUIC. For more details, see
+-         * documentation of {@link QuicOptions} and the individual methods
+-         * of {@link QuicOptions.Builder}.
++         * documentation of {@link QuicParams} and the individual methods
++         * of {@link QuicParams.Builder}.
+          *
+          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
+          *
+          * @return the builder to facilitate chaining.
+          */
+-        @QuicOptions.Experimental
+-        public Builder setQuicOptions(QuicOptions quicOptions) {
+-            mBuilderDelegate.setQuicOptions(quicOptions);
++        @QuicParams.Experimental
++        public Builder setQuicParams(QuicParams quicParams) {
++            mBuilderDelegate.setQuicParams(quicParams);
+             return this;
+         }
+ 
+         /**
+-         * @see #setQuicOptions(QuicOptions)
++         * @see #setQuicParams(QuicParams)
+          *
+          * {@hide}
+          */
+-        @QuicOptions.Experimental
+-        public Builder setQuicOptions(QuicOptions.Builder quicOptionsBuilder) {
+-            return setQuicOptions(quicOptionsBuilder.build());
++        @QuicParams.Experimental
++        public Builder setQuicParams(QuicParams.Builder quicParamsBuilder) {
++            return setQuicParams(quicParamsBuilder.build());
+         }
+ 
+         /**
+diff --git a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+index 5dc00230..3f587320 100644
+--- a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
++++ b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+@@ -26,7 +26,7 @@ public abstract class IHttpEngineBuilder {
+     // structures, hence we resort to plain old good ints.
+     public static final int CONNECTION_MIGRATION_PARAMS = 1;
+     public static final int DNS_PARAMS = 2;
+-    public static final int QUIC_OPTIONS = 3;
++    public static final int QUIC_PARAMS = 3;
+ 
+     // Public API methods.
+     public abstract IHttpEngineBuilder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
+@@ -50,7 +50,7 @@ public abstract class IHttpEngineBuilder {
+         return this;
+     }
+ 
+-    public IHttpEngineBuilder setQuicOptions(QuicOptions quicOptions) {
++    public IHttpEngineBuilder setQuicParams(QuicParams quicParams) {
+         return this;
+     }
+ 
+diff --git a/components/cronet/android/api/src/android/net/http/QuicOptions.java b/components/cronet/android/api/src/android/net/http/QuicParams.java
+similarity index 98%
+rename from components/cronet/android/api/src/android/net/http/QuicOptions.java
+rename to components/cronet/android/api/src/android/net/http/QuicParams.java
+index 022ea50f..24679f82 100644
+--- a/components/cronet/android/api/src/android/net/http/QuicOptions.java
++++ b/components/cronet/android/api/src/android/net/http/QuicParams.java
+@@ -19,7 +19,7 @@ import java.util.Set;
+  * {@link HttpEngine.Builder#setEnableQuic(boolean)} to enable / disable QUIC for
+  * the HTTP engine.
+  */
+-public class QuicOptions {
++public class QuicParams {
+     private final Set<String> mQuicHostAllowlist;
+     private final Set<String> mEnabledQuicVersions;
+ 
+@@ -58,7 +58,7 @@ public class QuicOptions {
+ 
+     private final Set<String> mExtraQuicheFlags;
+ 
+-    QuicOptions(Builder builder) {
++    QuicParams(Builder builder) {
+         this.mQuicHostAllowlist =
+                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mQuicHostAllowlist));
+         this.mEnabledQuicVersions =
+@@ -271,7 +271,7 @@ public class QuicOptions {
+     }
+ 
+     /**
+-     * Create a new {@code QuicOptions} builder.
++     * Create a new {@code QuicParams} builder.
+      *
+      * {@hide}
+      */
+@@ -280,7 +280,7 @@ public class QuicOptions {
+     }
+ 
+     /**
+-     * Builder for {@link QuicOptions}.
++     * Builder for {@link QuicParams}.
+      */
+     public static final class Builder {
+         private final Set<String> mQuicHostAllowlist = new LinkedHashSet<>();
+@@ -624,12 +624,12 @@ public class QuicOptions {
+         }
+ 
+         /**
+-         * Creates and returns the final {@link QuicOptions} instance, based on the values
++         * Creates and returns the final {@link QuicParams} instance, based on the values
+          * in this builder.
+          */
+         @NonNull
+-        public QuicOptions build() {
+-            return new QuicOptions(this);
++        public QuicParams build() {
++            return new QuicParams(this);
+         }
+     }
+ 
+diff --git a/patches/local/0030-cronet-Rename-QuicOptions-to-QuicParams.patch b/patches/local/0030-cronet-Rename-QuicOptions-to-QuicParams.patch
+new file mode 100644
+index 00000000..5b2b25c6
+--- /dev/null
++++ b/patches/local/0030-cronet-Rename-QuicOptions-to-QuicParams.patch
+@@ -0,0 +1,340 @@
++From 5533d307ecb5e8cb1d443ae6b2415e05f3ab2197 Mon Sep 17 00:00:00 2001
++From: Motomu Utsumi <motomuman@google.com>
++Date: Thu, 16 Feb 2023 17:00:01 +0900
++Subject: [PATCH] cronet: Rename QuicOptions to QuicParams
++
++Fix UserHandleName API linter error for QuicOptions
++```
++QuicOptions.java:22: error: Classes holding a set of parameters should be
++called `FooParams`, was `QuicOptions` [UserHandleName]
++```
++
++Test: TH
++Bug: 265674359
++Change-Id: I67e7300c5a96e0a18563186ebee79ed2ecd35e1d
++---
++ Android.bp                                    |   2 +-
++ components/cronet/android/BUILD.gn            |   2 +-
++ .../net/http/ExperimentalHttpEngine.java      | 114 +++++++++---------
++ .../api/src/android/net/http/HttpEngine.java  |  18 +--
++ .../android/net/http/IHttpEngineBuilder.java  |   4 +-
++ .../{QuicOptions.java => QuicParams.java}     |  14 +--
++ 6 files changed, 77 insertions(+), 77 deletions(-)
++ rename components/cronet/android/api/src/android/net/http/{QuicOptions.java => QuicParams.java} (98%)
++
++diff --git a/Android.bp b/Android.bp
++index e2598b63..eec29b01 100644
++--- a/Android.bp
+++++ b/Android.bp
++@@ -56,7 +56,7 @@ filegroup {
++         "components/cronet/android/api/src/android/net/http/NetworkQualityRttListener.java",
++         "components/cronet/android/api/src/android/net/http/NetworkQualityThroughputListener.java",
++         "components/cronet/android/api/src/android/net/http/QuicException.java",
++-        "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+++        "components/cronet/android/api/src/android/net/http/QuicParams.java",
++         "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
++         "components/cronet/android/api/src/android/net/http/UploadDataProvider.java",
++         "components/cronet/android/api/src/android/net/http/UploadDataSink.java",
++diff --git a/components/cronet/android/BUILD.gn b/components/cronet/android/BUILD.gn
++index db1ee1bb..5263b996 100644
++--- a/components/cronet/android/BUILD.gn
+++++ b/components/cronet/android/BUILD.gn
++@@ -241,7 +241,7 @@ android_library("cronet_api_java") {
++     "api/src/android/net/http/NetworkQualityRttListener.java",
++     "api/src/android/net/http/NetworkQualityThroughputListener.java",
++     "api/src/android/net/http/QuicException.java",
++-    "api/src/android/net/http/QuicOptions.java",
+++    "api/src/android/net/http/QuicParams.java",
++     "api/src/android/net/http/RequestFinishedInfo.java",
++     "api/src/android/net/http/UploadDataProvider.java",
++     "api/src/android/net/http/UploadDataSink.java",
++diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++index 060423df..ba577ec0 100644
++--- a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+++++ b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++@@ -184,103 +184,103 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
++         }
++ 
++         @Override
++-        @QuicOptions.Experimental
++-        public Builder setQuicOptions(QuicOptions options) {
+++        @QuicParams.Experimental
+++        public Builder setQuicParams(QuicParams params) {
++             // If the delegate builder supports enabling connection migration directly, just use it
++             if (mBuilderDelegate.getSupportedConfigOptions().contains(
++-                    IHttpEngineBuilder.QUIC_OPTIONS)) {
++-                mBuilderDelegate.setQuicOptions(options);
+++                    IHttpEngineBuilder.QUIC_PARAMS)) {
+++                mBuilderDelegate.setQuicParams(params);
++                 return this;
++             }
++ 
++             // If not, we'll have to work around it by modifying the experimental options JSON.
++             mExperimentalOptionsPatches.add((experimentalOptions) -> {
++-                JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
+++                JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
++ 
++                 // Note: using the experimental APIs always overwrites what's in the experimental
++                 // JSON, even though "repeated" fields could in theory be additive.
++-                if (!options.getQuicHostAllowlist().isEmpty()) {
++-                    quicOptions.put(
++-                            "host_whitelist", String.join(",", options.getQuicHostAllowlist()));
+++                if (!params.getQuicHostAllowlist().isEmpty()) {
+++                    quicParams.put(
+++                            "host_whitelist", String.join(",", params.getQuicHostAllowlist()));
++                 }
++-                if (!options.getEnabledQuicVersions().isEmpty()) {
++-                    quicOptions.put(
++-                            "quic_version", String.join(",", options.getEnabledQuicVersions()));
+++                if (!params.getEnabledQuicVersions().isEmpty()) {
+++                    quicParams.put(
+++                            "quic_version", String.join(",", params.getEnabledQuicVersions()));
++                 }
++-                if (!options.getConnectionOptions().isEmpty()) {
++-                    quicOptions.put(
++-                            "connection_options", String.join(",", options.getConnectionOptions()));
+++                if (!params.getConnectionOptions().isEmpty()) {
+++                    quicParams.put(
+++                            "connection_options", String.join(",", params.getConnectionOptions()));
++                 }
++-                if (!options.getClientConnectionOptions().isEmpty()) {
++-                    quicOptions.put("client_connection_options",
++-                            String.join(",", options.getClientConnectionOptions()));
+++                if (!params.getClientConnectionOptions().isEmpty()) {
+++                    quicParams.put("client_connection_options",
+++                            String.join(",", params.getClientConnectionOptions()));
++                 }
++-                if (!options.getExtraQuicheFlags().isEmpty()) {
++-                    quicOptions.put(
++-                            "set_quic_flags", String.join(",", options.getExtraQuicheFlags()));
+++                if (!params.getExtraQuicheFlags().isEmpty()) {
+++                    quicParams.put(
+++                            "set_quic_flags", String.join(",", params.getExtraQuicheFlags()));
++                 }
++ 
++-                if (options.getInMemoryServerConfigsCacheSize() != null) {
++-                    quicOptions.put("max_server_configs_stored_in_properties",
++-                            options.getInMemoryServerConfigsCacheSize());
+++                if (params.getInMemoryServerConfigsCacheSize() != null) {
+++                    quicParams.put("max_server_configs_stored_in_properties",
+++                            params.getInMemoryServerConfigsCacheSize());
++                 }
++ 
++-                if (options.getHandshakeUserAgent() != null) {
++-                    quicOptions.put("user_agent_id", options.getHandshakeUserAgent());
+++                if (params.getHandshakeUserAgent() != null) {
+++                    quicParams.put("user_agent_id", params.getHandshakeUserAgent());
++                 }
++ 
++-                if (options.getRetryWithoutAltSvcOnQuicErrors() != null) {
++-                    quicOptions.put("retry_without_alt_svc_on_quic_errors",
++-                            options.getRetryWithoutAltSvcOnQuicErrors());
+++                if (params.getRetryWithoutAltSvcOnQuicErrors() != null) {
+++                    quicParams.put("retry_without_alt_svc_on_quic_errors",
+++                            params.getRetryWithoutAltSvcOnQuicErrors());
++                 }
++ 
++-                if (options.getEnableTlsZeroRtt() != null) {
++-                    quicOptions.put("disable_tls_zero_rtt", !options.getEnableTlsZeroRtt());
+++                if (params.getEnableTlsZeroRtt() != null) {
+++                    quicParams.put("disable_tls_zero_rtt", !params.getEnableTlsZeroRtt());
++                 }
++ 
++-                if (options.getPreCryptoHandshakeIdleTimeout() != null) {
++-                    quicOptions.put("max_idle_time_before_crypto_handshake_seconds",
++-                            options.getPreCryptoHandshakeIdleTimeout().toSeconds());
+++                if (params.getPreCryptoHandshakeIdleTimeout() != null) {
+++                    quicParams.put("max_idle_time_before_crypto_handshake_seconds",
+++                            params.getPreCryptoHandshakeIdleTimeout().toSeconds());
++                 }
++ 
++-                if (options.getCryptoHandshakeTimeout() != null) {
++-                    quicOptions.put("max_time_before_crypto_handshake_seconds",
++-                            options.getCryptoHandshakeTimeout().toSeconds());
+++                if (params.getCryptoHandshakeTimeout() != null) {
+++                    quicParams.put("max_time_before_crypto_handshake_seconds",
+++                            params.getCryptoHandshakeTimeout().toSeconds());
++                 }
++ 
++-                if (options.getIdleConnectionTimeout() != null) {
++-                    quicOptions.put("idle_connection_timeout_seconds",
++-                            options.getIdleConnectionTimeout().toSeconds());
+++                if (params.getIdleConnectionTimeout() != null) {
+++                    quicParams.put("idle_connection_timeout_seconds",
+++                            params.getIdleConnectionTimeout().toSeconds());
++                 }
++ 
++-                if (options.getRetransmittableOnWireTimeout() != null) {
++-                    quicOptions.put("retransmittable_on_wire_timeout_milliseconds",
++-                            options.getRetransmittableOnWireTimeout().toMillis());
+++                if (params.getRetransmittableOnWireTimeout() != null) {
+++                    quicParams.put("retransmittable_on_wire_timeout_milliseconds",
+++                            params.getRetransmittableOnWireTimeout().toMillis());
++                 }
++ 
++-                if (options.getCloseSessionsOnIpChange() != null) {
++-                    quicOptions.put(
++-                            "close_sessions_on_ip_change", options.getCloseSessionsOnIpChange());
+++                if (params.getCloseSessionsOnIpChange() != null) {
+++                    quicParams.put(
+++                            "close_sessions_on_ip_change", params.getCloseSessionsOnIpChange());
++                 }
++ 
++-                if (options.getGoawaySessionsOnIpChange() != null) {
++-                    quicOptions.put(
++-                            "goaway_sessions_on_ip_change", options.getGoawaySessionsOnIpChange());
+++                if (params.getGoawaySessionsOnIpChange() != null) {
+++                    quicParams.put(
+++                            "goaway_sessions_on_ip_change", params.getGoawaySessionsOnIpChange());
++                 }
++ 
++-                if (options.getInitialBrokenServicePeriod() != null) {
++-                    quicOptions.put("initial_delay_for_broken_alternative_service_seconds",
++-                            options.getInitialBrokenServicePeriod().toSeconds());
+++                if (params.getInitialBrokenServicePeriod() != null) {
+++                    quicParams.put("initial_delay_for_broken_alternative_service_seconds",
+++                            params.getInitialBrokenServicePeriod().toSeconds());
++                 }
++ 
++-                if (options.getIncreaseBrokenServicePeriodExponentially() != null) {
++-                    quicOptions.put("exponential_backoff_on_initial_delay",
++-                            options.getIncreaseBrokenServicePeriodExponentially());
+++                if (params.getIncreaseBrokenServicePeriodExponentially() != null) {
+++                    quicParams.put("exponential_backoff_on_initial_delay",
+++                            params.getIncreaseBrokenServicePeriodExponentially());
++                 }
++ 
++-                if (options.getDelayJobsWithAvailableSpdySession() != null) {
++-                    quicOptions.put("delay_main_job_with_available_spdy_session",
++-                            options.getDelayJobsWithAvailableSpdySession());
+++                if (params.getDelayJobsWithAvailableSpdySession() != null) {
+++                    quicParams.put("delay_main_job_with_available_spdy_session",
+++                            params.getDelayJobsWithAvailableSpdySession());
++                 }
++             });
++             return this;
++diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
++index 4170310c..429d4a92 100644
++--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
+++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
++@@ -286,27 +286,27 @@ public abstract class HttpEngine {
++ 
++         /**
++          * Configures the behavior of the HTTP stack when using QUIC. For more details, see
++-         * documentation of {@link QuicOptions} and the individual methods
++-         * of {@link QuicOptions.Builder}.
+++         * documentation of {@link QuicParams} and the individual methods
+++         * of {@link QuicParams.Builder}.
++          *
++          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
++          *
++          * @return the builder to facilitate chaining.
++          */
++-        @QuicOptions.Experimental
++-        public Builder setQuicOptions(QuicOptions quicOptions) {
++-            mBuilderDelegate.setQuicOptions(quicOptions);
+++        @QuicParams.Experimental
+++        public Builder setQuicParams(QuicParams quicParams) {
+++            mBuilderDelegate.setQuicParams(quicParams);
++             return this;
++         }
++ 
++         /**
++-         * @see #setQuicOptions(QuicOptions)
+++         * @see #setQuicParams(QuicParams)
++          *
++          * {@hide}
++          */
++-        @QuicOptions.Experimental
++-        public Builder setQuicOptions(QuicOptions.Builder quicOptionsBuilder) {
++-            return setQuicOptions(quicOptionsBuilder.build());
+++        @QuicParams.Experimental
+++        public Builder setQuicParams(QuicParams.Builder quicParamsBuilder) {
+++            return setQuicParams(quicParamsBuilder.build());
++         }
++ 
++         /**
++diff --git a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
++index 5dc00230..3f587320 100644
++--- a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+++++ b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
++@@ -26,7 +26,7 @@ public abstract class IHttpEngineBuilder {
++     // structures, hence we resort to plain old good ints.
++     public static final int CONNECTION_MIGRATION_PARAMS = 1;
++     public static final int DNS_PARAMS = 2;
++-    public static final int QUIC_OPTIONS = 3;
+++    public static final int QUIC_PARAMS = 3;
++ 
++     // Public API methods.
++     public abstract IHttpEngineBuilder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
++@@ -50,7 +50,7 @@ public abstract class IHttpEngineBuilder {
++         return this;
++     }
++ 
++-    public IHttpEngineBuilder setQuicOptions(QuicOptions quicOptions) {
+++    public IHttpEngineBuilder setQuicParams(QuicParams quicParams) {
++         return this;
++     }
++ 
++diff --git a/components/cronet/android/api/src/android/net/http/QuicOptions.java b/components/cronet/android/api/src/android/net/http/QuicParams.java
++similarity index 98%
++rename from components/cronet/android/api/src/android/net/http/QuicOptions.java
++rename to components/cronet/android/api/src/android/net/http/QuicParams.java
++index 13f76429..2bf4cf4c 100644
++--- a/components/cronet/android/api/src/android/net/http/QuicOptions.java
+++++ b/components/cronet/android/api/src/android/net/http/QuicParams.java
++@@ -19,7 +19,7 @@ import java.util.Set;
++  * {@link HttpEngine.Builder#setEnableQuic(boolean)} to enable / disable QUIC for
++  * the HTTP engine.
++  */
++-public class QuicOptions {
+++public class QuicParams {
++     private final Set<String> mQuicHostAllowlist;
++     private final Set<String> mEnabledQuicVersions;
++ 
++@@ -58,7 +58,7 @@ public class QuicOptions {
++ 
++     private final Set<String> mExtraQuicheFlags;
++ 
++-    QuicOptions(Builder builder) {
+++    QuicParams(Builder builder) {
++         this.mQuicHostAllowlist =
++                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mQuicHostAllowlist));
++         this.mEnabledQuicVersions =
++@@ -271,7 +271,7 @@ public class QuicOptions {
++     }
++ 
++     /**
++-     * Create a new {@code QuicOptions} builder.
+++     * Create a new {@code QuicParams} builder.
++      *
++      * {@hide}
++      */
++@@ -280,7 +280,7 @@ public class QuicOptions {
++     }
++ 
++     /**
++-     * Builder for {@link QuicOptions}.
+++     * Builder for {@link QuicParams}.
++      */
++     public static final class Builder {
++         private final Set<String> mQuicHostAllowlist = new LinkedHashSet<>();
++@@ -623,12 +623,12 @@ public class QuicOptions {
++         }
++ 
++         /**
++-         * Creates and returns the final {@link QuicOptions} instance, based on the values
+++         * Creates and returns the final {@link QuicParams} instance, based on the values
++          * in this builder.
++          */
++         @NonNull
++-        public QuicOptions build() {
++-            return new QuicOptions(this);
+++        public QuicParams build() {
+++            return new QuicParams(this);
++         }
++     }
++ 
++-- 
++2.39.1.581.gbfd45094c4-goog
++
+-- 
+2.39.2.637.g21b0678d19-goog
+
