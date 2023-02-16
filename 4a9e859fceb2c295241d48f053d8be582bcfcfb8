@@ -22,6 +22,30 @@
       },
       "revId": "4a9e859fceb2c295241d48f053d8be582bcfcfb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bc13cce_c609ef7e",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T01:57:48Z",
+      "side": 1,
+      "message": "I saw aosp/2402861 annotates @Nullable for the setter args if it can be nullable.\nAnd tried to be consistent with that.",
+      "parentUuid": "61f6556b_d7c2152e",
+      "range": {
+        "startLine": 416,
+        "startChar": 45,
+        "endLine": 416,
+        "endChar": 54
+      },
+      "revId": "4a9e859fceb2c295241d48f053d8be582bcfcfb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
