@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f60d725e_d01e5f28",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-16T16:19:17Z",
+      "side": 1,
+      "message": "This happens for all connections that have outstanding requests (including hanging GETs)[1] independently of migration options. And yes, this is a bad thing for battery life.\n\n(I discussed this with ianswett@ in the past and we agreed that it would be interesting to try making the pinging mechanism adaptive. Though, we haven\u0027t allocated any time towards this.)\n\n[1] https://source.chromium.org/chromium/chromium/src/+/main:net/third_party/quiche/src/quiche/quic/core/http/quic_spdy_session.cc;l\u003d885-890;drc\u003df37b11fe3cfd8d5f8294ef27d5c6c723a4028d89",
+      "parentUuid": "bb6e52b2_9fa5bcfe",
+      "range": {
+        "startLine": 195,
+        "startChar": 17,
+        "endLine": 195,
+        "endChar": 18
+      },
+      "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08ba22f6_b6c76e2d",
