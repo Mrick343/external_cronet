@@ -4,7 +4,7 @@
 package android.net.http;
 
 import android.content.Context;
-import android.net.http.DnsOptions.StaleDnsOptions;
+import android.net.http.DnsParams.StaleDnsParams;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -287,66 +287,66 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions options) {
+        @DnsParams.Experimental
+        public Builder setDnsParams(DnsParams params) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
-                    IHttpEngineBuilder.DNS_OPTIONS)) {
-                mBuilderDelegate.setDnsOptions(options);
+                    IHttpEngineBuilder.DNS_PARAMS)) {
+                mBuilderDelegate.setDnsParams(params);
                 return this;
             }
 
             // If not, we'll have to work around it by modifying the experimental options JSON.
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
-                JSONObject asyncDnsOptions = createDefaultIfAbsent(experimentalOptions, "AsyncDNS");
+                JSONObject asyncDnsParams = createDefaultIfAbsent(experimentalOptions, "AsyncDNS");
 
-                if (options.getUseHttpStackDnsResolver() != null) {
-                    asyncDnsOptions.put("enable", options.getUseHttpStackDnsResolver());
+                if (params.getUseHttpStackDnsResolver() != null) {
+                    asyncDnsParams.put("enable", params.getUseHttpStackDnsResolver());
                 }
 
-                JSONObject staleDnsOptions = createDefaultIfAbsent(experimentalOptions, "StaleDNS");
+                JSONObject staleDnsParams = createDefaultIfAbsent(experimentalOptions, "StaleDNS");
 
-                if (options.getEnableStaleDns() != null) {
-                    staleDnsOptions.put("enable", options.getEnableStaleDns());
+                if (params.getEnableStaleDns() != null) {
+                    staleDnsParams.put("enable", params.getEnableStaleDns());
                 }
 
-                if (options.getPersistHostCache() != null) {
-                    staleDnsOptions.put("persist_to_disk", options.getPersistHostCache());
+                if (params.getPersistHostCache() != null) {
+                    staleDnsParams.put("persist_to_disk", params.getPersistHostCache());
                 }
 
-                if (options.getPersistHostCachePeriod() != null) {
-                    staleDnsOptions.put(
-                            "persist_delay_ms", options.getPersistHostCachePeriod().toMillis());
+                if (params.getPersistHostCachePeriod() != null) {
+                    staleDnsParams.put(
+                            "persist_delay_ms", params.getPersistHostCachePeriod().toMillis());
                 }
 
-                if (options.getStaleDnsOptions() != null) {
-                    StaleDnsOptions staleDnsOptionsJava = options.getStaleDnsOptions();
+                if (params.getStaleDnsParams() != null) {
+                    StaleDnsParams staleDnsParamsJava = params.getStaleDnsParams();
 
-                    if (staleDnsOptionsJava.getAllowCrossNetworkUsage() != null) {
-                        staleDnsOptions.put("allow_other_network",
-                                staleDnsOptionsJava.getAllowCrossNetworkUsage());
+                    if (staleDnsParamsJava.getAllowCrossNetworkUsage() != null) {
+                        staleDnsParams.put("allow_other_network",
+                                staleDnsParamsJava.getAllowCrossNetworkUsage());
                     }
 
-                    if (staleDnsOptionsJava.getFreshLookupTimeoutMillis() != null) {
-                        staleDnsOptions.put(
-                                "delay_ms", staleDnsOptionsJava.getFreshLookupTimeoutMillis());
+                    if (staleDnsParamsJava.getFreshLookupTimeoutMillis() != null) {
+                        staleDnsParams.put(
+                                "delay_ms", staleDnsParamsJava.getFreshLookupTimeoutMillis());
                     }
 
-                    if (staleDnsOptionsJava.getUseStaleOnNameNotResolved() != null) {
-                        staleDnsOptions.put("use_stale_on_name_not_resolved",
-                                staleDnsOptionsJava.getUseStaleOnNameNotResolved());
+                    if (staleDnsParamsJava.getUseStaleOnNameNotResolved() != null) {
+                        staleDnsParams.put("use_stale_on_name_not_resolved",
+                                staleDnsParamsJava.getUseStaleOnNameNotResolved());
                     }
 
-                    if (staleDnsOptionsJava.getMaxExpiredDelayMillis() != null) {
-                        staleDnsOptions.put("max_expired_time_ms",
-                                staleDnsOptionsJava.getMaxExpiredDelayMillis());
+                    if (staleDnsParamsJava.getMaxExpiredDelayMillis() != null) {
+                        staleDnsParams.put("max_expired_time_ms",
+                                staleDnsParamsJava.getMaxExpiredDelayMillis());
                     }
                 }
 
-                JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
-                if (options.getPreestablishConnectionsToStaleDnsResults() != null) {
-                    quicOptions.put("race_stale_dns_on_connection",
-                            options.getPreestablishConnectionsToStaleDnsResults());
+                JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
+                if (params.getPreestablishConnectionsToStaleDnsResults() != null) {
+                    quicParams.put("race_stale_dns_on_connection",
+                            params.getPreestablishConnectionsToStaleDnsResults());
                 }
             });
             return this;
