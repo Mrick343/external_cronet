@@ -184,8 +184,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         @Override
-        @QuicOptions.Experimental
-        public Builder setQuicOptions(QuicOptions options) {
+        @QuicParams.Experimental
+        public Builder setQuicParams(QuicParams options) {
             // If the delegate builder supports enabling connection migration directly, just use it
             if (mBuilderDelegate.getSupportedConfigOptions().contains(
                     IHttpEngineBuilder.QUIC_OPTIONS)) {

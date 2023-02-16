@@ -50,7 +50,7 @@ public abstract class IHttpEngineBuilder {
         return this;
     }
 
-    public IHttpEngineBuilder setQuicOptions(QuicOptions quicOptions) {
+    public IHttpEngineBuilder setQuicOptions(QuicParams quicOptions) {
         return this;
     }
 

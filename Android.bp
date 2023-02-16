@@ -44,7 +44,7 @@ filegroup {
         "components/cronet/android/api/src/android/net/http/NetworkQualityRttListener.java",
         "components/cronet/android/api/src/android/net/http/NetworkQualityThroughputListener.java",
         "components/cronet/android/api/src/android/net/http/QuicException.java",
-        "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "components/cronet/android/api/src/android/net/http/QuicParams.java",
         "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
         "components/cronet/android/api/src/android/net/http/UploadDataProvider.java",
         "components/cronet/android/api/src/android/net/http/UploadDataSink.java",
