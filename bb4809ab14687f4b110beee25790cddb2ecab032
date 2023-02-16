@@ -16,6 +16,24 @@
       "message": "I took a quick look at this. This looks great and it looks like you figured out a lot of those things on your own.\n\nThis is actually a [very common way](https://source.corp.google.com/aosp-master/cts/hostsidetests) we run tests in Android (by installing a test .apk and controlling the test from the host). Can this be integrated into the [existing framework for Connectivity hostside tests](https://source.corp.google.com/aosp-master/packages/modules/Connectivity/tests/cts/hostside)? Note that it *may* make sense to duplicate a similar setup in and place it in packages/modules/Connectivity/Cronet/tests/cts/hostside rather than touching HostsideNetworkTestCase (that\u0027s something to look into).",
       "revId": "bb4809ab14687f4b110beee25790cddb2ecab032",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d6941f3_156dc876",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-02-16T15:25:14Z",
+      "side": 1,
+      "message": "I don\u0027t think this would be possible. I\u0027ve taken a quick look at the existing framework for Connectivity hostside tests. I noticed that the entry point for those tests are Java, there\u0027s is some JNI but overall. It\u0027s Java tests being executed by a Junit test runner. The JUnit test runner is notifying the host test runner when it finishes so it can dump the coverage.\n\nHowever, The host-side tests that we\u0027re running here don\u0027t have any Java code. It\u0027s purely native gtest that are being executed. In other words, the entry point for the tests are C++. Hence, the Junit test runner is not used here so the host-side can never know when the tests has finished executing. So using the existing framework will not work out of the box.\n\nI can still use the signalMaskInfo instead of copying it over and maintaining our own version.\n\nI\u0027d prefer to do this in a different CL chain as this chain has went on for far too long.",
+      "parentUuid": "64b4d8b2_0fe8aabc",
+      "revId": "bb4809ab14687f4b110beee25790cddb2ecab032",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
