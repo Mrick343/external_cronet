@@ -25,7 +25,7 @@ public abstract class IHttpEngineBuilder {
     // as long as the values don't change meaning. This isn't true of enums and other dynamic
     // structures, hence we resort to plain old good ints.
     public static final int CONNECTION_MIGRATION_PARAMS = 1;
-    public static final int DNS_OPTIONS = 2;
+    public static final int DNS_PARAMS = 2;
     public static final int QUIC_OPTIONS = 3;
 
     // Public API methods.
@@ -54,7 +54,7 @@ public abstract class IHttpEngineBuilder {
         return this;
     }
 
-    public IHttpEngineBuilder setDnsOptions(DnsOptions dnsOptions) {
+    public IHttpEngineBuilder setDnsParams(DnsParams dnsParams) {
         return this;
     }
 
