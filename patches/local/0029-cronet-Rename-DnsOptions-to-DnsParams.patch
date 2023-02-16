@@ -1,0 +1,378 @@
+From 6854135e4597b4f1d953b4520e7e9ac15dcb3c26 Mon Sep 17 00:00:00 2001
+From: Motomu Utsumi <motomuman@google.com>
+Date: Thu, 16 Feb 2023 15:36:15 +0900
+Subject: [PATCH] cronet: Rename DnsOptions to DnsParams
+
+Fix UserHandleName API linter error for DnsOptions
+```
+DnsOptions.java:38: error: Classes holding a set of parameters should be
+called `FooParams`, was `DnsOptions` [UserHandleName]
+```
+
+Test: TH
+Bug: 265674359
+Change-Id: I418791feb3c22498e78abd06d7597e7bdb2c4914
+---
+ components/cronet/android/BUILD.gn            |  2 +-
+ .../http/{DnsOptions.java => DnsParams.java}  | 54 +++++++--------
+ .../net/http/ExperimentalHttpEngine.java      | 68 +++++++++----------
+ .../api/src/android/net/http/HttpEngine.java  | 16 ++---
+ .../android/net/http/IHttpEngineBuilder.java  |  4 +-
+ 5 files changed, 72 insertions(+), 72 deletions(-)
+ rename components/cronet/android/api/src/android/net/http/{DnsOptions.java => DnsParams.java} (89%)
+
+diff --git a/components/cronet/android/BUILD.gn b/components/cronet/android/BUILD.gn
+index 89a1335d..db1ee1bb 100644
+--- a/components/cronet/android/BUILD.gn
++++ b/components/cronet/android/BUILD.gn
+@@ -231,7 +231,7 @@ android_library("cronet_api_java") {
+     "api/src/android/net/http/ConnectionMigrationParams.java",
+     "api/src/android/net/http/HttpEngine.java",
+     "api/src/android/net/http/HttpException.java",
+-    "api/src/android/net/http/DnsOptions.java",
++    "api/src/android/net/http/DnsParams.java",
+     "api/src/android/net/http/ExperimentalBidirectionalStream.java",
+     "api/src/android/net/http/ExperimentalHttpEngine.java",
+     "api/src/android/net/http/ExperimentalUrlRequest.java",
+diff --git a/components/cronet/android/api/src/android/net/http/DnsOptions.java b/components/cronet/android/api/src/android/net/http/DnsParams.java
+similarity index 89%
+rename from components/cronet/android/api/src/android/net/http/DnsOptions.java
+rename to components/cronet/android/api/src/android/net/http/DnsParams.java
+index c6110576..53f5f3f1 100644
+--- a/components/cronet/android/api/src/android/net/http/DnsOptions.java
++++ b/components/cronet/android/api/src/android/net/http/DnsParams.java
+@@ -35,7 +35,7 @@ import java.time.Duration;
+  *
+  * <p>Most configuration in this class is only applicable if the built-in DNS resolver is used.
+  */
+-public final class DnsOptions {
++public final class DnsParams {
+     @Nullable
+     private final Boolean mUseHttpStackDnsResolver;
+     @Nullable
+@@ -48,11 +48,11 @@ public final class DnsOptions {
+     @Nullable
+     private final Boolean mPreestablishConnectionsToStaleDnsResults;
+     @Nullable
+-    private final StaleDnsOptions mStaleDnsOptions;
++    private final StaleDnsParams mStaleDnsParams;
+ 
+-    DnsOptions(Builder builder) {
++    DnsParams(Builder builder) {
+         this.mEnableStaleDns = builder.mEnableStaleDns;
+-        this.mStaleDnsOptions = builder.mStaleDnsOptions;
++        this.mStaleDnsParams = builder.mStaleDnsParams;
+         this.mPersistHostCachePeriod = builder.mPersistHostCachePeriod;
+         this.mPreestablishConnectionsToStaleDnsResults =
+                 builder.mPreestablishConnectionsToStaleDnsResults;
+@@ -103,16 +103,16 @@ public final class DnsOptions {
+     }
+ 
+     /**
+-     * See {@link Builder#setStaleDnsOptions}
++     * See {@link Builder#setStaleDnsParams}
+      */
+     @Experimental
+     @Nullable
+-    public StaleDnsOptions getStaleDnsOptions() {
+-        return mStaleDnsOptions;
++    public StaleDnsParams getStaleDnsParams() {
++        return mStaleDnsParams;
+     }
+ 
+     /**
+-     * Returns a new builder for {@link DnsOptions}.
++     * Returns a new builder for {@link DnsParams}.
+      *
+      * @hide
+      */
+@@ -136,11 +136,11 @@ public final class DnsOptions {
+      *   <li>results returned from a different network's DNS server, whether expired or not.
+      * </ul>
+      *
+-     * <p>For detailed explanation of the configuration options see javadoc on
+-     * {@link StaleDnsOptions.Builder} methods.
++     * <p>For detailed explanation of the configuration params see javadoc on
++     * {@link StaleDnsParams.Builder} methods.
+      */
+     @Experimental
+-    public static class StaleDnsOptions {
++    public static class StaleDnsParams {
+         @Nullable
+         public Long getFreshLookupTimeoutMillis() {
+             return mFreshLookupTimeoutMillis;
+@@ -177,7 +177,7 @@ public final class DnsOptions {
+         @Nullable
+         private final Boolean mUseStaleOnNameNotResolved;
+ 
+-        StaleDnsOptions(Builder builder) {
++        StaleDnsParams(Builder builder) {
+             this.mFreshLookupTimeoutMillis = builder.mFreshLookupTimeoutMillis;
+             this.mMaxExpiredDelayMillis = builder.mMaxExpiredDelayMillis;
+             this.mAllowCrossNetworkUsage = builder.mAllowCrossNetworkUsage;
+@@ -185,7 +185,7 @@ public final class DnsOptions {
+         }
+ 
+         /**
+-         * Builder for {@link StaleDnsOptions}.
++         * Builder for {@link StaleDnsParams}.
+          */
+         public static final class Builder {
+             private Long mFreshLookupTimeoutMillis;
+@@ -247,17 +247,17 @@ public final class DnsOptions {
+             }
+ 
+             /**
+-             * Creates and returns the final {@link StaleDnsOptions} instance, based on the values
++             * Creates and returns the final {@link StaleDnsParams} instance, based on the values
+              * in this builder.
+              */
+-            public StaleDnsOptions build() {
+-                return new StaleDnsOptions(this);
++            public StaleDnsParams build() {
++                return new StaleDnsParams(this);
+             }
+         }
+     }
+ 
+     /**
+-     * Builder for {@link DnsOptions}.
++     * Builder for {@link DnsParams}.
+      */
+     public static final class Builder {
+         @Nullable
+@@ -265,7 +265,7 @@ public final class DnsOptions {
+         @Nullable
+         private Boolean mEnableStaleDns;
+         @Nullable
+-        private StaleDnsOptions mStaleDnsOptions;
++        private StaleDnsParams mStaleDnsParams;
+         @Nullable
+         private Boolean mPersistHostCache;
+         @Nullable
+@@ -306,19 +306,19 @@ public final class DnsOptions {
+          * @return this builder for chaining.
+          */
+         @Experimental
+-        public Builder setStaleDnsOptions(StaleDnsOptions staleDnsOptions) {
+-            this.mStaleDnsOptions = staleDnsOptions;
++        public Builder setStaleDnsParams(StaleDnsParams staleDnsParams) {
++            this.mStaleDnsParams = staleDnsParams;
+             return this;
+         }
+ 
+         /**
+-         * @see #setStaleDnsOptions(StaleDnsOptions)
++         * @see #setStaleDnsParams(StaleDnsParams)
+          *
+          * {@hide}
+          */
+         @Experimental
+-        public Builder setStaleDnsOptions(StaleDnsOptions.Builder staleDnsOptionsBuilder) {
+-            return setStaleDnsOptions(staleDnsOptionsBuilder.build());
++        public Builder setStaleDnsParams(StaleDnsParams.Builder staleDnsParamsBuilder) {
++            return setStaleDnsParams(staleDnsParamsBuilder.build());
+         }
+ 
+         /**
+@@ -330,7 +330,7 @@ public final class DnsOptions {
+          * cached record was up to date.
+          *
+          * <p>To use cached DNS records straight away, use {@link #setEnableStaleDns} and {@link
+-         * StaleDnsOptions} configuration options.
++         * StaleDnsParams} configuration params.
+          *
+          * <p>This option may not be available for all networking protocols.
+          *
+@@ -368,11 +368,11 @@ public final class DnsOptions {
+         }
+ 
+         /**
+-         * Creates and returns the final {@link DnsOptions} instance, based on the values in this
++         * Creates and returns the final {@link DnsParams} instance, based on the values in this
+          * builder.
+          */
+-        public DnsOptions build() {
+-            return new DnsOptions(this);
++        public DnsParams build() {
++            return new DnsParams(this);
+         }
+     }
+ 
+diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+index 80641dd4..1faa6678 100644
+--- a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+@@ -4,7 +4,7 @@
+ package android.net.http;
+ 
+ import android.content.Context;
+-import android.net.http.DnsOptions.StaleDnsOptions;
++import android.net.http.DnsParams.StaleDnsParams;
+ 
+ import androidx.annotation.VisibleForTesting;
+ 
+@@ -287,66 +287,66 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
+         }
+ 
+         @Override
+-        @DnsOptions.Experimental
+-        public Builder setDnsOptions(DnsOptions options) {
++        @DnsParams.Experimental
++        public Builder setDnsParams(DnsParams params) {
+             // If the delegate builder supports enabling connection migration directly, just use it
+             if (mBuilderDelegate.getSupportedConfigOptions().contains(
+-                    IHttpEngineBuilder.DNS_OPTIONS)) {
+-                mBuilderDelegate.setDnsOptions(options);
++                    IHttpEngineBuilder.DNS_PARAMS)) {
++                mBuilderDelegate.setDnsParams(params);
+                 return this;
+             }
+ 
+             // If not, we'll have to work around it by modifying the experimental options JSON.
+             mExperimentalOptionsPatches.add((experimentalOptions) -> {
+-                JSONObject asyncDnsOptions = createDefaultIfAbsent(experimentalOptions, "AsyncDNS");
++                JSONObject asyncDnsParams = createDefaultIfAbsent(experimentalOptions, "AsyncDNS");
+ 
+-                if (options.getUseHttpStackDnsResolver() != null) {
+-                    asyncDnsOptions.put("enable", options.getUseHttpStackDnsResolver());
++                if (params.getUseHttpStackDnsResolver() != null) {
++                    asyncDnsParams.put("enable", params.getUseHttpStackDnsResolver());
+                 }
+ 
+-                JSONObject staleDnsOptions = createDefaultIfAbsent(experimentalOptions, "StaleDNS");
++                JSONObject staleDnsParams = createDefaultIfAbsent(experimentalOptions, "StaleDNS");
+ 
+-                if (options.getEnableStaleDns() != null) {
+-                    staleDnsOptions.put("enable", options.getEnableStaleDns());
++                if (params.getEnableStaleDns() != null) {
++                    staleDnsParams.put("enable", params.getEnableStaleDns());
+                 }
+ 
+-                if (options.getPersistHostCache() != null) {
+-                    staleDnsOptions.put("persist_to_disk", options.getPersistHostCache());
++                if (params.getPersistHostCache() != null) {
++                    staleDnsParams.put("persist_to_disk", params.getPersistHostCache());
+                 }
+ 
+-                if (options.getPersistHostCachePeriod() != null) {
+-                    staleDnsOptions.put(
+-                            "persist_delay_ms", options.getPersistHostCachePeriod().toMillis());
++                if (params.getPersistHostCachePeriod() != null) {
++                    staleDnsParams.put(
++                            "persist_delay_ms", params.getPersistHostCachePeriod().toMillis());
+                 }
+ 
+-                if (options.getStaleDnsOptions() != null) {
+-                    StaleDnsOptions staleDnsOptionsJava = options.getStaleDnsOptions();
++                if (params.getStaleDnsParams() != null) {
++                    StaleDnsParams staleDnsParamsJava = params.getStaleDnsParams();
+ 
+-                    if (staleDnsOptionsJava.getAllowCrossNetworkUsage() != null) {
+-                        staleDnsOptions.put("allow_other_network",
+-                                staleDnsOptionsJava.getAllowCrossNetworkUsage());
++                    if (staleDnsParamsJava.getAllowCrossNetworkUsage() != null) {
++                        staleDnsParams.put("allow_other_network",
++                                staleDnsParamsJava.getAllowCrossNetworkUsage());
+                     }
+ 
+-                    if (staleDnsOptionsJava.getFreshLookupTimeoutMillis() != null) {
+-                        staleDnsOptions.put(
+-                                "delay_ms", staleDnsOptionsJava.getFreshLookupTimeoutMillis());
++                    if (staleDnsParamsJava.getFreshLookupTimeoutMillis() != null) {
++                        staleDnsParams.put(
++                                "delay_ms", staleDnsParamsJava.getFreshLookupTimeoutMillis());
+                     }
+ 
+-                    if (staleDnsOptionsJava.getUseStaleOnNameNotResolved() != null) {
+-                        staleDnsOptions.put("use_stale_on_name_not_resolved",
+-                                staleDnsOptionsJava.getUseStaleOnNameNotResolved());
++                    if (staleDnsParamsJava.getUseStaleOnNameNotResolved() != null) {
++                        staleDnsParams.put("use_stale_on_name_not_resolved",
++                                staleDnsParamsJava.getUseStaleOnNameNotResolved());
+                     }
+ 
+-                    if (staleDnsOptionsJava.getMaxExpiredDelayMillis() != null) {
+-                        staleDnsOptions.put("max_expired_time_ms",
+-                                staleDnsOptionsJava.getMaxExpiredDelayMillis());
++                    if (staleDnsParamsJava.getMaxExpiredDelayMillis() != null) {
++                        staleDnsParams.put("max_expired_time_ms",
++                                staleDnsParamsJava.getMaxExpiredDelayMillis());
+                     }
+                 }
+ 
+-                JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
+-                if (options.getPreestablishConnectionsToStaleDnsResults() != null) {
+-                    quicOptions.put("race_stale_dns_on_connection",
+-                            options.getPreestablishConnectionsToStaleDnsResults());
++                JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
++                if (params.getPreestablishConnectionsToStaleDnsResults() != null) {
++                    quicParams.put("race_stale_dns_on_connection",
++                            params.getPreestablishConnectionsToStaleDnsResults());
+                 }
+             });
+             return this;
+diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+index 4780fb3a..80869c7c 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+@@ -311,26 +311,26 @@ public abstract class HttpEngine {
+ 
+         /**
+          * Configures the behavior of hostname lookup. For more details, see documentation
+-         * of {@link DnsOptions} and the individual methods of {@link DnsOptions.Builder}.
++         * of {@link DnsParams} and the individual methods of {@link DnsParams.Builder}.
+          *
+          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
+          *
+          * @return the builder to facilitate chaining.
+          */
+-        @DnsOptions.Experimental
+-        public Builder setDnsOptions(DnsOptions dnsOptions) {
+-            mBuilderDelegate.setDnsOptions(dnsOptions);
++        @DnsParams.Experimental
++        public Builder setDnsParams(DnsParams dnsParams) {
++            mBuilderDelegate.setDnsParams(dnsParams);
+             return this;
+         }
+ 
+         /**
+-         * @see #setDnsOptions(DnsOptions)
++         * @see #setDnsParams(DnsParams)
+          *
+          * {@hide}
+          */
+-        @DnsOptions.Experimental
+-        public Builder setDnsOptions(DnsOptions.Builder dnsOptions) {
+-            return setDnsOptions(dnsOptions.build());
++        @DnsParams.Experimental
++        public Builder setDnsParams(DnsParams.Builder dnsParams) {
++            return setDnsParams(dnsParams.build());
+         }
+ 
+         /**
+diff --git a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+index a9748ef6..5dc00230 100644
+--- a/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
++++ b/components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java
+@@ -25,7 +25,7 @@ public abstract class IHttpEngineBuilder {
+     // as long as the values don't change meaning. This isn't true of enums and other dynamic
+     // structures, hence we resort to plain old good ints.
+     public static final int CONNECTION_MIGRATION_PARAMS = 1;
+-    public static final int DNS_OPTIONS = 2;
++    public static final int DNS_PARAMS = 2;
+     public static final int QUIC_OPTIONS = 3;
+ 
+     // Public API methods.
+@@ -54,7 +54,7 @@ public abstract class IHttpEngineBuilder {
+         return this;
+     }
+ 
+-    public IHttpEngineBuilder setDnsOptions(DnsOptions dnsOptions) {
++    public IHttpEngineBuilder setDnsParams(DnsParams dnsParams) {
+         return this;
+     }
+ 
+-- 
+2.39.2.637.g21b0678d19-goog
+
