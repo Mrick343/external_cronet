@@ -22,6 +22,30 @@
       },
       "revId": "eebc351420eb44242b33a6a15768c750d7000f72",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cd1367a_5983a30f",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T02:41:42Z",
+      "side": 1,
+      "message": "Done. I have added the comment why can not be final.",
+      "parentUuid": "2ba72c0b_3d1b4649",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 39
+      },
+      "revId": "eebc351420eb44242b33a6a15768c750d7000f72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
