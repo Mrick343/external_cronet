@@ -44,7 +44,7 @@ filegroup {
         "components/cronet/android/api/src/android/net/http/BidirectionalStream.java",
         "components/cronet/android/api/src/android/net/http/CallbackException.java",
         "components/cronet/android/api/src/android/net/http/ConnectionMigrationParams.java",
-        "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "components/cronet/android/api/src/android/net/http/DnsParams.java",
         "components/cronet/android/api/src/android/net/http/ExperimentalBidirectionalStream.java",
         "components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java",
         "components/cronet/android/api/src/android/net/http/ExperimentalUrlRequest.java",
