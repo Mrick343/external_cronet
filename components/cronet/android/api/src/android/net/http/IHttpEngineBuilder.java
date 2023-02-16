@@ -54,7 +54,7 @@ public abstract class IHttpEngineBuilder {
         return this;
     }
 
-    public IHttpEngineBuilder setDnsOptions(DnsOptions dnsOptions) {
+    public IHttpEngineBuilder setDnsParams(DnsParams dnsParams) {
         return this;
     }
 
