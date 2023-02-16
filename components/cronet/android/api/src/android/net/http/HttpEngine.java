@@ -311,26 +311,26 @@ public abstract class HttpEngine {
 
         /**
          * Configures the behavior of hostname lookup. For more details, see documentation
-         * of {@link DnsOptions} and the individual methods of {@link DnsOptions.Builder}.
+         * of {@link DnsParams} and the individual methods of {@link DnsParams.Builder}.
          *
          * <p>Only relevant if {@link #setEnableQuic(boolean)} is enabled.
          *
          * @return the builder to facilitate chaining.
          */
-        @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions dnsOptions) {
-            mBuilderDelegate.setDnsOptions(dnsOptions);
+        @DnsParams.Experimental
+        public Builder setDnsParams(DnsParams dnsParams) {
+            mBuilderDelegate.setDnsParams(dnsParams);
             return this;
         }
 
         /**
-         * @see #setDnsOptions(DnsOptions)
+         * @see #setDnsParams(DnsParams)
          *
          * {@hide}
          */
-        @DnsOptions.Experimental
-        public Builder setDnsOptions(DnsOptions.Builder dnsOptions) {
-            return setDnsOptions(dnsOptions.build());
+        @DnsParams.Experimental
+        public Builder setDnsParams(DnsParams.Builder dnsParams) {
+            return setDnsParams(dnsParams.build());
         }
 
         /**
