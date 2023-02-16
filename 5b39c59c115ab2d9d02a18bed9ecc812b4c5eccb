@@ -22,6 +22,30 @@
       },
       "revId": "5b39c59c115ab2d9d02a18bed9ecc812b4c5eccb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33d252dd_d4dc824e",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-16T02:02:07Z",
+      "side": 1,
+      "message": "This also triggers UserHandleName, I just haven\u0027t uploaded CL for that.\nI updated commit message to `Fix UserHandleName API linter error for ConnectionMigrationOptions `",
+      "parentUuid": "eb7ae487_91ff5c3a",
+      "range": {
+        "startLine": 22,
+        "startChar": 13,
+        "endLine": 22,
+        "endChar": 24
+      },
+      "revId": "5b39c59c115ab2d9d02a18bed9ecc812b4c5eccb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
