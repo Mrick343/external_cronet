@@ -74,7 +74,7 @@ public final class DnsParams {
      * See {@link Builder#setPersistHostCache}
      */
     @Nullable
-    public Boolean getPersistHostCache() {
+    public Boolean isPersistHostCache() {
         return mPersistHostCache;
     }
 
