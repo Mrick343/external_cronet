@@ -34,6 +34,24 @@
       "parentUuid": "9f60cb75_a40febb8",
       "revId": "c04b19796df2478b9180735152bba68a8fcb6d8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5154ffaa_0f2f11e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-17T15:13:31Z",
+      "side": 1,
+      "message": "*adding the method and @hiding the old one. That way, we won\u0027t break old clients in o.c.n as it ignores the annotation, and will still benefit from existence of the new one. AOSP respects the annotation so it\u0027ll correctly expose the new one only.",
+      "parentUuid": "a1a3c3ad_04505436",
+      "revId": "c04b19796df2478b9180735152bba68a8fcb6d8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
