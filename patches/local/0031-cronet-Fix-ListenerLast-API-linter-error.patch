@@ -1,0 +1,141 @@
+From b8798381a43c10c6c1aca087a1c28fd7c9e683d7 Mon Sep 17 00:00:00 2001
+From: Motomu Utsumi <motomuman@google.com>
+Date: Fri, 17 Feb 2023 11:52:14 +0900
+Subject: [PATCH] cronet: Fix ListenerLast API linter error
+
+Update UrlRequest.Builder#newUrlRequestBuilder arguments order.
+Also, update UrlRequestBuilderImpl arguments order to be aligned.
+
+Bug: 265674359
+Test: TH
+
+Change-Id: Ie5ad5072f356ebc6a72a5b9915fd30c1f8e887d9
+---
+ .../net/http/ExperimentalHttpEngine.java      |  2 +-
+ .../api/src/android/net/http/HttpEngine.java  | 24 +++++++++++++++++--
+ .../chromium/net/impl/CronetEngineBase.java   |  4 ++--
+ .../net/impl/UrlRequestBuilderImpl.java       | 12 +++++-----
+ .../CronetHttpURLConnection.java              |  2 +-
+ 5 files changed, 32 insertions(+), 12 deletions(-)
+
+diff --git a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+index 8b4418e4..75c917bf 100644
+--- a/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java
+@@ -506,7 +506,7 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
+ 
+     @Override
+     public abstract ExperimentalUrlRequest.Builder newUrlRequestBuilder(
+-            String url, UrlRequest.Callback callback, Executor executor);
++            String url, Executor executor, UrlRequest.Callback callback);
+ 
+     /**
+      * Starts NetLog logging to a specified directory with a bounded size. The NetLog will contain
+diff --git a/components/cronet/android/api/src/android/net/http/HttpEngine.java b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+index a1dd3377..503cc5a9 100644
+--- a/components/cronet/android/api/src/android/net/http/HttpEngine.java
++++ b/components/cronet/android/api/src/android/net/http/HttpEngine.java
+@@ -524,11 +524,31 @@ public abstract class HttpEngine {
+      * operations and causing exceptions during shutdown.
+      *
+      * @param url URL for the generated requests.
+-     * @param callback callback object that gets invoked on different events.
+      * @param executor {@link Executor} on which all callbacks will be invoked.
++     * @param callback callback object that gets invoked on different events.
+      */
+     public abstract UrlRequest.Builder newUrlRequestBuilder(
+-            String url, UrlRequest.Callback callback, Executor executor);
++            String url, Executor executor, UrlRequest.Callback callback);
++
++    /**
++     * Creates a builder for {@link UrlRequest}. All callbacks for
++     * generated {@link UrlRequest} objects will be invoked on
++     * {@code executor}'s threads. {@code executor} must not run tasks on the
++     * thread calling {@link Executor#execute} to prevent blocking networking
++     * operations and causing exceptions during shutdown.
++     *
++     * @param url URL for the generated requests.
++     * @param callback callback object that gets invoked on different events.
++     * @param executor {@link Executor} on which all callbacks will be invoked.
++     */
++    // This API is kept for the backward compatibility in upstream
++    // TODO(motomuman) Hide this API
++    // This API is not hidden since this API is used in internal master and removing this makes
++    // presubmit fail. Once internal use is replaced by above API, this API will be hidden.
++    public UrlRequest.Builder newUrlRequestBuilder(String url, UrlRequest.Callback callback,
++            @SuppressLint("ListenerLast") Executor executor) {
++        return newUrlRequestBuilder(url, executor, callback);
++    }
+ 
+     /**
+      * Creates a builder for {@link BidirectionalStream} objects. All callbacks for
+diff --git a/components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBase.java b/components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBase.java
+index 47d60752..e6ed54d0 100644
+--- a/components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBase.java
++++ b/components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBase.java
+@@ -109,8 +109,8 @@ public abstract class CronetEngineBase extends ExperimentalHttpEngine {
+ 
+     @Override
+     public ExperimentalUrlRequest.Builder newUrlRequestBuilder(
+-            String url, UrlRequest.Callback callback, Executor executor) {
+-        return new UrlRequestBuilderImpl(url, callback, executor, this);
++            String url, Executor executor, UrlRequest.Callback callback) {
++        return new UrlRequestBuilderImpl(url, executor, callback, this);
+     }
+ 
+     @IntDef({UrlRequest.Builder.REQUEST_PRIORITY_IDLE, UrlRequest.Builder.REQUEST_PRIORITY_LOWEST,
+diff --git a/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java b/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java
+index d9f0bb02..9864a6d6 100644
+--- a/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java
++++ b/components/cronet/android/java/src/org/chromium/net/impl/UrlRequestBuilderImpl.java
+@@ -77,28 +77,28 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
+      * exceptions during shutdown.
+      *
+      * @param url URL for the generated requests.
+-     * @param callback callback object that gets invoked on different events.
+      * @param executor {@link Executor} on which all callbacks will be invoked.
++     * @param callback callback object that gets invoked on different events.
+      * @param cronetEngine {@link HttpEngine} used to execute this request.
+      */
+-    UrlRequestBuilderImpl(String url, UrlRequest.Callback callback, Executor executor,
++    UrlRequestBuilderImpl(String url, Executor executor, UrlRequest.Callback callback,
+             CronetEngineBase cronetEngine) {
+         super();
+         if (url == null) {
+             throw new NullPointerException("URL is required.");
+         }
+-        if (callback == null) {
+-            throw new NullPointerException("Callback is required.");
+-        }
+         if (executor == null) {
+             throw new NullPointerException("Executor is required.");
+         }
++        if (callback == null) {
++            throw new NullPointerException("Callback is required.");
++        }
+         if (cronetEngine == null) {
+             throw new NullPointerException("CronetEngine is required.");
+         }
+         mUrl = url;
+-        mCallback = callback;
+         mExecutor = executor;
++        mCallback = callback;
+         mCronetEngine = cronetEngine;
+     }
+ 
+diff --git a/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java b/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java
+index 8fe5bc27..85bcce7f 100644
+--- a/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java
++++ b/components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java
+@@ -257,7 +257,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
+         }
+         final ExperimentalUrlRequest.Builder requestBuilder =
+                 (ExperimentalUrlRequest.Builder) mCronetEngine.newUrlRequestBuilder(
+-                        getURL().toString(), new CronetUrlRequestCallback(), mMessageLoop);
++                        getURL().toString(), mMessageLoop, new CronetUrlRequestCallback());
+         if (doOutput) {
+             if (method.equals("GET")) {
+                 method = "POST";
+-- 
+2.39.2.637.g21b0678d19-goog
+
