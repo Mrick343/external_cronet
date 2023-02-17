@@ -65,24 +65,24 @@ public class BidirectionalStreamBuilderImpl extends ExperimentalBidirectionalStr
      * @param executor the {@link Executor} on which {@code callback} methods will be invoked
      * @param cronetEngine the {@link HttpEngine} used to create the stream
      */
-    BidirectionalStreamBuilderImpl(String url, BidirectionalStream.Callback callback,
-            Executor executor, CronetEngineBase cronetEngine) {
+    BidirectionalStreamBuilderImpl(String url, Executor executor,
+            BidirectionalStream.Callback callback, CronetEngineBase cronetEngine) {
         super();
         if (url == null) {
             throw new NullPointerException("URL is required.");
         }
-        if (callback == null) {
-            throw new NullPointerException("Callback is required.");
-        }
         if (executor == null) {
             throw new NullPointerException("Executor is required.");
+        }
+        if (callback == null) {
+            throw new NullPointerException("Callback is required.");
         }
         if (cronetEngine == null) {
             throw new NullPointerException("CronetEngine is required.");
         }
         mUrl = url;
-        mCallback = callback;
         mExecutor = executor;
+        mCallback = callback;
         mCronetEngine = cronetEngine;
     }
 

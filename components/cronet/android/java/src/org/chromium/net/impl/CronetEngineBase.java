@@ -109,8 +109,8 @@ public abstract class CronetEngineBase extends ExperimentalHttpEngine {
 
     @Override
     public ExperimentalUrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor) {
-        return new UrlRequestBuilderImpl(url, callback, executor, this);
+            String url, Executor executor, UrlRequest.Callback callback) {
+        return new UrlRequestBuilderImpl(url, executor, callback, this);
     }
 
     @IntDef({UrlRequest.Builder.REQUEST_PRIORITY_IDLE, UrlRequest.Builder.REQUEST_PRIORITY_LOWEST,
