@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d6df9e3_25f56e26",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-17T15:13:11Z",
+      "side": 1,
+      "message": "Does changing from abstract class to interface affect the generated Java bytecode (for the virtual calls)?\n\nIf so, this would break backward compatibility. Though, this should be relatively straightforward to maintain as an off-tree patch, so it might be fine?",
+      "revId": "36409199d592e417fbca16ba24abc36c50197201",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
