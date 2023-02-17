@@ -199,9 +199,9 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
 
                 // Note: using the experimental APIs always overwrites what's in the experimental
                 // JSON, even though "repeated" fields could in theory be additive.
-                if (!params.getQuicHostAllowlist().isEmpty()) {
+                if (!params.getAllowedQuicHosts().isEmpty()) {
                     quicParams.put(
-                            "host_whitelist", String.join(",", params.getQuicHostAllowlist()));
+                            "host_whitelist", String.join(",", params.getAllowedQuicHosts()));
                 }
                 if (!params.getEnabledQuicVersions().isEmpty()) {
                     quicParams.put(
@@ -310,8 +310,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                     staleDnsParams.put("enable", params.getEnableStaleDns());
                 }
 
-                if (params.getPersistHostCache() != null) {
-                    staleDnsParams.put("persist_to_disk", params.getPersistHostCache());
+                if (params.isPersistHostCache() != null) {
+                    staleDnsParams.put("persist_to_disk", params.isPersistHostCache());
                 }
 
                 if (params.getPersistHostCachePeriod() != null) {
@@ -366,9 +366,9 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
                 JSONObject quicParams = createDefaultIfAbsent(experimentalOptions, "QUIC");
 
-                if (params.getEnableDefaultNetworkMigration() != null) {
+                if (params.isEnableDefaultNetworkMigration() != null) {
                     quicParams.put("migrate_sessions_on_network_change_v2",
-                            params.getEnableDefaultNetworkMigration());
+                            params.isEnableDefaultNetworkMigration());
                 }
                 if (params.getAllowServerMigration() != null) {
                     quicParams.put("allow_server_migration", params.getAllowServerMigration());
@@ -392,8 +392,8 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                     quicParams.put("max_migrations_to_non_default_network_on_write_error",
                             params.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
                 }
-                if (params.getEnablePathDegradationMigration() != null) {
-                    boolean pathDegradationValue = params.getEnablePathDegradationMigration();
+                if (params.isEnablePathDegradationMigration() != null) {
+                    boolean pathDegradationValue = params.isEnablePathDegradationMigration();
 
                     boolean skipPortMigrationFlag = false;
 
