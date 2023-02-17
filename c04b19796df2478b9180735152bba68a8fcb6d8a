@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f60cb75_a40febb8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-17T13:53:32Z",
+      "side": 1,
+      "message": "These changes cannot be upstreamed because they would break backward compatibility.\n\nHence, we would need to maintain patches for this around forever, unnecessarily increasing the already expensive update procedure.\n\nSo, I would rather lean towards suppressing these error. Dan?",
+      "revId": "c04b19796df2478b9180735152bba68a8fcb6d8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
