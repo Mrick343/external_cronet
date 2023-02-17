@@ -93,6 +93,7 @@ public abstract class HttpEngine {
          *
          * @return User-Agent string.
          */
+        @SuppressLint("GetterOnBuilder")
         public String getDefaultUserAgent() {
             return mBuilderDelegate.getDefaultUserAgent();
         }
@@ -483,14 +484,15 @@ public abstract class HttpEngine {
      * Establishes a new connection to the resource specified by the {@link URL} {@code url}.
      * <p>
      * <b>Note:</b> This {@link java.net.HttpURLConnection} implementation is subject to certain
-     * limitations, see {@link #createURLStreamHandlerFactory} for details.
+     * limitations, see {@link #createUrlStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @return an {@link java.net.HttpURLConnection} instance implemented
      *     by this {@link HttpEngine}.
      * @throws IOException if an error occurs while opening the connection.
      */
-    public abstract URLConnection openConnection(URL url) throws IOException;
+    @SuppressLint("AndroidUri")
+    public abstract URLConnection openConnection(@SuppressLint("AndroidUri") URL url) throws IOException;
 
     /**
      * Creates a {@link URLStreamHandlerFactory} to handle HTTP and HTTPS
@@ -523,7 +525,8 @@ public abstract class HttpEngine {
      * @return an {@link URLStreamHandlerFactory} instance implemented by this
      *         {@link HttpEngine}.
      */
-    public abstract URLStreamHandlerFactory createURLStreamHandlerFactory();
+    @SuppressLint("AndroidUri")
+    public abstract URLStreamHandlerFactory createUrlStreamHandlerFactory();
 
     /**
      * Creates a builder for {@link UrlRequest}. All callbacks for

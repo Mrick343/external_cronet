@@ -189,6 +189,8 @@ public abstract class UrlRequest {
          *         will be called with the thrown exception set as the cause of the
          *         {@link CallbackException}.
          */
+        // SuppressLint: Exception will be wrapped and passed to #onFailed, see above javadoc
+        @SuppressLint("GenericException")
         public abstract void onRedirectReceived(@NonNull UrlRequest request,
                 @NonNull UrlResponseInfo info, @NonNull String newLocationUrl) throws Exception;
 
@@ -209,6 +211,8 @@ public abstract class UrlRequest {
          *         will be called with the thrown exception set as the cause of the
          *         {@link CallbackException}.
          */
+        // SuppressLint: Exception will be wrapped and passed to #onFailed, see above javadoc
+        @SuppressLint("GenericException")
         public abstract void onResponseStarted(@NonNull UrlRequest request,
                 @NonNull UrlResponseInfo info) throws Exception;
 
@@ -234,6 +238,8 @@ public abstract class UrlRequest {
          *         {@link #onFailed} will be called with the thrown exception set as the cause of
          *         the {@link CallbackException}.
          */
+        // SuppressLint: Exception will be wrapped and passed to #onFailed, see above javadoc
+        @SuppressLint("GenericException")
         public abstract void onReadCompleted(@NonNull UrlRequest request,
                 @NonNull UrlResponseInfo info, @NonNull ByteBuffer byteBuffer) throws Exception;
 
@@ -509,6 +515,7 @@ public abstract class UrlRequest {
      * @param listener a {@link StatusListener} that will be invoked with
      *         the request's current status.
      */
+    @SuppressLint("ExecutorRegistration")
     public abstract void getStatus(@NonNull final StatusListener listener);
 
     // Note:  There are deliberately no accessors for the results of the request

@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -126,7 +128,7 @@ public class QuicParams {
     /**
      * See {@link Builder#setInMemoryServerConfigsCacheSize}
      */
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Integer getInMemoryServerConfigsCacheSize() {
         return mInMemoryServerConfigsCacheSize;
     }
