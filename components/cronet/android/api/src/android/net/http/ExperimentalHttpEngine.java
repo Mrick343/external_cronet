@@ -506,7 +506,7 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
 
     @Override
     public abstract ExperimentalUrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor);
+            String url, Executor executor, UrlRequest.Callback callback);
 
     /**
      * Starts NetLog logging to a specified directory with a bounded size. The NetLog will contain
