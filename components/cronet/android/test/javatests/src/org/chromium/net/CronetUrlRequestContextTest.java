@@ -120,7 +120,7 @@ public class CronetUrlRequestContextTest {
             HttpEngine cronetEngine = new HttpEngine.Builder(getContext()).build();
             mCallback = new TestUrlRequestCallback();
             UrlRequest.Builder urlRequestBuilder =
-                    cronetEngine.newUrlRequestBuilder(mUrl, mCallback, mCallback.getExecutor());
+                    cronetEngine.newUrlRequestBuilder(mUrl, mCallback.getExecutor(), mCallback);
             urlRequestBuilder.build().start();
             mCallback.blockForDone();
         }
@@ -173,7 +173,7 @@ public class CronetUrlRequestContextTest {
         assertTrue(NativeTestServer.startNativeTestServer(getContext()));
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder urlRequestBuilder = cronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getEchoHeaderURL(userAgentName), callback, callback.getExecutor());
+                NativeTestServer.getEchoHeaderURL(userAgentName), callback.getExecutor(), callback);
         urlRequestBuilder.build().start();
         callback.blockForDone();
         assertEquals(userAgentValue, callback.mResponseAsString);
@@ -191,7 +191,7 @@ public class CronetUrlRequestContextTest {
         // if there are active requests.
         callback.setAutoAdvance(false);
         UrlRequest.Builder urlRequestBuilder = testFramework.mCronetEngine.newUrlRequestBuilder(
-                mUrl, callback, callback.getExecutor());
+                mUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = urlRequestBuilder.build();
         urlRequest.start();
         try {
@@ -323,7 +323,7 @@ public class CronetUrlRequestContextTest {
         ShutdownTestUrlRequestCallback callback =
                 new ShutdownTestUrlRequestCallback(testFramework.mCronetEngine);
         UrlRequest.Builder urlRequestBuilder = testFramework.mCronetEngine.newUrlRequestBuilder(
-                MOCK_CRONET_TEST_FAILED_URL, callback, callback.getExecutor());
+                MOCK_CRONET_TEST_FAILED_URL, callback.getExecutor(), callback);
         urlRequestBuilder.build().start();
         callback.blockForDone();
         assertTrue(callback.mOnErrorCalled);
@@ -341,7 +341,7 @@ public class CronetUrlRequestContextTest {
         // if there are active requests.
         callback.setAutoAdvance(false);
         UrlRequest.Builder urlRequestBuilder = testFramework.mCronetEngine.newUrlRequestBuilder(
-                mUrl, callback, callback.getExecutor());
+                mUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = urlRequestBuilder.build();
         urlRequest.start();
         try {
@@ -378,7 +378,7 @@ public class CronetUrlRequestContextTest {
 
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 (ExperimentalUrlRequest.Builder) testFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         urlRequestBuilder.bindToNetwork(defaultNetwork.getNetworkHandle());
         UrlRequest urlRequest = urlRequestBuilder.build();
 
@@ -433,7 +433,7 @@ public class CronetUrlRequestContextTest {
         callback.setAutoAdvance(false);
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 (ExperimentalUrlRequest.Builder) testFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         ConnectivityManagerDelegate delegate =
                 new ConnectivityManagerDelegate(getContext());
         Network defaultNetwork = delegate.getDefaultNetwork();

@@ -82,7 +82,7 @@ public class MockCertVerifierTest {
     private TestUrlRequestCallback startAndWaitForComplete(String url) {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                mCronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                mCronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         builder.build().start();
         callback.blockForDone();
         return callback;

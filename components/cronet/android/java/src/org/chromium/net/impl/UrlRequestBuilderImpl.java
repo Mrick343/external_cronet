@@ -77,28 +77,28 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
      * exceptions during shutdown.
      *
      * @param url URL for the generated requests.
-     * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
+     * @param callback callback object that gets invoked on different events.
      * @param cronetEngine {@link HttpEngine} used to execute this request.
      */
-    UrlRequestBuilderImpl(String url, UrlRequest.Callback callback, Executor executor,
+    UrlRequestBuilderImpl(String url, Executor executor, UrlRequest.Callback callback,
             CronetEngineBase cronetEngine) {
         super();
         if (url == null) {
             throw new NullPointerException("URL is required.");
         }
-        if (callback == null) {
-            throw new NullPointerException("Callback is required.");
-        }
         if (executor == null) {
             throw new NullPointerException("Executor is required.");
+        }
+        if (callback == null) {
+            throw new NullPointerException("Callback is required.");
         }
         if (cronetEngine == null) {
             throw new NullPointerException("CronetEngine is required.");
         }
         mUrl = url;
-        mCallback = callback;
         mExecutor = executor;
+        mCallback = callback;
         mCronetEngine = cronetEngine;
     }
 

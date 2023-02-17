@@ -130,7 +130,7 @@ public class RequestFinishedInfoTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 (ExperimentalUrlRequest.Builder) mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         Date startTime = new Date();
         urlRequestBuilder.addRequestAnnotation("request annotation")
                 .addRequestAnnotation(this)
@@ -160,7 +160,7 @@ public class RequestFinishedInfoTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 (ExperimentalUrlRequest.Builder) mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         Date startTime = new Date();
         urlRequestBuilder.addRequestAnnotation("request annotation")
                 .addRequestAnnotation(this)
@@ -192,7 +192,7 @@ public class RequestFinishedInfoTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 (ExperimentalUrlRequest.Builder) mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         Date startTime = new Date();
         urlRequestBuilder.addRequestAnnotation("request annotation")
                 .addRequestAnnotation(this)
@@ -232,7 +232,7 @@ public class RequestFinishedInfoTest {
         mTestFramework.mCronetEngine.addRequestFinishedListener(requestFinishedListener);
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder urlRequestBuilder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                connectionRefusedUrl, callback, callback.getExecutor());
+                connectionRefusedUrl, callback.getExecutor(), callback);
         Date startTime = new Date();
         urlRequestBuilder.build().start();
         callback.blockForDone();
@@ -279,7 +279,7 @@ public class RequestFinishedInfoTest {
         mTestFramework.mCronetEngine.addRequestFinishedListener(requestFinishedListener);
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder urlRequestBuilder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                mUrl, callback, callback.getExecutor());
+                mUrl, callback.getExecutor(), callback);
         UrlRequest request = urlRequestBuilder.build();
         mTestFramework.mCronetEngine.removeRequestFinishedListener(requestFinishedListener);
         request.start();
@@ -305,7 +305,7 @@ public class RequestFinishedInfoTest {
         };
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         Date startTime = new Date();
         urlRequestBuilder.addRequestAnnotation("request annotation")
                 .addRequestAnnotation(this)
@@ -345,7 +345,7 @@ public class RequestFinishedInfoTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         ExperimentalUrlRequest.Builder urlRequestBuilder =
                 mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                        mUrl, callback, callback.getExecutor());
+                        mUrl, callback.getExecutor(), callback);
         // Empty headers are invalid and will cause start() to throw an exception.
         UrlRequest request = urlRequestBuilder.addHeader("", "").build();
         try {

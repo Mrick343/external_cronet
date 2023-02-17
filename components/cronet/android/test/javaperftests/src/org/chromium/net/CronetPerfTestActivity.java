@@ -365,7 +365,7 @@ public class CronetPerfTestActivity extends Activity {
                 };
                 final UrlRequest.Builder builder =
                         mCronetEngine.newUrlRequestBuilder(mUrl.toString(),
-                                new Callback(buffer, completionCallback), mWorkQueueExecutor);
+                                mWorkQueueExecutornew, Callback(buffer, completionCallback));
                 if (mDirection == Direction.UP) {
                     builder.setUploadDataProvider(new Uploader(buffer), mWorkQueueExecutor);
                     builder.addHeader("Content-Type", "application/octet-stream");

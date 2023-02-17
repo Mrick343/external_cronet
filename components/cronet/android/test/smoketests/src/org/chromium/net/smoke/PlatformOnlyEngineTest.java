@@ -56,7 +56,7 @@ public class PlatformOnlyEngineTest {
         assertJavaEngine(mRule.getCronetEngine());
         SmokeTestRequestCallback callback = new SmokeTestRequestCallback();
         UrlRequest.Builder requestBuilder = mRule.getCronetEngine().newUrlRequestBuilder(
-                mURL, callback, callback.getExecutor());
+                mURL, callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
         assertSuccessfulNonEmptyResponse(callback, mURL);

@@ -105,7 +105,7 @@ public class CronetUrlRequestTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         // Create request.
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                url, callback, callback.getExecutor());
+                url, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -141,28 +141,28 @@ public class CronetUrlRequestTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         try {
             mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                    null, callback, callback.getExecutor());
+                    null, callback.getExecutor(), callback);
             fail("URL not null-checked");
         } catch (NullPointerException e) {
             assertEquals("URL is required.", e.getMessage());
         }
         try {
             mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                    NativeTestServer.getRedirectURL(), null, callback.getExecutor());
+                    NativeTestServer.getRedirectURL(), callback.getExecutor(), null);
             fail("Callback not null-checked");
         } catch (NullPointerException e) {
             assertEquals("Callback is required.", e.getMessage());
         }
         try {
             mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                    NativeTestServer.getRedirectURL(), callback, null);
+                    NativeTestServer.getRedirectURL(), null, callback);
             fail("Executor not null-checked");
         } catch (NullPointerException e) {
             assertEquals("Executor is required.", e.getMessage());
         }
         // Verify successful creation doesn't throw.
         mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getRedirectURL(), callback, callback.getExecutor());
+                NativeTestServer.getRedirectURL(), callback.getExecutor(), callback);
     }
 
     @Test
@@ -201,8 +201,8 @@ public class CronetUrlRequestTest {
         // Create builder, start a request, and check if default load_flags are set correctly.
         ExperimentalUrlRequest.Builder builder =
                 (ExperimentalUrlRequest.Builder) mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                        NativeTestServer.getFileURL("/success.txt"), callback,
-                        callback.getExecutor());
+                        NativeTestServer.getFileURL("/success.txt"), callback.getExecutor(),
+                        callback);
         // Disable connection migration.
         if (disableConnectionMigration) builder.disableConnectionMigration();
         UrlRequest urlRequest = builder.build();
@@ -242,7 +242,7 @@ public class CronetUrlRequestTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         callback.setAutoAdvance(false);
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getRedirectURL(), callback, callback.getExecutor());
+                NativeTestServer.getRedirectURL(), callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.waitForNextStep();

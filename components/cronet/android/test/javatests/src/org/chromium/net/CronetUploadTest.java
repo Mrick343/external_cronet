@@ -57,7 +57,7 @@ public class CronetUploadTest {
         // Creates a dummy CronetUrlRequest, which is not used to drive CronetUploadDataStream.
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                "https://dummy.url", callback, callback.getExecutor());
+                "https://dummy.url", callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
 
         mUploadDataStream =

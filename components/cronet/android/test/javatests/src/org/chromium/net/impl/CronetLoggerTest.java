@@ -238,7 +238,7 @@ public final class CronetLoggerTest {
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
-                engine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                engine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest request = requestBuilder.build();
         request.start();
         callback.blockForDone();
@@ -321,11 +321,11 @@ public final class CronetLoggerTest {
 
         TestUrlRequestCallback callback1 = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder1 =
-                engine.newUrlRequestBuilder(url, callback1, callback1.getExecutor());
+                engine.newUrlRequestBuilder(url, callback1.getExecutor(), callback1);
         UrlRequest request1 = requestBuilder1.build();
         TestUrlRequestCallback callback2 = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder2 =
-                engine.newUrlRequestBuilder(url, callback2, callback2.getExecutor());
+                engine.newUrlRequestBuilder(url, callback2.getExecutor(), callback2);
         UrlRequest request2 = requestBuilder2.build();
 
         request1.start();
@@ -358,11 +358,11 @@ public final class CronetLoggerTest {
 
         TestUrlRequestCallback callback1 = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder1 =
-                engine1.newUrlRequestBuilder(url, callback1, callback1.getExecutor());
+                engine1.newUrlRequestBuilder(url, callback1.getExecutor(), callback1);
         UrlRequest request1 = requestBuilder1.build();
         TestUrlRequestCallback callback2 = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder2 =
-                engine2.newUrlRequestBuilder(url, callback2, callback2.getExecutor());
+                engine2.newUrlRequestBuilder(url, callback2.getExecutor(), callback2);
         UrlRequest request2 = requestBuilder2.build();
 
         request1.start();
@@ -391,7 +391,7 @@ public final class CronetLoggerTest {
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
-                engine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                engine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest request = requestBuilder.build();
         request.start();
         callback.blockForDone();
@@ -424,7 +424,7 @@ public final class CronetLoggerTest {
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
-                engine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                engine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest request = requestBuilder.build();
         request.start();
         callback.blockForDone();
@@ -459,7 +459,7 @@ public final class CronetLoggerTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         callback.setAutoAdvance(false);
         UrlRequest.Builder requestBuilder =
-                engine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                engine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest request = requestBuilder.build();
         request.start();
         request.cancel();

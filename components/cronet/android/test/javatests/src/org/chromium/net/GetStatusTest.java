@@ -84,7 +84,7 @@ public class GetStatusTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         callback.setAutoAdvance(false);
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                url, callback, callback.getExecutor());
+                url, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         // Calling before request is started should give Status.INVALID,
         // since the native adapter is not created.
@@ -157,7 +157,7 @@ public class GetStatusTest {
     public void testGetStatusForUpload() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getEchoBodyURL(), callback, callback.getExecutor());
+                NativeTestServer.getEchoBodyURL(), callback.getExecutor(), callback);
 
         final ConditionVariable block = new ConditionVariable();
         // Use a separate executor for UploadDataProvider so the upload can be
