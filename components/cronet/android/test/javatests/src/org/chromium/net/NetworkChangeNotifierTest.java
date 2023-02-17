@@ -74,7 +74,7 @@ public class NetworkChangeNotifierTest {
         for (int i = 0; i < 4; i++) {
             callback = new TestUrlRequestCallback();
             request = testFramework.mCronetEngine
-                              .newUrlRequestBuilder(url, callback, callback.getExecutor())
+                              .newUrlRequestBuilder(url, callback.getExecutor(), callback)
                               .build();
             request.start();
         }

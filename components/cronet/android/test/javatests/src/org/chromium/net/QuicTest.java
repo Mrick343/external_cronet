@@ -103,7 +103,7 @@ public class QuicTest {
         // QUIC will always succeed with a 200 (see
         // net::HttpStreamFactoryImpl::Request::OnStreamFailed).
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(quicURL, callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
 
@@ -146,7 +146,7 @@ public class QuicTest {
         cronetEngine = builder.build();
         TestUrlRequestCallback callback2 = new TestUrlRequestCallback();
         requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback2, callback2.getExecutor());
+                cronetEngine.newUrlRequestBuilder(quicURL, callback2.getExecutor(), callback2);
         requestBuilder.build().start();
         callback2.blockForDone();
         assertEquals(200, callback2.mResponseInfo.getHttpStatusCode());
@@ -195,7 +195,7 @@ public class QuicTest {
         // QUIC will always succeed with a 200 (see
         // net::HttpStreamFactoryImpl::Request::OnStreamFailed).
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(quicURL, callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
 
@@ -262,7 +262,7 @@ public class QuicTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
 
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(quicURL, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(quicURL, callback.getExecutor(), callback);
         Date startTime = new Date();
         requestBuilder.build().start();
         callback.blockForDone();

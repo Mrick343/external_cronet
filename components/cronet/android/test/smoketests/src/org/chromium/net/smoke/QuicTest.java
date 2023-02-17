@@ -68,7 +68,7 @@ public class QuicTest {
             SmokeTestRequestCallback callback = new SmokeTestRequestCallback();
             UrlRequest.Builder requestBuilder =
                     mRule.getCronetEngine().newUrlRequestBuilder(
-                            urlString, callback, callback.getExecutor());
+                            urlString, callback.getExecutor(), callback);
             requestBuilder.build().start();
             callback.blockForDone();
             NativeCronetTestRule.assertSuccessfulNonEmptyResponse(callback, urlString);

@@ -47,7 +47,7 @@ public class Http2Test {
         Assert.assertTrue(mServer.start());
         SmokeTestRequestCallback callback = new SmokeTestRequestCallback();
         UrlRequest.Builder requestBuilder = mRule.getCronetEngine().newUrlRequestBuilder(
-                mServer.getSuccessURL(), callback, callback.getExecutor());
+                mServer.getSuccessURL(), callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
 

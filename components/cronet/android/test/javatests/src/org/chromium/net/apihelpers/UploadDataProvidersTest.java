@@ -76,7 +76,7 @@ public class UploadDataProvidersTest {
     public void testFileProvider() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getRedirectToEchoBody(), callback, callback.getExecutor());
+                NativeTestServer.getRedirectToEchoBody(), callback.getExecutor(), callback);
         UploadDataProvider dataProvider = UploadDataProviders.create(mFile);
         builder.setUploadDataProvider(dataProvider, callback.getExecutor());
         builder.addHeader("Content-Type", "useless/string");
@@ -94,7 +94,7 @@ public class UploadDataProvidersTest {
         assertTrue(descriptor.getFileDescriptor().valid());
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getRedirectToEchoBody(), callback, callback.getExecutor());
+                NativeTestServer.getRedirectToEchoBody(), callback.getExecutor(), callback);
         UploadDataProvider dataProvider = UploadDataProviders.create(descriptor);
         builder.setUploadDataProvider(dataProvider, callback.getExecutor());
         builder.addHeader("Content-Type", "useless/string");
@@ -109,7 +109,7 @@ public class UploadDataProvidersTest {
     public void testBadFileDescriptorProvider() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getRedirectToEchoBody(), callback, callback.getExecutor());
+                NativeTestServer.getRedirectToEchoBody(), callback.getExecutor(), callback);
         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
         try {
             UploadDataProvider dataProvider = UploadDataProviders.create(pipe[0]);
@@ -129,7 +129,7 @@ public class UploadDataProvidersTest {
     public void testBufferProvider() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getRedirectToEchoBody(), callback, callback.getExecutor());
+                NativeTestServer.getRedirectToEchoBody(), callback.getExecutor(), callback);
         UploadDataProvider dataProvider = UploadDataProviders.create(LOREM.getBytes("UTF-8"));
         builder.setUploadDataProvider(dataProvider, callback.getExecutor());
         builder.addHeader("Content-Type", "useless/string");
@@ -147,7 +147,7 @@ public class UploadDataProvidersTest {
     public void testUploadChangeBufferLimit() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getEchoBodyURL(), callback, callback.getExecutor());
+                NativeTestServer.getEchoBodyURL(), callback.getExecutor(), callback);
         builder.addHeader("Content-Type", "useless/string");
         builder.setUploadDataProvider(new UploadDataProvider() {
             private static final String CONTENT = "hello";
@@ -186,7 +186,7 @@ public class UploadDataProvidersTest {
     public void testNoErrorWhenCanceledDuringStart() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getEchoBodyURL(), callback, callback.getExecutor());
+                NativeTestServer.getEchoBodyURL(), callback.getExecutor(), callback);
         final ConditionVariable first = new ConditionVariable();
         final ConditionVariable second = new ConditionVariable();
         builder.addHeader("Content-Type", "useless/string");
@@ -219,7 +219,7 @@ public class UploadDataProvidersTest {
     public void testNoErrorWhenExceptionDuringStart() throws Exception {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder = mTestFramework.mCronetEngine.newUrlRequestBuilder(
-                NativeTestServer.getEchoBodyURL(), callback, callback.getExecutor());
+                NativeTestServer.getEchoBodyURL(), callback.getExecutor(), callback);
         final ConditionVariable first = new ConditionVariable();
         final String exceptionMessage = "Bad Length";
         builder.addHeader("Content-Type", "useless/string");

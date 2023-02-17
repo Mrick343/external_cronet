@@ -79,7 +79,7 @@ public class DiskStorageTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         String url = NativeTestServer.getFileURL("/cacheable.txt");
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest urlRequest = requestBuilder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -142,7 +142,7 @@ public class DiskStorageTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         String url = NativeTestServer.getFileURL("/cacheable.txt");
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest urlRequest = requestBuilder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -183,7 +183,7 @@ public class DiskStorageTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         String url = NativeTestServer.getFileURL("/cacheable.txt");
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest urlRequest = requestBuilder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -209,7 +209,7 @@ public class DiskStorageTest {
         TestUrlRequestCallback callback2 = new TestUrlRequestCallback();
         String url2 = NativeTestServer.getFileURL("/cacheable.txt");
         UrlRequest.Builder requestBuilder2 =
-                engine.newUrlRequestBuilder(url2, callback2, callback2.getExecutor());
+                engine.newUrlRequestBuilder(url2, callback2.getExecutor(), callback2);
         UrlRequest urlRequest2 = requestBuilder2.build();
         urlRequest2.start();
         callback2.blockForDone();
@@ -249,7 +249,7 @@ public class DiskStorageTest {
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         String url = NativeTestServer.getFileURL("/cacheable.txt");
         UrlRequest.Builder requestBuilder =
-                cronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest urlRequest = requestBuilder.build();
         urlRequest.start();
         callback.blockForDone();

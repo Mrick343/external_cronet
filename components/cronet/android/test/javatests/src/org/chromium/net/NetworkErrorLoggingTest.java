@@ -63,7 +63,7 @@ public class NetworkErrorLoggingTest {
         String url = Http2TestServer.getReportingCollectorUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
-                mCronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                mCronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         TestUploadDataProvider dataProvider = new TestUploadDataProvider(
                 TestUploadDataProvider.SuccessCallbackMode.SYNC, callback.getExecutor());
         dataProvider.addRead("[{\"type\": \"test_report\"}]".getBytes());
@@ -90,7 +90,7 @@ public class NetworkErrorLoggingTest {
         String url = Http2TestServer.getSuccessWithNELHeadersUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
-                mCronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                mCronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
         assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
@@ -152,7 +152,7 @@ public class NetworkErrorLoggingTest {
         String url = Http2TestServer.getEchoMethodUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
-                mCronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                mCronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
         assertEquals(200, callback.mResponseInfo.getHttpStatusCode());

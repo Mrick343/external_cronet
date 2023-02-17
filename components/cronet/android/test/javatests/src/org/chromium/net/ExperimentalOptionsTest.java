@@ -98,7 +98,7 @@ public class ExperimentalOptionsTest {
         String url = Http2TestServer.getEchoMethodUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                cronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -126,7 +126,7 @@ public class ExperimentalOptionsTest {
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                cronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(url, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -213,7 +213,7 @@ public class ExperimentalOptionsTest {
         // Do a request for the test URL to make sure it's cached.
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                context.newUrlRequestBuilder(testUrl, callback, callback.getExecutor());
+                context.newUrlRequestBuilder(testUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -227,7 +227,7 @@ public class ExperimentalOptionsTest {
         // Use the test URL without creating a new cache entry first. It should use the persisted
         // one.
         callback = new TestUrlRequestCallback();
-        builder = context.newUrlRequestBuilder(testUrl, callback, callback.getExecutor());
+        builder = context.newUrlRequestBuilder(testUrl, callback.getExecutor(), callback);
         urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();

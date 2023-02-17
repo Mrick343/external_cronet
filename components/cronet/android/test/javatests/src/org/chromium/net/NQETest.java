@@ -115,7 +115,7 @@ public class NQETest {
         }
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                cronetEngine.newUrlRequestBuilder(mUrl, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(mUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
 
         urlRequest.start();
@@ -142,7 +142,7 @@ public class NQETest {
         cronetEngine.removeRttListener(rttListener);
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                cronetEngine.newUrlRequestBuilder(mUrl, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(mUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -202,7 +202,7 @@ public class NQETest {
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                cronetEngine.newUrlRequestBuilder(mUrl, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(mUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
@@ -318,7 +318,7 @@ public class NQETest {
 
             TestUrlRequestCallback callback = new TestUrlRequestCallback();
             UrlRequest.Builder builder =
-                    cronetEngine.newUrlRequestBuilder(mUrl, callback, callback.getExecutor());
+                    cronetEngine.newUrlRequestBuilder(mUrl, callback.getExecutor(), callback);
             UrlRequest urlRequest = builder.build();
             urlRequest.start();
             callback.blockForDone();
@@ -386,7 +386,7 @@ public class NQETest {
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
-                cronetEngine.newUrlRequestBuilder(mUrl, callback, callback.getExecutor());
+                cronetEngine.newUrlRequestBuilder(mUrl, callback.getExecutor(), callback);
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();

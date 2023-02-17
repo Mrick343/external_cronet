@@ -178,7 +178,7 @@ public class CronetSampleActivity extends Activity {
 
         Executor executor = Executors.newSingleThreadExecutor();
         UrlRequest.Callback callback = new SimpleUrlRequestCallback();
-        UrlRequest.Builder builder = mCronetEngine.newUrlRequestBuilder(url, callback, executor);
+        UrlRequest.Builder builder = mCronetEngine.newUrlRequestBuilder(url, executor, callback);
         applyPostDataToUrlRequestBuilder(builder, executor, postData);
         builder.build().start();
     }

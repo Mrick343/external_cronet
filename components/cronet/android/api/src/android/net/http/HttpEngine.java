@@ -524,9 +524,9 @@ public abstract class HttpEngine {
      * operations and causing exceptions during shutdown.
      *
      * @param url URL for the generated requests.
-     * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
+     * @param callback callback object that gets invoked on different events.
      */
     public abstract UrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor);
+            String url, Executor executor, UrlRequest.Callback callback);
 }

@@ -80,7 +80,7 @@ Make a request like this:
     Executor executor = Executors.newSingleThreadExecutor();
     MyCallback callback = new MyCallback();
     UrlRequest.Builder requestBuilder = engine.newUrlRequestBuilder(
-            "https://www.example.com", callback, executor);
+            "https://www.example.com", executor, callback);
     UrlRequest request = requestBuilder.build();
     request.start();
 
