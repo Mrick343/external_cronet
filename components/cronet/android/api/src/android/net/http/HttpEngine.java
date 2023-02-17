@@ -106,6 +106,7 @@ public abstract class HttpEngine {
          * @param userAgent the User-Agent string to use for all requests.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setUserAgent(String userAgent) {
             mBuilderDelegate.setUserAgent(userAgent);
             return this;
@@ -122,6 +123,7 @@ public abstract class HttpEngine {
          * @param value path to existing directory.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setStoragePath(String value) {
             mBuilderDelegate.setStoragePath(value);
             return this;
@@ -134,6 +136,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable QUIC, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setEnableQuic(boolean value) {
             mBuilderDelegate.enableQuic(value);
             return this;
@@ -145,6 +148,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable HTTP/2, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setEnableHttp2(boolean value) {
             mBuilderDelegate.enableHttp2(value);
             return this;
@@ -157,6 +161,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable Brotli, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setEnableBrotli(boolean value) {
             mBuilderDelegate.enableBrotli(value);
             return this;
@@ -197,6 +202,7 @@ public abstract class HttpEngine {
          * exceeded at times).
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setEnableHttpCache(int cacheMode, long maxSize) {
             mBuilderDelegate.enableHttpCache(cacheMode, maxSize);
             return this;
@@ -213,6 +219,7 @@ public abstract class HttpEngine {
          * @param alternatePort alternate port to use for QUIC.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder addQuicHint(String host, int port, int alternatePort) {
             mBuilderDelegate.addQuicHint(host, port, alternatePort);
             return this;
@@ -259,6 +266,7 @@ public abstract class HttpEngine {
          *                                  contains a byte array that does not represent a valid
          *                                  SHA-256 hash.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
                 boolean includeSubdomains, Instant expirationInstant) {
             mBuilderDelegate.addPublicKeyPins(
@@ -279,6 +287,7 @@ public abstract class HttpEngine {
          * @param value {@code true} to enable the bypass, {@code false} to disable.
          * @return the builder to facilitate chaining.
          */
+        @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setEnablePublicKeyPinningBypassForLocalTrustAnchors(boolean value) {
             mBuilderDelegate.enablePublicKeyPinningBypassForLocalTrustAnchors(value);
             return this;
@@ -293,7 +302,7 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
-        @QuicParams.Experimental
+        @QuicParams.Experimental @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setQuicParams(QuicParams quicParams) {
             mBuilderDelegate.setQuicParams(quicParams);
             return this;
@@ -317,7 +326,7 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
-        @DnsParams.Experimental
+        @DnsParams.Experimental @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setDnsParams(DnsParams dnsParams) {
             mBuilderDelegate.setDnsParams(dnsParams);
             return this;
@@ -342,7 +351,7 @@ public abstract class HttpEngine {
          *
          * @return the builder to facilitate chaining.
          */
-        @ConnectionMigrationParams.Experimental
+        @ConnectionMigrationParams.Experimental @SuppressLint("MissingGetterMatchingBuilder")
         public Builder setConnectionMigrationParams(
                 ConnectionMigrationParams connectionMigrationParams) {
             mBuilderDelegate.setConnectionMigrationParams(connectionMigrationParams);

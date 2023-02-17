@@ -223,6 +223,21 @@ public final class CronetUrlRequest extends UrlRequestBase {
     }
 
     @Override
+    public String getHttpMethod() {
+        return mInitialMethod;
+    }
+
+    @Override
+    public boolean isDisableCache() {
+        return mDisableCache;
+    }
+
+    @Override
+    public boolean isAllowDirectExecutor() {
+        return mAllowDirectExecutor;
+    }
+
+    @Override
     public void start() {
         synchronized (mUrlRequestAdapterLock) {
             checkNotStarted();
