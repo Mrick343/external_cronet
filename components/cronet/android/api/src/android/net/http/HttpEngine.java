@@ -524,9 +524,17 @@ public abstract class HttpEngine {
      * operations and causing exceptions during shutdown.
      *
      * @param url URL for the generated requests.
-     * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
+     * @param callback callback object that gets invoked on different events.
      */
     public abstract UrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor);
+            String url, Executor executor, UrlRequest.Callback callback);
+
+    // TODO(motomuman) Remove this API
+    // This API is kept since this API is used in internal master and removing this makes presubmit
+    // fail. Once internal use is replaced by above API, this API will be removed
+    public UrlRequest.Builder newUrlRequestBuilder(String url, UrlRequest.Callback callback,
+            @SuppressLint("ListenerLast") Executor executor) {
+                return newUrlRequestBuilder(url, executor, callback);
+    }
 }
