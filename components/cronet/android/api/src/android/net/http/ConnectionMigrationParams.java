@@ -50,7 +50,7 @@ public class ConnectionMigrationParams {
      * See {@link Builder#setEnableDefaultNetworkMigration}
      */
     @Nullable
-    public Boolean getEnableDefaultNetworkMigration() {
+    public Boolean isEnableDefaultNetworkMigration() {
         return mEnableDefaultNetworkMigration;
     }
 
@@ -58,7 +58,7 @@ public class ConnectionMigrationParams {
      * See {@link Builder#setEnablePathDegradationMigration}
      */
     @Nullable
-    public Boolean getEnablePathDegradationMigration() {
+    public Boolean isEnablePathDegradationMigration() {
         return mEnablePathDegradationMigration;
     }
 

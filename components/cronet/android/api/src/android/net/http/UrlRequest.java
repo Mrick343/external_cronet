@@ -58,7 +58,7 @@ public abstract class UrlRequest {
          * @param value header value.
          * @return the builder to facilitate chaining.
          */
-        @NonNull
+        @NonNull @SuppressLint("MissingGetterMatchingBuilder")
         public abstract Builder addHeader(@NonNull String header, @NonNull String value);
 
         /**
@@ -102,7 +102,7 @@ public abstract class UrlRequest {
          *         {@link #REQUEST_PRIORITY_IDLE REQUEST_PRIORITY_*} values.
          * @return the builder to facilitate chaining.
          */
-        @NonNull
+        @NonNull @SuppressLint("MissingGetterMatchingBuilder")
         public abstract Builder setPriority(int priority);
 
         /**
@@ -116,7 +116,7 @@ public abstract class UrlRequest {
          *     {@code Executor} the request itself is using.
          * @return the builder to facilitate chaining.
          */
-        @NonNull
+        @NonNull @SuppressLint("MissingGetterMatchingBuilder")
         public abstract Builder setUploadDataProvider(
                 @NonNull UploadDataProvider uploadDataProvider, @NonNull Executor executor);
 
@@ -453,6 +453,29 @@ public abstract class UrlRequest {
          */
         void onStatus(@UrlRequestStatus int status);
     }
+
+    /**
+     * Get the HTTP method verb to use for this request. See {@link Builder#setHttpMethod}
+     *
+     * @return HTTP method
+     */
+    @Nullable
+    public abstract String getHttpMethod();
+
+    /**
+     * Get Whether to disable cache for the request. See {@link Builder#setDisableCache}
+     *
+     * @return {@code true} to disable cache, {@code false} otherwise.
+     */
+    public abstract boolean isDisableCache();
+
+    /**
+     * Get whether the executors this request will use to notify callbacks is allowed to perform
+     * inline execution. See {@link Builder#setAllowDirectExecutor}
+     *
+     * @return {@code true} to allow executors performing inline execution, {@code false} otherwise.
+     */
+    public abstract boolean isAllowDirectExecutor();
 
     /**
      * Starts the request, all callbacks go to {@link Callback}. May only be called

@@ -89,7 +89,7 @@ public class QuicParams {
      * See {@link Builder#addAllowedQuicHost}
      */
     @NonNull
-    public Set<String> getQuicHostAllowlist() {
+    public Set<String> getAllowedQuicHosts() {
         return mQuicHostAllowlist;
     }
 
