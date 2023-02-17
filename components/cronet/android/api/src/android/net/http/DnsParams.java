@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import android.annotation.SuppressLint;
 import android.os.Build.VERSION_CODES;
 
 import androidx.annotation.Nullable;
@@ -71,7 +72,7 @@ public final class DnsParams {
     /**
      * See {@link Builder#setPersistHostCache}
      */
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean isPersistHostCache() {
         return mPersistHostCache;
     }

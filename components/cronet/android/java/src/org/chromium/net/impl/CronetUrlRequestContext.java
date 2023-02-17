@@ -604,7 +604,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     @Override
-    public URLStreamHandlerFactory createURLStreamHandlerFactory() {
+    public URLStreamHandlerFactory createUrlStreamHandlerFactory() {
         return new CronetURLStreamHandlerFactory(this);
     }
 
