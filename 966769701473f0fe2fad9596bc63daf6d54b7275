@@ -93,6 +93,30 @@
       },
       "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59fc9609_98ff5597",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-17T09:37:27Z",
+      "side": 1,
+      "message": "Resolved.",
+      "parentUuid": "5e8edb36_5d927000",
+      "range": {
+        "startLine": 263,
+        "startChar": 28,
+        "endLine": 263,
+        "endChar": 37
+      },
+      "revId": "966769701473f0fe2fad9596bc63daf6d54b7275",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
