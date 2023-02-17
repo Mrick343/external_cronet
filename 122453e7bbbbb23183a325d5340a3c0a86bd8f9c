@@ -435,6 +435,30 @@
       },
       "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e27c6fd3_b80f85f3",
+        "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetHttpURLConnection.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-17T14:52:12Z",
+      "side": 1,
+      "message": "I\u0027m fine keeping this as is, I\u0027d express my opinion more explicitly if I felt strongly about this :).\n\nResolving.",
+      "parentUuid": "caf4d1c4_0bad3f04",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 56
+      },
+      "revId": "122453e7bbbbb23183a325d5340a3c0a86bd8f9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
