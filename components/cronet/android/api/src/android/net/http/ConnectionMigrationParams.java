@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.Nullable;
 
 import java.time.Duration;
@@ -49,7 +51,7 @@ public class ConnectionMigrationParams {
     /**
      * See {@link Builder#setEnableDefaultNetworkMigration}
      */
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getEnableDefaultNetworkMigration() {
         return mEnableDefaultNetworkMigration;
     }
@@ -57,7 +59,7 @@ public class ConnectionMigrationParams {
     /**
      * See {@link Builder#setEnablePathDegradationMigration}
      */
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getEnablePathDegradationMigration() {
         return mEnablePathDegradationMigration;
     }
@@ -99,7 +101,7 @@ public class ConnectionMigrationParams {
      * See {@link Builder#setAllowNonDefaultNetworkUsage}
      */
     @Experimental
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getAllowNonDefaultNetworkUsage() {
         return mAllowNonDefaultNetworkUsage;
     }
