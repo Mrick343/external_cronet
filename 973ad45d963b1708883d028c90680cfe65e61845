@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91dfaa79_61f19bd6",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/BidirectionalStreamBuilderImpl.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T10:07:54Z",
+      "side": 1,
+      "message": "Was this automated or done by hand? I chuckled at going the extra mile for handling the parameters in order :).",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "009d79c2_56f1ccd9",
+        "filename": "patches/local/0031-cronet-Fix-ListenerLast-API-linter-error.patch",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T10:07:54Z",
+      "side": 1,
+      "message": "Should this be moved to upstream-next?",
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
