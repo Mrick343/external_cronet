@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "870addfd_0c15513b",
+        "filename": "components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T09:59:34Z",
+      "side": 1,
+      "message": "Ditto about renaming non-public bits.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 60
+      },
+      "revId": "901ae3849a1abdb6989ecf4135b6b801af77cc0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

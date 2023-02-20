@@ -46,6 +46,30 @@
       },
       "revId": "e5b43923e4c10d80a4a2a2ccae357260f1b07780",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9369176f_6e434baf",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T09:59:34Z",
+      "side": 1,
+      "message": "I commented on this in more detail on the other CL. Please let\u0027s not rename things which are not part of the public API. Let\u0027s remember that the primary surface of Cronet people will develop is still in Chromium, at least for the time being. As a result, naming self-consistence within AOSP isn\u0027t as important as ease of merging Chromium and AOSP. Renaming internal classes makes the local patch larger which increases likelihood of merge conflicts, and doesn\u0027t help solving the API linter issues anyhow.",
+      "parentUuid": "f6266371_5cc87b5f",
+      "range": {
+        "startLine": 359,
+        "startChar": 51,
+        "endLine": 359,
+        "endChar": 58
+      },
+      "revId": "e5b43923e4c10d80a4a2a2ccae357260f1b07780",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
