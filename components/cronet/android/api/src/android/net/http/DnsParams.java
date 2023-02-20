@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import android.annotation.SuppressLint;
 import android.os.Build.VERSION_CODES;
 
 import androidx.annotation.Nullable;
@@ -63,7 +64,8 @@ public final class DnsParams {
     /**
      * See {@link Builder#setUseHttpStackDnsResolver}
      */
-    @Nullable
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getUseHttpStackDnsResolver() {
         return mUseHttpStackDnsResolver;
     }
@@ -71,7 +73,8 @@ public final class DnsParams {
     /**
      * See {@link Builder#setPersistHostCache}
      */
-    @Nullable
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getPersistHostCache() {
         return mPersistHostCache;
     }
@@ -79,8 +82,9 @@ public final class DnsParams {
     /**
      * See {@link Builder#setEnableStaleDns}
      */
+    // SuppressLint since return value is @Nullable
     @Experimental
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getEnableStaleDns() {
         return mEnableStaleDns;
     }
@@ -88,7 +92,8 @@ public final class DnsParams {
     /**
      * See {@link Builder#setPersistHostCachePeriod}
      */
-    @Nullable
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Duration getPersistHostCachePeriod() {
         return mPersistHostCachePeriod;
     }
@@ -96,8 +101,9 @@ public final class DnsParams {
     /**
      * See {@link Builder#setPreestablishConnectionsToStaleDnsResults}
      */
+    // SuppressLint since return value is @Nullable
     @Experimental
-    @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
     public Boolean getPreestablishConnectionsToStaleDnsResults() {
         return mPreestablishConnectionsToStaleDnsResults;
     }
@@ -141,22 +147,26 @@ public final class DnsParams {
      */
     @Experimental
     public static class StaleDnsParams {
-        @Nullable
+        // SuppressLint since return value is @Nullable
+        @Nullable @SuppressLint("AutoBoxing")
         public Long getFreshLookupTimeoutMillis() {
             return mFreshLookupTimeoutMillis;
         }
 
-        @Nullable
+        // SuppressLint since return value is @Nullable
+        @Nullable @SuppressLint("AutoBoxing")
         public Long getMaxExpiredDelayMillis() {
             return mMaxExpiredDelayMillis;
         }
 
-        @Nullable
+        // SuppressLint since return value is @Nullable
+        @Nullable @SuppressLint("AutoBoxing")
         public Boolean getAllowCrossNetworkUsage() {
             return mAllowCrossNetworkUsage;
         }
 
-        @Nullable
+        // SuppressLint since return value is @Nullable
+        @Nullable @SuppressLint("AutoBoxing")
         public Boolean getUseStaleOnNameNotResolved() {
             return mUseStaleOnNameNotResolved;
         }
