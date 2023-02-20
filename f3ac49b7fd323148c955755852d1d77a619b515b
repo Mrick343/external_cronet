@@ -34,6 +34,24 @@
       "parentUuid": "98430db6_8767f33d",
       "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3d5e310_be06db7f",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T09:50:00Z",
+      "side": 1,
+      "message": "\u003e As in, change that to always pass an empty string and make this @NonNull\n\nI\u0027d actually prefer this the other way round if possible - return null if no proxy was used instead of an empty string, and perhaps make the return type a proper Proxy object if it was used. Null is IMO a more expressive way of expressing \"nothing\" compared to a default value.",
+      "parentUuid": "688e9575_563f2363",
+      "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
