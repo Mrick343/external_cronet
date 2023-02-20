@@ -103,8 +103,10 @@ def _Generate(java_file_paths,
         signature_to_cases, namespace)
 
   if header_path:
-    combined_dict['HEADER_GUARD'] = \
-        os.path.splitext(header_path)[0].replace('/', '_').replace('.', '_').upper() + '_'
+    head_guard = os.path.splitext(header_path)[0].upper() + '_'
+    for c in ('/', '.', '-'):
+        head_guard = head_guard.replace(c, "_")
+    combined_dict['HEADER_GUARD'] = head_guard
     combined_dict['NAMESPACE'] = namespace
     header_content = CreateFromDict(
         combined_dict,
