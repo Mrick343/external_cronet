@@ -16,6 +16,24 @@
       "message": "Does changing from abstract class to interface affect the generated Java bytecode (for the virtual calls)?\n\nIf so, this would break backward compatibility. Though, this should be relatively straightforward to maintain as an off-tree patch, so it might be fine?",
       "revId": "36409199d592e417fbca16ba24abc36c50197201",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff8335fd_63ad7484",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T09:38:46Z",
+      "side": 1,
+      "message": "I doubt this is a bytecode compatible change. Invoking interface methods uses a different bytecode instruction ([invokeinterface](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.invokeinterface) vs [invokevirtual](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.invokevirtual).\n\nLet\u0027s keep this as a local patch.",
+      "parentUuid": "6d6df9e3_25f56e26",
+      "revId": "36409199d592e417fbca16ba24abc36c50197201",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
