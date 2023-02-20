@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "09da2860_d8af4b75",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T10:27:13Z",
+      "side": 1,
+      "message": "This is correct, though it\u0027s only relevant for the implementation in Chromium. My interpretation of patches under upstream-next is \"this can be deleted once we import the new version from Chromium which implements the functionality\", not \"this can be copied verbatim to Chromium and it\u0027ll just work\".\n\nApologies if my understanding isn\u0027t right.",
+      "parentUuid": "cc4e465a_e3d7a478",
+      "range": {
+        "startLine": 276,
+        "startChar": 4,
+        "endLine": 276,
+        "endChar": 80
+      },
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "009d79c2_56f1ccd9",
         "filename": "patches/local/0031-cronet-Fix-ListenerLast-API-linter-error.patch",
         "patchSetId": 13
