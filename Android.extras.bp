@@ -11,3 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+java_library {
+    // Don't change the name of the module.
+    name: "cronet_aml_api_java",
+    srcs: [
+        ":cronet_aml_api_sources",
+    ],
+    libs: [
+        "androidx.annotation_annotation",
+        "framework-annotations-lib",
+        "framework-connectivity.stubs.module_lib",
+    ],
+    sdk_version: "module_current",
+}
