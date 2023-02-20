@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ee9073c_fd4d734e",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T10:03:18Z",
+      "side": 1,
+      "message": "Nit: Comment that this (and below) is for interface parity with j.n.UrlConnection APIs?",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 484,
+        "endChar": 31
+      },
+      "revId": "7984faf03ae3ed5c34daced540c854d87e642274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
