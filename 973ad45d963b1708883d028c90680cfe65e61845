@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cc4e465a_e3d7a478",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-20T10:19:58Z",
+      "side": 1,
+      "message": "If we plan on upstreaming this, we also need to duplicate these methods, or even better implement the new methods on top of the old one (this way the implementation code will stay the same). \n\nIf we keep things as they are the implementation won\u0027t be backward compatible: in non-AOSP Cronet people can end up having an API which is older than the implementation.\n\nThis means that the following situation is possible: code calling into the old API code (with just the old signature) but with a recent implementation. As things stand, since the recent implementation doesn\u0027t implement the old signature method, the call will fail at runtime.",
+      "range": {
+        "startLine": 276,
+        "startChar": 4,
+        "endLine": 276,
+        "endChar": 80
+      },
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "009d79c2_56f1ccd9",
         "filename": "patches/local/0031-cronet-Fix-ListenerLast-API-linter-error.patch",
         "patchSetId": 13
