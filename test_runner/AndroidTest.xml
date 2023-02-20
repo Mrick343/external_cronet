@@ -23,7 +23,7 @@
     </target_preparer>
     <target_preparer class="com.android.tradefed.targetprep.RunCommandTargetPreparer">
         <option name="run-command" value="settings put global hidden_api_policy 1" />
-        <option name="teardown-command" value="settings put global hidden_api_policy" />
+        <option name="teardown-command" value="settings put global hidden_api_policy 0" />
         <option name="throw-if-cmd-fail" value="true" />
     </target_preparer>
     <target_preparer class="com.android.tradefed.targetprep.RunCommandTargetPreparer">
@@ -39,6 +39,16 @@
     <target_preparer class="com.android.tradefed.targetprep.suite.SuiteApkInstaller">
         <option name="cleanup-apks" value="true" />
         <option name="test-file-name" value="cronet_tester_app.apk" />
+    </target_preparer>
+    <target_preparer class="com.android.tradefed.targetprep.PushFilePreparer">
+        <option name="push-file" key="cert_net_fetcher_impl_unittest" value="/data/local/tmp/net/data/cert_net_fetcher_impl_unittest/" />
+        <option name="push-file" key="dns" value="/data/local/tmp/net/data/dns/" />
+        <option name="push-file" key="ov_name_constraints" value="/data/local/tmp/net/data/ov_name_constraints/" />
+        <option name="push-file" key="parse_certificate_unittest" value="/data/local/tmp/net/data/parse_certificate_unittest/" />
+        <option name="push-file" key="ssl" value="/data/local/tmp/net/data/ssl/" />
+        <option name="push-file" key="url_request_unittest" value="/data/local/tmp/net/data/url_request_unittest/" />
+        <option name="push-file" key="websocket" value="/data/local/tmp/net/data/websocket/" />
+        <option name="cleanup" value="true" />
     </target_preparer>
     <test class="com.android.tradefed.testtype.HostTest" >
         <option name="jar" value="cronet_host_tester.jar" />

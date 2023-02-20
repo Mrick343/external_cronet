@@ -19,7 +19,7 @@ import org.chromium.build.NativeLibraries;
  */
 public class NativeUnitTest extends NativeTest {
     private static final String TAG = "NativeTest";
-    private static final String[] LIBRARIES = {"cronet_aml_components_cronet_android_cronet_unittests_android__library"};
+    private static final String[] LIBRARIES = {"cronet_aml_net_net_unittests__library"};
     private static class NativeUnitTestLibraryLoader extends LibraryLoader {
         static void setLibrariesLoaded() {
             LibraryLoader.setLibrariesLoadedForNativeTests();

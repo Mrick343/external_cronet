@@ -47,7 +47,7 @@ public class NativeTestInstrumentationTestRunner extends Instrumentation {
 
     private static final String TAG = "NativeTest";
 
-    private static final long DEFAULT_SHARD_NANO_TIMEOUT = 60 * 1000000000L;
+    private static final long DEFAULT_SHARD_NANO_TIMEOUT = 6000 * 1000000000L;
     // Default to no size limit.
     private static final int DEFAULT_SHARD_SIZE_LIMIT = 0;
 

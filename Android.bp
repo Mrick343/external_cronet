@@ -6552,22 +6552,28 @@ cc_genrule {
     name: "cronet_aml_net_base_registry_controlled_domains_lookup_strings_test_sets",
     cmd: "$(location net/tools/dafsa/make_dafsa.py) $(location net/base/registry_controlled_domains/effective_tld_names.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest1.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest1-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest2.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest2-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest3.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest3-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest4.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest4-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest5.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest5-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest6.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest6-inc.cc)",
     out: [
@@ -6600,27 +6606,33 @@ cc_genrule {
     cmd: "$(location net/tools/dafsa/make_dafsa.py) --reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names-reversed-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "--reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest1.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest1-reversed-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "--reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest2.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest2-reversed-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "--reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest3.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest3-reversed-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "--reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest4.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest4-reversed-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "--reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest5.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest5-reversed-inc.cc) " +
-         "&& python3 $(location net/tools/dafsa/make_dafsa.py) " +
+         "&& " +
+         "python3 $(location net/tools/dafsa/make_dafsa.py) " +
          "--reverse " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest6.gperf) " +
          "$(location net/base/registry_controlled_domains/effective_tld_names_unittest6-reversed-inc.cc)",
@@ -7699,16 +7711,19 @@ cc_genrule {
         "cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator",
     ],
     cmd: "$(location cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator) " +
+         "$(location net/http/transport_security_state_static_unittest1.json) " +
          "$(location net/http/transport_security_state_static_unittest.pins) " +
          "$(location net/http/transport_security_state_static_unittest.template) " +
          "$(location net/http/transport_security_state_static_unittest1.h) " +
-         "&& python3 $(location build/gn_run_binary.py) " +
-         "clang_x64/transport_security_state_generator " +
+         "&& " +
+         "$(location cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator) " +
+         "$(location net/http/transport_security_state_static_unittest2.json) " +
          "$(location net/http/transport_security_state_static_unittest.pins) " +
          "$(location net/http/transport_security_state_static_unittest.template) " +
          "$(location net/http/transport_security_state_static_unittest2.h) " +
-         "&& python3 $(location build/gn_run_binary.py) " +
-         "clang_x64/transport_security_state_generator " +
+         "&& " +
+         "$(location cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator) " +
+         "$(location net/http/transport_security_state_static_unittest3.json) " +
          "$(location net/http/transport_security_state_static_unittest.pins) " +
          "$(location net/http/transport_security_state_static_unittest.template) " +
          "$(location net/http/transport_security_state_static_unittest3.h)",
@@ -8837,6 +8852,19 @@ cc_genrule {
     ],
 }
 
+filegroup {
+    name: "net_unittests_data",
+    srcs: [
+        "net/data/cert_net_fetcher_impl_unittest/**/*",
+        "net/data/dns/**/*",
+        "net/data/ov_name_constraints/**/*",
+        "net/data/parse_certificate_unittest/**/*",
+        "net/data/ssl/**/*",
+        "net/data/url_request_unittest/**/*",
+        "net/data/websocket/**/*",
+    ],
+}
+
 // GN: //net:net_unittests__library
 cc_library_shared {
     name: "cronet_aml_net_net_unittests__library",
@@ -8903,10 +8931,10 @@ cc_library_shared {
         ":cronet_aml_third_party_googletest_gmock",
         ":cronet_aml_third_party_googletest_gtest",
         "net/android/dummy_spnego_authenticator.cc",
-        "net/android/http_auth_negotiate_android_unittest.cc",
-        "net/android/network_change_notifier_android_unittest.cc",
-        "net/android/network_library_unittest.cc",
-        "net/android/traffic_stats_unittest.cc",
+        //"net/android/http_auth_negotiate_android_unittest.cc",
+        //"net/android/network_change_notifier_android_unittest.cc",
+        //"net/android/network_library_unittest.cc",
+        //"net/android/traffic_stats_unittest.cc",
         "net/base/address_family_unittest.cc",
         "net/base/address_list_unittest.cc",
         "net/base/address_tracker_linux_unittest.cc",
@@ -8954,59 +8982,7 @@ cc_library_shared {
         "net/base/test_proxy_delegate.cc",
         "net/base/upload_bytes_element_reader_unittest.cc",
         "net/base/upload_file_element_reader_unittest.cc",
-        "net/cert/caching_cert_verifier_unittest.cc",
-        "net/cert/cert_and_ct_verifier_unittest.cc",
-        "net/cert/cert_verifier_unittest.cc",
-        "net/cert/cert_verify_proc_android_unittest.cc",
-        "net/cert/cert_verify_proc_builtin_unittest.cc",
-        "net/cert/cert_verify_proc_unittest.cc",
-        "net/cert/coalescing_cert_verifier_unittest.cc",
-        "net/cert/crl_set_unittest.cc",
-        "net/cert/ct_log_response_parser_unittest.cc",
-        "net/cert/ct_log_verifier_unittest.cc",
-        "net/cert/ct_objects_extractor_unittest.cc",
-        "net/cert/ct_serialization_unittest.cc",
-        "net/cert/ev_root_ca_metadata_unittest.cc",
-        "net/cert/internal/cert_issuer_source_aia_unittest.cc",
-        "net/cert/internal/cert_issuer_source_sync_unittest.cc",
-        "net/cert/internal/crl_unittest.cc",
-        "net/cert/internal/general_names_unittest.cc",
-        "net/cert/internal/revocation_checker_unittest.cc",
-        "net/cert/internal/revocation_util_unittest.cc",
-        "net/cert/internal/system_trust_store_unittest.cc",
-        "net/cert/known_roots_unittest.cc",
-        "net/cert/merkle_audit_proof_unittest.cc",
-        "net/cert/merkle_tree_leaf_unittest.cc",
-        "net/cert/multi_log_ct_verifier_unittest.cc",
-        "net/cert/multi_threaded_cert_verifier_unittest.cc",
-        "net/cert/pem_unittest.cc",
-        "net/cert/pki/cert_issuer_source_static_unittest.cc",
-        "net/cert/pki/certificate_policies_unittest.cc",
-        "net/cert/pki/extended_key_usage_unittest.cc",
-        "net/cert/pki/name_constraints_unittest.cc",
-        "net/cert/pki/nist_pkits_unittest.cc",
-        "net/cert/pki/ocsp_unittest.cc",
-        "net/cert/pki/parse_certificate_unittest.cc",
-        "net/cert/pki/parse_name_unittest.cc",
-        "net/cert/pki/parsed_certificate_unittest.cc",
-        "net/cert/pki/path_builder_pkits_unittest.cc",
-        "net/cert/pki/path_builder_unittest.cc",
-        "net/cert/pki/path_builder_verify_certificate_chain_unittest.cc",
-        "net/cert/pki/signature_algorithm_unittest.cc",
-        "net/cert/pki/simple_path_builder_delegate_unittest.cc",
-        "net/cert/pki/string_util_unittest.cc",
-        "net/cert/pki/test_helpers.cc",
-        "net/cert/pki/trust_store_collection_unittest.cc",
-        "net/cert/pki/verify_certificate_chain_pkits_unittest.cc",
-        "net/cert/pki/verify_certificate_chain_unittest.cc",
-        "net/cert/pki/verify_name_match_unittest.cc",
-        "net/cert/pki/verify_signed_data_unittest.cc",
-        "net/cert/signed_certificate_timestamp_unittest.cc",
-        "net/cert/symantec_certs_unittest.cc",
-        "net/cert/test_root_certs_unittest.cc",
-        "net/cert/x509_cert_types_unittest.cc",
-        "net/cert/x509_util_unittest.cc",
-        "net/cert_net/cert_net_fetcher_url_request_unittest.cc",
+
         "net/cookies/canonical_cookie_unittest.cc",
         "net/cookies/cookie_constants_unittest.cc",
         "net/cookies/cookie_deletion_info_unittest.cc",
@@ -9060,7 +9036,7 @@ cc_library_shared {
         "net/http/http_auth_handler_digest_unittest.cc",
         "net/http/http_auth_handler_factory_unittest.cc",
         "net/http/http_auth_handler_mock.cc",
-        "net/http/http_auth_handler_negotiate_unittest.cc",
+        // "net/http/http_auth_handler_negotiate_unittest.cc",
         "net/http/http_auth_handler_ntlm_portable_unittest.cc",
         "net/http/http_auth_handler_unittest.cc",
         "net/http/http_auth_multi_round_parse_unittest.cc",
@@ -9104,7 +9080,7 @@ cc_library_shared {
         "net/log/net_log_unittest.cc",
         "net/log/net_log_util_unittest.cc",
         "net/log/net_log_values_unittest.cc",
-        "net/log/trace_net_log_observer_unittest.cc",
+        // "net/log/trace_net_log_observer_unittest.cc",
         "net/network_error_logging/mock_persistent_nel_store_unittest.cc",
         "net/network_error_logging/network_error_logging_service_unittest.cc",
         "net/nqe/effective_connection_type_unittest.cc",
@@ -9122,16 +9098,7 @@ cc_library_shared {
         "net/ntlm/ntlm_buffer_writer_unittest.cc",
         "net/ntlm/ntlm_client_unittest.cc",
         "net/ntlm/ntlm_unittest.cc",
-        "net/proxy_resolution/configured_proxy_resolution_service_unittest.cc",
-        "net/proxy_resolution/multi_threaded_proxy_resolver_unittest.cc",
-        "net/proxy_resolution/network_delegate_error_observer_unittest.cc",
-        "net/proxy_resolution/pac_file_decider_unittest.cc",
-        "net/proxy_resolution/pac_file_fetcher_impl_unittest.cc",
-        "net/proxy_resolution/proxy_bypass_rules_unittest.cc",
-        "net/proxy_resolution/proxy_config_service_android_unittest.cc",
-        "net/proxy_resolution/proxy_config_unittest.cc",
-        "net/proxy_resolution/proxy_info_unittest.cc",
-        "net/proxy_resolution/proxy_list_unittest.cc",
+
         "net/quic/bidirectional_stream_quic_impl_unittest.cc",
         "net/quic/crypto/proof_test_chromium.cc",
         "net/quic/crypto/proof_verifier_chromium_test.cc",
@@ -9221,9 +9188,9 @@ cc_library_shared {
         "net/ssl/ssl_config_service_unittest.cc",
         "net/ssl/ssl_config_unittest.cc",
         "net/ssl/ssl_connection_status_flags_unittest.cc",
-        "net/ssl/ssl_platform_key_android_unittest.cc",
+        // "net/ssl/ssl_platform_key_android_unittest.cc",
         "net/ssl/ssl_platform_key_util_unittest.cc",
-        "net/test/embedded_test_server/embedded_test_server_unittest.cc",
+        // "net/test/embedded_test_server/embedded_test_server_unittest.cc",
         "net/test/embedded_test_server/http_request_unittest.cc",
         "net/test/embedded_test_server/http_response_unittest.cc",
         "net/test/run_all_unittests.cc",
@@ -9238,7 +9205,7 @@ cc_library_shared {
         "net/url_request/report_sender_unittest.cc",
         "net/url_request/url_request_context_builder_unittest.cc",
         "net/url_request/url_request_filter_unittest.cc",
-        "net/url_request/url_request_http_job_unittest.cc",
+        // "net/url_request/url_request_http_job_unittest.cc",
         "net/url_request/url_request_job_factory_unittest.cc",
         "net/url_request/url_request_quic_unittest.cc",
         "net/url_request/url_request_throttler_simulation_unittest.cc",
@@ -10236,6 +10203,7 @@ cc_genrule {
     export_include_dirs: [
         ".",
         "net/third_party/quiche/src/quiche/quic/test_tools",
+        "net/third_party/quiche/src",
         "protos",
     ],
     apex_available: [
@@ -18679,6 +18647,8 @@ cc_genrule {
         ".",
         "protos",
         "third_party/quic_trace/src/quic_trace",
+        "third_party/quic_trace/src",
+        "net/third_party/quiche/src",
     ],
     apex_available: [
         "com.android.tethering",

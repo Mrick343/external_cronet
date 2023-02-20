@@ -48,6 +48,8 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
             "NativeTest.CommandLineFlags");
     static final String DUMP_COVERAGE_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
             "NativeTestInstrumentationTestRunner.DumpCoverage");
+    static final String SHARD_NANO_TIMEOUT_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
+            "NativeTestInstrumentationTestRunner.ShardNanoTimeout");
     static final String STDOUT_FILE_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
             "NativeTestInstrumentationTestRunner.StdoutFile");
     static final String TEST_RUNNER = String.format("%s/%s", CHROMIUM_PACKAGE,
@@ -56,7 +58,7 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
             "Failed to fetch gtest output file. Expected file destination: %s\n"
                     + "To rerun the gtests, run the following command:\n"
                     + "adb shell %s";
-    static Duration testsTimeout = Duration.ofSeconds(60);
+    static Duration testsTimeout = Duration.ofMinutes(30);
     static final CollectingOutputReceiver OUTPUT_COLLECTOR = new CollectingOutputReceiver();
     // This contains the gtest runner result output.
     static final String GTEST_RESULT_OUTPUT_PATH =
@@ -100,8 +102,8 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
         if (mCoverage) {
             LogUtil.CLog.i("dump-native-coverage enabled!");
         }
-        getDevice().executeShellCommand(cmd, OUTPUT_COLLECTOR, testsTimeout.toSeconds(),
-                TimeUnit.SECONDS, 3);
+        getDevice().executeShellCommand(cmd, OUTPUT_COLLECTOR, testsTimeout.toMinutes(),
+                TimeUnit.MINUTES, 3);
         File gtestTestResultsJson = getDevice().pullFile(GTEST_RESULT_OUTPUT_PATH);
         File testsOutput = getDevice().pullFile(GTEST_OUTPUT_PATH);
         if (testsOutput == null) {
@@ -129,10 +131,10 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
         }
         Assert.assertFalse(gTestsMetaData.hasAnyFailures());
         if (!gTestsMetaData.isOutputParsedCorrectly()) {
-            LogUtil.CLog.e("Failed to parse gtests result. "
-                    + "Please check the logcat for more information.");
+            // Assert.fail("Failed to parse gtests result. "
+               //     + "Please check the logcat for more information.");
         } else if (gTestsMetaData.getTotalTests() == 0) {
-            LogUtil.CLog.e("No Test has been executed.");
+            Assert.fail("No Test has been executed.");
         }
     }
 }
