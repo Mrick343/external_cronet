@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90024233_eaec0340",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsParams.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-20T09:53:46Z",
+      "side": 1,
+      "message": "General feedback: Given this is a local patch please don\u0027t rename what\u0027s not absolutely necessary in order to keep the patch scope minimal. Things like internal classes, private variables etc. can keep their names to simplify merges later on.",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 49
+      },
+      "revId": "9ed4a73283acf4001f9931e76c872634ea6b9bbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
