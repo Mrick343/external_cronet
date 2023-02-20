@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9b9cf974_edb06e91",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-02-20T12:06:06Z",
+      "side": 1,
+      "message": "Your interpretation of patches under upstream-next makes sense.\nBut, currently, our script to generate desc jsons apply upstream-next patches first\nhttps://source.corp.google.com/aosp-master/packages/modules/Connectivity/tools/gn2bp/gen_desc_json.sh\nWe can update script to specify the order of all the patches but this is also painful.\n\nSo, moving this patch to upstream-next will break the script since this patch depends on local patches.\nWe can move the patch to upstream-next only when we can apply patch to upstream as it is.\n\nCurrent way to maintain changes is really painful and “patch file cleanup / redesign” is in our OKR but it’s not high priority",
+      "parentUuid": "48ba23ea_56c3c449",
+      "range": {
+        "startLine": 276,
+        "startChar": 4,
+        "endLine": 276,
+        "endChar": 80
+      },
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "009d79c2_56f1ccd9",
         "filename": "patches/local/0031-cronet-Fix-ListenerLast-API-linter-error.patch",
         "patchSetId": 13
