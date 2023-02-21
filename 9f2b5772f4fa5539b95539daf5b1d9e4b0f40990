@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fabd33a4_3404fa44",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1308504
+      },
+      "writtenOn": "2023-02-21T04:48:28Z",
+      "side": 1,
+      "message": "Thanks for the fix. LGTM, only nits.",
+      "revId": "9f2b5772f4fa5539b95539daf5b1d9e4b0f40990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "147b806b_2bfa957b",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3049,
+      "author": {
+        "id": 1308504
+      },
+      "writtenOn": "2023-02-21T04:48:28Z",
+      "side": 1,
+      "message": "nets: no strong opinion but feel like \"OUT\" instead of \"out\" would be friendly to read.",
+      "range": {
+        "startLine": 3049,
+        "startChar": 36,
+        "endLine": 3049,
+        "endChar": 39
+      },
+      "revId": "9f2b5772f4fa5539b95539daf5b1d9e4b0f40990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b6f3117_630ebe34",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3303,
+      "author": {
+        "id": 1308504
+      },
+      "writtenOn": "2023-02-21T04:48:28Z",
+      "side": 1,
+      "message": "ditto: no strong opinion but feel like \"OUT\" instead of \"out\" would be friendly to read.",
+      "range": {
+        "startLine": 3303,
+        "startChar": 36,
+        "endLine": 3303,
+        "endChar": 39
+      },
+      "revId": "9f2b5772f4fa5539b95539daf5b1d9e4b0f40990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
