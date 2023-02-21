@@ -15,7 +15,7 @@
 // This file is created by generate_build_files.py. Do not edit manually.
 
 cc_defaults {
-    name: "cronet_libcrypto_sources",
+    name: "libcrypto_sources",
     srcs: [
         "third_party/boringssl/err_data.c",
         "third_party/boringssl/src/crypto/asn1/a_bitstr.c",
@@ -283,7 +283,7 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "cronet_libcrypto_bcm_sources",
+    name: "libcrypto_bcm_sources",
     srcs: [
         "third_party/boringssl/src/crypto/fipsmodule/bcm.c",
     ],
@@ -353,7 +353,7 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "cronet_libssl_sources",
+    name: "libssl_sources",
     srcs: [
         "third_party/boringssl/src/ssl/bio_ssl.cc",
         "third_party/boringssl/src/ssl/d1_both.cc",
@@ -396,7 +396,7 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "cronet_bssl_sources",
+    name: "bssl_sources",
     srcs: [
         "third_party/boringssl/src/tool/args.cc",
         "third_party/boringssl/src/tool/ciphers.cc",
@@ -419,7 +419,7 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "cronet_boringssl_test_support_sources",
+    name: "boringssl_test_support_sources",
     srcs: [
         "third_party/boringssl/src/crypto/test/file_test.cc",
         "third_party/boringssl/src/crypto/test/malloc.cc",
@@ -429,7 +429,7 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "cronet_boringssl_crypto_test_sources",
+    name: "boringssl_crypto_test_sources",
     srcs: [
         "third_party/boringssl/crypto_test_data.cc",
         "third_party/boringssl/src/crypto/abi_self_test.cc",
@@ -502,7 +502,7 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "cronet_boringssl_ssl_test_sources",
+    name: "boringssl_ssl_test_sources",
     srcs: [
         "third_party/boringssl/src/crypto/test/abi_test.cc",
         "third_party/boringssl/src/crypto/test/gtest_main.cc",
