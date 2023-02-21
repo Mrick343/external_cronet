@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da515d97_452327a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-21T19:36:46Z",
+      "side": 1,
+      "message": "CL is here: aosp/2448344. Let\u0027s merge that instead if that works for you.",
+      "revId": "3f9e2a914945ee2a1cd5ebc72fa5685a50edb25f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
