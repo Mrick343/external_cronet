@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8fea0ca_d978f6d6",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3049,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2023-02-21T04:50:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "147b806b_2bfa957b",
+      "range": {
+        "startLine": 3049,
+        "startChar": 36,
+        "endLine": 3049,
+        "endChar": 39
+      },
+      "revId": "9f2b5772f4fa5539b95539daf5b1d9e4b0f40990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b6f3117_630ebe34",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-02-21T04:48:28Z",
       "side": 1,
       "message": "ditto: no strong opinion but feel like \"OUT\" instead of \"out\" would be friendly to read.",
+      "range": {
+        "startLine": 3303,
+        "startChar": 36,
+        "endLine": 3303,
+        "endChar": 39
+      },
+      "revId": "9f2b5772f4fa5539b95539daf5b1d9e4b0f40990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ba1d099_4aabc7b4",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3303,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2023-02-21T04:50:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b6f3117_630ebe34",
       "range": {
         "startLine": 3303,
         "startChar": 36,
