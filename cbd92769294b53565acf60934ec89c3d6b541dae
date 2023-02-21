@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bbd47df_43032064",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-21T21:42:26Z",
+      "side": 1,
+      "message": "nit: maybe add a comment saying that this file is manually maintained and included by the auto-generated Android.bp in this folder.",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 33
+      },
+      "revId": "cbd92769294b53565acf60934ec89c3d6b541dae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
