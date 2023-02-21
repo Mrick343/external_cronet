@@ -2837,7 +2837,7 @@ cc_genrule {
          "--manual_jni_registration " +
          "--package_prefix " +
          "android.net.http.internal " +
-         ";sed -i -e 's/OUT_SOONG_.TEMP_SBOX_.*_OUT/GEN/g'  " +
+         ";sed -i -e 's/.*_SOONG_.TEMP_SBOX_.*_OUT/GEN/g'  " +
          "$(genDir)/components/cronet/android/cronet_jni_registration.h",
     out: [
         "components/cronet/android/cronet_jni_registration.h",
@@ -3090,7 +3090,7 @@ java_genrule {
          "--manual_jni_registration " +
          "--package_prefix " +
          "android.net.http.internal " +
-         ";sed -i -e 's/OUT_SOONG_.TEMP_SBOX_.*_OUT/GEN/g'  " +
+         ";sed -i -e 's/.*_SOONG_.TEMP_SBOX_.*_OUT/GEN/g'  " +
          "$(genDir)/components/cronet/android/cronet_jni_registration.h",
     out: [
         "components/cronet/android/cronet_jni_registration.srcjar",
