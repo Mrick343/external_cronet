@@ -16,6 +16,24 @@
       "message": "LGTM. Please create a patch at upstream_next and also upstream.\n\nWhat was the issue being fixed? I understand the defensive part.",
       "revId": "bd27f245f08568100d967eb401afb05e659110ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96aafc73_9b1e0d17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-02-22T12:26:27Z",
+      "side": 1,
+      "message": "getVersionString() doesn\u0027t return the `Cronet/` prefix anymore so splitting by `/` and retrieving the second part in `version \u003d version.split(\"/\")[1];` fails with IOOB.",
+      "parentUuid": "d0de8e20_e8a2bb8a",
+      "revId": "bd27f245f08568100d967eb401afb05e659110ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
