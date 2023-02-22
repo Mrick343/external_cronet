@@ -30,7 +30,6 @@ java_library {
     libs: [
         "androidx.annotation_annotation",
         "framework-annotations-lib",
-        "framework-connectivity.stubs.module_lib",
     ],
     sdk_version: "module_current",
 }
@@ -184,7 +183,6 @@ cc_genrule {
 cc_library_static {
     name: "cronet_aml_base_allocator_partition_allocator_partition_alloc",
     srcs: [
-        ":cronet_aml_third_party_android_ndk_cpu_features",
         "base/allocator/partition_allocator/address_pool_manager.cc",
         "base/allocator/partition_allocator/address_pool_manager_bitmap.cc",
         "base/allocator/partition_allocator/address_space_randomization.cc",
@@ -237,6 +235,9 @@ cc_library_static {
         "base/allocator/partition_allocator/starscan/write_protector.cc",
         "base/allocator/partition_allocator/tagging.cc",
         "base/allocator/partition_allocator/thread_cache.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_android_ndk_cpu_features",
     ],
     generated_headers: [
         "cronet_aml_base_allocator_partition_allocator_chromecast_buildflags",
@@ -429,56 +430,6 @@ cc_genrule {
 cc_library_static {
     name: "cronet_aml_base_base",
     srcs: [
-        ":cronet_aml_base_nodebug_assertion",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_base",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_strerror",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
-        ":cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
-        ":cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
-        ":cronet_aml_third_party_abseil_cpp_absl_hash_city",
-        ":cronet_aml_third_party_abseil_cpp_absl_hash_hash",
-        ":cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
-        ":cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
-        ":cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_distributions",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
-        ":cronet_aml_third_party_abseil_cpp_absl_status_status",
-        ":cronet_aml_third_party_abseil_cpp_absl_status_statusor",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cord",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_strings",
-        ":cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
-        ":cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
-        ":cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
-        ":cronet_aml_third_party_abseil_cpp_absl_time_time",
-        ":cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
-        ":cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
-        ":cronet_aml_third_party_android_ndk_cpu_features",
-        ":cronet_aml_third_party_ashmem_ashmem",
         "base/allocator/allocator_check.cc",
         "base/allocator/allocator_extension.cc",
         "base/allocator/dispatcher/dispatcher.cc",
@@ -920,9 +871,60 @@ cc_library_static {
     static_libs: [
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -1737,7 +1739,7 @@ cc_genrule {
 }
 
 // GN: //base:nodebug_assertion
-cc_object {
+cc_library_static {
     name: "cronet_aml_base_nodebug_assertion",
     srcs: [
         "base/nodebug_assertion.cc",
@@ -1782,6 +1784,11 @@ cc_object {
         "buildtools/third_party/libc++abi/trunk/include",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -2314,7 +2321,7 @@ cc_genrule {
 }
 
 // GN: //buildtools/third_party/libc++:libc++
-cc_object {
+cc_library_static {
     name: "cronet_aml_buildtools_third_party_libc___libc__",
     srcs: [
         "buildtools/third_party/libc++/trunk/src/algorithm.cpp",
@@ -2360,6 +2367,9 @@ cc_object {
         "buildtools/third_party/libc++/trunk/src/vector.cpp",
         "buildtools/third_party/libc++/trunk/src/verbose_abort.cpp",
     ],
+    static_libs: [
+        "cronet_aml_buildtools_third_party_libc__abi_libc__abi",
+    ],
     host_supported: true,
     defaults: [
         "cronet_aml_defaults",
@@ -2395,6 +2405,11 @@ cc_object {
         "buildtools/third_party/libc++abi/trunk/include",
     ],
     cpp_std: "c++20",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     cppflags: [
         "-fexceptions",
     ],
@@ -2457,7 +2472,7 @@ cc_object {
 }
 
 // GN: //buildtools/third_party/libc++abi:libc++abi
-cc_object {
+cc_library_static {
     name: "cronet_aml_buildtools_third_party_libc__abi_libc__abi",
     srcs: [
         "buildtools/third_party/libc++abi/trunk/src/abort_message.cpp",
@@ -2511,6 +2526,11 @@ cc_object {
         "buildtools/third_party/libc++abi/trunk/include",
     ],
     cpp_std: "c++20",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     cppflags: [
         "-fexceptions",
     ],
@@ -2614,12 +2634,6 @@ cc_genrule {
 cc_library_shared {
     name: "cronet_aml_components_cronet_android_cronet",
     srcs: [
-        ":cronet_aml_buildtools_third_party_libc___libc__",
-        ":cronet_aml_buildtools_third_party_libc__abi_libc__abi",
-        ":cronet_aml_components_cronet_android_cronet_static",
-        ":cronet_aml_components_cronet_cronet_common",
-        ":cronet_aml_components_cronet_metrics_util",
-        ":cronet_aml_components_metrics_library_support",
         "components/cronet/android/cronet_jni.cc",
     ],
     shared_libs: [
@@ -2631,15 +2645,79 @@ cc_library_shared {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_buildtools_third_party_libc___libc__",
+        "cronet_aml_buildtools_third_party_libc__abi_libc__abi",
+        "cronet_aml_components_cronet_android_cronet_static",
+        "cronet_aml_components_cronet_cronet_common",
+        "cronet_aml_components_cronet_cronet_version_header",
+        "cronet_aml_components_cronet_metrics_util",
+        "cronet_aml_components_metrics_library_support",
         "cronet_aml_components_prefs_prefs",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_dns_dns",
+        "cronet_aml_net_dns_public_public",
+        "cronet_aml_net_http_transport_security_state_generated_files",
         "cronet_aml_net_net",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -2648,30 +2726,6 @@ cc_library_shared {
         "cronet_aml_third_party_modp_b64_modp_b64",
         "cronet_aml_third_party_protobuf_protobuf_lite",
         "cronet_aml_url_url",
-    ],
-    generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
-        "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_components_cronet_android_buildflags",
-        "cronet_aml_components_cronet_android_cronet_jni_headers",
-        "cronet_aml_components_cronet_android_cronet_jni_registration",
-        "cronet_aml_components_cronet_cronet_buildflags",
-        "cronet_aml_components_cronet_cronet_version_header_action",
-        "cronet_aml_third_party_metrics_proto_metrics_proto_gen_headers",
-        "cronet_aml_url_buildflags",
-    ],
-    export_generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
-        "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_components_cronet_android_buildflags",
-        "cronet_aml_components_cronet_android_cronet_jni_headers",
-        "cronet_aml_components_cronet_android_cronet_jni_registration",
-        "cronet_aml_components_cronet_cronet_buildflags",
-        "cronet_aml_components_cronet_cronet_version_header_action",
-        "cronet_aml_third_party_metrics_proto_metrics_proto_gen_headers",
-        "cronet_aml_url_buildflags",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -3314,7 +3368,7 @@ java_genrule {
 }
 
 // GN: //components/cronet/android:cronet_static
-cc_object {
+cc_library_static {
     name: "cronet_aml_components_cronet_android_cronet_static",
     srcs: [
         "components/cronet/android/cronet_bidirectional_stream_adapter.cc",
@@ -3334,15 +3388,76 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_components_cronet_cronet_common",
+        "cronet_aml_components_cronet_cronet_version_header",
+        "cronet_aml_components_cronet_metrics_util",
+        "cronet_aml_components_metrics_library_support",
         "cronet_aml_components_prefs_prefs",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_dns_dns",
+        "cronet_aml_net_dns_public_public",
+        "cronet_aml_net_http_transport_security_state_generated_files",
         "cronet_aml_net_net",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -3359,9 +3474,15 @@ cc_object {
         "cronet_aml_components_cronet_android_buildflags",
         "cronet_aml_components_cronet_android_cronet_jni_headers",
         "cronet_aml_components_cronet_android_cronet_jni_registration",
-        "cronet_aml_components_cronet_cronet_buildflags",
-        "cronet_aml_components_cronet_cronet_version_header_action",
-        "cronet_aml_third_party_metrics_proto_metrics_proto_gen_headers",
+        "cronet_aml_url_buildflags",
+    ],
+    export_generated_headers: [
+        "cronet_aml_base_debugging_buildflags",
+        "cronet_aml_base_logging_buildflags",
+        "cronet_aml_build_chromeos_buildflags",
+        "cronet_aml_components_cronet_android_buildflags",
+        "cronet_aml_components_cronet_android_cronet_jni_headers",
+        "cronet_aml_components_cronet_android_cronet_jni_registration",
         "cronet_aml_url_buildflags",
     ],
     defaults: [
@@ -3410,6 +3531,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -3709,7 +3835,7 @@ cc_genrule {
 }
 
 // GN: //components/cronet:cronet_common
-cc_object {
+cc_library_static {
     name: "cronet_aml_components_cronet_cronet_common",
     srcs: [
         "components/cronet/cronet_context.cc",
@@ -3729,15 +3855,74 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_components_cronet_cronet_version_header",
+        "cronet_aml_components_metrics_library_support",
         "cronet_aml_components_prefs_prefs",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_dns_dns",
+        "cronet_aml_net_dns_public_public",
+        "cronet_aml_net_http_transport_security_state_generated_files",
         "cronet_aml_net_net",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -3749,8 +3934,9 @@ cc_object {
     ],
     generated_headers: [
         "cronet_aml_components_cronet_cronet_buildflags",
-        "cronet_aml_components_cronet_cronet_version_header_action",
-        "cronet_aml_third_party_metrics_proto_metrics_proto_gen_headers",
+    ],
+    export_generated_headers: [
+        "cronet_aml_components_cronet_cronet_buildflags",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -3798,6 +3984,88 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
+    target: {
+        android_arm: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
+        android_arm64: {
+            cflags: [
+                "-fstack-protector",
+                "-mno-outline",
+                "-mno-outline-atomics",
+            ],
+        },
+        android_x86: {
+            cflags: [
+                "-msse3",
+            ],
+        },
+        android_x86_64: {
+            cflags: [
+                "-fstack-protector",
+                "-msse3",
+            ],
+        },
+    },
+}
+
+// GN: //components/cronet:cronet_version_header
+cc_library_static {
+    name: "cronet_aml_components_cronet_cronet_version_header",
+    generated_headers: [
+        "cronet_aml_components_cronet_cronet_version_header_action",
+    ],
+    export_generated_headers: [
+        "cronet_aml_components_cronet_cronet_version_header_action",
+    ],
+    defaults: [
+        "cronet_aml_defaults",
+    ],
+    cflags: [
+        "-DANDROID",
+        "-DANDROID_NDK_VERSION_ROLL=r23_1",
+        "-DCR_CLANG_REVISION=\"llvmorg-16-init-6578-g0d30e92f-2\"",
+        "-DCR_LIBCXX_REVISION=64d36e572d3f9719c5d75011a718f33f11126851",
+        "-DDYNAMIC_ANNOTATIONS_ENABLED=0",
+        "-DHAVE_SYS_UIO_H",
+        "-DNDEBUG",
+        "-DNO_UNWIND_TABLES",
+        "-DNVALGRIND",
+        "-DOFFICIAL_BUILD",
+        "-D_FORTIFY_SOURCE=2",
+        "-D_GNU_SOURCE",
+        "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
+        "-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS",
+        "-D__STDC_CONSTANT_MACROS",
+        "-D__STDC_FORMAT_MACROS",
+        "-Oz",
+        "-fdata-sections",
+        "-ffunction-sections",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-unwind-tables",
+        "-fvisibility-inlines-hidden",
+        "-fvisibility=hidden",
+        "-g1",
+    ],
+    local_include_dirs: [
+        "./",
+        "buildtools/third_party/libc++/",
+        "buildtools/third_party/libc++/trunk/include",
+        "buildtools/third_party/libc++abi/trunk/include",
+    ],
+    cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -3852,7 +4120,7 @@ cc_genrule {
 }
 
 // GN: //components/cronet:metrics_util
-cc_object {
+cc_library_static {
     name: "cronet_aml_components_cronet_metrics_util",
     srcs: [
         "components/cronet/metrics_util.cc",
@@ -3865,9 +4133,60 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -3911,6 +4230,11 @@ cc_object {
         "third_party/boringssl/src/include/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -3939,7 +4263,7 @@ cc_object {
 }
 
 // GN: //components/metrics:library_support
-cc_object {
+cc_library_static {
     name: "cronet_aml_components_metrics_library_support",
     srcs: [
         ":cronet_aml_third_party_metrics_proto_metrics_proto_gen",
@@ -3955,9 +4279,60 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -3965,6 +4340,9 @@ cc_object {
         "cronet_aml_third_party_protobuf_protobuf_lite",
     ],
     generated_headers: [
+        "cronet_aml_third_party_metrics_proto_metrics_proto_gen_headers",
+    ],
+    export_generated_headers: [
         "cronet_aml_third_party_metrics_proto_metrics_proto_gen_headers",
     ],
     defaults: [
@@ -4010,6 +4388,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -4105,9 +4488,60 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -4251,9 +4685,60 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -4858,7 +5343,7 @@ cc_genrule {
 }
 
 // GN: //net/dns:dns
-cc_object {
+cc_library_static {
     name: "cronet_aml_net_dns_dns",
     srcs: [
         "net/dns/address_info.cc",
@@ -4908,13 +5393,68 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_dns_public_public",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -4923,18 +5463,6 @@ cc_object {
         "cronet_aml_third_party_modp_b64_modp_b64",
         "cronet_aml_third_party_protobuf_protobuf_lite",
         "cronet_aml_url_url",
-    ],
-    generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
-        "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains",
-        "cronet_aml_net_buildflags",
-        "cronet_aml_net_isolation_info_proto_gen_headers",
-        "cronet_aml_net_net_jni_headers",
-        "cronet_aml_net_net_nqe_proto_gen_headers",
-        "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
-        "cronet_aml_url_buildflags",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -4985,6 +5513,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -5013,7 +5546,7 @@ cc_object {
 }
 
 // GN: //net/dns/public:public
-cc_object {
+cc_library_static {
     name: "cronet_aml_net_dns_public_public",
     srcs: [
         "net/dns/public/dns_config_overrides.cc",
@@ -5034,13 +5567,67 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -5049,18 +5636,6 @@ cc_object {
         "cronet_aml_third_party_modp_b64_modp_b64",
         "cronet_aml_third_party_protobuf_protobuf_lite",
         "cronet_aml_url_url",
-    ],
-    generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
-        "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains",
-        "cronet_aml_net_buildflags",
-        "cronet_aml_net_isolation_info_proto_gen_headers",
-        "cronet_aml_net_net_jni_headers",
-        "cronet_aml_net_net_nqe_proto_gen_headers",
-        "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
-        "cronet_aml_url_buildflags",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -5111,6 +5686,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -5158,7 +5738,7 @@ java_genrule {
 }
 
 // GN: //net/http:transport_security_state_generated_files
-cc_object {
+cc_library_static {
     name: "cronet_aml_net_http_transport_security_state_generated_files",
     srcs: [
         "net/http/transport_security_state.cc",
@@ -5172,13 +5752,69 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_dns_dns",
+        "cronet_aml_net_dns_public_public",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -5189,17 +5825,10 @@ cc_object {
         "cronet_aml_url_url",
     ],
     generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
         "cronet_aml_build_branding_buildflags",
-        "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains",
-        "cronet_aml_net_buildflags",
-        "cronet_aml_net_isolation_info_proto_gen_headers",
-        "cronet_aml_net_net_jni_headers",
-        "cronet_aml_net_net_nqe_proto_gen_headers",
-        "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
-        "cronet_aml_url_buildflags",
+    ],
+    export_generated_headers: [
+        "cronet_aml_build_branding_buildflags",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -5250,6 +5879,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -5345,12 +5979,6 @@ cc_genrule {
 cc_library_static {
     name: "cronet_aml_net_net",
     srcs: [
-        ":cronet_aml_net_dns_dns",
-        ":cronet_aml_net_dns_public_public",
-        ":cronet_aml_net_http_transport_security_state_generated_files",
-        ":cronet_aml_net_net_deps",
-        ":cronet_aml_net_net_public_deps",
-        ":cronet_aml_net_traffic_annotation_traffic_annotation",
         "net/android/android_http_util.cc",
         "net/android/cert_verify_result_android.cc",
         "net/android/gurl_utils.cc",
@@ -5843,13 +6471,70 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_crypto_crypto",
+        "cronet_aml_net_dns_dns",
+        "cronet_aml_net_dns_public_public",
+        "cronet_aml_net_http_transport_security_state_generated_files",
+        "cronet_aml_net_net_deps",
+        "cronet_aml_net_net_public_deps",
         "cronet_aml_net_preload_decoder",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -5860,32 +6545,12 @@ cc_library_static {
         "cronet_aml_url_url",
     ],
     generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
-        "cronet_aml_build_branding_buildflags",
         "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains",
-        "cronet_aml_net_buildflags",
         "cronet_aml_net_ios_cronet_buildflags",
-        "cronet_aml_net_isolation_info_proto_gen_headers",
-        "cronet_aml_net_net_jni_headers",
-        "cronet_aml_net_net_nqe_proto_gen_headers",
-        "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
-        "cronet_aml_url_buildflags",
     ],
     export_generated_headers: [
-        "cronet_aml_base_debugging_buildflags",
-        "cronet_aml_base_logging_buildflags",
-        "cronet_aml_build_branding_buildflags",
         "cronet_aml_build_chromeos_buildflags",
-        "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains",
-        "cronet_aml_net_buildflags",
         "cronet_aml_net_ios_cronet_buildflags",
-        "cronet_aml_net_isolation_info_proto_gen_headers",
-        "cronet_aml_net_net_jni_headers",
-        "cronet_aml_net_net_nqe_proto_gen_headers",
-        "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
-        "cronet_aml_url_buildflags",
     ],
     export_static_lib_headers: [
         "cronet_aml_crypto_crypto",
@@ -5985,7 +6650,7 @@ cc_library_static {
 }
 
 // GN: //net:net_deps
-cc_object {
+cc_library_static {
     name: "cronet_aml_net_net_deps",
     srcs: [
         ":cronet_aml_net_isolation_info_proto_gen",
@@ -6000,10 +6665,61 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_net_preload_decoder",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_brotli_common",
         "cronet_aml_third_party_brotli_dec",
         "cronet_aml_third_party_icu_icui18n",
@@ -6013,6 +6729,15 @@ cc_object {
         "cronet_aml_third_party_protobuf_protobuf_lite",
     ],
     generated_headers: [
+        "cronet_aml_base_debugging_buildflags",
+        "cronet_aml_base_logging_buildflags",
+        "cronet_aml_build_chromeos_buildflags",
+        "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains",
+        "cronet_aml_net_isolation_info_proto_gen_headers",
+        "cronet_aml_net_net_jni_headers",
+        "cronet_aml_url_buildflags",
+    ],
+    export_generated_headers: [
         "cronet_aml_base_debugging_buildflags",
         "cronet_aml_base_logging_buildflags",
         "cronet_aml_build_chromeos_buildflags",
@@ -6067,6 +6792,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -6242,7 +6972,7 @@ cc_genrule {
 }
 
 // GN: //net:net_public_deps
-cc_object {
+cc_library_static {
     name: "cronet_aml_net_net_public_deps",
     srcs: [
         ":cronet_aml_net_net_nqe_proto_gen",
@@ -6258,12 +6988,64 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_crypto_crypto",
         "cronet_aml_net_third_party_quiche_quiche",
+        "cronet_aml_net_traffic_annotation_traffic_annotation",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -6272,7 +7054,11 @@ cc_object {
         "cronet_aml_url_url",
     ],
     generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+        "cronet_aml_net_buildflags",
+        "cronet_aml_net_net_nqe_proto_gen_headers",
+        "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
+    ],
+    export_generated_headers: [
         "cronet_aml_net_buildflags",
         "cronet_aml_net_net_nqe_proto_gen_headers",
         "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers",
@@ -6323,6 +7109,11 @@ cc_object {
         "third_party/protobuf/src/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -6364,9 +7155,60 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -6537,53 +7379,6 @@ cc_library_static {
     name: "cronet_aml_net_third_party_quiche_quiche",
     srcs: [
         ":cronet_aml_net_third_party_quiche_net_quic_proto_gen",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_base",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_strerror",
-        ":cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
-        ":cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
-        ":cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
-        ":cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
-        ":cronet_aml_third_party_abseil_cpp_absl_hash_city",
-        ":cronet_aml_third_party_abseil_cpp_absl_hash_hash",
-        ":cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
-        ":cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
-        ":cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_distributions",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
-        ":cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
-        ":cronet_aml_third_party_abseil_cpp_absl_status_status",
-        ":cronet_aml_third_party_abseil_cpp_absl_status_statusor",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cord",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_strings_strings",
-        ":cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
-        ":cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
-        ":cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
-        ":cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
-        ":cronet_aml_third_party_abseil_cpp_absl_time_time",
-        ":cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
-        ":cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
         "net/third_party/quiche/overrides/quiche_platform_impl/quiche_mutex_impl.cc",
         "net/third_party/quiche/overrides/quiche_platform_impl/quiche_time_utils_impl.cc",
         "net/third_party/quiche/overrides/quiche_platform_impl/quiche_url_utils_impl.cc",
@@ -6875,10 +7670,61 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
         "cronet_aml_net_uri_template",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -6887,11 +7733,9 @@ cc_library_static {
         "cronet_aml_url_url",
     ],
     generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
         "cronet_aml_net_third_party_quiche_net_quic_proto_gen_headers",
     ],
     export_generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
         "cronet_aml_net_third_party_quiche_net_quic_proto_gen_headers",
     ],
     defaults: [
@@ -6974,7 +7818,7 @@ cc_library_static {
 }
 
 // GN: //net/traffic_annotation:traffic_annotation
-cc_object {
+cc_library_static {
     name: "cronet_aml_net_traffic_annotation_traffic_annotation",
     srcs: [
         "net/traffic_annotation/network_traffic_annotation_android.cc",
@@ -6987,15 +7831,69 @@ cc_object {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
         "cronet_aml_third_party_modp_b64_modp_b64",
     ],
     generated_headers: [
+        "cronet_aml_build_chromeos_buildflags",
+    ],
+    export_generated_headers: [
         "cronet_aml_build_chromeos_buildflags",
     ],
     defaults: [
@@ -7036,6 +7934,11 @@ cc_object {
         "third_party/boringssl/src/include/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7077,9 +7980,60 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
@@ -7157,7 +8111,7 @@ cc_library_static {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:base
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_base",
     srcs: [
         "third_party/abseil-cpp/absl/base/internal/cycleclock.cc",
@@ -7165,6 +8119,11 @@ cc_object {
         "third_party/abseil-cpp/absl/base/internal/sysinfo.cc",
         "third_party/abseil-cpp/absl/base/internal/thread_identity.cc",
         "third_party/abseil-cpp/absl/base/internal/unscaledcycleclock.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7201,6 +8160,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7229,7 +8193,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:log_severity
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
     srcs: [
         "third_party/abseil-cpp/absl/base/log_severity.cc",
@@ -7269,6 +8233,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7297,10 +8266,16 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:malloc_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
     srcs: [
         "third_party/abseil-cpp/absl/base/internal/low_level_alloc.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7337,6 +8312,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7365,10 +8345,13 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:raw_logging_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
     srcs: [
         "third_party/abseil-cpp/absl/base/internal/raw_logging.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7405,6 +8388,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7433,7 +8421,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:spinlock_wait
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     srcs: [
         "third_party/abseil-cpp/absl/base/internal/spinlock_wait.cc",
@@ -7473,6 +8461,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7501,7 +8494,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:strerror
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
     srcs: [
         "third_party/abseil-cpp/absl/base/internal/strerror.cc",
@@ -7541,6 +8534,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7569,10 +8567,14 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/base:throw_delegate
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
     srcs: [
         "third_party/abseil-cpp/absl/base/internal/throw_delegate.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7609,6 +8611,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7637,11 +8644,32 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/container:hashtablez_sampler
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
     srcs: [
         "third_party/abseil-cpp/absl/container/internal/hashtablez_sampler.cc",
         "third_party/abseil-cpp/absl/container/internal/hashtablez_sampler_force_weak_definition.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7678,6 +8706,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7706,10 +8739,33 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/container:raw_hash_set
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
     srcs: [
         "third_party/abseil-cpp/absl/container/internal/raw_hash_set.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7746,6 +8802,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7774,12 +8835,16 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/debugging:debugging_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
     srcs: [
         "third_party/abseil-cpp/absl/debugging/internal/address_is_readable.cc",
         "third_party/abseil-cpp/absl/debugging/internal/elf_mem_image.cc",
         "third_party/abseil-cpp/absl/debugging/internal/vdso_support.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7816,6 +8881,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7844,10 +8914,16 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/debugging:demangle_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
     srcs: [
         "third_party/abseil-cpp/absl/debugging/internal/demangle.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7884,6 +8960,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7912,10 +8993,25 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/debugging:examine_stack
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
     srcs: [
         "third_party/abseil-cpp/absl/debugging/internal/examine_stack.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -7952,6 +9048,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -7980,10 +9081,26 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/debugging:failure_signal_handler
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
     srcs: [
         "third_party/abseil-cpp/absl/debugging/failure_signal_handler.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8020,6 +9137,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8048,10 +9170,15 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/debugging:stacktrace
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
     srcs: [
         "third_party/abseil-cpp/absl/debugging/stacktrace.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8088,6 +9215,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8116,10 +9248,23 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/debugging:symbolize
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
     srcs: [
         "third_party/abseil-cpp/absl/debugging/symbolize.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8156,6 +9301,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8184,10 +9334,16 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/hash:city
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_hash_city",
     srcs: [
         "third_party/abseil-cpp/absl/hash/internal/city.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8224,6 +9380,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8252,10 +9413,24 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/hash:hash
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
     srcs: [
         "third_party/abseil-cpp/absl/hash/internal/hash.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8292,6 +9467,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8320,10 +9500,17 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/hash:low_level_hash
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
     srcs: [
         "third_party/abseil-cpp/absl/hash/internal/low_level_hash.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8360,6 +9547,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8388,7 +9580,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/numeric:int128
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
     srcs: [
         "third_party/abseil-cpp/absl/numeric/int128.cc",
@@ -8428,6 +9620,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8456,7 +9653,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/profiling:exponential_biased
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
     srcs: [
         "third_party/abseil-cpp/absl/profiling/internal/exponential_biased.cc",
@@ -8496,6 +9693,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8524,11 +9726,21 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random:distributions
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
     srcs: [
         "third_party/abseil-cpp/absl/random/discrete_distribution.cc",
         "third_party/abseil-cpp/absl/random/gaussian_distribution.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8565,6 +9777,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8593,12 +9810,15 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:platform
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/randen_round_keys.cc",
     ],
     generated_headers: [
+        "cronet_aml_build_chromeos_buildflags",
+    ],
+    export_generated_headers: [
         "cronet_aml_build_chromeos_buildflags",
     ],
     defaults: [
@@ -8636,6 +9856,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8664,13 +9889,28 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:pool_urbg
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/pool_urbg.cc",
     ],
-    generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8707,6 +9947,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8735,13 +9980,21 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:randen
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/randen.cc",
     ],
-    generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8778,6 +10031,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8806,13 +10064,15 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:randen_hwaes
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/randen_detect.cc",
     ],
-    generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8849,6 +10109,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8877,13 +10142,14 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:randen_hwaes_impl
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/randen_hwaes.cc",
     ],
-    generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8920,6 +10186,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -8948,13 +10219,18 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:randen_slow
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/randen_slow.cc",
     ],
-    generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -8991,6 +10267,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9019,10 +10300,21 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random/internal:seed_material
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
     srcs: [
         "third_party/abseil-cpp/absl/random/internal/seed_material.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9059,6 +10351,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9087,7 +10384,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random:seed_gen_exception
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
     srcs: [
         "third_party/abseil-cpp/absl/random/seed_gen_exception.cc",
@@ -9127,6 +10424,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9155,13 +10457,29 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/random:seed_sequences
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
     srcs: [
         "third_party/abseil-cpp/absl/random/seed_sequences.cc",
     ],
-    generated_headers: [
-        "cronet_aml_build_chromeos_buildflags",
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9198,6 +10516,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9226,11 +10549,40 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/status:status
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_status_status",
     srcs: [
         "third_party/abseil-cpp/absl/status/status.cc",
         "third_party/abseil-cpp/absl/status/status_payload_printer.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9267,6 +10619,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9295,10 +10652,41 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/status:statusor
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
     srcs: [
         "third_party/abseil-cpp/absl/status/statusor.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9335,6 +10723,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9363,12 +10756,39 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:cord
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
     srcs: [
         "third_party/abseil-cpp/absl/strings/cord.cc",
         "third_party/abseil-cpp/absl/strings/cord_analysis.cc",
         "third_party/abseil-cpp/absl/strings/cord_buffer.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9405,6 +10825,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9433,7 +10858,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:cord_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
     srcs: [
         "third_party/abseil-cpp/absl/strings/internal/cord_internal.cc",
@@ -9443,6 +10868,16 @@ cc_object {
         "third_party/abseil-cpp/absl/strings/internal/cord_rep_consume.cc",
         "third_party/abseil-cpp/absl/strings/internal/cord_rep_crc.cc",
         "third_party/abseil-cpp/absl/strings/internal/cord_rep_ring.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9479,6 +10914,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9507,10 +10947,15 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:cordz_functions
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
     srcs: [
         "third_party/abseil-cpp/absl/strings/internal/cordz_functions.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9547,6 +10992,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9575,10 +11025,30 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:cordz_handle
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
     srcs: [
         "third_party/abseil-cpp/absl/strings/internal/cordz_handle.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9615,6 +11085,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9643,10 +11118,34 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:cordz_info
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
     srcs: [
         "third_party/abseil-cpp/absl/strings/internal/cordz_info.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9683,6 +11182,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9711,12 +11215,18 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
     srcs: [
         "third_party/abseil-cpp/absl/strings/internal/escaping.cc",
         "third_party/abseil-cpp/absl/strings/internal/ostringstream.cc",
         "third_party/abseil-cpp/absl/strings/internal/utf8.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9753,6 +11263,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9781,7 +11296,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:str_format_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
     srcs: [
         "third_party/abseil-cpp/absl/strings/internal/str_format/arg.cc",
@@ -9790,6 +11305,17 @@ cc_object {
         "third_party/abseil-cpp/absl/strings/internal/str_format/float_conversion.cc",
         "third_party/abseil-cpp/absl/strings/internal/str_format/output.cc",
         "third_party/abseil-cpp/absl/strings/internal/str_format/parser.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9826,6 +11352,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9854,7 +11385,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/strings:strings
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
     srcs: [
         "third_party/abseil-cpp/absl/strings/ascii.cc",
@@ -9870,6 +11401,15 @@ cc_object {
         "third_party/abseil-cpp/absl/strings/str_split.cc",
         "third_party/abseil-cpp/absl/strings/string_view.cc",
         "third_party/abseil-cpp/absl/strings/substitute.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9906,6 +11446,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -9934,10 +11479,17 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/synchronization:graphcycles_internal
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
     srcs: [
         "third_party/abseil-cpp/absl/synchronization/internal/graphcycles.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9974,6 +11526,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10002,7 +11559,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/synchronization:synchronization
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
     srcs: [
         "third_party/abseil-cpp/absl/synchronization/barrier.cc",
@@ -10012,6 +11569,25 @@ cc_object {
         "third_party/abseil-cpp/absl/synchronization/internal/waiter.cc",
         "third_party/abseil-cpp/absl/synchronization/mutex.cc",
         "third_party/abseil-cpp/absl/synchronization/notification.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -10048,6 +11624,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10076,7 +11657,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/time/internal/cctz:civil_time
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
     srcs: [
         "third_party/abseil-cpp/absl/time/internal/cctz/src/civil_time_detail.cc",
@@ -10116,6 +11697,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10144,7 +11730,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/time/internal/cctz:time_zone
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
     srcs: [
         "third_party/abseil-cpp/absl/time/internal/cctz/src/time_zone_fixed.cc",
@@ -10156,6 +11742,9 @@ cc_object {
         "third_party/abseil-cpp/absl/time/internal/cctz/src/time_zone_lookup.cc",
         "third_party/abseil-cpp/absl/time/internal/cctz/src/time_zone_posix.cc",
         "third_party/abseil-cpp/absl/time/internal/cctz/src/zone_info_source.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -10192,6 +11781,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10220,7 +11814,7 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/time:time
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_time_time",
     srcs: [
         "third_party/abseil-cpp/absl/time/civil_time.cc",
@@ -10228,6 +11822,18 @@ cc_object {
         "third_party/abseil-cpp/absl/time/duration.cc",
         "third_party/abseil-cpp/absl/time/format.cc",
         "third_party/abseil-cpp/absl/time/time.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -10264,6 +11870,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10292,10 +11903,14 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/types:bad_optional_access
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
     srcs: [
         "third_party/abseil-cpp/absl/types/bad_optional_access.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -10332,6 +11947,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10360,10 +11980,14 @@ cc_object {
 }
 
 // GN: //third_party/abseil-cpp/absl/types:bad_variant_access
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
     srcs: [
         "third_party/abseil-cpp/absl/types/bad_variant_access.cc",
+    ],
+    static_libs: [
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -10400,6 +12024,11 @@ cc_object {
         "third_party/abseil-cpp/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10428,7 +12057,7 @@ cc_object {
 }
 
 // GN: //third_party/android_ndk:cpu_features
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_android_ndk_cpu_features",
     srcs: [
         "third_party/android_ndk/sources/android/cpufeatures/cpu-features.c",
@@ -10467,6 +12096,11 @@ cc_object {
         "third_party/android_ndk/sources/android/cpufeatures/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10495,7 +12129,7 @@ cc_object {
 }
 
 // GN: //third_party/ashmem:ashmem
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_ashmem_ashmem",
     srcs: [
         "third_party/ashmem/ashmem-dev.c",
@@ -10536,6 +12170,11 @@ cc_object {
         "buildtools/third_party/libc++abi/trunk/include",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             cflags: [
@@ -10567,7 +12206,6 @@ cc_object {
 cc_library_static {
     name: "cronet_aml_third_party_boringssl_boringssl",
     srcs: [
-        ":cronet_aml_third_party_boringssl_boringssl_asm",
         "third_party/boringssl/err_data.c",
         "third_party/boringssl/src/crypto/asn1/a_bitstr.c",
         "third_party/boringssl/src/crypto/asn1/a_bool.c",
@@ -10835,6 +12473,9 @@ cc_library_static {
         "third_party/boringssl/src/ssl/tls_method.cc",
         "third_party/boringssl/src/ssl/tls_record.cc",
     ],
+    static_libs: [
+        "cronet_aml_third_party_boringssl_boringssl_asm",
+    ],
     defaults: [
         "cronet_aml_defaults",
     ],
@@ -10906,7 +12547,7 @@ cc_library_static {
 }
 
 // GN: //third_party/boringssl:boringssl_asm
-cc_object {
+cc_library_static {
     name: "cronet_aml_third_party_boringssl_boringssl_asm",
     defaults: [
         "cronet_aml_defaults",
@@ -10945,6 +12586,11 @@ cc_object {
         "third_party/boringssl/src/include/",
     ],
     cpp_std: "c++17",
+    ldflags: [
+        "-Wl,--as-needed",
+        "-Wl,--gc-sections",
+        "-Wl,--icf=all",
+    ],
     target: {
         android_arm: {
             srcs: [
@@ -12375,14 +14021,14 @@ cc_library_static {
 cc_binary {
     name: "cronet_aml_third_party_protobuf_protoc",
     srcs: [
-        ":cronet_aml_buildtools_third_party_libc___libc__",
-        ":cronet_aml_buildtools_third_party_libc__abi_libc__abi",
         "third_party/protobuf/src/google/protobuf/compiler/main.cc",
     ],
     shared_libs: [
         "libz",
     ],
     static_libs: [
+        "cronet_aml_buildtools_third_party_libc___libc__",
+        "cronet_aml_buildtools_third_party_libc__abi_libc__abi",
         "cronet_aml_third_party_protobuf_protobuf_full",
         "cronet_aml_third_party_protobuf_protoc_lib",
     ],
@@ -12646,9 +14292,60 @@ cc_library_static {
         "cronet_aml_base_allocator_partition_allocator_partition_alloc",
         "cronet_aml_base_base",
         "cronet_aml_base_base_static",
+        "cronet_aml_base_nodebug_assertion",
         "cronet_aml_base_third_party_double_conversion_double_conversion",
         "cronet_aml_base_third_party_dynamic_annotations_dynamic_annotations",
+        "cronet_aml_third_party_abseil_cpp_absl_base_base",
+        "cronet_aml_third_party_abseil_cpp_absl_base_log_severity",
+        "cronet_aml_third_party_abseil_cpp_absl_base_malloc_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_raw_logging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_base_spinlock_wait",
+        "cronet_aml_third_party_abseil_cpp_absl_base_strerror",
+        "cronet_aml_third_party_abseil_cpp_absl_base_throw_delegate",
+        "cronet_aml_third_party_abseil_cpp_absl_container_hashtablez_sampler",
+        "cronet_aml_third_party_abseil_cpp_absl_container_raw_hash_set",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_debugging_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_demangle_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_examine_stack",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_failure_signal_handler",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_stacktrace",
+        "cronet_aml_third_party_abseil_cpp_absl_debugging_symbolize",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_city",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_hash_low_level_hash",
+        "cronet_aml_third_party_abseil_cpp_absl_numeric_int128",
+        "cronet_aml_third_party_abseil_cpp_absl_profiling_exponential_biased",
+        "cronet_aml_third_party_abseil_cpp_absl_random_distributions",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_platform",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_pool_urbg",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_hwaes_impl",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_randen_slow",
+        "cronet_aml_third_party_abseil_cpp_absl_random_internal_seed_material",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_gen_exception",
+        "cronet_aml_third_party_abseil_cpp_absl_random_seed_sequences",
+        "cronet_aml_third_party_abseil_cpp_absl_status_status",
+        "cronet_aml_third_party_abseil_cpp_absl_status_statusor",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cord_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_functions",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_handle",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_cordz_info",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_str_format_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_strings_strings",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_graphcycles_internal",
+        "cronet_aml_third_party_abseil_cpp_absl_synchronization_synchronization",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_civil_time",
+        "cronet_aml_third_party_abseil_cpp_absl_time_internal_cctz_time_zone",
+        "cronet_aml_third_party_abseil_cpp_absl_time_time",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_optional_access",
+        "cronet_aml_third_party_abseil_cpp_absl_types_bad_variant_access",
+        "cronet_aml_third_party_android_ndk_cpu_features",
+        "cronet_aml_third_party_ashmem_ashmem",
         "cronet_aml_third_party_boringssl_boringssl",
+        "cronet_aml_third_party_boringssl_boringssl_asm",
         "cronet_aml_third_party_icu_icui18n",
         "cronet_aml_third_party_icu_icuuc_private",
         "cronet_aml_third_party_libevent_libevent",
