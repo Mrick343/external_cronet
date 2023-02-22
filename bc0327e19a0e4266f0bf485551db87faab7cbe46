@@ -46,6 +46,30 @@
       },
       "revId": "bc0327e19a0e4266f0bf485551db87faab7cbe46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "653eed25_e3a2b3e2",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3302,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2023-02-22T00:41:13Z",
+      "side": 0,
+      "message": "That would also work, but I just wanted to make it sure in case of any exceptional case. It is your call.",
+      "parentUuid": "4392b4c6_14c4d68b",
+      "range": {
+        "startLine": 3302,
+        "startChar": 24,
+        "endLine": 3302,
+        "endChar": 34
+      },
+      "revId": "bc0327e19a0e4266f0bf485551db87faab7cbe46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
