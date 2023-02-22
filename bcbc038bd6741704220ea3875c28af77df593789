@@ -22,6 +22,30 @@
       },
       "revId": "bcbc038bd6741704220ea3875c28af77df593789",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e476256b_e6691607",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-02-22T11:41:55Z",
+      "side": 1,
+      "message": "You never know 😄",
+      "parentUuid": "28543469_c4f49a90",
+      "range": {
+        "startLine": 16,
+        "startChar": 4,
+        "endLine": 16,
+        "endChar": 43
+      },
+      "revId": "bcbc038bd6741704220ea3875c28af77df593789",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
