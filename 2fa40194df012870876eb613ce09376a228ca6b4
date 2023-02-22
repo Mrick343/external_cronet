@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33d722d0_58ffddbc",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3049,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2023-02-22T00:40:24Z",
+      "side": 1,
+      "message": "+ would be a better fit than *, because out path cannot be empty.",
+      "range": {
+        "startLine": 3049,
+        "startChar": 28,
+        "endLine": 3049,
+        "endChar": 29
+      },
+      "revId": "2fa40194df012870876eb613ce09376a228ca6b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "930a9384_677c7797",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3049,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2023-02-22T00:40:24Z",
+      "side": 1,
+      "message": "What about \\s, to cover any whitespace?",
+      "range": {
+        "startLine": 3049,
+        "startChar": 26,
+        "endLine": 3049,
+        "endChar": 27
+      },
+      "revId": "2fa40194df012870876eb613ce09376a228ca6b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
