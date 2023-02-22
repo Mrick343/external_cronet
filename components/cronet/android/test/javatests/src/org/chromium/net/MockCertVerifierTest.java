@@ -13,6 +13,7 @@ import static org.chromium.net.CronetTestRule.getContext;
 import android.net.http.ExperimentalHttpEngine;
 import android.net.http.UrlRequest;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -26,6 +27,7 @@ import org.junit.runner.RunWith;
  * Unit tests for {@code MockCertVerifier}.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class MockCertVerifierTest {
     private static final String TAG = MockCertVerifierTest.class.getSimpleName();
 

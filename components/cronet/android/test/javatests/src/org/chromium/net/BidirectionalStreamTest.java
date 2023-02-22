@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -65,6 +66,7 @@ import java.util.regex.Pattern;
  * Test functionality of BidirectionalStream interface.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class BidirectionalStreamTest {
     private static final String TAG = BidirectionalStreamTest.class.getSimpleName();
 

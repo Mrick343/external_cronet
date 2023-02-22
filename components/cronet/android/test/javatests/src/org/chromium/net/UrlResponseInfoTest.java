@@ -6,6 +6,7 @@ package org.chromium.net;
 
 import android.net.http.UrlResponseInfo;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -24,6 +25,7 @@ import java.util.Map;
  * Tests for {@link UrlResponseInfo}.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class UrlResponseInfoTest {
     /**
      * Test for public API of {@link UrlResponseInfo}.

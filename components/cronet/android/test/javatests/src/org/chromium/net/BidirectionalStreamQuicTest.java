@@ -19,6 +19,7 @@ import android.net.http.QuicException;
 import android.net.http.RequestFinishedInfo;
 import android.net.http.UrlResponseInfo;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -39,6 +40,7 @@ import java.util.HashSet;
  * Tests functionality of BidirectionalStream's QUIC implementation.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class BidirectionalStreamQuicTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

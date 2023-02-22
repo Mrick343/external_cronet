@@ -13,6 +13,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Assert;
@@ -36,6 +37,7 @@ import java.net.URLStreamHandlerFactory;
 /**
  * Custom TestRule for Cronet instrumentation tests.
  */
+@RequiresApi(34)
 public class CronetTestRule implements TestRule {
     private static final String PRIVATE_DATA_DIRECTORY_SUFFIX = "cronet_test";
 

@@ -19,6 +19,7 @@ import android.net.http.ExperimentalHttpEngine;
 import android.net.http.NetworkException;
 import android.net.http.UrlRequest;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -45,6 +46,7 @@ import java.util.Set;
  * Public-Key-Pinning tests of Cronet Java API.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class PkpTest {
     private static final Duration DISTANT_FUTURE = Duration.ofDays(999999);
     private static final boolean INCLUDE_SUBDOMAINS = true;

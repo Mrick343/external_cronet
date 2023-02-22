@@ -8,6 +8,8 @@ import android.net.http.UploadDataProvider;
 import android.net.http.UploadDataSink;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -18,6 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * An UploadDataProvider implementation used in tests.
  */
+@RequiresApi(34)
 public class TestUploadDataProvider extends UploadDataProvider {
     // Indicates whether all success callbacks are synchronous or asynchronous.
     // Doesn't apply to errors.

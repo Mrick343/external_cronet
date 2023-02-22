@@ -15,6 +15,7 @@ import android.net.http.HttpEngine;
 import android.net.http.ExperimentalHttpEngine;
 import android.net.http.UrlRequest;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -30,6 +31,7 @@ import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
  * Tests requests that generate Network Error Logging reports.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class NetworkErrorLoggingTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

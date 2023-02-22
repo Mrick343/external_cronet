@@ -11,6 +11,7 @@ import static org.junit.Assert.fail;
 
 import static org.chromium.net.CronetTestRule.getContext;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -33,6 +34,7 @@ import java.net.URL;
  * Tests for CronetHttpURLStreamHandler class.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class CronetHttpURLStreamHandlerTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

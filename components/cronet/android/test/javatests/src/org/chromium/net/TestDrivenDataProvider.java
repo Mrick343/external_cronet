@@ -8,6 +8,8 @@ import android.net.http.UploadDataProvider;
 import android.net.http.UploadDataSink;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.concurrent.Executor;
  * Chunked mode is not supported here, since the main interest is to test
  * different order of init/read/rewind calls.
  */
+@RequiresApi(34)
 class TestDrivenDataProvider extends UploadDataProvider {
     private final Executor mExecutor;
     private final List<byte[]> mReads;

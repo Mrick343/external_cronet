@@ -9,8 +9,11 @@ import static junit.framework.Assert.assertEquals;
 import android.net.http.NetworkQualityThroughputListener;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
+
 import java.util.concurrent.Executor;
 
+@RequiresApi(34)
 class TestNetworkQualityThroughputListener extends NetworkQualityThroughputListener {
     // Lock to ensure that observation counts can be updated and read by different threads.
     private final Object mLock = new Object();

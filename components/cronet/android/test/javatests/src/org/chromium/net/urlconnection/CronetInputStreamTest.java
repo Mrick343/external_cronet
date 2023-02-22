@@ -6,6 +6,7 @@ package org.chromium.net.urlconnection;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -21,6 +22,7 @@ import java.util.concurrent.Callable;
 
 /** Test for {@link CronetInputStream}. */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class CronetInputStreamTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();
