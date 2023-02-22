@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -70,6 +71,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Test CronetEngine.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 @JNINamespace("cronet")
 public class CronetUrlRequestContextTest {
     @Rule

@@ -27,6 +27,7 @@ import android.os.ConditionVariable;
 import android.os.Process;
 import android.os.StrictMode;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -70,6 +71,7 @@ import java.util.regex.Pattern;
  * Test functionality of CronetUrlRequest.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class CronetUrlRequestTest {
     private static final String TAG = CronetUrlRequestTest.class.getSimpleName();
 

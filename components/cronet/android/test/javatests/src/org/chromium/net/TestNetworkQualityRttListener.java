@@ -10,8 +10,11 @@ import android.net.http.NetworkQualityRttListener;
 import android.os.ConditionVariable;
 import android.util.SparseIntArray;
 
+import androidx.annotation.RequiresApi;
+
 import java.util.concurrent.Executor;
 
+@RequiresApi(34)
 class TestNetworkQualityRttListener extends NetworkQualityRttListener {
     // Lock to ensure that observation counts can be updated and read by different threads.
     private final Object mLock = new Object();

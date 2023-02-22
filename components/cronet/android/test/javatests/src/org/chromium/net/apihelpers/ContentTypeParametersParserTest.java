@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.net.http.apihelpers.ContentTypeParametersParser;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -23,6 +24,7 @@ import java.util.Map;
 
 /** Unit tests for {@link ContentTypeParametersParser}. */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 @Batch(Batch.UNIT_TESTS)
 public class ContentTypeParametersParserTest {
     @Test

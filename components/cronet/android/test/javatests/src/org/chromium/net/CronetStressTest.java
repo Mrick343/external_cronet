@@ -11,6 +11,7 @@ import static org.chromium.net.CronetTestRule.getContext;
 
 import android.net.http.UrlRequest;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -28,6 +29,7 @@ import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
  * Tests that making a large number of requests do not lead to crashes.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class CronetStressTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

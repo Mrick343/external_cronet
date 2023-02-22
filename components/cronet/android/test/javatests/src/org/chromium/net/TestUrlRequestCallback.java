@@ -20,6 +20,8 @@ import android.net.http.UrlResponseInfo;
 import android.os.ConditionVariable;
 import android.os.StrictMode;
 
+import androidx.annotation.RequiresApi;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +34,7 @@ import java.util.concurrent.TimeUnit;
  * method to block thread until the request completes on another thread.
  * Allows to cancel, block request or throw an exception from an arbitrary step.
  */
+@RequiresApi(34)
 public class TestUrlRequestCallback extends UrlRequest.Callback {
     public ArrayList<UrlResponseInfo> mRedirectResponseInfoList = new ArrayList<UrlResponseInfo>();
     public ArrayList<String> mRedirectUrlList = new ArrayList<String>();

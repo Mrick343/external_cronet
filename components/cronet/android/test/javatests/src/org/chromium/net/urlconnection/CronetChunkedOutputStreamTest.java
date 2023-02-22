@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 
 import static org.chromium.net.CronetTestRule.getContext;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -41,6 +42,7 @@ import java.net.URL;
  * See {@link CronetTestBase#runTest()} for details.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class CronetChunkedOutputStreamTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

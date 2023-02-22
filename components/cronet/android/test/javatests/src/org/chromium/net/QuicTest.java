@@ -16,6 +16,7 @@ import android.net.http.RequestFinishedInfo;
 import android.net.http.UrlRequest;
 import android.net.http.UrlResponseInfo;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SmallTest;
@@ -42,6 +43,7 @@ import java.util.concurrent.Executors;
  * Tests making requests using QUIC.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class QuicTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

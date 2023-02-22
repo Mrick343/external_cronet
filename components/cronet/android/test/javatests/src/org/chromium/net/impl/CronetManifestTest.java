@@ -15,6 +15,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -32,6 +33,7 @@ import org.chromium.net.impl.CronetLogger.CronetSource;
  * Tests {@link CronetManifest}
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class CronetManifestTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

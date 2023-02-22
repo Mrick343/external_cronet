@@ -15,6 +15,7 @@ import android.net.http.ExperimentalHttpEngine;
 import android.net.http.UrlRequest;
 import android.os.StrictMode;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -45,6 +46,7 @@ import java.util.concurrent.ThreadFactory;
  * Test Network Quality Estimator.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class NQETest {
     private static final String TAG = NQETest.class.getSimpleName();
 

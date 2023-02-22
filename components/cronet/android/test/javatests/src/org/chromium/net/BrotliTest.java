@@ -16,6 +16,7 @@ import android.net.http.HttpEngine;
 import android.net.http.ExperimentalHttpEngine;
 import android.net.http.UrlRequest;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -32,6 +33,7 @@ import org.chromium.net.CronetTestRule.RequiresMinApi;
  * Simple test for Brotli support.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 @RequiresMinApi(5) // Brotli support added in API version 5: crrev.com/465216
 public class BrotliTest {
     @Rule

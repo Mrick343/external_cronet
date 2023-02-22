@@ -15,6 +15,8 @@ import android.net.http.apihelpers.UploadDataProviders;
 import android.os.ConditionVariable;
 import android.os.ParcelFileDescriptor;
 
+import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -41,6 +43,7 @@ import java.nio.ByteBuffer;
 
 /** Test the default provided implementations of {@link UploadDataProvider} */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class UploadDataProvidersTest {
     private static final String LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
             + "Proin elementum, libero laoreet fringilla faucibus, metus tortor vehicula ante, "

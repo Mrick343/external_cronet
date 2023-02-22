@@ -12,6 +12,8 @@ import static org.junit.Assert.assertTrue;
 import android.net.http.RequestFinishedInfo;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -22,6 +24,7 @@ import java.util.concurrent.Executors;
  * Classes which are useful for testing Cronet's metrics implementation and are needed in more than
  * one test file.
  */
+@RequiresApi(34)
 public class MetricsTestUtil {
     /**
      * Executor which runs tasks only when told to with runAllTasks().

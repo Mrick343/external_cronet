@@ -19,6 +19,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.filters.SmallTest;
 
 import org.json.JSONException;
@@ -63,6 +64,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @RunWith(JUnit4.class)
 @RequiresMinAndroidApi(Build.VERSION_CODES.O)
+@RequiresApi(34)
 public final class CronetLoggerTest {
     private final CronetTestRule mTestRule = new CronetTestRule();
     private final CronetLoggerTestRule mLoggerTestRule = new CronetLoggerTestRule(TestLogger.class);

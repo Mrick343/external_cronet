@@ -9,6 +9,8 @@ import android.net.http.HttpException;
 import android.net.http.UrlResponseInfo;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
@@ -27,6 +29,7 @@ import java.util.concurrent.ThreadFactory;
  * method to block thread until the stream completes on another thread.
  * Allows to cancel, block stream or throw an exception from an arbitrary step.
  */
+@RequiresApi(34)
 public class TestBidirectionalStreamCallback extends BidirectionalStream.Callback {
     public UrlResponseInfo mResponseInfo;
     public HttpException mError;

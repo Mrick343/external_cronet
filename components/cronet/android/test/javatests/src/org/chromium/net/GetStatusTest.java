@@ -13,6 +13,7 @@ import static org.chromium.net.CronetTestRule.getContext;
 import android.net.http.UrlRequest;
 import android.os.ConditionVariable;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -40,6 +41,7 @@ import java.util.concurrent.Executors;
  * expected.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 public class GetStatusTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();

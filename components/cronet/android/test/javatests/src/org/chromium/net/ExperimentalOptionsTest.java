@@ -22,6 +22,7 @@ import android.net.http.ExperimentalHttpEngine;
 import android.net.http.NetworkException;
 import android.net.http.UrlRequest;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
@@ -54,6 +55,7 @@ import java.util.concurrent.CountDownLatch;
  * Tests for experimental options.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(34)
 @JNINamespace("cronet")
 public class ExperimentalOptionsTest {
     @Rule
