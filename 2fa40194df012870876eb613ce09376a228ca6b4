@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3a4c010c_7027433c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2023-02-22T07:06:51Z",
+      "side": 1,
+      "message": "Please specify bug number and more details of the change in the commit message.",
+      "revId": "2fa40194df012870876eb613ce09376a228ca6b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33d722d0_58ffddbc",
         "filename": "Android.bp",
         "patchSetId": 2
