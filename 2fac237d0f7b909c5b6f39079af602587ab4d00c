@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c55c2bc0_5c61b9eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-23T17:31:15Z",
+      "side": 1,
+      "message": "Let me know if this LGTY before I backport these changes to gn2bp.\n\nP.S. I could split the soong_namespace but I don\u0027t think it\u0027s worth the extra effort as it\u0027s a 1 line change.",
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

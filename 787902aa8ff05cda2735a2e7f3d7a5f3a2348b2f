@@ -74,6 +74,30 @@
       },
       "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89324fdb_c929e976",
+        "filename": "Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 10836,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-23T17:31:15Z",
+      "side": 1,
+      "message": "Yep. Removed.",
+      "parentUuid": "ec8af00c_74d00762",
+      "range": {
+        "startLine": 10826,
+        "startChar": 0,
+        "endLine": 10836,
+        "endChar": 10
+      },
+      "revId": "787902aa8ff05cda2735a2e7f3d7a5f3a2348b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
