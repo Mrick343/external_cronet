@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d4c9cad1_7dccc321",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-23T18:40:41Z",
+      "side": 1,
+      "message": "\u003e Does this mean backport to BUILD.gn?\n\nOh, I meant to stop translating `third_party/boringssl/BUILD.gn` with gn2bp and instead always hook the manually crafted at `third_party/boringssl/Android.bp`.\n\n\u003e What does the gn2bp produce when you change boringssl to a shared_library third_party/boringssl/BUILD.gn?\n\nI\u0027m guessing it would produce a `cc_library_shared`, but to get FIPS right that is not good enough. The sources need to be split in a specific way with certain flags applied only to some of them.",
+      "parentUuid": "22677c38_8f2c3423",
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3e1fa0cd_a8ad13c2",
         "filename": "third_party/boringssl/Android.bp",
         "patchSetId": 16
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "It looks like boringssl only relies on the STL parts of the standard library (which are header-only).",
       "parentUuid": "3e1fa0cd_a8ad13c2",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 36,
+        "endChar": 6
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da22c333_efbfcf33",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-23T18:40:41Z",
+      "side": 1,
+      "message": "Makes sense.",
+      "parentUuid": "cf6dd961_5aec56ed",
       "range": {
         "startLine": 32,
         "startChar": 3,
