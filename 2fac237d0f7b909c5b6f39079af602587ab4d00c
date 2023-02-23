@@ -57,6 +57,30 @@
       },
       "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf6dd961_5aec56ed",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-23T18:11:33Z",
+      "side": 1,
+      "message": "It looks like boringssl only relies on the STL parts of the standard library (which are header-only).",
+      "parentUuid": "3e1fa0cd_a8ad13c2",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 36,
+        "endChar": 6
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
