@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "22677c38_8f2c3423",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-23T18:09:44Z",
+      "side": 1,
+      "message": "\u003e Let me know if this LGTY before I backport these changes to gn2bp\n\nDoes this mean backport to BUILD.gn? What does the gn2bp produce when you change boringssl to a shared_library third_party/boringssl/BUILD.gn?",
+      "parentUuid": "c55c2bc0_5c61b9eb",
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3e1fa0cd_a8ad13c2",
         "filename": "third_party/boringssl/Android.bp",
         "patchSetId": 16
