@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce3f4cda_a461e303",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-24T17:36:37Z",
+      "side": 1,
+      "message": "Discussed offline, we\u0027ll keep as is but try to move the source.bp generation step upstream.",
+      "parentUuid": "d4c9cad1_7dccc321",
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e1fa0cd_a8ad13c2",
