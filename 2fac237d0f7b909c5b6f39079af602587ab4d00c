@@ -74,6 +74,144 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "469e2629_fc5f5d8a",
+        "filename": "Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "This change is technically unrelated; I would suggest putting it in a separate CL.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 18
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a350092b_142b4800",
+        "filename": "Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2448,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "Are these required? They are already part of the cc_defaults. (And I am just noticing, that it should probably be min_sdk_version: 30).",
+      "range": {
+        "startLine": 2448,
+        "startChar": 4,
+        "endLine": 2448,
+        "endChar": 26
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81d4b30f_d4a1d43e",
+        "filename": "Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4357,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "we should be getting c_std from c flags instead. We don\u0027t currently collect cflags_c aren\u0027t currently collected here: https://source.corp.google.com/aosp-master/packages/modules/Connectivity/tools/gn2bp/gn_utils.py;l\u003d415\nAnd this also needs to be updated:\nhttps://source.corp.google.com/aosp-master/packages/modules/Connectivity/tools/gn2bp/gen_android_bp;l\u003d1353\n\nAlso, should it be c11 or gnu11? Which target needs this?",
+      "range": {
+        "startLine": 4357,
+        "startChar": 4,
+        "endLine": 4357,
+        "endChar": 19
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "334b50c7_e7654466",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: add a comment: \"Guarded with namespace to not clash with //external/conscrypt\".",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bf0671d_c66dcecb",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: should this be merged with boringssl_defaults?",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecf7acc8_240289b6",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: While I don\u0027t disagree about being specific here, this isn\u0027t actually built on tm-mainline-prod and the default c_std in U has been updated to gnu11. Might want to update the comment.",
+      "range": {
+        "startLine": 25,
+        "startChar": 28,
+        "endLine": 25,
+        "endChar": 43
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3e1fa0cd_a8ad13c2",
         "filename": "third_party/boringssl/Android.bp",
         "patchSetId": 16
@@ -138,6 +276,121 @@
         "startChar": 3,
         "endLine": 36,
         "endChar": 6
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac590282_4c4a617c",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: consider keeping these sorted alphabetically so they are easier to parse.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 26
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c4be8da_99631cbe",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: we generally use TODO(b/${BUG}) in Android as it\u0027s easier to keep track of. Maybe add it to some release hotlist to make sure we don\u0027t forget to fix this (if there is one?)?",
+      "range": {
+        "startLine": 93,
+        "startChar": 16,
+        "endLine": 93,
+        "endChar": 27
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e99f01ec_eab69677",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "Is this our temporary hack or someone else\u0027s temporary hack? Is there a bug associated with this hack?",
+      "range": {
+        "startLine": 109,
+        "startChar": 11,
+        "endLine": 109,
+        "endChar": 25
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3824278_fd33c853",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: this defaults to true, so it can be removed.",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 27
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cff2af9c_19aac662",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-24T18:57:47Z",
+      "side": 1,
+      "message": "nit: should libcrypto_defaults include cronet_defaults, libcrypto_sources, boringssl_defaults, and boringssl_flags?\n\nAlso, should unique_host_soname and target.android... be added to libcrypto_defaults? (libcrypto_for_testing could still specify the additional cflag (-DBORINGSSL_FIPS_BREAK_TESTS); Soong adds target properties to defaults and does not override them).\n\n---\n\nActually, just seeing that libcrypto_defaults are also used for bcm_object. The naming of the defaults is a bit confusing. I would expect libcrypto_defaults to be used for libcrypto and libcrypto_for_testing.",
+      "range": {
+        "startLine": 179,
+        "startChar": 9,
+        "endLine": 179,
+        "endChar": 27
       },
       "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
