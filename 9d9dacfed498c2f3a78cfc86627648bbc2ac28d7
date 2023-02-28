@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbe672f7_f37bd2e0",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "Per comment on other CL, it looks like this isn\u0027t actually @NonNull because passing null doesn\u0027t throw an exception, and in fact null is the default value. Maybe make this @Nullable instead?",
+      "range": {
+        "startLine": 320,
+        "startChar": 42,
+        "endLine": 320,
+        "endChar": 50
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da308fd2_2d5b0f1a",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "What does null mean? Use the default? If so, this should be explained in the javadoc.",
+      "range": {
+        "startLine": 111,
+        "startChar": 36,
+        "endLine": 111,
+        "endChar": 45
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54c08d4b_3a4dce1d",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "Does this actually throw NPE if the caller passes in null? If not, then mayne it should be @Nullable instead?",
+      "range": {
+        "startLine": 128,
+        "startChar": 38,
+        "endLine": 128,
+        "endChar": 46
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4089665_4b9884b4",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "Ditto, does this throw NPE if host is null?",
+      "range": {
+        "startLine": 224,
+        "startChar": 35,
+        "endLine": 224,
+        "endChar": 43
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9639ccc_92feda2e",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "Ditto, do these throw NPE if the caller passes in null?",
+      "range": {
+        "startLine": 271,
+        "startChar": 40,
+        "endLine": 271,
+        "endChar": 48
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce0e2d4e_c5488867",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 308,
+        "startChar": 38,
+        "endLine": 308,
+        "endChar": 46
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3597b5d2_c35df3ae",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "Ditto. Actually, for optional builder parameters like this one, @Nullable is recommended, because it lets the caller restore the builder object to the default state.",
+      "range": {
+        "startLine": 334,
+        "startChar": 37,
+        "endLine": 334,
+        "endChar": 45
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a095bed1_178da1c3",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-02-28T08:56:55Z",
+      "side": 1,
+      "message": "If the caller passes in null to setVersionString, what does this return? If it returns null, then NonNull here is wrong...",
+      "range": {
+        "startLine": 411,
+        "startChar": 4,
+        "endLine": 411,
+        "endChar": 12
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
