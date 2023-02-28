@@ -519,6 +519,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc6e62c8_4c06dba0",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-02-28T14:36:45Z",
+      "side": 1,
+      "message": "Nevermind, this is still required as this is a syntax error, not a compile error. I\u0027ve filed an actual bug and I\u0027m now referencing that.",
+      "parentUuid": "f6a6a40e_cbc0492d",
+      "range": {
+        "startLine": 93,
+        "startChar": 16,
+        "endLine": 93,
+        "endChar": 27
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e99f01ec_eab69677",
