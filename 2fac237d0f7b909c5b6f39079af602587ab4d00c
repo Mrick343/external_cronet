@@ -682,6 +682,30 @@
       },
       "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04d6b6cf_8c0014d5",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-02-28T17:36:41Z",
+      "side": 1,
+      "message": "Gotcha! Can you maybe add a comment somewhere (or multiple if you prefer) that reflects what\u0027s coming from external/boringssl?",
+      "parentUuid": "9db32a19_bcec7247",
+      "range": {
+        "startLine": 179,
+        "startChar": 9,
+        "endLine": 179,
+        "endChar": 27
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
