@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b75fe72b_c70bf071",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:54:04Z",
+      "side": 1,
+      "message": "Ditto about the annotation rename not being necessary.",
+      "range": {
+        "startLine": 356,
+        "startChar": 8,
+        "endLine": 356,
+        "endChar": 34
+      },
+      "revId": "4ef4d9d619b7d8a2c6ea50f2f8965c6980a82c0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
