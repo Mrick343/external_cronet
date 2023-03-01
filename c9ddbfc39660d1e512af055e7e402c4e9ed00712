@@ -16,6 +16,29 @@
       "message": "Pete, can you take a look at this to check if it\u0027s reasonable FIPS-wise?",
       "revId": "c9ddbfc39660d1e512af055e7e402c4e9ed00712",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "247847c3_bc28066a",
+        "filename": "third_party/boringssl/sources.bp",
+        "patchSetId": 19
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1334152
+      },
+      "writtenOn": "2023-03-01T10:54:00Z",
+      "side": 1,
+      "message": "Just ensuring you\u0027re aware this final is auto-generated.  If you need any changes to the generation script then I\u0027m sure we can upstream them.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 73
+      },
+      "revId": "c9ddbfc39660d1e512af055e7e402c4e9ed00712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

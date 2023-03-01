@@ -706,6 +706,30 @@
       },
       "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48645d13_c4443d46",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1334152
+      },
+      "writtenOn": "2023-03-01T10:54:00Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s my bad... Looking at it I should have factored out some new sets of defaults to keep the break-tests versions automagically in sync.\n\nI shall try and do that this week and CC y\u0027all.",
+      "parentUuid": "04d6b6cf_8c0014d5",
+      "range": {
+        "startLine": 179,
+        "startChar": 9,
+        "endLine": 179,
+        "endChar": 27
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
