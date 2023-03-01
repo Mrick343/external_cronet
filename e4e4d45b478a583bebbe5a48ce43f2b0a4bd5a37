@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d2aa5f0_d3e06090",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:49:38Z",
+      "side": 1,
+      "message": "The CL itself looks fine from the AOSP perspective. I have no strong opinions on structuring the patches.",
+      "revId": "e4e4d45b478a583bebbe5a48ce43f2b0a4bd5a37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
