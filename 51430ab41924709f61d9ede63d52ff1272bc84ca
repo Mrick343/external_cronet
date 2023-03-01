@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01d4b582_a58ae6ea",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:51:18Z",
+      "side": 1,
+      "message": "This can be reverted, the annotations are irrelevant for AOSP.",
+      "range": {
+        "startLine": 187,
+        "startChar": 8,
+        "endLine": 187,
+        "endChar": 19
+      },
+      "revId": "51430ab41924709f61d9ede63d52ff1272bc84ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
