@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6133f40c_b300b659",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:45:43Z",
+      "side": 1,
+      "message": "The idea behind making these non-Nullable is that if you want to keep the default you shouldn\u0027t set and then reset the value in the first place.\n\ngo/android-api-guidelines#builders-copy-nullable-setters has some guidance on Nullable parameters when the builder can be created from an existing object. It\u0027s not currently the case though, and if we add this functionality, I\u0027d actually prefer to add `clearFoo()` methods, which is also recommended here: go/android-api-guidelines#builder-method-naming \n\nThrowing a NPE is recommended, but optional per the guidelines: go/android-api-guidelines#nullability. I believe this has been discussed and we  to do this upstream and let the checks drip down in one of the subsequent releases given it\u0027s not a must-have. If the NPE is virtually a requirement, I\u0027d prefer adding the checks over making the parameters Nullable (see above).",
+      "parentUuid": "bbe672f7_f37bd2e0",
+      "range": {
+        "startLine": 320,
+        "startChar": 42,
+        "endLine": 320,
+        "endChar": 50
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "da308fd2_2d5b0f1a",
         "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
         "patchSetId": 10
@@ -37,6 +61,30 @@
       "writtenOn": "2023-02-28T08:56:55Z",
       "side": 1,
       "message": "What does null mean? Use the default? If so, this should be explained in the javadoc.",
+      "range": {
+        "startLine": 111,
+        "startChar": 36,
+        "endLine": 111,
+        "endChar": 45
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c286502_038b9c28",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:45:43Z",
+      "side": 1,
+      "message": "See above - I\u0027d argue this should be @NonNull",
+      "parentUuid": "da308fd2_2d5b0f1a",
       "range": {
         "startLine": 111,
         "startChar": 36,
@@ -175,6 +223,30 @@
       "writtenOn": "2023-02-28T08:56:55Z",
       "side": 1,
       "message": "If the caller passes in null to setVersionString, what does this return? If it returns null, then NonNull here is wrong...",
+      "range": {
+        "startLine": 411,
+        "startChar": 4,
+        "endLine": 411,
+        "endChar": 12
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3142fa16_a67e5153",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:45:43Z",
+      "side": 1,
+      "message": "This is a static method - the return value is controlled by Cronet internals. We guarantee that it won\u0027t be null.",
+      "parentUuid": "a095bed1_178da1c3",
       "range": {
         "startLine": 411,
         "startChar": 4,
