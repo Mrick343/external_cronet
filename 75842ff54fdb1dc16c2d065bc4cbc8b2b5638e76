@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b982f195_9627de47",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-01T11:55:30Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 290,
+        "startChar": 8,
+        "endLine": 290,
+        "endChar": 18
+      },
+      "revId": "75842ff54fdb1dc16c2d065bc4cbc8b2b5638e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
