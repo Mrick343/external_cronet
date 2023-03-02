@@ -9,6 +9,7 @@ import android.net.http.ApiVersion;
 import android.os.ConditionVariable;
 import android.os.Process;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
@@ -463,12 +464,13 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     @Override
-    public void bindToNetwork(@Nullable Network network) {
-        if (network == null) {
-            mNetworkHandle = UNBIND_NETWORK_HANDLE;
-        } else {
-            mNetworkHandle = network.getNetworkHandle();
-        }
+    public void bindToNetwork(@NonNull Network network) {
+        mNetworkHandle = network.getNetworkHandle();
+    }
+
+    @Override
+    public void unbindFromNetwork() {
+        mNetworkHandle = UNBIND_NETWORK_HANDLE;
     }
 
     @VisibleForTesting

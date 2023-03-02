@@ -7,6 +7,7 @@ package android.net.http;
 import android.annotation.IntDef;
 import android.net.Network;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.lang.annotation.Retention;
@@ -127,10 +128,23 @@ public abstract class UrlRequest {
          * will  fail, the exact error will depend on the stage of request processing when
          * the network disconnects.
          *
-         * @param network the network to bind the request to. Specify {@code null} to unbind.
+         * <p>To reverse the action or override the engine setting,
+         * use {@link #unbindFromNetwork()}.
+         *
+         * @param network the network to bind the request to.
          * @return the builder to facilitate chaining.
          */
-        public abstract Builder bindToNetwork(@Nullable Network network);
+        public abstract Builder bindToNetwork(@NonNull Network network);
+
+        /**
+         * Release a preexisting network binding previously created
+         * by {@link #bindToNetwork(Network)} or {@link HttpEngine#bindToNetwork(Network)}.
+         *
+         * <p>If the engine isn't bound to any network the method has no effect, thus making it idempotent.
+         *
+         * @return the builder to facilitate chaining.
+         */
+        public abstract Builder unbindFromNetwork();
 
         /**
          * Sets {@link android.net.TrafficStats} tag to use when accounting socket traffic caused by
