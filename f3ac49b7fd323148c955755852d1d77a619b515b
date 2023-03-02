@@ -52,6 +52,24 @@
       "parentUuid": "688e9575_563f2363",
       "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ce4673f_44f85eb0",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-02T08:36:47Z",
+      "side": 1,
+      "message": "Let me confirm your comment\nyou suggest updating getProxyServer to return null if the proxyServer is empty string in this CL?\nOr you suggest we can introduce Proxy class and use that instead of string in this CL?\nOr you mean we don\u0027t need to change and keep Nullable as a API linter fix?",
+      "parentUuid": "b3d5e310_be06db7f",
+      "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
