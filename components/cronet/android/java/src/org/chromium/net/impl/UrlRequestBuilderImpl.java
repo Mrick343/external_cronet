@@ -16,6 +16,7 @@ import android.net.http.RequestFinishedInfo;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -210,12 +211,14 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     }
 
     @Override
-    public UrlRequestBuilderImpl bindToNetwork(@Nullable Network network) {
-        if (network == null) {
-            mNetworkHandle = UNBIND_NETWORK_HANDLE;
-        } else {
-            mNetworkHandle = network.getNetworkHandle();
-        }
+    public UrlRequestBuilderImpl bindToNetwork(@NonNull Network network) {
+        mNetworkHandle = network.getNetworkHandle();
+        return this;
+    }
+
+    @Override
+    public UrlRequestBuilderImpl unbindFromNetwork() {
+        mNetworkHandle = UNBIND_NETWORK_HANDLE;
         return this;
     }
 
