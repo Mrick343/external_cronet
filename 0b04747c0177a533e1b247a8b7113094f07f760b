@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bec4c947_94928159",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T15:17:29Z",
+      "side": 1,
+      "message": "I have reviewed the licensing situation and we agreed on the following:\nMETADATA should include only\nlicense_text: [\n  \"LICENSE\"\n]\nand the individual licenses should be concatenated into this top level file.\nThis will be done in another CL, as this the code has correct licenses in each directories (and is not going into the production build).",
+      "revId": "0b04747c0177a533e1b247a8b7113094f07f760b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
