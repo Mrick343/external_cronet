@@ -730,6 +730,30 @@
       },
       "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "651aa77f_98cf4093",
+        "filename": "third_party/boringssl/Android.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-03T14:46:45Z",
+      "side": 1,
+      "message": "I\u0027ve some context (about most of this stuff coming from //external/boringssl/Android.bp) at the top of this file.",
+      "parentUuid": "48645d13_c4443d46",
+      "range": {
+        "startLine": 179,
+        "startChar": 9,
+        "endLine": 179,
+        "endChar": 27
+      },
+      "revId": "2fac237d0f7b909c5b6f39079af602587ab4d00c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
