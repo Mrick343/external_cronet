@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0573ca59_25a63488",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-03T17:04:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5af1a5d4_91fe546f",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed87e1d0_8fac3d94",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-03-03T13:31:42Z",
       "side": 1,
       "message": "This is shorter than https://source.corp.google.com/android/external/icu/NOTICE - do you maybe know why?",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "470e90a9_a1b1f8a3",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-03T17:04:53Z",
+      "side": 1,
+      "message": "https://source.chromium.org/chromium/chromium/src/+/main:base/third_party/icu/README.chromium;l\u003d16",
+      "parentUuid": "1390b51a_73f1d9b0",
       "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -100,6 +136,54 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c1666d49_e1988a50",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-03T17:04:53Z",
+      "side": 1,
+      "message": "Fixing this LICENSE file must happen upstream in Chromium as this will be replaced the next time we import Cronet to AOSP.",
+      "parentUuid": "0c92aa85_c227a149",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 0
+      },
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c01df24_e6faffd6",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-03T17:04:53Z",
+      "side": 1,
+      "message": "This is surfacing due to two issues:\n1) There is no standard format for the structure of the LICENSE file.\n2) The LICENSE text exist upstream which sometimes has extra additions like `author`.\n\nThe solution here would be to fix it upstream and speak with the opensource team about a proper structure for the LICENSE file.",
+      "parentUuid": "7af478f7_c02a6b86",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 0
+      },
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "575f13ac_3bc8559b",
         "filename": "LICENSE",
         "patchSetId": 1
@@ -111,6 +195,24 @@
       "writtenOn": "2023-03-03T13:31:42Z",
       "side": 1,
       "message": "Files with no corresponding license?",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c21be3e_43e752be",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 3645,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-03T17:04:53Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "575f13ac_3bc8559b",
       "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
