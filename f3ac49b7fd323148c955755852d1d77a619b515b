@@ -70,6 +70,24 @@
       "parentUuid": "b3d5e310_be06db7f",
       "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10431450_31534482",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-03T11:13:45Z",
+      "side": 1,
+      "message": "Hide this API.",
+      "parentUuid": "6ce4673f_44f85eb0",
+      "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
