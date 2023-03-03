@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5af1a5d4_91fe546f",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T13:31:42Z",
+      "side": 1,
+      "message": "go/thirdpartylicenses#different suggests a pattern here:\nnet/third_party/uri_template/*\n\nI think a good goal here would be to have a set of patterns that cover 100% of third party files.",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed87e1d0_8fac3d94",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T13:31:42Z",
+      "side": 1,
+      "message": "Can this be net/third_party/quiche/*?\nI\u0027ve seen src before, but we import also BUILD and overrides from Chromium - are they simply licensed as Chromium code?",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1390b51a_73f1d9b0",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T13:31:42Z",
+      "side": 1,
+      "message": "This is shorter than https://source.corp.google.com/android/external/icu/NOTICE - do you maybe know why?",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c92aa85_c227a149",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T13:31:42Z",
+      "side": 1,
+      "message": "Please fix this WARNING reported by ComplianceLint: LicenseIsKnown\n\nAnalyzer Description: Reports third party compliance warnings. go/compliancelint\nOwner: opensource-compliance-team@google.com\n\nLicenseIsKnown\nUnidentified text present in LICENSE file.\n\n📖 See go/compliancelint-checks#LicenseIsKnown",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 0
+      },
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7af478f7_c02a6b86",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T13:31:42Z",
+      "side": 1,
+      "message": "Please fix this WARNING reported by ComplianceLint: LicenseIsKnown\n\nAnalyzer Description: Reports third party compliance warnings. go/compliancelint\nOwner: opensource-compliance-team@google.com\n\nLicenseIsKnown\nUnidentified text present in LICENSE file.\n\n📖 See go/compliancelint-checks#LicenseIsKnown",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 0
+      },
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "575f13ac_3bc8559b",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 3645,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-03T13:31:42Z",
+      "side": 1,
+      "message": "Files with no corresponding license?",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
