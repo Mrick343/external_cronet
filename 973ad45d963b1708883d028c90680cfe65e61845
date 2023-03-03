@@ -119,6 +119,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c9a7398_ca9ea8b7",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-03T06:37:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b9cf974_edb06e91",
+      "range": {
+        "startLine": 276,
+        "startChar": 4,
+        "endLine": 276,
+        "endChar": 80
+      },
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "009d79c2_56f1ccd9",
@@ -150,6 +174,24 @@
       "side": 1,
       "message": "I agree we should move to upstream-next since this should be upstremed.\nBut, I prefer to keep under local since moving to upstrem-next break our script to generate desc json files.",
       "parentUuid": "009d79c2_56f1ccd9",
+      "revId": "973ad45d963b1708883d028c90680cfe65e61845",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7822b63_f02b9a68",
+        "filename": "patches/local/0031-cronet-Fix-ListenerLast-API-linter-error.patch",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-03T06:37:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec3e243a_a01c8df3",
       "revId": "973ad45d963b1708883d028c90680cfe65e61845",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
