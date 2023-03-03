@@ -215,6 +215,24 @@
       "parentUuid": "575f13ac_3bc8559b",
       "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4d67b97_170511a4",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 3645,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-03T17:16:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c21be3e_43e752be",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
