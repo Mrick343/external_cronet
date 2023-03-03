@@ -14,6 +14,63 @@
 
 // This is manually maintained and automatically included into the Android.bp by the gn2bp script.
 
+license {
+    name: "external_cronet_license",
+    license_kinds: [
+        "SPDX-license-identifier-AFL-2.0",
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-BSD-3-Clause",
+        "SPDX-license-identifier-BSD-Source-Code",
+        "SPDX-license-identifier-BSD-2-Clause",
+        "SPDX-license-identifier-BSD-4-Clause",
+        "SPDX-license-identifier-BSL-1.0",
+        "SPDX-license-identifier-ICU",
+        "SPDX-license-identifier-ISC",
+        "SPDX-license-identifier-MIT",
+        "SPDX-license-identifier-MPL",
+        "SPDX-license-identifier-MPL-1.1",
+        "SPDX-license-identifier-MPL-2.0",
+        "SPDX-license-identifier-NCSA",
+        "SPDX-license-identifier-GPL-2.0-with-autoconf-exception", // ICU
+        "SPDX-license-identifier-GPL-3.0-with-autoconf-exception", // ICU
+        "SPDX-license-identifier-OpenSSL",
+        "SPDX-license-identifier-Unicode-DFS-2016",
+        "legacy_unencumbered",
+    ],
+    license_text: [
+        "LICENSE",
+        "base/third_party/double_conversion/LICENSE",
+        "base/third_party/dynamic_annotations/LICENSE",
+        "base/third_party/icu/LICENSE",
+        "base/third_party/nspr/LICENSE",
+        "base/third_party/superfasthash/LICENSE",
+        "base/third_party/symbolize/LICENSE",
+        "base/third_party/valgrind/LICENSE",
+        "base/third_party/xdg_user_dirs/LICENSE",
+        "net/third_party/quiche/src/LICENSE",
+        "net/third_party/uri_template/LICENSE",
+        "third_party/abseil-cpp/LICENSE",
+        "third_party/ashmem/LICENSE",
+        "third_party/boringssl/src/LICENSE",
+        "third_party/boringssl/src/third_party/fiat/LICENSE",
+        "third_party/boringssl/src/third_party/googletest/LICENSE",
+        "third_party/boringssl/src/third_party/wycheproof_testvectors/LICENSE",
+        "third_party/brotli/LICENSE",
+        "third_party/icu/LICENSE",
+        "third_party/icu/scripts/LICENSE",
+        "third_party/libevent/LICENSE",
+        "third_party/metrics_proto/LICENSE",
+        "third_party/modp_b64/LICENSE",
+        "third_party/protobuf/LICENSE",
+        "third_party/protobuf/third_party/utf8_range/LICENSE",
+        "url/third_party/mozilla/LICENSE",
+        "buildtools/third_party/libc++abi/trunk/LICENSE",
+        "buildtools/third_party/libc++/trunk/LICENSE",
+        "third_party/quic_trace/src/third_party/glew/LICENSE",
+    ],
+}
+
 java_library {
     // Don't change the name of the module.
     name: "cronet_aml_api_java",
