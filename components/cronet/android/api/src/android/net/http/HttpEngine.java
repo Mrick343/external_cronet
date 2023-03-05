@@ -5,6 +5,9 @@
 package android.net.http;
 
 import android.content.Context;
+import android.net.Network;
+
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -384,7 +387,9 @@ public abstract class HttpEngine {
     /**
      * @return a human-readable version string of the engine.
      */
-    public abstract String getVersionString();
+    public static String getVersionString() {
+        return ApiVersion.getCronetVersionWithLastChange();
+    }
 
     /**
      * Shuts down the {@link HttpEngine} if there are no active requests,
@@ -452,6 +457,16 @@ public abstract class HttpEngine {
     }
 
     /**
+     * Binds the engine to the specified network. All requests created through this engine
+     * will use the network associated to this handle. If this network disconnects all requests will
+     * fail, the exact error will depend on the stage of request processing when the network
+     * disconnects.
+     *
+     * @param network the network to bind the engine to. Specify {@code null} to unbind.
+     */
+    public void bindToNetwork(@Nullable Network network) {}
+
+    /**
      * Establishes a new connection to the resource specified by the {@link URL} {@code url}.
      * <p>
      * <b>Note:</b> This {@link java.net.HttpURLConnection} implementation is subject to certain
@@ -510,4 +525,21 @@ public abstract class HttpEngine {
      */
     public abstract UrlRequest.Builder newUrlRequestBuilder(
             String url, UrlRequest.Callback callback, Executor executor);
+
+    /**
+     * Creates a builder for {@link BidirectionalStream} objects. All callbacks for
+     * generated {@code BidirectionalStream} objects will be invoked on
+     * {@code executor}. {@code executor} must not run tasks on the
+     * current thread, otherwise the networking operations may block and exceptions
+     * may be thrown at shutdown time.
+     *
+     * @param url URL for the generated streams.
+     * @param callback the {@link BidirectionalStream.Callback} object that gets invoked upon
+     * different events occurring.
+     * @param executor the {@link Executor} on which {@code callback} methods will be invoked.
+     *
+     * @return the created builder.
+     */
+    public abstract BidirectionalStream.Builder newBidirectionalStreamBuilder(
+            String url, BidirectionalStream.Callback callback, Executor executor);
 }
