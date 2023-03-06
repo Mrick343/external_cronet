@@ -88,6 +88,24 @@
       "parentUuid": "6ce4673f_44f85eb0",
       "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3f28df0_43c9ca30",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-03-06T04:09:02Z",
+      "side": 1,
+      "message": "Chatted with Dan and it looks like there\u0027s no support for setting proxies, either for the engine or for requests. So the only thing that this would return is whatever system proxy was used for this request.\n\nIn that case, then this method should return an android.net.ProxyInfo, not a String.\n\nThat said, even that doesn\u0027t seem very useful though since the proxy is available in other ways, such as cm.getLinkProperties(network).getHttpProxy() .\n\nI would say either change this to @Nullable ProxyInfo, or make it @hide and expose it when we know the exact semantics of what we want.",
+      "parentUuid": "6ce4673f_44f85eb0",
+      "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
