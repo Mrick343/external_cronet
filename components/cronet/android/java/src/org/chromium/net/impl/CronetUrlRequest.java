@@ -198,6 +198,52 @@ public final class CronetUrlRequest extends UrlRequestBase {
         }
         mInitialMethod = method;
     }
+    @Override
+    public String getHttpMethod() {
+        return mInitialMethod;
+    }
+
+    @Override
+    public boolean isAllowDirectExecutorEnabled() {
+        return mAllowDirectExecutor;
+    }
+
+    @Override
+    public boolean isCacheDisabled() {
+        return mDisableCache;
+    }
+
+    @Override
+    public Integer getTrafficStatsTag() {
+        return mTrafficStatsTagSet ? mTrafficStatsTag : null;
+    }
+
+    @Override
+    public Integer getTrafficStatsUid() {
+        return mTrafficStatsUidSet ? mTrafficStatsUid : null;
+    }
+    @Override
+    public int getPriority() {
+        switch (mPriority) {
+            case RequestPriority.IDLE:
+                return Builder.REQUEST_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return Builder.REQUEST_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return Builder.REQUEST_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return Builder.REQUEST_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return Builder.REQUEST_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid stream priority: " + mPriority);
+        }
+    }
+
+    @Override
+    public List<Map.Entry<String, String>> getHeaders() {
+        return mRequestHeaders;
+    }
 
     @Override
     public void addHeader(String header, String value) {
