@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -28,7 +30,7 @@ public abstract class UrlResponseInfo {
          * @return an unmodifiable list of response header field and value pairs
          */
         @NonNull
-        public abstract List<Map.Entry<String, String>> getAsList();
+        public abstract List<Pair<String, String>> getAsList();
 
         /**
          * Returns an unmodifiable map from response-header field names to lists of values.

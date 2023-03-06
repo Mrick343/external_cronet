@@ -20,6 +20,7 @@ import android.net.http.NetworkException;
 import android.net.http.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
 import android.net.http.UrlResponseInfo;
+import android.util.Pair;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -93,6 +94,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     private final int mInitialPriority;
     private final String mInitialMethod;
     private final String mRequestHeaders[];
+    private final List<Pair<String, String>> mRequestHeaderPairList;
     private final boolean mDelayRequestHeadersUntilFirstFlush;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mTrafficStatsTagSet;
@@ -250,6 +252,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mExecutor = executor;
         mInitialMethod = httpMethod;
         mRequestHeaders = stringsFromHeaderList(requestHeaders);
+        mRequestHeaderPairList = pairListFromEntryList(requestHeaders);
         mDelayRequestHeadersUntilFirstFlush = delayRequestHeadersUntilNextFlush;
         mPendingData = new LinkedList<>();
         mFlushData = new LinkedList<>();
@@ -259,6 +262,49 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mTrafficStatsUidSet = trafficStatsUidSet;
         mTrafficStatsUid = trafficStatsUid;
         mNetworkHandle = networkHandle;
+    }
+
+    @Override
+    public String getHttpMethod() {
+        return mInitialMethod;
+    }
+
+    @Override
+    public Integer getTrafficStatsTag() {
+        return mTrafficStatsTagSet ? mTrafficStatsTag : null;
+    }
+
+    @Override
+    public Integer getTrafficStatsUid() {
+        return mTrafficStatsUidSet ? mTrafficStatsUid : null;
+    }
+
+    @Override
+    public List<Pair<String, String>> getHeaders() {
+        return mRequestHeaderPairList;
+    }
+
+    @Override
+    public int getPriority() {
+        switch (mInitialPriority) {
+            case RequestPriority.IDLE:
+                return Builder.STREAM_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return Builder.STREAM_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return Builder.STREAM_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return Builder.STREAM_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return Builder.STREAM_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid stream priority: " + mInitialPriority);
+        }
+    }
+
+    @Override
+    public boolean isDelayRequestHeadersUntilFirstFlushEnabled() {
+        return mDelayRequestHeadersUntilFirstFlush;
     }
 
     @Override
@@ -716,6 +762,15 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
             headersArray[i++] = requestHeader.getValue();
         }
         return headersArray;
+    }
+
+    private static List<Pair<String, String>> pairListFromEntryList(
+            List<Map.Entry<String, String>> headerEntryList) {
+        List<Pair<String, String>> headerPairList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : headerEntryList) {
+            headerPairList.add(new Pair<String, String>(entry.getKey(), entry.getValue()));
+        }
+        return headerPairList;
     }
 
     private static int convertStreamPriority(@CronetEngineBase.StreamPriority int priority) {

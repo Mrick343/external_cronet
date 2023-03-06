@@ -26,9 +26,12 @@ import android.net.http.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;
+import android.util.Pair;
+
 import org.chromium.net.impl.CronetLogger.CronetTrafficInfo;
 
 import java.nio.ByteBuffer;
+import java.sql.Array;
 import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -88,7 +91,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
     private final int mPriority;
     private final int mIdempotency;
     private String mInitialMethod;
-    private final HeadersList mRequestHeaders = new HeadersList();
+    private final ArrayList<Pair<String, String>> mRequestHeaders = new ArrayList<>();
     private final Collection<Object> mRequestAnnotations;
     private final boolean mDisableCache;
     private final boolean mDisableConnectionMigration;
@@ -200,6 +203,53 @@ public final class CronetUrlRequest extends UrlRequestBase {
     }
 
     @Override
+    public String getHttpMethod() {
+        return mInitialMethod != null ? mInitialMethod : "POST";
+    }
+
+    @Override
+    public boolean isDirectExecutorAllowed() {
+        return mAllowDirectExecutor;
+    }
+
+    @Override
+    public boolean isCacheDisabled() {
+        return mDisableCache;
+    }
+
+    @Override
+    public Integer getTrafficStatsTag() {
+        return mTrafficStatsTagSet ? mTrafficStatsTag : null;
+    }
+
+    @Override
+    public Integer getTrafficStatsUid() {
+        return mTrafficStatsUidSet ? mTrafficStatsUid : null;
+    }
+    @Override
+    public int getPriority() {
+        switch (mPriority) {
+            case RequestPriority.IDLE:
+                return Builder.REQUEST_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return Builder.REQUEST_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return Builder.REQUEST_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return Builder.REQUEST_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return Builder.REQUEST_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid stream priority: " + mPriority);
+        }
+    }
+
+    @Override
+    public List<Pair<String, String>> getHeaders() {
+        return mRequestHeaders;
+    }
+
+    @Override
     public void addHeader(String header, String value) {
         checkNotStarted();
         if (header == null) {
@@ -208,7 +258,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
         if (value == null) {
             throw new NullPointerException("Invalid header value.");
         }
-        mRequestHeaders.add(new AbstractMap.SimpleImmutableEntry<String, String>(header, value));
+        mRequestHeaders.add(new Pair<String, String>(header, value));
     }
 
     @Override
@@ -242,15 +292,15 @@ public final class CronetUrlRequest extends UrlRequestBase {
                 }
 
                 boolean hasContentType = false;
-                for (Map.Entry<String, String> header : mRequestHeaders) {
-                    if (header.getKey().equalsIgnoreCase("Content-Type")
-                            && !header.getValue().isEmpty()) {
+                for (Pair<String, String> header : mRequestHeaders) {
+                    if (header.first.equalsIgnoreCase("Content-Type")
+                            && !header.second.isEmpty()) {
                         hasContentType = true;
                     }
                     if (!CronetUrlRequestJni.get().addRequestHeader(mUrlRequestAdapter,
-                                CronetUrlRequest.this, header.getKey(), header.getValue())) {
+                                CronetUrlRequest.this, header.first, header.second)) {
                         throw new IllegalArgumentException(
-                                "Invalid header " + header.getKey() + "=" + header.getValue());
+                                "Invalid header " + header.first + "=" + header.second);
                     }
                 }
                 if (mUploadDataStream != null) {
@@ -475,14 +525,14 @@ public final class CronetUrlRequest extends UrlRequestBase {
      * We are not really interested in their specific size but something which is close enough.
      */
     @VisibleForTesting
-    static long estimateHeadersSizeInBytes(HeadersList headers) {
+    static long estimateHeadersSizeInBytes(List<Pair<String, String>> headers) {
         if (headers == null) return 0;
         long responseHeaderSizeInBytes = 0;
-        for (Map.Entry<String, String> entry : headers) {
-            String key = entry.getKey();
+        for (Pair<String, String> entry : headers) {
+            String key = entry.first;
             if (key != null) responseHeaderSizeInBytes += key.length();
-            String value = entry.getValue();
-            if (value != null) responseHeaderSizeInBytes += entry.getValue().length();
+            String value = entry.second;
+            if (value != null) responseHeaderSizeInBytes += entry.second.length();
         }
         return responseHeaderSizeInBytes;
     }

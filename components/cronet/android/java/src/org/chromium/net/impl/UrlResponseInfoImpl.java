@@ -6,6 +6,7 @@ package org.chromium.net.impl;
 
 import android.net.http.UrlRequest;
 import android.net.http.UrlResponseInfo;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,15 +37,24 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
      * Unmodifiable container of response headers or trailers.
      */
     public static final class HeaderBlockImpl extends HeaderBlock {
-        private final List<Map.Entry<String, String>> mAllHeadersList;
+        private final List<Pair<String, String>> mAllHeadersList;
         private Map<String, List<String>> mHeadersMap;
 
         HeaderBlockImpl(List<Map.Entry<String, String>> allHeadersList) {
-            mAllHeadersList = allHeadersList;
+            mAllHeadersList = pairListFromEntryList(allHeadersList);
+        }
+
+        private List<Pair<String, String>> pairListFromEntryList(
+                List<Map.Entry<String, String>> headerEntryList) {
+            List<Pair<String, String>> headerPairList = new ArrayList<>();
+            for (Map.Entry<String, String> entry : headerEntryList) {
+                headerPairList.add(new Pair<String, String>(entry.getKey(), entry.getValue()));
+            }
+            return headerPairList;
         }
 
         @Override
-        public List<Map.Entry<String, String>> getAsList() {
+        public List<Pair<String, String>> getAsList() {
             return mAllHeadersList;
         }
 
@@ -55,13 +65,13 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
                 return mHeadersMap;
             }
             Map<String, List<String>> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            for (Map.Entry<String, String> entry : mAllHeadersList) {
+            for (Pair<String, String> entry : mAllHeadersList) {
                 List<String> values = new ArrayList<String>();
-                if (map.containsKey(entry.getKey())) {
-                    values.addAll(map.get(entry.getKey()));
+                if (map.containsKey(entry.first)) {
+                    values.addAll(map.get(entry.second));
                 }
-                values.add(entry.getValue());
-                map.put(entry.getKey(), Collections.unmodifiableList(values));
+                values.add(entry.second);
+                map.put(entry.first, Collections.unmodifiableList(values));
             }
             mHeadersMap = Collections.unmodifiableMap(map);
             return mHeadersMap;
