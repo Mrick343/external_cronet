@@ -6,6 +6,7 @@ package org.chromium.net.impl;
 
 import android.net.http.UrlRequest;
 import android.net.http.UrlResponseInfo;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
