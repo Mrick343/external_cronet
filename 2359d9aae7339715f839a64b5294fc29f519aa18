@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02130603_3eae06e8",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-06T09:38:51Z",
+      "side": 1,
+      "message": "Nit: space",
+      "range": {
+        "startLine": 106,
+        "startChar": 34,
+        "endLine": 106,
+        "endChar": 35
+      },
+      "revId": "2359d9aae7339715f839a64b5294fc29f519aa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
