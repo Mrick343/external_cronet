@@ -29,6 +29,7 @@ import android.net.http.UrlRequest;
 import org.chromium.net.impl.CronetLogger.CronetTrafficInfo;
 
 import java.nio.ByteBuffer;
+import java.sql.Array;
 import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -200,6 +201,53 @@ public final class CronetUrlRequest extends UrlRequestBase {
     }
 
     @Override
+    public String getHttpMethod() {
+        return mInitialMethod;
+    }
+
+    @Override
+    public boolean isDirectExecutorAllowed() {
+        return mAllowDirectExecutor;
+    }
+
+    @Override
+    public boolean isCacheDisabled() {
+        return mDisableCache;
+    }
+
+    @Override
+    public Integer getTrafficStatsTag() {
+        return mTrafficStatsTagSet ? mTrafficStatsTag : null;
+    }
+
+    @Override
+    public Integer getTrafficStatsUid() {
+        return mTrafficStatsUidSet ? mTrafficStatsUid : null;
+    }
+    @Override
+    public int getPriority() {
+        switch (mPriority) {
+            case RequestPriority.IDLE:
+                return Builder.REQUEST_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return Builder.REQUEST_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return Builder.REQUEST_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return Builder.REQUEST_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return Builder.REQUEST_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid stream priority: " + mPriority);
+        }
+    }
+
+    @Override
+    public List<Map.Entry<String, String>> getHeaders() {
+        return mRequestHeaders;
+    }
+
+    @Override
     public void addHeader(String header, String value) {
         checkNotStarted();
         if (header == null) {
@@ -248,7 +296,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
                         hasContentType = true;
                     }
                     if (!CronetUrlRequestJni.get().addRequestHeader(mUrlRequestAdapter,
-                                CronetUrlRequest.this, header.getKey(), header.getValue())) {
+                            CronetUrlRequest.this, header.getKey(), header.getValue())) {
                         throw new IllegalArgumentException(
                                 "Invalid header " + header.getKey() + "=" + header.getValue());
                     }

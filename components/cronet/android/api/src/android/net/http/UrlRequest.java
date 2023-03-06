@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -68,7 +70,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder setDisableCache(boolean disableCache);
+        public abstract Builder setCacheDisabled(boolean disableCache);
 
         /**
          * Lowest request priority. Passed to {@link #setPriority}.
@@ -116,7 +118,9 @@ public abstract class UrlRequest {
          *     {@code Executor} the request itself is using.
          * @return the builder to facilitate chaining.
          */
-        @NonNull
+        // SuppressLint: UploadDataProvider is a class to provide an upload body and getter would
+        // not be useful
+        @NonNull @SuppressLint("MissingGetterMatchingBuilder")
         public abstract Builder setUploadDataProvider(
                 @NonNull UploadDataProvider uploadDataProvider, @NonNull Executor executor);
 
@@ -135,7 +139,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder setAllowDirectExecutor(boolean allowDirectExecutor);
+        public abstract Builder setDirectExecutorAllowed(boolean allowDirectExecutor);
 
         /**
          * Binds the request to the specified network. The HTTP stack will send this request
@@ -461,6 +465,70 @@ public abstract class UrlRequest {
          */
         void onStatus(@UrlRequestStatus int status);
     }
+
+    /**
+     * Gets the HTTP method for the request
+     * See {@link UrlRequest.Builder#setHttpMethod(String)}.
+     *
+     * @return HTTP method for the request
+     */
+    @Nullable
+    public abstract String getHttpMethod();
+
+    /**
+     * Gets a request header. See {@link UrlRequest.Builder#addHeader(String, String)}
+     *
+     * @return List of header name value pair
+     */
+    @NonNull
+    public abstract List<Map.Entry<String, String>> getHeaders();
+
+    /**
+     * Get Whether to disable cache for the request. See {@link Builder#setCacheDisabled(boolean)}
+     *
+     * @return {@code true} to disable cache, {@code false} otherwise.
+     */
+    public abstract boolean isCacheDisabled();
+
+    /**
+     * Gets whether the executors this request will use to notify callbacks (for
+     * {@code UploadDataProvider}s and {@code UrlRequest.Callback}s) is intentionally performing
+     * inline execution. See {@link UrlRequest.Builder#setDirectExecutorAllowed(boolean)}
+     *
+     * @return {@code true} to allow executors performing inline execution, {@code false} otherwise.
+     */
+    public abstract boolean isDirectExecutorAllowed();
+
+    /**
+     * Gets priority of the request which should be one of the
+     * {@link Builder#REQUEST_PRIORITY_IDLE REQUEST_PRIORITY_*} values.
+     * See {@link Builder#setPriority(int)}
+     *
+     * @return priority of the request which should be one of the
+     *         {@link Builder#REQUEST_PRIORITY_IDLE REQUEST_PRIORITY_*} values.
+     */
+    public abstract int getPriority();
+
+    /**
+     * Gets {@link android.net.TrafficStats} tag to use when accounting socket traffic caused by
+     * this request. See {@link Builder#setTrafficStatsTag(int)}
+     *
+     * @return the tag value used to when accounting for socket traffic caused by this request.
+     */
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
+    public abstract Integer getTrafficStatsTag();
+
+    /**
+     * Gets specific UID to use when accounting socket traffic caused by this request.
+     * See {@link Builder#setTrafficStatsUid(int)}
+     *
+     * @return uid the UID to attribute socket traffic caused by this request.
+     */
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
+    public abstract Integer getTrafficStatsUid();
+
 
     /**
      * Starts the request, all callbacks go to {@link Callback}. May only be called
