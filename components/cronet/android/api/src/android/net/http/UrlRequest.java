@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -68,7 +70,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder setDisableCache(boolean disableCache);
+        public abstract Builder setCacheDisabled(boolean disableCache);
 
         /**
          * Lowest request priority. Passed to {@link #setPriority}.
@@ -116,7 +118,9 @@ public abstract class UrlRequest {
          *     {@code Executor} the request itself is using.
          * @return the builder to facilitate chaining.
          */
-        @NonNull
+        // SuppressLint: UploadDataProvider is wrapped by other classes after set.
+        // Also, UploadDataProvider is a class to provide an upload body and getter is not useful
+        @NonNull @SuppressLint("MissingGetterMatchingBuilder")
         public abstract Builder setUploadDataProvider(
                 @NonNull UploadDataProvider uploadDataProvider, @NonNull Executor executor);
 
@@ -135,7 +139,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder setAllowDirectExecutor(boolean allowDirectExecutor);
+        public abstract Builder setAllowDirectExecutorEnabled(boolean allowDirectExecutor);
 
         /**
          * Binds the request to the specified network. The HTTP stack will send this request
@@ -461,6 +465,48 @@ public abstract class UrlRequest {
          */
         void onStatus(@UrlRequestStatus int status);
     }
+
+    /**
+     * See {@link UrlRequest.Builder#setHttpMethod(String)}.
+     */
+    @Nullable
+    public abstract String getHttpMethod();
+
+    /**
+     * See {@link UrlRequest.Builder#addHeader(String, String)}
+     */
+    @NonNull
+    public abstract List<Map.Entry<String, String>> getHeaders();
+
+    /**
+     * See {@link Builder#setCacheDisabled(boolean)}
+     */
+    public abstract boolean isCacheDisabled();
+
+    /**
+     * See {@link UrlRequest.Builder#setAllowDirectExecutorEnabled(boolean)}
+     */
+    public abstract boolean isAllowDirectExecutorEnabled();
+
+    /**
+     * See {@link Builder#setPriority(int)}
+     */
+    public abstract int getPriority();
+
+    /**
+     * See {@link Builder#setTrafficStatsTag(int)}
+     */
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
+    public abstract Integer getTrafficStatsTag();
+
+    /**
+     * See {@link Builder#setTrafficStatsUid(int)}
+     */
+    // SuppressLint since return value is @Nullable
+    @Nullable @SuppressLint("AutoBoxing")
+    public abstract Integer getTrafficStatsUid();
+
 
     /**
      * Starts the request, all callbacks go to {@link Callback}. May only be called
