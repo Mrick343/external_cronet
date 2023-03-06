@@ -5,7 +5,6 @@
 package android.net.http;
 
 import android.annotation.IntDef;
-import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,8 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -94,7 +95,7 @@ public abstract class BidirectionalStream {
         public abstract Builder setPriority(@BidirectionalStreamPriority int priority);
 
         /**
-         * Delays sending request headers until {@link BidirectionalStream#flush()}
+         * Sets whether to delay sending request headers until {@link BidirectionalStream#flush()}
          * is called. This flag is currently only respected when QUIC is negotiated.
          * When true, QUIC will send request header frame along with data frame(s)
          * as a single packet when possible.
@@ -104,7 +105,7 @@ public abstract class BidirectionalStream {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder delayRequestHeadersUntilFirstFlush(
+        public abstract Builder setDelayRequestHeadersUntilFirstFlushEnabled(
                 boolean delayRequestHeadersUntilFirstFlush);
 
         /**
@@ -271,6 +272,40 @@ public abstract class BidirectionalStream {
         public void onCanceled(@NonNull BidirectionalStream stream,
                 @Nullable UrlResponseInfo info) {}
     }
+
+    /**
+     * See {@link BidirectionalStream.Builder#setHttpMethod(String)}.
+     */
+    @NonNull
+    public abstract String getHttpMethod();
+
+    /**
+     * See {@link BidirectionalStream.Builder#setTrafficStatsTag(int)}
+     */
+    @Nullable
+    public abstract Integer getTrafficStatsTag();
+
+    /**
+     * See {@link BidirectionalStream.Builder#setTrafficStatsUid(int)}
+     */
+    @Nullable
+    public abstract Integer getTrafficStatsUid();
+
+    /**
+     * See {@link Builder#addHeader(String, String)}
+     */
+    @NonNull
+    public abstract List<Map.Entry<String, String>> getHeaders();
+
+    /**
+     * See {@link Builder#setPriority(int)} for more information.
+     */
+    public abstract @Builder.BidirectionalStreamPriority int getPriority();
+
+    /**
+     * See {@link Builder#setDelayRequestHeadersUntilFirstFlushEnabled(boolean)}.
+     */
+    public abstract boolean isDelayRequestHeadersUntilFirstFlushEnabled();
 
     /**
      * Starts the stream, all callbacks go to the {@code callback} argument passed to {@link
