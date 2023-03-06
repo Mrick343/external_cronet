@@ -286,7 +286,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
         for (Pair<String, String> requestHeader : mRequestHeaders) {
             requestBuilder.addHeader(requestHeader.first, requestHeader.second);
         }
-        requestBuilder.setDisableCache(!getUseCaches());
+        requestBuilder.setCacheDisabled(!getUseCaches());
         // Set HTTP method.
         requestBuilder.setHttpMethod(method);
         if (checkTrafficStatsTag()) {
@@ -689,8 +689,8 @@ public class CronetHttpURLConnection extends HttpURLConnection {
         for (Map.Entry<String, String> entry : mResponseInfo.getHeaders().getAsList()) {
             // Strips Content-Encoding response header. See crbug.com/592700.
             if (!entry.getKey().equalsIgnoreCase("Content-Encoding")) {
-                mResponseHeadersList.add(
-                        new AbstractMap.SimpleImmutableEntry<String, String>(entry));
+                mResponseHeadersList.add(new AbstractMap.SimpleImmutableEntry<String, String>(
+                        entry.getKey(), entry.getValue()));
             }
         }
         mResponseHeadersList = Collections.unmodifiableList(mResponseHeadersList);

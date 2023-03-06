@@ -4,11 +4,14 @@
 
 package android.net.http;
 
+import android.annotation.IntDef;
 import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.time.Duration;
 
 /**
@@ -52,21 +55,51 @@ public class ConnectionMigrationOptions {
     private final Integer mMaxPathDegradingNonDefaultMigrationsCount;
 
     /**
-     * See {@link Builder#setEnableDefaultNetworkMigration}
+     * Option is enabled.
      */
-    // SuppressLint since return value is @Nullable
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getEnableDefaultNetworkMigration() {
-        return mEnableDefaultNetworkMigration;
+    public static final int MIGRATION_OPTION_ENABLED = 0;
+
+    /**
+     * Option is disabled.
+     */
+    public static final int MIGRATION_OPTION_DISABLED = 1;
+
+    /**
+     * Option is unspecified.
+     */
+    public static final int MIGRATION_OPTION_UNSPECIFIED = 2;
+
+    /** @hide */
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(flag = false, prefix = "MIGRATION_OPTION_", value = {
+            MIGRATION_OPTION_ENABLED,
+            MIGRATION_OPTION_DISABLED,
+            MIGRATION_OPTION_UNSPECIFIED,
+    })
+    public @interface MigrationOptionEnabled {}
+
+    private static @MigrationOptionEnabled int getMigrationOptionEnabled(Boolean enabled) {
+        if (enabled == null) {
+            return MIGRATION_OPTION_UNSPECIFIED;
+        } else if (enabled) {
+            return MIGRATION_OPTION_ENABLED;
+        } else {
+            return MIGRATION_OPTION_DISABLED;
+        }
     }
 
     /**
-     * See {@link Builder#setEnablePathDegradationMigration}
+     * See {@link Builder#setDefaultNetworkMigrationEnabled}
      */
-    // SuppressLint since return value is @Nullable
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getEnablePathDegradationMigration() {
-        return mEnablePathDegradationMigration;
+    public @MigrationOptionEnabled int isDefaultNetworkMigrationEnabled() {
+        return getMigrationOptionEnabled(mEnableDefaultNetworkMigration);
+    }
+
+    /**
+     * See {@link Builder#setPathDegradationMigrationEnabled}
+     */
+    public @MigrationOptionEnabled int isPathDegradationMigrationEnabled() {
+        return getMigrationOptionEnabled(mEnablePathDegradationMigration);
     }
 
     /**
@@ -103,13 +136,11 @@ public class ConnectionMigrationOptions {
     }
 
     /**
-     * See {@link Builder#setAllowNonDefaultNetworkUsage}
+     * See {@link Builder#setNonDefaultNetworkUsageAllowed}
      */
     @Experimental
-    // SuppressLint since return value is @Nullable
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getAllowNonDefaultNetworkUsage() {
-        return mAllowNonDefaultNetworkUsage;
+    public @MigrationOptionEnabled int isNonDefaultNetworkUsageAllowed() {
+        return getMigrationOptionEnabled(mAllowNonDefaultNetworkUsage);
     }
 
     /**
@@ -193,7 +224,7 @@ public class ConnectionMigrationOptions {
          * @return this builder for chaining
          */
         @NonNull
-        public Builder setEnableDefaultNetworkMigration(
+        public Builder setDefaultNetworkMigrationEnabled(
                 boolean enableDefaultNetworkConnectionMigration) {
             this.mEnableDefaultNetworkMigration = enableDefaultNetworkConnectionMigration;
             return this;
@@ -209,7 +240,7 @@ public class ConnectionMigrationOptions {
          * @return this builder for chaining
          */
         @NonNull
-        public Builder setEnablePathDegradationMigration(boolean enable) {
+        public Builder setPathDegradationMigrationEnabled(boolean enable) {
             this.mEnablePathDegradationMigration = enable;
             return this;
         }
@@ -269,7 +300,7 @@ public class ConnectionMigrationOptions {
         /**
          * Sets whether connections can be migrated to an alternate network when Cronet detects
          * a degradation of the path currently in use. Requires setting
-         * {@link #setEnablePathDegradationMigration} to true to have any effect.
+         * {@link #setPathDegradationMigrationEnabled} to true to have any effect.
          *
          * <p>Note: This setting can result in requests being sent on non-default metered networks,
          * eating into the users' data budgets and incurring extra costs. Make sure you're using
@@ -279,7 +310,7 @@ public class ConnectionMigrationOptions {
          */
         @Experimental
         @NonNull
-        public Builder setAllowNonDefaultNetworkUsage(boolean enable) {
+        public Builder setNonDefaultNetworkUsageAllowed(boolean enable) {
             this.mAllowNonDefaultNetworkUsage = enable;
             return this;
         }
@@ -289,7 +320,7 @@ public class ConnectionMigrationOptions {
          * there before they're migrated back. This time is not cumulative - each migration off
          * the default network for each connection measures and compares to this value separately.
          *
-         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsage(boolean)} is enabled.
+         * <p>Only relevant if {@link #setNonDefaultNetworkUsageAllowed(boolean)} is enabled.
          *
          * @return this builder for chaining
          *
@@ -307,7 +338,7 @@ public class ConnectionMigrationOptions {
          * Sets the maximum number of migrations to the non-default network upon encountering write
          * errors. Counted cumulatively per network per connection.
          *
-         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsage(boolean)} is enabled.
+         * <p>Only relevant if {@link #setNonDefaultNetworkUsageAllowed(boolean)} is enabled.
          *
          * @return this builder for chaining
          *
@@ -325,7 +356,7 @@ public class ConnectionMigrationOptions {
          * Sets the maximum number of migrations to the non-default network upon encountering path
          * degradation for the existing connection. Counted cumulatively per network per connection.
          *
-         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsage(boolean)} is enabled.
+         * <p>Only relevant if {@link #setNonDefaultNetworkUsageAllowed(boolean)} is enabled.
          *
          * @return this builder for chaining
          *
