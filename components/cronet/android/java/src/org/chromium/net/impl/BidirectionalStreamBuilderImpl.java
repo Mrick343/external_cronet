@@ -115,7 +115,7 @@ public class BidirectionalStreamBuilderImpl extends ExperimentalBidirectionalStr
     }
 
     @Override
-    public BidirectionalStreamBuilderImpl delayRequestHeadersUntilFirstFlush(
+    public BidirectionalStreamBuilderImpl setDelayRequestHeadersUntilFirstFlushEnabled(
             boolean delayRequestHeadersUntilFirstFlush) {
         mDelayRequestHeadersUntilFirstFlush = delayRequestHeadersUntilFirstFlush;
         return this;
