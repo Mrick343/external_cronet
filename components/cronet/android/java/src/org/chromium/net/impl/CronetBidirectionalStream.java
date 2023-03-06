@@ -93,6 +93,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     private final int mInitialPriority;
     private final String mInitialMethod;
     private final String mRequestHeaders[];
+    private final List<Map.Entry<String, String>> mRequestHeaderEntries;
     private final boolean mDelayRequestHeadersUntilFirstFlush;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mTrafficStatsTagSet;
@@ -249,6 +250,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mCallback = new VersionSafeCallbacks.BidirectionalStreamCallback(callback);
         mExecutor = executor;
         mInitialMethod = httpMethod;
+        mRequestHeaderEntries = requestHeaders;
         mRequestHeaders = stringsFromHeaderList(requestHeaders);
         mDelayRequestHeadersUntilFirstFlush = delayRequestHeadersUntilNextFlush;
         mPendingData = new LinkedList<>();
@@ -259,6 +261,49 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mTrafficStatsUidSet = trafficStatsUidSet;
         mTrafficStatsUid = trafficStatsUid;
         mNetworkHandle = networkHandle;
+    }
+
+    @Override
+    public String getHttpMethod() {
+        return mInitialMethod;
+    }
+
+    @Override
+    public Integer getTrafficStatsTag() {
+        return mTrafficStatsTagSet ? mTrafficStatsTag : null;
+    }
+
+    @Override
+    public Integer getTrafficStatsUid() {
+        return mTrafficStatsUidSet ? mTrafficStatsUid : null;
+    }
+
+    @Override
+    public List<Map.Entry<String, String>> getHeaders() {
+        return mRequestHeaderEntries;
+    }
+
+    @Override
+    public int getPriority() {
+        switch (mInitialPriority) {
+            case RequestPriority.IDLE:
+                return Builder.STREAM_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return Builder.STREAM_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return Builder.STREAM_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return Builder.STREAM_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return Builder.STREAM_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid stream priority: " + mInitialPriority);
+        }
+    }
+
+    @Override
+    public boolean isDelayRequestHeadersUntilFirstFlushEnabled() {
+        return mDelayRequestHeadersUntilFirstFlush;
     }
 
     @Override

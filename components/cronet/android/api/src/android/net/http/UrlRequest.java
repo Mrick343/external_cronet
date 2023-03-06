@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -68,7 +70,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder setDisableCache(boolean disableCache);
+        public abstract Builder setCacheDisabled(boolean disableCache);
 
         /**
          * Lowest request priority. Passed to {@link #setPriority}.
@@ -116,7 +118,8 @@ public abstract class UrlRequest {
          *     {@code Executor} the request itself is using.
          * @return the builder to facilitate chaining.
          */
-        @NonNull
+        // SuppressLint?
+        @NonNull @SuppressLint("MissingGetterMatchingBuilder")
         public abstract Builder setUploadDataProvider(
                 @NonNull UploadDataProvider uploadDataProvider, @NonNull Executor executor);
 
@@ -135,7 +138,7 @@ public abstract class UrlRequest {
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder setAllowDirectExecutor(boolean allowDirectExecutor);
+        public abstract Builder setDirectExecutorAllowed(boolean allowDirectExecutor);
 
         /**
          * Binds the request to the specified network. The HTTP stack will send this request
@@ -461,6 +464,53 @@ public abstract class UrlRequest {
          */
         void onStatus(@UrlRequestStatus int status);
     }
+
+    /**
+     * Gets the HTTP method for the request
+     * See {@link UrlRequest.Builder#setHttpMethod(String)}.
+     *
+     * @return HTTP method for the request
+     */
+    @NonNull
+    public abstract String getHttpMethod();
+
+    /**
+     * Gets a request header.
+     *
+     * @return List of header name value pair
+     */
+    @NonNull
+    public abstract List<Map.Entry<String, String>> getHeaders();
+
+    /**
+     * Get Whether to disable cache for the request. See {@link Builder#setCacheDisabled(boolean)}
+     *
+     * @return {@code true} to disable cache, {@code false} otherwise.
+     */
+    public abstract boolean isCacheDisabled();
+
+    public abstract boolean isDirectExecutorAllowed();
+
+    public abstract int getPriority();
+
+    /**
+     * Getss {@link android.net.TrafficStats} tag to use when accounting socket traffic caused by
+     * this request.
+     *
+     * @return the tag value used to when accounting for socket traffic caused by this
+     *            request.
+     */
+    @Nullable
+    public abstract Integer getTrafficStatsTag();
+
+    /**
+     * Gets specific UID to use when accounting socket traffic caused by this request.
+     *
+     * @return uid the UID to attribute socket traffic caused by this request.
+     */
+    @Nullable
+    public abstract Integer getTrafficStatsUid();
+
 
     /**
      * Starts the request, all callbacks go to {@link Callback}. May only be called

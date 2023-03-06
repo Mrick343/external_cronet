@@ -4,6 +4,7 @@
 
 package android.net.http;
 
+import android.annotation.IntDef;
 import android.annotation.SuppressLint;
 import android.os.Build.VERSION_CODES;
 
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.time.Duration;
 
 /**
@@ -65,31 +68,57 @@ public final class DnsOptions {
     }
 
     /**
-     * See {@link Builder#setUseHttpStackDnsResolver}
      */
-    // SuppressLint since return value is @Nullable
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getUseHttpStackDnsResolver() {
-        return mUseHttpStackDnsResolver;
+    public static final int DNS_OPTION_ENABLED = 0;
+
+    /**
+     */
+    public static final int DNS_OPTION_DISABLED = 1;
+
+
+    /**
+     */
+    public static final int DNS_OPTION_UNSPECIFIED = 2;
+
+    /** @hide */
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(flag = false, prefix = "DNS_OPTION_", value = {
+            DNS_OPTION_ENABLED,
+            DNS_OPTION_DISABLED,
+            DNS_OPTION_UNSPECIFIED,
+    })
+    public @interface DnsOptionEnabled {}
+
+    private static @DnsOptionEnabled int getDnsOptionEnabled(Boolean enabled) {
+        if (enabled == null) {
+            return DNS_OPTION_UNSPECIFIED;
+        } else if (enabled) {
+            return DNS_OPTION_ENABLED;
+        } else {
+            return DNS_OPTION_DISABLED;
+        }
     }
 
     /**
-     * See {@link Builder#setPersistHostCache}
+     * See {@link Builder#setUseHttpStackDnsResolverEnabled}
      */
-    // SuppressLint since return value is @Nullable
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getPersistHostCache() {
-        return mPersistHostCache;
+    public @DnsOptionEnabled int isUseHttpStackDnsResolverEnabled() {
+        return getDnsOptionEnabled(mUseHttpStackDnsResolver);
     }
 
     /**
-     * See {@link Builder#setEnableStaleDns}
+     * See {@link Builder#setHostCachePersistent(boolean)}
      */
-    // SuppressLint since return value is @Nullable
+    public @DnsOptionEnabled int isHostCachePersistent() {
+        return getDnsOptionEnabled(mPersistHostCache);
+    }
+
+    /**
+     * See {@link Builder#setStaleDnsEnabled}
+     */
     @Experimental
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getEnableStaleDns() {
-        return mEnableStaleDns;
+    public @DnsOptionEnabled int isStaleDnsEnabled() {
+        return getDnsOptionEnabled(mEnableStaleDns);
     }
 
     /**
@@ -101,13 +130,11 @@ public final class DnsOptions {
     }
 
     /**
-     * See {@link Builder#setPreestablishConnectionsToStaleDnsResults}
+     * See {@link Builder#setPreestablishConnectionsToStaleDnsResultsEnabled}
      */
-    // SuppressLint since return value is @Nullable
     @Experimental
-    @Nullable @SuppressLint("AutoBoxing")
-    public Boolean getPreestablishConnectionsToStaleDnsResults() {
-        return mPreestablishConnectionsToStaleDnsResults;
+    public @DnsOptionEnabled int isPreestablishConnectionsToStaleDnsResultsEnabled() {
+        return getDnsOptionEnabled(mPreestablishConnectionsToStaleDnsResults);
     }
 
     /**
@@ -151,28 +178,21 @@ public final class DnsOptions {
     // SuppressLint to be consistent with other cronet code
     @Experimental @SuppressLint("UserHandleName")
     public static class StaleDnsOptions {
-        // SuppressLint since return value is @Nullable
-        @Nullable @SuppressLint("AutoBoxing")
-        public Long getFreshLookupTimeoutMillis() {
-            return mFreshLookupTimeoutMillis;
+        @Nullable
+        public Duration getFreshLookupTimeout() {
+            return mFreshLookupTimeout;
         }
 
-        // SuppressLint since return value is @Nullable
-        @Nullable @SuppressLint("AutoBoxing")
-        public Long getMaxExpiredDelayMillis() {
-            return mMaxExpiredDelayMillis;
+        @Nullable
+        public Duration getMaxExpiredDelay() {
+            return mMaxExpiredDelay;
         }
 
-        // SuppressLint since return value is @Nullable
-        @Nullable @SuppressLint("AutoBoxing")
-        public Boolean getAllowCrossNetworkUsage() {
-            return mAllowCrossNetworkUsage;
+        public @DnsOptionEnabled int isCrossNetworkUsageAllowed() {
+            return getDnsOptionEnabled(mAllowCrossNetworkUsage);
         }
-
-        // SuppressLint since return value is @Nullable
-        @Nullable @SuppressLint("AutoBoxing")
-        public Boolean getUseStaleOnNameNotResolved() {
-            return mUseStaleOnNameNotResolved;
+        public @DnsOptionEnabled int isUseStaleOnNameNotResolvedEnabled() {
+            return getDnsOptionEnabled(mUseStaleOnNameNotResolved);
         }
 
         /**
@@ -184,17 +204,17 @@ public final class DnsOptions {
         }
 
         @Nullable
-        private final Long mFreshLookupTimeoutMillis;
+        private final Duration mFreshLookupTimeout;
         @Nullable
-        private final Long mMaxExpiredDelayMillis;
+        private final Duration mMaxExpiredDelay;
         @Nullable
         private final Boolean mAllowCrossNetworkUsage;
         @Nullable
         private final Boolean mUseStaleOnNameNotResolved;
 
         StaleDnsOptions(@NonNull Builder builder) {
-            this.mFreshLookupTimeoutMillis = builder.mFreshLookupTimeoutMillis;
-            this.mMaxExpiredDelayMillis = builder.mMaxExpiredDelayMillis;
+            this.mFreshLookupTimeout = builder.mFreshLookupTimeout;
+            this.mMaxExpiredDelay = builder.mMaxExpiredDelay;
             this.mAllowCrossNetworkUsage = builder.mAllowCrossNetworkUsage;
             this.mUseStaleOnNameNotResolved = builder.mUseStaleOnNameNotResolved;
         }
@@ -203,8 +223,8 @@ public final class DnsOptions {
          * Builder for {@link StaleDnsOptions}.
          */
         public static final class Builder {
-            private Long mFreshLookupTimeoutMillis;
-            private Long mMaxExpiredDelayMillis;
+            private Duration mFreshLookupTimeout;
+            private Duration mMaxExpiredDelay;
             private Boolean mAllowCrossNetworkUsage;
             private Boolean mUseStaleOnNameNotResolved;
 
@@ -219,7 +239,7 @@ public final class DnsOptions {
              */
             @NonNull
             public Builder setFreshLookupTimeout(@NonNull Duration freshLookupTimeout) {
-                this.mFreshLookupTimeoutMillis = freshLookupTimeout.toMillis();
+                this.mFreshLookupTimeout = freshLookupTimeout;
                 return this;
             }
 
@@ -231,7 +251,7 @@ public final class DnsOptions {
              */
             @NonNull
             public Builder setMaxExpiredDelay(@NonNull Duration maxExpiredDelay) {
-                this.mMaxExpiredDelayMillis = maxExpiredDelay.toMillis();
+                this.mMaxExpiredDelay = maxExpiredDelay;
                 return this;
             }
 
@@ -243,7 +263,7 @@ public final class DnsOptions {
              * @return the builder for chaining
              */
             @NonNull
-            public Builder setAllowCrossNetworkUsage(boolean allowCrossNetworkUsage) {
+            public Builder setCrossNetworkUsageAllowed(boolean allowCrossNetworkUsage) {
                 this.mAllowCrossNetworkUsage = allowCrossNetworkUsage;
                 return this;
             }
@@ -260,7 +280,7 @@ public final class DnsOptions {
              * @return the builder for chaining
              */
             @NonNull
-            public Builder setUseStaleOnNameNotResolved(boolean useStaleOnNameNotResolved) {
+            public Builder setUseStaleOnNameNotResolvedEnabled(boolean useStaleOnNameNotResolved) {
                 this.mUseStaleOnNameNotResolved = useStaleOnNameNotResolved;
                 return this;
             }
@@ -303,7 +323,7 @@ public final class DnsOptions {
          * documentation for more details.
          */
         @NonNull
-        public Builder setUseHttpStackDnsResolver(boolean enable) {
+        public Builder setUseHttpStackDnsResolverEnabled(boolean enable) {
             this.mUseHttpStackDnsResolver = enable;
             return this;
         }
@@ -315,7 +335,7 @@ public final class DnsOptions {
          */
         @Experimental
         @NonNull
-        public Builder setEnableStaleDns(boolean enable) {
+        public Builder setStaleDnsEnabled(boolean enable) {
             this.mEnableStaleDns = enable;
             return this;
         }
@@ -323,7 +343,7 @@ public final class DnsOptions {
         /**
          * Sets detailed configuration for stale DNS.
          *
-         * Only relevant if {@link #setEnableStaleDns(boolean)} is set.
+         * Only relevant if {@link #setStaleDnsEnabled(boolean)} is set.
          *
          * @return this builder for chaining.
          */
@@ -353,7 +373,7 @@ public final class DnsOptions {
          * expired. Such connections won't be used further until a new DNS lookup confirms the
          * cached record was up to date.
          *
-         * <p>To use cached DNS records straight away, use {@link #setEnableStaleDns} and {@link
+         * <p>To use cached DNS records straight away, use {@link #setStaleDnsEnabled} and {@link
          * StaleDnsOptions} configuration options.
          *
          * <p>This option may not be available for all networking protocols.
@@ -362,7 +382,7 @@ public final class DnsOptions {
          */
         @Experimental
         @NonNull
-        public Builder setPreestablishConnectionsToStaleDnsResults(boolean enable) {
+        public Builder setPreestablishConnectionsToStaleDnsResultsEnabled(boolean enable) {
             this.mPreestablishConnectionsToStaleDnsResults = enable;
             return this;
         }
@@ -376,7 +396,7 @@ public final class DnsOptions {
          * @return the builder for chaining
          */
         @NonNull
-        public Builder setPersistHostCache(boolean persistHostCache) {
+        public Builder setHostCachePersistent(boolean persistHostCache) {
             this.mPersistHostCache = persistHostCache;
             return this;
         }
@@ -384,7 +404,7 @@ public final class DnsOptions {
         /**
          * Sets the minimum period between subsequent writes to disk for DNS cache persistence.
          *
-         * <p>Only relevant if {@link #setPersistHostCache(boolean)} is set to true.
+         * <p>Only relevant if {@link #setHostCachePersistent(boolean)} is set to true.
          *
          * @return the builder for chaining
          */
