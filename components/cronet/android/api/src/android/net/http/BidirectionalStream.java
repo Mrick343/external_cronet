@@ -5,7 +5,6 @@
 package android.net.http;
 
 import android.annotation.IntDef;
-import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,8 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -31,6 +32,7 @@ public abstract class BidirectionalStream {
     public abstract static class Builder {
         /**
          * Sets the HTTP method for the request. Returns builder to facilitate chaining.
+         * See {@link BidirectionalStream#getHttpMethod()}.
          *
          * @param method the method to use for request. Default is 'POST'
          * @return the builder to facilitate chaining
@@ -84,7 +86,7 @@ public abstract class BidirectionalStream {
          * Sets priority of the stream which should be one of the
          * {@link #STREAM_PRIORITY_IDLE STREAM_PRIORITY_*} values.
          * The stream is given {@link #STREAM_PRIORITY_MEDIUM} priority if
-         * this method is not called.
+         * this method is not called. See {@link BidirectionalStream#getPriority()}
          *
          * @param priority priority of the stream which should be one of the
          *         {@link #STREAM_PRIORITY_IDLE STREAM_PRIORITY_*} values.
@@ -94,17 +96,18 @@ public abstract class BidirectionalStream {
         public abstract Builder setPriority(@BidirectionalStreamPriority int priority);
 
         /**
-         * Delays sending request headers until {@link BidirectionalStream#flush()}
+         * Sets whether to delay sending request headers until {@link BidirectionalStream#flush()}
          * is called. This flag is currently only respected when QUIC is negotiated.
          * When true, QUIC will send request header frame along with data frame(s)
          * as a single packet when possible.
+         * See {@link BidirectionalStream#isDelayRequestHeadersUntilFirstFlushEnabled()}.
          *
          * @param delayRequestHeadersUntilFirstFlush if true, sending request headers will
          *         be delayed until flush() is called.
          * @return the builder to facilitate chaining.
          */
         @NonNull
-        public abstract Builder delayRequestHeadersUntilFirstFlush(
+        public abstract Builder setDelayRequestHeadersUntilFirstFlushEnabled(
                 boolean delayRequestHeadersUntilFirstFlush);
 
         /**
@@ -271,6 +274,61 @@ public abstract class BidirectionalStream {
         public void onCanceled(@NonNull BidirectionalStream stream,
                 @Nullable UrlResponseInfo info) {}
     }
+
+    /**
+     * Gets the HTTP method for the request
+     * See {@link BidirectionalStream.Builder#setHttpMethod(String)}.
+     *
+     * @return HTTP method for the request
+     */
+    @NonNull
+    public abstract String getHttpMethod();
+
+    /**
+     * Gets {@link android.net.TrafficStats} tag to use when accounting socket traffic caused by
+     * this request. See {@link android.net.TrafficStats} and
+     * {@link BidirectionalStream.Builder#setTrafficStatsTag(int)} for more information.
+     *
+     * @return the tag value.
+     */
+    @Nullable
+    public abstract Integer getTrafficStatsTag();
+
+    /**
+     * Gets specific UID to use when accounting socket traffic caused by this request. See
+     * {@link android.net.TrafficStats} and
+     * {@link BidirectionalStream.Builder#setTrafficStatsUid(int)} for more information.
+     *
+     * @return the UID to attribute socket traffic caused by this request.
+     */
+    @Nullable
+    public abstract Integer getTrafficStatsUid();
+
+    /**
+     * Gets a request header. See {@link Builder#addHeader(String, String)}
+     *
+     * @return List of header name value pair
+     */
+    @NonNull
+    public abstract List<Map.Entry<String, String>> getHeaders();
+
+    /**
+     * Gets priority of the stream which should be one of the
+     * {@link Builder#STREAM_PRIORITY_IDLE STREAM_PRIORITY_*} values.
+     * See {@link Builder#setPriority(int)}
+     *
+     * @return priority of the stream which should be one of the
+     *         {@link Builder#STREAM_PRIORITY_IDLE STREAM_PRIORITY_*} values.
+     */
+    public abstract @Builder.BidirectionalStreamPriority int getPriority();
+
+    /**
+     * Get whether to delay sending request headers until {@link BidirectionalStream#flush()}
+     * is called. See {@link Builder#setDelayRequestHeadersUntilFirstFlushEnabled(boolean)}
+     *
+     * @return {@link true} if sending request headers will be delayed until flush() is called.
+     */
+    public abstract boolean isDelayRequestHeadersUntilFirstFlushEnabled();
 
     /**
      * Starts the stream, all callbacks go to the {@code callback} argument passed to {@link

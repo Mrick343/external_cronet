@@ -26,9 +26,11 @@ import android.net.http.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;
+
 import org.chromium.net.impl.CronetLogger.CronetTrafficInfo;
 
 import java.nio.ByteBuffer;
+import java.sql.Array;
 import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -200,6 +202,53 @@ public final class CronetUrlRequest extends UrlRequestBase {
     }
 
     @Override
+    public String getHttpMethod() {
+        return mInitialMethod != null ? mInitialMethod : "POST";
+    }
+
+    @Override
+    public boolean isDirectExecutorAllowed() {
+        return mAllowDirectExecutor;
+    }
+
+    @Override
+    public boolean isCacheDisabled() {
+        return mDisableCache;
+    }
+
+    @Override
+    public Integer getTrafficStatsTag() {
+        return mTrafficStatsTagSet ? mTrafficStatsTag : null;
+    }
+
+    @Override
+    public Integer getTrafficStatsUid() {
+        return mTrafficStatsUidSet ? mTrafficStatsUid : null;
+    }
+    @Override
+    public int getPriority() {
+        switch (mPriority) {
+            case RequestPriority.IDLE:
+                return Builder.REQUEST_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return Builder.REQUEST_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return Builder.REQUEST_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return Builder.REQUEST_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return Builder.REQUEST_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid stream priority: " + mPriority);
+        }
+    }
+
+    @Override
+    public List<Map.Entry<String, String>> getHeaders() {
+        return mRequestHeaders;
+    }
+
+    @Override
     public void addHeader(String header, String value) {
         checkNotStarted();
         if (header == null) {
@@ -248,7 +297,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
                         hasContentType = true;
                     }
                     if (!CronetUrlRequestJni.get().addRequestHeader(mUrlRequestAdapter,
-                                CronetUrlRequest.this, header.getKey(), header.getValue())) {
+                            CronetUrlRequest.this, header.getKey(), header.getValue())) {
                         throw new IllegalArgumentException(
                                 "Invalid header " + header.getKey() + "=" + header.getValue());
                     }
@@ -454,18 +503,14 @@ public final class CronetUrlRequest extends UrlRequestBase {
      * We are not really interested in their specific size but something which is close enough.
      */
     @VisibleForTesting
-    static long estimateHeadersSizeInBytes(Map<String, List<String>> headers) {
+    static long estimateHeadersSizeInBytes(HeadersList headers) {
         if (headers == null) return 0;
-
         long responseHeaderSizeInBytes = 0;
-        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+        for (Map.Entry<String, String> entry : headers) {
             String key = entry.getKey();
             if (key != null) responseHeaderSizeInBytes += key.length();
-            if (entry.getValue() == null) continue;
-
-            for (String content : entry.getValue()) {
-                responseHeaderSizeInBytes += content.length();
-            }
+            String value = entry.getValue();
+            if (value != null) responseHeaderSizeInBytes += entry.getValue().length();
         }
         return responseHeaderSizeInBytes;
     }

@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 package android.net.http;
 
+import android.annotation.SuppressLint;
+
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Set;
