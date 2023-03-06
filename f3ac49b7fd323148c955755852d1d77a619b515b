@@ -106,6 +106,24 @@
       "parentUuid": "6ce4673f_44f85eb0",
       "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e44af8bf_36f34573",
+        "filename": "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-06T07:01:28Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "a3f28df0_43c9ca30",
+      "revId": "f3ac49b7fd323148c955755852d1d77a619b515b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
