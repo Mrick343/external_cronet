@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b80072d7_d64d4e59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-06T09:37:52Z",
+      "side": 1,
+      "message": "I think this is obsolete with the IntDef suggestion?",
+      "revId": "b86f4cbc382d7a0597e886b09e3aef4dc7bf7d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
