@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88eca25d_2971c4a8",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:03:38Z",
+      "side": 1,
+      "message": "Optional: This isn\u0027t technically necessary as the method isn\u0027t part of the public API, same with builder() below.",
+      "range": {
+        "startLine": 148,
+        "startChar": 32,
+        "endLine": 148,
+        "endChar": 39
+      },
+      "revId": "527a87b3a2326ef9e862dc70bfb7a643bc574843",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

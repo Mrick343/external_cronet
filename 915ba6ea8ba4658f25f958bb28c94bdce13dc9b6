@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a7d8599_06160fd2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:03:38Z",
+      "side": 1,
+      "message": "I think there\u0027s some overlap between this and Motomu\u0027s CLs. Let\u0027s hold this one back (I\u0027m also holding some of mine) until Motomu submits his chain.",
+      "revId": "915ba6ea8ba4658f25f958bb28c94bdce13dc9b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
