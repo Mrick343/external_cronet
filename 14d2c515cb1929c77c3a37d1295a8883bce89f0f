@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1897d57b_0970bdbb",
+        "filename": "base/android/jni_generator/jni_registration_generator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-03-07T00:39:01Z",
+      "side": 1,
+      "message": "please use single quote to match rest (style violation)",
+      "range": {
+        "startLine": 108,
+        "startChar": 47,
+        "endLine": 108,
+        "endChar": 48
+      },
+      "revId": "14d2c515cb1929c77c3a37d1295a8883bce89f0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
