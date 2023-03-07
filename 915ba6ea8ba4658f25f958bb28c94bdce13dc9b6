@@ -16,6 +16,24 @@
       "message": "I think there\u0027s some overlap between this and Motomu\u0027s CLs. Let\u0027s hold this one back (I\u0027m also holding some of mine) until Motomu submits his chain.",
       "revId": "915ba6ea8ba4658f25f958bb28c94bdce13dc9b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a448421_6ca573f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T11:40:49Z",
+      "side": 1,
+      "message": "I have avoided the overlap with this CL.\nAnd this CL is a parent of remaining CLs.\nSo this CL does not have any conflict with other CLs.",
+      "parentUuid": "3a7d8599_06160fd2",
+      "revId": "915ba6ea8ba4658f25f958bb28c94bdce13dc9b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
