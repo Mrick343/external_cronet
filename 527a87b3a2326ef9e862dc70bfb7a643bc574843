@@ -22,6 +22,30 @@
       },
       "revId": "527a87b3a2326ef9e862dc70bfb7a643bc574843",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb47f5e9_bf539296",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:57:26Z",
+      "side": 1,
+      "message": "This applies to a lot of hidden methods as well. Still optional, just opening to make sure it\u0027s seen. If the plan is to upstream verbatim let\u0027s keep the annotations as they\u0027ll be useful there.",
+      "parentUuid": "88eca25d_2971c4a8",
+      "range": {
+        "startLine": 148,
+        "startChar": 32,
+        "endLine": 148,
+        "endChar": 39
+      },
+      "revId": "527a87b3a2326ef9e862dc70bfb7a643bc574843",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

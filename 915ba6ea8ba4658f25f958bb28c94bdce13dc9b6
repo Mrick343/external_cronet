@@ -34,6 +34,47 @@
       "parentUuid": "3a7d8599_06160fd2",
       "revId": "915ba6ea8ba4658f25f958bb28c94bdce13dc9b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d469f792_3c623416",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:57:26Z",
+      "side": 1,
+      "message": "Thanks for confirming!",
+      "parentUuid": "7a448421_6ca573f2",
+      "revId": "915ba6ea8ba4658f25f958bb28c94bdce13dc9b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be3ed88c_75fdcfea",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:57:26Z",
+      "side": 1,
+      "message": "As commented elsewhere I think this should be @NonNull. Same below.\n\nIf in doubt, let\u0027s use the stricter annotation - that is, @NonNull on values we accept and @Nullable on values we return. It\u0027s a lot easier to change those than if we promise we can handle nulls and later decide that we cannot.",
+      "range": {
+        "startLine": 264,
+        "startChar": 16,
+        "endLine": 264,
+        "endChar": 25
+      },
+      "revId": "915ba6ea8ba4658f25f958bb28c94bdce13dc9b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
