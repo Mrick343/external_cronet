@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "395a0091_cbd0d990",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T04:01:50Z",
+      "side": 1,
+      "message": "Concluded to go with the setter that takes @NonNull and see if API counsil is fine with this.\nhttps://android-review.git.corp.google.com/c/platform/packages/modules/Connectivity/+/2437174/comment/acf7f93c_66f9672c/",
+      "parentUuid": "6133f40c_b300b659",
+      "range": {
+        "startLine": 320,
+        "startChar": 42,
+        "endLine": 320,
+        "endChar": 50
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da308fd2_2d5b0f1a",
@@ -142,6 +166,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f00e598b_0577c8bb",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T04:01:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "54c08d4b_3a4dce1d",
+      "range": {
+        "startLine": 128,
+        "startChar": 38,
+        "endLine": 128,
+        "endChar": 46
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4089665_4b9884b4",
@@ -155,6 +203,30 @@
       "writtenOn": "2023-02-28T08:56:55Z",
       "side": 1,
       "message": "Ditto, does this throw NPE if host is null?",
+      "range": {
+        "startLine": 224,
+        "startChar": 35,
+        "endLine": 224,
+        "endChar": 43
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cbfe8cd_75c7dd7b",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T04:01:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "a4089665_4b9884b4",
       "range": {
         "startLine": 224,
         "startChar": 35,
@@ -188,6 +260,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b152a97e_a27d599c",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T04:01:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f9639ccc_92feda2e",
+      "range": {
+        "startLine": 271,
+        "startChar": 40,
+        "endLine": 271,
+        "endChar": 48
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce0e2d4e_c5488867",
@@ -211,6 +307,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "48b831be_5c715e61",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T04:01:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ce0e2d4e_c5488867",
+      "range": {
+        "startLine": 308,
+        "startChar": 38,
+        "endLine": 308,
+        "endChar": 46
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3597b5d2_c35df3ae",
@@ -224,6 +344,30 @@
       "writtenOn": "2023-02-28T08:56:55Z",
       "side": 1,
       "message": "Ditto. Actually, for optional builder parameters like this one, @Nullable is recommended, because it lets the caller restore the builder object to the default state.",
+      "range": {
+        "startLine": 334,
+        "startChar": 37,
+        "endLine": 334,
+        "endChar": 45
+      },
+      "revId": "9d9dacfed498c2f3a78cfc86627648bbc2ac28d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72f30fdc_2fba75a3",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-07T04:01:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "3597b5d2_c35df3ae",
       "range": {
         "startLine": 334,
         "startChar": 37,
