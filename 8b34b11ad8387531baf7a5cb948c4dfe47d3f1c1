@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eff39048_0e31d2ac",
+        "filename": "components/cronet/android/api/src/android/net/http/BidirectionalStream.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:01:38Z",
+      "side": 1,
+      "message": "I thought we agreed not to add the getters for now?\n\nIf you want to have them please replace the return type of getHeaders with a HeaderBlock to be consistent with other APIs.",
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccf0af44_75bf0b4a",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:01:38Z",
+      "side": 1,
+      "message": "Can this just be an enum?\n\nThese methods are largely set-once-and-forget so I\u0027d argue that readability is more important than efficiency. Even if we consider it there\u0027s unlikely to be a significant difference in practice (https://youtu.be/IrMw7MEgADk?t\u003d719).\n\nIt also allows you to have helper methods on the class so you can easily say `if (foo.isSet())` to check for presence.\n\nSame feedback applies to all *Options classes.",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 77
+      },
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb1f9332_9495fe2d",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:01:38Z",
+      "side": 1,
+      "message": "Nit: set to, same below",
+      "range": {
+        "startLine": 310,
+        "startChar": 86,
+        "endLine": 310,
+        "endChar": 89
+      },
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db7b47f4_257a7d61",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:01:38Z",
+      "side": 1,
+      "message": "This should be a pair of `has*/get*` methods\n\ngo/android-api-guidelines#classes-avoid-optional",
+      "range": {
+        "startLine": 272,
+        "startChar": 11,
+        "endLine": 272,
+        "endChar": 18
+      },
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f94e58c5_a1adc785",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-07T11:01:38Z",
+      "side": 1,
+      "message": "Nit: It\u0027s not builder specific anymore, move the constants to the outer class.",
+      "range": {
+        "startLine": 290,
+        "startChar": 23,
+        "endLine": 290,
+        "endChar": 51
+      },
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
