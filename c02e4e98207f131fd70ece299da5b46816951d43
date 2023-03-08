@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35b6ea0c_303ee494",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-08T15:56:27Z",
+      "side": 1,
+      "message": "Deleting unused directories as we don\u0027t have their LICENSES declared in the top-level package LICENSE file.",
+      "revId": "c02e4e98207f131fd70ece299da5b46816951d43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
