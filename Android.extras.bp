@@ -44,8 +44,12 @@ filegroup {
     ],
 }
 
-java_library {
+android_library {
     name: "cronet_test_utils",
+    asset_dirs: [
+      "components/cronet/testing/test_server/data"
+    ],
+    manifest: "components/cronet/android/test/src/org/chromium/net/AndroidManifest.xml",
     srcs: [
         "components/cronet/android/test/**/NativeTestServer.java",
         "components/cronet/android/test/**/TestFilesInstaller.java",
