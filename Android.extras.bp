@@ -27,3 +27,43 @@ java_library {
     ],
     sdk_version: "module_current",
 }
+
+// ------------------------------------ TESTS TARGETS ---------------------------------------------
+
+filegroup {
+    name: "cronet_aml_javatests_sources",
+    srcs: [
+        "components/cronet/android/test/javatests/**/UrlResponseInfoTest.java",
+        "components/cronet/android/test/javatests/**/CronetTestRule.java",
+        "components/cronet/android/test/javatests/**/CronetTestRuleTest.java",
+        "components/cronet/android/test/javatests/**/GetStatusTest.java",
+        "components/cronet/android/test/javatests/**/TestUrlRequestCallback.java",
+        "components/cronet/android/test/javatests/**/TestUploadDataProvider.java",
+    ],
+}
+
+filegroup {
+    name: "cronet_aml_testserver_data",
+    srcs: [
+        "components/cronet/testing/test_server/data/**/*.txt",
+        "components/cronet/testing/test_server/data/**/*.mock-http-headers",
+        "components/cronet/testing/test_server/data/**/*.html",
+    ],
+}
+
+java_library {
+    name: "cronet_testserver_utils",
+    srcs: [
+        "components/cronet/android/test/**/NativeTestServer.java",
+        "components/cronet/android/test/**/TestFilesInstaller.java",
+        "base/test/android/javatests/**/UrlUtils.java",
+    ],
+    static_libs: [
+        "androidx.test.ext.junit",
+        "cronet_aml_java__testing",
+        "junit",
+    ],
+    libs: ["android.test.base"],
+}
+
+// ----------------------------------- END OF TEST TARGETS ----------------------------------------

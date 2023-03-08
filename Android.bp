@@ -12789,7 +12789,7 @@ java_library {
     plugins: [
         "cronet_aml_java_jni_annotation_preprocessor",
     ],
-    sdk_version: "current",
+    sdk_version: "module_current",
     javacflags: [
         "-Aorg.chromium.chrome.skipGenJni",
     ],

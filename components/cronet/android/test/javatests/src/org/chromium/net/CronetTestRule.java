@@ -6,8 +6,8 @@ package org.chromium.net;
 
 import static org.junit.Assume.assumeTrue;
 
+import android.net.http.ApiVersion;
 import android.net.http.HttpEngine;
-import android.net.http.ExperimentalHttpEngine;
 import android.net.http.UrlResponseInfo;
 import android.content.Context;
 import android.os.Build;
@@ -20,9 +20,9 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import org.chromium.base.ContextUtils;
-import org.chromium.base.Log;
-import org.chromium.base.PathUtils;
+import android.net.http.internal.org.chromium.base.ContextUtils;
+import android.net.http.internal.org.chromium.base.Log;
+import android.net.http.internal.org.chromium.base.PathUtils;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -60,8 +60,8 @@ public class CronetTestRule implements TestRule {
      * Creates and holds pointer to CronetEngine.
      */
     public static class CronetTestFramework {
-        public ExperimentalHttpEngine mCronetEngine;
-        public ExperimentalHttpEngine.Builder mBuilder;
+        public HttpEngine mCronetEngine;
+        public HttpEngine.Builder mBuilder;
 
         private Context mContext;
 
@@ -74,7 +74,7 @@ public class CronetTestRule implements TestRule {
             return new CronetTestFramework(context);
         }
 
-        public ExperimentalHttpEngine startEngine() {
+        public HttpEngine startEngine() {
             assert mCronetEngine == null;
 
             mCronetEngine = mBuilder.build();
@@ -91,7 +91,7 @@ public class CronetTestRule implements TestRule {
             mCronetEngine = null;
         }
 
-        private ExperimentalHttpEngine.Builder createNativeEngineBuilder() {
+        private HttpEngine.Builder createNativeEngineBuilder() {
             return CronetTestRule.createNativeEngineBuilder(mContext).setEnableQuic(true);
         }
     }
@@ -246,9 +246,7 @@ public class CronetTestRule implements TestRule {
     }
 
     private CronetTestFramework createCronetTestFramework() {
-        mCronetTestFramework = testingJavaImpl()
-                ? CronetTestFramework.createUsingJavaImpl(getContext())
-                : CronetTestFramework.createUsingNativeImpl(getContext());
+        mCronetTestFramework = CronetTestFramework.createUsingNativeImpl(getContext());
         return mCronetTestFramework;
     }
 
@@ -269,18 +267,18 @@ public class CronetTestRule implements TestRule {
     }
 
     /**
-     * Creates and returns {@link ExperimentalHttpEngine.Builder} that creates
+     * Creates and returns {@link HttpEngine.Builder} that creates
      * Chromium (native) based {@link HttpEngine.Builder}.
      *
      * @return the {@code CronetEngine.Builder} that builds Chromium-based {@code Cronet engine}.
      */
-    public static ExperimentalHttpEngine.Builder createNativeEngineBuilder(Context context) {
-        return (ExperimentalHttpEngine.Builder) HttpEngine.builder(context);
+    public static HttpEngine.Builder createNativeEngineBuilder(Context context) {
+        return new HttpEngine.Builder(context);
     }
 
     public void assertResponseEquals(UrlResponseInfo expected, UrlResponseInfo actual) {
-        Assert.assertEquals(expected.getAllHeaders(), actual.getAllHeaders());
-        Assert.assertEquals(expected.getAllHeadersAsList(), actual.getAllHeadersAsList());
+        Assert.assertEquals(expected.getHeaders(), actual.getHeaders());
+        Assert.assertEquals(expected.getHeaders().getAsList(), actual.getHeaders().getAsList());
         Assert.assertEquals(expected.getHttpStatusCode(), actual.getHttpStatusCode());
         Assert.assertEquals(expected.getHttpStatusText(), actual.getHttpStatusText());
         Assert.assertEquals(expected.getUrlChain(), actual.getUrlChain());
