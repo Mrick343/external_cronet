@@ -53,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1526fb6_aa95a49f",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-08T16:07:43Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ed87e1d0_8fac3d94",
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1390b51a_73f1d9b0",
@@ -172,6 +190,54 @@
       "side": 1,
       "message": "This is surfacing due to two issues:\n1) There is no standard format for the structure of the LICENSE file.\n2) The LICENSE text exist upstream which sometimes has extra additions like `author`.\n\nThe solution here would be to fix it upstream and speak with the opensource team about a proper structure for the LICENSE file.",
       "parentUuid": "7af478f7_c02a6b86",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 0
+      },
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "257be43b_a17caabf",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-08T16:07:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1666d49_e1988a50",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 0
+      },
+      "revId": "fea20f80217bc6f47fb0631af888613985c3793b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2e7f97a_9537174b",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1979915
+      },
+      "writtenOn": "2023-03-08T16:07:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c01df24_e6faffd6",
       "range": {
         "startLine": 399,
         "startChar": 0,
