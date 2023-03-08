@@ -5,6 +5,7 @@
 package org.chromium.net.impl;
 
 import android.net.Network;
+import android.net.http.ApiVersion;
 import android.os.ConditionVariable;
 import android.os.Process;
 
@@ -274,7 +275,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
 
     @Override
     public ExperimentalBidirectionalStream.Builder newBidirectionalStreamBuilder(
-            String url, BidirectionalStream.Callback callback, Executor executor) {
+            String url, Executor executor, BidirectionalStream.Callback callback) {
         return new BidirectionalStreamBuilderImpl(url, callback, executor, this);
     }
 
@@ -317,12 +318,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     private CronetVersion buildCronetVersion() {
-        String version = getVersionString();
-        // getVersionString()'s output looks like "Cronet/w.x.y.z@hash". CronetVersion only cares
-        // about the "w.x.y.z" bit.
-        version = version.split("/")[1];
-        version = version.split("@")[0];
-        return new CronetVersion(version);
+        return new CronetVersion(ApiVersion.getCronetVersion());
     }
 
     @Override
@@ -604,7 +600,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     @Override
-    public URLStreamHandlerFactory createURLStreamHandlerFactory() {
+    public URLStreamHandlerFactory createUrlStreamHandlerFactory() {
         return new CronetURLStreamHandlerFactory(this);
     }
 

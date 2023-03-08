@@ -48,6 +48,7 @@ public class UrlResponseInfoTest {
                 new UrlResponseInfoImpl(urlChain, httpStatusCode, httpStatusText, allHeadersList,
                         wasCached, negotiatedProtocol, proxyServer, receivedByteCount);
         Assert.assertEquals(info.getUrlChain(), urlChain);
+        Assert.assertEquals(info.getUrl(), urlChain.get(urlChain.size() - 1));
         try {
             info.getUrlChain().add("example.com");
             Assert.fail("getUrlChain() returned modifyable list.");
@@ -71,7 +72,6 @@ public class UrlResponseInfoTest {
                 allHeadersList.get(0).getValue());
         Assert.assertEquals(info.wasCached(), wasCached);
         Assert.assertEquals(info.getNegotiatedProtocol(), negotiatedProtocol);
-        Assert.assertEquals(info.getProxyServer(), proxyServer);
         Assert.assertEquals(info.getReceivedByteCount(), receivedByteCount);
     }
 }
