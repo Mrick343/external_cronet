@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0044cb41_bf5c3181",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-08T13:44:19Z",
+      "side": 1,
+      "message": "Nit: make `estimateHeadersSizeInBytes` consume a HeaderBlock, and use the list given it\u0027s available directly, but the map needs to be constructed?",
+      "range": {
+        "startLine": 958,
+        "startChar": 0,
+        "endLine": 958,
+        "endChar": 94
+      },
+      "revId": "cdd29e3a8199e156437e0fa84f1e1baa2710e7ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
