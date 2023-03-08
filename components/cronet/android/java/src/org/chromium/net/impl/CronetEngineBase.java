@@ -70,7 +70,8 @@ public abstract class CronetEngineBase extends ExperimentalHttpEngine {
             boolean disableCache, boolean disableConnectionMigration, boolean allowDirectExecutor,
             boolean trafficStatsTagSet, int trafficStatsTag, boolean trafficStatsUidSet,
             int trafficStatsUid, @Nullable RequestFinishedInfo.Listener requestFinishedListener,
-            @Idempotency int idempotency, long networkHandle);
+            @Idempotency int idempotency, long networkHandle,
+            List<Map.Entry<String, String>> headers);
 
     /**
      * Creates a {@link BidirectionalStream} object. {@code callback} methods will

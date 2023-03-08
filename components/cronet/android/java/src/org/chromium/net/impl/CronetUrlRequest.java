@@ -6,6 +6,7 @@ package org.chromium.net.impl;
 
 import static java.lang.Math.max;
 
+import android.net.http.HeaderBlock;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -88,7 +89,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
     private final int mPriority;
     private final int mIdempotency;
     private String mInitialMethod;
-    private final HeadersList mRequestHeaders = new HeadersList();
+    private final HeaderBlock mRequestHeaders;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mDisableCache;
     private final boolean mDisableConnectionMigration;
@@ -156,7 +157,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
             boolean disableCache, boolean disableConnectionMigration, boolean allowDirectExecutor,
             boolean trafficStatsTagSet, int trafficStatsTag, boolean trafficStatsUidSet,
             int trafficStatsUid, RequestFinishedInfo.Listener requestFinishedListener,
-            int idempotency, long networkHandle) {
+            int idempotency, long networkHandle, List<Map.Entry<String, String>> headers) {
         if (url == null) {
             throw new NullPointerException("URL is required");
         }
@@ -188,6 +189,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
                 : null;
         mIdempotency = convertIdempotency(idempotency);
         mNetworkHandle = networkHandle;
+        mRequestHeaders = new HeaderBlockImpl(Collections.unmodifiableList(headers));
     }
 
     @Override
@@ -257,20 +259,8 @@ public final class CronetUrlRequest extends UrlRequestBase {
     }
 
     @Override
-    public List<Map.Entry<String, String>> getHeaders() {
+    public HeaderBlock getHeaders() {
         return mRequestHeaders;
-    }
-
-    @Override
-    public void addHeader(String header, String value) {
-        checkNotStarted();
-        if (header == null) {
-            throw new NullPointerException("Invalid header name.");
-        }
-        if (value == null) {
-            throw new NullPointerException("Invalid header value.");
-        }
-        mRequestHeaders.add(new AbstractMap.SimpleImmutableEntry<String, String>(header, value));
     }
 
     @Override
@@ -304,7 +294,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
                 }
 
                 boolean hasContentType = false;
-                for (Map.Entry<String, String> header : mRequestHeaders) {
+                for (Map.Entry<String, String> header : mRequestHeaders.getAsList()) {
                     if (header.getKey().equalsIgnoreCase("Content-Type")
                             && !header.getValue().isEmpty()) {
                         hasContentType = true;
@@ -528,23 +518,6 @@ public final class CronetUrlRequest extends UrlRequestBase {
             for (String content : entry.getValue()) {
                 responseHeaderSizeInBytes += content.length();
             }
-        }
-        return responseHeaderSizeInBytes;
-    }
-
-    /**
-     * Estimates the byte size of the headers in their on-wire format.
-     * We are not really interested in their specific size but something which is close enough.
-     */
-    @VisibleForTesting
-    static long estimateHeadersSizeInBytes(HeadersList headers) {
-        if (headers == null) return 0;
-        long responseHeaderSizeInBytes = 0;
-        for (Map.Entry<String, String> entry : headers) {
-            String key = entry.getKey();
-            if (key != null) responseHeaderSizeInBytes += key.length();
-            String value = entry.getValue();
-            if (value != null) responseHeaderSizeInBytes += entry.getValue().length();
         }
         return responseHeaderSizeInBytes;
     }
@@ -982,7 +955,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
             requestBodySizeInBytes = 0;
         } else {
             // Served from cache with the need to revalidate or served from the network directly.
-            requestHeaderSizeInBytes = estimateHeadersSizeInBytes(mRequestHeaders);
+            requestHeaderSizeInBytes = estimateHeadersSizeInBytes(mRequestHeaders.getAsMap());
             requestBodySizeInBytes = max(0, requestTotalSizeInBytes - requestHeaderSizeInBytes);
         }
 
