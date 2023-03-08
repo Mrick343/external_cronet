@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fc72c3a8_7fda1a77",
+        "filename": "components/cronet/android/api/src/android/net/http/BidirectionalStream.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T07:31:59Z",
+      "side": 1,
+      "message": "I thought what we agreed was we keep using Map.Entry\u003cString, String\u003e for header not Pair\u003cString, String\u003e\n\nI tried moving HeaderBlock from UrlRequestInfo to indivisual class and updating to use HeaderBlock in aosp/2475845.\nHeaderBlock is an unmodifiable container of headers/trailers\nBut CronetUrlRequest (which is not a builder) has addHeader method\nSo I removed CronetUrlRequest#addHeader and add headers to the constructor since CronetUrlRequest#addHeader is used only from build().\n\nIf I misunderstood your suggestion, please tell me.",
+      "parentUuid": "eff39048_0e31d2ac",
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ccf0af44_75bf0b4a",
         "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
         "patchSetId": 20
