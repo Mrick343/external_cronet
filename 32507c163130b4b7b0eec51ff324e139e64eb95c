@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26c5af68_953c8532",
+        "filename": "components/cronet/android/api/src/android/net/http/BidirectionalStream.java",
+        "patchSetId": 23
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-08T13:48:35Z",
+      "side": 1,
+      "message": "HeaderBlock?",
+      "range": {
+        "startLine": 308,
+        "startChar": 20,
+        "endLine": 308,
+        "endChar": 51
+      },
+      "revId": "32507c163130b4b7b0eec51ff324e139e64eb95c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
