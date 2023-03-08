@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9a328ec_dd9834b1",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T08:40:12Z",
+      "side": 1,
+      "message": "I think this is what linter is suggesting.\ngo/android-api-guidelines#classes-autocloseable",
+      "revId": "11d0fcb3472943dfa91f54fbc03215a03ff0a8dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
