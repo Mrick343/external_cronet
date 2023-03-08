@@ -26,7 +26,7 @@ import javax.net.ssl.HttpsURLConnection;
  * available on the current platform. An instance of this class can be created
  * using {@link Builder}.
  */
-public abstract class HttpEngine {
+public abstract class HttpEngine implements AutoCloseable {
 
     /**
      * {@hide}
@@ -438,6 +438,11 @@ public abstract class HttpEngine {
      * callbacks on). May block until all the {@link HttpEngine} resources have been cleaned up.
      */
     public abstract void shutdown();
+
+    @Override
+    public void close() {
+        shutdown();
+    }
 
     /**
      * Starts NetLog logging to a file. The NetLog will contain events emitted
