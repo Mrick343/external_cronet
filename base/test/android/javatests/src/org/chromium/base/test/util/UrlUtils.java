@@ -43,7 +43,7 @@ public class UrlUtils {
     @CalledByNative
     public static String getIsolatedTestRoot() {
         try (StrictModeContext ignored = StrictModeContext.allowDiskReads()) {
-            return PathUtils.getExternalStorageDirectory() + "/chromium_tests_root";
+            return PathUtils.getExternalStorageDirectory();
         }
     }
 
