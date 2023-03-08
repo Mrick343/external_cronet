@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0edfbaa7_28d96e9c",
+        "filename": "components/cronet/android/api/src/android/net/http/BidirectionalStream.java",
+        "patchSetId": 20
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T10:25:01Z",
+      "side": 1,
+      "message": "I see your points, now we can only update HeaderBlock even if we need to update to use Pair\u003cString, String\u003e.\nthank you for your explanation!",
+      "parentUuid": "0470f136_0f57ec50",
+      "revId": "8b34b11ad8387531baf7a5cb948c4dfe47d3f1c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ccf0af44_75bf0b4a",
