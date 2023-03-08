@@ -84,10 +84,10 @@ public class TestUrlRequestCallback extends UrlRequest.Callback {
                     StrictMode.ThreadPolicy threadPolicy = StrictMode.getThreadPolicy();
                     try {
                         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                                                           .detectNetwork()
-                                                           .penaltyLog()
-                                                           .penaltyDeath()
-                                                           .build());
+                                .detectNetwork()
+                                .penaltyLog()
+                                .penaltyDeath()
+                                .build());
                         r.run();
                     } finally {
                         StrictMode.setThreadPolicy(threadPolicy);

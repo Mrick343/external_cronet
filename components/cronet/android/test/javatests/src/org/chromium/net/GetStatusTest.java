@@ -28,8 +28,8 @@ import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import org.chromium.net.TestUrlRequestCallback.ResponseStep;
 import android.net.http.UrlRequest.Status;
 import android.net.http.UrlRequest.StatusListener;
-import org.chromium.net.impl.LoadState;
-import org.chromium.net.impl.UrlRequestBase;
+import android.net.http.internal.org.chromium.net.impl.LoadState;
+import android.net.http.internal.org.chromium.net.impl.UrlRequestBase;
 
 import java.io.IOException;
 import java.util.concurrent.Executor;

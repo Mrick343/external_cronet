@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.chromium.net.CronetTestRule.CronetTestFramework;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import org.chromium.net.CronetTestRule.RequiresMinApi;
-import org.chromium.net.impl.CronetUrlRequestContext;
+import android.net.http.internal.org.chromium.net.impl.CronetUrlRequestContext;
 
 /**
  * Tests features of CronetTestRule.
@@ -67,8 +67,6 @@ public class CronetTestRuleTest {
     public void testRequiresMinApiMustRun() {
         mTestWasRun = true;
     }
-
-}
 
     @Test
     @SmallTest
