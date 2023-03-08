@@ -140,14 +140,29 @@ public abstract class UrlRequest {
         /**
          * Binds the request to the specified network. The HTTP stack will send this request
          * only using the network associated to this handle. If this network disconnects the request
-         * will fail, the exact error will depend on the stage of request processing when
+         * will  fail, the exact error will depend on the stage of request processing when
          * the network disconnects.
          *
-         * @param network the network to bind the request to. Specify {@code null} to unbind.
+         * <p>To reverse the action or override the engine setting,
+         * use {@link #unbindFromNetwork()}.
+         *
+         * @param network the network to bind the request to.
          * @return the builder to facilitate chaining.
          */
-        @NonNull @SuppressLint("BuilderSetStyle")
-        public abstract Builder bindToNetwork(@Nullable Network network);
+        @NonNull
+        public abstract Builder bindToNetwork(@NonNull Network network);
+
+        /**
+         * Release a preexisting network binding previously created
+         * by {@link #bindToNetwork(Network)} or {@link HttpEngine#bindToNetwork(Network)}.
+         *
+         * <p>If the engine isn't bound to any network the method has no effect, thus making
+         * it idempotent.
+         *
+         * @return the builder to facilitate chaining.
+         */
+        @NonNull
+        public abstract Builder unbindFromNetwork();
 
         /**
          * Sets {@link android.net.TrafficStats} tag to use when accounting socket traffic caused by

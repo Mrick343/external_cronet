@@ -487,9 +487,17 @@ public abstract class HttpEngine {
      * fail, the exact error will depend on the stage of request processing when the network
      * disconnects.
      *
-     * @param network the network to bind the engine to. Specify {@code null} to unbind.
+     * <p>To reverse the action, use {@link #unbindFromNetwork()}.
+     *
+     * @param network the network to bind the engine to
      */
-    public void bindToNetwork(@Nullable Network network) {}
+    public void bindToNetwork(@NonNull Network network) {}
+
+    /**
+     * Release a preexisting network binding previously created by {@link #bindToNetwork(Network)}.
+     * If the engine isn't bound to any network the method has no effect, thus making it idempotent.     *
+     */
+    public void unbindFromNetwork() {}
 
     /**
      * Establishes a new connection to the resource specified by the {@link URL} {@code url}.
