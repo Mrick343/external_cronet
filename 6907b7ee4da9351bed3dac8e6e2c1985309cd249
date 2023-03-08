@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2503aaba_fe37fc67",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T10:27:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6420f702_14716f1d",
+      "range": {
+        "startLine": 98,
+        "startChar": 18,
+        "endLine": 98,
+        "endChar": 33
+      },
+      "revId": "6907b7ee4da9351bed3dac8e6e2c1985309cd249",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3558e94_745b7944",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-03-08T09:29:44Z",
       "side": 1,
       "message": "Just use the header block directly?",
+      "range": {
+        "startLine": 74,
+        "startChar": 12,
+        "endLine": 74,
+        "endChar": 51
+      },
+      "revId": "6907b7ee4da9351bed3dac8e6e2c1985309cd249",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8679739c_2f4da480",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBase.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T10:27:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3558e94_745b7944",
       "range": {
         "startLine": 74,
         "startChar": 12,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1191dfe3_67ffc4f8",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/HeaderBlockImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T10:27:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee91321c_eb291dec",
+      "range": {
+        "startLine": 34,
+        "startChar": 20,
+        "endLine": 34,
+        "endChar": 66
+      },
+      "revId": "6907b7ee4da9351bed3dac8e6e2c1985309cd249",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4ca4848_743889b2",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-03-08T09:29:44Z",
       "side": 1,
       "message": "This is essentially copy-on-write, meaning that if we have multiple headers of the same name we\u0027re being quite wasteful. How about \n\n```\n Map\u003cString, List\u003cString\u003e\u003e map \u003d new TreeMap\u003c\u003e(String.CASE_INSENSITIVE_ORDER);\n      for (Map.Entry\u003cString, String\u003e entry : mAllHeadersList) {\n        List\u003cString\u003e values \u003d map.computeIfAbsent(\n            entry.getKey(),\n            key -\u003e new ArrayList\u003c\u003e());\n        values.add(entry.getValue());\n      }\n      map.replaceAll((key, values) -\u003e Collections.unmodifiableList(values));\n````\n\n?",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 9
+      },
+      "revId": "6907b7ee4da9351bed3dac8e6e2c1985309cd249",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d59205e5_016eadbb",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/HeaderBlockImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-08T10:27:01Z",
+      "side": 1,
+      "message": "Thanks, this is much efficient. Updated.",
+      "parentUuid": "c4ca4848_743889b2",
       "range": {
         "startLine": 49,
         "startChar": 8,
