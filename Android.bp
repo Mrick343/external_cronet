@@ -893,7 +893,7 @@ cc_genrule {
 
 // GN: //base:android_runtime_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_base_android_runtime_jni_headers__testing__testing",
+    name: "cronet_aml_base_android_runtime_jni_headers__testing",
     cmd: "$(location base/android/jni_generator/jni_generator.py) --ptr_type " +
          "long " +
          "--output_dir " +
@@ -2222,15 +2222,15 @@ cc_library_static {
                 "third_party/android_ndk/sources/android/cpufeatures/",
             ],
             generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
             ],
             export_generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
@@ -2341,15 +2341,15 @@ cc_library_static {
                 "third_party/android_ndk/sources/android/cpufeatures/",
             ],
             generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
             ],
             export_generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
@@ -2458,15 +2458,15 @@ cc_library_static {
                 "third_party/android_ndk/sources/android/cpufeatures/",
             ],
             generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
             ],
             export_generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
@@ -2576,15 +2576,15 @@ cc_library_static {
                 "third_party/android_ndk/sources/android/cpufeatures/",
             ],
             generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
             ],
             export_generated_headers: [
-                "cronet_aml_base_android_runtime_jni_headers__testing__testing",
-                "cronet_aml_base_base_jni_headers__testing__testing",
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
                 "cronet_aml_base_debugging_buildflags__testing",
                 "cronet_aml_base_logging_buildflags__testing",
                 "cronet_aml_build_chromeos_buildflags__testing",
@@ -2947,7 +2947,7 @@ cc_genrule {
 
 // GN: //base:base_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_base_base_jni_headers__testing__testing",
+    name: "cronet_aml_base_base_jni_headers__testing",
     srcs: [
         "base/android/java/src/org/chromium/base/ApkAssets.java",
         "base/android/java/src/org/chromium/base/ApplicationStatus.java",
@@ -4597,7 +4597,7 @@ cc_genrule {
 
 // GN: //base/test:base_unittests_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_base_test_base_unittests_jni_headers__testing__testing",
+    name: "cronet_aml_base_test_base_unittests_jni_headers__testing",
     srcs: [
         "base/test/android/java/src/org/chromium/base/ContentUriTestUtils.java",
         "base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java",
@@ -4897,15 +4897,15 @@ cc_library_static {
     generated_headers: [
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
-        "cronet_aml_base_test_base_unittests_jni_headers__testing__testing",
-        "cronet_aml_base_test_test_support_jni_headers__testing__testing",
+        "cronet_aml_base_test_base_unittests_jni_headers__testing",
+        "cronet_aml_base_test_test_support_jni_headers__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
     ],
     export_generated_headers: [
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
-        "cronet_aml_base_test_base_unittests_jni_headers__testing__testing",
-        "cronet_aml_base_test_test_support_jni_headers__testing__testing",
+        "cronet_aml_base_test_base_unittests_jni_headers__testing",
+        "cronet_aml_base_test_test_support_jni_headers__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
     ],
     defaults: [
@@ -5017,7 +5017,7 @@ cc_library_static {
 
 // GN: //base/test:test_support_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_base_test_test_support_jni_headers__testing__testing",
+    name: "cronet_aml_base_test_test_support_jni_headers__testing",
     srcs: [
         "base/test/android/java/src/org/chromium/base/MainReturnCodeResult.java",
         "base/test/android/java/src/org/chromium/base/MultiprocessTestClientLauncher.java",
@@ -6638,7 +6638,7 @@ cc_genrule {
 
 // GN: //components/cronet/android:cronet_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_components_cronet_android_cronet_jni_headers__testing__testing",
+    name: "cronet_aml_components_cronet_android_cronet_jni_headers__testing",
     srcs: [
         "components/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java",
         "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
@@ -7196,7 +7196,7 @@ java_genrule {
 
 // GN: //components/cronet/android:cronet_jni_registration
 java_genrule {
-    name: "cronet_aml_components_cronet_android_cronet_jni_registration__testing__java",
+    name: "cronet_aml_components_cronet_android_cronet_jni_registration__java__testing",
     srcs: [
         "base/android/java/src/org/chromium/base/ActivityState.java",
         "base/android/java/src/org/chromium/base/ApiCompatibilityUtils.java",
@@ -7443,7 +7443,7 @@ java_genrule {
 
 // GN: //components/cronet/android:cronet_jni_registration__testing
 cc_genrule {
-    name: "cronet_aml_components_cronet_android_cronet_jni_registration__testing__testing",
+    name: "cronet_aml_components_cronet_android_cronet_jni_registration__testing",
     srcs: [
         "base/android/java/src/org/chromium/base/ActivityState.java",
         "base/android/java/src/org/chromium/base/ApiCompatibilityUtils.java",
@@ -7860,8 +7860,8 @@ cc_object {
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
         "cronet_aml_components_cronet_android_buildflags__testing",
-        "cronet_aml_components_cronet_android_cronet_jni_headers__testing__testing",
-        "cronet_aml_components_cronet_android_cronet_jni_registration__testing__testing",
+        "cronet_aml_components_cronet_android_cronet_jni_headers__testing",
+        "cronet_aml_components_cronet_android_cronet_jni_registration__testing",
         "cronet_aml_components_cronet_cronet_buildflags__testing",
         "cronet_aml_components_cronet_cronet_version_header_action__testing",
         "cronet_aml_third_party_metrics_proto_metrics_proto__testing_gen_headers",
@@ -7999,11 +7999,11 @@ cc_library_shared {
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
         "cronet_aml_components_cronet_android_buildflags__testing",
-        "cronet_aml_components_cronet_android_cronet_jni_headers__testing__testing",
-        "cronet_aml_components_cronet_android_cronet_jni_registration__testing__testing",
+        "cronet_aml_components_cronet_android_cronet_jni_headers__testing",
+        "cronet_aml_components_cronet_android_cronet_jni_registration__testing",
         "cronet_aml_components_cronet_cronet_buildflags__testing",
         "cronet_aml_components_cronet_cronet_version_header_action__testing",
-        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing__testing",
+        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing",
         "cronet_aml_third_party_metrics_proto_metrics_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
     ],
@@ -8012,11 +8012,11 @@ cc_library_shared {
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
         "cronet_aml_components_cronet_android_buildflags__testing",
-        "cronet_aml_components_cronet_android_cronet_jni_headers__testing__testing",
-        "cronet_aml_components_cronet_android_cronet_jni_registration__testing__testing",
+        "cronet_aml_components_cronet_android_cronet_jni_headers__testing",
+        "cronet_aml_components_cronet_android_cronet_jni_registration__testing",
         "cronet_aml_components_cronet_cronet_buildflags__testing",
         "cronet_aml_components_cronet_cronet_version_header_action__testing",
-        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing__testing",
+        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing",
         "cronet_aml_third_party_metrics_proto_metrics_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
     ],
@@ -9269,7 +9269,7 @@ cc_genrule {
 
 // GN: //components/prefs/android:jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_components_prefs_android_jni_headers__testing__testing",
+    name: "cronet_aml_components_prefs_android_jni_headers__testing",
     srcs: [
         "components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java",
     ],
@@ -9486,13 +9486,13 @@ cc_library_static {
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
-        "cronet_aml_components_prefs_android_jni_headers__testing__testing",
+        "cronet_aml_components_prefs_android_jni_headers__testing",
     ],
     export_generated_headers: [
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
-        "cronet_aml_components_prefs_android_jni_headers__testing__testing",
+        "cronet_aml_components_prefs_android_jni_headers__testing",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -10500,7 +10500,7 @@ java_library {
         ":cronet_aml_base_java_switches_srcjar",
         ":cronet_aml_build_android_build_config_gen",
         ":cronet_aml_build_android_native_libraries_gen",
-        ":cronet_aml_components_cronet_android_cronet_jni_registration__testing__java",
+        ":cronet_aml_components_cronet_android_cronet_jni_registration__java__testing",
         ":cronet_aml_components_cronet_android_http_cache_type_java",
         ":cronet_aml_components_cronet_android_implementation_api_version",
         ":cronet_aml_components_cronet_android_integrated_mode_state",
@@ -11322,7 +11322,7 @@ cc_object {
         "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains__testing",
         "cronet_aml_net_buildflags__testing",
         "cronet_aml_net_isolation_info_proto__testing_gen_headers",
-        "cronet_aml_net_net_jni_headers__testing__testing",
+        "cronet_aml_net_net_jni_headers__testing",
         "cronet_aml_net_net_nqe_proto__testing_gen_headers",
         "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
@@ -11574,7 +11574,7 @@ cc_object {
         "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains__testing",
         "cronet_aml_net_buildflags__testing",
         "cronet_aml_net_isolation_info_proto__testing_gen_headers",
-        "cronet_aml_net_net_jni_headers__testing__testing",
+        "cronet_aml_net_net_jni_headers__testing",
         "cronet_aml_net_net_nqe_proto__testing_gen_headers",
         "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
@@ -12161,7 +12161,7 @@ cc_object {
         "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains__testing",
         "cronet_aml_net_buildflags__testing",
         "cronet_aml_net_isolation_info_proto__testing_gen_headers",
-        "cronet_aml_net_net_jni_headers__testing__testing",
+        "cronet_aml_net_net_jni_headers__testing",
         "cronet_aml_net_net_nqe_proto__testing_gen_headers",
         "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
@@ -13581,7 +13581,7 @@ cc_library_static {
         "cronet_aml_net_buildflags__testing",
         "cronet_aml_net_ios_cronet_buildflags__testing",
         "cronet_aml_net_isolation_info_proto__testing_gen_headers",
-        "cronet_aml_net_net_jni_headers__testing__testing",
+        "cronet_aml_net_net_jni_headers__testing",
         "cronet_aml_net_net_nqe_proto__testing_gen_headers",
         "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
@@ -13595,7 +13595,7 @@ cc_library_static {
         "cronet_aml_net_buildflags__testing",
         "cronet_aml_net_ios_cronet_buildflags__testing",
         "cronet_aml_net_isolation_info_proto__testing_gen_headers",
-        "cronet_aml_net_net_jni_headers__testing__testing",
+        "cronet_aml_net_net_jni_headers__testing",
         "cronet_aml_net_net_nqe_proto__testing_gen_headers",
         "cronet_aml_net_third_party_quiche_net_quic_test_tools_proto__testing_gen_headers",
         "cronet_aml_url_buildflags__testing",
@@ -13853,7 +13853,7 @@ cc_object {
         "cronet_aml_build_chromeos_buildflags__testing",
         "cronet_aml_net_base_registry_controlled_domains_registry_controlled_domains__testing",
         "cronet_aml_net_isolation_info_proto__testing_gen_headers",
-        "cronet_aml_net_net_jni_headers__testing__testing",
+        "cronet_aml_net_net_jni_headers__testing",
         "cronet_aml_url_buildflags__testing",
     ],
     defaults: [
@@ -14037,7 +14037,7 @@ cc_genrule {
 
 // GN: //net:net_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_net_net_jni_headers__testing__testing",
+    name: "cronet_aml_net_net_jni_headers__testing",
     srcs: [
         "net/android/java/src/org/chromium/net/AndroidCertVerifyResult.java",
         "net/android/java/src/org/chromium/net/AndroidKeyStore.java",
@@ -17113,7 +17113,7 @@ cc_library_static {
 
 // GN: //testing/android/native_test:native_test_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_testing_android_native_test_native_test_jni_headers__testing__testing",
+    name: "cronet_aml_testing_android_native_test_native_test_jni_headers__testing",
     srcs: [
         "testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java",
         "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
@@ -17184,7 +17184,7 @@ cc_object {
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
-        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing__testing",
+        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -17288,7 +17288,7 @@ cc_object {
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
-        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing__testing",
+        "cronet_aml_testing_android_native_test_native_test_jni_headers__testing",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -30330,14 +30330,14 @@ cc_library_static {
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
         "cronet_aml_url_buildflags__testing",
-        "cronet_aml_url_url_jni_headers__testing__testing",
+        "cronet_aml_url_url_jni_headers__testing",
     ],
     export_generated_headers: [
         "cronet_aml_base_debugging_buildflags__testing",
         "cronet_aml_base_logging_buildflags__testing",
         "cronet_aml_build_chromeos_buildflags__testing",
         "cronet_aml_url_buildflags__testing",
-        "cronet_aml_url_url_jni_headers__testing__testing",
+        "cronet_aml_url_url_jni_headers__testing",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -30468,7 +30468,7 @@ cc_genrule {
 
 // GN: //url:url_jni_headers__testing
 cc_genrule {
-    name: "cronet_aml_url_url_jni_headers__testing__testing",
+    name: "cronet_aml_url_url_jni_headers__testing",
     srcs: [
         "url/android/java/src/org/chromium/url/IDNStringUtil.java",
         "url/android/java/src/org/chromium/url/Origin.java",
