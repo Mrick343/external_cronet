@@ -285,7 +285,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
             boolean disableConnectionMigration, boolean allowDirectExecutor,
             boolean trafficStatsTagSet, int trafficStatsTag, boolean trafficStatsUidSet,
             int trafficStatsUid, RequestFinishedInfo.Listener requestFinishedListener,
-            int idempotency, long networkHandle) {
+            int idempotency, long networkHandle, List<Map.Entry<String,String>> headers) {
         if (networkHandle == DEFAULT_NETWORK_HANDLE) {
             networkHandle = mNetworkHandle;
         }
@@ -294,7 +294,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
             return new CronetUrlRequest(this, url, priority, callback, executor, requestAnnotations,
                     disableCache, disableConnectionMigration, allowDirectExecutor,
                     trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet, trafficStatsUid,
-                    requestFinishedListener, idempotency, networkHandle);
+                    requestFinishedListener, idempotency, networkHandle, headers);
         }
     }
 
