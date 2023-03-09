@@ -27,3 +27,20 @@ java_test_host {
         "general-tests",
     ],
 }
+
+java_test_host {
+    name: "net_unittests_tester",
+    srcs: ["src/**/*.java"],
+    auto_gen_config: false,
+    test_config: "AndroidNetTest.xml",
+    libs: [
+        "tradefed",
+    ],
+    data: [
+        ":cronet_net_tester_app",
+        ":net_unittests_data",
+    ],
+    test_suites: [
+        "general-tests",
+    ],
+}
