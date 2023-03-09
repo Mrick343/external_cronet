@@ -48,6 +48,9 @@ java_library {
     name: "cronet_aml_api_java",
     srcs: [
         ":cronet_aml_api_sources",
+        // TODO: move to cronet_aml_api_sources once there's a patch for aosp/2475845 and desc_.json
+        // is regenerated.
+        "components/cronet/android/api/src/android/net/http/HeaderBlock.java",
     ],
     libs: [
         "androidx.annotation_annotation",
