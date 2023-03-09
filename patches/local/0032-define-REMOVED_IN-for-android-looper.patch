@@ -1,0 +1,59 @@
+From 6764ce065e1d064f1b8980b92d0d250506c30dfc Mon Sep 17 00:00:00 2001
+From: Chidera Olibie <colibie@google.com>
+Date: Thu, 9 Mar 2023 16:48:33 +0000
+Subject: [PATCH] Regenerate bp file after aosp/2480255
+
+Changes to asop/2441119 was also not merged
+external/cronet/Android.bp and hence auto-added here.
+
+Internal build fails to compile because REMOVED_IN
+was added to the android/looper.h file.
+
+Test: m
+Change-Id: I57a321c9b27d7970b4adb3941e8f4aacee160626
+---
+ message_loop/message_pump_android.cc | 7 +++++++
+ test/test_support_android.cc         | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/message_loop/message_pump_android.cc b/message_loop/message_pump_android.cc
+index 645a1927..40d7141c 100644
+--- a/message_loop/message_pump_android.cc
++++ b/message_loop/message_pump_android.cc
+@@ -4,7 +4,14 @@
+ 
+ #include "base/message_loop/message_pump_android.h"
+ 
++
++// This file is included by modules that have host support but android/looper.h is not supported
++// on host. __REMOVED_IN needs to be defined in order for android/looper.h to be compiled.
++#ifndef __BIONIC__
++#define __REMOVED_IN(x) __attribute__((deprecated))
++#endif
+ #include <android/looper.h>
++
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <jni.h>
+diff --git a/test/test_support_android.cc b/test/test_support_android.cc
+index c5ec6187..d5c7b0a3 100644
+--- a/test/test_support_android.cc
++++ b/test/test_support_android.cc
+@@ -2,7 +2,14 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++
++// This file is included by modules that have host support but android/looper.h is not supported
++// on host. __REMOVED_IN needs to be defined in order for android/looper.h to be compiled.
++#ifndef __BIONIC__
++#define __REMOVED_IN(x) __attribute__((deprecated))
++#endif
+ #include <android/looper.h>
++
+ #include <stdarg.h>
+ #include <string.h>
+ 
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
+
