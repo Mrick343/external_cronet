@@ -45,7 +45,8 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
             "NativeTestInstrumentationTestRunner.NativeTestActivity");
     private static final String RUN_IN_SUBTHREAD_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
             "NativeTest.RunInSubThread");
-    private static final String NATIVE_UNIT_TEST_ACTIVITY_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
+    private static final String NATIVE_UNIT_TEST_ACTIVITY_KEY = String.format("%s.%s",
+            CHROMIUM_PACKAGE,
             "NativeUnitTestActivity");
     private static final String COMMAND_LINE_FLAGS_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
             "NativeTest.CommandLineFlags");
@@ -54,7 +55,8 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
             "NativeTestInstrumentationTestRunner.ShardNanoTimeout");
     private static final String DUMP_COVERAGE_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
             "NativeTestInstrumentationTestRunner.DumpCoverage");
-    private static final String LIBRARY_TO_LOAD_ACTIVITY_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
+    private static final String LIBRARY_TO_LOAD_ACTIVITY_KEY = String.format("%s.%s",
+            CHROMIUM_PACKAGE,
             "NativeTestInstrumentationTestRunner.LibraryUnderTest");
     private static final String STDOUT_FILE_KEY = String.format("%s.%s", CHROMIUM_PACKAGE,
             "NativeTestInstrumentationTestRunner.StdoutFile");
@@ -79,24 +81,40 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
     private boolean mCoverage = false;
 
     @Option(
+            name = "gtest-filter",
+            description = "Run only tests specified by the filter"
+    )
+    private String gtestFilter = "*"; // Default to run everything
+
+    @Option(
             name = "library-to-load",
             description = "Name of the .so file under test"
     )
     private String libraryToLoad;
 
     private String createRunAllTestsCommand() {
+
         InstrumentationCommandBuilder builder = new InstrumentationCommandBuilder(TEST_RUNNER)
                 .addArgument(NATIVE_TEST_ACTIVITY_KEY, NATIVE_UNIT_TEST_ACTIVITY_KEY)
                 .addArgument(RUN_IN_SUBTHREAD_KEY, "1")
                 .addArgument(EXTRA_SHARD_NANO_TIMEOUT_KEY, String.valueOf(testsTimeout.toNanos()))
                 .addArgument(LIBRARY_TO_LOAD_ACTIVITY_KEY, libraryToLoad)
                 .addArgument(STDOUT_FILE_KEY, GTEST_OUTPUT_PATH)
-                .addArgument(COMMAND_LINE_FLAGS_KEY, String.format("'--gtest_output=json:%s'",
-                        ChromiumHostDrivenTest.GTEST_RESULT_OUTPUT_PATH));
+                .addArgument(COMMAND_LINE_FLAGS_KEY,
+                        String.format("'--gtest_filter=%s --gtest_output=json:%s'",
+                                gtestFilter, ChromiumHostDrivenTest.GTEST_RESULT_OUTPUT_PATH));
         if (mCoverage) {
             builder.addArgument(DUMP_COVERAGE_KEY, "true");
         }
         return builder.build();
+    }
+
+    private void logFileFromDevice(String filePath) throws DeviceNotAvailableException {
+        File file = getDevice().pullFile(filePath);
+        if (file != null) {
+            logs.addTestLog(filePath, LogDataType.TEXT,
+                    new FileInputStreamSource(file));
+        }
     }
 
     @Before
@@ -128,6 +146,8 @@ public class ChromiumHostDrivenTest extends BaseHostJUnit4Test {
         }
         logs.addTestLog("cronet_extra_logs", LogDataType.TEXT,
                 new FileInputStreamSource(logFile));
+        logFileFromDevice(GTEST_RESULT_OUTPUT_PATH);
+        logFileFromDevice(GTEST_OUTPUT_PATH);
         // The files are included in the test report generated after executing the tests.
         File gtestTestResultsJson = getDevice().pullFile(GTEST_RESULT_OUTPUT_PATH);
         GTestsMetaData gTestsMetaData = GTestsMetaData.from(gtestTestResultsJson);

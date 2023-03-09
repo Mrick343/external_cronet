@@ -184,7 +184,7 @@ public class NativeTest {
 
     private void runTests(Activity activity) {
         nativeRunTests(mCommandLineFlags.toString(), mCommandLineFilePath, mStdoutFilePath,
-                activity.getApplicationContext(), UrlUtils.getIsolatedTestRoot());
+                activity.getApplicationContext(), "/data/local/tmp");
         if (mDumpCoverage) {
             new Handler(Looper.getMainLooper()).post(() -> {
                 maybeDumpNativeCoverage();
