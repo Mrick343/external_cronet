@@ -34,6 +34,23 @@
       "parentUuid": "a1820b35_9399a9fb",
       "revId": "825569b7257cfe0ca2761d7319cfec820197e0ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13cb82e6_fc49bf5b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-09T16:21:20Z",
+      "side": 1,
+      "message": "I need to delete the license generating module. cc aosp/2469561",
+      "revId": "825569b7257cfe0ca2761d7319cfec820197e0ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
