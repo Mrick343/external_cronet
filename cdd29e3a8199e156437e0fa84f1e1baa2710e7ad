@@ -22,6 +22,30 @@
       },
       "revId": "cdd29e3a8199e156437e0fa84f1e1baa2710e7ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22b5ae50_87d68405",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-03-09T02:17:08Z",
+      "side": 1,
+      "message": "Right, getAsList is better since getAsMap is not called before.",
+      "parentUuid": "0044cb41_bf5c3181",
+      "range": {
+        "startLine": 958,
+        "startChar": 0,
+        "endLine": 958,
+        "endChar": 94
+      },
+      "revId": "cdd29e3a8199e156437e0fa84f1e1baa2710e7ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
