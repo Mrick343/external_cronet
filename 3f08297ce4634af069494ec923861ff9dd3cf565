@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e060031e_d0f823cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-09T15:36:50Z",
+      "side": 1,
+      "message": "Which version of gn2bp is this Android.bp generated from? Latest?",
+      "revId": "3f08297ce4634af069494ec923861ff9dd3cf565",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
