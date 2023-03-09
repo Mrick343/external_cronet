@@ -12,16 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-java_test_host {
-    name: "cronet_unittests_tester",
+java_library_host {
+    name: "CronetHostSideTestRunner",
     srcs: ["src/**/*.java"],
-    auto_gen_config: false,
-    test_config: "AndroidTest.xml",
     libs: [
         "tradefed",
     ],
+}
+
+java_test_host {
+    name: "cronet_unittests_tester",
+    auto_gen_config: false,
+    test_config: "AndroidTest.xml",
+    static_libs: [
+        "CronetHostSideTestRunner"
+    ],
     data: [
         ":cronet_tester_app",
+    ],
+    test_suites: [
+        "general-tests",
+    ],
+}
+
+java_test_host {
+    name: "net_unittests_tester",
+    auto_gen_config: false,
+    test_config: "AndroidNetTest.xml",
+    static_libs: [
+        "CronetHostSideTestRunner"
+    ],
+    data: [
+        ":cronet_net_tester_app",
+        ":net_unittests_data",
     ],
     test_suites: [
         "general-tests",
