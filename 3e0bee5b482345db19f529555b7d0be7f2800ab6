@@ -22,6 +22,30 @@
       },
       "revId": "3e0bee5b482345db19f529555b7d0be7f2800ab6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39f913f0_54fe428b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-10T19:49:16Z",
+      "side": 1,
+      "message": "Oops, submitted before I saw this comment. Leaving it open for anyone that finds this cl :)",
+      "parentUuid": "121ef105_475ebc72",
+      "range": {
+        "startLine": 10,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 48
+      },
+      "revId": "3e0bee5b482345db19f529555b7d0be7f2800ab6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
