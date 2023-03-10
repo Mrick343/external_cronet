@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06f38cc5_a76112e3",
+        "filename": "base/message_loop/message_pump_android.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-10T03:25:59Z",
+      "side": 1,
+      "message": "Can you put these changes into their own CL?\n\nAlso, none of this code can work on host, right? I am a bit confused why this is being done. (the _android implementations shouldn\u0027t be used on host).",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "8a9dce052744d9f64d43fd52e12c457e00e21e3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
