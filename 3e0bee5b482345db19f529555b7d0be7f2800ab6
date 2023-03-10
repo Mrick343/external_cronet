@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "121ef105_475ebc72",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-10T19:17:59Z",
+      "side": 1,
+      "message": "I think this is slightly off, bionic is the c library that ships in Android. I am assuming this breaks for targets that might need this on hosts (which use gnu libc, I think).",
+      "range": {
+        "startLine": 10,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 48
+      },
+      "revId": "3e0bee5b482345db19f529555b7d0be7f2800ab6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
