@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31b6c364_36acd59d",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-13T17:37:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d81d7217_43cba8db",
+      "range": {
+        "startLine": 19,
+        "startChar": 5,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "61a053cd37b3374649f9800a400d6121eee3a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "558c2c6b_26084e02",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8ca0c4a_c6ea5f29",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-13T17:37:40Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "558c2c6b_26084e02",
+      "range": {
+        "startLine": 36,
+        "startChar": 45,
+        "endLine": 36,
+        "endChar": 70
+      },
+      "revId": "61a053cd37b3374649f9800a400d6121eee3a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30326ce3_f465882b",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-03-13T16:44:08Z",
       "side": 1,
       "message": "Did you forget to remove this?",
+      "range": {
+        "startLine": 47,
+        "startChar": 8,
+        "endLine": 47,
+        "endChar": 102
+      },
+      "revId": "61a053cd37b3374649f9800a400d6121eee3a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e45e44ad_00a17922",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-13T17:37:40Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "30326ce3_f465882b",
       "range": {
         "startLine": 47,
         "startChar": 8,
