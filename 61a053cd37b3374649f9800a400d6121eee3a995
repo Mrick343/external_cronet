@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d81d7217_43cba8db",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-13T16:44:08Z",
+      "side": 1,
+      "message": "It might be nice to add a quick comment as to why each of these target preparer is needed. Otherwise, I feel that they would become an obscure thing in a couple of months.",
+      "range": {
+        "startLine": 19,
+        "startChar": 5,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "61a053cd37b3374649f9800a400d6121eee3a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "558c2c6b_26084e02",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-13T16:44:08Z",
+      "side": 1,
+      "message": "Just to confirm my understanding, is this the output of Android.extras.bp\u0027s cronet_net_tester_app?",
+      "range": {
+        "startLine": 36,
+        "startChar": 45,
+        "endLine": 36,
+        "endChar": 70
+      },
+      "revId": "61a053cd37b3374649f9800a400d6121eee3a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30326ce3_f465882b",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-13T16:44:08Z",
+      "side": 1,
+      "message": "Did you forget to remove this?",
+      "range": {
+        "startLine": 47,
+        "startChar": 8,
+        "endLine": 47,
+        "endChar": 102
+      },
+      "revId": "61a053cd37b3374649f9800a400d6121eee3a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
