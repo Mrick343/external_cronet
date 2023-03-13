@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18db8bb1_43dae29f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-13T16:43:50Z",
+      "side": 1,
+      "message": "Should we update Android.bp alongside? Otherwise this change might be breaking things without us knowing about it.",
+      "revId": "8242c11f4bc48c3e4ce9e2b3a0ff1a2b23f9d6a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
