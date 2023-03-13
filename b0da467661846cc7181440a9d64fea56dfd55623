@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f578c0eb_ae7f9abf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-13T16:38:33Z",
+      "side": 1,
+      "message": "LGTM. It might be a good idea to bump the priority of b/272756726 to at least P2 (if not P1).",
+      "revId": "b0da467661846cc7181440a9d64fea56dfd55623",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "723c6203_5e9ef8d8",
+        "filename": "net/http/http_response_headers_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1826,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-13T16:38:33Z",
+      "side": 1,
+      "message": "We probably want to drop this altogether as it involves the use of Perfetto.",
+      "range": {
+        "startLine": 1826,
+        "startChar": 0,
+        "endLine": 1826,
+        "endChar": 56
+      },
+      "revId": "b0da467661846cc7181440a9d64fea56dfd55623",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
