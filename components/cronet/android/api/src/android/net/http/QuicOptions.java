@@ -29,8 +29,8 @@ public class QuicOptions {
 
     private final Set<String> mConnectionOptions;
     private final Set<String> mClientConnectionOptions;
-    @Nullable
-    private final Integer mInMemoryServerConfigsCacheSize;
+    private final boolean mInMemoryServerConfigsCacheSizeSet;
+    private final int mInMemoryServerConfigsCacheSize;
     @Nullable
     private final String mHandshakeUserAgent;
     @Nullable
@@ -71,6 +71,7 @@ public class QuicOptions {
                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mConnectionOptions));
         this.mClientConnectionOptions =
                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mClientConnectionOptions));
+        this.mInMemoryServerConfigsCacheSizeSet = builder.mInMemoryServerConfigsCacheSizeSet;
         this.mInMemoryServerConfigsCacheSize = builder.mInMemoryServerConfigsCacheSize;
         this.mHandshakeUserAgent = builder.mHandshakeUserAgent;
         this.mRetryWithoutAltSvcOnQuicErrors = builder.mRetryWithoutAltSvcOnQuicErrors;
@@ -130,9 +131,17 @@ public class QuicOptions {
     /**
      * See {@link Builder#setInMemoryServerConfigsCacheSize}
      */
-    // SuppressLint since return value is @Nullable
-    @Nullable @SuppressLint("AutoBoxing")
-    public Integer getInMemoryServerConfigsCacheSize() {
+     public boolean hasInMemoryServerConfigsCacheSize() {
+        return mInMemoryServerConfigsCacheSizeSet;
+     }
+
+    /**
+     * See {@link Builder#setInMemoryServerConfigsCacheSize}
+     */
+    public int getInMemoryServerConfigsCacheSize() {
+        if (!hasInMemoryServerConfigsCacheSize()) {
+            throw new IllegalStateException("InMemoryServerConfigsCacheSize is not set");
+        }
         return mInMemoryServerConfigsCacheSize;
     }
 
@@ -290,8 +299,8 @@ public class QuicOptions {
         private final Set<String> mEnabledQuicVersions = new LinkedHashSet<>();
         private final Set<String> mConnectionOptions = new LinkedHashSet<>();
         private final Set<String> mClientConnectionOptions = new LinkedHashSet<>();
-        @Nullable
-        private Integer mInMemoryServerConfigsCacheSize;
+        private boolean mInMemoryServerConfigsCacheSizeSet;
+        private int mInMemoryServerConfigsCacheSize;
         @Nullable
         private String mHandshakeUserAgent;
         @Nullable
@@ -402,6 +411,7 @@ public class QuicOptions {
          */
         @NonNull
         public Builder setInMemoryServerConfigsCacheSize(int inMemoryServerConfigsCacheSize) {
+            this.mInMemoryServerConfigsCacheSizeSet = true;
             this.mInMemoryServerConfigsCacheSize = inMemoryServerConfigsCacheSize;
             return this;
         }
