@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d072844_2fa31297",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49493102_184d1bbe",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 10
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9ef053bd_e23560d7",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-03-15T08:56:17Z",
       "side": 1,
       "message": "Nit: formatting",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 5
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c78942c_d316f7d3",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ef053bd_e23560d7",
       "range": {
         "startLine": 32,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd4a96c6_9966fa03",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "Thanks for the recommendation! Done.",
+      "parentUuid": "3b8f19e5_1c4ee01a",
+      "range": {
+        "startLine": 37,
+        "startChar": 8,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38539729_7c04274f",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-03-15T08:56:17Z",
       "side": 1,
       "message": "This isn\u0027t needed per https://android-review.git.corp.google.com/c/platform/external/cronet/+/2395712/comment/c1b194f2_ebc62d3c/, same below.",
+      "range": {
+        "startLine": 60,
+        "startChar": 15,
+        "endLine": 60,
+        "endChar": 19
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "681413c5_c01db6af",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38539729_7c04274f",
       "range": {
         "startLine": 60,
         "startChar": 15,
@@ -116,6 +212,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5998efc5_d3ca9592",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "This is also copied so I\u0027ll keep it the same. I\u0027ll probably move those to different files in upcoming CLs once this is merged.",
+      "parentUuid": "2dfe8e5b_7027c2ed",
+      "range": {
+        "startLine": 253,
+        "startChar": 8,
+        "endLine": 253,
+        "endChar": 48
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d30dd86a_e603945a",
@@ -139,6 +259,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c6df787_8982ad64",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "I reverted those changes because they require Guava and it doesn\u0027t seem that you can have Guava on the device atleast from what I have tried.",
+      "parentUuid": "d30dd86a_e603945a",
+      "range": {
+        "startLine": 259,
+        "startChar": 54,
+        "endLine": 259,
+        "endChar": 82
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "651d26b3_e44076b6",
@@ -152,6 +296,30 @@
       "writtenOn": "2023-03-15T08:56:17Z",
       "side": 1,
       "message": "Please add a comment where this originates from.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 29
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0e88d9b_b9a45f04",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/SignalMaskInfo.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T13:54:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "651d26b3_e44076b6",
       "range": {
         "startLine": 35,
         "startChar": 0,
