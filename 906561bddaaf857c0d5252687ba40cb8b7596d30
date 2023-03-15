@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11bd7c64_ca41f81d",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/NativeUnitTest.java",
+        "patchSetId": 34
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T14:03:16Z",
+      "side": 1,
+      "message": "Looks like accidental changes from another client, please revert to the previous state",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 34
+      },
+      "revId": "906561bddaaf857c0d5252687ba40cb8b7596d30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

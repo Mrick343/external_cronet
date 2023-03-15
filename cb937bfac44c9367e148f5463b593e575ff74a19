@@ -283,6 +283,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4768e0a_c2e0feb9",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T14:03:16Z",
+      "side": 1,
+      "message": "Optional: Consider using helper methods which are copied over from Guava - I don\u0027t see any significant interdependencies on the rest of Guava.",
+      "parentUuid": "8c6df787_8982ad64",
+      "range": {
+        "startLine": 259,
+        "startChar": 54,
+        "endLine": 259,
+        "endChar": 82
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "651d26b3_e44076b6",
