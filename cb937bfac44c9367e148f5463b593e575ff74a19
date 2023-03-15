@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49493102_184d1bbe",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "private, per https://android-review.git.corp.google.com/c/platform/external/cronet/+/2395712/comment/894ff94b_154fd399/",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 10
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ef053bd_e23560d7",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "Nit: formatting",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 5
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b8f19e5_1c4ee01a",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "Immutable classes are preferable over mutable ones: go/java-practices/immutability#immutability. A better way to do this would be to have a private constructor with three parameters, let parseFile be static and return a new instance rather than mutating the current one. This allows you to make the fields final.",
+      "range": {
+        "startLine": 37,
+        "startChar": 8,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38539729_7c04274f",
+        "filename": "test_runner/src/com.android.tests.chromium.host/GTestsMetaData.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "This isn\u0027t needed per https://android-review.git.corp.google.com/c/platform/external/cronet/+/2395712/comment/c1b194f2_ebc62d3c/, same below.",
+      "range": {
+        "startLine": 60,
+        "startChar": 15,
+        "endLine": 60,
+        "endChar": 19
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dfe8e5b_7027c2ed",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "Nit: You should rather use System.nanoTime() which isn\u0027t affected by system clock changes.",
+      "range": {
+        "startLine": 253,
+        "startChar": 8,
+        "endLine": 253,
+        "endChar": 48
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d30dd86a_e603945a",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "Nit: 2 seconds",
+      "range": {
+        "startLine": 259,
+        "startChar": 54,
+        "endLine": 259,
+        "endChar": 82
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "651d26b3_e44076b6",
+        "filename": "testing/android/native_test/java/src/org/chromium/native_test/SignalMaskInfo.java",
+        "patchSetId": 33
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:56:17Z",
+      "side": 1,
+      "message": "Please add a comment where this originates from.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 29
+      },
+      "revId": "cb937bfac44c9367e148f5463b593e575ff74a19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
