@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc8485a_dd3f8b2d",
+        "filename": "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-15T08:32:41Z",
+      "side": 1,
+      "message": "I think it might be better to keep the boxed variant internally and just expose it using the proposed APIs, for the sake of consistency with the rest.\n\nApproving in its current state to expedite submission.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 54
+      },
+      "revId": "602972e1d7fcb1f3e01c10c601e76897b389d1fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
