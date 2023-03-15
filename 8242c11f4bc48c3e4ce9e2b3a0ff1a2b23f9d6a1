@@ -34,6 +34,24 @@
       "parentUuid": "18db8bb1_43dae29f",
       "revId": "8242c11f4bc48c3e4ce9e2b3a0ff1a2b23f9d6a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f3703b8_837f0b06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-15T14:39:29Z",
+      "side": 1,
+      "message": "I\u0027ve attached a topic to this CL. So it can be together in the CL where the Android.bp can be updated. Unfortunately I can\u0027t update the Android.bp here.",
+      "parentUuid": "9ba72c82_5e062800",
+      "revId": "8242c11f4bc48c3e4ce9e2b3a0ff1a2b23f9d6a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
