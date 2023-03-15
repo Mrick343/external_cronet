@@ -55,6 +55,9 @@ java_library {
         "framework-connectivity.stubs.module_lib",
     ],
     sdk_version: "module_current",
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
 }
 
 // ------------------------------ NATIVE TEST TARGETS --------------------------------------------
@@ -169,5 +172,8 @@ filegroup {
     name: "cronet_aml_javatests_sources",
     srcs: [
         "components/cronet/android/test/javatests/**/UrlResponseInfoTest.java"
+    ],
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
     ],
 }
