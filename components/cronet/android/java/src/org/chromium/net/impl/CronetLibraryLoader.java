@@ -28,7 +28,6 @@ import org.chromium.net.NetworkChangeNotifier;
 public class CronetLibraryLoader {
     // Synchronize initialization.
     private static final Object sLoadLock = new Object();
-    private static final String LIBRARY_NAME = "cronet." + ImplVersion.getCronetVersion();
     private static final String TAG = CronetLibraryLoader.class.getSimpleName();
     // Thread used for initialization work and processing callbacks for
     // long-lived global singletons. This thread lives forever as things like
@@ -57,7 +56,9 @@ public class CronetLibraryLoader {
                 postToInitThread(CronetLibraryLoader::ensureInitializedOnInitThread);
             }
             if (!sLibraryLoaded) {
-                System.loadLibrary(LIBRARY_NAME);
+                final String nativeLibraryName =
+                        CronetLibraryLoader.class.getPackage().getName().replaceAll("\\.", "_");
+                System.loadLibrary(nativeLibraryName);
                 String implVersion = ImplVersion.getCronetVersion();
                 if (!implVersion.equals(CronetLibraryLoaderJni.get().getCronetVersion())) {
                     throw new RuntimeException(String.format("Expected Cronet version number %s, "
