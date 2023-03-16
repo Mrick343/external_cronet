@@ -6551,7 +6551,7 @@ cc_library_shared {
         "-Wl,-wrap,valloc",
         "-Wl,-wrap,vasprintf",
     ],
-    stem: "libcronet.108.0.5359.128",
+    stem: "libandroid_net_http_internal_org_chromium_net_impl",
     target: {
         android_arm: {
             cflags: [
@@ -8112,7 +8112,7 @@ cc_library_shared {
         "-Wl,-wrap,valloc",
         "-Wl,-wrap,vasprintf",
     ],
-    stem: "libcronet_unittests_android__library",
+    stem: "libandroid_net_connectivity_org_chromium_net_impl",
     target: {
         android_arm: {
             cflags: [
