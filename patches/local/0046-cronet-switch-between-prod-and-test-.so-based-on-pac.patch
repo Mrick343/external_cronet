@@ -1,0 +1,55 @@
+From a3433d9c5e564e1bdf6773eb150910e3f4867b09 Mon Sep 17 00:00:00 2001
+From: Patrick Rohr <prohr@google.com>
+Date: Thu, 16 Mar 2023 09:25:53 -0700
+Subject: [PATCH] cronet: switch between prod and test .so based on package
+ name
+
+Tests need to load the test-specific .so, and not the .so used in
+production.
+
+Test: atest CtsNetHttpTestCases
+Change-Id: If39ead49f612a4f5c279dcecdd805524981fa0bc
+---
+ Android.bp                                                    | 4 ++--
+ .../java/src/org/chromium/net/impl/CronetLibraryLoader.java   | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Android.bp b/Android.bp
+index a10762ba6b520..8980ac38f62a7 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -6551,7 +6551,7 @@ cc_library_shared {
+         "-Wl,-wrap,valloc",
+         "-Wl,-wrap,vasprintf",
+     ],
+-    stem: "libcronet.108.0.5359.128",
++    stem: "libandroid_net_http_internal_org_chromium_net_impl",
+     target: {
+         android_arm: {
+             cflags: [
+@@ -8112,7 +8112,7 @@ cc_library_shared {
+         "-Wl,-wrap,valloc",
+         "-Wl,-wrap,vasprintf",
+     ],
+-    stem: "libcronet_unittests_android__library",
++    stem: "libandroid_net_connectivity_org_chromium_net_impl",
+     target: {
+         android_arm: {
+             cflags: [
+diff --git a/components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java b/components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java
+index b2a6329273219..00e6f204df214 100644
+--- a/components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java
++++ b/components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java
+@@ -28,7 +28,8 @@ import org.chromium.net.NetworkChangeNotifier;
+ public class CronetLibraryLoader {
+     // Synchronize initialization.
+     private static final Object sLoadLock = new Object();
+-    private static final String LIBRARY_NAME = "cronet." + ImplVersion.getCronetVersion();
++    private static final String LIBRARY_NAME =
++            CronetLibraryLoader.class.getPackage().getName().replaceAll("\\.", "_");
+     private static final String TAG = CronetLibraryLoader.class.getSimpleName();
+     // Thread used for initialization work and processing callbacks for
+     // long-lived global singletons. This thread lives forever as things like
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
+
