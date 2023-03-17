@@ -16,6 +16,69 @@
       "message": "I personally found more readable the initial approach that used Boolean, which maps the True/False/Unset semantics directly (using true, false and null respectively),  but that seems to be against some API council guidance?\n\nSo, I don\u0027t have a strong opinion, what you end up agreeing on will probably work for me.",
       "revId": "d04e01ba942bdd60d5e42584c51c5cac66a56542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f50a154_2cc907f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-03-17T13:47:15Z",
+      "side": 1,
+      "message": "LGTM. Feel free to address comments in a follow-up (or not at all).",
+      "revId": "d04e01ba942bdd60d5e42584c51c5cac66a56542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "241b63d2_eaecffd0",
+        "filename": "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-03-17T13:47:15Z",
+      "side": 1,
+      "message": "I think these would be clearer as just @MigrationOption instead of @MigrationOptionState.\n\nBut actually, given that the IntDef is nested within the ConnectionMigrationOptions class... maybe call it just \"Option\"? That way its name will be android.net.http.ConnectionMigrationOptions.Option. Or Value?\n\nDoesn\u0027t need to be in this CL because IntDefs aren\u0027t part of the API signature.",
+      "range": {
+        "startLine": 39,
+        "startChar": 19,
+        "endLine": 39,
+        "endChar": 39
+      },
+      "revId": "d04e01ba942bdd60d5e42584c51c5cac66a56542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54bb17da_44c053a2",
+        "filename": "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2023-03-17T13:47:15Z",
+      "side": 1,
+      "message": "Ditto, maybe just all this Option, or Value?",
+      "range": {
+        "startLine": 88,
+        "startChar": 22,
+        "endLine": 88,
+        "endChar": 36
+      },
+      "revId": "d04e01ba942bdd60d5e42584c51c5cac66a56542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
