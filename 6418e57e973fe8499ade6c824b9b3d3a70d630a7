@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f525515b_1dcd40d0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-17T09:06:23Z",
+      "side": 1,
+      "message": "Update this to create a smaller diff and added a patch file.\n\nFWIW, this CL can live on its own as there is nothing using the test .so at this point. Whenever possible, it\u0027s preferable to mere changes on their own rather than creating a topic (unless there is a cross-repo dependency). It\u0027s much harder to revert a topic than a single CL.",
+      "revId": "6418e57e973fe8499ade6c824b9b3d3a70d630a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
