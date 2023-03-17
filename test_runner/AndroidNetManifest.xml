@@ -49,7 +49,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <service android:name="org.chromium.net.test.DummySpnegoAuthenticatorService"
+    <service android:name="android.net.connectivity.org.chromium.net.test.DummySpnegoAuthenticatorService"
              android:exported="false"
              android:process=":test_process">
       <intent-filter>
