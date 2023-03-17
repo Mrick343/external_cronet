@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8b6c679_3edc18ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-17T11:48:32Z",
+      "side": 1,
+      "message": "I personally found more readable the initial approach that used Boolean, which maps the True/False/Unset semantics directly (using true, false and null respectively),  but that seems to be against some API council guidance?\n\nSo, I don\u0027t have a strong opinion, what you end up agreeing on will probably work for me.",
+      "revId": "d04e01ba942bdd60d5e42584c51c5cac66a56542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
