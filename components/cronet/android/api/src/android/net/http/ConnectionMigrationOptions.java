@@ -35,15 +35,15 @@ import java.time.Duration;
 // SuppressLint to be consistent with other cronet code
 @SuppressLint("UserHandleName")
 public class ConnectionMigrationOptions {
-    private final @MigrationOptionEnabled int mEnableDefaultNetworkMigration;
-    private final @MigrationOptionEnabled int mEnablePathDegradationMigration;
+    private final @MigrationOptionState int mEnableDefaultNetworkMigration;
+    private final @MigrationOptionState int mEnablePathDegradationMigration;
     @Nullable
     private final Boolean mAllowServerMigration;
     @Nullable
     private final Boolean mMigrateIdleConnections;
     @Nullable
     private final Duration mIdleMigrationPeriod;
-    private final @MigrationOptionEnabled int mAllowNonDefaultNetworkUsage;
+    private final @MigrationOptionState int mAllowNonDefaultNetworkUsage;
     @Nullable
     private final Duration mMaxTimeOnNonDefaultNetwork;
     @Nullable
@@ -73,19 +73,19 @@ public class ConnectionMigrationOptions {
             MIGRATION_OPTION_ENABLED,
             MIGRATION_OPTION_DISABLED,
     })
-    public @interface MigrationOptionEnabled {}
+    public @interface MigrationOptionState {}
 
     /**
-     * See {@link Builder#setDefaultNetworkMigrationEnabled}
+     * See {@link Builder#setDefaultNetworkMigrationState(int)}
      */
-    public @MigrationOptionEnabled int getDefaultNetworkMigrationEnabled() {
+    public @MigrationOptionState int getDefaultNetworkMigrationState() {
         return mEnableDefaultNetworkMigration;
     }
 
     /**
-     * See {@link Builder#setPathDegradationMigrationEnabled}
+     * See {@link Builder#setPathDegradationMigrationState(int)}
      */
-    public @MigrationOptionEnabled int getPathDegradationMigrationEnabled() {
+    public @MigrationOptionState int getPathDegradationMigrationState() {
         return mEnablePathDegradationMigration;
     }
 
@@ -123,10 +123,10 @@ public class ConnectionMigrationOptions {
     }
 
     /**
-     * See {@link Builder#setAllowNonDefaultNetworkUsageEnabled(int)}
+     * See {@link Builder#setAllowNonDefaultNetworkUsageState(int)}
      */
     @Experimental
-    public @MigrationOptionEnabled int getAllowNonDefaultNetworkUsageEnabled() {
+    public @MigrationOptionState int getAllowNonDefaultNetworkUsageState() {
         return mAllowNonDefaultNetworkUsage;
     }
 
@@ -179,15 +179,15 @@ public class ConnectionMigrationOptions {
      * Builder for {@link ConnectionMigrationOptions}.
      */
     public static final class Builder {
-        private @MigrationOptionEnabled int mEnableDefaultNetworkMigration;
-        private @MigrationOptionEnabled int mEnablePathDegradationMigration;
+        private @MigrationOptionState int mEnableDefaultNetworkMigration;
+        private @MigrationOptionState int mEnablePathDegradationMigration;
         @Nullable
         private Boolean mAllowServerMigration;
         @Nullable
         private Boolean mMigrateIdleConnections;
         @Nullable
         private Duration mIdleConnectionMigrationPeriod;
-        private @MigrationOptionEnabled int mAllowNonDefaultNetworkUsage;
+        private @MigrationOptionState int mAllowNonDefaultNetworkUsage;
         @Nullable
         private Duration mMaxTimeOnNonDefaultNetwork;
         @Nullable
@@ -209,7 +209,7 @@ public class ConnectionMigrationOptions {
          * @return this builder for chaining
          */
         @NonNull
-        public Builder setDefaultNetworkMigrationEnabled(@MigrationOptionEnabled int enabled) {
+        public Builder setDefaultNetworkMigrationState(@MigrationOptionState int enabled) {
             this.mEnableDefaultNetworkMigration = enabled;
             return this;
         }
@@ -225,7 +225,7 @@ public class ConnectionMigrationOptions {
          * @return this builder for chaining
          */
         @NonNull
-        public Builder setPathDegradationMigrationEnabled(@MigrationOptionEnabled int enabled) {
+        public Builder setPathDegradationMigrationState(@MigrationOptionState int enabled) {
             this.mEnablePathDegradationMigration = enabled;
             return this;
         }
@@ -285,7 +285,7 @@ public class ConnectionMigrationOptions {
         /**
          * Sets whether connections can be migrated to an alternate network when Cronet detects
          * a degradation of the path currently in use. Requires setting
-         * {@link #setPathDegradationMigrationEnabled(int)} to {@link #MIGRATION_OPTION_ENABLED} to
+         * {@link #setPathDegradationMigrationState(int)} to {@link #MIGRATION_OPTION_ENABLED} to
          * have any effect.
          *
          * <p>Note: This setting can result in requests being sent on non-default metered networks,
@@ -297,7 +297,7 @@ public class ConnectionMigrationOptions {
          */
         @Experimental
         @NonNull
-        public Builder setAllowNonDefaultNetworkUsageEnabled(@MigrationOptionEnabled int enabled) {
+        public Builder setAllowNonDefaultNetworkUsageState(@MigrationOptionState int enabled) {
             this.mAllowNonDefaultNetworkUsage = enabled;
             return this;
         }
@@ -307,7 +307,7 @@ public class ConnectionMigrationOptions {
          * there before they're migrated back. This time is not cumulative - each migration off
          * the default network for each connection measures and compares to this value separately.
          *
-         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsageEnabled(int)} is set to
+         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsageState(int)} is set to
          * {@link #MIGRATION_OPTION_ENABLED}
          *
          * @return this builder for chaining
@@ -326,7 +326,7 @@ public class ConnectionMigrationOptions {
          * Sets the maximum number of migrations to the non-default network upon encountering write
          * errors. Counted cumulatively per network per connection.
          *
-         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsageEnabled(int)} is set to
+         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsageState(int)} is set to
          * {@link #MIGRATION_OPTION_ENABLED}
          *
          * @return this builder for chaining
@@ -345,7 +345,7 @@ public class ConnectionMigrationOptions {
          * Sets the maximum number of migrations to the non-default network upon encountering path
          * degradation for the existing connection. Counted cumulatively per network per connection.
          *
-         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsageEnabled(int)} is set to
+         * <p>Only relevant if {@link #setAllowNonDefaultNetworkUsageState(int)} is set to
          * {@link #MIGRATION_OPTION_ENABLED}
          *
          * @return this builder for chaining
