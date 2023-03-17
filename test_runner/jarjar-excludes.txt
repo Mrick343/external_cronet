@@ -1,0 +1,12 @@
+com\.android\..+
+org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner(\$.+)?
+org.chromium.build.gtest_apk.NativeTestIntent(\$.+)?
+org.chromium.build.gtest_apk.TestStatusIntent(\$.+)?
+org.chromium.build.gtest_apk.TestStatusReceiver(\$.+)?
+# this must not be jarjar-ed since it does JNI org.chromium.native_test.NativeTest(\$.+)?
+# Change the above once NativeTest start going through GEN_JNI.java
+org.chromium.native_test.SignalMaskInfo(\$.+)?
+org.chromium.native_test.NativeTestApplication(\$.+)?
+org.chromium.native_test.NativeUnitTest(\$.+)?
+org.chromium.native_test.NativeUnitTestActivity(\$.+)?
+org.chromium.native_test.NativeUnitTestNativeActivity(\$.+)?

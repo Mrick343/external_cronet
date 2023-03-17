@@ -105,6 +105,7 @@ android_test_helper_app {
         "testing/android/native_test/java/src/org/chromium/native_test/NativeUnitTestNativeActivity.java",
         "testing/android/reporter/java/src/org/chromium/test/reporter/TestStatusReporter.java",
     ],
+    jarjar_rules: ":cronet-testing-jarjar-rules",
     static_libs: [
         "android-support-multidex",
         "androidx.annotation_annotation",
@@ -119,6 +120,34 @@ android_test_helper_app {
         "net/android/unittest_support/res",
     ]
 }
+
+java_library {
+    name: "cronet_net_tester_app_pre_jarjar",
+    srcs: [
+        "base/test/android/java/src/org/chromium/base/multidex/ChromiumMultiDexInstaller.java",
+        "base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java",
+        "build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/NativeTestInstrumentationTestRunner.java",
+        "build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/NativeTestIntent.java",
+        "build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/TestStatusIntent.java",
+        "build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/TestStatusReceiver.java",
+        "testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java",
+        "testing/android/native_test/java/src/org/chromium/native_test/SignalMaskInfo.java",
+        "testing/android/native_test/java/src/org/chromium/native_test/NativeTestApplication.java",
+        "testing/android/native_test/java/src/org/chromium/native_test/NativeUnitTest.java",
+        "testing/android/native_test/java/src/org/chromium/native_test/NativeUnitTestActivity.java",
+        "testing/android/native_test/java/src/org/chromium/native_test/NativeUnitTestNativeActivity.java",
+        "testing/android/reporter/java/src/org/chromium/test/reporter/TestStatusReporter.java",
+    ],
+    static_libs: [
+        "cronet_for_testing_net_java",
+    ],
+    libs: [
+        "android-support-multidex",
+        "androidx.annotation_annotation",
+        "junit",
+    ],
+}
+
 
 java_library {
     name: "cronet_for_testing_net_java",
@@ -152,6 +181,23 @@ java_library {
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental-nodeps",
     ],
+}
+
+java_genrule {
+    name: "cronet-testing-jarjar-rules",
+    tool_files: [
+        ":cronet_net_tester_app_pre_jarjar{.jar}",
+        "test_runner/jarjar-excludes.txt",
+    ],
+    tools: [
+        "jarjar-rules-generator",
+    ],
+    out: ["cronet_testing_jarjar_rules.txt"],
+    cmd: "$(location jarjar-rules-generator) " +
+        "$(location :cronet_net_tester_app_pre_jarjar{.jar}) " +
+        "--prefix android.net.connectivity " +
+        "--excludes $(location test_runner/jarjar-excludes.txt) " +
+        "--output $(out)",
 }
 
 filegroup {
