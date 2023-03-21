@@ -383,7 +383,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
                 // of the same key, see crbug.com/432719 for more details.
                 throw new UnsupportedOperationException(
                         "Cannot add multiple headers of the same key, " + key
-                        + ". crbug.com/432719.");
+                                + ". crbug.com/432719.");
             }
         }
         // Adds the new header at the end of mRequestHeaders.
@@ -406,7 +406,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
             if (map.containsKey(entry.first)) {
                 // This should not happen due to setRequestPropertyInternal.
                 throw new IllegalStateException(
-                    "Should not have multiple values.");
+                        "Should not have multiple values.");
             } else {
                 List<String> values = new ArrayList<String>();
                 values.add(entry.second);
