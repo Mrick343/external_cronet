@@ -233,6 +233,7 @@ public class CronetTestRule implements TestRule {
     }
 
     private void tearDown() throws Exception {
+        resetURLStreamHandlerFactory();
         try {
             // Run GC and finalizers a few times to pick up leaked closeables
             for (int i = 0; i < 10; i++) {
