@@ -46,6 +46,30 @@
       },
       "revId": "26b17131b27be4b84fc089d96dcc1998e686ecf9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19b902df_76159a6d",
+        "filename": "third_party/googletest/.gitignore",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T17:50:52Z",
+      "side": -2,
+      "message": "Fixed in aosp/2498881.",
+      "parentUuid": "5d50485f_1e10ac7f",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 4
+      },
+      "revId": "26b17131b27be4b84fc089d96dcc1998e686ecf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
