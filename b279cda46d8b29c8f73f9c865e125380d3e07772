@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04db70d5_1e294a0d",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-21T10:33:44Z",
+      "side": 1,
+      "message": "Can this be passed in as a flag?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 84
+      },
+      "revId": "b279cda46d8b29c8f73f9c865e125380d3e07772",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
