@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5310b100_dc7d3aa6",
+        "filename": "third_party/googletest/.gitignore",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-21T16:56:05Z",
+      "side": -2,
+      "message": "Copybara is copying these into upstream-staging but we don\u0027t have these (and don\u0027t want them) in aosp-master.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 4
+      },
+      "revId": "26b17131b27be4b84fc089d96dcc1998e686ecf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
