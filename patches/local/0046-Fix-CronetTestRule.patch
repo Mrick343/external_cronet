@@ -1,0 +1,101 @@
+From 40699fe03c31b02caf54a2bed79b468f57dbafbc Mon Sep 17 00:00:00 2001
+From: Chidera Olibie <colibie@google.com>
+Date: Tue, 21 Mar 2023 15:52:59 +0000
+Subject: [PATCH] Add working version of CronetTestRule
+
+This is a base class used to setup all tests.
+This cl removes reference to methods that were deleted
+on import and also fixes a ClassCastException between the
+HttpEngine and ExperimentalHttpEngine
+
+Test: atest NetHttpCoverageTest
+Bug: 267353182
+Change-Id: Iedfba707e4b7ae4b15e2223d5051d33be9d2a041
+---
+ .../src/org/chromium/net/CronetTestRule.java  | 24 ++++++-------------
+ .../org/chromium/net/CronetTestRuleTest.java  |  2 --
+ 2 files changed, 7 insertions(+), 19 deletions(-)
+
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
+index 805151bc..eed217e8 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
+@@ -6,8 +6,9 @@ package org.chromium.net;
+ 
+ import static org.junit.Assume.assumeTrue;
+ 
+-import android.net.http.HttpEngine;
++import android.net.http.ApiVersion;
+ import android.net.http.ExperimentalHttpEngine;
++import android.net.http.HttpEngine;
+ import android.net.http.UrlResponseInfo;
+ import android.content.Context;
+ import android.os.Build;
+@@ -54,6 +55,7 @@ public class CronetTestRule implements TestRule {
+     private CronetTestFramework mCronetTestFramework;
+ 
+     private boolean mTestingSystemHttpURLConnection;
++
+     private StrictMode.VmPolicy mOldVmPolicy;
+ 
+     /**
+@@ -246,9 +248,7 @@ public class CronetTestRule implements TestRule {
+     }
+ 
+     private CronetTestFramework createCronetTestFramework() {
+-        mCronetTestFramework = testingJavaImpl()
+-                ? CronetTestFramework.createUsingJavaImpl(getContext())
+-                : CronetTestFramework.createUsingNativeImpl(getContext());
++        mCronetTestFramework = CronetTestFramework.createUsingNativeImpl(getContext());
+         return mCronetTestFramework;
+     }
+ 
+@@ -275,12 +275,12 @@ public class CronetTestRule implements TestRule {
+      * @return the {@code CronetEngine.Builder} that builds Chromium-based {@code Cronet engine}.
+      */
+     public static ExperimentalHttpEngine.Builder createNativeEngineBuilder(Context context) {
+-        return (ExperimentalHttpEngine.Builder) HttpEngine.builder(context);
++        return new ExperimentalHttpEngine.Builder(context);
+     }
+ 
+     public void assertResponseEquals(UrlResponseInfo expected, UrlResponseInfo actual) {
+-        Assert.assertEquals(expected.getAllHeaders(), actual.getAllHeaders());
+-        Assert.assertEquals(expected.getAllHeadersAsList(), actual.getAllHeadersAsList());
++        // Assert.assertEquals(expected.getHeaders(), actual.getHeaders());
++        Assert.assertEquals(expected.getHeaders().getAsList(), actual.getHeaders().getAsList());
+         Assert.assertEquals(expected.getHttpStatusCode(), actual.getHttpStatusCode());
+         Assert.assertEquals(expected.getHttpStatusText(), actual.getHttpStatusText());
+         Assert.assertEquals(expected.getUrlChain(), actual.getUrlChain());
+@@ -308,16 +308,6 @@ public class CronetTestRule implements TestRule {
+         return cronetEngineBuilder;
+     }
+ 
+-    /**
+-     * Sets the {@link URLStreamHandlerFactory} from {@code cronetEngine}.  This should be called
+-     * during setUp() and is installed by {@link runTest()} as the default when Cronet is tested.
+-     */
+-    public void setStreamHandlerFactory(HttpEngine cronetEngine) {
+-        if (!testingSystemHttpURLConnection()) {
+-            URL.setURLStreamHandlerFactory(cronetEngine.createUrlStreamHandlerFactory());
+-        }
+-    }
+-
+     /**
+      * Annotation for test methods in org.chromium.net.urlconnection pacakage that runs them
+      * against both Cronet's HttpURLConnection implementation, and against the system's
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java
+index 298cb629..607e994b 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java
+@@ -68,8 +68,6 @@ public class CronetTestRuleTest {
+         mTestWasRun = true;
+     }
+ 
+-}
+-
+     @Test
+     @SmallTest
+     @OnlyRunNativeCronet
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
+

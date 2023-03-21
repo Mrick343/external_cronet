@@ -6,8 +6,9 @@ package org.chromium.net;
 
 import static org.junit.Assume.assumeTrue;
 
-import android.net.http.HttpEngine;
+import android.net.http.ApiVersion;
 import android.net.http.ExperimentalHttpEngine;
+import android.net.http.HttpEngine;
 import android.net.http.UrlResponseInfo;
 import android.content.Context;
 import android.os.Build;
@@ -54,6 +55,7 @@ public class CronetTestRule implements TestRule {
     private CronetTestFramework mCronetTestFramework;
 
     private boolean mTestingSystemHttpURLConnection;
+
     private StrictMode.VmPolicy mOldVmPolicy;
 
     /**
@@ -246,9 +248,7 @@ public class CronetTestRule implements TestRule {
     }
 
     private CronetTestFramework createCronetTestFramework() {
-        mCronetTestFramework = testingJavaImpl()
-                ? CronetTestFramework.createUsingJavaImpl(getContext())
-                : CronetTestFramework.createUsingNativeImpl(getContext());
+        mCronetTestFramework = CronetTestFramework.createUsingNativeImpl(getContext());
         return mCronetTestFramework;
     }
 
@@ -275,12 +275,12 @@ public class CronetTestRule implements TestRule {
      * @return the {@code CronetEngine.Builder} that builds Chromium-based {@code Cronet engine}.
      */
     public static ExperimentalHttpEngine.Builder createNativeEngineBuilder(Context context) {
-        return (ExperimentalHttpEngine.Builder) HttpEngine.builder(context);
+        return new ExperimentalHttpEngine.Builder(context);
     }
 
     public void assertResponseEquals(UrlResponseInfo expected, UrlResponseInfo actual) {
-        Assert.assertEquals(expected.getAllHeaders(), actual.getAllHeaders());
-        Assert.assertEquals(expected.getAllHeadersAsList(), actual.getAllHeadersAsList());
+        // Assert.assertEquals(expected.getHeaders(), actual.getHeaders());
+        Assert.assertEquals(expected.getHeaders().getAsList(), actual.getHeaders().getAsList());
         Assert.assertEquals(expected.getHttpStatusCode(), actual.getHttpStatusCode());
         Assert.assertEquals(expected.getHttpStatusText(), actual.getHttpStatusText());
         Assert.assertEquals(expected.getUrlChain(), actual.getUrlChain());
@@ -306,16 +306,6 @@ public class CronetTestRule implements TestRule {
         cronetEngineBuilder.setStoragePath(getTestStorage(getContext()));
         cronetEngineBuilder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 1000 * 1024);
         return cronetEngineBuilder;
-    }
-
-    /**
-     * Sets the {@link URLStreamHandlerFactory} from {@code cronetEngine}.  This should be called
-     * during setUp() and is installed by {@link runTest()} as the default when Cronet is tested.
-     */
-    public void setStreamHandlerFactory(HttpEngine cronetEngine) {
-        if (!testingSystemHttpURLConnection()) {
-            URL.setURLStreamHandlerFactory(cronetEngine.createUrlStreamHandlerFactory());
-        }
     }
 
     /**
