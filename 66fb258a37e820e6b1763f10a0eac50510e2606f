@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4968a8a6_67f05a24",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T16:56:43Z",
+      "side": 1,
+      "message": "Ah, I see, the problem is that cronet_aml_java__testing is setting sdk_version module_current. We should probably either use test_current or (maybe even better) no sdk version at all?",
+      "range": {
+        "startLine": 177,
+        "startChar": 18,
+        "endLine": 177,
+        "endChar": 32
+      },
+      "revId": "66fb258a37e820e6b1763f10a0eac50510e2606f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57867a97_0130d749",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T16:56:43Z",
+      "side": 1,
+      "message": "That\u0027s a bit surprising, what is needed from here?",
+      "range": {
+        "startLine": 190,
+        "startChar": 9,
+        "endLine": 190,
+        "endChar": 48
+      },
+      "revId": "66fb258a37e820e6b1763f10a0eac50510e2606f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
