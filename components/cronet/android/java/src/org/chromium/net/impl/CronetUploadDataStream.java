@@ -14,8 +14,13 @@ import org.chromium.base.annotations.CalledByNative;
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeClassQualifiedName;
 import org.chromium.base.annotations.NativeMethods;
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.UploadDataProvider;
 import android.net.http.UploadDataSink;
+=======
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UploadDataSink;
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 import java.io.IOException;
 import java.lang.annotation.Retention;

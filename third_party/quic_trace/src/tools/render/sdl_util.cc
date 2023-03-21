@@ -58,6 +58,7 @@ OpenGlContext::OpenGlContext(SDL_Window* window) {
               LOG(INFO) << "[GL]: " << std::string(message, length);
               break;
             case GL_DEBUG_SEVERITY_NOTIFICATION:
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
               break;
           }
         },
@@ -80,6 +81,31 @@ std::string GlShader::GetCompileInfoLog() {
 
   glGetShaderiv(shader_, GL_INFO_LOG_LENGTH, &buffer_size);
   auto buffer = std::make_unique<char[]>(buffer_size);
+=======
+              VLOG(1) << "[GL]: " << std::string(message, length);
+              break;
+          }
+        },
+        nullptr);
+  }
+}
+
+bool GlShader::Compile(const char* source) {
+  glShaderSource(shader_, 1, &source, nullptr);
+  glCompileShader(shader_);
+
+  GLint compile_status = GL_FALSE;
+  glGetShaderiv(shader_, GL_COMPILE_STATUS, &compile_status);
+  return compile_status;
+}
+
+std::string GlShader::GetCompileInfoLog() {
+  GLint buffer_size = 0;
+  GLint actual_size = 0;
+
+  glGetShaderiv(shader_, GL_INFO_LOG_LENGTH, &buffer_size);
+  auto buffer = absl::make_unique<char[]>(buffer_size);
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
   glGetShaderInfoLog(shader_, buffer_size, &actual_size, buffer.get());
   return std::string(buffer.get(), actual_size);

@@ -4,6 +4,7 @@
 
 #include "base/message_loop/message_pump_android.h"
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 // This file is included by modules that have host support but android/looper.h is not supported
 // on host. __REMOVED_IN needs to be defined in order for android/looper.h to be compiled.
 #ifndef __BIONIC__
@@ -11,6 +12,9 @@
 #endif
 #include <android/looper.h>
 
+=======
+#include <android/looper.h>
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include <errno.h>
 #include <fcntl.h>
 #include <jni.h>

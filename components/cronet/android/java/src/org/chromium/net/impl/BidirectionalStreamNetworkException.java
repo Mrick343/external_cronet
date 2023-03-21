@@ -19,6 +19,7 @@ public class BidirectionalStreamNetworkException extends NetworkExceptionImpl {
     }
 
     @Override
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
     public boolean isImmediatelyRetryable() {
         switch (mCronetInternalErrorCode) {
             case NetError.ERR_HTTP2_PING_FAILED:
@@ -27,6 +28,16 @@ public class BidirectionalStreamNetworkException extends NetworkExceptionImpl {
                 return true;
             default:
                 return super.isImmediatelyRetryable();
+=======
+    public boolean immediatelyRetryable() {
+        switch (mCronetInternalErrorCode) {
+            case NetError.ERR_HTTP2_PING_FAILED:
+            case NetError.ERR_QUIC_HANDSHAKE_FAILED:
+                assert mErrorCode == ERROR_OTHER;
+                return true;
+            default:
+                return super.immediatelyRetryable();
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
         }
     }
 }

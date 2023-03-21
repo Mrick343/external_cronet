@@ -366,6 +366,7 @@ TEST_F(NetworkChangeNotifierDelegateAndroidTest, DelegateObserverNotified) {
 // NetworkChangeNotifierDelegateAndroid's connectivity state changes, the
 // NetworkChangeNotifierAndroid should reflect that state.
 TEST_F(NetworkChangeNotifierAndroidTest,
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
        DISABLED_NotificationsSentToNetworkChangeNotifierAndroid) {
   RunTest(
       base::BindRepeating(&NetworkChangeNotifierObserver::notifications_count,
@@ -379,6 +380,21 @@ TEST_F(NetworkChangeNotifierAndroidTest,
 // notify all of its observers.
 TEST_F(NetworkChangeNotifierAndroidTest,
        DISABLED_NotificationsSentToClientsOfNetworkChangeNotifier) {
+=======
+       NotificationsSentToNetworkChangeNotifierAndroid) {
+  RunTest(
+      base::BindRepeating(&NetworkChangeNotifierObserver::notifications_count,
+                          base::Unretained(&connection_type_observer_)),
+      base::BindRepeating(
+          &NetworkChangeNotifierAndroid::GetCurrentConnectionType,
+          base::Unretained(&notifier_)));
+}
+
+// When a NetworkChangeNotifierAndroid's connection state changes, it should
+// notify all of its observers.
+TEST_F(NetworkChangeNotifierAndroidTest,
+       NotificationsSentToClientsOfNetworkChangeNotifier) {
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
   RunTest(
       base::BindRepeating(&NetworkChangeNotifierObserver::notifications_count,
                           base::Unretained(&connection_type_observer_)),

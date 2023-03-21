@@ -9,6 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.apihelpers.ContentTypeParametersParser;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -139,6 +140,146 @@ public class ContentTypeParametersParserTest {
 
     @Test
     @SmallTest
+=======
+import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.filters.SmallTest;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.chromium.base.test.util.Batch;
+import org.chromium.base.test.util.Feature;
+
+import java.util.Map;
+
+/** Unit tests for {@link ContentTypeParametersParser}. */
+@RunWith(AndroidJUnit4.class)
+@Batch(Batch.UNIT_TESTS)
+public class ContentTypeParametersParserTest {
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testSingleParam_simple() throws Exception {
+        String header = "text/html;charset=utf-8";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+        Map.Entry<String, String> parameter = parser.getNextParameter();
+
+        assertEquals("charset", parameter.getKey());
+        assertEquals("utf-8", parameter.getValue());
+        assertFalse(parser.hasMore());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testParser_quoted_noEscape() throws Exception {
+        String header = "text/html;charset=\"utf-8\"";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+        Map.Entry<String, String> parameter = parser.getNextParameter();
+
+        assertEquals("charset", parameter.getKey());
+        assertEquals("utf-8", parameter.getValue());
+        assertFalse(parser.hasMore());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testParser_quoted_noEscapeWithSpace() throws Exception {
+        String header = "text/html;charset=\"utf-  8\"";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+        Map.Entry<String, String> parameter = parser.getNextParameter();
+
+        assertEquals("charset", parameter.getKey());
+        assertEquals("utf-  8", parameter.getValue());
+        assertFalse(parser.hasMore());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testParser_quoted_escape() throws Exception {
+        String header = "text/html;charset=\"utf-\\\\8\"";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+        Map.Entry<String, String> parameter = parser.getNextParameter();
+
+        assertEquals("charset", parameter.getKey());
+        assertEquals("utf-\\8", parameter.getValue());
+        assertFalse(parser.hasMore());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testParser_multiple_mixed() throws Exception {
+        String header = "text/html;charset=\"utf-\\\\8\";foo=\" bar\" ;   baz=quix ; abc=def";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+
+        Map.Entry<String, String> parameter = parser.getNextParameter();
+
+        assertEquals("charset", parameter.getKey());
+        assertEquals("utf-\\8", parameter.getValue());
+        assertTrue(parser.hasMore());
+
+        parameter = parser.getNextParameter();
+
+        assertEquals("foo", parameter.getKey());
+        assertEquals(" bar", parameter.getValue());
+        assertTrue(parser.hasMore());
+
+        parameter = parser.getNextParameter();
+
+        assertEquals("baz", parameter.getKey());
+        assertEquals("quix", parameter.getValue());
+        assertTrue(parser.hasMore());
+
+        parameter = parser.getNextParameter();
+
+        assertEquals("abc", parameter.getKey());
+        assertEquals("def", parameter.getValue());
+        assertFalse(parser.hasMore());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testParser_invalidTokenChar_key() throws Throwable {
+        String header = "text/html;char\\set=utf8";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+
+        ContentTypeParametersParser.ContentTypeParametersParserException exception =
+                assertThrows(ContentTypeParametersParser.ContentTypeParametersParserException.class,
+                        () -> parser.getNextParameter());
+
+        assertEquals(header.indexOf('\\'), exception.getErrorOffset());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testParser_invalidTokenChar_value() throws Throwable {
+        String header = "text/html;charset=utf\\8";
+
+        ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
+
+        ContentTypeParametersParser.ContentTypeParametersParserException exception =
+                assertThrows(ContentTypeParametersParser.ContentTypeParametersParserException.class,
+                        () -> parser.getNextParameter());
+
+        assertEquals(header.indexOf('\\'), exception.getErrorOffset());
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     public void testParser_quotedStringNotClosed() throws Throwable {
         String header = "text/html;charset=\"utf-8";
 

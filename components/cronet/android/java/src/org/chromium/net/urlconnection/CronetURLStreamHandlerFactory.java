@@ -4,6 +4,7 @@
 
 package org.chromium.net.urlconnection;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.ExperimentalHttpEngine;
 
 import java.net.URLStreamHandler;
@@ -49,6 +50,53 @@ public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
      * @throws NullPointerException if config is null.
      */
     public CronetURLStreamHandlerFactory(ExperimentalHttpEngine cronetEngine) {
+=======
+import org.chromium.net.ExperimentalCronetEngine;
+
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
+
+/**
+ * An implementation of {@link URLStreamHandlerFactory} to handle HTTP and HTTPS
+ * traffic. An instance of this class can be installed via
+ * {@link java.net.URL#setURLStreamHandlerFactory} thus using Cronet by default for all requests
+ * created via {@link java.net.URL#openConnection}.
+ * <p>
+ * Cronet does not use certain HTTP features provided via the system:
+ * <ul>
+ * <li>the HTTP cache installed via
+ *     {@link android.net.http.HttpResponseCache#install}</li>
+ * <li>the HTTP authentication method installed via
+ *     {@link java.net.Authenticator#setDefault}</li>
+ * <li>the HTTP cookie storage installed via {@link java.net.CookieHandler#setDefault}</li>
+ * </ul>
+ * <p>
+ * While Cronet supports and encourages requests using the HTTPS protocol,
+ * Cronet does not provide support for the
+ * {@link javax.net.ssl.HttpsURLConnection} API. This lack of support also
+ * includes not using certain HTTPS features provided via the system:
+ * <ul>
+ * <li>the HTTPS hostname verifier installed via {@link
+ *     javax.net.ssl.HttpsURLConnection#setDefaultHostnameVerifier(javax.net.ssl.HostnameVerifier)
+ *     HttpsURLConnection.setDefaultHostnameVerifier(javax.net.ssl.HostnameVerifier)}</li>
+ * <li>the HTTPS socket factory installed via {@link
+ *     javax.net.ssl.HttpsURLConnection#setDefaultSSLSocketFactory(javax.net.ssl.SSLSocketFactory)
+ *     HttpsURLConnection.setDefaultSSLSocketFactory(javax.net.ssl.SSLSocketFactory)}</li>
+ * </ul>
+ *
+ * {@hide}
+ */
+public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
+    private final ExperimentalCronetEngine mCronetEngine;
+
+    /**
+     * Creates a {@link CronetURLStreamHandlerFactory} to handle HTTP and HTTPS
+     * traffic.
+     * @param cronetEngine the {@link CronetEngine} to be used.
+     * @throws NullPointerException if config is null.
+     */
+    public CronetURLStreamHandlerFactory(ExperimentalCronetEngine cronetEngine) {
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
         if (cronetEngine == null) {
             throw new NullPointerException("CronetEngine is null.");
         }

@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 import static org.chromium.net.CronetTestRule.getContext;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -65,6 +66,68 @@ public class QuicUploadTest {
 
     @Test
     @SmallTest
+=======
+import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.filters.SmallTest;
+
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.chromium.base.test.util.Feature;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.CronetTestRule;
+import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
+import org.chromium.net.CronetTestUtil;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.QuicTestServer;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+
+/**
+ * Tests HttpURLConnection upload using QUIC.
+ */
+@RunWith(AndroidJUnit4.class)
+public class QuicUploadTest {
+    @Rule
+    public final CronetTestRule mTestRule = new CronetTestRule();
+
+    private CronetEngine mCronetEngine;
+
+    @Before
+    public void setUp() throws Exception {
+        // Load library first to create MockCertVerifier.
+        System.loadLibrary("cronet_tests");
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(getContext());
+
+        QuicTestServer.startQuicTestServer(getContext());
+
+        builder.enableQuic(true);
+        JSONObject hostResolverParams = CronetTestUtil.generateHostResolverRules();
+        JSONObject experimentalOptions = new JSONObject()
+                                                 .put("HostResolverRules", hostResolverParams);
+        builder.setExperimentalOptions(experimentalOptions.toString());
+
+        builder.addQuicHint(QuicTestServer.getServerHost(), QuicTestServer.getServerPort(),
+                QuicTestServer.getServerPort());
+
+        CronetTestUtil.setMockCertVerifierForTesting(
+                builder, QuicTestServer.createMockCertVerifier());
+
+        mCronetEngine = builder.build();
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     @OnlyRunNativeCronet
     // Regression testing for crbug.com/618872.
     public void testOneMassiveWrite() throws Exception {

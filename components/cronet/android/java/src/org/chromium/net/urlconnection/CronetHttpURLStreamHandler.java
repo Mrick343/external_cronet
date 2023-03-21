@@ -4,6 +4,7 @@
 
 package org.chromium.net.urlconnection;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.ExperimentalHttpEngine;
 
 import java.io.IOException;
@@ -26,6 +27,30 @@ class CronetHttpURLStreamHandler extends URLStreamHandler {
     private final ExperimentalHttpEngine mCronetEngine;
 
     public CronetHttpURLStreamHandler(ExperimentalHttpEngine cronetEngine) {
+=======
+import org.chromium.net.ExperimentalCronetEngine;
+
+import java.io.IOException;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+
+/**
+ * A {@link URLStreamHandler} that handles HTTP and HTTPS connections. One can use this class to
+ * create {@link java.net.HttpURLConnection} instances implemented by Cronet; for example: <pre>
+ *
+ * CronetHttpURLStreamHandler streamHandler = new CronetHttpURLStreamHandler(myContext);
+ * HttpURLConnection connection = (HttpURLConnection)streamHandler.openConnection(
+ *         new URL("http://chromium.org"));</pre>
+ * <b>Note:</b> Cronet's {@code HttpURLConnection} implementation is subject to some limitations
+ * listed {@link CronetURLStreamHandlerFactory here}.
+ */
+class CronetHttpURLStreamHandler extends URLStreamHandler {
+    private final ExperimentalCronetEngine mCronetEngine;
+
+    public CronetHttpURLStreamHandler(ExperimentalCronetEngine cronetEngine) {
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
         mCronetEngine = cronetEngine;
     }
 

@@ -17,11 +17,20 @@
 #ifndef THIRD_PARTY_QUIC_TRACE_LIB_ANALYSIS_TRACE_NUMBERING_H_
 #define THIRD_PARTY_QUIC_TRACE_LIB_ANALYSIS_TRACE_NUMBERING_H_
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <cstdint>
 #include <unordered_map>
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/log/log.h"
+=======
+#include <glog/logging.h>
+
+#include <cstdint>
+#include <unordered_map>
+
+#include "absl/container/flat_hash_map.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "quic_trace/quic_trace.pb.h"
 
 namespace quic_trace {

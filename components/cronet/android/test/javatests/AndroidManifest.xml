@@ -39,7 +39,11 @@ found in the LICENSE file.
                  android:requestLegacyExternalStorage="true" />
     <!-- Does not use BaseChromiumAndroidJUnitRunner so that it's easy to run
          tests when dropped into non-chromium repositories. -->
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
     <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
+=======
+    <instrumentation android:name="android.support.test.runner.AndroidJUnitRunner"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
                      android:targetPackage="org.chromium.net.tests"
                      android:label="Tests for org.chromium.net" />
 </manifest>

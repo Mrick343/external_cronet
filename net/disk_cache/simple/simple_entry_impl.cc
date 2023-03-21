@@ -9,6 +9,7 @@
 #include <limits>
 #include <utility>
 #include <vector>
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/bind.h"
@@ -37,6 +38,36 @@
 #include "net/disk_cache/simple/simple_util.h"
 #include "net/log/net_log.h"
 #include "net/log/net_log_source_type.h"
+=======
+
+#include "base/bind.h"
+#include "base/callback.h"
+#include "base/callback_helpers.h"
+#include "base/check_op.h"
+#include "base/cxx17_backports.h"
+#include "base/location.h"
+#include "base/memory/raw_ptr.h"
+#include "base/notreached.h"
+#include "base/task/task_runner.h"
+#include "base/threading/sequenced_task_runner_handle.h"
+#include "base/time/time.h"
+#include "base/trace_event/memory_usage_estimator.h"
+#include "net/base/io_buffer.h"
+#include "net/base/net_errors.h"
+#include "net/base/prioritized_task_runner.h"
+#include "net/disk_cache/backend_cleanup_tracker.h"
+#include "net/disk_cache/net_log_parameters.h"
+#include "net/disk_cache/simple/simple_backend_impl.h"
+#include "net/disk_cache/simple/simple_histogram_enums.h"
+#include "net/disk_cache/simple/simple_histogram_macros.h"
+#include "net/disk_cache/simple/simple_index.h"
+#include "net/disk_cache/simple/simple_net_log_parameters.h"
+#include "net/disk_cache/simple/simple_synchronous_entry.h"
+#include "net/disk_cache/simple/simple_util.h"
+#include "net/log/net_log.h"
+#include "net/log/net_log_source_type.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 namespace disk_cache {
 namespace {

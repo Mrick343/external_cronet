@@ -10,7 +10,11 @@
 #include "base/json/json_reader.h"
 #include "base/strings/string_piece.h"
 #include "base/time/time.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "base/values.h"
 #include "crypto/sha2.h"
 #include "net/base/trace_constants.h"

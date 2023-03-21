@@ -1478,7 +1478,11 @@ TEST_F(UDPSocketTest, Tag) {
   EXPECT_GT(GetTaggedBytes(tag_val1), old_traffic);
 }
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 TEST_F(UDPSocketTest, DISABLED_RecordRadioWakeUpTrigger) {
+=======
+TEST_F(UDPSocketTest, RecordRadioWakeUpTrigger) {
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
   base::test::ScopedFeatureList feature_list;
   feature_list.InitAndEnableFeature(features::kRecordRadioWakeupTrigger);
 

@@ -34,6 +34,7 @@
 #include "base/rand_util.h"
 #include "base/task/current_thread.h"
 #include "base/task/thread_pool.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
 #include "build/chromeos_buildflags.h"
 #include "net/base/cronet_buildflags.h"
@@ -54,6 +55,29 @@
 #include "net/socket/socket_tag.h"
 #include "net/socket/udp_net_log_parameters.h"
 #include "net/traffic_annotation/network_traffic_annotation.h"
+=======
+#include "base/trace_event/typed_macros.h"
+#include "build/chromeos_buildflags.h"
+#include "net/base/features.h"
+#include "net/base/io_buffer.h"
+#include "net/base/ip_address.h"
+#include "net/base/ip_endpoint.h"
+#include "net/base/net_errors.h"
+#include "net/base/network_activity_monitor.h"
+#include "net/base/sockaddr_storage.h"
+#include "net/base/trace_constants.h"
+#include "net/log/net_log.h"
+#include "net/log/net_log_event_type.h"
+#include "net/log/net_log_source.h"
+#include "net/log/net_log_source_type.h"
+#include "net/socket/ios_cronet_buildflags.h"
+#include "net/socket/socket_descriptor.h"
+#include "net/socket/socket_options.h"
+#include "net/socket/socket_tag.h"
+#include "net/socket/udp_net_log_parameters.h"
+#include "net/traffic_annotation/network_traffic_annotation.h"
+#include "third_party/perfetto/include/perfetto/tracing/string_helpers.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 #if BUILDFLAG(IS_ANDROID)
 #include "base/native_library.h"

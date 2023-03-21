@@ -4,6 +4,7 @@
 
 package org.chromium.net.impl;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.QuicException;
 
 /**
@@ -52,6 +53,56 @@ public class QuicExceptionImpl extends QuicException {
     @Override
     public boolean isImmediatelyRetryable() {
         return mNetworkException.isImmediatelyRetryable();
+=======
+import org.chromium.net.QuicException;
+
+/**
+ * Implements {@link QuicException}.
+ */
+public class QuicExceptionImpl extends QuicException {
+    private final int mQuicDetailedErrorCode;
+    private final NetworkExceptionImpl mNetworkException;
+
+    /**
+     * Constructs an exception with a specific error.
+     *
+     * @param message explanation of failure.
+     * @param netErrorCode Error code from
+     * <a href=https://chromium.googlesource.com/chromium/src/+/main/net/base/net_error_list.h>
+     * this list</a>.
+     * @param quicDetailedErrorCode Detailed <a href="https://www.chromium.org/quic">QUIC</a> error
+     * code from <a
+     * href="https://cs.chromium.org/search/?q=symbol:%5CbQuicErrorCode%5Cb">
+     * QuicErrorCode</a>.
+     */
+    public QuicExceptionImpl(
+            String message, int errorCode, int netErrorCode, int quicDetailedErrorCode) {
+        super(message, null);
+        mNetworkException = new NetworkExceptionImpl(message, errorCode, netErrorCode);
+        mQuicDetailedErrorCode = quicDetailedErrorCode;
+    }
+
+    @Override
+    public String getMessage() {
+        StringBuilder b = new StringBuilder(mNetworkException.getMessage());
+        b.append(", QuicDetailedErrorCode=").append(mQuicDetailedErrorCode);
+        return b.toString();
+    }
+
+    @Override
+    public int getErrorCode() {
+        return mNetworkException.getErrorCode();
+    }
+
+    @Override
+    public int getCronetInternalErrorCode() {
+        return mNetworkException.getCronetInternalErrorCode();
+    }
+
+    @Override
+    public boolean immediatelyRetryable() {
+        return mNetworkException.immediatelyRetryable();
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     }
 
     @Override

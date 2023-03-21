@@ -11,6 +11,7 @@ import static org.junit.Assert.fail;
 
 import static org.chromium.net.CronetTestRule.getContext;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -91,6 +92,94 @@ public class CronetHttpURLStreamHandlerTest {
 
     @Test
     @SmallTest
+=======
+import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.filters.SmallTest;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.chromium.base.test.util.Feature;
+import org.chromium.net.CronetTestRule;
+import org.chromium.net.CronetTestRule.CronetTestFramework;
+import org.chromium.net.NativeTestServer;
+
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+
+/**
+ * Tests for CronetHttpURLStreamHandler class.
+ */
+@RunWith(AndroidJUnit4.class)
+public class CronetHttpURLStreamHandlerTest {
+    @Rule
+    public final CronetTestRule mTestRule = new CronetTestRule();
+
+    private CronetTestFramework mTestFramework;
+
+    @Before
+    public void setUp() throws Exception {
+        mTestFramework = mTestRule.startCronetTestFramework();
+        assertTrue(NativeTestServer.startNativeTestServer(getContext()));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        NativeTestServer.shutdownNativeTestServer();
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testOpenConnectionHttp() throws Exception {
+        URL url = new URL(NativeTestServer.getEchoMethodURL());
+        CronetHttpURLStreamHandler streamHandler =
+                new CronetHttpURLStreamHandler(mTestFramework.mCronetEngine);
+        HttpURLConnection connection =
+                (HttpURLConnection) streamHandler.openConnection(url);
+        assertEquals(200, connection.getResponseCode());
+        assertEquals("OK", connection.getResponseMessage());
+        assertEquals("GET", TestUtil.getResponseAsString(connection));
+        connection.disconnect();
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testOpenConnectionHttps() throws Exception {
+        URL url = new URL("https://example.com");
+        CronetHttpURLStreamHandler streamHandler =
+                new CronetHttpURLStreamHandler(mTestFramework.mCronetEngine);
+        HttpURLConnection connection =
+                (HttpURLConnection) streamHandler.openConnection(url);
+        assertNotNull(connection);
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testOpenConnectionProtocolNotSupported() throws Exception {
+        URL url = new URL("ftp://example.com");
+        CronetHttpURLStreamHandler streamHandler =
+                new CronetHttpURLStreamHandler(mTestFramework.mCronetEngine);
+        try {
+            streamHandler.openConnection(url);
+            fail();
+        } catch (UnsupportedOperationException e) {
+            assertEquals("Unexpected protocol:ftp", e.getMessage());
+        }
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     public void testOpenConnectionWithProxy() throws Exception {
         URL url = new URL(NativeTestServer.getEchoMethodURL());
         CronetHttpURLStreamHandler streamHandler =

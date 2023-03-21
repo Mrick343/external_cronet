@@ -15,8 +15,13 @@
 #include "base/no_destructor.h"
 #include "base/strings/string_piece.h"
 #include "base/strings/string_util.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
 #include "base/trace_event/memory_usage_estimator.h"
+=======
+#include "base/trace_event/memory_usage_estimator.h"
+#include "third_party/perfetto/include/perfetto/tracing/traced_value.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "url/url_canon_stdstring.h"
 #include "url/url_util.h"
 

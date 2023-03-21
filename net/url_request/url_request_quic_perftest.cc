@@ -18,8 +18,14 @@
 #include "base/trace_event/memory_dump_manager.h"
 #include "base/trace_event/memory_dump_manager_test_utils.h"
 #include "base/trace_event/memory_dump_request_args.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/trace_config.h"
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/process_memory_dump.h"
+#include "base/trace_event/trace_config.h"
+#include "base/trace_event/traced_value.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "net/base/load_timing_info.h"
 #include "net/cert/mock_cert_verifier.h"
 #include "net/dns/mapped_host_resolver.h"
