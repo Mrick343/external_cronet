@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caab9c75_9b59640f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T18:19:13Z",
+      "side": 1,
+      "message": "Could you add a description of what this CL does?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 38
+      },
+      "revId": "62d7a1a0791872973ba6d7e09d5c87e8ebfb4b3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c68d4c92_a00ec91b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T18:19:13Z",
+      "side": 1,
+      "message": "Can you add a comment on why this change is required?",
+      "range": {
+        "startLine": 318,
+        "startChar": 8,
+        "endLine": 322,
+        "endChar": 103
+      },
+      "revId": "62d7a1a0791872973ba6d7e09d5c87e8ebfb4b3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a02b0f4b_9bed0e76",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T18:19:13Z",
+      "side": 1,
+      "message": "nit: long line",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 322,
+        "endChar": 103
+      },
+      "revId": "62d7a1a0791872973ba6d7e09d5c87e8ebfb4b3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5aaaa3e_6905e363",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T18:19:13Z",
+      "side": 1,
+      "message": "typo: is",
+      "range": {
+        "startLine": 327,
+        "startChar": 60,
+        "endLine": 327,
+        "endChar": 64
+      },
+      "revId": "62d7a1a0791872973ba6d7e09d5c87e8ebfb4b3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7677adb_e1bb63d5",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T18:19:13Z",
+      "side": 1,
+      "message": "Should this be used somewhere?",
+      "range": {
+        "startLine": 330,
+        "startChar": 17,
+        "endLine": 330,
+        "endChar": 45
+      },
+      "revId": "62d7a1a0791872973ba6d7e09d5c87e8ebfb4b3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
