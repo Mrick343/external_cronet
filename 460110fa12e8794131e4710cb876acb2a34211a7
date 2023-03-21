@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bcb07e4_086f78ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-21T15:46:43Z",
+      "side": 1,
+      "message": "Check aosp/2498878 for the corresponding gn2bp change.",
+      "revId": "460110fa12e8794131e4710cb876acb2a34211a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
