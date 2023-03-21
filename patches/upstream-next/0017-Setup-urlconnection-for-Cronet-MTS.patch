@@ -1,0 +1,116 @@
+From 0ff6795004359d264bddccb7e5a09c4d02f956b6 Mon Sep 17 00:00:00 2001
+From: Chidera Olibie <colibie@google.com>
+Date: Tue, 21 Mar 2023 17:16:33 +0000
+Subject: [PATCH] Setup urlconnection for Cronet MTS
+
+This cl fixes urlconnection tests imported from chromium
+and adds them to the build target
+
+Test: atest NetHttpCoverageTest
+Bug: 267353182
+Change-Id: Ia4b3ad5d485946bd31f0fdc1c6184d36d7238bda
+---
+ .../src/org/chromium/net/CronetTestRule.java  | 22 ++++++++++++++++++-
+ .../src/org/chromium/net/CronetTestUtil.java  | 11 ++++++----
+ 2 files changed, 28 insertions(+), 5 deletions(-)
+
+diff --git a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
+index 3f6d343e..296b6fd7 100644
+--- a/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
++++ b/components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java
+@@ -31,6 +31,7 @@ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+ import java.lang.annotation.Target;
++import java.lang.reflect.Field;
+ import java.net.URL;
+ import java.net.URLStreamHandlerFactory;
+ 
+@@ -233,6 +234,7 @@ public class CronetTestRule implements TestRule {
+     }
+ 
+     private void tearDown() throws Exception {
++        resetURLStreamHandlerFactory();
+         try {
+             // Run GC and finalizers a few times to pick up leaked closeables
+             for (int i = 0; i < 10; i++) {
+@@ -312,11 +314,29 @@ public class CronetTestRule implements TestRule {
+      * during setUp() and is installed by {@link runTest()} as the default when Cronet is tested.
+      */
+     public void setStreamHandlerFactory(HttpEngine cronetEngine) {
+-        if (!testingSystemHttpURLConnection()) {
++        if (testingSystemHttpURLConnection()) {
++            URL.setURLStreamHandlerFactory(null);
++        } else {
+             URL.setURLStreamHandlerFactory(cronetEngine.createUrlStreamHandlerFactory());
+         }
+     }
+ 
++    /**
++     * Clears the {@link URL}'s {@code factory} field. This is called
++     * during teardown() so as to start each test with the system's URLStreamHandler.
++     * Factory cannot be set reassigned in a JVM instance so we need to reflectively clear it to
++     * set it again.
++     */
++    private void resetURLStreamHandlerFactory() {
++        try {
++            Field factory = URL.class.getDeclaredField("factory");
++            factory.setAccessible(true);
++            factory.set(null, null);
++        } catch (IllegalAccessException | NoSuchFieldException e) {
++            throw new RuntimeException("CronetTestRule#shutdown: factory could not be reset", e);
++        }
++    }
++
+     /**
+      * Annotation for test methods in org.chromium.net.urlconnection pacakage that runs them
+      * against both Cronet's HttpURLConnection implementation, and against the system's
+diff --git a/components/cronet/android/test/src/org/chromium/net/CronetTestUtil.java b/components/cronet/android/test/src/org/chromium/net/CronetTestUtil.java
+index 8833e7c6..ad09a4ae 100644
+--- a/components/cronet/android/test/src/org/chromium/net/CronetTestUtil.java
++++ b/components/cronet/android/test/src/org/chromium/net/CronetTestUtil.java
+@@ -4,6 +4,9 @@
+ 
+ package org.chromium.net;
+ 
++import android.net.http.ExperimentalHttpEngine;
++import android.net.http.HttpEngine;
++import android.net.http.UrlRequest;
+ import android.net.Network;
+ 
+ import org.json.JSONException;
+@@ -60,7 +63,7 @@ public class CronetTestUtil {
+     public static class NetworkThreadTestConnector {
+         private final CronetUrlRequestContext mRequestContext;
+ 
+-        public NetworkThreadTestConnector(CronetEngine cronetEngine) {
++        public NetworkThreadTestConnector(HttpEngine cronetEngine) {
+             mRequestContext = (CronetUrlRequestContext) cronetEngine;
+             nativePrepareNetworkThread(mRequestContext.getUrlRequestContextAdapter());
+         }
+@@ -79,19 +82,19 @@ public class CronetTestUtil {
+     }
+ 
+     public static boolean doesURLRequestContextExistForTesting(
+-            CronetEngine engine, Network network) {
++            HttpEngine engine, Network network) {
+         CronetUrlRequestContext context = (CronetUrlRequestContext) engine;
+         return nativeURLRequestContextExistsForTesting(
+                 context.getUrlRequestContextAdapter(), network.getNetworkHandle());
+     }
+ 
+     public static void setMockCertVerifierForTesting(
+-            ExperimentalCronetEngine.Builder builder, long mockCertVerifier) {
++            ExperimentalHttpEngine.Builder builder, long mockCertVerifier) {
+         getCronetEngineBuilderImpl(builder).setMockCertVerifierForTesting(mockCertVerifier);
+     }
+ 
+     public static CronetEngineBuilderImpl getCronetEngineBuilderImpl(
+-            ExperimentalCronetEngine.Builder builder) {
++            ExperimentalHttpEngine.Builder builder) {
+         return (CronetEngineBuilderImpl) builder.getBuilderDelegate();
+     }
+ 
+-- 
+2.40.0.348.gf938b09366-goog
+
