@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61466c2e_7f89ef77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-21T15:46:05Z",
+      "side": 1,
+      "message": "Check https://android-review.git.corp.google.com/c/platform/packages/modules/Connectivity/+/2498879/1 for the corresponding gn2bp change",
+      "revId": "5dea93c5a9a621216b103c071685980d1ad084a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
