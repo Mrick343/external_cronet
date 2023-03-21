@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2e17e0b_241f503b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-21T15:37:07Z",
+      "side": 1,
+      "message": "nit: `components/metrics/metrics_service_observer.{h, cc}` is present in v108, but I don\u0027t think we actually use it (since they\u0027re not mentioned in our Android.bp).",
+      "revId": "e47d96ba3ced95c518a48c37fd5ff9a61dd30bef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
