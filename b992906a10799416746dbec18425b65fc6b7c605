@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8641f2ae_c0c56cd4",
+        "filename": "third_party/boringssl/src/crypto/cpu_arm_freebsd.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T17:37:56Z",
+      "side": 1,
+      "message": "As discussed, we\u0027ll delete in master in a follow up (and remove the sources.bp entry).",
+      "parentUuid": "6217e635_2459264d",
+      "revId": "b992906a10799416746dbec18425b65fc6b7c605",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b040258f_23549fc8",
         "filename": "third_party/quic_trace/src/tools/render/sdl_util.h",
         "patchSetId": 2
@@ -48,6 +66,30 @@
       "writtenOn": "2023-03-21T16:56:05Z",
       "side": 1,
       "message": "Leaving a comment to figure out what\u0027s going on",
+      "range": {
+        "startLine": 26,
+        "startChar": 10,
+        "endLine": 26,
+        "endChar": 27
+      },
+      "revId": "b992906a10799416746dbec18425b65fc6b7c605",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12d90992_88ddaa3b",
+        "filename": "third_party/quic_trace/src/tools/render/sdl_util.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T17:37:56Z",
+      "side": 1,
+      "message": "These were at the wrong version. Reset them to v108.",
+      "parentUuid": "b040258f_23549fc8",
       "range": {
         "startLine": 26,
         "startChar": 10,

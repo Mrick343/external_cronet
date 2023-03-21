@@ -22,6 +22,30 @@
       },
       "revId": "26b17131b27be4b84fc089d96dcc1998e686ecf9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d50485f_1e10ac7f",
+        "filename": "third_party/googletest/.gitignore",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-21T17:37:56Z",
+      "side": -2,
+      "message": "Will make changes to copy.bara.sky to ignore these.",
+      "parentUuid": "5310b100_dc7d3aa6",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 4
+      },
+      "revId": "26b17131b27be4b84fc089d96dcc1998e686ecf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
