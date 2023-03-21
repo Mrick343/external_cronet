@@ -18,6 +18,10 @@ ciopfs
 /Release
 /Release_x64
 /win_toolchain.json
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
+=======
+/util/LASTCHANGE*
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 /util/support
 /x64/
 /linux/debian_*-sysroot/

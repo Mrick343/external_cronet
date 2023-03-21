@@ -8,7 +8,11 @@
 #include "base/check_op.h"
 #include "base/strings/stringprintf.h"
 #include "base/threading/thread_task_runner_handle.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/typed_macros.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "net/test/embedded_test_server/http_response.h"
 
 namespace net::test_server {

@@ -8,6 +8,7 @@
 #include <memory>
 #include <ostream>
 #include <utility>
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/files/file_util.h"
@@ -17,6 +18,17 @@
 #include "net/filter/mock_source_stream.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "testing/platform_test.h"
+=======
+
+#include "base/files/file_util.h"
+#include "base/path_service.h"
+#include "net/filter/brotli_source_stream.h"
+#include "net/filter/filter_source_stream_test_util.h"
+#include "net/filter/mock_source_stream.h"
+#include "testing/gtest/include/gtest/gtest.h"
+#include "testing/platform_test.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 namespace net {
 

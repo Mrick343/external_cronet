@@ -5,10 +5,17 @@
 #include "net/filter/filter_source_stream_test_util.h"
 
 #include <cstring>
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/bit_cast.h"
 #include "base/check_op.h"
+=======
+
+#include "base/bit_cast.h"
+#include "base/check_op.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 namespace net {
 

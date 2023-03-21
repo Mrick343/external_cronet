@@ -6,7 +6,10 @@ package org.chromium.net;
 
 import static junit.framework.Assert.assertEquals;
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.NetworkQualityRttListener;
+=======
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 import android.os.ConditionVariable;
 import android.util.SparseIntArray;
 

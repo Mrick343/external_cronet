@@ -6,6 +6,7 @@ package org.chromium.net.impl;
 
 import android.content.Context;
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.ExperimentalHttpEngine;
 import android.net.http.IHttpEngineBuilder;
 
@@ -30,6 +31,32 @@ public class NativeCronetEngineBuilderImpl extends CronetEngineBuilderImpl {
         }
 
         ExperimentalHttpEngine builder = new CronetUrlRequestContext(this);
+=======
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.ICronetEngineBuilder;
+
+/**
+ * Implementation of {@link ICronetEngineBuilder} that builds native Cronet engine.
+ */
+public class NativeCronetEngineBuilderImpl extends CronetEngineBuilderImpl {
+    /**
+     * Builder for Native Cronet Engine.
+     * Default config enables SPDY, disables QUIC and HTTP cache.
+     *
+     * @param context Android {@link Context} for engine to use.
+     */
+    public NativeCronetEngineBuilderImpl(Context context) {
+        super(context);
+    }
+
+    @Override
+    public ExperimentalCronetEngine build() {
+        if (getUserAgent() == null) {
+            setUserAgent(getDefaultUserAgent());
+        }
+
+        ExperimentalCronetEngine builder = new CronetUrlRequestContext(this);
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
         // Clear MOCK_CERT_VERIFIER reference if there is any, since
         // the ownership has been transferred to the engine.

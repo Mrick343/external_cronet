@@ -16,7 +16,11 @@
 
 namespace net::android {
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 TEST(HttpAuthNegotiateAndroidTest, DISABLED_GenerateAuthToken) {
+=======
+TEST(HttpAuthNegotiateAndroidTest, GenerateAuthToken) {
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
   base::test::TaskEnvironment task_environment;
 
   DummySpnegoAuthenticator::EnsureTestAccountExists();

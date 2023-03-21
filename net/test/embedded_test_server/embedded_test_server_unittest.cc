@@ -348,7 +348,11 @@ TEST_P(EmbeddedTestServerTest, ConnectionListenerRead) {
 #else
 #define MAYBE_ConnectionListenerComplete ConnectionListenerComplete
 #endif
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 TEST_P(EmbeddedTestServerTest, DISABLED_ConnectionListenerComplete) {
+=======
+TEST_P(EmbeddedTestServerTest, MAYBE_ConnectionListenerComplete) {
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
   // OnResponseCompletedSuccessfully() makes the assumption that a connection is
   // "finished" before the socket is closed, and in the case of HTTP/2 this is
   // not supported

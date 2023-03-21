@@ -15,12 +15,21 @@
 #include "base/debug/crash_logging.h"
 #include "base/strings/string_piece_forward.h"
 #include "base/strings/string_util.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing_forward.h"
 #include "base/unguessable_token.h"
 #include "build/build_config.h"
 #include "build/buildflag.h"
 #include "ipc/ipc_param_traits.h"
 #include "third_party/abseil-cpp/absl/types/optional.h"
+=======
+#include "base/unguessable_token.h"
+#include "build/build_config.h"
+#include "build/buildflag.h"
+#include "ipc/ipc_param_traits.h"
+#include "third_party/abseil-cpp/absl/types/optional.h"
+#include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "url/scheme_host_port.h"
 
 #if BUILDFLAG(IS_ANDROID)

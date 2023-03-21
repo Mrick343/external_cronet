@@ -5,6 +5,7 @@
 #include "net/disk_cache/simple/simple_version_upgrade.h"
 
 #include <cstring>
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/files/file.h"
@@ -17,6 +18,20 @@
 #include "net/disk_cache/disk_cache.h"
 #include "net/disk_cache/simple/simple_backend_version.h"
 #include "net/disk_cache/simple/simple_entry_format_history.h"
+=======
+
+#include "base/files/file.h"
+#include "base/files/file_enumerator.h"
+#include "base/files/file_path.h"
+#include "base/files/file_util.h"
+#include "base/files/memory_mapped_file.h"
+#include "base/logging.h"
+#include "base/pickle.h"
+#include "net/disk_cache/disk_cache.h"
+#include "net/disk_cache/simple/simple_backend_version.h"
+#include "net/disk_cache/simple/simple_entry_format_history.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 namespace {
 

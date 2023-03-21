@@ -50,6 +50,7 @@ namespace internal {
 
 namespace  {
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 // TaggedStringPtr::Flags uses the lower 2 bits as tags.
 // Enforce that allocated data aligns to at least 4 bytes, and that
 // the alignment of the global const string value does as well.
@@ -67,6 +68,24 @@ constexpr size_t kStringAlign = alignof(std::string);
 
 static_assert((kStringAlign > kNewAlign ? kStringAlign : kNewAlign) >= 4, "");
 static_assert(alignof(ExplicitlyConstructedArenaString) >= 4, "");
+=======
+// Enforce that allocated data aligns to at least 8 bytes, and that
+// the alignment of the global const string value does as well.
+// The alignment guaranteed by `new std::string` depends on both:
+// - new align = __STDCPP_DEFAULT_NEW_ALIGNMENT__ / max_align_t
+// - alignof(std::string)
+#ifdef __STDCPP_DEFAULT_NEW_ALIGNMENT__
+constexpr size_t kNewAlign = __STDCPP_DEFAULT_NEW_ALIGNMENT__;
+#elif (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__) < 40900
+constexpr size_t kNewAlign = alignof(::max_align_t);
+#else
+constexpr size_t kNewAlign = alignof(std::max_align_t);
+#endif
+constexpr size_t kStringAlign = alignof(std::string);
+
+static_assert((kStringAlign > kNewAlign ? kStringAlign : kNewAlign) >= 8, "");
+static_assert(alignof(ExplicitlyConstructedArenaString) >= 8, "");
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 }  // namespace
 

@@ -24,6 +24,10 @@ cc_library(
     deps = [
         "//quic_trace:quic_trace_cc_proto",
         "@com_google_absl//absl/container:flat_hash_map",
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
         "@com_google_absl//absl/log",
+=======
+        "@com_google_glog//:glog",
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
     ],
 )

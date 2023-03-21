@@ -141,6 +141,7 @@ else # Device mode
 
     TEST_FIPS_BIN="$ANDROID_PRODUCT_OUT/system/bin/test_fips"
     check_file "$TEST_FIPS_BIN"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
     LIBCRYPTO_BIN="$ANDROID_PRODUCT_OUT/system_ext/apex/com.android.tethering/lib/libcrypto.so"
     check_file "$LIBCRYPTO_BIN"
 
@@ -148,6 +149,15 @@ else # Device mode
     DEVICE_TMP=/data/local/tmp
 
     BORINGSSL="$ANDROID_BUILD_TOP/external/cronet/third_party/boringssl/src"
+=======
+    LIBCRYPTO_BIN="$ANDROID_PRODUCT_OUT/system/lib64/libcrypto.so"
+    check_file "$LIBCRYPTO_BIN"
+
+    test "$ANDROID_SERIAL" || die "ANDROID_SERIAL not set"
+    DEVICE_TMP=/data/local/tmp
+
+    BORINGSSL="$ANDROID_BUILD_TOP/external/boringssl/src"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
     RUN=run_test_on_device
     INTEGRITY_BREAK_TEST=device_integrity_break_test
     KAT_BREAK_TEST=device_kat_break_test

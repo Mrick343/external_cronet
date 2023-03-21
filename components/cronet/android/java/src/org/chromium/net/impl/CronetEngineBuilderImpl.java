@@ -11,6 +11,7 @@ import android.util.Base64;
 import androidx.annotation.IntDef;
 import androidx.annotation.VisibleForTesting;
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.HttpEngine;
 import android.net.http.IHttpEngineBuilder;
 
@@ -317,6 +318,332 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
         // Add new element to PKP list.
         mPkps.add(new Pkp(idnHostName, hashes.values().toArray(new byte[hashes.size()][]),
                 includeSubdomains, expirationInstant));
+=======
+import org.chromium.net.CronetEngine;
+import org.chromium.net.ICronetEngineBuilder;
+
+import java.io.File;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.net.IDN;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+/**
+ * Implementation of {@link ICronetEngineBuilder}.
+ */
+public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
+    /**
+     * A hint that a host supports QUIC.
+     */
+    public static class QuicHint {
+        // The host.
+        final String mHost;
+        // Port of the server that supports QUIC.
+        final int mPort;
+        // Alternate protocol port.
+        final int mAlternatePort;
+
+        QuicHint(String host, int port, int alternatePort) {
+            mHost = host;
+            mPort = port;
+            mAlternatePort = alternatePort;
+        }
+    }
+
+    /**
+     * A public key pin.
+     */
+    public static class Pkp {
+        // Host to pin for.
+        final String mHost;
+        // Array of SHA-256 hashes of keys.
+        final byte[][] mHashes;
+        // Should pin apply to subdomains?
+        final boolean mIncludeSubdomains;
+        // When the pin expires.
+        final Date mExpirationDate;
+
+        Pkp(String host, byte[][] hashes, boolean includeSubdomains, Date expirationDate) {
+            mHost = host;
+            mHashes = hashes;
+            mIncludeSubdomains = includeSubdomains;
+            mExpirationDate = expirationDate;
+        }
+    }
+
+    /**
+     * Mapping between public builder view of HttpCacheMode and internal builder one.
+     */
+    @VisibleForTesting
+    static enum HttpCacheMode {
+        DISABLED(HttpCacheType.DISABLED, false),
+        DISK(HttpCacheType.DISK, true),
+        DISK_NO_HTTP(HttpCacheType.DISK, false),
+        MEMORY(HttpCacheType.MEMORY, true);
+
+        private final int mType;
+        private final boolean mContentCacheEnabled;
+
+        private HttpCacheMode(int type, boolean contentCacheEnabled) {
+            mContentCacheEnabled = contentCacheEnabled;
+            mType = type;
+        }
+
+        int getType() {
+            return mType;
+        }
+
+        boolean isContentCacheEnabled() {
+            return mContentCacheEnabled;
+        }
+
+        @HttpCacheSetting
+        int toPublicBuilderCacheMode() {
+            switch (this) {
+                case DISABLED:
+                    return CronetEngine.Builder.HTTP_CACHE_DISABLED;
+                case DISK_NO_HTTP:
+                    return CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP;
+                case DISK:
+                    return CronetEngine.Builder.HTTP_CACHE_DISK;
+                case MEMORY:
+                    return CronetEngine.Builder.HTTP_CACHE_IN_MEMORY;
+                default:
+                    throw new IllegalArgumentException("Unknown internal builder cache mode");
+            }
+        }
+
+        @VisibleForTesting
+        static HttpCacheMode fromPublicBuilderCacheMode(@HttpCacheSetting int cacheMode) {
+            switch (cacheMode) {
+                case CronetEngine.Builder.HTTP_CACHE_DISABLED:
+                    return DISABLED;
+                case CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP:
+                    return DISK_NO_HTTP;
+                case CronetEngine.Builder.HTTP_CACHE_DISK:
+                    return DISK;
+                case CronetEngine.Builder.HTTP_CACHE_IN_MEMORY:
+                    return MEMORY;
+                default:
+                    throw new IllegalArgumentException("Unknown public builder cache mode");
+            }
+        }
+    }
+
+    private static final Pattern INVALID_PKP_HOST_NAME = Pattern.compile("^[0-9\\.]*$");
+
+    private static final int INVALID_THREAD_PRIORITY = THREAD_PRIORITY_LOWEST + 1;
+
+    // Private fields are simply storage of configuration for the resulting CronetEngine.
+    // See setters below for verbose descriptions.
+    private final Context mApplicationContext;
+    private final List<QuicHint> mQuicHints = new LinkedList<>();
+    private final List<Pkp> mPkps = new LinkedList<>();
+    private boolean mPublicKeyPinningBypassForLocalTrustAnchorsEnabled;
+    private String mUserAgent;
+    private String mStoragePath;
+    private boolean mQuicEnabled;
+    private boolean mHttp2Enabled;
+    private boolean mBrotiEnabled;
+    private boolean mDisableCache;
+    private HttpCacheMode mHttpCacheMode;
+    private long mHttpCacheMaxSize;
+    private String mExperimentalOptions;
+    protected long mMockCertVerifier;
+    private boolean mNetworkQualityEstimatorEnabled;
+    private int mThreadPriority = INVALID_THREAD_PRIORITY;
+
+    /**
+     * Default config enables SPDY and QUIC, disables SDCH and HTTP cache.
+     * @param context Android {@link Context} for engine to use.
+     */
+    public CronetEngineBuilderImpl(Context context) {
+        mApplicationContext = context.getApplicationContext();
+        enableQuic(true);
+        enableHttp2(true);
+        enableBrotli(false);
+        enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISABLED, 0);
+        enableNetworkQualityEstimator(false);
+        enablePublicKeyPinningBypassForLocalTrustAnchors(true);
+    }
+
+    @Override
+    public String getDefaultUserAgent() {
+        return UserAgent.from(mApplicationContext);
+    }
+
+    @Override
+    public CronetEngineBuilderImpl setUserAgent(String userAgent) {
+        mUserAgent = userAgent;
+        return this;
+    }
+
+    @VisibleForTesting
+    String getUserAgent() {
+        return mUserAgent;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl setStoragePath(String value) {
+        if (!new File(value).isDirectory()) {
+            throw new IllegalArgumentException("Storage path must be set to existing directory");
+        }
+        mStoragePath = value;
+        return this;
+    }
+
+    @VisibleForTesting
+    String storagePath() {
+        return mStoragePath;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl setLibraryLoader(CronetEngine.Builder.LibraryLoader loader) {
+        // |CronetEngineBuilderImpl| is an abstract class that is used by concrete builder
+        // implementations, including the Java Cronet engine builder; therefore, the implementation
+        // of this method should be "no-op". Subclasses that care about the library loader
+        // should override this method.
+        return this;
+    }
+
+    /**
+     * Default implementation of the method that returns {@code null}.
+     *
+     * @return {@code null}.
+     */
+    VersionSafeCallbacks.LibraryLoader libraryLoader() {
+        return null;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl enableQuic(boolean value) {
+        mQuicEnabled = value;
+        return this;
+    }
+
+    @VisibleForTesting
+    boolean quicEnabled() {
+        return mQuicEnabled;
+    }
+
+    /**
+     * Constructs default QUIC User Agent Id string including application name
+     * and Cronet version. Returns empty string if QUIC is not enabled.
+     *
+     * @return QUIC User Agent ID string.
+     */
+    String getDefaultQuicUserAgentId() {
+        return mQuicEnabled ? UserAgent.getQuicUserAgentIdFrom(mApplicationContext) : "";
+    }
+
+    @Override
+    public CronetEngineBuilderImpl enableHttp2(boolean value) {
+        mHttp2Enabled = value;
+        return this;
+    }
+
+    @VisibleForTesting
+    boolean http2Enabled() {
+        return mHttp2Enabled;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl enableSdch(boolean value) {
+        return this;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl enableBrotli(boolean value) {
+        mBrotiEnabled = value;
+        return this;
+    }
+
+    @VisibleForTesting
+    boolean brotliEnabled() {
+        return mBrotiEnabled;
+    }
+
+    @IntDef({CronetEngine.Builder.HTTP_CACHE_DISABLED, CronetEngine.Builder.HTTP_CACHE_IN_MEMORY,
+            CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, CronetEngine.Builder.HTTP_CACHE_DISK})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface HttpCacheSetting {}
+
+    @Override
+    public CronetEngineBuilderImpl enableHttpCache(@HttpCacheSetting int cacheMode, long maxSize) {
+        HttpCacheMode cacheModeEnum = HttpCacheMode.fromPublicBuilderCacheMode(cacheMode);
+
+        if (cacheModeEnum.getType() == HttpCacheType.DISK && storagePath() == null) {
+            throw new IllegalArgumentException("Storage path must be set");
+        }
+
+        mHttpCacheMode = cacheModeEnum;
+        mHttpCacheMaxSize = maxSize;
+
+        return this;
+    }
+
+    boolean cacheDisabled() {
+        return !mHttpCacheMode.isContentCacheEnabled();
+    }
+
+    long httpCacheMaxSize() {
+        return mHttpCacheMaxSize;
+    }
+
+    @VisibleForTesting
+    int httpCacheMode() {
+        return mHttpCacheMode.getType();
+    }
+
+    @HttpCacheSetting
+    int publicBuilderHttpCacheMode() {
+        return mHttpCacheMode.toPublicBuilderCacheMode();
+    }
+
+    @Override
+    public CronetEngineBuilderImpl addQuicHint(String host, int port, int alternatePort) {
+        if (host.contains("/")) {
+            throw new IllegalArgumentException("Illegal QUIC Hint Host: " + host);
+        }
+        mQuicHints.add(new QuicHint(host, port, alternatePort));
+        return this;
+    }
+
+    List<QuicHint> quicHints() {
+        return mQuicHints;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
+            boolean includeSubdomains, Date expirationDate) {
+        if (hostName == null) {
+            throw new NullPointerException("The hostname cannot be null");
+        }
+        if (pinsSha256 == null) {
+            throw new NullPointerException("The set of SHA256 pins cannot be null");
+        }
+        if (expirationDate == null) {
+            throw new NullPointerException("The pin expiration date cannot be null");
+        }
+        String idnHostName = validateHostNameForPinningAndConvert(hostName);
+        // Convert the pin to BASE64 encoding to remove duplicates.
+        Map<String, byte[]> hashes = new HashMap<>();
+        for (byte[] pinSha256 : pinsSha256) {
+            if (pinSha256 == null || pinSha256.length != 32) {
+                throw new IllegalArgumentException("Public key pin is invalid");
+            }
+            hashes.put(Base64.encodeToString(pinSha256, 0), pinSha256);
+        }
+        // Add new element to PKP list.
+        mPkps.add(new Pkp(idnHostName, hashes.values().toArray(new byte[hashes.size()][]),
+                includeSubdomains, expirationDate));
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
         return this;
     }
 

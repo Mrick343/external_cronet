@@ -20,7 +20,11 @@
 #include "base/trace_event/memory_dump_provider_info.h"
 #include "base/trace_event/memory_dump_request_args.h"
 #include "base/trace_event/process_memory_dump.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 namespace base {
 

@@ -5,6 +5,7 @@ package org.chromium.net.impl;
 
 import androidx.annotation.IntDef;
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.ExperimentalUrlRequest;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;
@@ -28,6 +29,40 @@ public abstract class UrlRequestBase extends ExperimentalUrlRequest {
      * @param method "GET", "HEAD", "DELETE", "POST" or "PUT".
      */
     protected abstract void setHttpMethod(String method);
+=======
+import org.chromium.net.ExperimentalUrlRequest;
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UrlRequest;
+import org.chromium.net.UrlRequest.Status;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.concurrent.Executor;
+
+/**
+ * Base class for classes that implement {@link UrlRequest} including experimental
+ * features. {@link CronetUrlRequest} and {@link JavaUrlRequest} extends this class.
+ */
+public abstract class UrlRequestBase extends ExperimentalUrlRequest {
+    /**
+     * Sets the HTTP method verb to use for this request. Must be done before
+     * request has started.
+     *
+     * <p>The default when this method is not called is "GET" if the request has
+     * no body or "POST" if it does.
+     *
+     * @param method "GET", "HEAD", "DELETE", "POST" or "PUT".
+     */
+    protected abstract void setHttpMethod(String method);
+
+    /**
+     * Adds a request header. Must be done before request has started.
+     *
+     * @param header header name.
+     * @param value header value.
+     */
+    protected abstract void addHeader(String header, String value);
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
     /**
      * Sets upload data provider. Must be done before request has started. May only be

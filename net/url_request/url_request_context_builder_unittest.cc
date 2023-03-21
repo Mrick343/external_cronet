@@ -28,6 +28,7 @@
 #include "net/traffic_annotation/network_traffic_annotation_test_helper.h"
 #include "net/url_request/url_request.h"
 #include "net/url_request/url_request_test_util.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "net/base/cronet_buildflags.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "testing/platform_test.h"
@@ -186,6 +187,161 @@ TEST_F(URLRequestContextBuilderTest, CustomHttpAuthHandlerFactory) {
 }
 
 #if BUILDFLAG(ENABLE_REPORTING) && !BUILDFLAG(CRONET_BUILD)
+=======
+#include "testing/gtest/include/gtest/gtest.h"
+#include "testing/platform_test.h"
+#include "url/gurl.h"
+#include "url/scheme_host_port.h"
+
+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID)
+#include "net/proxy_resolution/proxy_config.h"
+#include "net/proxy_resolution/proxy_config_service_fixed.h"
+#endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) ||
+        // BUILDFLAG(IS_ANDROID)
+
+#if BUILDFLAG(IS_ANDROID)
+#include "base/android/build_info.h"
+#endif  // BUILDFLAG(IS_ANDROID)
+
+#if BUILDFLAG(ENABLE_REPORTING)
+#include "base/files/scoped_temp_dir.h"
+#include "base/threading/thread_task_runner_handle.h"
+#include "net/extras/sqlite/sqlite_persistent_reporting_and_nel_store.h"
+#include "net/reporting/reporting_context.h"
+#include "net/reporting/reporting_policy.h"
+#include "net/reporting/reporting_service.h"
+#include "net/reporting/reporting_uploader.h"
+#endif  // BUILDFLAG(ENABLE_REPORTING)
+
+namespace net {
+
+namespace {
+
+class MockHttpAuthHandlerFactory : public HttpAuthHandlerFactory {
+ public:
+  MockHttpAuthHandlerFactory(std::string supported_scheme, int return_code)
+      : return_code_(return_code), supported_scheme_(supported_scheme) {}
+  ~MockHttpAuthHandlerFactory() override = default;
+
+  int CreateAuthHandler(
+      HttpAuthChallengeTokenizer* challenge,
+      HttpAuth::Target target,
+      const SSLInfo& ssl_info,
+      const NetworkAnonymizationKey& network_anonymization_key,
+      const url::SchemeHostPort& scheme_host_port,
+      CreateReason reason,
+      int nonce_count,
+      const NetLogWithSource& net_log,
+      HostResolver* host_resolver,
+      std::unique_ptr<HttpAuthHandler>* handler) override {
+    handler->reset();
+
+    return challenge->auth_scheme() == supported_scheme_
+               ? return_code_
+               : ERR_UNSUPPORTED_AUTH_SCHEME;
+  }
+
+ private:
+  int return_code_;
+  std::string supported_scheme_;
+};
+
+class URLRequestContextBuilderTest : public PlatformTest,
+                                     public WithTaskEnvironment {
+ protected:
+  URLRequestContextBuilderTest() {
+    test_server_.AddDefaultHandlers(
+        base::FilePath(FILE_PATH_LITERAL("net/data/url_request_unittest")));
+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID)
+    builder_.set_proxy_config_service(std::make_unique<ProxyConfigServiceFixed>(
+        ProxyConfigWithAnnotation::CreateDirect()));
+#endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) ||
+        // BUILDFLAG(IS_ANDROID)
+  }
+
+  std::unique_ptr<HostResolver> host_resolver_ =
+      std::make_unique<MockHostResolver>();
+  EmbeddedTestServer test_server_;
+  URLRequestContextBuilder builder_;
+};
+
+TEST_F(URLRequestContextBuilderTest, DefaultSettings) {
+  ASSERT_TRUE(test_server_.Start());
+
+  std::unique_ptr<URLRequestContext> context(builder_.Build());
+  TestDelegate delegate;
+  std::unique_ptr<URLRequest> request(context->CreateRequest(
+      test_server_.GetURL("/echoheader?Foo"), DEFAULT_PRIORITY, &delegate,
+      TRAFFIC_ANNOTATION_FOR_TESTS));
+  request->set_method("GET");
+  request->SetExtraRequestHeaderByName("Foo", "Bar", false);
+  request->Start();
+  base::RunLoop().Run();
+  EXPECT_EQ("Bar", delegate.data_received());
+}
+
+TEST_F(URLRequestContextBuilderTest, UserAgent) {
+  ASSERT_TRUE(test_server_.Start());
+
+  builder_.set_user_agent("Bar");
+  std::unique_ptr<URLRequestContext> context(builder_.Build());
+  TestDelegate delegate;
+  std::unique_ptr<URLRequest> request(context->CreateRequest(
+      test_server_.GetURL("/echoheader?User-Agent"), DEFAULT_PRIORITY,
+      &delegate, TRAFFIC_ANNOTATION_FOR_TESTS));
+  request->set_method("GET");
+  request->Start();
+  base::RunLoop().Run();
+  EXPECT_EQ("Bar", delegate.data_received());
+}
+
+TEST_F(URLRequestContextBuilderTest, DefaultHttpAuthHandlerFactory) {
+  url::SchemeHostPort scheme_host_port(GURL("https://www.google.com"));
+  std::unique_ptr<HttpAuthHandler> handler;
+  std::unique_ptr<URLRequestContext> context(builder_.Build());
+  SSLInfo null_ssl_info;
+
+  // Verify that the default basic handler is present
+  EXPECT_EQ(OK,
+            context->http_auth_handler_factory()->CreateAuthHandlerFromString(
+                "basic", HttpAuth::AUTH_SERVER, null_ssl_info,
+                NetworkAnonymizationKey(), scheme_host_port, NetLogWithSource(),
+                host_resolver_.get(), &handler));
+}
+
+TEST_F(URLRequestContextBuilderTest, CustomHttpAuthHandlerFactory) {
+  url::SchemeHostPort scheme_host_port(GURL("https://www.google.com"));
+  const int kBasicReturnCode = OK;
+  std::unique_ptr<HttpAuthHandler> handler;
+  builder_.SetHttpAuthHandlerFactory(
+      std::make_unique<MockHttpAuthHandlerFactory>("extrascheme",
+                                                   kBasicReturnCode));
+  std::unique_ptr<URLRequestContext> context(builder_.Build());
+  SSLInfo null_ssl_info;
+  // Verify that a handler is returned for a custom scheme.
+  EXPECT_EQ(kBasicReturnCode,
+            context->http_auth_handler_factory()->CreateAuthHandlerFromString(
+                "ExtraScheme", HttpAuth::AUTH_SERVER, null_ssl_info,
+                NetworkAnonymizationKey(), scheme_host_port, NetLogWithSource(),
+                host_resolver_.get(), &handler));
+
+  // Verify that the default basic handler isn't present
+  EXPECT_EQ(ERR_UNSUPPORTED_AUTH_SCHEME,
+            context->http_auth_handler_factory()->CreateAuthHandlerFromString(
+                "basic", HttpAuth::AUTH_SERVER, null_ssl_info,
+                NetworkAnonymizationKey(), scheme_host_port, NetLogWithSource(),
+                host_resolver_.get(), &handler));
+
+  // Verify that a handler isn't returned for a bogus scheme.
+  EXPECT_EQ(ERR_UNSUPPORTED_AUTH_SCHEME,
+            context->http_auth_handler_factory()->CreateAuthHandlerFromString(
+                "Bogus", HttpAuth::AUTH_SERVER, null_ssl_info,
+                NetworkAnonymizationKey(), scheme_host_port, NetLogWithSource(),
+                host_resolver_.get(), &handler));
+}
+
+#if BUILDFLAG(ENABLE_REPORTING)
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 // See crbug.com/935209. This test ensures that shutdown occurs correctly and
 // does not crash while destoying the NEL and Reporting services in the process
 // of destroying the URLRequestContext whilst Reporting has a pending upload.

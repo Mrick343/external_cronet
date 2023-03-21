@@ -7,7 +7,11 @@
 
 #include "base/memory/raw_ptr.h"
 #include "base/memory/weak_ptr.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_log.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "net/base/net_export.h"
 #include "net/log/net_log.h"
 

@@ -23,8 +23,13 @@
 
 #include <memory>
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "absl/log/check.h"
 #include "absl/log/log.h"
+=======
+#include <glog/logging.h>
+#include <glog/stl_logging.h>
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "absl/memory/memory.h"
 
 namespace quic_trace {

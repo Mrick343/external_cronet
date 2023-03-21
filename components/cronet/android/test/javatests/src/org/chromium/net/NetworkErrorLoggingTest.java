@@ -11,6 +11,7 @@ import static org.chromium.net.CronetTestRule.SERVER_CERT_PEM;
 import static org.chromium.net.CronetTestRule.SERVER_KEY_PKCS8_PEM;
 import static org.chromium.net.CronetTestRule.getContext;
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.HttpEngine;
 import android.net.http.ExperimentalHttpEngine;
 import android.net.http.UrlRequest;
@@ -118,6 +119,116 @@ public class NetworkErrorLoggingTest {
     public void testUploadNELReportsFromPreloadedPolicy() throws Exception {
         ExperimentalHttpEngine.Builder builder =
                 new ExperimentalHttpEngine.Builder(getContext());
+=======
+import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.filters.SmallTest;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.chromium.base.test.util.Feature;
+import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
+
+/**
+ * Tests requests that generate Network Error Logging reports.
+ */
+@RunWith(AndroidJUnit4.class)
+public class NetworkErrorLoggingTest {
+    @Rule
+    public final CronetTestRule mTestRule = new CronetTestRule();
+
+    private CronetEngine mCronetEngine;
+
+    @Before
+    public void setUp() throws Exception {
+        TestFilesInstaller.installIfNeeded(getContext());
+        assertTrue(Http2TestServer.startHttp2TestServer(
+                getContext(), SERVER_CERT_PEM, SERVER_KEY_PKCS8_PEM));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        assertTrue(Http2TestServer.shutdownHttp2TestServer());
+        if (mCronetEngine != null) {
+            mCronetEngine.shutdown();
+        }
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    @OnlyRunNativeCronet
+    public void testManualReportUpload() throws Exception {
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(getContext());
+        CronetTestUtil.setMockCertVerifierForTesting(
+                builder, QuicTestServer.createMockCertVerifier());
+        mCronetEngine = builder.build();
+        String url = Http2TestServer.getReportingCollectorUrl();
+        TestUrlRequestCallback callback = new TestUrlRequestCallback();
+        UrlRequest.Builder requestBuilder =
+                mCronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+        TestUploadDataProvider dataProvider = new TestUploadDataProvider(
+                TestUploadDataProvider.SuccessCallbackMode.SYNC, callback.getExecutor());
+        dataProvider.addRead("[{\"type\": \"test_report\"}]".getBytes());
+        requestBuilder.setUploadDataProvider(dataProvider, callback.getExecutor());
+        requestBuilder.addHeader("Content-Type", "application/reports+json");
+        requestBuilder.build().start();
+        callback.blockForDone();
+        dataProvider.assertClosed();
+        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+        assertTrue(Http2TestServer.getReportingCollector().containsReport(
+                "{\"type\": \"test_report\"}"));
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    @OnlyRunNativeCronet
+    public void testUploadNELReportsFromHeaders() throws Exception {
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(getContext());
+        builder.setExperimentalOptions("{\"NetworkErrorLogging\": {\"enable\": true}}");
+        CronetTestUtil.setMockCertVerifierForTesting(
+                builder, QuicTestServer.createMockCertVerifier());
+        mCronetEngine = builder.build();
+        String url = Http2TestServer.getSuccessWithNELHeadersUrl();
+        TestUrlRequestCallback callback = new TestUrlRequestCallback();
+        UrlRequest.Builder requestBuilder =
+                mCronetEngine.newUrlRequestBuilder(url, callback, callback.getExecutor());
+        requestBuilder.build().start();
+        callback.blockForDone();
+        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+        Http2TestServer.getReportingCollector().waitForReports(1);
+        assertTrue(Http2TestServer.getReportingCollector().containsReport(""
+                + "{"
+                + "  \"type\": \"network-error\","
+                + "  \"url\": \"" + url + "\","
+                + "  \"body\": {"
+                + "    \"method\": \"GET\","
+                + "    \"phase\": \"application\","
+                + "    \"protocol\": \"h2\","
+                + "    \"referrer\": \"\","
+                + "    \"sampling_fraction\": 1.0,"
+                + "    \"server_ip\": \"127.0.0.1\","
+                + "    \"status_code\": 200,"
+                + "    \"type\": \"ok\""
+                + "  }"
+                + "}"));
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    @OnlyRunNativeCronet
+    public void testUploadNELReportsFromPreloadedPolicy() throws Exception {
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(getContext());
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
         String serverOrigin = Http2TestServer.getServerUrl();
         String collectorUrl = Http2TestServer.getReportingCollectorUrl();
         builder.setExperimentalOptions(""

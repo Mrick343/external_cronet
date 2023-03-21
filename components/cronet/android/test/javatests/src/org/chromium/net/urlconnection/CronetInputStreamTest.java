@@ -6,6 +6,7 @@ package org.chromium.net.urlconnection;
 
 import static com.google.common.truth.Truth.assertThat;
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
@@ -89,6 +90,99 @@ public class CronetInputStreamTest {
 
     @Test
     @SmallTest
+=======
+import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.filters.SmallTest;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.chromium.base.test.util.Feature;
+import org.chromium.net.CronetTestRule;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.concurrent.Callable;
+
+/** Test for {@link CronetInputStream}. */
+@RunWith(AndroidJUnit4.class)
+public class CronetInputStreamTest {
+    @Rule
+    public final CronetTestRule mTestRule = new CronetTestRule();
+
+    // public to squelch lint warning about naming
+    public CronetInputStream underTest;
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testAvailable_closed_withoutException() throws Exception {
+        underTest = new CronetInputStream(new MockHttpURLConnection());
+
+        underTest.setResponseDataCompleted(null);
+
+        assertThat(underTest.available()).isEqualTo(0);
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testAvailable_closed_withException() throws Exception {
+        underTest = new CronetInputStream(new MockHttpURLConnection());
+        IOException expected = new IOException();
+        underTest.setResponseDataCompleted(expected);
+
+        IOException actual = assertThrowsIoException(() -> underTest.available());
+
+        assertThat(actual).isSameInstanceAs(expected);
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testAvailable_noReads() throws Exception {
+        underTest = new CronetInputStream(new MockHttpURLConnection());
+
+        assertThat(underTest.available()).isEqualTo(0);
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testAvailable_everythingRead() throws Exception {
+        int bytesInBuffer = 10;
+
+        underTest = new CronetInputStream(new MockHttpURLConnection(bytesInBuffer));
+
+        for (int i = 0; i < bytesInBuffer; i++) {
+            underTest.read();
+        }
+
+        assertThat(underTest.available()).isEqualTo(0);
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+    public void testAvailable_partiallyRead() throws Exception {
+        int bytesInBuffer = 10;
+        int consumed = 3;
+
+        underTest = new CronetInputStream(new MockHttpURLConnection(bytesInBuffer));
+
+        for (int i = 0; i < consumed; i++) {
+            underTest.read();
+        }
+
+        assertThat(underTest.available()).isEqualTo(bytesInBuffer - consumed);
+    }
+
+    @Test
+    @SmallTest
+    @Feature({"Cronet"})
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
     public void testRead_afterDataCompleted() throws Exception {
         int bytesInBuffer = 10;
         int consumed = 3;

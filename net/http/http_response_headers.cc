@@ -27,7 +27,11 @@
 #include "base/strings/string_util.h"
 #include "base/strings/stringprintf.h"
 #include "base/time/time.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "base/values.h"
 #include "net/base/parse_number.h"
 #include "net/http/http_byte_range.h"

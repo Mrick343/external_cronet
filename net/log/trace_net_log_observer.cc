@@ -12,7 +12,11 @@
 
 #include "base/check.h"
 #include "base/json/json_writer.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "base/values.h"
 #include "net/log/net_log_entry.h"
 #include "net/log/net_log_event_type.h"

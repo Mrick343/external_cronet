@@ -279,6 +279,7 @@ class HttpAuthHandlerNegotiateTest : public PlatformTest,
   std::unique_ptr<HttpAuthHandlerNegotiate::Factory> factory_;
 };
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 TEST_F(HttpAuthHandlerNegotiateTest, DISABLED_DisableCname) {
   SetupMocks(AuthLibrary());
   std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
@@ -438,6 +439,167 @@ TEST_F(HttpAuthHandlerNegotiateTest, DISABLED_ServerNotInKerberosDatabase) {
 // This test is only for GSSAPI, as we can't use explicit credentials with
 // that library.
 TEST_F(HttpAuthHandlerNegotiateTest, DISABLED_NoKerberosCredentials) {
+=======
+TEST_F(HttpAuthHandlerNegotiateTest, DisableCname) {
+  SetupMocks(AuthLibrary());
+  std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
+  EXPECT_EQ(OK, CreateHandler(
+      true, false, true, "http://alias:500", &auth_handler));
+
+  ASSERT_TRUE(auth_handler.get() != nullptr);
+  TestCompletionCallback callback;
+  HttpRequestInfo request_info;
+  std::string token;
+  EXPECT_EQ(OK, callback.GetResult(auth_handler->GenerateAuthToken(
+                    nullptr, &request_info, callback.callback(), &token)));
+#if BUILDFLAG(IS_WIN)
+  EXPECT_EQ("HTTP/alias", auth_handler->spn_for_testing());
+#else
+  EXPECT_EQ("HTTP@alias", auth_handler->spn_for_testing());
+#endif
+}
+
+TEST_F(HttpAuthHandlerNegotiateTest, DisableCnameStandardPort) {
+  SetupMocks(AuthLibrary());
+  std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
+  EXPECT_EQ(OK, CreateHandler(
+      true, true, true, "http://alias:80", &auth_handler));
+  ASSERT_TRUE(auth_handler.get() != nullptr);
+  TestCompletionCallback callback;
+  HttpRequestInfo request_info;
+  std::string token;
+  EXPECT_EQ(OK, callback.GetResult(auth_handler->GenerateAuthToken(
+                    nullptr, &request_info, callback.callback(), &token)));
+#if BUILDFLAG(IS_WIN)
+  EXPECT_EQ("HTTP/alias", auth_handler->spn_for_testing());
+#else
+  EXPECT_EQ("HTTP@alias", auth_handler->spn_for_testing());
+#endif
+}
+
+TEST_F(HttpAuthHandlerNegotiateTest, DisableCnameNonstandardPort) {
+  SetupMocks(AuthLibrary());
+  std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
+  EXPECT_EQ(OK, CreateHandler(
+      true, true, true, "http://alias:500", &auth_handler));
+  ASSERT_TRUE(auth_handler.get() != nullptr);
+  TestCompletionCallback callback;
+  HttpRequestInfo request_info;
+  std::string token;
+  EXPECT_EQ(OK, callback.GetResult(auth_handler->GenerateAuthToken(
+                    nullptr, &request_info, callback.callback(), &token)));
+#if BUILDFLAG(IS_WIN)
+  EXPECT_EQ("HTTP/alias:500", auth_handler->spn_for_testing());
+#else
+  EXPECT_EQ("HTTP@alias:500", auth_handler->spn_for_testing());
+#endif
+}
+
+TEST_F(HttpAuthHandlerNegotiateTest, CnameSync) {
+  SetupMocks(AuthLibrary());
+  std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
+  const std::string url_string = "http://alias:500";
+  EXPECT_EQ(OK, CreateHandler(false, false, true, url_string, &auth_handler));
+  ASSERT_TRUE(auth_handler.get() != nullptr);
+  TestCompletionCallback callback;
+  HttpRequestInfo request_info;
+  std::string token;
+  EXPECT_EQ(OK, callback.GetResult(auth_handler->GenerateAuthToken(
+                    nullptr, &request_info, callback.callback(), &token)));
+#if BUILDFLAG(IS_WIN)
+  EXPECT_EQ("HTTP/canonical.example.com", auth_handler->spn_for_testing());
+#else
+  EXPECT_EQ("HTTP@canonical.example.com", auth_handler->spn_for_testing());
+#endif
+
+  // Make sure a cache-only lookup with the wrong NetworkAnonymizationKey (an
+  // empty one) fails, to make sure the right NetworkAnonymizationKey was used.
+  url::SchemeHostPort scheme_host_port{GURL(url_string)};
+  HostResolver::ResolveHostParameters resolve_params;
+  resolve_params.include_canonical_name = true;
+  resolve_params.source = HostResolverSource::LOCAL_ONLY;
+  std::unique_ptr<HostResolver::ResolveHostRequest> host_request1 =
+      resolver()->CreateRequest(scheme_host_port, NetworkAnonymizationKey(),
+                                NetLogWithSource(), resolve_params);
+  TestCompletionCallback callback2;
+  int result = host_request1->Start(callback2.callback());
+  EXPECT_EQ(ERR_NAME_NOT_RESOLVED, callback2.GetResult(result));
+
+  // Make sure a cache-only lookup with the same NetworkAnonymizationKey
+  // succeeds, to make sure the right NetworkAnonymizationKey was used.
+  std::unique_ptr<HostResolver::ResolveHostRequest> host_request2 =
+      resolver()->CreateRequest(scheme_host_port, network_anonymization_key(),
+                                NetLogWithSource(), resolve_params);
+  TestCompletionCallback callback3;
+  result = host_request2->Start(callback3.callback());
+  EXPECT_EQ(OK, callback3.GetResult(result));
+}
+
+TEST_F(HttpAuthHandlerNegotiateTest, CnameAsync) {
+  SetupMocks(AuthLibrary());
+  std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
+  const std::string url_string = "http://alias:500";
+  EXPECT_EQ(OK, CreateHandler(false, false, false, url_string, &auth_handler));
+  ASSERT_TRUE(auth_handler.get() != nullptr);
+  TestCompletionCallback callback;
+  HttpRequestInfo request_info;
+  std::string token;
+  EXPECT_EQ(ERR_IO_PENDING,
+            auth_handler->GenerateAuthToken(nullptr, &request_info,
+                                            callback.callback(), &token));
+  EXPECT_THAT(callback.WaitForResult(), IsOk());
+#if BUILDFLAG(IS_WIN)
+  EXPECT_EQ("HTTP/canonical.example.com", auth_handler->spn_for_testing());
+#else
+  EXPECT_EQ("HTTP@canonical.example.com", auth_handler->spn_for_testing());
+#endif
+
+  // Make sure a cache-only lookup with the wrong NetworkAnonymizationKey (an
+  // empty one) fails, to make sure the right NetworkAnonymizationKey was used.
+  url::SchemeHostPort scheme_host_port{GURL(url_string)};
+  HostResolver::ResolveHostParameters resolve_params;
+  resolve_params.include_canonical_name = true;
+  resolve_params.source = HostResolverSource::LOCAL_ONLY;
+  std::unique_ptr<HostResolver::ResolveHostRequest> host_request1 =
+      resolver()->CreateRequest(scheme_host_port, NetworkAnonymizationKey(),
+                                NetLogWithSource(), resolve_params);
+  TestCompletionCallback callback2;
+  int result = host_request1->Start(callback2.callback());
+  EXPECT_EQ(ERR_NAME_NOT_RESOLVED, callback2.GetResult(result));
+
+  // Make sure a cache-only lookup with the same NetworkAnonymizationKey
+  // succeeds, to make sure the right NetworkAnonymizationKey was used.
+  std::unique_ptr<HostResolver::ResolveHostRequest> host_request2 =
+      resolver()->CreateRequest(scheme_host_port, network_anonymization_key(),
+                                NetLogWithSource(), resolve_params);
+  TestCompletionCallback callback3;
+  result = host_request2->Start(callback3.callback());
+  EXPECT_EQ(OK, callback3.GetResult(result));
+}
+
+#if BUILDFLAG(IS_POSIX)
+
+// This test is only for GSSAPI, as we can't use explicit credentials with
+// that library.
+TEST_F(HttpAuthHandlerNegotiateTest, ServerNotInKerberosDatabase) {
+  SetupErrorMocks(AuthLibrary(), GSS_S_FAILURE, 0x96C73A07);  // No server
+  std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
+  EXPECT_EQ(OK, CreateHandler(
+      false, false, false, "http://alias:500", &auth_handler));
+  ASSERT_TRUE(auth_handler.get() != nullptr);
+  TestCompletionCallback callback;
+  HttpRequestInfo request_info;
+  std::string token;
+  EXPECT_EQ(ERR_IO_PENDING,
+            auth_handler->GenerateAuthToken(nullptr, &request_info,
+                                            callback.callback(), &token));
+  EXPECT_THAT(callback.WaitForResult(), IsError(ERR_MISSING_AUTH_CREDENTIALS));
+}
+
+// This test is only for GSSAPI, as we can't use explicit credentials with
+// that library.
+TEST_F(HttpAuthHandlerNegotiateTest, NoKerberosCredentials) {
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
   SetupErrorMocks(AuthLibrary(), GSS_S_FAILURE, 0x96C73AC3);  // No credentials
   std::unique_ptr<HttpAuthHandlerNegotiate> auth_handler;
   EXPECT_EQ(OK, CreateHandler(

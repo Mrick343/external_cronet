@@ -9,6 +9,14 @@ declare_args() {
   # default is only there for compatibility reasons and will be removed (see
   # crbug.com/1138425 for more details).
   target_environment = ""
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
+=======
+
+  # Control whether cronet is built (this is usually set by the script
+  # components/cronet/tools/cr_cronet.py as cronet requires specific
+  # gn args to build correctly).
+  is_cronet_build = false
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 }
 
 if (target_environment == "") {

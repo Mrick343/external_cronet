@@ -6,10 +6,17 @@
 
 #include <algorithm>
 #include <vector>
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/check_op.h"
 #include "net/base/io_buffer.h"
+=======
+
+#include "base/check_op.h"
+#include "net/base/io_buffer.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 namespace net {
 

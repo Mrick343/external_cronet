@@ -56,7 +56,11 @@
 #include "base/threading/thread_task_runner_handle.h"
 #include "base/time/default_tick_clock.h"
 #include "base/time/time.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "base/types/optional_util.h"
 #include "base/values.h"
 #include "build/build_config.h"

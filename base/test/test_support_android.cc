@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 // This file is included by modules that have host support but android/looper.h is not supported
 // on host. __REMOVED_IN needs to be defined in order for android/looper.h to be compiled.
 #ifndef __BIONIC__
@@ -9,6 +10,9 @@
 #endif
 #include <android/looper.h>
 
+=======
+#include <android/looper.h>
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include <stdarg.h>
 #include <string.h>
 

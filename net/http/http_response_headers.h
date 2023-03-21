@@ -16,10 +16,17 @@
 #include "base/memory/ref_counted.h"
 #include "base/strings/string_piece.h"
 #include "base/time/time.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing_forward.h"
 #include "net/base/net_export.h"
 #include "net/http/http_version.h"
 #include "net/log/net_log_capture_mode.h"
+=======
+#include "net/base/net_export.h"
+#include "net/http/http_version.h"
+#include "net/log/net_log_capture_mode.h"
+#include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 
 namespace base {
 class Pickle;

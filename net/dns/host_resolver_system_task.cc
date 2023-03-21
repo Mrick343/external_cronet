@@ -13,7 +13,11 @@
 #include "base/task/task_traits.h"
 #include "base/task/thread_pool.h"
 #include "base/threading/scoped_blocking_call.h"
+<<<<<<< HEAD   (a4cf74 Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (14c906 Import Cronet version 108.0.5359.128)
 #include "base/types/pass_key.h"
 #include "dns_reloader.h"
 #include "net/base/net_errors.h"
