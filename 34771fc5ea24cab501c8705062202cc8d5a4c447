@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12e0fc3e_34c7542d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-21T15:35:31Z",
+      "side": 1,
+      "message": "P.S. Discussed offline, these were present in v108, but we don\u0027t actually need them (Android bidi stream implementation doesn\u0027t go through components/grpc_support but calls directly into net/bidirectional_stream)",
+      "revId": "34771fc5ea24cab501c8705062202cc8d5a4c447",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
