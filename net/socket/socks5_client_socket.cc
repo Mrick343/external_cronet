@@ -12,7 +12,11 @@
 #include "base/format_macros.h"
 #include "base/strings/string_util.h"
 #include "base/sys_byteorder.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "net/base/io_buffer.h"
 #include "net/base/sys_addrinfo.h"
 #include "net/log/net_log.h"

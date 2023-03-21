@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <memory>
 #include <utility>
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/bind.h"
@@ -17,6 +18,18 @@
 #include "base/notreached.h"
 #include "base/numerics/checked_math.h"
 #include "net/base/io_buffer.h"
+=======
+
+#include "base/bind.h"
+#include "base/bit_cast.h"
+#include "base/check_op.h"
+#include "base/memory/ptr_util.h"
+#include "base/memory/ref_counted.h"
+#include "base/notreached.h"
+#include "base/numerics/checked_math.h"
+#include "net/base/io_buffer.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 namespace net {
 

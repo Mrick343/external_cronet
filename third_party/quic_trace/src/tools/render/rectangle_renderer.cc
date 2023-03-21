@@ -89,7 +89,11 @@ void RectangleRenderer::Render() {
   CHECK(point_count < std::numeric_limits<uint16_t>::max());
 
   // Transform points of each rectangle into a pair of triangles.
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
   auto indices = std::make_unique<uint16_t[]>(point_count);
+=======
+  auto indices = absl::make_unique<uint16_t[]>(point_count);
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
   for (int i = 0; i < rectangle_count; i++) {
     indices[6 * i + 0] = 4 * i + 0;
     indices[6 * i + 1] = 4 * i + 1;

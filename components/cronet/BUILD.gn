@@ -7,6 +7,10 @@ import("//build/toolchain/toolchain.gni")
 import("//build/util/lastchange.gni")
 import("//build/util/process_version.gni")
 import("//chrome/version.gni")
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
+=======
+import("//components/cronet/native/include/headers.gni")
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 import("//components/grpc_support/include/headers.gni")
 import("//testing/test.gni")
 

@@ -12,6 +12,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
@@ -275,6 +276,291 @@ public class ApiCompatibilityUtils {
      */
     public static Drawable getDrawable(Resources res, int id) throws NotFoundException {
         return getDrawableForDensity(res, id, 0);
+=======
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.hardware.display.DisplayManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.os.UserManager;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.view.Display;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodSubtype;
+import android.view.textclassifier.TextClassifier;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.widget.ImageViewCompat;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Utility class to use APIs not in all supported Android versions.
+ *
+ * Do not inline because we use many new APIs, and if they are inlined, they could cause dex
+ * validation errors on low Android versions.
+ */
+public class ApiCompatibilityUtils {
+    private ApiCompatibilityUtils() {
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private static class ApisQ {
+        static boolean isRunningInUserTestHarness() {
+            return ActivityManager.isRunningInUserTestHarness();
+        }
+
+        static List<Integer> getTargetableDisplayIds(@Nullable Activity activity) {
+            List<Integer> displayList = new ArrayList<>();
+            if (activity == null) return displayList;
+            DisplayManager displayManager =
+                    (DisplayManager) activity.getSystemService(Context.DISPLAY_SERVICE);
+            if (displayManager == null) return displayList;
+            Display[] displays = displayManager.getDisplays();
+            ActivityManager am =
+                    (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+            for (Display display : displays) {
+                if (display.getState() == Display.STATE_ON
+                        && am.isActivityStartAllowedOnDisplay(activity, display.getDisplayId(),
+                                new Intent(activity, activity.getClass()))) {
+                    displayList.add(display.getDisplayId());
+                }
+            }
+            return displayList;
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private static class ApisP {
+        static String getProcessName() {
+            return Application.getProcessName();
+        }
+
+        static Bitmap getBitmapByUri(ContentResolver cr, Uri uri) throws IOException {
+            return ImageDecoder.decodeBitmap(ImageDecoder.createSource(cr, uri));
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private static class ApisO {
+        static void initNotificationSettingsIntent(Intent intent, String packageName) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName);
+        }
+
+        static void disableSmartSelectionTextClassifier(TextView textView) {
+            textView.setTextClassifier(TextClassifier.NO_OP);
+        }
+
+        static Bundle createLaunchDisplayIdActivityOptions(int displayId) {
+            ActivityOptions options = ActivityOptions.makeBasic();
+            options.setLaunchDisplayId(displayId);
+            return options.toBundle();
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private static class ApisN {
+        static String toHtml(Spanned spanned, int option) {
+            return Html.toHtml(spanned, option);
+        }
+
+        // This class is sufficiently small that it's fine if it doesn't verify for N devices.
+        @RequiresApi(Build.VERSION_CODES.N_MR1)
+        static boolean isDemoUser() {
+            UserManager userManager =
+                    (UserManager) ContextUtils.getApplicationContext().getSystemService(
+                            Context.USER_SERVICE);
+            return userManager.isDemoUser();
+        }
+
+        static String getLocale(InputMethodSubtype inputMethodSubType) {
+            return inputMethodSubType.getLanguageTag();
+        }
+
+        static boolean isInMultiWindowMode(Activity activity) {
+            return activity.isInMultiWindowMode();
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private static class ApisM {
+        public static void setStatusBarIconColor(View rootView, boolean useDarkIcons) {
+            int systemUiVisibility = rootView.getSystemUiVisibility();
+            if (useDarkIcons) {
+                systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                systemUiVisibility &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+            rootView.setSystemUiVisibility(systemUiVisibility);
+        }
+    }
+
+    private static class ApisLmr1 {
+        static void setAccessibilityTraversalBefore(View view, int viewFocusedAfter) {
+            view.setAccessibilityTraversalBefore(viewFocusedAfter);
+        }
+    }
+
+    /**
+     * Compares two long values numerically. The value returned is identical to what would be
+     * returned by {@link Long#compare(long, long)} which is available since API level 19.
+     */
+    public static int compareLong(long lhs, long rhs) {
+        return lhs < rhs ? -1 : (lhs == rhs ? 0 : 1);
+    }
+
+    /**
+     * Compares two boolean values. The value returned is identical to what would be returned by
+     * {@link Boolean#compare(boolean, boolean)} which is available since API level 19.
+     */
+    public static int compareBoolean(boolean lhs, boolean rhs) {
+        return lhs == rhs ? 0 : lhs ? 1 : -1;
+    }
+
+    /**
+     * Checks that the object reference is not null and throws NullPointerException if it is.
+     * See {@link Objects#requireNonNull} which is available since API level 19.
+     * @param obj The object to check
+     */
+    @NonNull
+    public static <T> T requireNonNull(T obj) {
+        if (obj == null) throw new NullPointerException();
+        return obj;
+    }
+
+    /**
+     * Checks that the object reference is not null and throws NullPointerException if it is.
+     * See {@link Objects#requireNonNull} which is available since API level 19.
+     * @param obj The object to check
+     * @param message The message to put into NullPointerException
+     */
+    @NonNull
+    public static <T> T requireNonNull(T obj, String message) {
+        if (obj == null) throw new NullPointerException(message);
+        return obj;
+    }
+
+    /**
+     * {@link String#getBytes()} but specifying UTF-8 as the encoding and capturing the resulting
+     * UnsupportedEncodingException.
+     */
+    public static byte[] getBytesUtf8(String str) {
+        try {
+            return str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * @see android.text.Html#toHtml(Spanned, int)
+     * @param option is ignored on below N
+     */
+    @SuppressWarnings("deprecation")
+    public static String toHtml(Spanned spanned, int option) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return ApisN.toHtml(spanned, option);
+        }
+        return Html.toHtml(spanned);
+    }
+
+    /**
+     *  Gets an intent to start the Android system notification settings activity for an app.
+     *
+     */
+    public static Intent getNotificationSettingsIntent() {
+        Intent intent = new Intent();
+        String packageName = ContextUtils.getApplicationContext().getPackageName();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ApisO.initNotificationSettingsIntent(intent, packageName);
+        } else {
+            intent.setAction("android.settings.ACTION_APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", packageName);
+            intent.putExtra(
+                    "app_uid", ContextUtils.getApplicationContext().getApplicationInfo().uid);
+        }
+        return intent;
+    }
+
+    /**
+     * @see android.view.Window#setStatusBarColor(int color).
+     */
+    public static void setStatusBarColor(Window window, int statusBarColor) {
+        // If both system bars are black, we can remove these from our layout,
+        // removing or shrinking the SurfaceFlinger overlay required for our views.
+        // This benefits battery usage on L and M.  However, this no longer provides a battery
+        // benefit as of N and starts to cause flicker bugs on O, so don't bother on O and up.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O && statusBarColor == Color.BLACK
+                && window.getNavigationBarColor() == Color.BLACK) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
+        window.setStatusBarColor(statusBarColor);
+    }
+
+    /**
+     * Sets the status bar icons to dark or light. Note that this is only valid for
+     * Android M+.
+     *
+     * @param rootView The root view used to request updates to the system UI theming.
+     * @param useDarkIcons Whether the status bar icons should be dark.
+     */
+    public static void setStatusBarIconColor(View rootView, boolean useDarkIcons) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ApisM.setStatusBarIconColor(rootView, useDarkIcons);
+        }
+    }
+
+    /**
+     * @see android.content.res.Resources#getDrawable(int id).
+     * TODO(ltian): use {@link AppCompatResources} to parse drawable to prevent fail on
+     * {@link VectorDrawable}. (http://crbug.com/792129)
+     */
+    public static Drawable getDrawable(Resources res, int id) throws NotFoundException {
+        return getDrawableForDensity(res, id, 0);
+    }
+
+    public static void setImageTintList(ImageView view, @Nullable ColorStateList tintList) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            // Work around broken workaround in ImageViewCompat, see
+            // https://crbug.com/891609#c3.
+            if (tintList != null && view.getImageTintMode() == null) {
+                view.setImageTintMode(PorterDuff.Mode.SRC_IN);
+            }
+        }
+        ImageViewCompat.setImageTintList(view, tintList);
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            // Work around that the tint list is not cleared when setting tint list to null on L
+            // in some cases. See https://crbug.com/983686.
+            if (tintList == null) view.refreshDrawableState();
+        }
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     }
 
     /**

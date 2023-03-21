@@ -11,7 +11,11 @@
 #include "base/check_op.h"
 #include "base/compiler_specific.h"
 #include "base/notreached.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "net/base/net_errors.h"
 #include "net/base/trace_constants.h"
 #include "net/log/net_log_event_type.h"

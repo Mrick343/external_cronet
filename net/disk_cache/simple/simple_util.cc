@@ -5,6 +5,7 @@
 #include "net/disk_cache/simple/simple_util.h"
 
 #include <limits>
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/check_op.h"
@@ -17,6 +18,20 @@
 #include "base/threading/thread_restrictions.h"
 #include "base/time/time.h"
 #include "net/disk_cache/simple/simple_entry_format.h"
+=======
+
+#include "base/check_op.h"
+#include "base/files/file_util.h"
+#include "base/format_macros.h"
+#include "base/hash/sha1.h"
+#include "base/numerics/safe_conversions.h"
+#include "base/strings/string_number_conversions.h"
+#include "base/strings/stringprintf.h"
+#include "base/threading/thread_restrictions.h"
+#include "base/time/time.h"
+#include "net/disk_cache/simple/simple_entry_format.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 namespace {
 

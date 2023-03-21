@@ -4,7 +4,11 @@
 
 package org.chromium.net.urlconnection;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.UploadDataProvider;
+=======
+import org.chromium.net.UploadDataProvider;
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -8,6 +8,7 @@
 #include <cstring>
 #include <functional>
 #include <limits>
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/compiler_specific.h"
@@ -34,6 +35,34 @@
 #include "net/disk_cache/simple/simple_histogram_enums.h"
 #include "net/disk_cache/simple/simple_histogram_macros.h"
 #include "net/disk_cache/simple/simple_util.h"
+=======
+
+#include "base/compiler_specific.h"
+#include "base/containers/stack_container.h"
+#include "base/files/file_util.h"
+#include "base/hash/hash.h"
+#include "base/location.h"
+#include "base/memory/ptr_util.h"
+#include "base/memory/raw_ptr.h"
+#include "base/metrics/field_trial_params.h"
+#include "base/metrics/histogram_macros.h"
+#include "base/metrics/histogram_macros_local.h"
+#include "base/numerics/checked_math.h"
+#include "base/numerics/safe_conversions.h"
+#include "base/strings/string_piece.h"
+#include "base/threading/sequenced_task_runner_handle.h"
+#include "base/timer/elapsed_timer.h"
+#include "crypto/secure_hash.h"
+#include "net/base/hash_value.h"
+#include "net/base/io_buffer.h"
+#include "net/base/net_errors.h"
+#include "net/disk_cache/cache_util.h"
+#include "net/disk_cache/simple/simple_backend_version.h"
+#include "net/disk_cache/simple/simple_histogram_enums.h"
+#include "net/disk_cache/simple/simple_histogram_macros.h"
+#include "net/disk_cache/simple/simple_util.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
 using base::FilePath;
 using base::Time;

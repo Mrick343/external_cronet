@@ -11,7 +11,11 @@
 #include "base/memory/weak_ptr.h"
 #include "base/task/thread_pool.h"
 #include "base/threading/thread_restrictions.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "crypto/crypto_buildflags.h"
 #include "net/base/net_errors.h"
 #include "net/base/trace_constants.h"

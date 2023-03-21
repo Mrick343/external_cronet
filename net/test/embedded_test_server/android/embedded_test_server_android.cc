@@ -10,7 +10,11 @@
 #include "base/bind.h"
 #include "base/files/file_path.h"
 #include "base/test/test_support_android.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/trace_event.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "net/net_test_jni_headers/EmbeddedTestServerImpl_jni.h"
 
 using base::android::JavaParamRef;

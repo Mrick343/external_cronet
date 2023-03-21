@@ -55,6 +55,7 @@ cc_library(
         "@com_google_absl//absl/container:flat_hash_set",
         "@com_google_absl//absl/container:node_hash_map",
         "@com_google_absl//absl/flags:flag",
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
         "@com_google_absl//absl/log",
         "@com_google_absl//absl/log:check",
         "@com_google_absl//absl/memory",
@@ -101,6 +102,51 @@ cc_binary(
         "@com_google_absl//absl/log:flags",
         "@com_google_absl//absl/log:initialize",
         "@com_google_absl//absl/strings",
+=======
+        "@com_google_absl//absl/memory",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/types:optional",
+        "@com_google_glog//:glog",
+        "@sdl2",
+        "@sdl2_ttf",
+    ],
+)
+
+cc_library(
+    name = "render_program",
+    srcs = [
+        "processed_trace.cc",
+        "trace_program.cc",
+    ],
+    hdrs = [
+        "processed_trace.h",
+        "trace_program.h",
+    ],
+    deps = [
+        ":render_core",
+        "//quic_trace:quic_trace_cc_proto",
+        "//quic_trace/analysis:numbering",
+        "@com_google_absl//absl/algorithm:container",
+        "@com_google_absl//absl/container:flat_hash_map",
+        "@com_google_absl//absl/container:flat_hash_set",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+        "@com_google_glog//:glog",
+    ],
+)
+
+cc_binary(
+    name = "render_trace",
+    srcs = [
+        "render_trace.cc",
+    ],
+    deps = [
+        ":render_program",
+        "@com_google_absl//absl/flags:parse",
+        "@com_google_absl//absl/strings",
+        "@com_google_glog//:glog",
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     ],
 )
 

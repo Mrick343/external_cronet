@@ -9,7 +9,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.net.http.RequestFinishedInfo;
+=======
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 import android.os.ConditionVariable;
 
 import java.util.Date;

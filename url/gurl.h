@@ -15,7 +15,11 @@
 #include "base/debug/alias.h"
 #include "base/debug/crash_logging.h"
 #include "base/strings/string_piece.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing_forward.h"
+=======
+#include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "url/third_party/mozilla/url_parse.h"
 #include "url/url_canon.h"
 #include "url/url_canon_stdstring.h"

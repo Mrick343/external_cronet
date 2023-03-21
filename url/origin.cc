@@ -21,8 +21,13 @@
 #include "base/pickle.h"
 #include "base/strings/strcat.h"
 #include "base/strings/string_piece.h"
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include "base/trace_event/base_tracing.h"
 #include "base/unguessable_token.h"
+=======
+#include "base/unguessable_token.h"
+#include "third_party/perfetto/include/perfetto/tracing/traced_value.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "url/gurl.h"
 #include "url/scheme_host_port.h"
 #include "url/url_constants.h"

@@ -56,6 +56,7 @@ import javax.tools.Diagnostic;
  * containing an interface annotated with NativeMethods.
  *
  */
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 @SupportedOptions({JniProcessor.SKIP_GEN_JNI_ARG, JniProcessor.PACKAGE_PREFIX_ARG})
 @AutoService(Processor.class)
 public class JniProcessor extends AbstractProcessor {
@@ -228,6 +229,175 @@ public class JniProcessor extends AbstractProcessor {
         return ((packagePrefix.length() > 0) ?
                 String.format("%s.%s.%s.%s", packagePrefix, packageName, className, oldMethodName) :
                 String.format("%s.%s.%s", packageName, className, oldMethodName))
+=======
+@SupportedOptions({JniProcessor.SKIP_GEN_JNI_ARG})
+@AutoService(Processor.class)
+public class JniProcessor extends AbstractProcessor {
+    static final String SKIP_GEN_JNI_ARG = "org.chromium.chrome.skipGenJni";
+    private static final Class<NativeMethods> JNI_STATIC_NATIVES_CLASS = NativeMethods.class;
+    private static final Class<MainDex> MAIN_DEX_CLASS = MainDex.class;
+    private static final Class<CheckDiscard> CHECK_DISCARD_CLASS = CheckDiscard.class;
+
+    private static final String CHECK_DISCARD_CRBUG = "crbug.com/993421";
+    private static final String NATIVE_WRAPPER_CLASS_POSTFIX = "Jni";
+
+    private static final ClassName GEN_JNI_CLASS_NAME =
+            ClassName.get("org.chromium.base.natives", "GEN_JNI");
+    private static final ClassName JNI_STATUS_CLASS_NAME =
+            ClassName.get(NativeLibraryLoadedStatus.class);
+
+    static final String NATIVE_TEST_FIELD_NAME = "TESTING_ENABLED";
+    static final String NATIVE_REQUIRE_MOCK_FIELD_NAME = "REQUIRE_MOCK";
+
+    // Builder for NativeClass which will hold all our native method declarations.
+    private TypeSpec.Builder mNativesBuilder;
+
+    // Types that are non-primitives and should not be
+    // casted to objects in native method declarations.
+    static final ImmutableSet JNI_OBJECT_TYPE_EXCEPTIONS =
+            ImmutableSet.of("java.lang.String", "java.lang.Throwable", "java.lang.Class", "void");
+
+    static String getNameOfWrapperClass(String containingClassName) {
+        return containingClassName + NATIVE_WRAPPER_CLASS_POSTFIX;
+    }
+
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        return ImmutableSet.of(JNI_STATIC_NATIVES_CLASS.getCanonicalName());
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
+    public JniProcessor() {
+        FieldSpec.Builder testingFlagBuilder =
+                FieldSpec.builder(TypeName.BOOLEAN, NATIVE_TEST_FIELD_NAME)
+                        .addModifiers(Modifier.STATIC, Modifier.PUBLIC);
+        FieldSpec.Builder throwFlagBuilder =
+                FieldSpec.builder(TypeName.BOOLEAN, NATIVE_REQUIRE_MOCK_FIELD_NAME)
+                        .addModifiers(Modifier.STATIC, Modifier.PUBLIC);
+
+        // State of mNativesBuilder needs to be preserved between processing rounds.
+        mNativesBuilder = TypeSpec.classBuilder(GEN_JNI_CLASS_NAME)
+                                  .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                                  .addField(testingFlagBuilder.build())
+                                  .addField(throwFlagBuilder.build());
+    }
+
+    /**
+     * Processes annotations that match getSupportedAnnotationTypes()
+     * Called each 'round' of annotation processing, must fail gracefully if set is empty.
+     */
+    @Override
+    public boolean process(
+            Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
+        // Do nothing on an empty round.
+        if (annotations.isEmpty()) {
+            return true;
+        }
+
+        List<JavaFile> writeQueue = Lists.newArrayList();
+        for (Element e : roundEnvironment.getElementsAnnotatedWith(JNI_STATIC_NATIVES_CLASS)) {
+            // @NativeMethods can only annotate types so this is safe.
+            TypeElement type = (TypeElement) e;
+
+            if (!e.getKind().isInterface()) {
+                printError("@NativeMethods must annotate an interface", e);
+            }
+
+            // Interface must be nested within a class.
+            Element outerElement = e.getEnclosingElement();
+            if (!(outerElement instanceof TypeElement)) {
+                printError(
+                        "Interface annotated with @JNIInterface must be nested within a class", e);
+            }
+
+            TypeElement outerType = (TypeElement) outerElement;
+            ClassName outerTypeName = ClassName.get(outerType);
+            String outerClassName = outerTypeName.simpleName();
+            String packageName = outerTypeName.packageName();
+
+            // Get all methods in annotated interface.
+            List<ExecutableElement> interfaceMethods = getMethodsFromType(type);
+
+            // Map from the current method names to the method spec for a static native
+            // method that will be in our big NativeClass.
+            // Collisions are not allowed - no overloading.
+            Map<String, MethodSpec> methodMap =
+                    createNativeMethodSpecs(interfaceMethods, outerTypeName);
+
+            // Add these to our NativeClass.
+            for (MethodSpec method : methodMap.values()) {
+                mNativesBuilder.addMethod(method);
+            }
+
+            // Generate a NativeWrapperClass for outerType by implementing the
+            // annotated interface. Need to pass it the method map because each
+            // method overridden will be a wrapper that calls its
+            // native counterpart in NativeClass.
+            boolean isNativesInterfacePublic = type.getModifiers().contains(Modifier.PUBLIC);
+            // If the outerType needs to be in the main dex, then the generated NativeWrapperClass
+            // should also be added to the main dex.
+            boolean addMainDexAnnotation = outerElement.getAnnotation(MAIN_DEX_CLASS) != null;
+
+            TypeSpec nativeWrapperClassSpec =
+                    createNativeWrapperClassSpec(getNameOfWrapperClass(outerClassName),
+                            isNativesInterfacePublic, addMainDexAnnotation, type, methodMap);
+
+            // Queue this file for writing.
+            // Can't write right now because the wrapper class depends on NativeClass
+            // to be written and we can't write NativeClass until all @NativeMethods
+            // interfaces are processed because each will add new native methods.
+            JavaFile file = JavaFile.builder(packageName, nativeWrapperClassSpec).build();
+            writeQueue.add(file);
+        }
+
+        // Nothing needs to be written this round.
+        if (writeQueue.size() == 0) {
+            return true;
+        }
+
+        try {
+            // Need to write NativeClass first because the wrapper classes
+            // depend on it. This step is skipped for APK targets since the final GEN_JNI class is
+            // provided elsewhere.
+            if (!processingEnv.getOptions().containsKey(SKIP_GEN_JNI_ARG)) {
+                JavaFile nativeClassFile =
+                        JavaFile.builder(GEN_JNI_CLASS_NAME.packageName(), mNativesBuilder.build())
+                                .build();
+
+                nativeClassFile.writeTo(processingEnv.getFiler());
+            }
+
+            for (JavaFile f : writeQueue) {
+                f.writeTo(processingEnv.getFiler());
+            }
+        } catch (Exception e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+        }
+        return true;
+    }
+
+    List<ExecutableElement> getMethodsFromType(TypeElement t) {
+        List<ExecutableElement> methods = Lists.newArrayList();
+        for (Element e : t.getEnclosedElements()) {
+            if (e.getKind() == ElementKind.METHOD) {
+                methods.add((ExecutableElement) e);
+            }
+        }
+        return methods;
+    }
+
+    /**
+     * Gets method name for methods inside of NativeClass
+     */
+    String getNativeMethodName(String packageName, String className, String oldMethodName) {
+        // e.g. org.chromium.base.Foo_Class.bar
+        // => org_chromium_base_Foo_1Class_bar()
+        return String.format("%s.%s.%s", packageName, className, oldMethodName)
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
                 .replaceAll("_", "_1")
                 .replaceAll("\\.", "_");
     }

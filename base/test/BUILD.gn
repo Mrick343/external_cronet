@@ -393,7 +393,10 @@ if (is_android) {
     deps = [
       "//base:base_java",
       "//base:jni_java",
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
       "//base:process_launcher_java",
+=======
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
       "//testing/android/native_test:native_main_runner_java",
       "//third_party/android_deps:com_google_code_findbugs_jsr305_java",
     ]

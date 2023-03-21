@@ -6,6 +6,7 @@ package org.chromium.net.smoke;
 
 import static org.chromium.net.smoke.CronetSmokeTestRule.assertJavaEngine;
 
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
@@ -53,6 +54,57 @@ public class MissingNativeLibraryTest {
     public void testForceChoiceOfJavaEngine() throws Exception {
         List<CronetProvider> availableProviders =
                 CronetProvider.getAllProviders(ApplicationProvider.getApplicationContext());
+=======
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.filters.SmallTest;
+
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+
+import org.chromium.net.CronetEngine;
+import org.chromium.net.CronetProvider;
+import org.chromium.net.ExperimentalCronetEngine;
+
+import java.util.List;
+
+/**
+ *  Tests scenarios when the native shared library file is missing in the APK or was built for a
+ *  wrong architecture.
+ */
+@RunWith(AndroidJUnit4.class)
+public class MissingNativeLibraryTest {
+    @Rule
+    public CronetSmokeTestRule mRule = new CronetSmokeTestRule();
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    /**
+     * If the ".so" file is missing, instantiating the Cronet engine should throw an exception.
+     */
+    @Test
+    @SmallTest
+    public void testExceptionWhenSoFileIsAbsent() throws Exception {
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(InstrumentationRegistry.getTargetContext());
+        thrown.expect(UnsatisfiedLinkError.class);
+        builder.build();
+    }
+
+    /**
+     * Tests the embedder ability to select Java (platform) based implementation when
+     * the native library is missing or doesn't load for some reason,
+     */
+    @Test
+    @SmallTest
+    public void testForceChoiceOfJavaEngine() throws Exception {
+        List<CronetProvider> availableProviders =
+                CronetProvider.getAllProviders(InstrumentationRegistry.getTargetContext());
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
         boolean foundNativeProvider = false;
         CronetProvider platformProvider = null;
         for (CronetProvider provider : availableProviders) {

@@ -12,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 
@@ -57,6 +58,55 @@ public class BundleUtils {
     // This cache is needed to support the workaround for b/172602571, see
     // createIsolatedSplitContext() for more info.
     private static final ArrayMap<String, ClassLoader> sCachedClassLoaders = new ArrayMap<>();
+=======
+import android.view.LayoutInflater;
+
+import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
+import androidx.collection.SimpleArrayMap;
+
+import dalvik.system.BaseDexClassLoader;
+import dalvik.system.PathClassLoader;
+
+import org.chromium.base.annotations.CalledByNative;
+import org.chromium.base.compat.ApiHelperForO;
+import org.chromium.base.metrics.RecordHistogram;
+import org.chromium.build.BuildConfig;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * Utils for working with android app bundles.
+ *
+ * Important notes about bundle status as interpreted by this class:
+ *
+ * <ul>
+ *   <li>If {@link BuildConfig#BUNDLES_SUPPORTED} is false, then we are definitely not in a bundle,
+ *   and ProGuard is able to strip out the bundle support library.</li>
+ *   <li>If {@link BuildConfig#BUNDLES_SUPPORTED} is true, then we MIGHT be in a bundle.
+ *   {@link BundleUtils#sIsBundle} is the source of truth.</li>
+ * </ul>
+ *
+ * We need two fields to store one bit of information here to ensure that ProGuard can optimize out
+ * the bundle support library (since {@link BuildConfig#BUNDLES_SUPPORTED} is final) and so that
+ * we can dynamically set whether or not we're in a bundle for targets that use static shared
+ * library APKs.
+ */
+public class BundleUtils {
+    private static final String TAG = "BundleUtils";
+    private static final String LOADED_SPLITS_KEY = "split_compat_loaded_splits";
+    private static Boolean sIsBundle;
+    private static final Object sSplitLock = new Object();
+
+    // This cache is needed to support the workaround for b/172602571, see
+    // createIsolatedSplitContext() for more info.
+    private static final SimpleArrayMap<String, ClassLoader> sCachedClassLoaders =
+            new SimpleArrayMap<>();
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 
     private static final Map<String, ClassLoader> sInflationClassLoaders =
             Collections.synchronizedMap(new ArrayMap<>());

@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
 #include <zlib.h>
 
 #include "base/android/base_jni_onload.h"
@@ -31,6 +32,33 @@
 #include "net/base/network_change_notifier.h"
 #include "net/proxy_resolution/configured_proxy_resolution_service.h"
 #include "net/proxy_resolution/proxy_config_service_android.h"
+=======
+
+#include "base/android/base_jni_onload.h"
+#include "base/android/build_info.h"
+#include "base/android/jni_android.h"
+#include "base/android/jni_registrar.h"
+#include "base/android/jni_string.h"
+#include "base/android/jni_utils.h"
+#include "base/android/library_loader/library_loader_hooks.h"
+#include "base/check_op.h"
+#include "base/feature_list.h"
+#include "base/message_loop/message_pump_type.h"
+#include "base/synchronization/waitable_event.h"
+#include "base/task/current_thread.h"
+#include "base/task/single_thread_task_executor.h"
+#include "base/task/thread_pool/thread_pool_instance.h"
+#include "build/build_config.h"
+#include "components/cronet/android/buildflags.h"
+#include "components/cronet/android/cronet_jni_headers/CronetLibraryLoader_jni.h"
+#include "components/cronet/cronet_global_state.h"
+#include "components/cronet/version.h"
+#include "net/android/network_change_notifier_factory_android.h"
+#include "net/base/network_change_notifier.h"
+#include "net/proxy_resolution/configured_proxy_resolution_service.h"
+#include "net/proxy_resolution/proxy_config_service_android.h"
+#include "third_party/zlib/zlib.h"
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
 #include "url/buildflags.h"
 
 #if !BUILDFLAG(USE_PLATFORM_ICU_ALTERNATIVES)

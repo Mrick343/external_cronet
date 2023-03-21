@@ -35,6 +35,7 @@ public class CronetLibraryLoader {
     // the global singleton NetworkChangeNotifier live on it and are never killed.
     private static final HandlerThread sInitThread = new HandlerThread("CronetInit");
     // Has library loading commenced?  Setting guarded by sLoadLock.
+<<<<<<< HEAD   (12482f Merge remote-tracking branch 'aosp/master' into upstream-sta)
     private static volatile boolean sLibraryLoaded = false;
     // Has ensureInitThreadInitialized() completed?
     private static volatile boolean sInitThreadInitDone;
@@ -130,6 +131,118 @@ public class CronetLibraryLoader {
     @CalledByNative
     private static String getDefaultUserAgent() {
         return UserAgent.getDefault();
+=======
+    private static volatile boolean sLibraryLoaded = IntegratedModeState.INTEGRATED_MODE_ENABLED;
+    // Has ensureInitThreadInitialized() completed?
+    private static volatile boolean sInitThreadInitDone;
+    // Block calling native methods until this ConditionVariable opens to indicate loadLibrary()
+    // is completed and native methods have been registered.
+    private static final ConditionVariable sWaitForLibLoad = new ConditionVariable();
+
+    /**
+     * Ensure that native library is loaded and initialized. Can be called from
+     * any thread, the load and initialization is performed on init thread.
+     */
+    public static void ensureInitialized(
+            Context applicationContext, final CronetEngineBuilderImpl builder) {
+        synchronized (sLoadLock) {
+            if (!sInitThreadInitDone) {
+                if (!IntegratedModeState.INTEGRATED_MODE_ENABLED) {
+                    // In integrated mode, application context should be initialized by the host.
+                    ContextUtils.initApplicationContext(applicationContext);
+                }
+                if (!sInitThread.isAlive()) {
+                    sInitThread.start();
+                }
+                postToInitThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ensureInitializedOnInitThread();
+                    }
+                });
+            }
+            if (!sLibraryLoaded) {
+                if (builder.libraryLoader() != null) {
+                    builder.libraryLoader().loadLibrary(LIBRARY_NAME);
+                } else {
+                    System.loadLibrary(LIBRARY_NAME);
+                }
+                String implVersion = ImplVersion.getCronetVersion();
+                if (!implVersion.equals(CronetLibraryLoaderJni.get().getCronetVersion())) {
+                    throw new RuntimeException(String.format("Expected Cronet version number %s, "
+                                    + "actual version number %s.",
+                            implVersion, CronetLibraryLoaderJni.get().getCronetVersion()));
+                }
+                Log.i(TAG, "Cronet version: %s, arch: %s", implVersion,
+                        System.getProperty("os.arch"));
+                sLibraryLoaded = true;
+                sWaitForLibLoad.open();
+            }
+        }
+    }
+
+    /**
+     * Returns {@code true} if running on the initialization thread.
+     */
+    private static boolean onInitThread() {
+        return sInitThread.getLooper() == Looper.myLooper();
+    }
+
+    /**
+     * Ensure that the init thread initialization has completed. Can only be called from
+     * the init thread. Ensures that the NetworkChangeNotifier is initialzied and the
+     * init thread native MessageLoop is initialized.
+     */
+    static void ensureInitializedOnInitThread() {
+        assert onInitThread();
+        if (sInitThreadInitDone) {
+            return;
+        }
+        if (IntegratedModeState.INTEGRATED_MODE_ENABLED) {
+            assert NetworkChangeNotifier.isInitialized();
+        } else {
+            NetworkChangeNotifier.init();
+            // Registers to always receive network notifications. Note
+            // that this call is fine for Cronet because Cronet
+            // embedders do not have API access to create network change
+            // observers. Existing observers in the net stack do not
+            // perform expensive work.
+            NetworkChangeNotifier.registerToReceiveNotificationsAlways();
+            // Wait for loadLibrary() to complete so JNI is registered.
+            sWaitForLibLoad.block();
+        }
+        assert sLibraryLoaded;
+        // registerToReceiveNotificationsAlways() is called before the native
+        // NetworkChangeNotifierAndroid is created, so as to avoid receiving
+        // the undesired initial network change observer notification, which
+        // will cause active requests to fail with ERR_NETWORK_CHANGED.
+        CronetLibraryLoaderJni.get().cronetInitOnInitThread();
+        sInitThreadInitDone = true;
+    }
+
+    /**
+     * Run {@code r} on the initialization thread.
+     */
+    public static void postToInitThread(Runnable r) {
+        if (onInitThread()) {
+            r.run();
+        } else {
+            new Handler(sInitThread.getLooper()).post(r);
+        }
+    }
+
+    /**
+     * Called from native library to get default user agent constructed
+     * using application context. May be called on any thread.
+     *
+     * Expects that ContextUtils.initApplicationContext() was called already
+     * either by some testing framework or an embedder constructing a Java
+     * CronetEngine via CronetEngine.Builder.build().
+     */
+    @CalledByNative
+    private static String getDefaultUserAgent() {
+        return UserAgent.from(ContextUtils.getApplicationContext());
+>>>>>>> BRANCH (26b171 Part 2 of Import Cronet version 108.0.5359.128)
     }
 
     /**
