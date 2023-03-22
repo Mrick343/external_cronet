@@ -1,0 +1,17 @@
+<<<<<<< HEAD   (7f0b85 Merge branch 'upstream-import' into upstream-staging)
+=======
+# Generated from 'DEPS'
+build_with_chromium = true
+checkout_android = true
+checkout_android_prebuilts_build_tools = false
+checkout_android_native_support = true
+checkout_google_benchmark = false
+checkout_ios_webkit = false
+checkout_nacl = true
+checkout_openxr = false
+checkout_rts_model = false
+checkout_src_internal = false
+cros_boards = ""
+cros_boards_with_qemu_images = ""
+generate_location_tags = true
+>>>>>>> BRANCH (c17572 Import Cronet version 110.0.5481.154)

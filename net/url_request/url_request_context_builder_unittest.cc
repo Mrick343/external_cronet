@@ -6,6 +6,7 @@
 
 #include "base/callback_helpers.h"
 #include "base/run_loop.h"
+#include "base/task/single_thread_task_runner.h"
 #include "base/task/thread_pool.h"
 #include "build/build_config.h"
 #include "net/base/mock_network_change_notifier.h"
@@ -46,12 +47,16 @@
 
 #if BUILDFLAG(ENABLE_REPORTING)
 #include "base/files/scoped_temp_dir.h"
+<<<<<<< HEAD   (7f0b85 Merge branch 'upstream-import' into upstream-staging)
 #include "base/threading/thread_task_runner_handle.h"
 #if !BUILDFLAG(CRONET_BUILD)
 // gn check does not account for BUILDFLAG(), specify nogncheck to stop it from
 // yelling.
 #include "net/extras/sqlite/sqlite_persistent_reporting_and_nel_store.h"  // nogncheck
 #endif
+=======
+#include "net/extras/sqlite/sqlite_persistent_reporting_and_nel_store.h"
+>>>>>>> BRANCH (c17572 Import Cronet version 110.0.5481.154)
 #include "net/reporting/reporting_context.h"
 #include "net/reporting/reporting_policy.h"
 #include "net/reporting/reporting_service.h"
@@ -205,7 +210,7 @@ TEST_F(URLRequestContextBuilderTest, ShutDownNELAndReportingWithPendingUpload) {
       std::make_unique<SQLitePersistentReportingAndNelStore>(
           scoped_temp_dir.GetPath().Append(
               FILE_PATH_LITERAL("ReportingAndNelStore")),
-          base::ThreadTaskRunnerHandle::Get(),
+          base::SingleThreadTaskRunner::GetCurrentDefault(),
           base::ThreadPool::CreateSequencedTaskRunner(
               {base::MayBlock(),
                net::GetReportingAndNelStoreBackgroundSequencePriority(),
