@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2705ea85_45d7f870",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-22T09:06:11Z",
+      "side": 1,
+      "message": "I can\u0027t use test_current because the MTS test classes would be unable to access the hidden classes they are meant to test.\n\nI\u0027d prefer to keep the `module_current` unless you have a strong objection.",
+      "parentUuid": "4968a8a6_67f05a24",
+      "range": {
+        "startLine": 177,
+        "startChar": 18,
+        "endLine": 177,
+        "endChar": 32
+      },
+      "revId": "66fb258a37e820e6b1763f10a0eac50510e2606f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "57867a97_0130d749",
         "filename": "Android.extras.bp",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2023-03-21T16:56:43Z",
       "side": 1,
       "message": "That\u0027s a bit surprising, what is needed from here?",
+      "range": {
+        "startLine": 190,
+        "startChar": 9,
+        "endLine": 190,
+        "endChar": 48
+      },
+      "revId": "66fb258a37e820e6b1763f10a0eac50510e2606f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "694599c7_e6146971",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-22T09:06:11Z",
+      "side": 1,
+      "message": "Nothing yet. Dependency from the future 😅",
+      "parentUuid": "57867a97_0130d749",
       "range": {
         "startLine": 190,
         "startChar": 9,
