@@ -16,6 +16,24 @@
       "message": "This unfortunately also needs changes in packages/modules/Connectivity. See https://android-review.git.corp.google.com/c/platform/packages/modules/Connectivity/+/2493756",
       "revId": "799bbeb0097a44593fd31e172bbfe3096c9b29d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3b921ed_2f479b17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-22T11:55:33Z",
+      "side": 1,
+      "message": "😞",
+      "parentUuid": "b2ef0329_7fe0346d",
+      "revId": "799bbeb0097a44593fd31e172bbfe3096c9b29d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
