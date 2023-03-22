@@ -8,14 +8,12 @@ import java.time.Instant;
 import java.util.concurrent.Executor;
 
 /**
- * Listener that is notified of throughput observations from the network quality
- * estimator.
- * {@hide} as it's a prototype.
+ * Listener that is notified of throughput observations from the network quality estimator.
  */
 public abstract class NetworkQualityThroughputListener {
     /**
-     * The executor on which this listener will be notified. Set as a final
-     * field, so it can be safely accessed across threads.
+     * The executor on which this listener will be notified. Set as a final field, so it can be
+     * safely accessed across threads.
      */
     private final Executor mExecutor;
 
@@ -35,6 +33,7 @@ public abstract class NetworkQualityThroughputListener {
 
     /**
      * Reports a new throughput observation.
+     *
      * @param throughputKbps the downstream throughput in kilobits per second.
      * @param observationInstant when the observation was recorded
      * @param source the observation source from {@link NetworkQualityObservationSource}.
