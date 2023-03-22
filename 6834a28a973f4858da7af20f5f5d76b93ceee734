@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a4fa06e_0b61e21e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-22T13:24:24Z",
+      "side": 1,
+      "message": "Thanks for breaking this CL up a bit! This change is now very easy to understand with a descriptive commit message. LGTM!",
+      "revId": "6834a28a973f4858da7af20f5f5d76b93ceee734",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37eb10b6_aab9dc68",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-22T13:24:24Z",
+      "side": 1,
+      "message": "Should this be:\n```\nAssert.assertEquals(expected.getHeaders().getAsMap(), actual.getHeaders().getAsMap());\n```",
+      "range": {
+        "startLine": 281,
+        "startChar": 8,
+        "endLine": 281,
+        "endChar": 75
+      },
+      "revId": "6834a28a973f4858da7af20f5f5d76b93ceee734",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
