@@ -371,7 +371,14 @@ class TracedArray {
 };
 template <class T>
 void WriteIntoTracedValue(TracedValue, T&&) {}
+<<<<<<< HEAD   (7f0b85 Merge branch 'upstream-import' into upstream-staging)
 namespace protos::pbzero::SequenceManagerTask {
+=======
+
+namespace protos::pbzero {
+namespace SequenceManagerTask {
+
+>>>>>>> BRANCH (3e3c7e Import Cronet version 110.0.5481.154)
 enum class QueueName {
   UNKNOWN_TQ = 0,
   DEFAULT_TQ = 1,
@@ -393,6 +400,7 @@ inline const char* QueueName_Name(QueueName value) {
       return "TEST_TQ";
   }
 }
+<<<<<<< HEAD   (7f0b85 Merge branch 'upstream-import' into upstream-staging)
 }  // namespace protos::pbzero::SequenceManagerTask
 template <typename MessageType>
 class TracedProto {
@@ -482,5 +490,17 @@ class TracedProto {
   MessageType* const message_;
   EventContext* context_;
 };
+=======
+
+}  // namespace SequenceManagerTask
+
+namespace ChromeProcessDescriptor {
+
+enum ProcessType {};
+
+}  // namespace ChromeProcessDescriptor
+
+}  // namespace protos::pbzero
+>>>>>>> BRANCH (3e3c7e Import Cronet version 110.0.5481.154)
 }  // namespace perfetto
 #endif  // BASE_TRACE_EVENT_TRACE_EVENT_STUB_H_
