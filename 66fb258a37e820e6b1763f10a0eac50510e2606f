@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "654190dd_786490d5",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-22T15:04:30Z",
+      "side": 1,
+      "message": "Got it finally...\nCan you add a comment along the lines of:\n```\n// module_current disables hiddenapi enforcement while test_current does not.\n```",
+      "parentUuid": "8ff08a3a_3c97c190",
+      "range": {
+        "startLine": 177,
+        "startChar": 18,
+        "endLine": 177,
+        "endChar": 32
+      },
+      "revId": "66fb258a37e820e6b1763f10a0eac50510e2606f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "57867a97_0130d749",
         "filename": "Android.extras.bp",
         "patchSetId": 1
