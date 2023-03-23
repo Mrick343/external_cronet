@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9063a24_debc371f",
+        "filename": "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-23T16:52:18Z",
+      "side": 1,
+      "message": "The comment formatting looks a bit broken in this file.",
+      "range": {
+        "startLine": 97,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 79
+      },
+      "revId": "5c13ecd6db0c86969fe65bb06d4036cedaec890c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

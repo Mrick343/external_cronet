@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bea5098_fbff3a48",
+        "filename": "components/cronet/android/api/src/android/net/http/NetworkQualityThroughputListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-23T16:52:18Z",
+      "side": -1,
+      "message": "Should this stay @hide for now?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 31
+      },
+      "revId": "7f0b852adc160806145e8828c2dbc4bfc38fe86a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8479bf01_01fbd99e",
+        "filename": "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-23T16:52:18Z",
+      "side": -1,
+      "message": "same here",
+      "range": {
+        "startLine": 21,
+        "startChar": 2,
+        "endLine": 22,
+        "endChar": 31
+      },
+      "revId": "7f0b852adc160806145e8828c2dbc4bfc38fe86a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16be7eef_d8c87bc4",
+        "filename": "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-23T16:52:18Z",
+      "side": -1,
+      "message": "and here",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 35
+      },
+      "revId": "7f0b852adc160806145e8828c2dbc4bfc38fe86a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
