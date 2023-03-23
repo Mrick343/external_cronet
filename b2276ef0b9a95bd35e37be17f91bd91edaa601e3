@@ -22,6 +22,30 @@
       },
       "revId": "b2276ef0b9a95bd35e37be17f91bd91edaa601e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14bc0229_60ea3263",
+        "filename": "components/cronet/android/java/src/org/chromium/net/urlconnection/CronetBufferedOutputStream.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-23T13:11:53Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s a PITA. I fixed it before and my IDE reset it. Will do.",
+      "parentUuid": "227dbaf5_95e01297",
+      "range": {
+        "startLine": 50,
+        "startChar": 14,
+        "endLine": 50,
+        "endChar": 25
+      },
+      "revId": "b2276ef0b9a95bd35e37be17f91bd91edaa601e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
