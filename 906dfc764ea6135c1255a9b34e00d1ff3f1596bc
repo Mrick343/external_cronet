@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5065af0_a1d3a4a2",
+        "filename": "Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1617,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-23T17:31:33Z",
+      "side": 1,
+      "message": "Is this equivalent to saying: include `base/allocator/partition_allocator/shim/allocator_shim.cc` everywhere except musl?",
+      "range": {
+        "startLine": 1569,
+        "startChar": 8,
+        "endLine": 1617,
+        "endChar": 10
+      },
+      "revId": "906dfc764ea6135c1255a9b34e00d1ff3f1596bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
