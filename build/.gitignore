@@ -1,3 +1,4 @@
+<<<<<<< HEAD   (7f0b85 Merge branch 'upstream-import' into upstream-staging)
 # This file is needed for projects that has this directory as a separate Git
 # mirror in DEPS. Without it, a lot is wiped and re-downloaded for each sync.
 *.pyc
@@ -26,3 +27,5 @@ ciopfs
 /mac_files
 
 !/util/LASTCHANGE.dummy
+=======
+>>>>>>> BRANCH (c17572 Import Cronet version 110.0.5481.154)
