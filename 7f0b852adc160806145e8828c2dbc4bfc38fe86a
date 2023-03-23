@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fe4f3e7_79191670",
+        "filename": "components/cronet/android/api/src/android/net/http/NetworkQualityThroughputListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-23T17:07:41Z",
+      "side": -1,
+      "message": "Done",
+      "parentUuid": "4bea5098_fbff3a48",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 31
+      },
+      "revId": "7f0b852adc160806145e8828c2dbc4bfc38fe86a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8479bf01_01fbd99e",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d4095b8_2acf8a3c",
+        "filename": "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-23T17:07:41Z",
+      "side": -1,
+      "message": "Done",
+      "parentUuid": "8479bf01_01fbd99e",
+      "range": {
+        "startLine": 21,
+        "startChar": 2,
+        "endLine": 22,
+        "endChar": 31
+      },
+      "revId": "7f0b852adc160806145e8828c2dbc4bfc38fe86a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16be7eef_d8c87bc4",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-03-23T16:52:18Z",
       "side": -1,
       "message": "and here",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 35
+      },
+      "revId": "7f0b852adc160806145e8828c2dbc4bfc38fe86a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1bed542_92715245",
+        "filename": "components/cronet/android/api/src/android/net/http/RequestFinishedInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-23T17:07:41Z",
+      "side": -1,
+      "message": "Done",
+      "parentUuid": "16be7eef_d8c87bc4",
       "range": {
         "startLine": 27,
         "startChar": 6,
