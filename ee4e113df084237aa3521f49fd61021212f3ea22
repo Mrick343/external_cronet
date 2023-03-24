@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5fbbad3c_cdc10345",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-24T10:45:52Z",
+      "side": 1,
+      "message": "What do you mean by being supported?\n\nTypically, people don\u0027t need to switch between the system\u0027s factory vs cronet for their apps. We only need to do this to test cronet\u0027s impl vs the system\u0027s.\n\nThis was not needed in chromium because in chromium, the test_runner runs each test on separate JVM which allowed us to run the urlconnectiontests without resetting the urlstreamfactory. This is not the case for here where the tests are run on the same JVM instance, and Factory cannot be set more than once.\n\nhttps://luci-logdog.appspot.com/logs/chromium/android/swarming/logcats/612bf86400c63711/+/logcat_logcat_org.chromium.net.urlconnection.CronetBufferedOutputStreamTest.testWriteAfterConnect_shard0_20230324T103723-UTC_emulator-5554 where ART init is called after each test.",
+      "parentUuid": "dda20f6e_e577d8ff",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c474c45b_f2ed2668",
         "filename": "patches/upstream-next/0017-Setup-urlconnection-for-Cronet-MTS.patch",
         "patchSetId": 4
