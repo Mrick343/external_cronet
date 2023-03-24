@@ -207,7 +207,8 @@ java_library {
     ],
     libs: [
         "android.test.base",
-        "framework-connectivity.stubs.module_lib",
+        // Needed for android.net.Network
+        "framework-connectivity",
     ],
     visibility: [
         "//packages/modules/Connectivity:__subpackages__",
