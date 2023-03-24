@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dda20f6e_e577d8ff",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-24T10:25:24Z",
+      "side": 1,
+      "message": "Is there any documentation about this being supported?\n\nI think that a safer long term solution would be to wrap the factory returned by `cronetEngine.createUrlStreamHandlerFactory` into something that can toggle between  the default system\u0027s factory and cronet\u0027s factory (and that can possibly reset the internal cronet\u0027s factory, if we want to drop state).\n\nP.S. Why is this needed here but not upstream?",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
