@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "45a2f7c7_f71de194",
+        "filename": "Android.extras.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-24T10:39:45Z",
+      "side": 1,
+      "message": "Can you leave a comment on why this is needed?\nAlso, I am curious if just referencing \"framework-connectivity\" would do the right thing?",
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dda20f6e_e577d8ff",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
         "patchSetId": 4
@@ -19,6 +36,29 @@
         "startChar": 12,
         "endLine": 334,
         "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c474c45b_f2ed2668",
+        "filename": "patches/upstream-next/0017-Setup-urlconnection-for-Cronet-MTS.patch",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-24T10:39:45Z",
+      "side": 1,
+      "message": "I am in the process of deleting all .patch files that do not touch any BUILD.gn (and therefore don\u0027t affect the the output of `gn desc`), so I think we don\u0027t actually need this anymore.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 50
       },
       "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
