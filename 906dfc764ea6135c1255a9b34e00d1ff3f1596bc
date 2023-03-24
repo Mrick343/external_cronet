@@ -22,6 +22,30 @@
       },
       "revId": "906dfc764ea6135c1255a9b34e00d1ff3f1596bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae3054ee_acfd28a7",
+        "filename": "Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1617,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-24T11:44:00Z",
+      "side": 1,
+      "message": "Yeah. For android, it will be included in every architecture, for host. It will be only included if the host machine is building using glibc.\n\nBasically, all but musl",
+      "parentUuid": "c5065af0_a1d3a4a2",
+      "range": {
+        "startLine": 1569,
+        "startChar": 8,
+        "endLine": 1617,
+        "endChar": 10
+      },
+      "revId": "906dfc764ea6135c1255a9b34e00d1ff3f1596bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
