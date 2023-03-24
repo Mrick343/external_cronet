@@ -207,7 +207,7 @@ java_library {
     ],
     libs: [
         "android.test.base",
-        // android.net.Network dependency
+        // Needed for android.net.Network
         "framework-connectivity",
     ],
     visibility: [

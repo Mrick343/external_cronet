@@ -26,7 +26,7 @@ import java.net.URLStreamHandler;
  */
 @VisibleForTesting
 public class CronetHttpURLStreamHandler extends URLStreamHandler {
-    private final ExperimentalHttpEngine mCronetEngine;
+    private ExperimentalHttpEngine mCronetEngine;
 
     public CronetHttpURLStreamHandler(ExperimentalHttpEngine cronetEngine) {
         mCronetEngine = cronetEngine;
@@ -49,5 +49,10 @@ public class CronetHttpURLStreamHandler extends URLStreamHandler {
     @Override
     public URLConnection openConnection(URL url, Proxy proxy) throws IOException {
         return mCronetEngine.openConnection(url, proxy);
+    }
+
+    @VisibleForTesting
+    public void swapCronetEngineForTesting(ExperimentalHttpEngine cronetEngine) {
+        mCronetEngine = cronetEngine;
     }
 }

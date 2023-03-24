@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 
 import android.net.http.HttpEngine;
 import org.chromium.net.CronetTestRule;
-import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import org.chromium.net.CronetTestUtil;
 import android.net.http.ExperimentalHttpEngine;
 import org.chromium.net.QuicTestServer;
@@ -65,7 +64,6 @@ public class QuicUploadTest {
 
     @Test
     @SmallTest
-    @OnlyRunNativeCronet
     // Regression testing for crbug.com/618872.
     public void testOneMassiveWrite() throws Exception {
         String path = "/simple.txt";

@@ -4,7 +4,10 @@
 
 package org.chromium.net.urlconnection;
 
+import android.net.http.ConnectionMigrationOptions;
 import android.net.http.ExperimentalHttpEngine;
+
+import androidx.annotation.VisibleForTesting;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -40,12 +43,13 @@ import java.net.URLStreamHandlerFactory;
  * {@hide}
  */
 public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
-    private final ExperimentalHttpEngine mCronetEngine;
+    private ExperimentalHttpEngine mCronetEngine;
+    private CronetHttpURLStreamHandler mHandler;
 
     /**
      * Creates a {@link CronetURLStreamHandlerFactory} to handle HTTP and HTTPS
      * traffic.
-     * @param cronetEngine the {@link CronetEngine} to be used.
+     * @param cronetEngine the {@link ExperimentalHttpEngine} to be used.
      * @throws NullPointerException if config is null.
      */
     public CronetURLStreamHandlerFactory(ExperimentalHttpEngine cronetEngine) {
@@ -62,8 +66,21 @@ public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
         if ("http".equals(protocol) || "https".equals(protocol)) {
-            return new CronetHttpURLStreamHandler(mCronetEngine);
+            // only return cached handler for the supported protocol
+            if (mHandler != null) return mHandler;
+            mHandler = new CronetHttpURLStreamHandler(mCronetEngine);
+            return mHandler;
         }
         return null;
+    }
+
+    @VisibleForTesting
+    public void swapCronetEngineForTesting(
+            ExperimentalHttpEngine httpEngine) {
+        if (mHandler != null) {
+            mHandler.swapCronetEngineForTesting(httpEngine);
+            return;
+        }
+        mCronetEngine = httpEngine;
     }
 }
