@@ -21,8 +21,6 @@ import org.junit.runner.RunWith;
 
 import android.net.http.HttpEngine;
 import org.chromium.net.CronetTestRule;
-import org.chromium.net.CronetTestRule.CompareDefaultWithCronet;
-import org.chromium.net.CronetTestRule.OnlyRunCronetHttpURLConnection;
 import org.chromium.net.NativeTestServer;
 import android.net.http.NetworkException;
 
@@ -36,9 +34,7 @@ import java.net.URL;
  * Tests {@code getOutputStream} when {@code setChunkedStreamingMode} is enabled.
  * Tests annotated with {@code CompareDefaultWithCronet} will run once with the
  * default HttpURLConnection implementation and then with Cronet's
- * HttpURLConnection implementation. Tests annotated with
- * {@code OnlyRunCronetHttpURLConnection} only run Cronet's implementation.
- * See {@link CronetTestBase#runTest()} for details.
+ * HttpURLConnection implementation.
  */
 @RunWith(AndroidJUnit4.class)
 public class CronetChunkedOutputStreamTest {
@@ -62,7 +58,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testGetOutputStreamAfterConnectionMade() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -80,7 +75,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testWriteAfterReadingResponse() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -99,7 +93,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testWriteAfterRequestFailed() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -127,7 +120,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testGetResponseAfterWriteFailed() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         NativeTestServer.shutdownNativeTestServer();
@@ -173,7 +165,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testPost() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -190,7 +181,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testTransferEncodingHeaderSet() throws Exception {
         URL url = new URL(NativeTestServer.getEchoHeaderURL("Transfer-Encoding"));
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -207,7 +197,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testPostOneMassiveWrite() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -225,7 +214,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testPostWriteOneByte() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -244,7 +232,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testPostOneMassiveWriteWriteOneByte() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -264,7 +251,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @CompareDefaultWithCronet
     public void testPostWholeNumberOfChunks() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -287,7 +273,6 @@ public class CronetChunkedOutputStreamTest {
 
     @Test
     @SmallTest
-    @OnlyRunCronetHttpURLConnection
     // Regression testing for crbug.com/618872.
     public void testOneMassiveWriteLargerThanInternalBuffer() throws Exception {
         URL url = new URL(NativeTestServer.getEchoBodyURL());
