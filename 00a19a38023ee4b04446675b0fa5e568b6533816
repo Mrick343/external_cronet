@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "516cb0e2_863b4833",
+        "filename": "patches/local/0024-Expose-the-network-binding-APIs-in-AOSP.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-24T15:56:34Z",
+      "side": 0,
+      "message": "Just to confirm, has this ever made its way to gn2bp?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 51
+      },
+      "revId": "00a19a38023ee4b04446675b0fa5e568b6533816",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
