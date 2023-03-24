@@ -16,6 +16,24 @@
       "message": "Can you drop this? I\u0027ve chatted with Patrick and we\u0027ve agreed that going forward we\u0027re just going to keep patches for CLs that modify BUILD.gn files (everything else is already \"applied\" during a new import merge).",
       "revId": "2c1bba489968f4e8ec257fdb6a71c73a7db73dad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "256e5202_548737ce",
+        "filename": "patches/upstream-next/0015-base-don-t-use-struct-stat64.patch",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-03-24T11:42:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d4978d1_3b28b065",
+      "revId": "2c1bba489968f4e8ec257fdb6a71c73a7db73dad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
