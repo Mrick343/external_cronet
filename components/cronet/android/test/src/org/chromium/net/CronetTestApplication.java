@@ -10,4 +10,10 @@ import android.app.Application;
  * Application for managing the Cronet Test.
  */
 public class CronetTestApplication extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // set url stream handler
+    }
 }

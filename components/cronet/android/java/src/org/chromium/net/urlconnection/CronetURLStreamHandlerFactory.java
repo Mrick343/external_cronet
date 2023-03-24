@@ -6,6 +6,8 @@ package org.chromium.net.urlconnection;
 
 import android.net.http.ExperimentalHttpEngine;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
@@ -41,6 +43,7 @@ import java.net.URLStreamHandlerFactory;
  */
 public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
     private final ExperimentalHttpEngine mCronetEngine;
+    private boolean useCronetHandler = true;
 
     /**
      * Creates a {@link CronetURLStreamHandlerFactory} to handle HTTP and HTTPS
@@ -61,9 +64,14 @@ public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
      */
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        if ("http".equals(protocol) || "https".equals(protocol)) {
+        if (useCronetHandler && ("http".equals(protocol) || "https".equals(protocol))) {
             return new CronetHttpURLStreamHandler(mCronetEngine);
         }
         return null;
+    }
+
+    @VisibleForTesting
+    public void setUseCronetHandler(boolean shouldUseCronetHandler) {
+        useCronetHandler = shouldUseCronetHandler;
     }
 }
