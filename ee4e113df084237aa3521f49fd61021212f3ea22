@@ -133,6 +133,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "934c975c_7c27e84a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-24T14:39:19Z",
+      "side": 1,
+      "message": "I think what you want is a ProxyURLStreamHandlerFactory that has a public method between two implementations. For one implementation, you forward the call to createURLStreamHandler() to CronetURLStreamHandlerFactory. And for the other implementation you return null. This feels easy enough to just do, or am I missing something?\n\nThat being said, this still sort of relies on java.net implementation details, and we might not want this to be the long-term solution (and try to re-architect the test instead).",
+      "parentUuid": "b5ca1151_98c07097",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c474c45b_f2ed2668",
         "filename": "patches/upstream-next/0017-Setup-urlconnection-for-Cronet-MTS.patch",
         "patchSetId": 4
