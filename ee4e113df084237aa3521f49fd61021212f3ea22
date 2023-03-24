@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "48b09da0_5ba53238",
+        "filename": "Android.extras.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-24T14:26:45Z",
+      "side": 1,
+      "message": "Why do we need the comment?",
+      "parentUuid": "45a2f7c7_f71de194",
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dda20f6e_e577d8ff",
@@ -91,6 +109,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b5ca1151_98c07097",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-24T14:26:45Z",
+      "side": 1,
+      "message": "Toggling between the factory won\u0027t work as we can\u0027t toggle the URL\u0027s factory once it\u0027s set.\n\nWhat we can do is to modifiy `CronetURLStreamHandlerFactory.createStreamHandler` to return null if we want to use the systems impl.\n\nI\u0027ll not do this in this cl as we need to consider if we really do want to do that inside the CronetURLStreamFactory impl. I\u0027ve created b/2505921 to move this along and have drafted this cl aosp/2505921.\n\nResolve and LGTM if this SGTY.",
+      "parentUuid": "cc42ed97_50237a28",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c474c45b_f2ed2668",
         "filename": "patches/upstream-next/0017-Setup-urlconnection-for-Cronet-MTS.patch",
         "patchSetId": 4
@@ -102,6 +144,30 @@
       "writtenOn": "2023-03-24T10:39:45Z",
       "side": 1,
       "message": "I am in the process of deleting all .patch files that do not touch any BUILD.gn (and therefore don\u0027t affect the the output of `gn desc`), so I think we don\u0027t actually need this anymore.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 50
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d15650db_98fbaf84",
+        "filename": "patches/upstream-next/0017-Setup-urlconnection-for-Cronet-MTS.patch",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-24T14:26:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c474c45b_f2ed2668",
       "range": {
         "startLine": 1,
         "startChar": 0,
