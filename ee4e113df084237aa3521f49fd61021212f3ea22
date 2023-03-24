@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cc42ed97_50237a28",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-24T10:55:45Z",
+      "side": 1,
+      "message": "From https://docs.oracle.com/javase/7/docs/api/java/net/URL.html#setURLStreamHandlerFactory(java.net.URLStreamHandlerFactory):\n```\npublic static void setURLStreamHandlerFactory(URLStreamHandlerFactory fac)\nSets an application\u0027s URLStreamHandlerFactory. This method can be called at most once in a given Java Virtual Machine\n```\n\nThis is probably forbidden due to some implementation details. Bypassing this restriction through reflection might work now just out of luck and could easily break on system updates (or be prone to race conditions etc).\n\nIf this is not documented anywhere, we should not do this and instead do something along the lines of what I\u0027ve suggested above.",
+      "parentUuid": "5fbbad3c_cdc10345",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c474c45b_f2ed2668",
         "filename": "patches/upstream-next/0017-Setup-urlconnection-for-Cronet-MTS.patch",
         "patchSetId": 4
