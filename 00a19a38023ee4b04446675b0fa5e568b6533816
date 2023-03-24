@@ -22,6 +22,30 @@
       },
       "revId": "00a19a38023ee4b04446675b0fa5e568b6533816",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe5b2561_adaf623c",
+        "filename": "patches/local/0024-Expose-the-network-binding-APIs-in-AOSP.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-24T15:58:24Z",
+      "side": 0,
+      "message": "It must have, otherwise it wouldn\u0027t build 😊 The patches aren\u0027t used in the tree itself, and where they are applied, there is no Android.bp file.",
+      "parentUuid": "516cb0e2_863b4833",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 51
+      },
+      "revId": "00a19a38023ee4b04446675b0fa5e568b6533816",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
