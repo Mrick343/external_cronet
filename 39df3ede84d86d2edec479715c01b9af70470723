@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "734429d7_356bdc05",
+        "filename": "Android.extras.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T15:50:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f1d69fd_b98d1d38",
+      "range": {
+        "startLine": 178,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 28
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3e9b571_152068f2",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b79652c4_450cf786",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T15:50:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3e9b571_152068f2",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 190,
+        "endChar": 45
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa9513ff_f8d0ee15",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-03-27T14:56:34Z",
       "side": 1,
       "message": "nit: AFAIU, we can say null here because we\u0027re looping the static fields of `URL`, can you add a comment mentioning that?",
+      "range": {
+        "startLine": 344,
+        "startChar": 37,
+        "endLine": 344,
+        "endChar": 41
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49513adb_d154fdd5",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T15:50:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure I get this. I\u0027ve added a comment though saying to reset the factoryField since it would\u0027ve been set already by the first test.",
+      "parentUuid": "aa9513ff_f8d0ee15",
       "range": {
         "startLine": 344,
         "startChar": 37,
