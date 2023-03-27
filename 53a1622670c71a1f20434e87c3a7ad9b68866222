@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9590f1c_284b2c03",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/MetricsTestUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-27T09:59:12Z",
+      "side": 1,
+      "message": "Can we use Truth?\n\nTruth.assertThat(date1).isAtLeast(date2)",
+      "range": {
+        "startLine": 93,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 18
+      },
+      "revId": "53a1622670c71a1f20434e87c3a7ad9b68866222",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd76b850_64c64819",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/TestUrlRequestCallback.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-27T09:59:12Z",
+      "side": 1,
+      "message": "Do we need a second copy given we already have one for CTS tests?",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 68
+      },
+      "revId": "53a1622670c71a1f20434e87c3a7ad9b68866222",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
