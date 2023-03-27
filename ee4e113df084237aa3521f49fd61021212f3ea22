@@ -155,6 +155,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0767e7e6_f0f8d0c6",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T13:23:12Z",
+      "side": 1,
+      "message": "Agreed to drop the system url connection tests entirely. Added b/2505921 as a blocker on the MTS bug so I can submit this and send aosp/2505921 as a follow-up once MTS is done.",
+      "parentUuid": "934c975c_7c27e84a",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 36
+      },
+      "revId": "ee4e113df084237aa3521f49fd61021212f3ea22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c474c45b_f2ed2668",
