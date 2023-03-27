@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2560b976_4bf6feab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T18:00:29Z",
+      "side": 1,
+      "message": "That\u0027s the correct file. Ohh, just saw the sha location. Links \u003e commit",
+      "parentUuid": "0ce1ba6e_a9a5710f",
+      "revId": "fa4694612eeb3015d6b2450a317b843867cef769",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8dc6cb95_fb64faf2",
