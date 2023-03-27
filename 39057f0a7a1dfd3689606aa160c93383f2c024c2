@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb230506_1e210d7d",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/Http2TestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-27T10:07:33Z",
+      "side": 1,
+      "message": "throw UnsupportedOperationException / AssertionError everywhere instead to prevent tests from accidentally passing?",
+      "range": {
+        "startLine": 32,
+        "startChar": 71,
+        "endLine": 32,
+        "endChar": 83
+      },
+      "revId": "39057f0a7a1dfd3689606aa160c93383f2c024c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
