@@ -140,6 +140,30 @@
       },
       "revId": "39df3ede84d86d2edec479715c01b9af70470723",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea9b15fa_fa9e810c",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-27T16:31:09Z",
+      "side": 1,
+      "message": "From https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html#set-java.lang.Object-java.lang.Object-\n```\npublic void set(Object obj,\n                Object value)\n         throws IllegalArgumentException,\n                IllegalAccessException\nIf the underlying field is static, the obj argument is ignored; it may be null.\n \nOtherwise the underlying field is an instance field. If the specified object argument is null, the method throws a NullPointerException\n```\n\nAFAIU, we\u0027re in the `the underlying field is static` case. Though, that wasn\u0027t obvious to me initially.",
+      "parentUuid": "49513adb_d154fdd5",
+      "range": {
+        "startLine": 344,
+        "startChar": 37,
+        "endLine": 344,
+        "endChar": 41
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
