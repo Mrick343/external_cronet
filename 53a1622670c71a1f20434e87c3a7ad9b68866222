@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22bb260d_713b684a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/MetricsTestUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-27T11:08:17Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "87897ad9_445455ca",
+      "range": {
+        "startLine": 93,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 18
+      },
+      "revId": "53a1622670c71a1f20434e87c3a7ad9b68866222",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd76b850_64c64819",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Hmm, I think the right order would be to export these as filegroup so that the cts can use the ones here since any changes in chromium would be made to the ones in this directory. Agree?",
       "parentUuid": "fd76b850_64c64819",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 68
+      },
+      "revId": "53a1622670c71a1f20434e87c3a7ad9b68866222",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84b8761c_74f4c55a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/TestUrlRequestCallback.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-27T11:08:17Z",
+      "side": 1,
+      "message": "Makes sense - I don\u0027t mind where exactly it lives as long as we only have one, and I agree that this is likely the better place for it to live.",
+      "parentUuid": "8fac3bfe_b2816084",
       "range": {
         "startLine": 35,
         "startChar": 0,
