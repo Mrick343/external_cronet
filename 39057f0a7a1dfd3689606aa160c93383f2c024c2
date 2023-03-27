@@ -22,6 +22,30 @@
       },
       "revId": "39057f0a7a1dfd3689606aa160c93383f2c024c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2aeedd8f_6c630a68",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/Http2TestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T13:45:13Z",
+      "side": 1,
+      "message": "start and shutdown are called in setup and teardown of tests. Throwing unsupported exception in those defeats the purpose of having this class.",
+      "parentUuid": "cb230506_1e210d7d",
+      "range": {
+        "startLine": 32,
+        "startChar": 71,
+        "endLine": 32,
+        "endChar": 83
+      },
+      "revId": "39057f0a7a1dfd3689606aa160c93383f2c024c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
