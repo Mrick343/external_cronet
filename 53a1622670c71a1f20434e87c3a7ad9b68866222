@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "87897ad9_445455ca",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/MetricsTestUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T10:54:07Z",
+      "side": 1,
+      "message": "I would prefer the keep the classes as is, unless necessary(api changes). If we want to switch to truth or some further cleanup, I\u0027d suggest we do the migration for all usages in a separate cl, in a way that allows us see what we need to upstream.",
+      "parentUuid": "f9590f1c_284b2c03",
+      "range": {
+        "startLine": 93,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 18
+      },
+      "revId": "53a1622670c71a1f20434e87c3a7ad9b68866222",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fd76b850_64c64819",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/TestUrlRequestCallback.java",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2023-03-27T09:59:12Z",
       "side": 1,
       "message": "Do we need a second copy given we already have one for CTS tests?",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 68
+      },
+      "revId": "53a1622670c71a1f20434e87c3a7ad9b68866222",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fac3bfe_b2816084",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/TestUrlRequestCallback.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T10:54:07Z",
+      "side": 1,
+      "message": "Hmm, I think the right order would be to export these as filegroup so that the cts can use the ones here since any changes in chromium would be made to the ones in this directory. Agree?",
+      "parentUuid": "fd76b850_64c64819",
       "range": {
         "startLine": 35,
         "startChar": 0,
