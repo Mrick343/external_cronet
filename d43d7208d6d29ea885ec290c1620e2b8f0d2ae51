@@ -33,6 +33,42 @@
       "message": "Is ExperimentalOptionsTest imported from upstream verbatim? If not, could you split the CL into a verbatim import (which will not conflict in a version update) and the downstream changes. This will make the update to a newer version much easier, especially if we encounter merge conflicts.",
       "revId": "d43d7208d6d29ea885ec290c1620e2b8f0d2ae51",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec741ada_244b96ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T16:57:53Z",
+      "side": 1,
+      "message": "experimentaloptionstest is a preexisting test class. I added more tests from the upstream one(these were added after the import) and then cleaned things up so they work. Are you saying I should separate (adding more tests) and (cleaning things up) into two separate cls?",
+      "parentUuid": "d1358c0f_fc0bbf3d",
+      "revId": "d43d7208d6d29ea885ec290c1620e2b8f0d2ae51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b6dfdc6_7a49bf8c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T16:57:53Z",
+      "side": 1,
+      "message": "ExperimentalOptionsTest already exists downstream and has been modified during the api changes. I updated this version with more tests that had been added upstream and some fixes. Should I still separate (adding more tests) and (those fixes)?",
+      "parentUuid": "d1358c0f_fc0bbf3d",
+      "revId": "d43d7208d6d29ea885ec290c1620e2b8f0d2ae51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
