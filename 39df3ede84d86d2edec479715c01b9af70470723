@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f1d69fd_b98d1d38",
+        "filename": "Android.extras.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-27T14:56:34Z",
+      "side": 1,
+      "message": "nit: Is there a follow-up CL ready for these? Otherwise could you create and reference bugs for these todos?",
+      "range": {
+        "startLine": 178,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 28
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3e9b571_152068f2",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-27T14:56:34Z",
+      "side": 1,
+      "message": "nit: add a todo linking to the cleanup bug",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 190,
+        "endChar": 45
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa9513ff_f8d0ee15",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-27T14:56:34Z",
+      "side": 1,
+      "message": "nit: AFAIU, we can say null here because we\u0027re looping the static fields of `URL`, can you add a comment mentioning that?",
+      "range": {
+        "startLine": 344,
+        "startChar": 37,
+        "endLine": 344,
+        "endChar": 41
+      },
+      "revId": "39df3ede84d86d2edec479715c01b9af70470723",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
