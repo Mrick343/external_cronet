@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1a631656_530fd021",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T17:53:26Z",
+      "side": 1,
+      "message": "Where did you get the sha? I checked the last commit in the file and got Ieaa8befbc2c71b3dd2e550a70665c11420e4e963.",
+      "parentUuid": "543a8509_4441c040",
+      "revId": "fa4694612eeb3015d6b2450a317b843867cef769",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8dc6cb95_fb64faf2",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
         "patchSetId": 4
@@ -31,6 +49,30 @@
       "writtenOn": "2023-03-27T17:46:36Z",
       "side": 1,
       "message": "FWIU, copyright notices retain the earliest copyright year.",
+      "range": {
+        "startLine": 1,
+        "startChar": 3,
+        "endLine": 1,
+        "endChar": 38
+      },
+      "revId": "fa4694612eeb3015d6b2450a317b843867cef769",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "428d9b32_3f51d4b9",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-27T17:53:26Z",
+      "side": 1,
+      "message": "This was changed upstream though.",
+      "parentUuid": "8dc6cb95_fb64faf2",
       "range": {
         "startLine": 1,
         "startChar": 3,
