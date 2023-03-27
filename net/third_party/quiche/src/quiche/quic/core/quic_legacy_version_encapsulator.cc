@@ -137,7 +137,7 @@ QuicPacketLength QuicLegacyVersionEncapsulator::Encapsulate(
     return 0;
   }
 
-  QUIC_DLOG(INFO) << "Successfully performed Legacy Version Encapsulation from "
+  LOG(INFO) << "Successfully performed Legacy Version Encapsulation from "
                   << inner_packet.length() << " bytes to " << encrypted_length;
 
   // Replace our current packet with the encapsulated one.

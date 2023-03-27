@@ -56,18 +56,18 @@ bool HttpDecoder::DecodeSettings(const char* data, QuicByteCount len,
   QuicDataReader reader(data, len);
   uint64_t frame_type;
   if (!reader.ReadVarInt62(&frame_type)) {
-    QUIC_DLOG(ERROR) << "Unable to read frame type.";
+    LOG(INFO) << "Unable to read frame type.";
     return false;
   }
 
   if (frame_type != static_cast<uint64_t>(HttpFrameType::SETTINGS)) {
-    QUIC_DLOG(ERROR) << "Invalid frame type " << frame_type;
+    LOG(INFO) << "Invalid frame type " << frame_type;
     return false;
   }
 
   absl::string_view frame_contents;
   if (!reader.ReadStringPieceVarInt62(&frame_contents)) {
-    QUIC_DLOG(ERROR) << "Failed to read SETTINGS frame contents";
+    LOG(INFO) << "Failed to read SETTINGS frame contents";
     return false;
   }
 
@@ -76,17 +76,17 @@ bool HttpDecoder::DecodeSettings(const char* data, QuicByteCount len,
   while (!frame_reader.IsDoneReading()) {
     uint64_t id;
     if (!frame_reader.ReadVarInt62(&id)) {
-      QUIC_DLOG(ERROR) << "Unable to read setting identifier.";
+      LOG(INFO) << "Unable to read setting identifier.";
       return false;
     }
     uint64_t content;
     if (!frame_reader.ReadVarInt62(&content)) {
-      QUIC_DLOG(ERROR) << "Unable to read setting value.";
+      LOG(INFO) << "Unable to read setting value.";
       return false;
     }
     auto result = frame->values.insert({id, content});
     if (!result.second) {
-      QUIC_DLOG(ERROR) << "Duplicate setting identifier.";
+      LOG(INFO) << "Duplicate setting identifier.";
       return false;
     }
   }

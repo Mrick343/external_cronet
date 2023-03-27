@@ -24,7 +24,7 @@ void QuicSustainedBandwidthRecorder::RecordEstimate(
     QuicTime estimate_time, QuicWallTime wall_time, QuicTime::Delta srtt) {
   if (in_recovery) {
     is_recording_ = false;
-    QUIC_DVLOG(1) << "Stopped recording at: "
+    LOG(INFO) << "Stopped recording at: "
                   << estimate_time.ToDebuggingValue();
     return;
   }
@@ -33,7 +33,7 @@ void QuicSustainedBandwidthRecorder::RecordEstimate(
     // This is the first estimate of a new recording period.
     start_time_ = estimate_time;
     is_recording_ = true;
-    QUIC_DVLOG(1) << "Started recording at: " << start_time_.ToDebuggingValue();
+    LOG(INFO) << "Started recording at: " << start_time_.ToDebuggingValue();
     return;
   }
 
@@ -43,7 +43,7 @@ void QuicSustainedBandwidthRecorder::RecordEstimate(
     has_estimate_ = true;
     bandwidth_estimate_recorded_during_slow_start_ = in_slow_start;
     bandwidth_estimate_ = bandwidth;
-    QUIC_DVLOG(1) << "New sustained bandwidth estimate (KBytes/s): "
+    LOG(INFO) << "New sustained bandwidth estimate (KBytes/s): "
                   << bandwidth_estimate_.ToKBytesPerSecond();
   }
 
@@ -51,7 +51,7 @@ void QuicSustainedBandwidthRecorder::RecordEstimate(
   if (bandwidth > max_bandwidth_estimate_) {
     max_bandwidth_estimate_ = bandwidth;
     max_bandwidth_timestamp_ = wall_time.ToUNIXSeconds();
-    QUIC_DVLOG(1) << "New max bandwidth estimate (KBytes/s): "
+    LOG(INFO) << "New max bandwidth estimate (KBytes/s): "
                   << max_bandwidth_estimate_.ToKBytesPerSecond();
   }
 }

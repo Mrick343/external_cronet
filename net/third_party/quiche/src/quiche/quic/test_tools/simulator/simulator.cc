@@ -139,7 +139,7 @@ void Simulator::HandleNextScheduledActor() {
   const auto current_event_it = schedule_.begin();
   QuicTime event_time = current_event_it->first;
   Actor* actor = current_event_it->second;
-  QUIC_DVLOG(3) << "At t = " << event_time.ToDebuggingValue() << ", calling "
+  LOG(INFO) << "At t = " << event_time.ToDebuggingValue() << ", calling "
                 << actor->name();
 
   Unschedule(actor);

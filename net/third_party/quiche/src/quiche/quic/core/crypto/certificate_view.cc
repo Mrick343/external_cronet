@@ -201,7 +201,7 @@ std::string PublicKeyTypeToString(PublicKeyType type) {
 absl::optional<quic::QuicWallTime> ParseDerTime(unsigned tag,
                                                 absl::string_view payload) {
   if (tag != CBS_ASN1_GENERALIZEDTIME && tag != CBS_ASN1_UTCTIME) {
-    QUIC_DLOG(WARNING) << "Invalid tag supplied for a DER timestamp";
+    LOG(INFO) << "Invalid tag supplied for a DER timestamp";
     return absl::nullopt;
   }
 
@@ -213,7 +213,7 @@ absl::optional<quic::QuicWallTime> ParseDerTime(unsigned tag,
       !reader.ReadDecimal64(2, &hour) || !reader.ReadDecimal64(2, &minute) ||
       !reader.ReadDecimal64(2, &second) ||
       reader.ReadRemainingPayload() != "Z") {
-    QUIC_DLOG(WARNING) << "Failed to parse the DER timestamp";
+    LOG(INFO) << "Failed to parse the DER timestamp";
     return absl::nullopt;
   }
 
@@ -358,7 +358,7 @@ std::unique_ptr<CertificateView> CertificateView::ParseSingleCertificate(
   if (!CBS_get_any_asn1(&validity, &not_before, &not_before_tag) ||
       !CBS_get_any_asn1(&validity, &not_after, &not_after_tag) ||
       CBS_len(&validity) != 0) {
-    QUIC_DLOG(WARNING) << "Failed to extract the validity dates";
+    LOG(INFO) << "Failed to extract the validity dates";
     return nullptr;
   }
   absl::optional<QuicWallTime> not_before_parsed =
@@ -366,7 +366,7 @@ std::unique_ptr<CertificateView> CertificateView::ParseSingleCertificate(
   absl::optional<QuicWallTime> not_after_parsed =
       ParseDerTime(not_after_tag, CbsToStringPiece(not_after));
   if (!not_before_parsed.has_value() || !not_after_parsed.has_value()) {
-    QUIC_DLOG(WARNING) << "Failed to parse validity dates";
+    LOG(INFO) << "Failed to parse validity dates";
     return nullptr;
   }
   result->validity_start_ = *not_before_parsed;
@@ -374,18 +374,18 @@ std::unique_ptr<CertificateView> CertificateView::ParseSingleCertificate(
 
   result->public_key_.reset(EVP_parse_public_key(&spki));
   if (result->public_key_ == nullptr) {
-    QUIC_DLOG(WARNING) << "Failed to parse the public key";
+    LOG(INFO) << "Failed to parse the public key";
     return nullptr;
   }
   if (!result->ValidatePublicKeyParameters()) {
-    QUIC_DLOG(WARNING) << "Public key has invalid parameters";
+    LOG(INFO) << "Public key has invalid parameters";
     return nullptr;
   }
 
   // Only support X.509v3.
   if (!has_version ||
       !CBS_mem_equal(&version, kX509Version, sizeof(kX509Version))) {
-    QUIC_DLOG(WARNING) << "Bad X.509 version";
+    LOG(INFO) << "Bad X.509 version";
     return nullptr;
   }
 
@@ -396,11 +396,11 @@ std::unique_ptr<CertificateView> CertificateView::ParseSingleCertificate(
   CBS extensions;
   if (!CBS_get_asn1(&extensions_outer, &extensions, CBS_ASN1_SEQUENCE) ||
       CBS_len(&extensions_outer) != 0) {
-    QUIC_DLOG(WARNING) << "Failed to extract the extension sequence";
+    LOG(INFO) << "Failed to extract the extension sequence";
     return nullptr;
   }
   if (!result->ParseExtensions(extensions)) {
-    QUIC_DLOG(WARNING) << "Failed to parse extensions";
+    LOG(INFO) << "Failed to parse extensions";
     return nullptr;
   }
 
@@ -424,7 +424,7 @@ bool CertificateView::ParseExtensions(CBS extensions) {
         //                 -- by extnID
         !CBS_get_asn1(&extension, &payload, CBS_ASN1_OCTETSTRING) ||
         CBS_len(&extension) != 0) {
-      QUIC_DLOG(WARNING) << "Bad extension entry";
+      LOG(INFO) << "Bad extension entry";
       return false;
     }
 
@@ -432,14 +432,14 @@ bool CertificateView::ParseExtensions(CBS extensions) {
       CBS alt_names;
       if (!CBS_get_asn1(&payload, &alt_names, CBS_ASN1_SEQUENCE) ||
           CBS_len(&payload) != 0) {
-        QUIC_DLOG(WARNING) << "Failed to parse subjectAltName";
+        LOG(INFO) << "Failed to parse subjectAltName";
         return false;
       }
       while (CBS_len(&alt_names) != 0) {
         CBS alt_name_cbs;
         unsigned int alt_name_tag;
         if (!CBS_get_any_asn1(&alt_names, &alt_name_cbs, &alt_name_tag)) {
-          QUIC_DLOG(WARNING) << "Failed to parse subjectAltName";
+          LOG(INFO) << "Failed to parse subjectAltName";
           return false;
         }
 
@@ -456,14 +456,14 @@ bool CertificateView::ParseExtensions(CBS extensions) {
           case CBS_ASN1_CONTEXT_SPECIFIC | 7:
             if (!ip_address.FromPackedString(alt_name.data(),
                                              alt_name.size())) {
-              QUIC_DLOG(WARNING) << "Failed to parse subjectAltName IP address";
+              LOG(INFO) << "Failed to parse subjectAltName IP address";
               return false;
             }
             subject_alt_name_ips_.push_back(ip_address);
             break;
 
           default:
-            QUIC_DLOG(INFO) << "Unknown subjectAltName tag " << alt_name_tag;
+            LOG(INFO) << "Unknown subjectAltName tag " << alt_name_tag;
             continue;
         }
       }

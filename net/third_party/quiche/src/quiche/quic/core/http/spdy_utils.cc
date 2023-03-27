@@ -39,7 +39,7 @@ bool SpdyUtils::ExtractContentLengthFromHeaders(int64_t* content_length,
       uint64_t new_value;
       if (!absl::SimpleAtoi(value, &new_value) ||
           !quiche::QuicheTextUtils::IsAllDigits(value)) {
-        QUIC_DLOG(ERROR)
+        LOG(INFO)
             << "Content length was either unparseable or negative.";
         return false;
       }
@@ -48,7 +48,7 @@ bool SpdyUtils::ExtractContentLengthFromHeaders(int64_t* content_length,
         continue;
       }
       if (new_value != static_cast<uint64_t>(*content_length)) {
-        QUIC_DLOG(ERROR)
+        LOG(INFO)
             << "Parsed content length " << new_value << " is "
             << "inconsistent with previously detected content length "
             << *content_length;
@@ -65,12 +65,12 @@ bool SpdyUtils::CopyAndValidateHeaders(const QuicHeaderList& header_list,
   for (const auto& p : header_list) {
     const std::string& name = p.first;
     if (name.empty()) {
-      QUIC_DLOG(ERROR) << "Header name must not be empty.";
+      LOG(INFO) << "Header name must not be empty.";
       return false;
     }
 
     if (quiche::QuicheTextUtils::ContainsUpperCase(name)) {
-      QUIC_DLOG(ERROR) << "Malformed header: Header name " << name
+      LOG(INFO) << "Malformed header: Header name " << name
                        << " contains upper-case characters.";
       return false;
     }
@@ -83,7 +83,7 @@ bool SpdyUtils::CopyAndValidateHeaders(const QuicHeaderList& header_list,
     return false;
   }
 
-  QUIC_DVLOG(1) << "Successfully parsed headers: " << headers->DebugString();
+  LOG(INFO) << "Successfully parsed headers: " << headers->DebugString();
   return true;
 }
 
@@ -105,14 +105,14 @@ bool SpdyUtils::CopyAndValidateTrailers(const QuicHeaderList& header_list,
     }
 
     if (name.empty() || name[0] == ':') {
-      QUIC_DLOG(ERROR)
+      LOG(INFO)
           << "Trailers must not be empty, and must not contain pseudo-"
           << "headers. Found: '" << name << "'";
       return false;
     }
 
     if (quiche::QuicheTextUtils::ContainsUpperCase(name)) {
-      QUIC_DLOG(ERROR) << "Malformed header: Header name " << name
+      LOG(INFO) << "Malformed header: Header name " << name
                        << " contains upper-case characters.";
       return false;
     }
@@ -121,14 +121,14 @@ bool SpdyUtils::CopyAndValidateTrailers(const QuicHeaderList& header_list,
   }
 
   if (expect_final_byte_offset && !found_final_byte_offset) {
-    QUIC_DLOG(ERROR) << "Required key '" << kFinalOffsetHeaderKey
+    LOG(INFO) << "Required key '" << kFinalOffsetHeaderKey
                      << "' not present";
     return false;
   }
 
   // TODO(rjshade): Check for other forbidden keys, following the HTTP/2 spec.
 
-  QUIC_DVLOG(1) << "Successfully parsed Trailers: " << trailers->DebugString();
+  LOG(INFO) << "Successfully parsed Trailers: " << trailers->DebugString();
   return true;
 }
 

@@ -91,7 +91,7 @@ TEST(IcmpPacketTest, CreatedPacketMatchesReference) {
       reinterpret_cast<const char*>(kReferenceICMPPacket), 104);
   CreateIcmpPacket(src_addr, dst_addr, icmp_header, message_body,
                    [&expected_packet](absl::string_view packet) {
-                     QUIC_LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
+                     LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
                      ASSERT_EQ(packet, expected_packet);
                    });
 }
@@ -120,7 +120,7 @@ TEST(IcmpPacketTest, NonZeroChecksumIsIgnored) {
       reinterpret_cast<const char*>(kReferenceICMPPacket), 104);
   CreateIcmpPacket(src_addr, dst_addr, icmp_header, message_body,
                    [&expected_packet](absl::string_view packet) {
-                     QUIC_LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
+                     LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
                      ASSERT_EQ(packet, expected_packet);
                    });
 }

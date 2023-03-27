@@ -492,7 +492,7 @@ TEST_F(NetlinkTest, GetRouteInfoWorks) {
                             buf, netlink_message, NLMSG_DONE, seq);
                         ret += NLMSG_ALIGN(netlink_message->nlmsg_len);
 
-                        QUIC_LOG(INFO) << "ret: " << ret;
+                        LOG(INFO) << "ret: " << ret;
                         return ret;
                       });
 

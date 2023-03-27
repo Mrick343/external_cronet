@@ -561,6 +561,15 @@ bool X509Certificate::VerifyHostname(
 bool X509Certificate::VerifyNameMatch(const std::string& hostname) const {
   std::vector<std::string> dns_names, ip_addrs;
   GetSubjectAltName(&dns_names, &ip_addrs);
+  LOG(INFO) << "Attmepting to match " << hostname << " against following DNS names: ";
+  for (auto dns : dns_names) {
+   LOG(INFO) << dns;
+  }
+  LOG(INFO) << "And IP addresses";
+  for (auto ip : ip_addrs) {
+     LOG(INFO) << ip;
+    }
+
   return VerifyHostname(hostname, dns_names, ip_addrs);
 }
 

@@ -55,11 +55,11 @@ void QuicSpdyClientSession::OnProofVerifyDetailsAvailable(
 
 bool QuicSpdyClientSession::ShouldCreateOutgoingBidirectionalStream() {
   if (!crypto_stream_->encryption_established()) {
-    QUIC_DLOG(INFO) << "Encryption not active so no outgoing stream created.";
+    LOG(INFO) << "Encryption not active so no outgoing stream created.";
     return false;
   }
   if (goaway_received() && respect_goaway_) {
-    QUIC_DLOG(INFO) << "Failed to create a new outgoing stream. "
+    LOG(INFO) << "Failed to create a new outgoing stream. "
                     << "Already received goaway.";
     return false;
   }
@@ -149,7 +149,7 @@ bool QuicSpdyClientSession::ShouldCreateIncomingStream(QuicStreamId id) {
     return false;
   }
   if (goaway_received() && respect_goaway_) {
-    QUIC_DLOG(INFO) << "Failed to create a new outgoing stream. "
+    LOG(INFO) << "Failed to create a new outgoing stream. "
                     << "Already received goaway.";
     return false;
   }
@@ -162,7 +162,7 @@ bool QuicSpdyClientSession::ShouldCreateIncomingStream(QuicStreamId id) {
   }
 
   if (QuicUtils::IsClientInitiatedStreamId(transport_version(), id)) {
-    QUIC_LOG(WARNING) << "Received invalid push stream id " << id;
+    LOG(INFO) << "Received invalid push stream id " << id;
     connection()->CloseConnection(
         QUIC_INVALID_STREAM_ID,
         "Server created non write unidirectional stream",

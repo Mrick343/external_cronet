@@ -56,24 +56,24 @@ bool WebTransportFingerprintProofVerifier::AddFingerprint(
     CertificateFingerprint fingerprint) {
   NormalizeFingerprint(fingerprint);
   if (fingerprint.algorithm != CertificateFingerprint::kSha256) {
-    QUIC_DLOG(WARNING) << "Algorithms other than SHA-256 are not supported";
+    LOG(INFO) << "Algorithms other than SHA-256 are not supported";
     return false;
   }
   if (fingerprint.fingerprint.size() != kFingerprintLength) {
-    QUIC_DLOG(WARNING) << "Invalid fingerprint length";
+    LOG(INFO) << "Invalid fingerprint length";
     return false;
   }
   for (size_t i = 0; i < fingerprint.fingerprint.size(); i++) {
     char current = fingerprint.fingerprint[i];
     if (i % 3 == 2) {
       if (current != ':') {
-        QUIC_DLOG(WARNING)
+        LOG(INFO)
             << "Missing colon separator between the bytes of the hash";
         return false;
       }
     } else {
       if (!IsNormalizedHexDigit(current)) {
-        QUIC_DLOG(WARNING) << "Fingerprint must be in hexadecimal";
+        LOG(INFO) << "Fingerprint must be in hexadecimal";
         return false;
       }
     }
@@ -89,11 +89,11 @@ bool WebTransportFingerprintProofVerifier::AddFingerprint(
 bool WebTransportFingerprintProofVerifier::AddFingerprint(
     WebTransportHash hash) {
   if (hash.algorithm != CertificateFingerprint::kSha256) {
-    QUIC_DLOG(WARNING) << "Algorithms other than SHA-256 are not supported";
+    LOG(INFO) << "Algorithms other than SHA-256 are not supported";
     return false;
   }
   if (hash.value.size() != SHA256_DIGEST_LENGTH) {
-    QUIC_DLOG(WARNING) << "Invalid fingerprint length";
+    LOG(INFO) << "Invalid fingerprint length";
     return false;
   }
   hashes_.push_back(std::move(hash));

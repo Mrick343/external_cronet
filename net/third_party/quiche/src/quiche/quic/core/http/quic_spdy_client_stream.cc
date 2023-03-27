@@ -52,7 +52,7 @@ bool QuicSpdyClientStream::CopyAndValidateHeaders(
 
 bool QuicSpdyClientStream::ParseAndValidateStatusCode() {
   if (!ParseHeaderStatusCode(response_headers_, &response_code_)) {
-    QUIC_DLOG(ERROR) << "Received invalid response code: "
+    LOG(INFO) << "Received invalid response code: "
                      << response_headers_[":status"].as_string()
                      << " on stream " << id();
     Reset(QUIC_BAD_APPLICATION_PAYLOAD);
@@ -62,7 +62,7 @@ bool QuicSpdyClientStream::ParseAndValidateStatusCode() {
   if (response_code_ == 101) {
     // 101 "Switching Protocols" is forbidden in HTTP/3 as per the
     // "HTTP Upgrade" section of draft-ietf-quic-http.
-    QUIC_DLOG(ERROR) << "Received forbidden 101 response code"
+    LOG(INFO) << "Received forbidden 101 response code"
                      << " on stream " << id();
     Reset(QUIC_BAD_APPLICATION_PAYLOAD);
     return false;
@@ -70,7 +70,7 @@ bool QuicSpdyClientStream::ParseAndValidateStatusCode() {
 
   if (response_code_ >= 100 && response_code_ < 200) {
     // These are Informational 1xx headers, not the actual response headers.
-    QUIC_DLOG(INFO) << "Received informational response code: "
+    LOG(INFO) << "Received informational response code: "
                     << response_headers_[":status"].as_string() << " on stream "
                     << id();
     set_headers_decompressed(false);
@@ -100,7 +100,7 @@ void QuicSpdyClientStream::OnInitialHeadersComplete(
 
   if (!CopyAndValidateHeaders(header_list, content_length_,
                               response_headers_)) {
-    QUIC_DLOG(ERROR) << "Failed to parse header list: "
+    LOG(INFO) << "Failed to parse header list: "
                      << header_list.DebugString() << " on stream " << id();
     Reset(QUIC_BAD_APPLICATION_PAYLOAD);
     return;
@@ -125,7 +125,7 @@ void QuicSpdyClientStream::OnInitialHeadersComplete(
   }
 
   ConsumeHeaderList();
-  QUIC_DVLOG(1) << "headers complete for stream " << id();
+  LOG(INFO) << "headers complete for stream " << id();
 
   session_->OnInitialHeadersComplete(id(), response_headers_);
 }
@@ -144,7 +144,7 @@ void QuicSpdyClientStream::OnPromiseHeaderList(
   Http2HeaderBlock promise_headers;
   if (!SpdyUtils::CopyAndValidateHeaders(header_list, &content_length,
                                          &promise_headers)) {
-    QUIC_DLOG(ERROR) << "Failed to parse promise headers: "
+    LOG(INFO) << "Failed to parse promise headers: "
                      << header_list.DebugString();
     Reset(QUIC_BAD_APPLICATION_PAYLOAD);
     return;
@@ -167,13 +167,13 @@ void QuicSpdyClientStream::OnBodyAvailable() {
       // No more data to read.
       break;
     }
-    QUIC_DVLOG(1) << "Client processed " << iov.iov_len << " bytes for stream "
+    LOG(INFO) << "Client processed " << iov.iov_len << " bytes for stream "
                   << id();
     data_.append(static_cast<char*>(iov.iov_base), iov.iov_len);
 
     if (content_length_ >= 0 &&
         data_.size() > static_cast<uint64_t>(content_length_)) {
-      QUIC_DLOG(ERROR) << "Invalid content length (" << content_length_
+      LOG(INFO) << "Invalid content length (" << content_length_
                        << ") with data of size " << data_.size();
       Reset(QUIC_BAD_APPLICATION_PAYLOAD);
       return;
@@ -217,7 +217,7 @@ bool QuicSpdyClientStream::AreHeadersValid(
     if (pair.first == ":status") {
       saw_status = true;
     } else if (absl::StrContains(pair.first, ":")) {
-      QUIC_DLOG(ERROR) << "Unexpected ':' in header " << pair.first << ".";
+      LOG(INFO) << "Unexpected ':' in header " << pair.first << ".";
       return false;
     }
   }

@@ -507,7 +507,7 @@ std::ostream& operator<<(std::ostream& os, const QuicFrame& frame) {
       os << "type { ACK_FREQUENCY_FRAME } " << *(frame.ack_frequency_frame);
       break;
     default: {
-      QUIC_LOG(ERROR) << "Unknown frame type: " << frame.type;
+      LOG(INFO) << "Unknown frame type: " << frame.type;
       break;
     }
   }

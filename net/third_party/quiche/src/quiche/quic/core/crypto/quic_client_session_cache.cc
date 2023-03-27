@@ -73,7 +73,7 @@ std::unique_ptr<QuicResumptionState> QuicClientSessionCache::Lookup(
   if (iter == cache_.end()) return nullptr;
 
   if (!IsValid(iter->second->PeekSession(), now.ToUNIXSeconds())) {
-    QUIC_DLOG(INFO) << "TLS Session expired for host:" << server_id.host();
+    LOG(INFO) << "TLS Session expired for host:" << server_id.host();
     cache_.Erase(iter);
     return nullptr;
   }
@@ -101,7 +101,7 @@ void QuicClientSessionCache::ClearEarlyData(const QuicServerId& server_id) {
   if (iter == cache_.end()) return;
   for (auto& session : iter->second->sessions) {
     if (session) {
-      QUIC_DLOG(INFO) << "Clear early data for for host: " << server_id.host();
+      LOG(INFO) << "Clear early data for for host: " << server_id.host();
       session.reset(SSL_SESSION_copy_without_early_data(session.get()));
     }
   }

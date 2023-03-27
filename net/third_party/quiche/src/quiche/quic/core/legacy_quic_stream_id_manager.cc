@@ -64,7 +64,7 @@ bool LegacyQuicStreamIdManager::MaybeIncreaseLargestPeerStreamId(
   size_t new_num_available_streams =
       GetNumAvailableStreams() + additional_available_streams;
   if (new_num_available_streams > MaxAvailableStreams()) {
-    QUIC_DLOG(INFO) << perspective_
+    LOG(INFO) << perspective_
                     << "Failed to create a new incoming stream with id:"
                     << stream_id << ".  There are already "
                     << GetNumAvailableStreams()

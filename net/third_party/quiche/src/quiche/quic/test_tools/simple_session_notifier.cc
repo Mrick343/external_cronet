@@ -50,19 +50,19 @@ QuicConsumedData SimpleSessionNotifier::WriteOrBufferData(
   const bool had_buffered_data =
       HasBufferedStreamData() || HasBufferedControlFrames();
   QuicStreamOffset offset = stream_state.bytes_sent;
-  QUIC_DVLOG(1) << "WriteOrBuffer stream_id: " << id << " [" << offset << ", "
+  LOG(INFO) << "WriteOrBuffer stream_id: " << id << " [" << offset << ", "
                 << offset + data_length << "), fin: " << (state != NO_FIN);
   stream_state.bytes_total += data_length;
   stream_state.fin_buffered = state != NO_FIN;
   if (had_buffered_data) {
-    QUIC_DLOG(WARNING) << "Connection is write blocked";
+    LOG(INFO) << "Connection is write blocked";
     return {0, false};
   }
   const size_t length = stream_state.bytes_total - stream_state.bytes_sent;
   connection_->SetTransmissionType(transmission_type);
   QuicConsumedData consumed =
       connection_->SendStreamData(id, length, stream_state.bytes_sent, state);
-  QUIC_DVLOG(1) << "consumed: " << consumed;
+  LOG(INFO) << "consumed: " << consumed;
   OnStreamDataConsumed(id, stream_state.bytes_sent, consumed.bytes_consumed,
                        consumed.fin_consumed);
   return consumed;
@@ -97,7 +97,7 @@ size_t SimpleSessionNotifier::WriteCryptoData(EncryptionLevel level,
 void SimpleSessionNotifier::WriteOrBufferRstStream(
     QuicStreamId id, QuicRstStreamErrorCode error,
     QuicStreamOffset bytes_written) {
-  QUIC_DVLOG(1) << "Writing RST_STREAM_FRAME";
+  LOG(INFO) << "Writing RST_STREAM_FRAME";
   const bool had_buffered_data =
       HasBufferedStreamData() || HasBufferedControlFrames();
   control_frames_.emplace_back((QuicFrame(new QuicRstStreamFrame(
@@ -107,7 +107,7 @@ void SimpleSessionNotifier::WriteOrBufferRstStream(
     stream_map_.erase(id);
   }
   if (had_buffered_data) {
-    QUIC_DLOG(WARNING) << "Connection is write blocked";
+    LOG(INFO) << "Connection is write blocked";
     return;
   }
   WriteBufferedControlFrames();
@@ -115,27 +115,27 @@ void SimpleSessionNotifier::WriteOrBufferRstStream(
 
 void SimpleSessionNotifier::WriteOrBufferWindowUpate(
     QuicStreamId id, QuicStreamOffset byte_offset) {
-  QUIC_DVLOG(1) << "Writing WINDOW_UPDATE";
+  LOG(INFO) << "Writing WINDOW_UPDATE";
   const bool had_buffered_data =
       HasBufferedStreamData() || HasBufferedControlFrames();
   QuicControlFrameId control_frame_id = ++last_control_frame_id_;
   control_frames_.emplace_back(
       (QuicFrame(QuicWindowUpdateFrame(control_frame_id, id, byte_offset))));
   if (had_buffered_data) {
-    QUIC_DLOG(WARNING) << "Connection is write blocked";
+    LOG(INFO) << "Connection is write blocked";
     return;
   }
   WriteBufferedControlFrames();
 }
 
 void SimpleSessionNotifier::WriteOrBufferPing() {
-  QUIC_DVLOG(1) << "Writing PING_FRAME";
+  LOG(INFO) << "Writing PING_FRAME";
   const bool had_buffered_data =
       HasBufferedStreamData() || HasBufferedControlFrames();
   control_frames_.emplace_back(
       (QuicFrame(QuicPingFrame(++last_control_frame_id_))));
   if (had_buffered_data) {
-    QUIC_DLOG(WARNING) << "Connection is write blocked";
+    LOG(INFO) << "Connection is write blocked";
     return;
   }
   WriteBufferedControlFrames();
@@ -143,7 +143,7 @@ void SimpleSessionNotifier::WriteOrBufferPing() {
 
 void SimpleSessionNotifier::WriteOrBufferAckFrequency(
     const QuicAckFrequencyFrame& ack_frequency_frame) {
-  QUIC_DVLOG(1) << "Writing ACK_FREQUENCY";
+  LOG(INFO) << "Writing ACK_FREQUENCY";
   const bool had_buffered_data =
       HasBufferedStreamData() || HasBufferedControlFrames();
   QuicControlFrameId control_frame_id = ++last_control_frame_id_;
@@ -153,7 +153,7 @@ void SimpleSessionNotifier::WriteOrBufferAckFrequency(
                                           ack_frequency_frame.packet_tolerance,
                                           ack_frequency_frame.max_ack_delay))));
   if (had_buffered_data) {
-    QUIC_DLOG(WARNING) << "Connection is write blocked";
+    LOG(INFO) << "Connection is write blocked";
     return;
   }
   WriteBufferedControlFrames();
@@ -211,7 +211,7 @@ void SimpleSessionNotifier::OnCanWrite() {
         connection_->framer().GetEncryptionLevelToSendApplicationData());
     QuicConsumedData consumed = connection_->SendStreamData(
         pair.first, length, state.bytes_sent, can_bundle_fin ? FIN : NO_FIN);
-    QUIC_DVLOG(1) << "Tries to write stream_id: " << pair.first << " ["
+    LOG(INFO) << "Tries to write stream_id: " << pair.first << " ["
                   << state.bytes_sent << ", " << state.bytes_sent + length
                   << "), fin: " << can_bundle_fin
                   << ", and consumed: " << consumed;
@@ -233,7 +233,7 @@ void SimpleSessionNotifier::OnStreamReset(QuicStreamId id,
 }
 
 bool SimpleSessionNotifier::WillingToWrite() const {
-  QUIC_DVLOG(1) << "has_buffered_control_frames: " << HasBufferedControlFrames()
+  LOG(INFO) << "has_buffered_control_frames: " << HasBufferedControlFrames()
                 << " as_lost_control_frames: " << !lost_control_frames_.empty()
                 << " has_buffered_stream_data: " << HasBufferedStreamData()
                 << " has_lost_stream_data: " << HasLostStreamData();
@@ -262,7 +262,7 @@ QuicByteCount SimpleSessionNotifier::StreamBytesToSend() const {
 bool SimpleSessionNotifier::OnFrameAcked(const QuicFrame& frame,
                                          QuicTime::Delta /*ack_delay_time*/,
                                          QuicTime /*receive_timestamp*/) {
-  QUIC_DVLOG(1) << "Acking " << frame;
+  LOG(INFO) << "Acking " << frame;
   if (frame.type == CRYPTO_FRAME) {
     StreamState* state = &crypto_state_[frame.crypto_frame->level];
     QuicStreamOffset offset = frame.crypto_frame->offset;
@@ -301,7 +301,7 @@ bool SimpleSessionNotifier::OnFrameAcked(const QuicFrame& frame,
 }
 
 void SimpleSessionNotifier::OnFrameLost(const QuicFrame& frame) {
-  QUIC_DVLOG(1) << "Losting " << frame;
+  LOG(INFO) << "Losting " << frame;
   if (frame.type == CRYPTO_FRAME) {
     StreamState* state = &crypto_state_[frame.crypto_frame->level];
     QuicStreamOffset offset = frame.crypto_frame->offset;
@@ -413,7 +413,7 @@ bool SimpleSessionNotifier::RetransmitFrames(const QuicFrames& frames,
       consumed = connection_->SendStreamData(
           frame.stream_frame.stream_id, retransmission_length,
           retransmission_offset, can_bundle_fin ? FIN : NO_FIN);
-      QUIC_DVLOG(1) << "stream " << frame.stream_frame.stream_id
+      LOG(INFO) << "stream " << frame.stream_frame.stream_id
                     << " is forced to retransmit stream data ["
                     << retransmission_offset << ", "
                     << retransmission_offset + retransmission_length
@@ -429,7 +429,7 @@ bool SimpleSessionNotifier::RetransmitFrames(const QuicFrames& frames,
       }
     }
     if (retransmit_fin) {
-      QUIC_DVLOG(1) << "stream " << frame.stream_frame.stream_id
+      LOG(INFO) << "stream " << frame.stream_frame.stream_id
                     << " retransmits fin only frame.";
       consumed = connection_->SendStreamData(frame.stream_frame.stream_id, 0,
                                              state.bytes_sent, FIN);
@@ -647,13 +647,13 @@ bool SimpleSessionNotifier::RetransmitLostStreamData() {
     while (!state.pending_retransmissions.Empty() || state.fin_lost) {
       connection_->SetTransmissionType(LOSS_RETRANSMISSION);
       if (state.pending_retransmissions.Empty()) {
-        QUIC_DVLOG(1) << "stream " << pair.first
+        LOG(INFO) << "stream " << pair.first
                       << " retransmits fin only frame.";
         consumed =
             connection_->SendStreamData(pair.first, 0, state.bytes_sent, FIN);
         state.fin_lost = !consumed.fin_consumed;
         if (state.fin_lost) {
-          QUIC_DLOG(INFO) << "Connection is write blocked";
+          LOG(INFO) << "Connection is write blocked";
           return false;
         }
       } else {
@@ -664,7 +664,7 @@ bool SimpleSessionNotifier::RetransmitLostStreamData() {
             state.fin_lost && (offset + length == state.bytes_sent);
         consumed = connection_->SendStreamData(pair.first, length, offset,
                                                can_bundle_fin ? FIN : NO_FIN);
-        QUIC_DVLOG(1) << "stream " << pair.first
+        LOG(INFO) << "stream " << pair.first
                       << " tries to retransmit stream data [" << offset << ", "
                       << offset + length << ") and fin: " << can_bundle_fin
                       << ", consumed: " << consumed;
@@ -675,7 +675,7 @@ bool SimpleSessionNotifier::RetransmitLostStreamData() {
         }
         if (length > consumed.bytes_consumed ||
             (can_bundle_fin && !consumed.fin_consumed)) {
-          QUIC_DVLOG(1) << "Connection is write blocked";
+          LOG(INFO) << "Connection is write blocked";
           break;
         }
       }

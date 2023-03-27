@@ -81,9 +81,9 @@ void QuicSpdyClientBase::OnClose(QuicSpdyStream* stream) {
   if (store_response_) {
     auto status = response_headers.find(":status");
     if (status == response_headers.end()) {
-      QUIC_LOG(ERROR) << "Missing :status response header";
+      LOG(INFO) << "Missing :status response header";
     } else if (!absl::SimpleAtoi(status->second, &latest_response_code_)) {
-      QUIC_LOG(ERROR) << "Invalid :status response header: " << status->second;
+      LOG(INFO) << "Invalid :status response header: " << status->second;
     }
     latest_response_headers_ = response_headers.DebugString();
     preliminary_response_headers_ =

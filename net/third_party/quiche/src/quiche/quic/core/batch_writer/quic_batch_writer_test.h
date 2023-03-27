@@ -24,7 +24,7 @@ static bool IsAddressFamilySupported(int address_family) {
   static auto check_function = [](int address_family) {
     int fd = socket(address_family, SOCK_STREAM, 0);
     if (fd < 0) {
-      QUIC_LOG(ERROR) << "address_family not supported: " << address_family
+      LOG(INFO) << "address_family not supported: " << address_family
                       << ", error: " << strerror(errno);
       EXPECT_EQ(EAFNOSUPPORT, errno);
       return false;
@@ -55,18 +55,18 @@ static bool CreateSocket(int family, QuicSocketAddress* address, int* fd) {
                           /*receive_buffer_size=*/kDefaultSocketReceiveBuffer,
                           /*send_buffer_size=*/kDefaultSocketReceiveBuffer);
   if (*fd < 0) {
-    QUIC_LOG(ERROR) << "CreateSocket() failed: " << strerror(errno);
+    LOG(INFO) << "CreateSocket() failed: " << strerror(errno);
     return false;
   }
   socket_api.EnableDroppedPacketCount(*fd);
 
   if (!socket_api.Bind(*fd, *address)) {
-    QUIC_LOG(ERROR) << "Bind failed: " << strerror(errno);
+    LOG(INFO) << "Bind failed: " << strerror(errno);
     return false;
   }
 
   if (address->FromSocket(*fd) != 0) {
-    QUIC_LOG(ERROR) << "Unable to get self address.  Error: "
+    LOG(INFO) << "Unable to get self address.  Error: "
                     << strerror(errno);
     return false;
   }
@@ -138,7 +138,7 @@ class QUIC_EXPORT_PRIVATE QuicUdpBatchWriterIOTest
         packet_size_(GetParam().packet_size),
         self_socket_(-1),
         peer_socket_(-1) {
-    QUIC_LOG(INFO) << "QuicUdpBatchWriterIOTestParams: " << GetParam();
+    LOG(INFO) << "QuicUdpBatchWriterIOTestParams: " << GetParam();
     EXPECT_TRUE(address_family_ == AF_INET || address_family_ == AF_INET6);
     EXPECT_LE(packet_size_, data_size_);
     EXPECT_LE(packet_size_, sizeof(packet_buffer_));
@@ -158,7 +158,7 @@ class QUIC_EXPORT_PRIVATE QuicUdpBatchWriterIOTest
   // available on the system.
   bool ShouldSkip() {
     if (!IsAddressFamilySupported(address_family_)) {
-      QUIC_LOG(WARNING)
+      LOG(INFO)
           << "Test skipped since address_family is not supported.";
       return true;
     }
@@ -172,9 +172,9 @@ class QUIC_EXPORT_PRIVATE QuicUdpBatchWriterIOTest
     ASSERT_TRUE(CreateSocket(address_family_, &self_address_, &self_socket_));
     ASSERT_TRUE(CreateSocket(address_family_, &peer_address_, &peer_socket_));
 
-    QUIC_DLOG(INFO) << "Self address: " << self_address_.ToString() << ", fd "
+    LOG(INFO) << "Self address: " << self_address_.ToString() << ", fd "
                     << self_socket_;
-    QUIC_DLOG(INFO) << "Peer address: " << peer_address_.ToString() << ", fd "
+    LOG(INFO) << "Peer address: " << peer_address_.ToString() << ", fd "
                     << peer_socket_;
     GetParam().delegate->ResetWriter(self_socket_);
   }
@@ -201,7 +201,7 @@ class QUIC_EXPORT_PRIVATE QuicUdpBatchWriterIOTest
       bytes_flushed += result.bytes_written;
       ++num_writes;
 
-      QUIC_DVLOG(1) << "[write #" << num_writes
+      LOG(INFO) << "[write #" << num_writes
                     << "] this_packet_size: " << this_packet_size
                     << ", total_bytes_sent: " << bytes_sent + this_packet_size
                     << ", bytes_flushed: " << bytes_flushed
@@ -213,7 +213,7 @@ class QUIC_EXPORT_PRIVATE QuicUdpBatchWriterIOTest
     bytes_flushed += result.bytes_written;
     ASSERT_EQ(data_size_, bytes_flushed);
 
-    QUIC_LOG(INFO) << "Sent " << data_size_ << " bytes in " << num_writes
+    LOG(INFO) << "Sent " << data_size_ << " bytes in " << num_writes
                    << " writes.";
   }
 
@@ -253,7 +253,7 @@ class QUIC_EXPORT_PRIVATE QuicUdpBatchWriterIOTest
       packets_received += this_packet_size;
     }
 
-    QUIC_LOG(INFO) << "Received " << data_size_ << " bytes in "
+    LOG(INFO) << "Received " << data_size_ << " bytes in "
                    << packets_received << " packets.";
   }
 

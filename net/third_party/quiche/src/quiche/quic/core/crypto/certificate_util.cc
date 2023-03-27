@@ -53,7 +53,7 @@ bool AddName(CBB* cbb, absl::string_view name) {
       absl::StrSplit(name, ',', absl::SkipEmpty());
 
   if (attributes.empty()) {
-    QUIC_LOG(ERROR) << "Missing DN or wrong format";
+    LOG(INFO) << "Missing DN or wrong format";
     return false;
   }
 
@@ -67,7 +67,7 @@ bool AddName(CBB* cbb, absl::string_view name) {
     std::vector<std::string> parts =
         absl::StrSplit(absl::StripAsciiWhitespace(attribute), '=');
     if (parts.size() != 2) {
-      QUIC_LOG(ERROR) << "Wrong DN format at " + attribute;
+      LOG(INFO) << "Wrong DN format at " + attribute;
       return false;
     }
 
@@ -83,7 +83,7 @@ bool AddName(CBB* cbb, absl::string_view name) {
     } else if (type_string == "OU") {
       type_bytes = kOrganizationalUnitName;
     } else {
-      QUIC_LOG(ERROR) << "Unrecognized type " + type_string;
+      LOG(INFO) << "Unrecognized type " + type_string;
       return false;
     }
 
@@ -197,7 +197,7 @@ std::string CreateSelfSignedCertificate(EVP_PKEY& key,
                                         const CertificateOptions& options) {
   std::string error;
   if (!IsEcdsa256Key(key)) {
-    QUIC_LOG(ERROR) << "CreateSelfSignedCert only accepts ECDSA P-256 keys";
+    LOG(INFO) << "CreateSelfSignedCert only accepts ECDSA P-256 keys";
     return error;
   }
 

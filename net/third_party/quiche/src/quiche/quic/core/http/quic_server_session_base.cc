@@ -58,7 +58,7 @@ void QuicServerSessionBase::OnConfigNegotiated() {
       QUIC_CODE_COUNT(quic_server_received_network_params_at_same_region);
       if (config()->HasReceivedConnectionOptions() &&
           ContainsQuicTag(config()->ReceivedConnectionOptions(), kTRTT)) {
-        QUIC_DLOG(INFO)
+        LOG(INFO)
             << "Server: Setting initial rtt to "
             << cached_network_params->min_rtt_ms()
             << "ms which is received from a validated address token";
@@ -138,7 +138,7 @@ void QuicServerSessionBase::OnBandwidthUpdateTimeout() {
   if (!enable_sending_bandwidth_estimate_when_network_idle_) {
     return;
   }
-  QUIC_DVLOG(1) << "Bandwidth update timed out.";
+  LOG(INFO) << "Bandwidth update timed out.";
   const SendAlgorithmInterface* send_algorithm =
       connection()->sent_packet_manager().GetSendAlgorithm();
   if (send_algorithm != nullptr &&
@@ -225,7 +225,7 @@ void QuicServerSessionBase::OnCongestionWindowChange(QuicTime now) {
 
     if (cached_network_params.has_value()) {
       bandwidth_estimate_sent_to_client_ = new_bandwidth_estimate;
-      QUIC_DVLOG(1) << "Server: sending new bandwidth estimate (KBytes/s): "
+      LOG(INFO) << "Server: sending new bandwidth estimate (KBytes/s): "
                     << bandwidth_estimate_sent_to_client_.ToKBytesPerSecond();
 
       QUICHE_DCHECK_EQ(
@@ -259,7 +259,7 @@ bool QuicServerSessionBase::ShouldCreateIncomingStream(QuicStreamId id) {
   }
 
   if (QuicUtils::IsServerInitiatedStreamId(transport_version(), id)) {
-    QUIC_DLOG(INFO) << "Invalid incoming even stream_id:" << id;
+    LOG(INFO) << "Invalid incoming even stream_id:" << id;
     connection()->CloseConnection(
         QUIC_INVALID_STREAM_ID, "Client created even numbered stream",
         ConnectionCloseBehavior::SEND_CONNECTION_CLOSE_PACKET);

@@ -136,7 +136,7 @@ class Bbr2SimulatorTest : public QuicTest {
       random_seed_ = QuicRandom::GetInstance()->RandUint64();
     }
     random_.set_seed(random_seed_);
-    QUIC_LOG(INFO) << "Using random seed: " << random_seed_;
+    LOG(INFO) << "Using random seed: " << random_seed_;
   }
 
   ~Bbr2SimulatorTest() override {
@@ -173,7 +173,7 @@ class Bbr2DefaultTopologyTest : public Bbr2SimulatorTest {
     const auto* test_info =
         ::testing::UnitTest::GetInstance()->current_test_info();
     const Bbr2Sender::DebugState& debug_state = sender_->ExportDebugState();
-    QUIC_LOG(INFO) << "Bbr2DefaultTopologyTest." << test_info->name()
+    LOG(INFO) << "Bbr2DefaultTopologyTest." << test_info->name()
                    << " completed at simulated time: "
                    << SimulatedNow().ToDebuggingValue() / 1e6
                    << " sec. packet loss:"
@@ -203,7 +203,7 @@ class Bbr2DefaultTopologyTest : public Bbr2SimulatorTest {
   }
 
   void CreateNetwork(const DefaultTopologyParams& params) {
-    QUIC_LOG(INFO) << "CreateNetwork with parameters: " << params.ToString();
+    LOG(INFO) << "CreateNetwork with parameters: " << params.ToString();
     switch_ = std::make_unique<simulator::Switch>(&simulator_, "Switch",
                                                   params.switch_port_count,
                                                   params.SwitchQueueCapacity());
@@ -246,7 +246,7 @@ class Bbr2DefaultTopologyTest : public Bbr2SimulatorTest {
     EXPECT_TRUE(simulator_result)
         << "Simple transfer failed.  Bytes remaining: "
         << sender_endpoint_.bytes_to_transfer();
-    QUIC_LOG(INFO) << "Simple transfer state: " << sender_->ExportDebugState();
+    LOG(INFO) << "Simple transfer state: " << sender_->ExportDebugState();
   }
 
   // Drive the simulator by sending enough data to enter PROBE_BW.
@@ -734,7 +734,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthDecrease)) {
   // 640 seconds.
   simulator_.RunFor(QuicTime::Delta::FromSeconds(10));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth decreasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth decreasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -761,7 +761,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthIncrease)) {
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -792,7 +792,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthIncreaseBBQ0)) {
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -829,7 +829,7 @@ TEST_F(Bbr2DefaultTopologyTest,
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   // This is much farther off when aggregation is present,
   // Ideally BSAO or another option would fix this.
@@ -863,7 +863,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthIncreaseB202)) {
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -900,7 +900,7 @@ TEST_F(Bbr2DefaultTopologyTest,
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   // This is much farther off when aggregation is present,
   // Ideally BSAO or another option would fix this.
@@ -933,7 +933,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthIncreaseB203)) {
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -970,7 +970,7 @@ TEST_F(Bbr2DefaultTopologyTest,
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   // This is much farther off when aggregation is present,
   // Ideally BSAO or another option would fix this.
@@ -1003,7 +1003,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthIncreaseB204)) {
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -1041,7 +1041,7 @@ TEST_F(Bbr2DefaultTopologyTest,
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   // This is much farther off when aggregation is present, and B204 actually
   // is increasing overestimation, which is surprising.
@@ -1076,7 +1076,7 @@ TEST_F(Bbr2DefaultTopologyTest, QUIC_SLOW_TEST(BandwidthIncreaseB205)) {
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   EXPECT_APPROX_EQ(params.test_link.bandwidth,
                    sender_->ExportDebugState().bandwidth_est, 0.1f);
@@ -1113,7 +1113,7 @@ TEST_F(Bbr2DefaultTopologyTest,
 
   simulator_.RunFor(QuicTime::Delta::FromSeconds(15));
   EXPECT_TRUE(Bbr2ModeIsOneOf({Bbr2Mode::PROBE_BW, Bbr2Mode::PROBE_RTT}));
-  QUIC_LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
+  LOG(INFO) << "Bandwidth increasing at time " << SimulatedNow();
 
   // This is much farther off when aggregation is present,
   // Ideally BSAO or another option would fix this.
@@ -1741,7 +1741,7 @@ TEST_F(Bbr2DefaultTopologyTest, AdjustNetworkParameters) {
   DefaultTopologyParams params;
   CreateNetwork(params);
 
-  QUIC_LOG(INFO) << "Initial cwnd: " << sender_debug_state().congestion_window
+  LOG(INFO) << "Initial cwnd: " << sender_debug_state().congestion_window
                  << "\nInitial pacing rate: " << sender_->PacingRate(0)
                  << "\nInitial bandwidth estimate: "
                  << sender_->BandwidthEstimate()
@@ -1929,12 +1929,12 @@ class Bbr2MultiSenderTest : public Bbr2SimulatorTest {
   ~Bbr2MultiSenderTest() {
     const auto* test_info =
         ::testing::UnitTest::GetInstance()->current_test_info();
-    QUIC_LOG(INFO) << "Bbr2MultiSenderTest." << test_info->name()
+    LOG(INFO) << "Bbr2MultiSenderTest." << test_info->name()
                    << " completed at simulated time: "
                    << SimulatedNow().ToDebuggingValue() / 1e6
                    << " sec. Per sender stats:";
     for (size_t i = 0; i < sender_endpoints_.size(); ++i) {
-      QUIC_LOG(INFO) << "sender[" << i << "]: "
+      LOG(INFO) << "sender[" << i << "]: "
                      << sender_connection(i)
                             ->sent_packet_manager()
                             .GetSendAlgorithm()
@@ -2000,7 +2000,7 @@ class Bbr2MultiSenderTest : public Bbr2SimulatorTest {
   }
 
   void CreateNetwork(const MultiSenderTopologyParams& params) {
-    QUIC_LOG(INFO) << "CreateNetwork with parameters: " << params.ToString();
+    LOG(INFO) << "CreateNetwork with parameters: " << params.ToString();
     switch_ = std::make_unique<simulator::Switch>(&simulator_, "Switch",
                                                   params.switch_port_count,
                                                   params.SwitchQueueCapacity());
@@ -2047,7 +2047,7 @@ TEST_F(Bbr2MultiSenderTest, Bbr2VsBbr2) {
   const QuicByteCount transfer_size = 10 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time;
+  LOG(INFO) << "Single flow transfer time: " << transfer_time;
 
   // Transfer 10% of data in first transfer.
   sender_endpoints_[0]->AddBytesToTransfer(transfer_size);
@@ -2081,7 +2081,7 @@ TEST_F(Bbr2MultiSenderTest, QUIC_SLOW_TEST(MultipleBbr2s)) {
   const QuicByteCount transfer_size = 10 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time
+  LOG(INFO) << "Single flow transfer time: " << transfer_time
                  << ". Now: " << SimulatedNow();
 
   // Start all transfers.
@@ -2131,7 +2131,7 @@ TEST_F(Bbr2MultiSenderTest, Bbr2VsBbr2LargeRttTinyBuffer) {
   const QuicByteCount transfer_size = 10 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time;
+  LOG(INFO) << "Single flow transfer time: " << transfer_time;
 
   // Transfer 10% of data in first transfer.
   sender_endpoints_[0]->AddBytesToTransfer(transfer_size);
@@ -2163,7 +2163,7 @@ TEST_F(Bbr2MultiSenderTest, Bbr2VsBbr1) {
   const QuicByteCount transfer_size = 10 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time;
+  LOG(INFO) << "Single flow transfer time: " << transfer_time;
 
   // Transfer 10% of data in first transfer.
   sender_endpoints_[0]->AddBytesToTransfer(transfer_size);
@@ -2194,7 +2194,7 @@ TEST_F(Bbr2MultiSenderTest, QUIC_SLOW_TEST(Bbr2VsReno)) {
   const QuicByteCount transfer_size = 10 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time;
+  LOG(INFO) << "Single flow transfer time: " << transfer_time;
 
   // Transfer 10% of data in first transfer.
   sender_endpoints_[0]->AddBytesToTransfer(transfer_size);
@@ -2226,7 +2226,7 @@ TEST_F(Bbr2MultiSenderTest, QUIC_SLOW_TEST(Bbr2VsRenoB2RC)) {
   const QuicByteCount transfer_size = 10 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time;
+  LOG(INFO) << "Single flow transfer time: " << transfer_time;
 
   // Transfer 10% of data in first transfer.
   sender_endpoints_[0]->AddBytesToTransfer(transfer_size);
@@ -2257,7 +2257,7 @@ TEST_F(Bbr2MultiSenderTest, QUIC_SLOW_TEST(Bbr2VsCubic)) {
   const QuicByteCount transfer_size = 50 * 1024 * 1024;
   const QuicTime::Delta transfer_time =
       params.BottleneckBandwidth().TransferTime(transfer_size);
-  QUIC_LOG(INFO) << "Single flow transfer time: " << transfer_time;
+  LOG(INFO) << "Single flow transfer time: " << transfer_time;
 
   // Transfer 10% of data in first transfer.
   sender_endpoints_[0]->AddBytesToTransfer(transfer_size);

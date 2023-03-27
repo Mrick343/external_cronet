@@ -44,7 +44,7 @@ QuicSendmmsgBatchWriter::InternalFlushImpl(size_t cmsg_space,
     int num_packets_sent;
     write_result = QuicLinuxSocketUtils::WriteMultiplePackets(
         fd(), &mhdr, &num_packets_sent);
-    QUIC_DVLOG(1) << "WriteMultiplePackets sent " << num_packets_sent
+    LOG(INFO) << "WriteMultiplePackets sent " << num_packets_sent
                   << " out of " << mhdr.num_msgs()
                   << " packets. WriteResult=" << write_result;
 

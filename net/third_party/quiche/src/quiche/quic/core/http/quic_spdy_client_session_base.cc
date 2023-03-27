@@ -27,7 +27,7 @@ QuicSpdyClientSessionBase::QuicSpdyClientSessionBase(
 QuicSpdyClientSessionBase::~QuicSpdyClientSessionBase() {
   //  all promised streams for this session
   for (auto& it : promised_by_id_) {
-    QUIC_DVLOG(1) << "erase stream " << it.first << " url " << it.second->url();
+    LOG(INFO) << "erase stream " << it.first << " url " << it.second->url();
     push_promise_index_->promised_by_url()->erase(it.second->url());
   }
   DeleteConnection();
@@ -111,13 +111,13 @@ bool QuicSpdyClientSessionBase::HandlePromised(
   if (IsClosedStream(promised_id)) {
     // There was a RST on the data stream already, perhaps
     // QUIC_REFUSED_STREAM?
-    QUIC_DVLOG(1) << "Promise ignored for stream " << promised_id
+    LOG(INFO) << "Promise ignored for stream " << promised_id
                   << " that is already closed";
     return false;
   }
 
   if (push_promise_index_->promised_by_url()->size() >= get_max_promises()) {
-    QUIC_DVLOG(1) << "Too many promises, rejecting promise for stream "
+    LOG(INFO) << "Too many promises, rejecting promise for stream "
                   << promised_id;
     ResetPromised(promised_id, QUIC_REFUSED_STREAM);
     return false;
@@ -127,7 +127,7 @@ bool QuicSpdyClientSessionBase::HandlePromised(
       SpdyServerPushUtils::GetPromisedUrlFromHeaders(headers);
   QuicClientPromisedInfo* old_promised = GetPromisedByUrl(url);
   if (old_promised) {
-    QUIC_DVLOG(1) << "Promise for stream " << promised_id
+    LOG(INFO) << "Promise for stream " << promised_id
                   << " is duplicate URL " << url
                   << " of previous promise for stream " << old_promised->id();
     ResetPromised(promised_id, QUIC_DUPLICATE_PROMISE_URL);
@@ -145,7 +145,7 @@ bool QuicSpdyClientSessionBase::HandlePromised(
       new QuicClientPromisedInfo(this, promised_id, url);
   std::unique_ptr<QuicClientPromisedInfo> promised_owner(promised);
   promised->Init();
-  QUIC_DVLOG(1) << "stream " << promised_id << " emplace url " << url;
+  LOG(INFO) << "stream " << promised_id << " emplace url " << url;
   (*push_promise_index_->promised_by_url())[url] = promised;
   promised_by_id_[promised_id] = std::move(promised_owner);
   bool result = promised->OnPromiseHeaders(headers);

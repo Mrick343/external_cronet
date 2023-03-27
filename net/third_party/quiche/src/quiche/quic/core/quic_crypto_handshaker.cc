@@ -21,7 +21,7 @@ QuicCryptoHandshaker::~QuicCryptoHandshaker() {}
 
 void QuicCryptoHandshaker::SendHandshakeMessage(
     const CryptoHandshakeMessage& message, EncryptionLevel level) {
-  QUIC_DVLOG(1) << ENDPOINT << "Sending " << message.DebugString();
+  LOG(INFO) << ENDPOINT << "Sending " << message.DebugString();
   session()->NeuterUnencryptedData();
   session()->OnCryptoHandshakeMessageSent(message);
   last_sent_handshake_message_tag_ = message.tag();
@@ -30,13 +30,13 @@ void QuicCryptoHandshaker::SendHandshakeMessage(
 }
 
 void QuicCryptoHandshaker::OnError(CryptoFramer* framer) {
-  QUIC_DLOG(WARNING) << "Error processing crypto data: "
+  LOG(INFO) << "Error processing crypto data: "
                      << QuicErrorCodeToString(framer->error());
 }
 
 void QuicCryptoHandshaker::OnHandshakeMessage(
     const CryptoHandshakeMessage& message) {
-  QUIC_DVLOG(1) << ENDPOINT << "Received " << message.DebugString();
+  LOG(INFO) << ENDPOINT << "Received " << message.DebugString();
   session()->OnCryptoHandshakeMessageReceived(message);
 }
 

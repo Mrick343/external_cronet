@@ -104,7 +104,7 @@ std::string HistogramEnumString(WriteStatus enum_value) {
     case WRITE_STATUS_NUM_VALUES:
       return "NUM_VALUES";
   }
-  QUIC_DLOG(ERROR) << "Invalid WriteStatus value: "
+  LOG(INFO) << "Invalid WriteStatus value: "
                    << static_cast<int16_t>(enum_value);
   return "<invalid>";
 }

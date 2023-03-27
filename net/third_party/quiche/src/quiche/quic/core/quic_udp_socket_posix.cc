@@ -442,7 +442,7 @@ void QuicUdpSocketApi::ReadPacket(QuicUdpSocketFd fd,
       PopulatePacketInfoFromControlMessage(cmsg, packet_info,
                                            packet_info_interested);
       if (packet_info->bitmask() == prior_bitmask) {
-        QUIC_DLOG(INFO) << "Ignored cmsg_level:" << cmsg->cmsg_level
+        LOG(INFO) << "Ignored cmsg_level:" << cmsg->cmsg_level
                         << ", cmsg_type:" << cmsg->cmsg_type;
       }
     }

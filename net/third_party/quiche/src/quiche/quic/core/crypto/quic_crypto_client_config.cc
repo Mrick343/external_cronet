@@ -258,7 +258,7 @@ bool QuicCryptoClientConfig::CachedState::Initialize(
       SetServerConfig(server_config, now, expiration_time, &error_details);
   RecordDiskCacheServerConfigState(state);
   if (state != SERVER_CONFIG_VALID) {
-    QUIC_DVLOG(1) << "SetServerConfig failed with " << error_details;
+    LOG(INFO) << "SetServerConfig failed with " << error_details;
     return false;
   }
 

@@ -31,7 +31,7 @@ void QuicMemoryCacheBackend::ResourceFile::Read() {
   absl::optional<std::string> maybe_file_contents =
       quiche::ReadFileContents(file_name_);
   if (!maybe_file_contents) {
-    QUIC_LOG(DFATAL) << "Failed to read file for the memory cache backend: "
+    LOG(INFO) << "Failed to read file for the memory cache backend: "
                      << file_name_;
     return;
   }
@@ -42,7 +42,7 @@ void QuicMemoryCacheBackend::ResourceFile::Read() {
   while (start < file_contents_.length()) {
     size_t pos = file_contents_.find('\n', start);
     if (pos == std::string::npos) {
-      QUIC_LOG(DFATAL) << "Headers invalid or empty, ignoring: " << file_name_;
+      LOG(INFO) << "Headers invalid or empty, ignoring: " << file_name_;
       return;
     }
     size_t len = pos - start;
@@ -60,7 +60,7 @@ void QuicMemoryCacheBackend::ResourceFile::Read() {
     if (line.substr(0, 4) == "HTTP") {
       pos = line.find(' ');
       if (pos == std::string::npos) {
-        QUIC_LOG(DFATAL) << "Headers invalid or empty, ignoring: "
+        LOG(INFO) << "Headers invalid or empty, ignoring: "
                          << file_name_;
         return;
       }
@@ -70,7 +70,7 @@ void QuicMemoryCacheBackend::ResourceFile::Read() {
     // Headers are "key: value".
     pos = line.find(": ");
     if (pos == std::string::npos) {
-      QUIC_LOG(DFATAL) << "Headers invalid or empty, ignoring: " << file_name_;
+      LOG(INFO) << "Headers invalid or empty, ignoring: " << file_name_;
       return;
     }
     spdy_headers_.AppendValueOrAddHeader(
@@ -160,7 +160,7 @@ const QuicBackendResponse* QuicMemoryCacheBackend::GetResponse(
         return generate_bytes_response_.get();
       }
     }
-    QUIC_DVLOG(1) << "Get response for resource failed: host " << host
+    LOG(INFO) << "Get response for resource failed: host " << host
                   << " path " << path;
     if (default_response_) {
       return default_response_.get();
@@ -259,7 +259,7 @@ bool QuicMemoryCacheBackend::InitializeBackend(
     QUIC_BUG(quic_bug_10932_1) << "cache_directory must not be empty.";
     return false;
   }
-  QUIC_LOG(INFO)
+  LOG(INFO)
       << "Attempting to initialize QuicMemoryCacheBackend from directory: "
       << cache_directory;
   std::vector<std::string> files;
@@ -354,7 +354,7 @@ void QuicMemoryCacheBackend::FetchResponseFromBackend(
   if (path != request_headers.end()) {
     request_url += std::string(path->second);
   }
-  QUIC_DVLOG(1)
+  LOG(INFO)
       << "Fetching QUIC response from backend in-memory cache for url "
       << request_url;
   quic_stream->OnResponseBackendComplete(quic_response);
@@ -373,7 +373,7 @@ std::list<ServerPushInfo> QuicMemoryCacheBackend::GetServerPushResources(
   for (auto it = resource_range.first; it != resource_range.second; ++it) {
     resources.push_back(it->second);
   }
-  QUIC_DVLOG(1) << "Found " << resources.size() << " push resources for "
+  LOG(INFO) << "Found " << resources.size() << " push resources for "
                 << request_url;
   return resources;
 }
@@ -437,7 +437,7 @@ void QuicMemoryCacheBackend::AddResponseImpl(
   for (auto& headers : early_hints) {
     new_response->AddEarlyHints(headers);
   }
-  QUIC_DVLOG(1) << "Add response with key " << key;
+  LOG(INFO) << "Add response with key " << key;
   responses_[key] = std::move(new_response);
 }
 
@@ -460,7 +460,7 @@ void QuicMemoryCacheBackend::MaybeAddServerPushResources(
       continue;
     }
 
-    QUIC_DVLOG(1) << "Add request-resource association: request url "
+    LOG(INFO) << "Add request-resource association: request url "
                   << request_url << " push url "
                   << push_resource.request_url.ToString()
                   << " response headers "
@@ -482,7 +482,7 @@ void QuicMemoryCacheBackend::MaybeAddServerPushResources(
     if (!found_existing_response) {
       // Add a server push response to responses map, if it is not in the map.
       absl::string_view body = push_resource.body;
-      QUIC_DVLOG(1) << "Add response for push resource: host " << host
+      LOG(INFO) << "Add response for push resource: host " << host
                     << " path " << path;
       AddResponse(host, path, push_resource.headers.Clone(), body);
     }

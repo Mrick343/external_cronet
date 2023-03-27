@@ -44,7 +44,7 @@ static const EVP_AEAD* (*const kAEAD)() = EVP_aead_aes_256_gcm_siv;
 
 bool CryptoSecretBoxer::SetKeys(const std::vector<std::string>& keys) {
   if (keys.empty()) {
-    QUIC_LOG(DFATAL) << "No keys supplied!";
+    LOG(INFO) << "No keys supplied!";
     return false;
   }
   const EVP_AEAD* const aead = kAEAD();
@@ -57,7 +57,7 @@ bool CryptoSecretBoxer::SetKeys(const std::vector<std::string>& keys) {
                          key.size(), EVP_AEAD_DEFAULT_TAG_LENGTH));
     if (!ctx) {
       ERR_clear_error();
-      QUIC_LOG(DFATAL) << "EVP_AEAD_CTX_init failed";
+      LOG(INFO) << "EVP_AEAD_CTX_init failed";
       return false;
     }
 
@@ -97,7 +97,7 @@ std::string CryptoSecretBoxer::Box(QuicRandom* rand,
                            reinterpret_cast<const uint8_t*>(plaintext.data()),
                            plaintext.size(), nullptr, 0)) {
       ERR_clear_error();
-      QUIC_LOG(DFATAL) << "EVP_AEAD_CTX_seal failed";
+      LOG(INFO) << "EVP_AEAD_CTX_seal failed";
       return "";
     }
   }

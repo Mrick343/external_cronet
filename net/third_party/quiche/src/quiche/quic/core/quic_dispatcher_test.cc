@@ -204,7 +204,7 @@ class MockServerConnection : public MockQuicConnection {
   }
 
   void UnregisterOnConnectionClosed() {
-    QUIC_LOG(ERROR) << "Unregistering " << connection_id();
+    LOG(INFO) << "Unregistering " << connection_id();
     dispatcher_->OnConnectionClosed(connection_id(), QUIC_NO_ERROR,
                                     "Unregistering.",
                                     ConnectionCloseSource::FROM_SELF);
@@ -1912,7 +1912,7 @@ class BlockingWriter : public QuicPacketWriterWrapper {
     // It would be quite possible to actually implement this method here with
     // the fake blocked status, but it would be significantly more work in
     // Chromium, and since it's not called anyway, don't bother.
-    QUIC_LOG(DFATAL) << "Not supported";
+    LOG(INFO) << "Not supported";
     return WriteResult();
   }
 
@@ -1971,7 +1971,7 @@ class QuicDispatcherWriteBlockedListTest : public QuicDispatcherTestBase {
   // Set the dispatcher's writer to be blocked. By default, all connections use
   // the same writer as the dispatcher in this test.
   void SetBlocked() {
-    QUIC_LOG(INFO) << "set writer " << writer_ << " to blocked";
+    LOG(INFO) << "set writer " << writer_ << " to blocked";
     writer_->write_blocked_ = true;
   }
 

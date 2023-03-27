@@ -103,7 +103,7 @@ class QuicClientPromisedInfoTest : public QuicTest {
 
   class StreamVisitor : public QuicSpdyClientStream::Visitor {
     void OnClose(QuicSpdyStream* stream) override {
-      QUIC_DVLOG(1) << "stream " << stream->id();
+      LOG(INFO) << "stream " << stream->id();
     }
   };
 

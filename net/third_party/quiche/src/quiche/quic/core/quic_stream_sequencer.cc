@@ -162,7 +162,7 @@ void QuicStreamSequencer::MaybeCloseStream() {
     return;
   }
 
-  QUIC_DVLOG(1) << "Passing up termination, as we've processed "
+  LOG(INFO) << "Passing up termination, as we've processed "
                 << buffered_frames_.BytesConsumed() << " of " << close_offset_
                 << " bytes.";
   // This will cause the stream to consume the FIN.
@@ -277,7 +277,7 @@ void QuicStreamSequencer::ReleaseBufferIfEmpty() {
 void QuicStreamSequencer::FlushBufferedFrames() {
   QUICHE_DCHECK(ignore_read_data_);
   size_t bytes_flushed = buffered_frames_.FlushBufferedFrames();
-  QUIC_DVLOG(1) << "Flushing buffered data at offset "
+  LOG(INFO) << "Flushing buffered data at offset "
                 << buffered_frames_.BytesConsumed() << " length "
                 << bytes_flushed << " for stream " << stream_->id();
   stream_->AddBytesConsumed(bytes_flushed);

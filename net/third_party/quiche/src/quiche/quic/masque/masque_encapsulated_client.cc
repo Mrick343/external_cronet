@@ -26,7 +26,7 @@ class MasquePacketWriter : public QuicPacketWriter {
                           const QuicSocketAddress& peer_address,
                           PerPacketOptions* /*options*/) override {
     QUICHE_DCHECK(peer_address.IsInitialized());
-    QUIC_DVLOG(1) << "MasquePacketWriter trying to write " << buf_len
+    LOG(INFO) << "MasquePacketWriter trying to write " << buf_len
                   << " bytes to " << peer_address;
     absl::string_view packet(buffer, buf_len);
     client_->masque_client()->masque_client_session()->SendPacket(
@@ -98,7 +98,7 @@ MasqueEncapsulatedClient::~MasqueEncapsulatedClient() {
 std::unique_ptr<QuicSession> MasqueEncapsulatedClient::CreateQuicClientSession(
     const ParsedQuicVersionVector& supported_versions,
     QuicConnection* connection) {
-  QUIC_DLOG(INFO) << "Creating MASQUE encapsulated session for "
+  LOG(INFO) << "Creating MASQUE encapsulated session for "
                   << connection->connection_id();
   return std::make_unique<MasqueEncapsulatedClientSession>(
       *config(), supported_versions, connection, server_id(), crypto_config(),

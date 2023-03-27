@@ -33,10 +33,10 @@ void QuicheRecordTestOutputToFile(absl::string_view filename,
 
   int bytes_written = base::WriteFile(path, data.data(), data.size());
   if (bytes_written < 0) {
-    QUIC_LOG(WARNING) << "Failed to write into " << path;
+    LOG(INFO) << "Failed to write into " << path;
     return;
   }
-  QUIC_LOG(INFO) << "Recorded test output into " << path;
+  LOG(INFO) << "Recorded test output into " << path;
 }
 
 void QuicheSaveTestOutputImpl(absl::string_view filename,
@@ -49,7 +49,7 @@ bool QuicheLoadTestOutputImpl(absl::string_view filename, std::string* data) {
   if (!base::Environment::Create()->GetVar("QUIC_TEST_OUTPUT_DIR",
                                            &output_dir) ||
       output_dir.empty()) {
-    QUIC_LOG(WARNING) << "Failed to load " << filename
+    LOG(INFO) << "Failed to load " << filename
                       << " because QUIC_TEST_OUTPUT_DIR is not set";
     return false;
   }

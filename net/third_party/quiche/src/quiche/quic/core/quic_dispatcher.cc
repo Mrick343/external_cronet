@@ -278,7 +278,7 @@ bool MaybeHandleLegacyVersionEncapsulation(
       &destination_connection_id, &source_connection_id, &retry_token,
       &detailed_error);
   if (error != QUIC_NO_ERROR) {
-    QUIC_DLOG(ERROR)
+    LOG(INFO)
         << "Failed to parse Legacy Version Encapsulation inner packet:"
         << detailed_error;
     return false;
@@ -286,7 +286,7 @@ bool MaybeHandleLegacyVersionEncapsulation(
   if (destination_connection_id != packet_info.destination_connection_id) {
     // We enforce that the inner and outer connection IDs match to make sure
     // this never impacts routing of packets.
-    QUIC_DLOG(ERROR) << "Ignoring Legacy Version Encapsulation packet "
+    LOG(INFO) << "Ignoring Legacy Version Encapsulation packet "
                         "with mismatched connection ID "
                      << destination_connection_id << " vs "
                      << packet_info.destination_connection_id;
@@ -301,7 +301,7 @@ bool MaybeHandleLegacyVersionEncapsulation(
     return false;
   }
 
-  QUIC_DVLOG(1) << "Extracted a Legacy Version Encapsulation "
+  LOG(INFO) << "Extracted a Legacy Version Encapsulation "
                 << legacy_version_encapsulation_inner_packet.length()
                 << " byte packet of version " << parsed_version;
 
@@ -359,7 +359,7 @@ QuicDispatcher::QuicDispatcher(
       connection_id_generator_(connection_id_generator) {
   QUIC_BUG_IF(quic_bug_12724_1, GetSupportedVersions().empty())
       << "Trying to create dispatcher without any supported versions";
-  QUIC_DLOG(INFO) << "Created QuicDispatcher with versions: "
+  LOG(INFO) << "Created QuicDispatcher with versions: "
                   << ParsedQuicVersionVectorToString(GetSupportedVersions());
 }
 
@@ -384,7 +384,7 @@ void QuicDispatcher::InitializeWithWriter(QuicPacketWriter* writer) {
 void QuicDispatcher::ProcessPacket(const QuicSocketAddress& self_address,
                                    const QuicSocketAddress& peer_address,
                                    const QuicReceivedPacket& packet) {
-  QUIC_DVLOG(2) << "Dispatcher received encrypted " << packet.length()
+  LOG(INFO) << "Dispatcher received encrypted " << packet.length()
                 << " bytes:" << std::endl
                 << quiche::QuicheTextUtils::HexDump(
                        absl::string_view(packet.data(), packet.length()));
@@ -400,7 +400,7 @@ void QuicDispatcher::ProcessPacket(const QuicSocketAddress& self_address,
   if (error != QUIC_NO_ERROR) {
     // Packet has framing error.
     SetLastError(error);
-    QUIC_DLOG(ERROR) << detailed_error;
+    LOG(INFO) << detailed_error;
     return;
   }
   if (packet_info.destination_connection_id.length() !=
@@ -409,7 +409,7 @@ void QuicDispatcher::ProcessPacket(const QuicSocketAddress& self_address,
       packet_info.version.IsKnown() &&
       !packet_info.version.AllowsVariableLengthConnectionIds()) {
     SetLastError(QUIC_INVALID_PACKET_HEADER);
-    QUIC_DLOG(ERROR) << "Invalid Connection Id Length";
+    LOG(INFO) << "Invalid Connection Id Length";
     return;
   }
 
@@ -418,7 +418,7 @@ void QuicDispatcher::ProcessPacket(const QuicSocketAddress& self_address,
             packet_info.destination_connection_id,
             packet_info.version.transport_version)) {
       SetLastError(QUIC_INVALID_PACKET_HEADER);
-      QUIC_DLOG(ERROR)
+      LOG(INFO)
           << "Invalid destination connection ID length for version";
       return;
     }
@@ -427,7 +427,7 @@ void QuicDispatcher::ProcessPacket(const QuicSocketAddress& self_address,
             packet_info.source_connection_id,
             packet_info.version.transport_version)) {
       SetLastError(QUIC_INVALID_PACKET_HEADER);
-      QUIC_DLOG(ERROR) << "Invalid source connection ID length for version";
+      LOG(INFO) << "Invalid source connection ID length for version";
       return;
     }
   }
@@ -481,7 +481,7 @@ absl::optional<QuicConnectionId> QuicDispatcher::MaybeReplaceServerConnectionId(
   QUICHE_DCHECK_EQ(expected_server_connection_id_length_,
                    new_connection_id.length());
 
-  QUIC_DLOG(INFO) << "Replacing incoming connection ID " << server_connection_id
+  LOG(INFO) << "Replacing incoming connection ID " << server_connection_id
                   << " with " << new_connection_id;
   return new_connection_id;
 }
@@ -569,7 +569,7 @@ bool QuicDispatcher::MaybeDispatchPacket(
       !allow_short_initial_server_connection_ids_) {
     QUICHE_DCHECK(packet_info.version_flag);
     QUICHE_DCHECK(packet_info.version.AllowsVariableLengthConnectionIds());
-    QUIC_DLOG(INFO) << "Packet with short destination connection ID "
+    LOG(INFO) << "Packet with short destination connection ID "
                     << server_connection_id << " expected "
                     << static_cast<int>(expected_server_connection_id_length_);
     // Drop the packet silently.
@@ -581,7 +581,7 @@ bool QuicDispatcher::MaybeDispatchPacket(
       !QuicUtils::IsConnectionIdLengthValidForVersion(
           server_connection_id.length(),
           packet_info.version.transport_version)) {
-    QUIC_DLOG(INFO) << "Packet with destination connection ID "
+    LOG(INFO) << "Packet with destination connection ID "
                     << server_connection_id << " is invalid with version "
                     << packet_info.version;
     // Drop the packet silently.
@@ -689,7 +689,7 @@ bool QuicDispatcher::MaybeDispatchPacket(
         packet_info.form == IETF_QUIC_LONG_HEADER_PACKET &&
         packet_info.long_packet_type == INITIAL &&
         packet_info.packet.length() < kMinClientInitialPacketLength) {
-      QUIC_DVLOG(1) << "Dropping initial packet which is too short, length: "
+      LOG(INFO) << "Dropping initial packet which is too short, length: "
                     << packet_info.packet.length();
       QUIC_CODE_COUNT(quic_drop_small_initial_packets);
       return true;
@@ -770,7 +770,7 @@ void QuicDispatcher::ProcessHeader(ReceivedPacketInfo* packet_info) {
     case kFateTimeWait: {
       // Add this connection_id to the time-wait state, to safely reject
       // future packets.
-      QUIC_DLOG(INFO) << "Adding connection ID " << server_connection_id
+      LOG(INFO) << "Adding connection ID " << server_connection_id
                       << " to time-wait list.";
       QUIC_CODE_COUNT(quic_reject_fate_time_wait);
       const std::string& connection_close_error_detail =
@@ -875,7 +875,7 @@ QuicDispatcher::TryExtractChloOrBufferEarlyPacket(
       !packet_info.version.HasIetfInvariantHeader() &&
       crypto_config()->validate_chlo_size() &&
       packet_info.packet.length() < kMinClientInitialPacketLength) {
-    QUIC_DVLOG(1) << "Dropping CHLO packet which is too short, length: "
+    LOG(INFO) << "Dropping CHLO packet which is too short, length: "
                   << packet_info.packet.length();
     QUIC_CODE_COUNT(quic_drop_small_chlo_packets);
     return result;
@@ -910,7 +910,7 @@ std::string QuicDispatcher::SelectAlpn(const std::vector<std::string>& alpns) {
 QuicDispatcher::QuicPacketFate QuicDispatcher::ValidityChecks(
     const ReceivedPacketInfo& packet_info) {
   if (!packet_info.version_flag) {
-    QUIC_DLOG(INFO)
+    LOG(INFO)
         << "Packet without version arrived for unknown connection ID "
         << packet_info.destination_connection_id;
     MaybeResetPacketsWithNoVersion(packet_info);
@@ -1183,7 +1183,7 @@ void QuicDispatcher::OnConnectionIdRetired(
 
 void QuicDispatcher::OnConnectionAddedToTimeWaitList(
     QuicConnectionId server_connection_id) {
-  QUIC_DLOG(INFO) << "Connection " << server_connection_id
+  LOG(INFO) << "Connection " << server_connection_id
                   << " added to time wait list.";
 }
 
@@ -1193,7 +1193,7 @@ void QuicDispatcher::StatelesslyTerminateConnection(
     QuicErrorCode error_code, const std::string& error_details,
     QuicTimeWaitListManager::TimeWaitAction action) {
   if (format != IETF_QUIC_LONG_HEADER_PACKET && !version_flag) {
-    QUIC_DVLOG(1) << "Statelessly terminating " << server_connection_id
+    LOG(INFO) << "Statelessly terminating " << server_connection_id
                   << " based on a non-ietf-long packet, action:" << action
                   << ", error_code:" << error_code
                   << ", error_details:" << error_details;
@@ -1205,7 +1205,7 @@ void QuicDispatcher::StatelesslyTerminateConnection(
 
   // If the version is known and supported by framer, send a connection close.
   if (IsSupportedVersion(version)) {
-    QUIC_DVLOG(1)
+    LOG(INFO)
         << "Statelessly terminating " << server_connection_id
         << " based on an ietf-long packet, which has a supported version:"
         << version << ", error_code:" << error_code
@@ -1224,7 +1224,7 @@ void QuicDispatcher::StatelesslyTerminateConnection(
     return;
   }
 
-  QUIC_DVLOG(1)
+  LOG(INFO)
       << "Statelessly terminating " << server_connection_id
       << " based on an ietf-long packet, which has an unsupported version:"
       << version << ", error_code:" << error_code
@@ -1301,7 +1301,7 @@ bool QuicDispatcher::HasBufferedPackets(QuicConnectionId server_connection_id) {
 
 void QuicDispatcher::OnBufferPacketFailure(
     EnqueuePacketResult result, QuicConnectionId server_connection_id) {
-  QUIC_DLOG(INFO) << "Fail to buffer packet on connection "
+  LOG(INFO) << "Fail to buffer packet on connection "
                   << server_connection_id << " because of " << result;
 }
 
@@ -1438,7 +1438,7 @@ std::shared_ptr<QuicSession> QuicDispatcher::CreateSessionFromChlo(
     session->connection()->SetOriginalDestinationConnectionId(
         original_connection_id);
   }
-  QUIC_DLOG(INFO) << "Created new session for " << *server_connection_id;
+  LOG(INFO) << "Created new session for " << *server_connection_id;
 
   auto insertion_result = reference_counted_session_map_.insert(std::make_pair(
       *server_connection_id, std::shared_ptr<QuicSession>(std::move(session))));

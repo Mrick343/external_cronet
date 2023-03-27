@@ -284,7 +284,7 @@ void PendingStream::MarkConsumed(QuicByteCount num_bytes) {
 }
 
 void PendingStream::StopReading() {
-  QUIC_DVLOG(1) << "Stop reading from pending stream " << id();
+  LOG(INFO) << "Stop reading from pending stream " << id();
   sequencer_.StopReading();
 }
 
@@ -390,7 +390,7 @@ QuicStream::QuicStream(QuicStreamId id, QuicSession* session,
 
 QuicStream::~QuicStream() {
   if (session_ != nullptr && IsWaitingForAcks()) {
-    QUIC_DVLOG(1)
+    LOG(INFO)
         << ENDPOINT << "Stream " << id_
         << " gets destroyed while waiting for acks. stream_bytes_outstanding = "
         << send_buffer_.stream_bytes_outstanding()
@@ -456,7 +456,7 @@ void QuicStream::OnStreamFrame(const QuicStreamFrame& frame) {
   }
 
   if (read_side_closed_) {
-    QUIC_DLOG(INFO)
+    LOG(INFO)
         << ENDPOINT << "Stream " << frame.stream_id
         << " is closed for reading. Ignoring newly received stream data.";
     // The subclass does not want to read data:  blackhole the data.
@@ -490,14 +490,14 @@ void QuicStream::OnStreamFrame(const QuicStreamFrame& frame) {
 bool QuicStream::OnStopSending(QuicResetStreamError error) {
   // Do not reset the stream if all data has been sent and acknowledged.
   if (write_side_closed() && !IsWaitingForAcks()) {
-    QUIC_DVLOG(1) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                   << "Ignoring STOP_SENDING for a write closed stream, id: "
                   << id_;
     return false;
   }
 
   if (is_static_) {
-    QUIC_DVLOG(1) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                   << "Received STOP_SENDING for a static stream, id: " << id_
                   << " Closing connection";
     OnUnrecoverableError(QUIC_INVALID_STREAM_ID,
@@ -675,7 +675,7 @@ void QuicStream::WriteOrBufferDataAtLevel(
     return;
   }
   if (write_side_closed_) {
-    QUIC_DLOG(ERROR) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                      << "Attempt to write when the write side is closed";
     if (type_ == READ_UNIDIRECTIONAL) {
       OnUnrecoverableError(QUIC_TRY_TO_WRITE_DATA_ON_READ_UNIDIRECTIONAL_STREAM,
@@ -720,7 +720,7 @@ void QuicStream::OnCanWrite() {
   }
 
   if (write_side_closed_) {
-    QUIC_DLOG(ERROR)
+    LOG(INFO)
         << ENDPOINT << "Stream " << id()
         << " attempting to write new data when the write side is closed";
     return;
@@ -784,7 +784,7 @@ QuicConsumedData QuicStream::WriteMemSlices(
   }
 
   if (write_side_closed_) {
-    QUIC_DLOG(ERROR) << ENDPOINT << "Stream " << id()
+    LOG(INFO) << ENDPOINT << "Stream " << id()
                      << " attempting to write when the write side is closed";
     if (type_ == READ_UNIDIRECTIONAL) {
       OnUnrecoverableError(QUIC_TRY_TO_WRITE_DATA_ON_READ_UNIDIRECTIONAL_STREAM,
@@ -836,13 +836,13 @@ void QuicStream::CloseReadSide() {
   if (read_side_closed_) {
     return;
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Done reading from stream " << id();
+  LOG(INFO) << ENDPOINT << "Done reading from stream " << id();
 
   read_side_closed_ = true;
   sequencer_.ReleaseBuffer();
 
   if (write_side_closed_) {
-    QUIC_DVLOG(1) << ENDPOINT << "Closing stream " << id();
+    LOG(INFO) << ENDPOINT << "Closing stream " << id();
     session_->OnStreamClosed(id());
     OnClose();
   }
@@ -852,11 +852,11 @@ void QuicStream::CloseWriteSide() {
   if (write_side_closed_) {
     return;
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Done writing to stream " << id();
+  LOG(INFO) << ENDPOINT << "Done writing to stream " << id();
 
   write_side_closed_ = true;
   if (read_side_closed_) {
-    QUIC_DVLOG(1) << ENDPOINT << "Closing stream " << id();
+    LOG(INFO) << ENDPOINT << "Closing stream " << id();
     session_->OnStreamClosed(id());
     OnClose();
   }
@@ -914,7 +914,7 @@ HandshakeProtocol QuicStream::handshake_protocol() const {
 }
 
 void QuicStream::StopReading() {
-  QUIC_DVLOG(1) << ENDPOINT << "Stop reading from stream " << id();
+  LOG(INFO) << ENDPOINT << "Stop reading from stream " << id();
   sequencer_.StopReading();
 }
 
@@ -1088,7 +1088,7 @@ bool QuicStream::OnStreamFrameAcked(QuicStreamOffset offset,
                                     QuicTime::Delta /*ack_delay_time*/,
                                     QuicTime /*receive_timestamp*/,
                                     QuicByteCount* newly_acked_length) {
-  QUIC_DVLOG(1) << ENDPOINT << "stream " << id_ << " Acking "
+  LOG(INFO) << ENDPOINT << "stream " << id_ << " Acking "
                 << "[" << offset << ", " << offset + data_length << "]"
                 << " fin = " << fin_acked;
   *newly_acked_length = 0;
@@ -1130,7 +1130,7 @@ void QuicStream::OnStreamFrameRetransmitted(QuicStreamOffset offset,
 
 void QuicStream::OnStreamFrameLost(QuicStreamOffset offset,
                                    QuicByteCount data_length, bool fin_lost) {
-  QUIC_DVLOG(1) << ENDPOINT << "stream " << id_ << " Losting "
+  LOG(INFO) << ENDPOINT << "stream " << id_ << " Losting "
                 << "[" << offset << ", " << offset + data_length << "]"
                 << " fin = " << fin_lost;
   if (data_length > 0) {
@@ -1167,7 +1167,7 @@ bool QuicStream::RetransmitStreamData(QuicStreamOffset offset,
         id_, retransmission_length, retransmission_offset,
         can_bundle_fin ? FIN : NO_FIN, type,
         session()->GetEncryptionLevelToSendApplicationData());
-    QUIC_DVLOG(1) << ENDPOINT << "stream " << id_
+    LOG(INFO) << ENDPOINT << "stream " << id_
                   << " is forced to retransmit stream data ["
                   << retransmission_offset << ", "
                   << retransmission_offset + retransmission_length
@@ -1185,7 +1185,7 @@ bool QuicStream::RetransmitStreamData(QuicStreamOffset offset,
     }
   }
   if (retransmit_fin) {
-    QUIC_DVLOG(1) << ENDPOINT << "stream " << id_
+    LOG(INFO) << ENDPOINT << "stream " << id_
                   << " retransmits fin only frame.";
     consumed = stream_delegate_->WritevData(
         id_, 0, stream_bytes_written(), FIN, type,
@@ -1210,7 +1210,7 @@ bool QuicStream::WriteStreamData(QuicStreamOffset offset,
                                  QuicByteCount data_length,
                                  QuicDataWriter* writer) {
   QUICHE_DCHECK_LT(0u, data_length);
-  QUIC_DVLOG(2) << ENDPOINT << "Write stream " << id_ << " data from offset "
+  LOG(INFO) << ENDPOINT << "Write stream " << id_ << " data from offset "
                 << offset << " length " << data_length;
   return send_buffer_.WriteStreamData(offset, data_length, writer);
 }
@@ -1258,7 +1258,7 @@ void QuicStream::WriteBufferedData(EncryptionLevel level) {
 
     // Writing more data would be a violation of flow control.
     write_length = send_window;
-    QUIC_DVLOG(1) << "stream " << id() << " shortens write length to "
+    LOG(INFO) << "stream " << id() << " shortens write length to "
                   << write_length << " due to flow control";
   }
 
@@ -1273,7 +1273,7 @@ void QuicStream::WriteBufferedData(EncryptionLevel level) {
   OnStreamDataConsumed(consumed_data.bytes_consumed);
 
   AddBytesSent(consumed_data.bytes_consumed);
-  QUIC_DVLOG(1) << ENDPOINT << "stream " << id_ << " sends "
+  LOG(INFO) << ENDPOINT << "stream " << id_ << " sends "
                 << stream_bytes_written() << " bytes "
                 << " and has buffered data " << BufferedDataBytes() << " bytes."
                 << " fin is sent: " << consumed_data.fin_consumed
@@ -1344,7 +1344,7 @@ void QuicStream::WritePendingRetransmission() {
   while (HasPendingRetransmission()) {
     QuicConsumedData consumed(0, false);
     if (!send_buffer_.HasPendingRetransmission()) {
-      QUIC_DVLOG(1) << ENDPOINT << "stream " << id_
+      LOG(INFO) << ENDPOINT << "stream " << id_
                     << " retransmits fin only frame.";
       consumed = stream_delegate_->WritevData(
           id_, 0, stream_bytes_written(), FIN, LOSS_RETRANSMISSION,
@@ -1365,7 +1365,7 @@ void QuicStream::WritePendingRetransmission() {
           id_, pending.length, pending.offset, can_bundle_fin ? FIN : NO_FIN,
           LOSS_RETRANSMISSION,
           session()->GetEncryptionLevelToSendApplicationData());
-      QUIC_DVLOG(1) << ENDPOINT << "stream " << id_
+      LOG(INFO) << ENDPOINT << "stream " << id_
                     << " tries to retransmit stream data [" << pending.offset
                     << ", " << pending.offset + pending.length
                     << ") and fin: " << can_bundle_fin
@@ -1387,7 +1387,7 @@ bool QuicStream::MaybeSetTtl(QuicTime::Delta ttl) {
     return false;
   }
   if (deadline_.IsInitialized()) {
-    QUIC_DLOG(WARNING) << "Deadline has already been set.";
+    LOG(INFO) << "Deadline has already been set.";
     return false;
   }
   QuicTime now = session()->connection()->clock()->ApproximateNow();
@@ -1405,7 +1405,7 @@ bool QuicStream::HasDeadlinePassed() const {
     return false;
   }
   // TTL expired.
-  QUIC_DVLOG(1) << "stream " << id() << " deadline has passed";
+  LOG(INFO) << "stream " << id() << " deadline has passed";
   return true;
 }
 

@@ -71,14 +71,14 @@ bool TunDeviceController::UpdateRoutes(
 
   NetlinkInterface::LinkInfo link_info{};
   if (!netlink_->GetLinkInfo(ifname_, &link_info)) {
-    QUIC_LOG(ERROR) << "Could not get link info for interface <" << ifname_
+    LOG(INFO) << "Could not get link info for interface <" << ifname_
                     << ">";
     return false;
   }
 
   std::vector<NetlinkInterface::RoutingRule> routing_rules;
   if (!netlink_->GetRouteInfo(&routing_rules)) {
-    QUIC_LOG(ERROR) << "Unable to get route info";
+    LOG(INFO) << "Unable to get route info";
     return false;
   }
 
@@ -89,7 +89,7 @@ bool TunDeviceController::UpdateRoutes(
                                  rule.destination_subnet, rule.scope,
                                  rule.preferred_source, rule.out_interface,
                                  rule.init_cwnd)) {
-        QUIC_LOG(ERROR) << "Unable to remove old route to <"
+        LOG(INFO) << "Unable to remove old route to <"
                         << rule.destination_subnet.ToString() << ">";
         return false;
       }
@@ -110,7 +110,7 @@ bool TunDeviceController::UpdateRoutes(
                                QboneConstants::kQboneRouteTableId, route,
                                RT_SCOPE_LINK, desired_address, link_info.index,
                                absl::GetFlag(FLAGS_qbone_route_init_cwnd))) {
-      QUIC_LOG(ERROR) << "Unable to add route <" << route.ToString() << ">";
+      LOG(INFO) << "Unable to add route <" << route.ToString() << ">";
       return false;
     }
   }
@@ -137,7 +137,7 @@ bool TunDeviceController::UpdateRules(IpRange desired_range) {
 
   std::vector<NetlinkInterface::IpRule> ip_rules;
   if (!netlink_->GetRuleInfo(&ip_rules)) {
-    QUIC_LOG(ERROR) << "Unable to get rule info";
+    LOG(INFO) << "Unable to get rule info";
     return false;
   }
 
@@ -145,7 +145,7 @@ bool TunDeviceController::UpdateRules(IpRange desired_range) {
     if (rule.table == QboneConstants::kQboneRouteTableId) {
       if (!netlink_->ChangeRule(NetlinkInterface::Verb::kRemove, rule.table,
                                 rule.source_range)) {
-        QUIC_LOG(ERROR) << "Unable to remove old rule for table <" << rule.table
+        LOG(INFO) << "Unable to remove old rule for table <" << rule.table
                         << "> from source <" << rule.source_range.ToString()
                         << ">";
         return false;
@@ -156,7 +156,7 @@ bool TunDeviceController::UpdateRules(IpRange desired_range) {
   if (!netlink_->ChangeRule(NetlinkInterface::Verb::kAdd,
                             QboneConstants::kQboneRouteTableId,
                             desired_range)) {
-    QUIC_LOG(ERROR) << "Unable to add rule for <" << desired_range.ToString()
+    LOG(INFO) << "Unable to add rule for <" << desired_range.ToString()
                     << ">";
     return false;
   }

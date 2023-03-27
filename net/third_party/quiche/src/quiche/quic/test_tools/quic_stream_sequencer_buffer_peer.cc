@@ -68,18 +68,18 @@ bool QuicStreamSequencerBufferPeer::CheckBufferInvariants() {
   bool capacity_sane = data_span <= buffer_->max_buffer_capacity_bytes_ &&
                        data_span >= buffer_->num_bytes_buffered_;
   if (!capacity_sane) {
-    QUIC_LOG(ERROR) << "data span is larger than capacity.";
-    QUIC_LOG(ERROR) << "total read: " << buffer_->total_bytes_read_
+    LOG(INFO) << "data span is larger than capacity.";
+    LOG(INFO) << "total read: " << buffer_->total_bytes_read_
                     << " last byte: " << buffer_->NextExpectedByte();
   }
   bool total_read_sane =
       buffer_->FirstMissingByte() >= buffer_->total_bytes_read_;
   if (!total_read_sane) {
-    QUIC_LOG(ERROR) << "read across 1st gap.";
+    LOG(INFO) << "read across 1st gap.";
   }
   bool read_offset_sane = buffer_->ReadOffset() < kBlockSizeBytes;
   if (!capacity_sane) {
-    QUIC_LOG(ERROR) << "read offset go beyond 1st block";
+    LOG(INFO) << "read offset go beyond 1st block";
   }
   bool block_match_capacity =
       (buffer_->max_buffer_capacity_bytes_ <=
@@ -87,11 +87,11 @@ bool QuicStreamSequencerBufferPeer::CheckBufferInvariants() {
       (buffer_->max_buffer_capacity_bytes_ >
        (buffer_->max_blocks_count_ - 1) * kBlockSizeBytes);
   if (!capacity_sane) {
-    QUIC_LOG(ERROR) << "block number not match capcaity.";
+    LOG(INFO) << "block number not match capcaity.";
   }
   bool block_retired_when_empty = CheckEmptyInvariants();
   if (!block_retired_when_empty) {
-    QUIC_LOG(ERROR) << "block is not retired after use.";
+    LOG(INFO) << "block is not retired after use.";
   }
   return capacity_sane && total_read_sane && read_offset_sane &&
          block_match_capacity && block_retired_when_empty;

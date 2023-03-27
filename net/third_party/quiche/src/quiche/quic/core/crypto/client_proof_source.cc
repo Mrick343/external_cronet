@@ -51,7 +51,7 @@ const ClientProofSource::CertAndKey* DefaultClientProofSource::GetCertAndKey(
 const ClientProofSource::CertAndKey* DefaultClientProofSource::LookupExact(
     absl::string_view map_key) const {
   const auto it = cert_and_keys_.find(map_key);
-  QUIC_DVLOG(1) << "LookupExact(" << map_key
+  LOG(INFO) << "LookupExact(" << map_key
                 << ") found:" << (it != cert_and_keys_.end());
   if (it != cert_and_keys_.end()) {
     return it->second.get();

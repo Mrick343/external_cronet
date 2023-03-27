@@ -403,7 +403,7 @@ class QuicSpdySession::SpdyFramerVisitor
       return;
     }
     int compression_pct = 100 - (100 * frame_len) / payload_len;
-    QUIC_DVLOG(1) << "Net.QuicHpackCompressionPercentage: " << compression_pct;
+    LOG(INFO) << "Net.QuicHpackCompressionPercentage: " << compression_pct;
   }
 
   void OnReceiveCompressedFrame(SpdyStreamId /*stream_id*/,
@@ -599,7 +599,7 @@ void QuicSpdySession::OnStreamHeaderList(QuicStreamId stream_id, bool fin,
               ConnectionCloseBehavior::SEND_CONNECTION_CLOSE_PACKET);
           return;
         }
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "Received final byte offset in trailers for stream "
                       << stream_id << ", which no longer exists.";
         OnFinalByteOffsetReceived(stream_id, final_byte_offset);
@@ -1064,7 +1064,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
     // SETTINGS frame received on the control stream.
     switch (id) {
       case SETTINGS_QPACK_MAX_TABLE_CAPACITY: {
-        QUIC_DVLOG(1)
+        LOG(INFO)
             << ENDPOINT
             << "SETTINGS_QPACK_MAX_TABLE_CAPACITY received with value "
             << value;
@@ -1090,7 +1090,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
         break;
       }
       case SETTINGS_MAX_FIELD_SECTION_SIZE:
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "SETTINGS_MAX_FIELD_SECTION_SIZE received with value "
                       << value;
         if (max_outbound_header_list_size_ !=
@@ -1111,7 +1111,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
         max_outbound_header_list_size_ = value;
         break;
       case SETTINGS_QPACK_BLOCKED_STREAMS: {
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "SETTINGS_QPACK_BLOCKED_STREAMS received with value "
                       << value;
         if (!qpack_encoder_->SetMaximumBlockedStreams(value)) {
@@ -1130,7 +1130,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
         break;
       }
       case SETTINGS_ENABLE_CONNECT_PROTOCOL: {
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "SETTINGS_ENABLE_CONNECT_PROTOCOL received with value "
                       << value;
         if (!VerifySettingIsZeroOrOne(id, value)) {
@@ -1160,7 +1160,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
             local_http_datagram_support != HttpDatagramSupport::kDraft04And09) {
           break;
         }
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "SETTINGS_H3_DATAGRAM_DRAFT04 received with value "
                       << value;
         if (!version().UsesHttp3()) {
@@ -1182,7 +1182,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
             local_http_datagram_support != HttpDatagramSupport::kDraft04And09) {
           break;
         }
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "SETTINGS_H3_DATAGRAM_DRAFT09 received with value "
                       << value;
         if (!version().UsesHttp3()) {
@@ -1200,7 +1200,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
         if (!WillNegotiateWebTransport()) {
           break;
         }
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "SETTINGS_ENABLE_WEBTRANSPORT received with value "
                       << value;
         if (!VerifySettingIsZeroOrOne(id, value)) {
@@ -1212,7 +1212,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
         }
         break;
       default:
-        QUIC_DVLOG(1) << ENDPOINT << "Unknown setting identifier " << id
+        LOG(INFO) << ENDPOINT << "Unknown setting identifier " << id
                       << " received with value " << value;
         // Ignore unknown settings.
         break;
@@ -1223,7 +1223,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
   // SETTINGS frame received on the headers stream.
   switch (id) {
     case spdy::SETTINGS_HEADER_TABLE_SIZE:
-      QUIC_DVLOG(1) << ENDPOINT
+      LOG(INFO) << ENDPOINT
                     << "SETTINGS_HEADER_TABLE_SIZE received with value "
                     << value;
       spdy_framer_.UpdateHeaderEncoderTableSize(
@@ -1233,7 +1233,7 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
       if (perspective() == Perspective::IS_SERVER) {
         // See rfc7540, Section 6.5.2.
         if (value > 1) {
-          QUIC_DLOG(ERROR) << ENDPOINT << "Invalid value " << value
+          LOG(INFO) << ENDPOINT << "Invalid value " << value
                            << " received for SETTINGS_ENABLE_PUSH.";
           if (IsConnected()) {
             CloseConnectionWithDetails(
@@ -1243,11 +1243,11 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
           }
           return true;
         }
-        QUIC_DVLOG(1) << ENDPOINT << "SETTINGS_ENABLE_PUSH received with value "
+        LOG(INFO) << ENDPOINT << "SETTINGS_ENABLE_PUSH received with value "
                       << value << ", ignoring.";
         break;
       } else {
-        QUIC_DLOG(ERROR)
+        LOG(INFO)
             << ENDPOINT
             << "Invalid SETTINGS_ENABLE_PUSH received by client with value "
             << value;
@@ -1259,13 +1259,13 @@ bool QuicSpdySession::OnSetting(uint64_t id, uint64_t value) {
       }
       break;
     case spdy::SETTINGS_MAX_HEADER_LIST_SIZE:
-      QUIC_DVLOG(1) << ENDPOINT
+      LOG(INFO) << ENDPOINT
                     << "SETTINGS_MAX_HEADER_LIST_SIZE received with value "
                     << value;
       max_outbound_header_list_size_ = value;
       break;
     default:
-      QUIC_DLOG(ERROR) << ENDPOINT << "Unknown setting identifier " << id
+      LOG(INFO) << ENDPOINT << "Unknown setting identifier " << id
                        << " received with value " << value;
       if (IsConnected()) {
         CloseConnectionWithDetails(
@@ -1328,7 +1328,7 @@ void QuicSpdySession::OnPriority(SpdyStreamId stream_id,
 }
 
 void QuicSpdySession::OnHeaderList(const QuicHeaderList& header_list) {
-  QUIC_DVLOG(1) << ENDPOINT << "Received header list for stream " << stream_id_
+  LOG(INFO) << ENDPOINT << "Received header list for stream " << stream_id_
                 << ": " << header_list.DebugString();
   // This code path is only executed for push promise in IETF QUIC.
   if (VersionUsesHttp3(transport_version())) {
@@ -1396,7 +1396,7 @@ QuicStream* QuicSpdySession::ProcessPendingStream(PendingStream* pending) {
           std::make_unique<QuicReceiveControlStream>(pending, this);
       receive_control_stream_ = receive_stream.get();
       ActivateStream(std::move(receive_stream));
-      QUIC_DVLOG(1) << ENDPOINT << "Receive Control stream is created";
+      LOG(INFO) << ENDPOINT << "Receive Control stream is created";
       if (debug_visitor_ != nullptr) {
         debug_visitor_->OnPeerControlStreamCreated(
             receive_control_stream_->id());
@@ -1417,7 +1417,7 @@ QuicStream* QuicSpdySession::ProcessPendingStream(PendingStream* pending) {
           pending, this, qpack_decoder_->encoder_stream_receiver());
       qpack_encoder_receive_stream_ = encoder_receive.get();
       ActivateStream(std::move(encoder_receive));
-      QUIC_DVLOG(1) << ENDPOINT << "Receive QPACK Encoder stream is created";
+      LOG(INFO) << ENDPOINT << "Receive QPACK Encoder stream is created";
       if (debug_visitor_ != nullptr) {
         debug_visitor_->OnPeerQpackEncoderStreamCreated(
             qpack_encoder_receive_stream_->id());
@@ -1433,7 +1433,7 @@ QuicStream* QuicSpdySession::ProcessPendingStream(PendingStream* pending) {
           pending, this, qpack_encoder_->decoder_stream_receiver());
       qpack_decoder_receive_stream_ = decoder_receive.get();
       ActivateStream(std::move(decoder_receive));
-      QUIC_DVLOG(1) << ENDPOINT << "Receive QPACK Decoder stream is created";
+      LOG(INFO) << ENDPOINT << "Receive QPACK Decoder stream is created";
       if (debug_visitor_ != nullptr) {
         debug_visitor_->OnPeerQpackDecoderStreamCreated(
             qpack_decoder_receive_stream_->id());
@@ -1450,7 +1450,7 @@ QuicStream* QuicSpdySession::ProcessPendingStream(PendingStream* pending) {
         // Treat as unknown stream type.
         break;
       }
-      QUIC_DVLOG(1) << ENDPOINT << "Created an incoming WebTransport stream "
+      LOG(INFO) << ENDPOINT << "Created an incoming WebTransport stream "
                     << pending->id();
       auto stream_owned =
           std::make_unique<WebTransportHttp3UnidirectionalStream>(pending,
@@ -1650,13 +1650,13 @@ void QuicSpdySession::SetMaxDatagramTimeInQueueForStreamId(
 void QuicSpdySession::OnMessageReceived(absl::string_view message) {
   QuicSession::OnMessageReceived(message);
   if (!SupportsH3Datagram()) {
-    QUIC_DLOG(INFO) << "Ignoring unexpected received HTTP/3 datagram";
+    LOG(INFO) << "Ignoring unexpected received HTTP/3 datagram";
     return;
   }
   QuicDataReader reader(message);
   uint64_t stream_id64;
   if (!reader.ReadVarInt62(&stream_id64)) {
-    QUIC_DLOG(ERROR) << "Failed to parse stream ID in received HTTP/3 datagram";
+    LOG(INFO) << "Failed to parse stream ID in received HTTP/3 datagram";
     return;
   }
   // Stream ID is sent divided by four as per the specification.
@@ -1673,7 +1673,7 @@ void QuicSpdySession::OnMessageReceived(absl::string_view message) {
   QuicSpdyStream* stream =
       static_cast<QuicSpdyStream*>(GetActiveStream(stream_id));
   if (stream == nullptr) {
-    QUIC_DLOG(INFO) << "Received HTTP/3 datagram for unknown stream ID "
+    LOG(INFO) << "Received HTTP/3 datagram for unknown stream ID "
                     << stream_id;
     // TODO(b/181256914) buffer HTTP/3 datagrams with unknown stream IDs for a
     // short period of time in case they were reordered.
@@ -1734,7 +1734,7 @@ void QuicSpdySession::AssociateIncomingWebTransportStreamWithSession(
   }
   WebTransportHttp3* session = GetWebTransportSession(session_id);
   if (session != nullptr) {
-    QUIC_DVLOG(1) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                   << "Successfully associated incoming WebTransport stream "
                   << stream_id << " with session ID " << session_id;
 
@@ -1743,14 +1743,14 @@ void QuicSpdySession::AssociateIncomingWebTransportStreamWithSession(
   }
   // Evict the oldest streams until we are under the limit.
   while (buffered_streams_.size() >= kMaxUnassociatedWebTransportStreams) {
-    QUIC_DVLOG(1) << ENDPOINT << "Removing stream "
+    LOG(INFO) << ENDPOINT << "Removing stream "
                   << buffered_streams_.front().stream_id
                   << " from buffered streams as the queue is full.";
     ResetStream(buffered_streams_.front().stream_id,
                 QUIC_STREAM_WEBTRANSPORT_BUFFERED_STREAMS_LIMIT_EXCEEDED);
     buffered_streams_.pop_front();
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Received a WebTransport stream " << stream_id
+  LOG(INFO) << ENDPOINT << "Received a WebTransport stream " << stream_id
                 << " for session ID " << session_id
                 << " but cannot associate it; buffering instead.";
   buffered_streams_.push_back(
@@ -1760,12 +1760,12 @@ void QuicSpdySession::AssociateIncomingWebTransportStreamWithSession(
 void QuicSpdySession::ProcessBufferedWebTransportStreamsForSession(
     WebTransportHttp3* session) {
   const WebTransportSessionId session_id = session->id();
-  QUIC_DVLOG(1) << "Processing buffered WebTransport streams for "
+  LOG(INFO) << "Processing buffered WebTransport streams for "
                 << session_id;
   auto it = buffered_streams_.begin();
   while (it != buffered_streams_.end()) {
     if (it->session_id == session_id) {
-      QUIC_DVLOG(1) << "Unbuffered and associated WebTransport stream "
+      LOG(INFO) << "Unbuffered and associated WebTransport stream "
                     << it->stream_id << " with session " << it->session_id;
       session->AssociateStream(it->stream_id);
       it = buffered_streams_.erase(it);

@@ -45,7 +45,7 @@ QuicSimpleServerSession::CreateQuicCryptoServerStream(
 
 void QuicSimpleServerSession::OnStreamFrame(const QuicStreamFrame& frame) {
   if (!IsIncomingStream(frame.stream_id) && !WillNegotiateWebTransport()) {
-    QUIC_LOG(WARNING) << "Client shouldn't send data on server push stream";
+    LOG(INFO) << "Client shouldn't send data on server push stream";
     connection()->CloseConnection(
         QUIC_INVALID_STREAM_ID, "Client sent data on server push stream",
         ConnectionCloseBehavior::SEND_CONNECTION_CLOSE_PACKET);
@@ -168,7 +168,7 @@ spdy::Http2HeaderBlock QuicSimpleServerSession::SynthesizePushRequestHeaders(
 void QuicSimpleServerSession::SendPushPromise(QuicStreamId original_stream_id,
                                               QuicStreamId promised_stream_id,
                                               spdy::Http2HeaderBlock headers) {
-  QUIC_DLOG(INFO) << "stream " << original_stream_id
+  LOG(INFO) << "stream " << original_stream_id
                   << " send PUSH_PROMISE for promised stream "
                   << promised_stream_id;
   WritePushPromise(original_stream_id, promised_stream_id, std::move(headers));
@@ -193,7 +193,7 @@ void QuicSimpleServerSession::HandlePromisedPushRequests() {
             CreateOutgoingUnidirectionalStream());
     QUICHE_DCHECK_NE(promised_stream, nullptr);
     QUICHE_DCHECK_EQ(promised_info.stream_id, promised_stream->id());
-    QUIC_DLOG(INFO) << "created server push stream " << promised_stream->id();
+    LOG(INFO) << "created server push stream " << promised_stream->id();
 
     promised_stream->SetPriority(promised_info.precedence);
 

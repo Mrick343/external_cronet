@@ -103,7 +103,7 @@ class QuicServerEpollInTest : public QuicTestWithParam<QuicEventLoopFactory*> {
     ASSERT_TRUE(QuicServerPeer::SetSmallSocket(&server_));
 
     if (!server_.overflow_supported()) {
-      QUIC_LOG(WARNING) << "Overflow not supported.  Not testing.";
+      LOG(INFO) << "Overflow not supported.  Not testing.";
       return;
     }
   }
@@ -157,7 +157,7 @@ TEST_P(QuicServerEpollInTest, ProcessBufferedCHLOsOnEpollin) {
   int rc = sendto(fd, buf, ABSL_ARRAYSIZE(buf), 0,
                   reinterpret_cast<sockaddr*>(&storage), sizeof(storage));
   if (rc < 0) {
-    QUIC_DLOG(INFO) << errno << " " << strerror(errno);
+    LOG(INFO) << errno << " " << strerror(errno);
   }
 
   while (more_chlos) {

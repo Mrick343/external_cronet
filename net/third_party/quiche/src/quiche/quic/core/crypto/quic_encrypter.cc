@@ -36,7 +36,7 @@ std::unique_ptr<QuicEncrypter> QuicEncrypter::Create(
         return std::make_unique<ChaCha20Poly1305Encrypter>();
       }
     default:
-      QUIC_LOG(FATAL) << "Unsupported algorithm: " << algorithm;
+      LOG(INFO) << "Unsupported algorithm: " << algorithm;
       return nullptr;
   }
 }

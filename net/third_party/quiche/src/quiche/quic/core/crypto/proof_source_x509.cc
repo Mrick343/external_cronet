@@ -74,6 +74,8 @@ ProofSourceX509::GetCertChain(const QuicSocketAddress& /*server_address*/,
                               const QuicSocketAddress& /*client_address*/,
                               const std::string& hostname,
                               bool* cert_matched_sni) {
+
+  LOG(INFO) << "Proof source - x509 asked for cert chain";
   if (!valid()) {
     QUIC_BUG(ProofSourceX509::GetCertChain called in invalid state)
         << "ProofSourceX509::GetCertChain called while the object is not "

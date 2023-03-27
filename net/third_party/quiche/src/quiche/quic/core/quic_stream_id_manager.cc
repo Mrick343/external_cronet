@@ -182,7 +182,7 @@ bool QuicStreamIdManager::MaybeIncreaseLargestPeerStreamId(
 
   if (incoming_stream_count_ + stream_count_increment >
       incoming_advertised_max_streams_) {
-    QUIC_DLOG(INFO) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                     << "Failed to create a new incoming stream with id:"
                     << stream_id << ", reaching MAX_STREAMS limit: "
                     << incoming_advertised_max_streams_ << ".";

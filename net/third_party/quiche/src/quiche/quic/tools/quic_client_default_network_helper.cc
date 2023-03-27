@@ -103,7 +103,7 @@ bool QuicClientDefaultNetworkHelper::CreateUDPSocketAndBind(
   sockaddr_storage addr = client_address.generic_address();
   int rc = bind(fd, reinterpret_cast<sockaddr*>(&addr), addrlen);
   if (rc < 0) {
-    QUIC_LOG(ERROR) << "Bind failed: " << strerror(errno)
+    LOG(INFO) << "Bind failed: " << strerror(errno)
                     << " bind_to_address:" << bind_to_address
                     << ", bind_to_port:" << bind_to_port
                     << ", client_address:" << client_address;
@@ -111,7 +111,7 @@ bool QuicClientDefaultNetworkHelper::CreateUDPSocketAndBind(
   }
 
   if (client_address.FromSocket(fd) != 0) {
-    QUIC_LOG(ERROR) << "Unable to get self address.  Error: "
+    LOG(INFO) << "Unable to get self address.  Error: "
                     << strerror(errno);
   }
 
@@ -154,7 +154,7 @@ void QuicClientDefaultNetworkHelper::OnSocketEvent(
     QuicEventLoop* /*event_loop*/, QuicUdpSocketFd fd,
     QuicSocketEventMask events) {
   if (events & kSocketEventReadable) {
-    QUIC_DVLOG(1) << "Read packets on kSocketEventReadable";
+    LOG(INFO) << "Read packets on kSocketEventReadable";
     int times_to_read = max_reads_per_event_loop_;
     bool more_to_read = true;
     QuicPacketCount packets_dropped = 0;
@@ -165,7 +165,7 @@ void QuicClientDefaultNetworkHelper::OnSocketEvent(
       --times_to_read;
     }
     if (packets_dropped_ < packets_dropped) {
-      QUIC_LOG(ERROR)
+      LOG(INFO)
           << packets_dropped - packets_dropped_
           << " more packets are dropped in the socket receive buffer.";
       packets_dropped_ = packets_dropped;
@@ -237,7 +237,7 @@ int QuicClientDefaultNetworkHelper::CreateUDPSocket(
   std::string interface_name = client_->interface_name();
   if (!interface_name.empty()) {
     if (!api.BindInterface(fd, interface_name)) {
-      QUIC_DLOG(WARNING) << "Failed to bind socket (" << fd
+      LOG(INFO) << "Failed to bind socket (" << fd
                          << ") to interface (" << interface_name << ").";
       CleanUpUDPSocket(fd);
       return kQuicInvalidSocketFd;

@@ -324,7 +324,7 @@ ParsedQuicVersion ParseQuicVersionLabel(QuicVersionLabel version_label) {
     }
   }
   // Reading from the client so this should not be considered an ERROR.
-  QUIC_DLOG(INFO) << "Unsupported QuicVersionLabel version: "
+  LOG(INFO) << "Unsupported QuicVersionLabel version: "
                   << QuicVersionLabelToString(version_label);
   return UnsupportedQuicVersion();
 }
@@ -378,7 +378,7 @@ ParsedQuicVersion ParseQuicVersionString(absl::string_view version_string) {
     return UnsupportedQuicVersion();
   }
   // Reading from the client so this should not be considered an ERROR.
-  QUIC_DLOG(INFO) << "Unsupported QUIC version string: \"" << version_string
+  LOG(INFO) << "Unsupported QUIC version string: \"" << version_string
                   << "\".";
   return UnsupportedQuicVersion();
 }

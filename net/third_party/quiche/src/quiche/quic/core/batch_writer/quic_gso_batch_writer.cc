@@ -44,7 +44,7 @@ QuicGsoBatchWriter::QuicGsoBatchWriter(
     : QuicUdpBatchWriter(std::move(batch_buffer), fd),
       clockid_for_release_time_(clockid_for_release_time),
       supports_release_time_(true) {
-  QUIC_DLOG(INFO) << "Release time forcefully enabled.";
+  LOG(INFO) << "Release time forcefully enabled.";
 }
 
 QuicGsoBatchWriter::CanBatchResult QuicGsoBatchWriter::CanBatch(
@@ -119,7 +119,7 @@ QuicGsoBatchWriter::ReleaseTime QuicGsoBatchWriter::GetReleaseTime(
     ReleaseTime result{actual_release_time,
                        QuicTime::Delta::FromMicroseconds(offset_ns / 1000)};
 
-    QUIC_DVLOG(1) << "ideal_release_time:" << ideal_release_time
+    LOG(INFO) << "ideal_release_time:" << ideal_release_time
                   << ", actual_release_time:" << actual_release_time
                   << ", offset:" << result.release_time_offset;
     return result;

@@ -52,7 +52,7 @@ quiche::QuicheBuffer HttpEncoder::SerializeDataFrameHeader(
   if (WriteFrameHeader(payload_length, HttpFrameType::DATA, &writer)) {
     return header;
   }
-  QUIC_DLOG(ERROR)
+  LOG(INFO)
       << "Http encoder failed when attempting to serialize data frame header.";
   return quiche::QuicheBuffer();
 }
@@ -72,7 +72,7 @@ std::string HttpEncoder::SerializeHeadersFrameHeader(
   if (WriteFrameHeader(payload_length, HttpFrameType::HEADERS, &writer)) {
     return frame;
   }
-  QUIC_DLOG(ERROR)
+  LOG(INFO)
       << "Http encoder failed when attempting to serialize headers "
          "frame header.";
   return {};
@@ -97,14 +97,14 @@ std::string HttpEncoder::SerializeSettingsFrame(const SettingsFrame& settings) {
   QuicDataWriter writer(total_length, frame.data());
 
   if (!WriteFrameHeader(payload_length, HttpFrameType::SETTINGS, &writer)) {
-    QUIC_DLOG(ERROR) << "Http encoder failed when attempting to serialize "
+    LOG(INFO) << "Http encoder failed when attempting to serialize "
                         "settings frame header.";
     return {};
   }
 
   for (const auto& p : ordered_settings) {
     if (!writer.WriteVarInt62(p.first) || !writer.WriteVarInt62(p.second)) {
-      QUIC_DLOG(ERROR) << "Http encoder failed when attempting to serialize "
+      LOG(INFO) << "Http encoder failed when attempting to serialize "
                           "settings frame payload.";
       return {};
     }
@@ -126,7 +126,7 @@ std::string HttpEncoder::SerializeGoAwayFrame(const GoAwayFrame& goaway) {
       writer.WriteVarInt62(goaway.id)) {
     return frame;
   }
-  QUIC_DLOG(ERROR)
+  LOG(INFO)
       << "Http encoder failed when attempting to serialize goaway frame.";
   return {};
 }
@@ -158,7 +158,7 @@ std::string HttpEncoder::SerializePriorityUpdateFrame(
     return frame;
   }
 
-  QUIC_DLOG(ERROR) << "Http encoder failed when attempting to serialize "
+  LOG(INFO) << "Http encoder failed when attempting to serialize "
                       "PRIORITY_UPDATE frame.";
   return {};
 }
@@ -181,7 +181,7 @@ std::string HttpEncoder::SerializeAcceptChFrame(
   QuicDataWriter writer(total_length, frame.data());
 
   if (!WriteFrameHeader(payload_length, HttpFrameType::ACCEPT_CH, &writer)) {
-    QUIC_DLOG(ERROR)
+    LOG(INFO)
         << "Http encoder failed to serialize ACCEPT_CH frame header.";
     return {};
   }
@@ -189,7 +189,7 @@ std::string HttpEncoder::SerializeAcceptChFrame(
   for (const auto& entry : accept_ch.entries) {
     if (!writer.WriteStringPieceVarInt62(entry.origin) ||
         !writer.WriteStringPieceVarInt62(entry.value)) {
-      QUIC_DLOG(ERROR)
+      LOG(INFO)
           << "Http encoder failed to serialize ACCEPT_CH frame payload.";
       return {};
     }
@@ -238,7 +238,7 @@ std::string HttpEncoder::SerializeGreasingFrame() {
     return frame;
   }
 
-  QUIC_DLOG(ERROR) << "Http encoder failed when attempting to serialize "
+  LOG(INFO) << "Http encoder failed when attempting to serialize "
                       "greasing frame.";
   return {};
 }
@@ -260,7 +260,7 @@ std::string HttpEncoder::SerializeWebTransportStreamFrameHeader(
     return frame;
   }
 
-  QUIC_DLOG(ERROR) << "Http encoder failed when attempting to serialize "
+  LOG(INFO) << "Http encoder failed when attempting to serialize "
                       "WEBTRANSPORT_STREAM frame header.";
   return {};
 }
@@ -280,7 +280,7 @@ std::string HttpEncoder::SerializeMetadataFrameHeader(
   if (WriteFrameHeader(payload_length, HttpFrameType::METADATA, &writer)) {
     return frame;
   }
-  QUIC_DLOG(ERROR)
+  LOG(INFO)
       << "Http encoder failed when attempting to serialize METADATA "
          "frame header.";
   return {};

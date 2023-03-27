@@ -25,7 +25,7 @@ class WebTransportDiscardVisitor : public WebTransportStreamVisitor {
   void OnCanRead() override {
     std::string buffer;
     WebTransportStream::ReadResult result = stream_->Read(&buffer);
-    QUIC_DVLOG(2) << "Read " << result.bytes_read
+    LOG(INFO) << "Read " << result.bytes_read
                   << " bytes from WebTransport stream "
                   << stream_->GetStreamId() << ", fin: " << result.fin;
   }
@@ -48,7 +48,7 @@ class WebTransportBidirectionalEchoVisitor : public WebTransportStreamVisitor {
 
   void OnCanRead() override {
     WebTransportStream::ReadResult result = stream_->Read(&buffer_);
-    QUIC_DVLOG(1) << "Attempted reading on WebTransport bidirectional stream "
+    LOG(INFO) << "Attempted reading on WebTransport bidirectional stream "
                   << stream_->GetStreamId()
                   << ", bytes read: " << result.bytes_read;
     if (result.fin) {
@@ -64,7 +64,7 @@ class WebTransportBidirectionalEchoVisitor : public WebTransportStreamVisitor {
 
     if (!buffer_.empty()) {
       bool success = stream_->Write(buffer_);
-      QUIC_DVLOG(1) << "Attempted writing on WebTransport bidirectional stream "
+      LOG(INFO) << "Attempted writing on WebTransport bidirectional stream "
                     << stream_->GetStreamId()
                     << ", success: " << (success ? "yes" : "no");
       if (!success) {
@@ -115,11 +115,11 @@ class WebTransportUnidirectionalEchoReadVisitor
 
   void OnCanRead() override {
     WebTransportStream::ReadResult result = stream_->Read(&buffer_);
-    QUIC_DVLOG(1) << "Attempted reading on WebTransport unidirectional stream "
+    LOG(INFO) << "Attempted reading on WebTransport unidirectional stream "
                   << stream_->GetStreamId()
                   << ", bytes read: " << result.bytes_read;
     if (result.fin) {
-      QUIC_DVLOG(1) << "Finished receiving data on a WebTransport stream "
+      LOG(INFO) << "Finished receiving data on a WebTransport stream "
                     << stream_->GetStreamId() << ", queueing up the echo";
       callback_(buffer_);
     }
@@ -192,7 +192,7 @@ class EchoWebTransportSessionVisitor : public WebTransportVisitor {
       if (stream == nullptr) {
         return;
       }
-      QUIC_DVLOG(1)
+      LOG(INFO)
           << "EchoWebTransportSessionVisitor received a bidirectional stream "
           << stream->GetStreamId();
       stream->SetVisitor(
@@ -208,7 +208,7 @@ class EchoWebTransportSessionVisitor : public WebTransportVisitor {
       if (stream == nullptr) {
         return;
       }
-      QUIC_DVLOG(1)
+      LOG(INFO)
           << "EchoWebTransportSessionVisitor received a unidirectional stream";
       stream->SetVisitor(
           std::make_unique<WebTransportUnidirectionalEchoReadVisitor>(
@@ -241,7 +241,7 @@ class EchoWebTransportSessionVisitor : public WebTransportVisitor {
   void TrySendingUnidirectionalStreams() {
     while (!streams_to_echo_back_.empty() &&
            session_->CanOpenNextOutgoingUnidirectionalStream()) {
-      QUIC_DVLOG(1)
+      LOG(INFO)
           << "EchoWebTransportServer echoed a unidirectional stream back";
       WebTransportStream* stream = session_->OpenOutgoingUnidirectionalStream();
       stream->SetVisitor(

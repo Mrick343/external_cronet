@@ -27,7 +27,7 @@
 #define RECORD_LATENCY_IN_US(stat_name, latency, comment)                   \
   do {                                                                      \
     const int64_t latency_in_us = (latency).ToMicroseconds();               \
-    QUIC_DVLOG(1) << "Recording " stat_name ": " << latency_in_us;          \
+    LOG(INFO) << "Recording " stat_name ": " << latency_in_us;          \
     QUIC_SERVER_HISTOGRAM_COUNTS(stat_name, latency_in_us, 1, 10000000, 50, \
                                  comment);                                  \
   } while (0)
@@ -50,7 +50,7 @@ TlsServerHandshaker::DefaultProofSourceHandle::~DefaultProofSourceHandle() {
 }
 
 void TlsServerHandshaker::DefaultProofSourceHandle::CloseHandle() {
-  QUIC_DVLOG(1) << "CloseHandle. is_signature_pending="
+  LOG(INFO) << "CloseHandle. is_signature_pending="
                 << (signature_callback_ != nullptr);
   if (signature_callback_) {
     signature_callback_->Cancel();
@@ -76,6 +76,9 @@ TlsServerHandshaker::DefaultProofSourceHandle::SelectCertificate(
   }
 
   bool cert_matched_sni;
+
+  // LOG(INFO) << "Proof source: " << (*proof_source_);
+
   quiche::QuicheReferenceCountedPointer<ProofSource::Chain> chain =
       proof_source_->GetCertChain(server_address, client_address, hostname,
                                   &cert_matched_sni);
@@ -116,13 +119,13 @@ QuicAsyncStatus TlsServerHandshaker::DefaultProofSourceHandle::ComputeSignature(
       std::unique_ptr<DefaultSignatureCallback>(signature_callback_));
 
   if (signature_callback_) {
-    QUIC_DVLOG(1) << "ComputeTlsSignature is pending";
+    LOG(INFO) << "ComputeTlsSignature is pending";
     signature_callback_->set_is_sync(false);
     return QUIC_PENDING;
   }
 
   bool success = handshaker_->HasValidSignature(max_signature_size);
-  QUIC_DVLOG(1) << "ComputeTlsSignature completed synchronously. success:"
+  LOG(INFO) << "ComputeTlsSignature completed synchronously. success:"
                 << success;
   // OnComputeSignatureDone should have been called by signature_callback_->Run.
   return success ? QUIC_SUCCESS : QUIC_FAILURE;
@@ -186,7 +189,7 @@ TlsServerHandshaker::TlsServerHandshaker(
       crypto_negotiated_params_(new QuicCryptoNegotiatedParameters),
       tls_connection_(crypto_config->ssl_ctx(), this, session->GetSSLConfig()),
       crypto_config_(crypto_config) {
-  QUIC_DVLOG(1) << "TlsServerHandshaker:  client_cert_mode initial value: "
+  LOG(INFO) << "TlsServerHandshaker:  client_cert_mode initial value: "
                 << client_cert_mode();
 
   QUICHE_DCHECK_EQ(PROTOCOL_TLS1_3,
@@ -246,7 +249,7 @@ void TlsServerHandshaker::InfoCallback(int type, int value) {
     tracer->PrintString(
         absl::StrCat("SSL:HANDSHAKE_DONE:", SSL_state_string_long(ssl())));
   } else {
-    QUIC_DLOG(INFO) << "Unknown event type " << type << ": "
+    LOG(INFO) << "Unknown event type " << type << ": "
                     << SSL_state_string_long(ssl());
     tracer->PrintString(
         absl::StrCat("SSL:unknown:", value, ":", SSL_state_string_long(ssl())));
@@ -343,7 +346,7 @@ bool TlsServerHandshaker::ValidateAddressToken(absl::string_view token) const {
   HandshakeFailureReason reason = crypto_config_->ParseSourceAddressToken(
       crypto_config_->source_address_token_boxer(), token, tokens);
   if (reason != HANDSHAKE_OK) {
-    QUIC_DLOG(WARNING) << "Failed to parse source address token: "
+    LOG(INFO) << "Failed to parse source address token: "
                        << CryptoUtils::HandshakeFailureReasonToString(reason);
     return false;
   }
@@ -352,7 +355,7 @@ bool TlsServerHandshaker::ValidateAddressToken(absl::string_view token) const {
       tokens, session()->connection()->effective_peer_address().host(),
       session()->connection()->clock()->WallNow(), cached_network_params.get());
   if (reason != HANDSHAKE_OK) {
-    QUIC_DLOG(WARNING) << "Failed to validate source address token: "
+    LOG(INFO) << "Failed to validate source address token: "
                        << CryptoUtils::HandshakeFailureReasonToString(reason);
     return false;
   }
@@ -582,7 +585,7 @@ void TlsServerHandshaker::FinishHandshake() {
   QUICHE_DCHECK(!SSL_in_early_data(ssl()));
 
   if (!valid_alpn_received_) {
-    QUIC_DLOG(ERROR)
+    LOG(INFO)
         << "Server: handshake finished without receiving a known ALPN";
     // TODO(b/130164908) this should send no_application_protocol
     // instead of QUIC_HANDSHAKE_FAILED.
@@ -592,7 +595,7 @@ void TlsServerHandshaker::FinishHandshake() {
   }
 
   ssl_early_data_reason_t reason_code = EarlyDataReason();
-  QUIC_DLOG(INFO) << "Server: handshake finished. Early data reason "
+  LOG(INFO) << "Server: handshake finished. Early data reason "
                   << reason_code << " ("
                   << CryptoUtils::EarlyDataReasonToString(reason_code) << ")";
   state_ = HANDSHAKE_CONFIRMED;
@@ -611,7 +614,7 @@ QuicAsyncStatus TlsServerHandshaker::VerifyCertChain(
     const std::vector<std::string>& /*certs*/, std::string* /*error_details*/,
     std::unique_ptr<ProofVerifyDetails>* /*details*/, uint8_t* /*out_alert*/,
     std::unique_ptr<ProofVerifierCallback> /*callback*/) {
-  QUIC_DVLOG(1) << "VerifyCertChain returning success";
+  LOG(INFO) << "VerifyCertChain returning success";
 
   // No real verification here. A subclass can override this function to verify
   // the client cert if needed.
@@ -676,7 +679,7 @@ ssl_private_key_result_t TlsServerHandshaker::PrivateKeyComplete(
 void TlsServerHandshaker::OnComputeSignatureDone(
     bool ok, bool is_sync, std::string signature,
     std::unique_ptr<ProofSource::Details> details) {
-  QUIC_DVLOG(1) << "OnComputeSignatureDone. ok:" << ok
+  LOG(INFO) << "OnComputeSignatureDone. ok:" << ok
                 << ", is_sync:" << is_sync
                 << ", len(signature):" << signature.size();
   absl::optional<QuicConnectionContextSwitcher> context_switcher;
@@ -797,7 +800,7 @@ ssl_ticket_aead_result_t TlsServerHandshaker::FinalizeSessionTicketOpen(
   ticket_decryption_callback_ = nullptr;
   set_expected_ssl_error(SSL_ERROR_WANT_READ);
   if (decrypted_session_ticket_.empty()) {
-    QUIC_DLOG(ERROR) << "Session ticket decryption failed; ignoring ticket";
+    LOG(INFO) << "Session ticket decryption failed; ignoring ticket";
     // Ticket decryption failed. Ignore the ticket.
     QUIC_CODE_COUNT(quic_tls_server_handshaker_tickets_ignored_2);
     return ssl_ticket_aead_ignore_ticket;
@@ -821,7 +824,7 @@ ssl_select_cert_result_t TlsServerHandshaker::EarlySelectCertCallback(
 
   if (select_cert_status_.has_value()) {
     // This is the second call, return the result directly.
-    QUIC_DVLOG(1) << "EarlySelectCertCallback called to continue handshake, "
+    LOG(INFO) << "EarlySelectCertCallback called to continue handshake, "
                      "returning directly. success:"
                   << (select_cert_status_.value() == QUIC_SUCCESS);
     return (select_cert_status_.value() == QUIC_SUCCESS)
@@ -871,7 +874,7 @@ ssl_select_cert_result_t TlsServerHandshaker::EarlySelectCertCallback(
       QUIC_CODE_COUNT(quic_tls_server_hostname_same);
     }
   } else {
-    QUIC_LOG(INFO) << "No hostname indicated in SNI";
+    LOG(INFO) << "No hostname indicated in SNI";
   }
 
   std::string error_details;
@@ -884,7 +887,7 @@ ssl_select_cert_result_t TlsServerHandshaker::EarlySelectCertCallback(
 
   auto set_transport_params_result = SetTransportParameters();
   if (!set_transport_params_result.success) {
-    QUIC_LOG(ERROR) << "Failed to set transport parameters";
+    LOG(INFO) << "Failed to set transport parameters";
     return ssl_select_cert_error;
   }
 
@@ -948,7 +951,7 @@ void TlsServerHandshaker::OnSelectCertificateDone(
     bool ok, bool is_sync, const ProofSource::Chain* chain,
     absl::string_view handshake_hints, absl::string_view ticket_encryption_key,
     bool cert_matched_sni, QuicDelayedSSLConfig delayed_ssl_config) {
-  QUIC_DVLOG(1) << "OnSelectCertificateDone. ok:" << ok
+  LOG(INFO) << "OnSelectCertificateDone. ok:" << ok
                 << ", is_sync:" << is_sync
                 << ", len(handshake_hints):" << handshake_hints.size()
                 << ", len(ticket_encryption_key):"
@@ -958,11 +961,11 @@ void TlsServerHandshaker::OnSelectCertificateDone(
     context_switcher.emplace(connection_context());
   }
 
-  QUIC_TRACESTRING(absl::StrCat(
+  LOG(INFO) << absl::StrCat(
       "TLS select certificate done: ok:", ok,
       ", certs_found:", (chain != nullptr && !chain->certs.empty()),
       ", len(handshake_hints):", handshake_hints.size(),
-      ", len(ticket_encryption_key):", ticket_encryption_key.size()));
+      ", len(ticket_encryption_key):", ticket_encryption_key.size());
 
   ticket_encryption_key_ = std::string(ticket_encryption_key);
   select_cert_status_ = QUIC_FAILURE;
@@ -970,7 +973,7 @@ void TlsServerHandshaker::OnSelectCertificateDone(
 
   if (delayed_ssl_config.client_cert_mode.has_value()) {
     tls_connection_.SetClientCertMode(*delayed_ssl_config.client_cert_mode);
-    QUIC_DVLOG(1) << "client_cert_mode after cert selection: "
+    LOG(INFO) << "client_cert_mode after cert selection: "
                   << client_cert_mode();
   }
 
@@ -985,11 +988,11 @@ void TlsServerHandshaker::OnSelectCertificateDone(
         // intact, it is as if we didn't call it. The handshaker will
         // continue to compute signature/decrypt ticket as normal.
         QUIC_CODE_COUNT(quic_tls_server_set_handshake_hints_failed);
-        QUIC_DVLOG(1) << "SSL_set_handshake_hints failed";
+        LOG(INFO) << "SSL_set_handshake_hints failed";
       }
       select_cert_status_ = QUIC_SUCCESS;
     } else {
-      QUIC_DLOG(ERROR) << "No certs provided for host '"
+      LOG(INFO) << "No certs provided for host '"
                        << crypto_negotiated_params_->sni << "', server_address:"
                        << session()->connection()->self_address()
                        << ", client_address:"
@@ -1027,7 +1030,7 @@ bool TlsServerHandshaker::ValidateHostname(const std::string& hostname) const {
   if (!QuicHostnameUtils::IsValidSNI(hostname)) {
     // TODO(b/151676147): Include this error string in the CONNECTION_CLOSE
     // frame.
-    QUIC_DLOG(ERROR) << "Invalid SNI provided: \"" << hostname << "\"";
+    LOG(INFO) << "Invalid SNI provided: \"" << hostname << "\"";
     return false;
   }
   return true;
@@ -1045,7 +1048,7 @@ int TlsServerHandshaker::SelectAlpn(const uint8_t** out, uint8_t* out_len,
   *out_len = 0;
   *out = nullptr;
   if (in_len == 0) {
-    QUIC_DLOG(ERROR) << "No ALPN provided by client";
+    LOG(INFO) << "No ALPN provided by client";
     return SSL_TLSEXT_ERR_NOACK;
   }
 
@@ -1056,13 +1059,13 @@ int TlsServerHandshaker::SelectAlpn(const uint8_t** out, uint8_t* out_len,
   while (CBS_len(&all_alpns) > 0) {
     CBS alpn;
     if (!CBS_get_u8_length_prefixed(&all_alpns, &alpn)) {
-      QUIC_DLOG(ERROR) << "Failed to parse ALPN length";
+      LOG(INFO) << "Failed to parse ALPN length";
       return SSL_TLSEXT_ERR_NOACK;
     }
 
     const size_t alpn_length = CBS_len(&alpn);
     if (alpn_length == 0) {
-      QUIC_DLOG(ERROR) << "Received invalid zero-length ALPN";
+      LOG(INFO) << "Received invalid zero-length ALPN";
       return SSL_TLSEXT_ERR_NOACK;
     }
 
@@ -1074,7 +1077,7 @@ int TlsServerHandshaker::SelectAlpn(const uint8_t** out, uint8_t* out_len,
   // ALPN on construction.
   auto selected_alpn = session()->SelectAlpn(alpns);
   if (selected_alpn == alpns.end()) {
-    QUIC_DLOG(ERROR) << "No known ALPN provided by client";
+    LOG(INFO) << "No known ALPN provided by client";
     return SSL_TLSEXT_ERR_NOACK;
   }
 
@@ -1108,7 +1111,7 @@ TlsServerHandshaker::SetApplicationSettings(absl::string_view alpn) {
   if (SSL_add_application_settings(
           ssl(), reinterpret_cast<const uint8_t*>(alpn.data()), alpn.size(),
           reinterpret_cast<const uint8_t*>(alps.data()), alps.size()) != 1) {
-    QUIC_DLOG(ERROR) << "Failed to enable ALPS";
+    LOG(INFO) << "Failed to enable ALPS";
     result.success = false;
   } else {
     result.success = true;

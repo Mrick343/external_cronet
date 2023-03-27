@@ -501,7 +501,7 @@ bool BbrSender::MaybeUpdateMinRtt(QuicTime now,
       !min_rtt_.IsZero() && (now > (min_rtt_timestamp_ + kMinRttExpiry));
 
   if (min_rtt_expired || sample_min_rtt < min_rtt_ || min_rtt_.IsZero()) {
-    QUIC_DVLOG(2) << "Min RTT updated, old value: " << min_rtt_
+    LOG(INFO) << "Min RTT updated, old value: " << min_rtt_
                   << ", new value: " << sample_min_rtt
                   << ", current time: " << now.ToDebuggingValue();
 
@@ -834,7 +834,7 @@ void BbrSender::OnApplicationLimited(QuicByteCount bytes_in_flight) {
   }
 
   sampler_.OnAppLimited();
-  QUIC_DVLOG(2) << "Becoming application limited. Last sent packet: "
+  LOG(INFO) << "Becoming application limited. Last sent packet: "
                 << last_sent_packet_ << ", CWND: " << GetCongestionWindow();
 }
 

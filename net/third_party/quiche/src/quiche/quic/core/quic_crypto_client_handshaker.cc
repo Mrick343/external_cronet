@@ -343,14 +343,14 @@ void QuicCryptoClientHandshaker::DoSendCHLO(
     const QuicByteCount max_packet_size =
         session()->connection()->max_packet_length();
     if (max_packet_size <= kFramingOverhead) {
-      QUIC_DLOG(DFATAL) << "max_packet_length (" << max_packet_size
+      LOG(INFO) << "max_packet_length (" << max_packet_size
                         << ") has no room for framing overhead.";
       stream_->OnUnrecoverableError(QUIC_INTERNAL_ERROR,
                                     "max_packet_size too smalll");
       return;
     }
     if (kClientHelloMinimumSize > max_packet_size - kFramingOverhead) {
-      QUIC_DLOG(DFATAL) << "Client hello won't fit in a single packet.";
+      LOG(INFO) << "Client hello won't fit in a single packet.";
       stream_->OnUnrecoverableError(QUIC_INTERNAL_ERROR, "CHLO too large");
       return;
     }
@@ -429,7 +429,7 @@ void QuicCryptoClientHandshaker::DoReceiveREJ(
           static_cast<HandshakeFailureReason>(reject_reasons[i]);
       packed_error |= 1 << (reason - 1);
     }
-    QUIC_DVLOG(1) << "Reasons for rejection: " << packed_error;
+    LOG(INFO) << "Reasons for rejection: " << packed_error;
   }
 
   // Receipt of a REJ message means that the server received the CHLO
@@ -483,7 +483,7 @@ QuicAsyncStatus QuicCryptoClientHandshaker::DoVerifyProof(
   switch (status) {
     case QUIC_PENDING:
       proof_verify_callback_ = proof_verify_callback;
-      QUIC_DVLOG(1) << "Doing VerifyProof";
+      LOG(INFO) << "Doing VerifyProof";
       break;
     case QUIC_FAILURE:
       break;

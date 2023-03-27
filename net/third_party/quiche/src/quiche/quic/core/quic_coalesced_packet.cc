@@ -39,7 +39,7 @@ bool QuicCoalescedPacket::MaybeCoalescePacket(
   } else {
     if (self_address_ != self_address || peer_address_ != peer_address) {
       // Do not coalesce packet with different self/peer addresses.
-      QUIC_DLOG(INFO)
+      LOG(INFO)
           << "Cannot coalesce packet because self/peer address changed";
       return false;
     }
@@ -58,7 +58,7 @@ bool QuicCoalescedPacket::MaybeCoalescePacket(
     // Packet does not fit.
     return false;
   }
-  QUIC_DVLOG(1) << "Successfully coalesced packet: encryption_level: "
+  LOG(INFO) << "Successfully coalesced packet: encryption_level: "
                 << packet.encryption_level
                 << ", encrypted_length: " << packet.encrypted_length
                 << ", current length: " << length_

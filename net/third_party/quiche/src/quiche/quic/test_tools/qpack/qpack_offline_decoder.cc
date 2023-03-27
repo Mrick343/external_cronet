@@ -49,17 +49,17 @@ bool QpackOfflineDecoder::DecodeAndVerifyOfflineData(
     absl::string_view input_filename,
     absl::string_view expected_headers_filename) {
   if (!ParseInputFilename(input_filename)) {
-    QUIC_LOG(ERROR) << "Error parsing input filename " << input_filename;
+    LOG(INFO) << "Error parsing input filename " << input_filename;
     return false;
   }
 
   if (!DecodeHeaderBlocksFromFile(input_filename)) {
-    QUIC_LOG(ERROR) << "Error decoding header blocks in " << input_filename;
+    LOG(INFO) << "Error decoding header blocks in " << input_filename;
     return false;
   }
 
   if (!VerifyDecodedHeaderLists(expected_headers_filename)) {
-    QUIC_LOG(ERROR) << "Header lists decoded from " << input_filename
+    LOG(INFO) << "Header lists decoded from " << input_filename
                     << " to not match expected headers parsed from "
                     << expected_headers_filename;
     return false;
@@ -70,7 +70,7 @@ bool QpackOfflineDecoder::DecodeAndVerifyOfflineData(
 
 void QpackOfflineDecoder::OnEncoderStreamError(
     QuicErrorCode error_code, absl::string_view error_message) {
-  QUIC_LOG(ERROR) << "Encoder stream error: "
+  LOG(INFO) << "Encoder stream error: "
                   << QuicErrorCodeToString(error_code) << " " << error_message;
   encoder_stream_error_detected_ = true;
 }
@@ -79,7 +79,7 @@ bool QpackOfflineDecoder::ParseInputFilename(absl::string_view input_filename) {
   std::vector<absl::string_view> pieces = absl::StrSplit(input_filename, '.');
 
   if (pieces.size() < 3) {
-    QUIC_LOG(ERROR) << "Not enough fields in input filename " << input_filename;
+    LOG(INFO) << "Not enough fields in input filename " << input_filename;
     return false;
   }
 
@@ -87,7 +87,7 @@ bool QpackOfflineDecoder::ParseInputFilename(absl::string_view input_filename) {
 
   // Acknowledgement mode: 1 for immediate, 0 for none.
   if (*piece_it != "0" && *piece_it != "1") {
-    QUIC_LOG(ERROR)
+    LOG(INFO)
         << "Header acknowledgement field must be 0 or 1 in input filename "
         << input_filename;
     return false;
@@ -98,7 +98,7 @@ bool QpackOfflineDecoder::ParseInputFilename(absl::string_view input_filename) {
   // Maximum allowed number of blocked streams.
   uint64_t max_blocked_streams = 0;
   if (!absl::SimpleAtoi(*piece_it, &max_blocked_streams)) {
-    QUIC_LOG(ERROR) << "Error parsing part of input filename \"" << *piece_it
+    LOG(INFO) << "Error parsing part of input filename \"" << *piece_it
                     << "\" as an integer.";
     return false;
   }
@@ -108,7 +108,7 @@ bool QpackOfflineDecoder::ParseInputFilename(absl::string_view input_filename) {
   // Maximum Dynamic Table Capacity in bytes
   uint64_t maximum_dynamic_table_capacity = 0;
   if (!absl::SimpleAtoi(*piece_it, &maximum_dynamic_table_capacity)) {
-    QUIC_LOG(ERROR) << "Error parsing part of input filename \"" << *piece_it
+    LOG(INFO) << "Error parsing part of input filename \"" << *piece_it
                     << "\" as an integer.";
     return false;
   }
@@ -138,7 +138,7 @@ bool QpackOfflineDecoder::DecodeHeaderBlocksFromFile(
   while (!input_data.empty()) {
     // Parse stream_id and length.
     if (input_data.size() < sizeof(uint64_t) + sizeof(uint32_t)) {
-      QUIC_LOG(ERROR) << "Unexpected end of input file.";
+      LOG(INFO) << "Unexpected end of input file.";
       return false;
     }
 
@@ -151,7 +151,7 @@ bool QpackOfflineDecoder::DecodeHeaderBlocksFromFile(
     input_data = input_data.substr(sizeof(uint32_t));
 
     if (input_data.size() < length) {
-      QUIC_LOG(ERROR) << "Unexpected end of input file.";
+      LOG(INFO) << "Unexpected end of input file.";
       return false;
     }
 
@@ -164,7 +164,7 @@ bool QpackOfflineDecoder::DecodeHeaderBlocksFromFile(
       qpack_decoder_->encoder_stream_receiver()->Decode(data);
 
       if (encoder_stream_error_detected_) {
-        QUIC_LOG(ERROR) << "Error detected on encoder stream.";
+        LOG(INFO) << "Error detected on encoder stream.";
         return false;
       }
     } else {
@@ -176,7 +176,7 @@ bool QpackOfflineDecoder::DecodeHeaderBlocksFromFile(
       progressive_decoder->EndHeaderBlock();
 
       if (headers_handler->decoding_error_detected()) {
-        QUIC_LOG(ERROR) << "Sync decoding error on stream " << stream_id << ": "
+        LOG(INFO) << "Sync decoding error on stream " << stream_id << ": "
                         << headers_handler->error_message();
         return false;
       }
@@ -192,14 +192,14 @@ bool QpackOfflineDecoder::DecodeHeaderBlocksFromFile(
       Decoder* decoder = &decoders_.front();
 
       if (decoder->headers_handler->decoding_error_detected()) {
-        QUIC_LOG(ERROR) << "Async decoding error on stream "
+        LOG(INFO) << "Async decoding error on stream "
                         << decoder->stream_id << ": "
                         << decoder->headers_handler->error_message();
         return false;
       }
 
       if (!decoder->headers_handler->decoding_completed()) {
-        QUIC_LOG(ERROR) << "Decoding incomplete after reading entire"
+        LOG(INFO) << "Decoding incomplete after reading entire"
                            " file, on stream "
                         << decoder->stream_id;
         return false;
@@ -214,7 +214,7 @@ bool QpackOfflineDecoder::DecodeHeaderBlocksFromFile(
   if (!decoders_.empty()) {
     QUICHE_DCHECK(!decoders_.front().headers_handler->decoding_completed());
 
-    QUIC_LOG(ERROR) << "Blocked decoding uncomplete after reading entire"
+    LOG(INFO) << "Blocked decoding uncomplete after reading entire"
                        " file, on stream "
                     << decoders_.front().stream_id;
     return false;
@@ -241,7 +241,7 @@ bool QpackOfflineDecoder::VerifyDecodedHeaderLists(
     spdy::Http2HeaderBlock expected_header_list;
     if (!ReadNextExpectedHeaderList(&expected_headers_data,
                                     &expected_header_list)) {
-      QUIC_LOG(ERROR)
+      LOG(INFO)
           << "Error parsing expected header list to match next decoded "
              "header list.";
       return false;
@@ -249,13 +249,13 @@ bool QpackOfflineDecoder::VerifyDecodedHeaderLists(
 
     if (!CompareHeaderBlocks(std::move(decoded_header_list),
                              std::move(expected_header_list))) {
-      QUIC_LOG(ERROR) << "Decoded header does not match expected header.";
+      LOG(INFO) << "Decoded header does not match expected header.";
       return false;
     }
   }
 
   if (!expected_headers_data.empty()) {
-    QUIC_LOG(ERROR)
+    LOG(INFO)
         << "Not enough encoded header lists to match expected ones.";
     return false;
   }
@@ -271,7 +271,7 @@ bool QpackOfflineDecoder::ReadNextExpectedHeaderList(
 
     // Even last header list must be followed by an empty line.
     if (endline == absl::string_view::npos) {
-      QUIC_LOG(ERROR) << "Unexpected end of expected header list file.";
+      LOG(INFO) << "Unexpected end of expected header list file.";
       return false;
     }
 
@@ -285,7 +285,7 @@ bool QpackOfflineDecoder::ReadNextExpectedHeaderList(
     std::vector<absl::string_view> pieces = absl::StrSplit(header_field, '\t');
 
     if (pieces.size() != 2) {
-      QUIC_LOG(ERROR) << "Header key and value must be separated by TAB.";
+      LOG(INFO) << "Header key and value must be separated by TAB.";
       return false;
     }
 

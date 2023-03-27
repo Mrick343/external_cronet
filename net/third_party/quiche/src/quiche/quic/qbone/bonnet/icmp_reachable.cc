@@ -64,26 +64,26 @@ IcmpReachable::~IcmpReachable() {
 bool IcmpReachable::Init() {
   send_fd_ = kernel_->socket(PF_INET6, SOCK_RAW | SOCK_NONBLOCK, IPPROTO_RAW);
   if (send_fd_ < 0) {
-    QUIC_LOG(ERROR) << "Unable to open socket: " << errno;
+    LOG(INFO) << "Unable to open socket: " << errno;
     return false;
   }
 
   if (kernel_->bind(send_fd_, reinterpret_cast<struct sockaddr*>(&src_),
                     sizeof(sockaddr_in6)) < 0) {
-    QUIC_LOG(ERROR) << "Unable to bind socket: " << errno;
+    LOG(INFO) << "Unable to bind socket: " << errno;
     return false;
   }
 
   recv_fd_ =
       kernel_->socket(PF_INET6, SOCK_RAW | SOCK_NONBLOCK, IPPROTO_ICMPV6);
   if (recv_fd_ < 0) {
-    QUIC_LOG(ERROR) << "Unable to open socket: " << errno;
+    LOG(INFO) << "Unable to open socket: " << errno;
     return false;
   }
 
   if (kernel_->bind(recv_fd_, reinterpret_cast<struct sockaddr*>(&src_),
                     sizeof(sockaddr_in6)) < 0) {
-    QUIC_LOG(ERROR) << "Unable to bind socket: " << errno;
+    LOG(INFO) << "Unable to bind socket: " << errno;
     return false;
   }
 
@@ -92,12 +92,12 @@ bool IcmpReachable::Init() {
   ICMP6_FILTER_SETPASS(ICMP6_ECHO_REPLY, &filter);
   if (kernel_->setsockopt(recv_fd_, SOL_ICMPV6, ICMP6_FILTER, &filter,
                           sizeof(filter)) < 0) {
-    QUIC_LOG(ERROR) << "Unable to set ICMP6 filter.";
+    LOG(INFO) << "Unable to set ICMP6 filter.";
     return false;
   }
 
   if (!event_loop_->RegisterSocket(recv_fd_, kEventMask, &cb_)) {
-    QUIC_LOG(ERROR) << "Unable to register recv ICMP socket";
+    LOG(INFO) << "Unable to register recv ICMP socket";
     return false;
   }
   alarm_->Set(clock_->Now());
@@ -129,26 +129,26 @@ bool IcmpReachable::OnEvent(int fd) {
     return false;
   }
 
-  QUIC_VLOG(2) << quiche::QuicheTextUtils::HexDump(
+  LOG(INFO) << quiche::QuicheTextUtils::HexDump(
       absl::string_view(buffer, size));
 
   auto* header = reinterpret_cast<const icmp6_hdr*>(&buffer);
   QuicWriterMutexLock mu(&header_lock_);
   if (header->icmp6_data32[0] != icmp_header_.icmp6_data32[0]) {
-    QUIC_VLOG(2) << "Unexpected response. id: " << header->icmp6_id
+    LOG(INFO) << "Unexpected response. id: " << header->icmp6_id
                  << " seq: " << header->icmp6_seq
                  << " Expected id: " << icmp_header_.icmp6_id
                  << " seq: " << icmp_header_.icmp6_seq;
     return true;
   }
   end_ = clock_->Now();
-  QUIC_VLOG(1) << "Received ping response in " << (end_ - start_);
+  LOG(INFO) << "Received ping response in " << (end_ - start_);
 
   std::string source;
   QuicIpAddress source_ip;
   if (!source_ip.FromPackedString(
           reinterpret_cast<char*>(&source_addr.sin6_addr), sizeof(in6_addr))) {
-    QUIC_LOG(WARNING) << "Unable to parse source address.";
+    LOG(INFO) << "Unable to parse source address.";
     source = kUnknownSource;
   } else {
     source = source_ip.ToString();
@@ -161,14 +161,14 @@ void IcmpReachable::OnAlarm() {
   QuicWriterMutexLock mu(&header_lock_);
 
   if (end_ < start_) {
-    QUIC_VLOG(1) << "Timed out on sequence: " << icmp_header_.icmp6_seq;
+    LOG(INFO) << "Timed out on sequence: " << icmp_header_.icmp6_seq;
     stats_->OnEvent({Status::UNREACHABLE, QuicTime::Delta::Zero(), kNoSource});
   }
 
   icmp_header_.icmp6_seq++;
   CreateIcmpPacket(src_.sin6_addr, dst_.sin6_addr, icmp_header_, "",
                    [this](absl::string_view packet) {
-                     QUIC_VLOG(2) << quiche::QuicheTextUtils::HexDump(packet);
+                     LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
 
                      ssize_t size = kernel_->sendto(
                          send_fd_, packet.data(), packet.size(), 0,

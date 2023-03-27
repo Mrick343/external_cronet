@@ -264,7 +264,7 @@ void TcpCubicSenderBytes::OnPacketLost(QuicPacketNumber packet_number,
         slowstart_threshold_ = congestion_window_;
       }
     }
-    QUIC_DVLOG(1) << "Ignoring loss for largest_missing:" << packet_number
+    LOG(INFO) << "Ignoring loss for largest_missing:" << packet_number
                   << " because it was sent prior to the last CWND cutback.";
     return;
   }
@@ -299,7 +299,7 @@ void TcpCubicSenderBytes::OnPacketLost(QuicPacketNumber packet_number,
   // Reset packet count from congestion avoidance mode. We start counting again
   // when we're out of recovery.
   num_acked_packets_ = 0;
-  QUIC_DVLOG(1) << "Incoming loss; congestion window: " << congestion_window_
+  LOG(INFO) << "Incoming loss; congestion window: " << congestion_window_
                 << " slowstart threshold: " << slowstart_threshold_;
 }
 
@@ -330,7 +330,7 @@ void TcpCubicSenderBytes::MaybeIncreaseCwnd(
   if (InSlowStart()) {
     // TCP slow start, exponential growth, increase by one for each ACK.
     congestion_window_ += kDefaultTCPMSS;
-    QUIC_DVLOG(1) << "Slow start; congestion window: " << congestion_window_
+    LOG(INFO) << "Slow start; congestion window: " << congestion_window_
                   << " slowstart threshold: " << slowstart_threshold_;
     return;
   }
@@ -346,7 +346,7 @@ void TcpCubicSenderBytes::MaybeIncreaseCwnd(
       num_acked_packets_ = 0;
     }
 
-    QUIC_DVLOG(1) << "Reno; congestion window: " << congestion_window_
+    LOG(INFO) << "Reno; congestion window: " << congestion_window_
                   << " slowstart threshold: " << slowstart_threshold_
                   << " congestion window count: " << num_acked_packets_;
   } else {
@@ -354,7 +354,7 @@ void TcpCubicSenderBytes::MaybeIncreaseCwnd(
         max_congestion_window_,
         cubic_.CongestionWindowAfterAck(acked_bytes, congestion_window_,
                                         rtt_stats_->min_rtt(), event_time));
-    QUIC_DVLOG(1) << "Cubic; congestion window: " << congestion_window_
+    LOG(INFO) << "Cubic; congestion window: " << congestion_window_
                   << " slowstart threshold: " << slowstart_threshold_;
   }
 }

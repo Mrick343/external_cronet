@@ -72,7 +72,7 @@ bool QuicStreamSequencerBuffer::RetireBlock(size_t index) {
   }
   delete blocks_[index];
   blocks_[index] = nullptr;
-  QUIC_DVLOG(1) << "Retired block with index: " << index;
+  LOG(INFO) << "Retired block with index: " << index;
   return true;
 }
 
@@ -225,7 +225,7 @@ bool QuicStreamSequencerBuffer::CopyStreamData(QuicStreamOffset offset,
     const size_t bytes_to_copy =
         std::min<size_t>(bytes_avail, source_remaining);
     char* dest = blocks_[write_block_num]->buffer + write_block_offset;
-    QUIC_DVLOG(1) << "Write at offset: " << offset
+    LOG(INFO) << "Write at offset: " << offset
                   << " length: " << bytes_to_copy;
 
     if (dest == nullptr || source == nullptr) {
@@ -326,14 +326,14 @@ int QuicStreamSequencerBuffer::GetReadableRegions(struct iovec* iov,
   if (start_block_idx == end_block_idx && ReadOffset() <= end_block_offset) {
     iov[0].iov_base = blocks_[start_block_idx]->buffer + ReadOffset();
     iov[0].iov_len = ReadableBytes();
-    QUIC_DVLOG(1) << "Got only a single block with index: " << start_block_idx;
+    LOG(INFO) << "Got only a single block with index: " << start_block_idx;
     return 1;
   }
 
   // Get first block
   iov[0].iov_base = blocks_[start_block_idx]->buffer + ReadOffset();
   iov[0].iov_len = GetBlockCapacity(start_block_idx) - ReadOffset();
-  QUIC_DVLOG(1) << "Got first block " << start_block_idx << " with len "
+  LOG(INFO) << "Got first block " << start_block_idx << " with len "
                 << iov[0].iov_len;
   QUICHE_DCHECK_GT(readable_offset_end + 1, total_bytes_read_ + iov[0].iov_len)
       << "there should be more available data";
@@ -347,7 +347,7 @@ int QuicStreamSequencerBuffer::GetReadableRegions(struct iovec* iov,
     QUICHE_DCHECK(nullptr != blocks_[block_idx]);
     iov[iov_used].iov_base = blocks_[block_idx]->buffer;
     iov[iov_used].iov_len = GetBlockCapacity(block_idx);
-    QUIC_DVLOG(1) << "Got block with index: " << block_idx;
+    LOG(INFO) << "Got block with index: " << block_idx;
     ++iov_used;
     block_idx = (start_block_idx + iov_used) % max_blocks_count_;
   }
@@ -357,7 +357,7 @@ int QuicStreamSequencerBuffer::GetReadableRegions(struct iovec* iov,
     QUICHE_DCHECK(nullptr != blocks_[block_idx]);
     iov[iov_used].iov_base = blocks_[end_block_idx]->buffer;
     iov[iov_used].iov_len = end_block_offset + 1;
-    QUIC_DVLOG(1) << "Got last block with index: " << end_block_idx;
+    LOG(INFO) << "Got last block with index: " << end_block_idx;
     ++iov_used;
   }
   return iov_used;

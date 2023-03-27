@@ -29,7 +29,7 @@ QuicClientPromisedInfo::~QuicClientPromisedInfo() {
 }
 
 void QuicClientPromisedInfo::CleanupAlarm::OnAlarm() {
-  QUIC_DVLOG(1) << "self GC alarm for stream " << promised_->id_;
+  LOG(INFO) << "self GC alarm for stream " << promised_->id_;
   promised_->session()->OnPushStreamTimedOut(promised_->id_);
   promised_->Reset(QUIC_PUSH_STREAM_TIMED_OUT);
 }
@@ -47,18 +47,18 @@ bool QuicClientPromisedInfo::OnPromiseHeaders(const Http2HeaderBlock& headers) {
   // 4.2.1.  GET and HEAD are the methods that are safe and required.
   Http2HeaderBlock::const_iterator it = headers.find(spdy::kHttp2MethodHeader);
   if (it == headers.end()) {
-    QUIC_DVLOG(1) << "Promise for stream " << id_ << " has no method";
+    LOG(INFO) << "Promise for stream " << id_ << " has no method";
     Reset(QUIC_INVALID_PROMISE_METHOD);
     return false;
   }
   if (!(it->second == "GET" || it->second == "HEAD")) {
-    QUIC_DVLOG(1) << "Promise for stream " << id_ << " has invalid method "
+    LOG(INFO) << "Promise for stream " << id_ << " has invalid method "
                   << it->second;
     Reset(QUIC_INVALID_PROMISE_METHOD);
     return false;
   }
   if (!SpdyServerPushUtils::PromisedUrlIsValid(headers)) {
-    QUIC_DVLOG(1) << "Promise for stream " << id_ << " has invalid URL "
+    LOG(INFO) << "Promise for stream " << id_ << " has invalid URL "
                   << url_;
     Reset(QUIC_INVALID_PROMISE_URL);
     return false;

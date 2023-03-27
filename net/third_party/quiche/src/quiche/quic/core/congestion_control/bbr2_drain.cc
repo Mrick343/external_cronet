@@ -22,7 +22,7 @@ Bbr2Mode Bbr2DrainMode::OnCongestionEvent(
 
   QuicByteCount drain_target = DrainTarget();
   if (congestion_event.bytes_in_flight <= drain_target) {
-    QUIC_DVLOG(3) << sender_ << " Exiting DRAIN. bytes_in_flight:"
+    LOG(INFO) << sender_ << " Exiting DRAIN. bytes_in_flight:"
                   << congestion_event.bytes_in_flight
                   << ", bdp:" << model_->BDP()
                   << ", drain_target:" << drain_target << "  @ "
@@ -30,7 +30,7 @@ Bbr2Mode Bbr2DrainMode::OnCongestionEvent(
     return Bbr2Mode::PROBE_BW;
   }
 
-  QUIC_DVLOG(3) << sender_ << " Staying in DRAIN. bytes_in_flight:"
+  LOG(INFO) << sender_ << " Staying in DRAIN. bytes_in_flight:"
                 << congestion_event.bytes_in_flight << ", bdp:" << model_->BDP()
                 << ", drain_target:" << drain_target << "  @ "
                 << congestion_event.event_time;

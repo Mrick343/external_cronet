@@ -30,7 +30,7 @@ void QuicSpdyServerStreamBase::CloseWriteSide() {
     // or RST.
     QUICHE_DCHECK(fin_sent() || !session()->connection()->connected());
     // Tell the peer to stop sending further data.
-    QUIC_DVLOG(1) << " Server: Send QUIC_STREAM_NO_ERROR on stream " << id();
+    LOG(INFO) << " Server: Send QUIC_STREAM_NO_ERROR on stream " << id();
     MaybeSendStopSending(QUIC_STREAM_NO_ERROR);
   }
 
@@ -42,7 +42,7 @@ void QuicSpdyServerStreamBase::StopReading() {
       !rst_sent()) {
     QUICHE_DCHECK(fin_sent());
     // Tell the peer to stop sending further data.
-    QUIC_DVLOG(1) << " Server: Send QUIC_STREAM_NO_ERROR on stream " << id();
+    LOG(INFO) << " Server: Send QUIC_STREAM_NO_ERROR on stream " << id();
     MaybeSendStopSending(QUIC_STREAM_NO_ERROR);
   }
   QuicSpdyStream::StopReading();
@@ -88,18 +88,18 @@ bool QuicSpdyServerStreamBase::AreHeadersValid(
     } else if (pair.first == ":authority") {
       saw_authority = true;
     } else if (absl::StrContains(pair.first, ":")) {
-      QUIC_DLOG(ERROR) << "Unexpected ':' in header " << pair.first << ".";
+      LOG(INFO) << "Unexpected ':' in header " << pair.first << ".";
       return false;
     }
     if (is_extended_connect) {
       if (!spdy_session()->allow_extended_connect()) {
-        QUIC_DLOG(ERROR)
+        LOG(INFO)
             << "Received extended-CONNECT request while it is disabled.";
         return false;
       }
     } else if (saw_method && !saw_connect) {
       if (saw_protocol) {
-        QUIC_DLOG(ERROR) << "Receive non-CONNECT request with :protocol.";
+        LOG(INFO) << "Receive non-CONNECT request with :protocol.";
         return false;
       }
     }
@@ -110,14 +110,14 @@ bool QuicSpdyServerStreamBase::AreHeadersValid(
       // Saw all the required pseudo headers.
       return true;
     }
-    QUIC_DLOG(ERROR) << "Missing required pseudo headers for extended-CONNECT.";
+    LOG(INFO) << "Missing required pseudo headers for extended-CONNECT.";
     return false;
   }
   // This is a vanilla CONNECT or non-CONNECT request.
   if (saw_connect) {
     // Check vanilla CONNECT.
     if (saw_path || saw_scheme) {
-      QUIC_DLOG(ERROR)
+      LOG(INFO)
           << "Received invalid CONNECT request with disallowed pseudo header.";
       return false;
     }
@@ -127,7 +127,7 @@ bool QuicSpdyServerStreamBase::AreHeadersValid(
   if (saw_method && saw_authority && saw_path && saw_scheme) {
     return true;
   }
-  QUIC_LOG(ERROR) << "Missing required pseudo headers.";
+  LOG(INFO) << "Missing required pseudo headers.";
   return false;
 }
 

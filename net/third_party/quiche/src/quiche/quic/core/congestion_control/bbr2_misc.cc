@@ -211,7 +211,7 @@ void Bbr2NetworkModel::AdaptLowerBounds(
       }
       bandwidth_lo_ =
           std::max(bandwidth_latest_, bandwidth_lo_ * (1.0 - Params().beta));
-      QUIC_DVLOG(3) << "bandwidth_lo_ updated to " << bandwidth_lo_
+      LOG(INFO) << "bandwidth_lo_ updated to " << bandwidth_lo_
                     << ", bandwidth_latest_ is " << bandwidth_latest_;
 
       if (Params().ignore_inflight_lo) {
@@ -328,7 +328,7 @@ bool Bbr2NetworkModel::MaybeExpireMinRtt(
   if (congestion_event.sample_min_rtt.IsInfinite()) {
     return false;
   }
-  QUIC_DVLOG(3) << "Replacing expired min rtt of " << min_rtt_filter_.Get()
+  LOG(INFO) << "Replacing expired min rtt of " << min_rtt_filter_.Get()
                 << " by " << congestion_event.sample_min_rtt << "  @ "
                 << congestion_event.event_time;
   min_rtt_filter_.ForceUpdate(congestion_event.sample_min_rtt,
@@ -355,7 +355,7 @@ bool Bbr2NetworkModel::IsInflightTooHigh(
   // bytes_lost_in_round_, OTOH, is the total bytes lost in the "current" round.
   const QuicByteCount bytes_lost_in_round = bytes_lost_in_round_;
 
-  QUIC_DVLOG(3) << "IsInflightTooHigh: loss_events_in_round:"
+  LOG(INFO) << "IsInflightTooHigh: loss_events_in_round:"
                 << loss_events_in_round()
 
                 << " bytes_lost_in_round:" << bytes_lost_in_round
@@ -409,7 +409,7 @@ bool Bbr2NetworkModel::HasBandwidthGrowth(
       full_bandwidth_baseline_ * Params().startup_full_bw_threshold;
 
   if (MaxBandwidth() >= threshold) {
-    QUIC_DVLOG(3) << " CheckBandwidthGrowth at end of round. max_bandwidth:"
+    LOG(INFO) << " CheckBandwidthGrowth at end of round. max_bandwidth:"
                   << MaxBandwidth() << ", threshold:" << threshold
                   << " (Still growing)  @ " << congestion_event.event_time;
     full_bandwidth_baseline_ = MaxBandwidth();
@@ -424,7 +424,7 @@ bool Bbr2NetworkModel::HasBandwidthGrowth(
       !congestion_event.last_packet_send_state.is_app_limited) {
     full_bandwidth_reached_ = true;
   }
-  QUIC_DVLOG(3) << " CheckBandwidthGrowth at end of round. max_bandwidth:"
+  LOG(INFO) << " CheckBandwidthGrowth at end of round. max_bandwidth:"
                 << MaxBandwidth() << ", threshold:" << threshold
                 << " rounds_without_growth:" << rounds_without_bandwidth_growth_
                 << " full_bw_reached:" << full_bandwidth_reached_ << "  @ "

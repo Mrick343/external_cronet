@@ -74,7 +74,7 @@ class QUIC_EXPORT_PRIVATE QuicGsoBatchWriter : public QuicUdpBatchWriter {
     cmsg_builder(&hdr, first.self_address, gso_size, first.release_time);
 
     write_result = QuicLinuxSocketUtils::WritePacket(fd(), hdr);
-    QUIC_DVLOG(1) << "Write GSO packet result: " << write_result
+    LOG(INFO) << "Write GSO packet result: " << write_result
                   << ", fd: " << fd()
                   << ", self_address: " << first.self_address.ToString()
                   << ", peer_address: " << first.peer_address.ToString()

@@ -432,7 +432,7 @@ class QboneSessionTest : public QuicTestWithParam<ParsedQuicVersion> {
     ASSERT_TRUE(client_peer_->IsEncryptionEstablished());
 
     // Create an outgoing stream from the client and say hello.
-    QUIC_LOG(INFO) << "Sending client -> server";
+    LOG(INFO) << "Sending client -> server";
     client_peer_->ProcessPacketFromNetwork(TestPacketIn("hello"));
     client_peer_->ProcessPacketFromNetwork(TestPacketIn("world"));
     runner_.Run();
@@ -445,7 +445,7 @@ class QboneSessionTest : public QuicTestWithParam<ParsedQuicVersion> {
     EXPECT_EQ(0u, client_peer_->GetNumActiveStreams());
 
     // Let's pretend some service responds.
-    QUIC_LOG(INFO) << "Sending server -> client";
+    LOG(INFO) << "Sending server -> client";
     server_peer_->ProcessPacketFromNetwork(TestPacketIn("Hello Again"));
     server_peer_->ProcessPacketFromNetwork(TestPacketIn("Again"));
     runner_.Run();
@@ -462,7 +462,7 @@ class QboneSessionTest : public QuicTestWithParam<ParsedQuicVersion> {
     // This should trigger the non-ephemeral stream code path.
     std::string long_data(
         QboneConstants::kMaxQbonePacketBytes - sizeof(ip6_hdr) - 1, 'A');
-    QUIC_LOG(INFO) << "Sending server -> client long data";
+    LOG(INFO) << "Sending server -> client long data";
     server_peer_->ProcessPacketFromNetwork(TestPacketIn(long_data));
     runner_.Run();
     if (use_messages) {
@@ -478,7 +478,7 @@ class QboneSessionTest : public QuicTestWithParam<ParsedQuicVersion> {
     EXPECT_EQ(0u, server_peer_->GetNumActiveStreams());
     EXPECT_EQ(0u, client_peer_->GetNumActiveStreams());
 
-    QUIC_LOG(INFO) << "Sending client -> server long data";
+    LOG(INFO) << "Sending client -> server long data";
     client_peer_->ProcessPacketFromNetwork(TestPacketIn(long_data));
     runner_.Run();
     if (use_messages) {

@@ -128,13 +128,13 @@ class QuicClientInteropRunner : QuicConnectionDebugVisitor {
   void OnConnectionCloseFrame(const QuicConnectionCloseFrame& frame) override {
     switch (frame.close_type) {
       case GOOGLE_QUIC_CONNECTION_CLOSE:
-        QUIC_LOG(ERROR) << "Received unexpected GoogleQUIC connection close";
+        LOG(INFO) << "Received unexpected GoogleQUIC connection close";
         break;
       case IETF_QUIC_TRANSPORT_CONNECTION_CLOSE:
         if (frame.wire_error_code == NO_IETF_QUIC_ERROR) {
           InsertFeature(Feature::kConnectionClose);
         } else {
-          QUIC_LOG(ERROR) << "Received transport connection close "
+          LOG(INFO) << "Received transport connection close "
                           << QuicIetfTransportErrorCodeString(
                                  static_cast<QuicIetfTransportErrorCodes>(
                                      frame.wire_error_code));
@@ -144,7 +144,7 @@ class QuicClientInteropRunner : QuicConnectionDebugVisitor {
         if (frame.wire_error_code == 0) {
           InsertFeature(Feature::kConnectionClose);
         } else {
-          QUIC_LOG(ERROR) << "Received application connection close "
+          LOG(INFO) << "Received application connection close "
                           << frame.wire_error_code;
         }
         break;
@@ -164,7 +164,7 @@ void QuicClientInteropRunner::AttemptResumption(QuicDefaultClient* client,
                                                 const std::string& authority) {
   client->Disconnect();
   if (!client->Initialize()) {
-    QUIC_LOG(ERROR) << "Failed to reinitialize client";
+    LOG(INFO) << "Failed to reinitialize client";
     return;
   }
   if (!client->Connect()) {
@@ -224,13 +224,13 @@ void QuicClientInteropRunner::AttemptRequest(
       std::move(proof_verifier), std::move(session_cache));
   client->set_connection_debug_visitor(this);
   if (!client->Initialize()) {
-    QUIC_LOG(ERROR) << "Failed to initialize client";
+    LOG(INFO) << "Failed to initialize client";
     return;
   }
   const bool connect_result = client->Connect();
   QuicConnection* connection = client->session()->connection();
   if (connection == nullptr) {
-    QUIC_LOG(ERROR) << "No QuicConnection object";
+    LOG(INFO) << "No QuicConnection object";
     return;
   }
   QuicConnectionStats client_stats = connection->GetStats();
@@ -293,7 +293,7 @@ void QuicClientInteropRunner::AttemptRequest(
           InsertFeature(Feature::kDynamicEntryReferenced);
         }
       } else {
-        QUIC_LOG(ERROR) << "Failed to change ephemeral port";
+        LOG(INFO) << "Failed to change ephemeral port";
       }
     }
 
@@ -312,10 +312,10 @@ void QuicClientInteropRunner::AttemptRequest(
           }
           InsertFeature(Feature::kKeyUpdate);
         } else {
-          QUIC_LOG(ERROR) << "Failed to initiate key update";
+          LOG(INFO) << "Failed to initiate key update";
         }
       } else {
-        QUIC_LOG(ERROR) << "Key update not allowed";
+        LOG(INFO) << "Key update not allowed";
       }
     }
   }
@@ -348,7 +348,7 @@ void QuicClientInteropRunner::SendRequest(
 
   QuicConnection* connection = client->session()->connection();
   if (connection == nullptr) {
-    QUIC_LOG(ERROR) << "No QuicConnection object";
+    LOG(INFO) << "No QuicConnection object";
     return;
   }
   QuicConnectionStats client_stats = connection->GetStats();
@@ -370,7 +370,7 @@ std::set<Feature> ServerSupport(std::string dns_host, std::string url_host,
   // Build the client, and try to connect.
   QuicSocketAddress addr = tools::LookupAddress(dns_host, absl::StrCat(port));
   if (!addr.IsInitialized()) {
-    QUIC_LOG(ERROR) << "Failed to resolve " << dns_host;
+    LOG(INFO) << "Failed to resolve " << dns_host;
     return std::set<Feature>();
   }
   QuicServerId server_id(url_host, port, false);

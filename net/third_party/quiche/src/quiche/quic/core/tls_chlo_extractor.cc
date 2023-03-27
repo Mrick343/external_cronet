@@ -69,21 +69,21 @@ TlsChloExtractor& TlsChloExtractor::operator=(TlsChloExtractor&& other) {
 void TlsChloExtractor::IngestPacket(const ParsedQuicVersion& version,
                                     const QuicReceivedPacket& packet) {
   if (state_ == State::kUnrecoverableFailure) {
-    QUIC_DLOG(ERROR) << "Not ingesting packet after unrecoverable error";
+    LOG(INFO) << "Not ingesting packet after unrecoverable error";
     return;
   }
   if (version == UnsupportedQuicVersion()) {
-    QUIC_DLOG(ERROR) << "Not ingesting packet with unsupported version";
+    LOG(INFO) << "Not ingesting packet with unsupported version";
     return;
   }
   if (version.handshake_protocol != PROTOCOL_TLS1_3) {
-    QUIC_DLOG(ERROR) << "Not ingesting packet with non-TLS version " << version;
+    LOG(INFO) << "Not ingesting packet with non-TLS version " << version;
     return;
   }
   if (framer_) {
     // This is not the first packet we have ingested, check if version matches.
     if (!framer_->IsSupportedVersion(version)) {
-      QUIC_DLOG(ERROR)
+      LOG(INFO)
           << "Not ingesting packet with version mismatch, expected "
           << framer_->version() << ", got " << version;
       return;
@@ -114,7 +114,7 @@ void TlsChloExtractor::IngestPacket(const ParsedQuicVersion& version,
 
   if (!parse_success) {
     // This could be due to the packet being non-initial for example.
-    QUIC_DLOG(ERROR) << "Failed to process packet";
+    LOG(INFO) << "Failed to process packet";
     return;
   }
 }
@@ -123,11 +123,11 @@ void TlsChloExtractor::IngestPacket(const ParsedQuicVersion& version,
 bool TlsChloExtractor::OnUnauthenticatedPublicHeader(
     const QuicPacketHeader& header) {
   if (header.form != IETF_QUIC_LONG_HEADER_PACKET) {
-    QUIC_DLOG(ERROR) << "Not parsing non-long-header packet " << header;
+    LOG(INFO) << "Not parsing non-long-header packet " << header;
     return false;
   }
   if (header.long_packet_type != INITIAL) {
-    QUIC_DLOG(ERROR) << "Not parsing non-initial packet " << header;
+    LOG(INFO) << "Not parsing non-initial packet " << header;
     return false;
   }
   // QuicFramer is constructed without knowledge of the server's connection ID
@@ -389,10 +389,10 @@ void TlsChloExtractor::HandleUnrecoverableError(
     const std::string& error_details) {
   if (HasParsedFullChlo()) {
     // Ignore errors if we've parsed everything successfully.
-    QUIC_DLOG(ERROR) << "Ignoring error: " << error_details;
+    LOG(INFO) << "Ignoring error: " << error_details;
     return;
   }
-  QUIC_DLOG(ERROR) << "Handling error: " << error_details;
+  LOG(INFO) << "Handling error: " << error_details;
 
   state_ = State::kUnrecoverableFailure;
 

@@ -354,7 +354,7 @@ QuicConsumedData QuicCryptoStream::RetransmitStreamDataAtLevel(
   const auto consumed = stream_delegate()->WritevData(
       id(), retransmission_length, retransmission_offset, NO_FIN, type,
       encryption_level);
-  QUIC_DVLOG(1) << ENDPOINT << "stream " << id()
+  LOG(INFO) << ENDPOINT << "stream " << id()
                 << " is forced to retransmit stream data ["
                 << retransmission_offset << ", "
                 << retransmission_offset + retransmission_length

@@ -50,7 +50,7 @@ bool MasqueServerBackend::MaybeHandleMasqueRequest(
 
   auto it = backend_client_states_.find(request_handler->connection_id());
   if (it == backend_client_states_.end()) {
-    QUIC_LOG(ERROR) << "Could not find backend client for " << masque_path
+    LOG(INFO) << "Could not find backend client for " << masque_path
                     << request_headers.DebugString();
     return false;
   }
@@ -60,12 +60,12 @@ bool MasqueServerBackend::MaybeHandleMasqueRequest(
   std::unique_ptr<QuicBackendResponse> response =
       backend_client->HandleMasqueRequest(request_headers, request_handler);
   if (response == nullptr) {
-    QUIC_LOG(ERROR) << "Backend client did not process request for "
+    LOG(INFO) << "Backend client did not process request for "
                     << masque_path << request_headers.DebugString();
     return false;
   }
 
-  QUIC_DLOG(INFO) << "Sending MASQUE response for "
+  LOG(INFO) << "Sending MASQUE response for "
                   << request_headers.DebugString();
 
   request_handler->OnResponseBackendComplete(response.get());
@@ -82,7 +82,7 @@ void MasqueServerBackend::FetchResponseFromBackend(
     // Request was handled as a MASQUE request.
     return;
   }
-  QUIC_DLOG(INFO) << "Fetching non-MASQUE response for "
+  LOG(INFO) << "Fetching non-MASQUE response for "
                   << request_headers.DebugString();
   QuicMemoryCacheBackend::FetchResponseFromBackend(
       request_headers, request_body, request_handler);
@@ -95,7 +95,7 @@ void MasqueServerBackend::HandleConnectHeaders(
     // Request was handled as a MASQUE request.
     return;
   }
-  QUIC_DLOG(INFO) << "Fetching non-MASQUE CONNECT response for "
+  LOG(INFO) << "Fetching non-MASQUE CONNECT response for "
                   << request_headers.DebugString();
   QuicMemoryCacheBackend::HandleConnectHeaders(request_headers,
                                                request_handler);
@@ -103,13 +103,13 @@ void MasqueServerBackend::HandleConnectHeaders(
 
 void MasqueServerBackend::CloseBackendResponseStream(
     QuicSimpleServerBackend::RequestHandler* request_handler) {
-  QUIC_DLOG(INFO) << "Closing response stream";
+  LOG(INFO) << "Closing response stream";
   QuicMemoryCacheBackend::CloseBackendResponseStream(request_handler);
 }
 
 void MasqueServerBackend::RegisterBackendClient(QuicConnectionId connection_id,
                                                 BackendClient* backend_client) {
-  QUIC_DLOG(INFO) << "Registering backend client for " << connection_id;
+  LOG(INFO) << "Registering backend client for " << connection_id;
   QUIC_BUG_IF(quic_bug_12005_1, backend_client_states_.find(connection_id) !=
                                     backend_client_states_.end())
       << connection_id << " already in backend clients map";
@@ -118,7 +118,7 @@ void MasqueServerBackend::RegisterBackendClient(QuicConnectionId connection_id,
 }
 
 void MasqueServerBackend::RemoveBackendClient(QuicConnectionId connection_id) {
-  QUIC_DLOG(INFO) << "Removing backend client for " << connection_id;
+  LOG(INFO) << "Removing backend client for " << connection_id;
   backend_client_states_.erase(connection_id);
 }
 

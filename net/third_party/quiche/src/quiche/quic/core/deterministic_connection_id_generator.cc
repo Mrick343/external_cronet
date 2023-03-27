@@ -65,7 +65,7 @@ DeterministicConnectionIdGenerator::MaybeReplaceConnectionId(
       *new_connection_id,
       static_cast<QuicConnectionId>(*GenerateNextConnectionId(original)));
   QUICHE_DCHECK_EQ(expected_connection_id_length_, new_connection_id->length());
-  QUIC_DLOG(INFO) << "Replacing incoming connection ID " << original << " with "
+  LOG(INFO) << "Replacing incoming connection ID " << original << " with "
                   << new_connection_id.value();
   return new_connection_id;
 }

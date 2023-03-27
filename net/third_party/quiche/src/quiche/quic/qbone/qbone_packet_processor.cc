@@ -165,14 +165,14 @@ QbonePacketProcessor::ProcessingResult QbonePacketProcessor::ProcessIPv6Header(
     char** transport_data, icmp6_hdr* icmp_header) {
   // Check if the packet is big enough to have IPv6 header.
   if (packet->size() < kIPv6HeaderSize) {
-    QUIC_DVLOG(1) << "Dropped malformed packet: IPv6 header too short";
+    LOG(INFO) << "Dropped malformed packet: IPv6 header too short";
     return ProcessingResult::SILENT_DROP;
   }
 
   // Check version field.
   ip6_hdr* header = reinterpret_cast<ip6_hdr*>(&*packet->begin());
   if (header->ip6_vfc >> 4 != 6) {
-    QUIC_DVLOG(1) << "Dropped malformed packet: IP version is not IPv6";
+    LOG(INFO) << "Dropped malformed packet: IP version is not IPv6";
     return ProcessingResult::SILENT_DROP;
   }
 
@@ -181,7 +181,7 @@ QbonePacketProcessor::ProcessingResult QbonePacketProcessor::ProcessIPv6Header(
       quiche::QuicheEndian::NetToHost16(header->ip6_plen);
   const size_t actual_payload_size = packet->size() - kIPv6HeaderSize;
   if (declared_payload_size != actual_payload_size) {
-    QUIC_DVLOG(1)
+    LOG(INFO)
         << "Dropped malformed packet: incorrect packet length specified";
     return ProcessingResult::SILENT_DROP;
   }
@@ -208,7 +208,7 @@ QbonePacketProcessor::ProcessingResult QbonePacketProcessor::ProcessIPv6Header(
   }
   QUICHE_DCHECK(ip_parse_result);
   if (!client_ip_.InSameSubnet(address_to_check, client_ip_subnet_length_)) {
-    QUIC_DVLOG(1)
+    LOG(INFO)
         << "Dropped packet: source/destination address is not client's";
     icmp_header->icmp6_type = ICMP6_DST_UNREACH;
     icmp_header->icmp6_code = address_reject_code;

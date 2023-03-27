@@ -249,7 +249,7 @@ void QuicCryptoServerStream::SendServerConfigUpdate(
   }
 
   if (send_server_config_update_cb_ != nullptr) {
-    QUIC_DVLOG(1)
+    LOG(INFO)
         << "Skipped server config update since one is already in progress";
     return;
   }
@@ -290,11 +290,11 @@ void QuicCryptoServerStream::FinishSendServerConfigUpdate(
   send_server_config_update_cb_ = nullptr;
 
   if (!ok) {
-    QUIC_DVLOG(1) << "Server: Failed to build server config update (SCUP)!";
+    LOG(INFO) << "Server: Failed to build server config update (SCUP)!";
     return;
   }
 
-  QUIC_DVLOG(1) << "Server: Sending server config update: "
+  LOG(INFO) << "Server: Sending server config update: "
                 << message.DebugString();
 
   // Send server config update in ENCRYPTION_FORWARD_SECURE.

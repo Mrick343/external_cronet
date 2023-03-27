@@ -216,8 +216,10 @@ namespace base {
 
 void InitAndroidTestPaths(const FilePath& test_data_dir) {
   if (g_test_data_dir) {
-    CHECK(test_data_dir == *g_test_data_dir);
-    return;
+    LOG(INFO) << "Test data was " << *g_test_data_dir << ", attempted change to " << test_data_dir;
+    if (test_data_dir == *g_test_data_dir) {
+      return;
+    }
   }
   g_test_data_dir = new FilePath(test_data_dir);
   InitPathProvider(DIR_ANDROID_APP_DATA);

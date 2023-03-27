@@ -28,7 +28,7 @@ std::unique_ptr<QuicSpdyClientBase> QuicEpollClientFactory::CreateClient(
   QuicSocketAddress addr = tools::LookupAddress(
       address_family_for_lookup, host_for_lookup, absl::StrCat(port));
   if (!addr.IsInitialized()) {
-    QUIC_LOG(ERROR) << "Unable to resolve address: " << host_for_lookup;
+    LOG(INFO) << "Unable to resolve address: " << host_for_lookup;
     return nullptr;
   }
   QuicServerId server_id(host_for_handshake, port, false);

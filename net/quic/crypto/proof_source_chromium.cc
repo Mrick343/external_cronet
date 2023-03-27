@@ -27,16 +27,21 @@ bool ProofSourceChromium::Initialize(const base::FilePath& cert_path,
 
   std::string cert_data;
   if (!base::ReadFileToString(cert_path, &cert_data)) {
-    DLOG(FATAL) << "Unable to read certificates.";
+    LOG(FATAL) << "Unable to read certificates.";
     return false;
   }
-  return true;
+
   certs_in_file_ = X509Certificate::CreateCertificateListFromBytes(
       base::as_bytes(base::make_span(cert_data)), X509Certificate::FORMAT_AUTO);
 
   if (certs_in_file_.empty()) {
-    DLOG(FATAL) << "No certificates.";
+    LOG(FATAL) << "No certificates.";
     return false;
+  } else {
+    LOG(INFO) << "ProofSource Certificates: ";
+    for (auto crt : certs_in_file_) {
+      LOG(INFO) << crt;
+    }
   }
 
   std::vector<string> certs;
@@ -152,9 +157,11 @@ ProofSourceChromium::GetCertChain(const quic::QuicSocketAddress& server_address,
                                   const quic::QuicSocketAddress& client_address,
                                   const std::string& hostname,
                                   bool* cert_matched_sni) {
+  LOG(INFO) << "Proof source - Chromium asked for cert chain. Hostname: " << hostname;
   *cert_matched_sni = false;
   if (!hostname.empty()) {
     for (const scoped_refptr<X509Certificate>& cert : certs_in_file_) {
+      LOG(INFO) << "Trying to match " << server_address << ", " << client_address << ", " << hostname << " against " << cert;
       if (cert->VerifyNameMatch(hostname)) {
         *cert_matched_sni = true;
         break;

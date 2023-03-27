@@ -11,12 +11,12 @@ void QboneTunnelSilo::Run() {
     tunnel_->WaitForEvents();
   }
 
-  QUIC_LOG(INFO) << "Tunnel has disconnected in state: "
+  LOG(INFO) << "Tunnel has disconnected in state: "
                  << tunnel_->StateToString(tunnel_->Disconnect());
 }
 
 void QboneTunnelSilo::Quit() {
-  QUIC_LOG(INFO) << "Quit called on QboneTunnelSilo";
+  LOG(INFO) << "Quit called on QboneTunnelSilo";
   quitting_.Notify();
   tunnel_->Wake();
 }

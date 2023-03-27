@@ -33,7 +33,7 @@ class QuicClientSocketMigrationValidationResultDelegate
   void OnPathValidationSuccess(
       std::unique_ptr<QuicPathValidationContext> context,
       QuicTime /*start_time*/) override {
-    QUIC_DLOG(INFO) << "Successfully validated path from " << *context
+    LOG(INFO) << "Successfully validated path from " << *context
                     << ". Migrate to it now.";
     auto migration_context = std::unique_ptr<PathMigrationContext>(
         static_cast<PathMigrationContext*>(context.release()));
@@ -47,7 +47,7 @@ class QuicClientSocketMigrationValidationResultDelegate
 
   void OnPathValidationFailure(
       std::unique_ptr<QuicPathValidationContext> context) override {
-    QUIC_LOG(WARNING) << "Fail to validate path " << *context
+    LOG(INFO) << "Fail to validate path " << *context
                       << ", stop migrating.";
     client_->session()->connection()->OnPathValidationFailureAtClient(
         /*is_multi_port=*/false);
@@ -230,7 +230,7 @@ bool QuicClientBase::WaitForEventsPostprocessing() {
   QUICHE_DCHECK(session() != nullptr);
   ParsedQuicVersion version = UnsupportedQuicVersion();
   if (!connected() && CanReconnectWithDifferentVersion(&version)) {
-    QUIC_DLOG(INFO) << "Can reconnect with version: " << version
+    LOG(INFO) << "Can reconnect with version: " << version
                     << ", attempting to reconnect.";
 
     Connect();
@@ -457,13 +457,13 @@ class ValidationResultDelegate : public QuicPathValidator::ResultDelegate {
   void OnPathValidationSuccess(
       std::unique_ptr<QuicPathValidationContext> context,
       QuicTime start_time) override {
-    QUIC_DLOG(INFO) << "Successfully validated path from " << *context
+    LOG(INFO) << "Successfully validated path from " << *context
                     << ", validation started at " << start_time;
     client_->AddValidatedPath(std::move(context));
   }
   void OnPathValidationFailure(
       std::unique_ptr<QuicPathValidationContext> context) override {
-    QUIC_LOG(WARNING) << "Fail to validate path " << *context
+    LOG(INFO) << "Fail to validate path " << *context
                       << ", stop migrating.";
     client_->session()->connection()->OnPathValidationFailureAtClient(
         /*is_multi_port=*/false);

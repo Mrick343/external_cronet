@@ -121,12 +121,12 @@ class QuicStreamSequencerTest : public QuicTest {
 
   bool VerifyIovec(const iovec& iovec, absl::string_view expected) {
     if (iovec.iov_len != expected.length()) {
-      QUIC_LOG(ERROR) << "Invalid length: " << iovec.iov_len << " vs "
+      LOG(INFO) << "Invalid length: " << iovec.iov_len << " vs "
                       << expected.length();
       return false;
     }
     if (memcmp(iovec.iov_base, expected.data(), expected.length()) != 0) {
-      QUIC_LOG(ERROR) << "Invalid data: " << static_cast<char*>(iovec.iov_base)
+      LOG(INFO) << "Invalid data: " << static_cast<char*>(iovec.iov_base)
                       << " vs " << expected;
       return false;
     }
@@ -403,7 +403,7 @@ class QuicSequencerRandomTest : public QuicStreamSequencerTest {
 
   QuicSequencerRandomTest() {
     uint64_t seed = QuicRandom::GetInstance()->RandUint64();
-    QUIC_LOG(INFO) << "**** The current seed is " << seed << " ****";
+    LOG(INFO) << "**** The current seed is " << seed << " ****";
     random_.set_seed(seed);
 
     CreateFrames();
@@ -446,7 +446,7 @@ TEST_F(QuicSequencerRandomTest, RandomFramesNoDroppingNoBackup) {
 
   while (!list_.empty()) {
     int index = OneToN(list_.size()) - 1;
-    QUIC_LOG(ERROR) << "Sending index " << index << " " << list_[index].second;
+    LOG(INFO) << "Sending index " << index << " " << list_[index].second;
     OnFrame(list_[index].first, list_[index].second.data());
 
     list_.erase(list_.begin() + index);

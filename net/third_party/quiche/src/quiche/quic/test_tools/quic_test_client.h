@@ -208,7 +208,7 @@ class QuicTestClient : public QuicSpdyStream::Visitor,
       return !HaveActiveStream() || !closed_stream_states_.empty();
     });
     if (response_complete()) {
-      QUIC_VLOG(1) << "Client received response:"
+      LOG(INFO) << "Client received response:"
                    << response_headers()->DebugString() << response_body();
     }
   }

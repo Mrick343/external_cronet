@@ -118,7 +118,7 @@ bool QuicServer::CreateUDPSocketAndListen(const QuicSocketAddress& address) {
                           /*receive_buffer_size =*/kDefaultSocketReceiveBuffer,
                           /*send_buffer_size =*/kDefaultSocketReceiveBuffer);
   if (fd_ == kQuicInvalidSocketFd) {
-    QUIC_LOG(ERROR) << "CreateSocket() failed: " << strerror(errno);
+    LOG(INFO) << "CreateSocket() failed: " << strerror(errno);
     return false;
   }
 
@@ -128,15 +128,15 @@ bool QuicServer::CreateUDPSocketAndListen(const QuicSocketAddress& address) {
   sockaddr_storage addr = address.generic_address();
   int rc = bind(fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
   if (rc < 0) {
-    QUIC_LOG(ERROR) << "Bind failed: " << strerror(errno);
+    LOG(INFO) << "Bind failed: " << strerror(errno);
     return false;
   }
-  QUIC_LOG(INFO) << "Listening on " << address.ToString();
+  LOG(INFO) << "Listening on " << address.ToString();
   port_ = address.port();
   if (port_ == 0) {
     QuicSocketAddress address;
     if (address.FromSocket(fd_) != 0) {
-      QUIC_LOG(ERROR) << "Unable to get self address.  Error: "
+      LOG(INFO) << "Unable to get self address.  Error: "
                       << strerror(errno);
     }
     port_ = address.port();
@@ -197,7 +197,7 @@ void QuicServer::OnSocketEvent(QuicEventLoop* /*event_loop*/,
   QUICHE_DCHECK_EQ(fd, fd_);
 
   if (events & kSocketEventReadable) {
-    QUIC_DVLOG(1) << "EPOLLIN";
+    LOG(INFO) << "EPOLLIN";
 
     dispatcher_->ProcessBufferedChlos(kNumSessionsToCreatePerSocketEvent);
 

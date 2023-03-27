@@ -49,11 +49,11 @@ void QuicPathValidator::OnPathResponse(const QuicPathFrameBuffer& probing_data,
     return;
   }
 
-  QUIC_DVLOG(1) << "Match PATH_RESPONSE received on " << self_address;
+  LOG(INFO) << "Match PATH_RESPONSE received on " << self_address;
   QUIC_BUG_IF(quic_bug_12402_1, !path_context_->self_address().IsInitialized())
       << "Self address should have been known by now";
   if (self_address != path_context_->self_address()) {
-    QUIC_DVLOG(1) << "Expect the response to be received on "
+    LOG(INFO) << "Expect the response to be received on "
                   << path_context_->self_address();
     return;
   }
@@ -66,7 +66,7 @@ void QuicPathValidator::OnPathResponse(const QuicPathFrameBuffer& probing_data,
       return;
     }
   }
-  QUIC_DVLOG(1) << "PATH_RESPONSE with payload " << probing_data.data()
+  LOG(INFO) << "PATH_RESPONSE with payload " << probing_data.data()
                 << " doesn't match the probing data.";
 }
 
@@ -74,7 +74,7 @@ void QuicPathValidator::StartPathValidation(
     std::unique_ptr<QuicPathValidationContext> context,
     std::unique_ptr<ResultDelegate> result_delegate) {
   QUICHE_DCHECK(context);
-  QUIC_DLOG(INFO) << "Start validating path " << *context
+  LOG(INFO) << "Start validating path " << *context
                   << " via writer: " << context->WriterToUse();
   if (path_context_ != nullptr) {
     QUIC_BUG(quic_bug_10876_1)
@@ -98,7 +98,7 @@ void QuicPathValidator::CancelPathValidation() {
   if (path_context_ == nullptr) {
     return;
   }
-  QUIC_DVLOG(1) << "Cancel validation on path" << *path_context_;
+  LOG(INFO) << "Cancel validation on path" << *path_context_;
   result_delegate_->OnPathValidationFailure(std::move(path_context_));
   ResetPathValidation();
 }
@@ -124,7 +124,7 @@ void QuicPathValidator::OnRetryTimeout() {
     CancelPathValidation();
     return;
   }
-  QUIC_DVLOG(1) << "Send another PATH_CHALLENGE on path " << *path_context_;
+  LOG(INFO) << "Send another PATH_CHALLENGE on path " << *path_context_;
   SendPathChallengeAndSetAlarm();
 }
 

@@ -45,14 +45,16 @@ void StartOnServerThread(const base::FilePath& test_files_root,
   g_quic_memory_cache_backend->InitializeBackend(file_dir.value());
   quic::QuicConfig config;
 
+  LOG(WARNING) << file_dir << "Test data here dandandan";
+
   // Set up server certs.
 //  base::FilePath directory = test_data_dir.Append("net/data/ssl/certificates");
   std::unique_ptr<net::ProofSourceChromium> proof_source(
       new net::ProofSourceChromium());
-  CHECK(proof_source->Initialize(
+  proof_source->Initialize(
       test_data_dir.Append("quic-chain.pem"),
       test_data_dir.Append("quic-leaf-cert.key"),
-      base::FilePath()));
+      base::FilePath());
   g_quic_server = new net::QuicSimpleServer(
       std::move(proof_source), config,
       quic::QuicCryptoServerConfig::ConfigOptions(),
@@ -84,7 +86,7 @@ void JNI_QuicTestServer_StartQuicTestServer(
   DCHECK(!g_quic_server_thread);
   base::FilePath test_data_dir(
       base::android::ConvertJavaStringToUTF8(env, jtest_data_dir));
-//  base::InitAndroidTestPaths(test_data_dir);
+  base::InitAndroidTestPaths(test_data_dir);
 
   g_quic_server_thread = new base::Thread("quic server thread");
   base::Thread::Options thread_options;

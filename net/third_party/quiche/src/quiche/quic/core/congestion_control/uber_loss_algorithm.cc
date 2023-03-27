@@ -108,7 +108,7 @@ void UberLossAlgorithm::MaybeStartTuning() {
 
   if (tuned_parameters_.reordering_shift.has_value() &&
       tuned_parameters_.reordering_threshold.has_value()) {
-    QUIC_DLOG(INFO) << "Setting reordering shift to "
+    LOG(INFO) << "Setting reordering shift to "
                     << *tuned_parameters_.reordering_shift
                     << ", and reordering threshold to "
                     << *tuned_parameters_.reordering_threshold;

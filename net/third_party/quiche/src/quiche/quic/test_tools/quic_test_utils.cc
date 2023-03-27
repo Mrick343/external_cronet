@@ -777,7 +777,7 @@ bool TestPushPromiseDelegate::CheckVary(
     const spdy::Http2HeaderBlock& /*client_request*/,
     const spdy::Http2HeaderBlock& /*promise_request*/,
     const spdy::Http2HeaderBlock& /*promise_response*/) {
-  QUIC_DVLOG(1) << "match " << match_;
+  LOG(INFO) << "match " << match_;
   return match_;
 }
 

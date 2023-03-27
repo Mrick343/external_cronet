@@ -28,7 +28,7 @@ using ::testing::StrictMock;
 struct TestParams {
   TestParams(const ParsedQuicVersion& version, Perspective perspective)
       : version(version), perspective(perspective) {
-    QUIC_LOG(INFO) << "TestParams: " << *this;
+    LOG(INFO) << "TestParams: " << *this;
   }
 
   TestParams(const TestParams& other)

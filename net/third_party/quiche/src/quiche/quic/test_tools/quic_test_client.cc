@@ -519,7 +519,7 @@ std::string QuicTestClient::SendCustomSynchronousRequest(
   // Clear connection state here and only track this synchronous request.
   ClearPerConnectionState();
   if (SendMessage(headers, body) == 0) {
-    QUIC_DLOG(ERROR) << "Failed the request for: " << headers.DebugString();
+    LOG(INFO) << "Failed the request for: " << headers.DebugString();
     // Set the response_ explicitly.  Otherwise response_ will contain the
     // response from the previously successful request.
     response_ = "";
@@ -662,7 +662,7 @@ bool QuicTestClient::WaitUntil(int timeout_ms, std::function<bool()> trigger) {
   }
   ReadNextResponse();
   if (trigger && !trigger()) {
-    QUIC_VLOG(1) << "Client WaitUntil returning with trigger returning false.";
+    LOG(INFO) << "Client WaitUntil returning with trigger returning false.";
     return false;
   }
   return true;

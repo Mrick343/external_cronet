@@ -97,7 +97,7 @@ void WebTransportHttp3::CloseSession(WebTransportSessionError error_code,
   // one.  If we received a close, however, we cannot send ours since we already
   // closed the stream in response.
   if (close_received_) {
-    QUIC_DLOG(INFO) << "Not sending CLOSE_WEBTRANSPORT_SESSION as we've "
+    LOG(INFO) << "Not sending CLOSE_WEBTRANSPORT_SESSION as we've "
                        "already sent one from peer.";
     return;
   }
@@ -121,7 +121,7 @@ void WebTransportHttp3::OnCloseReceived(WebTransportSessionError error_code,
 
   // If the peer has sent a close after we sent our own, keep the local error.
   if (close_sent_) {
-    QUIC_DLOG(INFO) << "Ignoring received CLOSE_WEBTRANSPORT_SESSION as we've "
+    LOG(INFO) << "Ignoring received CLOSE_WEBTRANSPORT_SESSION as we've "
                        "already sent our own.";
     return;
   }
@@ -141,7 +141,7 @@ void WebTransportHttp3::OnConnectStreamFinReceived() {
   }
   close_received_ = true;
   if (close_sent_) {
-    QUIC_DLOG(INFO) << "Ignoring received FIN as we've already sent our close.";
+    LOG(INFO) << "Ignoring received FIN as we've already sent our close.";
     return;
   }
 
@@ -163,7 +163,7 @@ void WebTransportHttp3::HeadersReceived(const spdy::Http2HeaderBlock& headers) {
   if (session_->perspective() == Perspective::IS_CLIENT) {
     int status_code;
     if (!QuicSpdyStream::ParseHeaderStatusCode(headers, &status_code)) {
-      QUIC_DVLOG(1) << ENDPOINT
+      LOG(INFO) << ENDPOINT
                     << "Received WebTransport headers from server without "
                        "a valid status code, rejecting.";
       rejection_reason_ = WebTransportHttp3RejectionReason::kNoStatusCode;
@@ -171,7 +171,7 @@ void WebTransportHttp3::HeadersReceived(const spdy::Http2HeaderBlock& headers) {
     }
     bool valid_status = status_code >= 200 && status_code <= 299;
     if (!valid_status) {
-      QUIC_DVLOG(1) << ENDPOINT
+      LOG(INFO) << ENDPOINT
                     << "Received WebTransport headers from server with "
                        "status code "
                     << status_code << ", rejecting.";
@@ -183,7 +183,7 @@ void WebTransportHttp3::HeadersReceived(const spdy::Http2HeaderBlock& headers) {
     if (should_validate_version) {
       auto draft_version_it = headers.find("sec-webtransport-http3-draft");
       if (draft_version_it == headers.end()) {
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "Received WebTransport headers from server without "
                          "a draft version, rejecting.";
         rejection_reason_ =
@@ -191,7 +191,7 @@ void WebTransportHttp3::HeadersReceived(const spdy::Http2HeaderBlock& headers) {
         return;
       }
       if (draft_version_it->second != "draft02") {
-        QUIC_DVLOG(1) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                       << "Received WebTransport headers from server with "
                          "an unknown draft version ("
                       << draft_version_it->second << "), rejecting.";
@@ -202,7 +202,7 @@ void WebTransportHttp3::HeadersReceived(const spdy::Http2HeaderBlock& headers) {
     }
   }
 
-  QUIC_DVLOG(1) << ENDPOINT << "WebTransport session " << id_ << " ready.";
+  LOG(INFO) << ENDPOINT << "WebTransport session " << id_ << " ready.";
   ready_ = true;
   visitor_->OnSessionReady(headers);
   session_->ProcessBufferedWebTransportStreamsForSession(this);
@@ -332,7 +332,7 @@ void WebTransportHttp3UnidirectionalStream::WritePreamble() {
   QUICHE_DCHECK(success);
   WriteOrBufferData(absl::string_view(buffer, writer.length()), /*fin=*/false,
                     /*ack_listener=*/nullptr);
-  QUIC_DVLOG(1) << ENDPOINT << "Sent stream type and session ID ("
+  LOG(INFO) << ENDPOINT << "Sent stream type and session ID ("
                 << *session_id_ << ") on WebTransport stream " << id();
   needs_to_send_preamble_ = false;
 }
@@ -350,7 +350,7 @@ bool WebTransportHttp3UnidirectionalStream::ReadSessionId() {
     // stream with a session, consume all of the data so that the stream can
     // be closed.
     if (sequencer()->IsAllDataAvailable()) {
-      QUIC_DLOG(WARNING)
+      LOG(INFO)
           << ENDPOINT << "Failed to associate WebTransport stream " << id()
           << " with a session because the stream ended prematurely.";
       sequencer()->MarkConsumed(sequencer()->NumBytesBuffered());
@@ -385,7 +385,7 @@ void WebTransportHttp3UnidirectionalStream::OnClose() {
   }
   WebTransportHttp3* session = session_->GetWebTransportSession(*session_id_);
   if (session == nullptr) {
-    QUIC_DLOG(WARNING) << ENDPOINT << "WebTransport stream " << id()
+    LOG(INFO) << ENDPOINT << "WebTransport stream " << id()
                        << " attempted to notify parent session " << *session_id_
                        << ", but the session could not be found.";
     return;

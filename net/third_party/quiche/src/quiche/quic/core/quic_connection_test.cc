@@ -624,7 +624,7 @@ class QuicConnectionTest : public QuicTestWithParam<TestParams> {
         connection_id_included_(CONNECTION_ID_PRESENT),
         notifier_(&connection_),
         connection_close_frame_count_(0) {
-    QUIC_DVLOG(2) << "QuicConnectionTest(" << PrintToString(GetParam()) << ")";
+    LOG(INFO) << "QuicConnectionTest(" << PrintToString(GetParam()) << ")";
     connection_.set_defer_send_in_response_to_packets(GetParam().ack_response ==
                                                       AckResponse::kDefer);
     framer_.SetInitialObfuscators(TestConnectionId());
@@ -5909,7 +5909,7 @@ TEST_P(QuicConnectionTest, TimeoutAfterReceiveNotSendWhenUnacked) {
               OnConnectionClosed(_, ConnectionCloseSource::FROM_SELF));
   EXPECT_CALL(*send_algorithm_, OnPacketSent(_, _, _, _, _)).Times(AnyNumber());
   for (int i = 0; i < 100 && connection_.connected(); ++i) {
-    QUIC_LOG(INFO) << "sending data packet";
+    LOG(INFO) << "sending data packet";
     connection_.SendStreamDataWithString(
         GetNthClientInitiatedStreamId(1, connection_.transport_version()),
         "foo", 0, NO_FIN);
@@ -9978,7 +9978,7 @@ TEST_P(QuicConnectionTest, FailToCoalescePacket) {
       *QuicCoalescedPacketPeer::GetMutableEncryptedBuffer(
           coalesced_packet, ENCRYPTION_FORWARD_SECURE) += "!!! TEST !!!";
 
-      QUIC_LOG(INFO) << "Reduced coalesced_packet_max_length from "
+      LOG(INFO) << "Reduced coalesced_packet_max_length from "
                      << coalesced_packet_max_length << " to "
                      << coalesced_packet.max_packet_length()
                      << ", coalesced_packet.length:"

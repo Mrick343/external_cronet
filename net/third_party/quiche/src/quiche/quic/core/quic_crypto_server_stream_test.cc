@@ -226,7 +226,7 @@ TEST_F(QuicCryptoServerStreamTest, ZeroRTT) {
   EXPECT_FALSE(server_stream()->ResumptionAttempted());
 
   // Now do another handshake, hopefully in 0-RTT.
-  QUIC_LOG(INFO) << "Resetting for 0-RTT handshake attempt";
+  LOG(INFO) << "Resetting for 0-RTT handshake attempt";
   InitializeFakeClient();
   InitializeServer();
 

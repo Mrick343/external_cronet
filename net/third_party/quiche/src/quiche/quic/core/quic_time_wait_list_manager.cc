@@ -180,12 +180,12 @@ void QuicTimeWaitListManager::ProcessPacket(
                                      connection_data->info.srtt);
 
   if (!ShouldSendResponse(connection_data->num_packets)) {
-    QUIC_DLOG(INFO) << "Processing " << connection_id << " in time wait state: "
+    LOG(INFO) << "Processing " << connection_id << " in time wait state: "
                     << "throttled";
     return;
   }
 
-  QUIC_DLOG(INFO) << "Processing " << connection_id << " in time wait state: "
+  LOG(INFO) << "Processing " << connection_id << " in time wait state: "
                   << "header format=" << header_format
                   << " ietf=" << connection_data->info.ietf_quic
                   << ", action=" << connection_data->action
@@ -263,7 +263,7 @@ void QuicTimeWaitListManager::SendVersionNegotiationPacket(
       QuicFramer::BuildVersionNegotiationPacket(
           server_connection_id, client_connection_id, ietf_quic,
           use_length_prefix, supported_versions);
-  QUIC_DVLOG(2) << "Dispatcher sending version negotiation packet {"
+  LOG(INFO) << "Dispatcher sending version negotiation packet {"
                 << ParsedQuicVersionVectorToString(supported_versions) << "}, "
                 << (ietf_quic ? "" : "!") << "ietf_quic, "
                 << (use_length_prefix ? "" : "!")
@@ -295,7 +295,7 @@ void QuicTimeWaitListManager::SendPublicReset(
       // packet).
       return;
     }
-    QUIC_DVLOG(2) << "Dispatcher sending IETF reset packet for "
+    LOG(INFO) << "Dispatcher sending IETF reset packet for "
                   << connection_id << std::endl
                   << quiche::QuicheTextUtils::HexDump(
                          absl::string_view(ietf_reset_packet->data(),
@@ -316,7 +316,7 @@ void QuicTimeWaitListManager::SendPublicReset(
   GetEndpointId(&packet.endpoint_id);
   // Takes ownership of the packet.
   std::unique_ptr<QuicEncryptedPacket> reset_packet = BuildPublicReset(packet);
-  QUIC_DVLOG(2) << "Dispatcher sending reset packet for " << connection_id
+  LOG(INFO) << "Dispatcher sending reset packet for " << connection_id
                 << std::endl
                 << quiche::QuicheTextUtils::HexDump(absl::string_view(
                        reset_packet->data(), reset_packet->length()));
@@ -352,7 +352,7 @@ bool QuicTimeWaitListManager::SendOrQueuePacket(
     std::unique_ptr<QueuedPacket> packet,
     const QuicPerPacketContext* /*packet_context*/) {
   if (packet == nullptr) {
-    QUIC_LOG(ERROR) << "Tried to send or queue a null packet";
+    LOG(INFO) << "Tried to send or queue a null packet";
     return true;
   }
   if (pending_packets_queue_.size() >=
@@ -408,7 +408,7 @@ void QuicTimeWaitListManager::SetConnectionIdCleanUpAlarm() {
     if (now - oldest_connection_id < time_wait_period_) {
       next_alarm_interval = oldest_connection_id + time_wait_period_ - now;
     } else {
-      QUIC_LOG(ERROR)
+      LOG(INFO)
           << "ConnectionId lingered for longer than time_wait_period_";
     }
   } else {
@@ -432,7 +432,7 @@ bool QuicTimeWaitListManager::MaybeExpireOldestConnection(
     return false;
   }
   // This connection_id has lived its age, retire it now.
-  QUIC_DLOG(INFO) << "Connection " << it->first
+  LOG(INFO) << "Connection " << it->first
                   << " expired from time wait list";
   RemoveConnectionDataFromMap(it);
   if (expiration_time == QuicTime::Infinite()) {

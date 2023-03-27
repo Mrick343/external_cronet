@@ -40,7 +40,7 @@ void QuicNetworkBlackholeDetector::OnAlarm() {
     return;
   }
 
-  QUIC_DVLOG(1) << "BlackholeDetector alarm firing. next_deadline:"
+  LOG(INFO) << "BlackholeDetector alarm firing. next_deadline:"
                 << next_deadline
                 << ", path_degrading_deadline_:" << path_degrading_deadline_
                 << ", path_mtu_reduction_deadline_:"
@@ -119,7 +119,7 @@ void QuicNetworkBlackholeDetector::UpdateAlarm() const {
 
   QuicTime next_deadline = GetEarliestDeadline();
 
-  QUIC_DVLOG(1) << "Updating alarm. next_deadline:" << next_deadline
+  LOG(INFO) << "Updating alarm. next_deadline:" << next_deadline
                 << ", path_degrading_deadline_:" << path_degrading_deadline_
                 << ", path_mtu_reduction_deadline_:"
                 << path_mtu_reduction_deadline_

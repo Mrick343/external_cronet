@@ -234,7 +234,7 @@ class TestQuicVisitor : public QuicFramerVisitorInterface {
   ~TestQuicVisitor() override {}
 
   void OnError(QuicFramer* f) override {
-    QUIC_DLOG(INFO) << "QuicFramer Error: " << QuicErrorCodeToString(f->error())
+    LOG(INFO) << "QuicFramer Error: " << QuicErrorCodeToString(f->error())
                     << " (" << f->error() << ")";
     ++error_count_;
   }
@@ -272,7 +272,7 @@ class TestQuicVisitor : public QuicFramerVisitorInterface {
   }
 
   bool OnProtocolVersionMismatch(ParsedQuicVersion received_version) override {
-    QUIC_DLOG(INFO) << "QuicFramer Version Mismatch, version: "
+    LOG(INFO) << "QuicFramer Version Mismatch, version: "
                     << received_version;
     ++version_mismatch_;
     EXPECT_EQ(0u, framer_->current_received_frame_type());
@@ -736,21 +736,21 @@ class QuicFramerTest : public QuicTestWithParam<ParsedQuicVersion> {
 
   bool CheckEncryption(QuicPacketNumber packet_number, QuicPacket* packet) {
     if (packet_number != encrypter_->packet_number_) {
-      QUIC_LOG(ERROR) << "Encrypted incorrect packet number.  expected "
+      LOG(INFO) << "Encrypted incorrect packet number.  expected "
                       << packet_number
                       << " actual: " << encrypter_->packet_number_;
       return false;
     }
     if (packet->AssociatedData(framer_.transport_version()) !=
         encrypter_->associated_data_) {
-      QUIC_LOG(ERROR) << "Encrypted incorrect associated data.  expected "
+      LOG(INFO) << "Encrypted incorrect associated data.  expected "
                       << packet->AssociatedData(framer_.transport_version())
                       << " actual: " << encrypter_->associated_data_;
       return false;
     }
     if (packet->Plaintext(framer_.transport_version()) !=
         encrypter_->plaintext_) {
-      QUIC_LOG(ERROR) << "Encrypted incorrect plaintext data.  expected "
+      LOG(INFO) << "Encrypted incorrect plaintext data.  expected "
                       << packet->Plaintext(framer_.transport_version())
                       << " actual: " << encrypter_->plaintext_;
       return false;
@@ -779,7 +779,7 @@ class QuicFramerTest : public QuicTestWithParam<ParsedQuicVersion> {
       size_t retry_token_length,
       quiche::QuicheVariableLengthIntegerLength length_length) {
     if (visitor_.header_->packet_number != decrypter_->packet_number_) {
-      QUIC_LOG(ERROR) << "Decrypted incorrect packet number.  expected "
+      LOG(INFO) << "Decrypted incorrect packet number.  expected "
                       << visitor_.header_->packet_number
                       << " actual: " << decrypter_->packet_number_;
       return false;
@@ -792,7 +792,7 @@ class QuicFramerTest : public QuicTestWithParam<ParsedQuicVersion> {
             PACKET_4BYTE_PACKET_NUMBER, retry_token_length_length,
             retry_token_length, length_length);
     if (associated_data != decrypter_->associated_data_) {
-      QUIC_LOG(ERROR) << "Decrypted incorrect associated data.  expected "
+      LOG(INFO) << "Decrypted incorrect associated data.  expected "
                       << absl::BytesToHexString(associated_data) << " actual: "
                       << absl::BytesToHexString(decrypter_->associated_data_);
       return false;
@@ -804,7 +804,7 @@ class QuicFramerTest : public QuicTestWithParam<ParsedQuicVersion> {
             includes_diversification_nonce, PACKET_4BYTE_PACKET_NUMBER,
             retry_token_length_length, retry_token_length, length_length)));
     if (ciphertext != decrypter_->ciphertext_) {
-      QUIC_LOG(ERROR) << "Decrypted incorrect ciphertext data.  expected "
+      LOG(INFO) << "Decrypted incorrect ciphertext data.  expected "
                       << absl::BytesToHexString(ciphertext) << " actual: "
                       << absl::BytesToHexString(decrypter_->ciphertext_)
                       << " associated data: "

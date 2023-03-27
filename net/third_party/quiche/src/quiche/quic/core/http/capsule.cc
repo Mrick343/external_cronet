@@ -527,12 +527,12 @@ size_t CapsuleParser::AttemptParseCapsule() {
   QuicDataReader capsule_fragment_reader(buffered_data_);
   uint64_t capsule_type64;
   if (!capsule_fragment_reader.ReadVarInt62(&capsule_type64)) {
-    QUIC_DVLOG(2) << "Partial read: not enough data to read capsule type";
+    LOG(INFO) << "Partial read: not enough data to read capsule type";
     return 0;
   }
   absl::string_view capsule_data;
   if (!capsule_fragment_reader.ReadStringPieceVarInt62(&capsule_data)) {
-    QUIC_DVLOG(2) << "Partial read: not enough data to read capsule length or "
+    LOG(INFO) << "Partial read: not enough data to read capsule length or "
                      "full capsule data";
     return 0;
   }

@@ -105,11 +105,11 @@ void QuicReceivedPacketManager::RecordPacketReceived(
   if (save_timestamps_) {
     // The timestamp format only handles packets in time order.
     if (save_timestamps_for_in_order_packets_ && packet_reordered) {
-      QUIC_DLOG(WARNING) << "Not saving receive timestamp for packet "
+      LOG(INFO) << "Not saving receive timestamp for packet "
                          << packet_number;
     } else if (!ack_frame_.received_packet_times.empty() &&
                ack_frame_.received_packet_times.back().second > receipt_time) {
-      QUIC_LOG(WARNING)
+      LOG(INFO)
           << "Receive time went backwards from: "
           << ack_frame_.received_packet_times.back().second.ToDebuggingValue()
           << " to " << receipt_time.ToDebuggingValue();

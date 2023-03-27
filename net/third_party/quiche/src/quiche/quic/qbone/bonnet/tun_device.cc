@@ -128,7 +128,7 @@ bool TunTapDevice::OpenDevice() {
       absl::GetFlag(FLAGS_qbone_client_tun_device_path);
   int fd = kernel_.open(tun_device_path.c_str(), O_RDWR);
   if (fd < 0) {
-    QUIC_PLOG(WARNING) << "Failed to open " << tun_device_path;
+    LOG(INFO) << "Failed to open " << tun_device_path;
     return successfully_opened;
   }
   file_descriptor_ = fd;
@@ -137,14 +137,14 @@ bool TunTapDevice::OpenDevice() {
   }
 
   if (kernel_.ioctl(fd, TUNSETIFF, reinterpret_cast<void*>(&if_request)) != 0) {
-    QUIC_PLOG(WARNING) << "Failed to TUNSETIFF on fd(" << fd << ")";
+    LOG(INFO) << "Failed to TUNSETIFF on fd(" << fd << ")";
     return successfully_opened;
   }
 
   if (kernel_.ioctl(
           fd, TUNSETPERSIST,
           persist_ ? reinterpret_cast<void*>(&if_request) : nullptr) != 0) {
-    QUIC_PLOG(WARNING) << "Failed to TUNSETPERSIST on fd(" << fd << ")";
+    LOG(INFO) << "Failed to TUNSETPERSIST on fd(" << fd << ")";
     return successfully_opened;
   }
 
@@ -177,12 +177,12 @@ bool TunTapDevice::ConfigureInterface() {
 bool TunTapDevice::CheckFeatures(int tun_device_fd) {
   unsigned int actual_features;
   if (kernel_.ioctl(tun_device_fd, TUNGETFEATURES, &actual_features) != 0) {
-    QUIC_PLOG(WARNING) << "Failed to TUNGETFEATURES";
+    LOG(INFO) << "Failed to TUNGETFEATURES";
     return false;
   }
   unsigned int required_features = IFF_TUN | IFF_NO_PI;
   if ((required_features & actual_features) != required_features) {
-    QUIC_LOG(WARNING)
+    LOG(INFO)
         << "Required feature does not exist. required_features: 0x" << std::hex
         << required_features << " vs actual_features: 0x" << std::hex
         << actual_features;
@@ -194,12 +194,12 @@ bool TunTapDevice::CheckFeatures(int tun_device_fd) {
 bool TunTapDevice::NetdeviceIoctl(int request, void* argp) {
   int fd = kernel_.socket(AF_INET6, SOCK_DGRAM, 0);
   if (fd < 0) {
-    QUIC_PLOG(WARNING) << "Failed to create AF_INET6 socket.";
+    LOG(INFO) << "Failed to create AF_INET6 socket.";
     return false;
   }
 
   if (kernel_.ioctl(fd, request, argp) != 0) {
-    QUIC_PLOG(WARNING) << "Failed ioctl request: " << request;
+    LOG(INFO) << "Failed ioctl request: " << request;
     kernel_.close(fd);
     return false;
   }

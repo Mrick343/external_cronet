@@ -62,7 +62,7 @@ void QuicControlFrameManager::WriteOrBufferQuicFrame(QuicFrame frame) {
 void QuicControlFrameManager::WriteOrBufferRstStream(
     QuicStreamId id, QuicResetStreamError error,
     QuicStreamOffset bytes_written) {
-  QUIC_DVLOG(1) << "Writing RST_STREAM_FRAME";
+  LOG(INFO) << "Writing RST_STREAM_FRAME";
   WriteOrBufferQuicFrame((QuicFrame(new QuicRstStreamFrame(
       ++last_control_frame_id_, id, error, bytes_written))));
 }
@@ -70,28 +70,28 @@ void QuicControlFrameManager::WriteOrBufferRstStream(
 void QuicControlFrameManager::WriteOrBufferGoAway(
     QuicErrorCode error, QuicStreamId last_good_stream_id,
     const std::string& reason) {
-  QUIC_DVLOG(1) << "Writing GOAWAY_FRAME";
+  LOG(INFO) << "Writing GOAWAY_FRAME";
   WriteOrBufferQuicFrame(QuicFrame(new QuicGoAwayFrame(
       ++last_control_frame_id_, error, last_good_stream_id, reason)));
 }
 
 void QuicControlFrameManager::WriteOrBufferWindowUpdate(
     QuicStreamId id, QuicStreamOffset byte_offset) {
-  QUIC_DVLOG(1) << "Writing WINDOW_UPDATE_FRAME";
+  LOG(INFO) << "Writing WINDOW_UPDATE_FRAME";
   WriteOrBufferQuicFrame(QuicFrame(
       QuicWindowUpdateFrame(++last_control_frame_id_, id, byte_offset)));
 }
 
 void QuicControlFrameManager::WriteOrBufferBlocked(
     QuicStreamId id, QuicStreamOffset byte_offset) {
-  QUIC_DVLOG(1) << "Writing BLOCKED_FRAME";
+  LOG(INFO) << "Writing BLOCKED_FRAME";
   WriteOrBufferQuicFrame(
       QuicFrame(QuicBlockedFrame(++last_control_frame_id_, id, byte_offset)));
 }
 
 void QuicControlFrameManager::WriteOrBufferStreamsBlocked(QuicStreamCount count,
                                                           bool unidirectional) {
-  QUIC_DVLOG(1) << "Writing STREAMS_BLOCKED Frame";
+  LOG(INFO) << "Writing STREAMS_BLOCKED Frame";
   QUIC_CODE_COUNT(quic_streams_blocked_transmits);
   WriteOrBufferQuicFrame(QuicFrame(QuicStreamsBlockedFrame(
       ++last_control_frame_id_, count, unidirectional)));
@@ -99,7 +99,7 @@ void QuicControlFrameManager::WriteOrBufferStreamsBlocked(QuicStreamCount count,
 
 void QuicControlFrameManager::WriteOrBufferMaxStreams(QuicStreamCount count,
                                                       bool unidirectional) {
-  QUIC_DVLOG(1) << "Writing MAX_STREAMS Frame";
+  LOG(INFO) << "Writing MAX_STREAMS Frame";
   QUIC_CODE_COUNT(quic_max_streams_transmits);
   WriteOrBufferQuicFrame(QuicFrame(
       QuicMaxStreamsFrame(++last_control_frame_id_, count, unidirectional)));
@@ -107,20 +107,20 @@ void QuicControlFrameManager::WriteOrBufferMaxStreams(QuicStreamCount count,
 
 void QuicControlFrameManager::WriteOrBufferStopSending(
     QuicResetStreamError error, QuicStreamId stream_id) {
-  QUIC_DVLOG(1) << "Writing STOP_SENDING_FRAME";
+  LOG(INFO) << "Writing STOP_SENDING_FRAME";
   WriteOrBufferQuicFrame(QuicFrame(
       QuicStopSendingFrame(++last_control_frame_id_, stream_id, error)));
 }
 
 void QuicControlFrameManager::WriteOrBufferHandshakeDone() {
-  QUIC_DVLOG(1) << "Writing HANDSHAKE_DONE";
+  LOG(INFO) << "Writing HANDSHAKE_DONE";
   WriteOrBufferQuicFrame(
       QuicFrame(QuicHandshakeDoneFrame(++last_control_frame_id_)));
 }
 
 void QuicControlFrameManager::WriteOrBufferAckFrequency(
     const QuicAckFrequencyFrame& ack_frequency_frame) {
-  QUIC_DVLOG(1) << "Writing ACK_FREQUENCY frame";
+  LOG(INFO) << "Writing ACK_FREQUENCY frame";
   QuicControlFrameId control_frame_id = ++last_control_frame_id_;
   // Using the control_frame_id for sequence_number here leaves gaps in
   // sequence_number.
@@ -135,7 +135,7 @@ void QuicControlFrameManager::WriteOrBufferNewConnectionId(
     const QuicConnectionId& connection_id, uint64_t sequence_number,
     uint64_t retire_prior_to,
     const StatelessResetToken& stateless_reset_token) {
-  QUIC_DVLOG(1) << "Writing NEW_CONNECTION_ID frame";
+  LOG(INFO) << "Writing NEW_CONNECTION_ID frame";
   WriteOrBufferQuicFrame(QuicFrame(new QuicNewConnectionIdFrame(
       ++last_control_frame_id_, connection_id, sequence_number,
       stateless_reset_token, retire_prior_to)));
@@ -143,13 +143,13 @@ void QuicControlFrameManager::WriteOrBufferNewConnectionId(
 
 void QuicControlFrameManager::WriteOrBufferRetireConnectionId(
     uint64_t sequence_number) {
-  QUIC_DVLOG(1) << "Writing RETIRE_CONNECTION_ID frame";
+  LOG(INFO) << "Writing RETIRE_CONNECTION_ID frame";
   WriteOrBufferQuicFrame(QuicFrame(new QuicRetireConnectionIdFrame(
       ++last_control_frame_id_, sequence_number)));
 }
 
 void QuicControlFrameManager::WriteOrBufferNewToken(absl::string_view token) {
-  QUIC_DVLOG(1) << "Writing NEW_TOKEN frame";
+  LOG(INFO) << "Writing NEW_TOKEN frame";
   WriteOrBufferQuicFrame(
       QuicFrame(new QuicNewTokenFrame(++last_control_frame_id_, token)));
 }
@@ -288,7 +288,7 @@ bool QuicControlFrameManager::RetransmitControlFrame(const QuicFrame& frame,
     return true;
   }
   QuicFrame copy = CopyRetransmittableControlFrame(frame);
-  QUIC_DVLOG(1) << "control frame manager is forced to retransmit frame: "
+  LOG(INFO) << "control frame manager is forced to retransmit frame: "
                 << frame;
   if (delegate_->WriteControlFrame(copy, type)) {
     return true;

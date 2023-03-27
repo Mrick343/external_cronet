@@ -160,7 +160,7 @@ class SendAlgorithmTest : public QuicTestWithParam<TestParams> {
 
     uint64_t seed = QuicRandom::GetInstance()->RandUint64();
     random_.set_seed(seed);
-    QUIC_LOG(INFO) << "SendAlgorithmTest simulator set up.  Seed: " << seed;
+    LOG(INFO) << "SendAlgorithmTest simulator set up.  Seed: " << seed;
   }
 
   // Creates a simulated network, with default settings between the
@@ -220,12 +220,12 @@ class SendAlgorithmTest : public QuicTestWithParam<TestParams> {
 
   void PrintTransferStats() {
     const QuicConnectionStats& stats = quic_sender_.connection()->GetStats();
-    QUIC_LOG(INFO) << "Summary for scenario " << GetParam();
-    QUIC_LOG(INFO) << "Sender stats is " << stats;
+    LOG(INFO) << "Summary for scenario " << GetParam();
+    LOG(INFO) << "Sender stats is " << stats;
     const double rtx_rate =
         static_cast<double>(stats.bytes_retransmitted) / stats.bytes_sent;
-    QUIC_LOG(INFO) << "Retransmit rate (num_rtx/num_total_sent): " << rtx_rate;
-    QUIC_LOG(INFO) << "Connection elapsed time: "
+    LOG(INFO) << "Retransmit rate (num_rtx/num_total_sent): " << rtx_rate;
+    LOG(INFO) << "Connection elapsed time: "
                    << (clock_->Now() - QuicSenderStartTime()).ToMilliseconds()
                    << " (ms)";
   }

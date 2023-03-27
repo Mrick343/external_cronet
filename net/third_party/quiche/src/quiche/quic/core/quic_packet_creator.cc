@@ -162,7 +162,7 @@ void QuicPacketCreator::SetMaxPacketLength(QuicByteCount length) {
   if (length == max_packet_length_) {
     return;
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Updating packet creator max packet length from "
+  LOG(INFO) << ENDPOINT << "Updating packet creator max packet length from "
                 << max_packet_length_ << " to " << length;
 
   max_packet_length_ = length;
@@ -200,12 +200,12 @@ void QuicPacketCreator::SetSoftMaxPacketLength(QuicByteCount length) {
       PacketHeaderSize() + MinPlaintextPacketSize(framer_->version())) {
     // Please note: this would not guarantee to fit next packet if the size of
     // packet header increases (e.g., encryption level changes).
-    QUIC_DLOG(INFO) << ENDPOINT << length
+    LOG(INFO) << ENDPOINT << length
                     << " is too small to fit packet header";
     RemoveSoftMaxPacketLength();
     return;
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Setting soft max packet length to: " << length;
+  LOG(INFO) << ENDPOINT << "Setting soft max packet length to: " << length;
   latched_hard_max_packet_length_ = max_packet_length_;
   max_packet_length_ = length;
   max_plaintext_size_ = framer_->GetMaxPlaintextSize(length);
@@ -255,7 +255,7 @@ void QuicPacketCreator::UpdatePacketNumberLength(
   if (packet_.packet_number_length == packet_number_length) {
     return;
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Updating packet number length from "
+  LOG(INFO) << ENDPOINT << "Updating packet number length from "
                 << static_cast<int>(packet_.packet_number_length) << " to "
                 << static_cast<int>(packet_number_length)
                 << ", least_packet_awaited_by_peer: "
@@ -280,7 +280,7 @@ void QuicPacketCreator::SkipNPacketNumbers(
   if (packet_.packet_number > packet_.packet_number + count) {
     // Skipping count packet numbers causes packet number wrapping around,
     // reject it.
-    QUIC_LOG(WARNING) << ENDPOINT << "Skipping " << count
+    LOG(INFO) << ENDPOINT << "Skipping " << count
                       << " packet numbers causes packet number wrapping "
                          "around, least_packet_awaited_by_peer: "
                       << least_packet_awaited_by_peer
@@ -296,7 +296,7 @@ bool QuicPacketCreator::ConsumeCryptoDataToFillCurrentPacket(
     EncryptionLevel level, size_t write_length, QuicStreamOffset offset,
     bool needs_full_padding, TransmissionType transmission_type,
     QuicFrame* frame) {
-  QUIC_DVLOG(2) << ENDPOINT << "ConsumeCryptoDataToFillCurrentPacket " << level
+  LOG(INFO) << ENDPOINT << "ConsumeCryptoDataToFillCurrentPacket " << level
                 << " write_length " << write_length << " offset " << offset
                 << (needs_full_padding ? " needs_full_padding" : "") << " "
                 << transmission_type;
@@ -542,7 +542,7 @@ size_t QuicPacketCreator::ReserializeInitialPacketInCoalescedPacket(
   }
   // Add necessary padding.
   if (padding_size > 0) {
-    QUIC_DVLOG(2) << ENDPOINT << "Add padding of size: " << padding_size;
+    LOG(INFO) << ENDPOINT << "Add padding of size: " << padding_size;
     if (!AddFrame(QuicFrame(QuicPaddingFrame(padding_size)),
                   packet.transmission_type)) {
       QUIC_BUG(quic_bug_10752_8)
@@ -579,7 +579,7 @@ void QuicPacketCreator::CreateAndSerializeStreamFrame(
   FillPacketHeader(&header);
   packet_.fate = delegate_->GetSerializedPacketFate(
       /*is_mtu_discovery=*/false, packet_.encryption_level);
-  QUIC_DVLOG(1) << ENDPOINT << "fate of packet " << packet_.packet_number
+  LOG(INFO) << ENDPOINT << "fate of packet " << packet_.packet_number
                 << ": " << SerializedPacketFateToString(packet_.fate) << " of "
                 << EncryptionLevelToString(packet_.encryption_level);
 
@@ -629,9 +629,9 @@ void QuicPacketCreator::CreateAndSerializeStreamFrame(
   if (debug_delegate_ != nullptr) {
     debug_delegate_->OnFrameAddedToPacket(QuicFrame(frame));
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Adding frame: " << frame;
+  LOG(INFO) << ENDPOINT << "Adding frame: " << frame;
 
-  QUIC_DVLOG(2) << ENDPOINT << "Serializing stream packet " << header << frame;
+  LOG(INFO) << ENDPOINT << "Serializing stream packet " << header << frame;
 
   // TODO(ianswett): AppendTypeByte and AppendStreamFrame could be optimized
   // into one method that takes a QuicStreamFrame, if warranted.
@@ -804,7 +804,7 @@ bool QuicPacketCreator::SerializePacket(QuicOwnedPacketBuffer encrypted_buffer,
         /*is_mtu_discovery=*/QuicUtils::ContainsFrameType(queued_frames_,
                                                           MTU_DISCOVERY_FRAME),
         packet_.encryption_level);
-    QUIC_DVLOG(1) << ENDPOINT << "fate of packet " << packet_.packet_number
+    LOG(INFO) << ENDPOINT << "fate of packet " << packet_.packet_number
                   << ": " << SerializedPacketFateToString(packet_.fate)
                   << " of "
                   << EncryptionLevelToString(packet_.encryption_level);
@@ -814,7 +814,7 @@ bool QuicPacketCreator::SerializePacket(QuicOwnedPacketBuffer encrypted_buffer,
     MaybeAddPadding();
   }
 
-  QUIC_DVLOG(2) << ENDPOINT << "Serializing packet " << header
+  LOG(INFO) << ENDPOINT << "Serializing packet " << header
                 << QuicFramesToString(queued_frames_) << " at encryption_level "
                 << packet_.encryption_level
                 << ", allow_padding:" << allow_padding;
@@ -901,7 +901,7 @@ QuicPacketCreator::SerializeConnectivityProbingPacket() {
   // FillPacketHeader increments packet_number_.
   FillPacketHeader(&header);
 
-  QUIC_DVLOG(2) << ENDPOINT << "Serializing connectivity probing packet "
+  LOG(INFO) << ENDPOINT << "Serializing connectivity probing packet "
                 << header;
 
   std::unique_ptr<char[]> buffer(new char[kMaxOutgoingPacketSize]);
@@ -944,7 +944,7 @@ QuicPacketCreator::SerializePathChallengeConnectivityProbingPacket(
   // FillPacketHeader increments packet_number_.
   FillPacketHeader(&header);
 
-  QUIC_DVLOG(2) << ENDPOINT << "Serializing path challenge packet " << header;
+  LOG(INFO) << ENDPOINT << "Serializing path challenge packet " << header;
 
   std::unique_ptr<char[]> buffer(new char[kMaxOutgoingPacketSize]);
   size_t length =
@@ -989,7 +989,7 @@ QuicPacketCreator::SerializePathResponseConnectivityProbingPacket(
   // FillPacketHeader increments packet_number_.
   FillPacketHeader(&header);
 
-  QUIC_DVLOG(2) << ENDPOINT << "Serializing path response packet " << header;
+  LOG(INFO) << ENDPOINT << "Serializing path response packet " << header;
 
   std::unique_ptr<char[]> buffer(new char[kMaxOutgoingPacketSize]);
   size_t length =
@@ -1155,7 +1155,7 @@ size_t QuicPacketCreator::SerializeCoalescedPacket(
     return 0;
   }
   packet_length += length_copied;
-  QUIC_DVLOG(1) << ENDPOINT
+  LOG(INFO) << ENDPOINT
                 << "Successfully serialized coalesced packet of length: "
                 << packet_length;
   return packet_length;
@@ -1427,7 +1427,7 @@ QuicConsumedData QuicPacketCreator::ConsumeDataFastPath(
 size_t QuicPacketCreator::ConsumeCryptoData(EncryptionLevel level,
                                             size_t write_length,
                                             QuicStreamOffset offset) {
-  QUIC_DVLOG(2) << ENDPOINT << "ConsumeCryptoData " << level << " write_length "
+  LOG(INFO) << ENDPOINT << "ConsumeCryptoData " << level << " write_length "
                 << write_length << " offset " << offset;
   QUIC_BUG_IF(quic_bug_10752_25, !flusher_attached_)
       << ENDPOINT
@@ -1708,7 +1708,7 @@ size_t QuicPacketCreator::GetSerializedFrameLength(const QuicFrame& frame) {
 
 bool QuicPacketCreator::AddFrame(const QuicFrame& frame,
                                  TransmissionType transmission_type) {
-  QUIC_DVLOG(1) << ENDPOINT << "Adding frame with transmission type "
+  LOG(INFO) << ENDPOINT << "Adding frame with transmission type "
                 << transmission_type << ": " << frame;
   if (frame.type == STREAM_FRAME &&
       !QuicUtils::IsCryptoStreamId(framer_->transport_version(),
@@ -1755,7 +1755,7 @@ bool QuicPacketCreator::AddFrame(const QuicFrame& frame,
     frame_len = GetSerializedFrameLength(frame);
   }
   if (frame_len == 0) {
-    QUIC_DVLOG(1) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                   << "Flushing because current open packet is full when adding "
                   << frame;
     FlushCurrentPacket();
@@ -1869,7 +1869,7 @@ bool QuicPacketCreator::RemoveSoftMaxPacketLength() {
   if (!CanSetMaxPacketLength()) {
     return false;
   }
-  QUIC_DVLOG(1) << ENDPOINT << "Restoring max packet length to: "
+  LOG(INFO) << ENDPOINT << "Restoring max packet length to: "
                 << latched_hard_max_packet_length_;
   SetMaxPacketLength(latched_hard_max_packet_length_);
   // Reset latched_max_packet_length_.
@@ -1894,7 +1894,7 @@ void QuicPacketCreator::MaybeAddPadding() {
   // Header protection requires a minimum plaintext packet size.
   MaybeAddExtraPaddingForHeaderProtection();
 
-  QUIC_DVLOG(3) << "MaybeAddPadding for " << packet_.packet_number
+  LOG(INFO) << "MaybeAddPadding for " << packet_.packet_number
                 << ": transmission_type:" << packet_.transmission_type
                 << ", fate:" << packet_.fate
                 << ", needs_full_padding_:" << needs_full_padding_
@@ -1933,7 +1933,7 @@ bool QuicPacketCreator::IncludeVersionInHeader() const {
 
 void QuicPacketCreator::AddPendingPadding(QuicByteCount size) {
   pending_padding_bytes_ += size;
-  QUIC_DVLOG(3) << "After AddPendingPadding(" << size
+  LOG(INFO) << "After AddPendingPadding(" << size
                 << "), pending_padding_bytes_:" << pending_padding_bytes_;
 }
 
@@ -2208,7 +2208,7 @@ void QuicPacketCreator::AddPathChallengeFrame(
   // TODO(danzh) This will consume retry budget, if it causes performance
   // regression, consider to notify the caller about the sending failure and let
   // the caller to decide if it worth retrying.
-  QUIC_DVLOG(1) << ENDPOINT << "Can't send PATH_CHALLENGE now";
+  LOG(INFO) << ENDPOINT << "Can't send PATH_CHALLENGE now";
 }
 
 bool QuicPacketCreator::AddPathResponseFrame(
@@ -2218,7 +2218,7 @@ bool QuicPacketCreator::AddPathResponseFrame(
     return true;
   }
 
-  QUIC_DVLOG(1) << ENDPOINT << "Can't send PATH_RESPONSE now";
+  LOG(INFO) << ENDPOINT << "Can't send PATH_RESPONSE now";
   return false;
 }
 

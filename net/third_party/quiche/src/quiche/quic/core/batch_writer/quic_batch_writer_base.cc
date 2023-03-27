@@ -85,7 +85,7 @@ WriteResult QuicBatchWriterBase::InternalWritePacket(
   size_t num_buffered_packets = buffered_writes().size();
   const FlushImplResult flush_result = CheckedFlush();
   WriteResult result = flush_result.write_result;
-  QUIC_DVLOG(1) << "Internally flushed " << flush_result.num_packets_sent
+  LOG(INFO) << "Internally flushed " << flush_result.num_packets_sent
                 << " out of " << num_buffered_packets
                 << " packets. WriteResult=" << result;
 
@@ -150,7 +150,7 @@ QuicBatchWriterBase::FlushImplResult QuicBatchWriterBase::CheckedFlush() {
 WriteResult QuicBatchWriterBase::Flush() {
   size_t num_buffered_packets = buffered_writes().size();
   FlushImplResult flush_result = CheckedFlush();
-  QUIC_DVLOG(1) << "Externally flushed " << flush_result.num_packets_sent
+  LOG(INFO) << "Externally flushed " << flush_result.num_packets_sent
                 << " out of " << num_buffered_packets
                 << " packets. WriteResult=" << flush_result.write_result;
 

@@ -27,7 +27,7 @@ MasqueClient::MasqueClient(QuicSocketAddress server_address,
 std::unique_ptr<QuicSession> MasqueClient::CreateQuicClientSession(
     const ParsedQuicVersionVector& supported_versions,
     QuicConnection* connection) {
-  QUIC_DLOG(INFO) << "Creating MASQUE session for "
+  LOG(INFO) << "Creating MASQUE session for "
                   << connection->connection_id();
   return std::make_unique<MasqueClientSession>(
       masque_mode_, uri_template_, *config(), supported_versions, connection,
@@ -57,7 +57,7 @@ std::unique_ptr<MasqueClient> MasqueClient::Create(
   // Build the masque_client, and try to connect.
   QuicSocketAddress addr = tools::LookupAddress(host, absl::StrCat(port));
   if (!addr.IsInitialized()) {
-    QUIC_LOG(ERROR) << "Unable to resolve address: " << host;
+    LOG(INFO) << "Unable to resolve address: " << host;
     return nullptr;
   }
   QuicServerId server_id(host, port);
@@ -69,25 +69,25 @@ std::unique_ptr<MasqueClient> MasqueClient::Create(
                        std::move(proof_verifier), uri_template));
 
   if (masque_client == nullptr) {
-    QUIC_LOG(ERROR) << "Failed to create masque_client";
+    LOG(INFO) << "Failed to create masque_client";
     return nullptr;
   }
 
   masque_client->set_initial_max_packet_length(kMasqueMaxOuterPacketSize);
   masque_client->set_drop_response_body(false);
   if (!masque_client->Initialize()) {
-    QUIC_LOG(ERROR) << "Failed to initialize masque_client";
+    LOG(INFO) << "Failed to initialize masque_client";
     return nullptr;
   }
   if (!masque_client->Connect()) {
     QuicErrorCode error = masque_client->session()->error();
-    QUIC_LOG(ERROR) << "Failed to connect to " << host << ":" << port
+    LOG(INFO) << "Failed to connect to " << host << ":" << port
                     << ". Error: " << QuicErrorCodeToString(error);
     return nullptr;
   }
 
   if (!masque_client->WaitUntilSettingsReceived()) {
-    QUIC_LOG(ERROR) << "Failed to receive settings";
+    LOG(INFO) << "Failed to receive settings";
     return nullptr;
   }
 

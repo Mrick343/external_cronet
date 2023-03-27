@@ -71,7 +71,7 @@ std::vector<uint8_t> CreateFakePreferredStatelessResetToken() {
 QuicSocketAddress CreateFakeV4SocketAddress() {
   QuicIpAddress ipv4_address;
   if (!ipv4_address.FromString("65.66.67.68")) {  // 0x41, 0x42, 0x43, 0x44
-    QUIC_LOG(FATAL) << "Failed to create IPv4 address";
+    LOG(INFO) << "Failed to create IPv4 address";
     return QuicSocketAddress();
   }
   return QuicSocketAddress(ipv4_address, 0x4884);
@@ -80,7 +80,7 @@ QuicSocketAddress CreateFakeV4SocketAddress() {
 QuicSocketAddress CreateFakeV6SocketAddress() {
   QuicIpAddress ipv6_address;
   if (!ipv6_address.FromString("6061:6263:6465:6667:6869:6A6B:6C6D:6E6F")) {
-    QUIC_LOG(FATAL) << "Failed to create IPv6 address";
+    LOG(INFO) << "Failed to create IPv6 address";
     return QuicSocketAddress();
   }
   return QuicSocketAddress(ipv6_address, 0x6336);

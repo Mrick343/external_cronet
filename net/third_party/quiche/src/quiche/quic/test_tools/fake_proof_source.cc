@@ -99,16 +99,16 @@ void FakeProofSource::ComputeTlsSignature(
     const QuicSocketAddress& client_address, const std::string& hostname,
     uint16_t signature_algorithm, absl::string_view in,
     std::unique_ptr<ProofSource::SignatureCallback> callback) {
-  QUIC_LOG(INFO) << "FakeProofSource::ComputeTlsSignature";
+  LOG(INFO) << "FakeProofSource::ComputeTlsSignature";
   if (!active_) {
-    QUIC_LOG(INFO) << "Not active - directly calling delegate";
+    LOG(INFO) << "Not active - directly calling delegate";
     delegate_->ComputeTlsSignature(server_address, client_address, hostname,
                                    signature_algorithm, in,
                                    std::move(callback));
     return;
   }
 
-  QUIC_LOG(INFO) << "Adding pending op";
+  LOG(INFO) << "Adding pending op";
   pending_ops_.push_back(std::make_unique<ComputeSignatureOp>(
       server_address, client_address, hostname, signature_algorithm, in,
       std::move(callback), delegate_.get()));

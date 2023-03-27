@@ -76,7 +76,7 @@ void QuicStreamSendBuffer::SaveStreamData(absl::string_view data) {
 }
 
 void QuicStreamSendBuffer::SaveMemSlice(quiche::QuicheMemSlice slice) {
-  QUIC_DVLOG(2) << "Save slice offset " << stream_offset_ << " length "
+  LOG(INFO) << "Save slice offset " << stream_offset_ << " length "
                 << slice.length();
   if (slice.empty()) {
     QUIC_BUG(quic_bug_10853_1) << "Try to save empty MemSlice to send buffer.";

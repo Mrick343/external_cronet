@@ -68,7 +68,7 @@ class PacingSenderTest : public QuicTest {
       pacing_sender_->OnCongestionEvent(true, 1234, clock_.Now(), empty,
                                         lost_packets);
     } else if (burst_size != kInitialBurstPackets) {
-      QUIC_LOG(FATAL) << "Unsupported burst_size " << burst_size
+      LOG(INFO) << "Unsupported burst_size " << burst_size
                       << " specificied, only 0 and " << kInitialBurstPackets
                       << " are supported.";
     }

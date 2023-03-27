@@ -310,7 +310,7 @@ QuicErrorCode CryptoFramer::Process(absl::string_view input) {
         if (!process_truncated_messages_) {
           break;
         }
-        QUIC_LOG(ERROR) << "Trunacted message. Missing "
+        LOG(INFO) << "Trunacted message. Missing "
                         << values_len_ - reader.BytesRemaining() << " bytes.";
       }
       for (const std::pair<QuicTag, size_t>& item : tags_and_lengths_) {

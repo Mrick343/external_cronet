@@ -31,7 +31,7 @@ bool SendEncapsulatedMasqueRequest(MasqueClient* masque_client,
   const QuicSocketAddress addr =
       LookupAddress(url.host(), absl::StrCat(url.port()));
   if (!addr.IsInitialized()) {
-    QUIC_LOG(ERROR) << "Unable to resolve address: " << url.host();
+    LOG(INFO) << "Unable to resolve address: " << url.host();
     return false;
   }
   const QuicServerId server_id(url.host(), url.port());
@@ -39,7 +39,7 @@ bool SendEncapsulatedMasqueRequest(MasqueClient* masque_client,
       addr, server_id, event_loop, std::move(proof_verifier), masque_client);
 
   if (client == nullptr) {
-    QUIC_LOG(ERROR) << "Failed to create MasqueEncapsulatedClient for "
+    LOG(INFO) << "Failed to create MasqueEncapsulatedClient for "
                     << url_string;
     return false;
   }
@@ -47,14 +47,14 @@ bool SendEncapsulatedMasqueRequest(MasqueClient* masque_client,
   client->set_initial_max_packet_length(kMasqueMaxEncapsulatedPacketSize);
   client->set_drop_response_body(false);
   if (!client->Initialize()) {
-    QUIC_LOG(ERROR) << "Failed to initialize MasqueEncapsulatedClient for "
+    LOG(INFO) << "Failed to initialize MasqueEncapsulatedClient for "
                     << url_string;
     return false;
   }
 
   if (!client->Connect()) {
     QuicErrorCode error = client->session()->error();
-    QUIC_LOG(ERROR) << "Failed to connect with client "
+    LOG(INFO) << "Failed to connect with client "
                     << client->session()->connection()->client_connection_id()
                     << " server " << client->session()->connection_id()
                     << " to " << url.HostPort()
@@ -62,7 +62,7 @@ bool SendEncapsulatedMasqueRequest(MasqueClient* masque_client,
     return false;
   }
 
-  QUIC_LOG(INFO) << "Connected client "
+  LOG(INFO) << "Connected client "
                  << client->session()->connection()->client_connection_id()
                  << " server " << client->session()->connection_id() << " for "
                  << url_string;
@@ -86,7 +86,7 @@ bool SendEncapsulatedMasqueRequest(MasqueClient* masque_client,
                                         /*fin=*/true);
 
   if (!client->connected()) {
-    QUIC_LOG(ERROR) << "Request for " << url_string
+    LOG(INFO) << "Request for " << url_string
                     << " caused connection failure. Error: "
                     << QuicErrorCodeToString(client->session()->error());
     return false;
@@ -94,13 +94,13 @@ bool SendEncapsulatedMasqueRequest(MasqueClient* masque_client,
 
   const int response_code = client->latest_response_code();
   if (response_code < 200 || response_code >= 300) {
-    QUIC_LOG(ERROR) << "Request for " << url_string
+    LOG(INFO) << "Request for " << url_string
                     << " failed with HTTP response code " << response_code;
     return false;
   }
 
   const std::string response_body = client->latest_response_body();
-  QUIC_LOG(INFO) << "Request succeeded for " << url_string << std::endl
+  LOG(INFO) << "Request succeeded for " << url_string << std::endl
                  << response_body;
 
   return true;

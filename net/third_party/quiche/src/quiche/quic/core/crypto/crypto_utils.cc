@@ -76,7 +76,7 @@ std::vector<uint8_t> HkdfExpandLabel(const EVP_MD* prf,
       // Zero length |Context|.
       !CBB_add_u8(quic_hkdf_label.get(), 0) ||
       !CBB_flush(quic_hkdf_label.get())) {
-    QUIC_LOG(ERROR) << "Building HKDF label failed";
+    LOG(INFO) << "Building HKDF label failed";
     return std::vector<uint8_t>();
   }
   std::vector<uint8_t> out;
@@ -84,7 +84,7 @@ std::vector<uint8_t> HkdfExpandLabel(const EVP_MD* prf,
   if (!HKDF_expand(out.data(), out_len, prf, secret.data(), secret.size(),
                    CBB_data(quic_hkdf_label.get()),
                    CBB_len(quic_hkdf_label.get()))) {
-    QUIC_LOG(ERROR) << "Running HKDF-Expand-Label failed";
+    LOG(INFO) << "Running HKDF-Expand-Label failed";
     return std::vector<uint8_t>();
   }
   return out;
@@ -282,7 +282,7 @@ void CryptoUtils::CreateInitialObfuscators(Perspective perspective,
                                            ParsedQuicVersion version,
                                            QuicConnectionId connection_id,
                                            CrypterPair* crypters) {
-  QUIC_DLOG(INFO) << "Creating "
+  LOG(INFO) << "Creating "
                   << (perspective == Perspective::IS_CLIENT ? "client"
                                                             : "server")
                   << " crypters for version " << version << " with CID "
@@ -374,7 +374,7 @@ bool CryptoUtils::ValidateRetryIntegrityTag(
   }
   if (CRYPTO_memcmp(computed_integrity_tag, integrity_tag.data(),
                     ABSL_ARRAYSIZE(computed_integrity_tag)) != 0) {
-    QUIC_DLOG(ERROR) << "Failed to validate retry integrity tag";
+    LOG(INFO) << "Failed to validate retry integrity tag";
     return false;
   }
   return true;

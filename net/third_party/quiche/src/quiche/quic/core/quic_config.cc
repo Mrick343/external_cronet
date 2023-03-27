@@ -340,7 +340,7 @@ QuicErrorCode QuicFixedTagVector::ProcessPeerHello(
       *error_details = "Missing " + QuicTagToString(tag_);
       break;
     case QUIC_NO_ERROR:
-      QUIC_DVLOG(1) << "Received Connection Option tags from receiver.";
+      LOG(INFO) << "Received Connection Option tags from receiver.";
       has_receive_values_ = true;
       receive_values_.insert(receive_values_.end(), values.begin(),
                              values.end());

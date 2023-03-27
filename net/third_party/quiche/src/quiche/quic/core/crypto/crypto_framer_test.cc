@@ -30,7 +30,7 @@ class TestCryptoVisitor : public CryptoFramerVisitorInterface {
   TestCryptoVisitor() : error_count_(0) {}
 
   void OnError(CryptoFramer* framer) override {
-    QUIC_DLOG(ERROR) << "CryptoFramer Error: " << framer->error();
+    LOG(INFO) << "CryptoFramer Error: " << framer->error();
     ++error_count_;
   }
 

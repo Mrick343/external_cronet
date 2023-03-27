@@ -93,12 +93,12 @@ TEST_F(QuicIntervalSetTest, IsDisjoint) {
 static bool VA_Check(const QuicIntervalSet<int>& is, int count, va_list ap) {
   std::vector<QuicInterval<int>> intervals(is.begin(), is.end());
   if (count != static_cast<int>(intervals.size())) {
-    QUIC_LOG(ERROR) << "Expected " << count << " intervals, got "
+    LOG(INFO) << "Expected " << count << " intervals, got "
                     << intervals.size() << ": " << is;
     return false;
   }
   if (count != static_cast<int>(is.Size())) {
-    QUIC_LOG(ERROR) << "Expected " << count << " intervals, got Size "
+    LOG(INFO) << "Expected " << count << " intervals, got Size "
                     << is.Size() << ": " << is;
     return false;
   }
@@ -107,7 +107,7 @@ static bool VA_Check(const QuicIntervalSet<int>& is, int count, va_list ap) {
     int min = va_arg(ap, int);
     int max = va_arg(ap, int);
     if (min != intervals[i].min() || max != intervals[i].max()) {
-      QUIC_LOG(ERROR) << "Expected: [" << min << ", " << max << ") got "
+      LOG(INFO) << "Expected: [" << min << ", " << max << ") got "
                       << intervals[i] << " in " << is;
       result = false;
     }
@@ -963,7 +963,7 @@ TEST_F(QuicIntervalSetTest, ToString) {
   iset.Add(100, 200);
   iset.Add(500, 600);
   EXPECT_TRUE(!iset.ToString().empty());
-  QUIC_VLOG(2) << iset;
+  LOG(INFO) << iset;
   // Order and format of ToString() output is guaranteed.
   EXPECT_EQ("{ [100, 200) [300, 400) [500, 600) }", iset.ToString());
   EXPECT_EQ("{ [1, 2) }", QuicIntervalSet<int>(1, 2).ToString());

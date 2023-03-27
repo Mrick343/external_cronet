@@ -560,7 +560,7 @@ void QuicSentPacketManager::MarkPacketHandled(QuicPacketNumber packet_number,
     if (!new_data_acked && info->transmission_type != NOT_RETRANSMISSION) {
       // Record as a spurious retransmission if this packet is a
       // retransmission and no new data gets acked.
-      QUIC_DVLOG(1) << "Detect spurious retransmitted packet " << packet_number
+      LOG(INFO) << "Detect spurious retransmitted packet " << packet_number
                     << " transmission type: " << info->transmission_type;
       RecordOneSpuriousRetransmission(*info);
     }
@@ -575,7 +575,7 @@ void QuicSentPacketManager::MarkPacketHandled(QuicPacketNumber packet_number,
             ? unacked_packets_.GetLargestAckedOfPacketNumberSpace(
                   packet_number_space)
             : unacked_packets_.largest_acked();
-    QUIC_DVLOG(1) << "Packet " << packet_number
+    LOG(INFO) << "Packet " << packet_number
                   << " was detected lost spuriously, "
                      "previous_largest_acked: "
                   << previous_largest_acked;
@@ -702,7 +702,7 @@ QuicSentPacketManager::OnRetransmissionTimeout() {
       return LOSS_MODE;
     }
     case PTO_MODE:
-      QUIC_DVLOG(1) << ENDPOINT << "PTO mode";
+      LOG(INFO) << ENDPOINT << "PTO mode";
       ++stats_->pto_count;
       if (handshake_mode_disabled_ && !handshake_finished_) {
         ++stats_->crypto_retransmit_count;
@@ -767,7 +767,7 @@ bool QuicSentPacketManager::MaybeRetransmitOldestPacket(TransmissionType type) {
       return true;
     }
   }
-  QUIC_DVLOG(1)
+  LOG(INFO)
       << "No retransmittable packets, so RetransmitOldestPacket failed.";
   return false;
 }
@@ -811,7 +811,7 @@ void QuicSentPacketManager::MaybeSendProbePacket() {
   }
 
   for (QuicPacketNumber retransmission : probing_packets) {
-    QUIC_DVLOG(1) << ENDPOINT << "Marking " << retransmission
+    LOG(INFO) << ENDPOINT << "Marking " << retransmission
                   << " for probing retransmission";
     MarkForRetransmission(retransmission, PTO_RETRANSMISSION);
   }
@@ -1257,7 +1257,7 @@ AckResult QuicSentPacketManager::OnAckFrameEnd(
       }
       continue;
     }
-    QUIC_DVLOG(1) << ENDPOINT << "Got an " << ack_decrypted_level
+    LOG(INFO) << ENDPOINT << "Got an " << ack_decrypted_level
                   << " ack for packet " << acked_packet.packet_number
                   << " , state: "
                   << QuicUtils::SentPacketStateToString(info->state);

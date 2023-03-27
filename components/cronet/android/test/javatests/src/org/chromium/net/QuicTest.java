@@ -118,7 +118,7 @@ public class QuicTest {
                 cronetEngine.newUrlRequestBuilder(quicURL, callback.getExecutor(), callback);
         requestBuilder.build().start();
         callback.blockForDone();
-        System.out.println(callback.mError + "chuchu");
+
         assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
         String expectedContent = "This is a simple text file served by QUIC.\n";
         assertEquals(expectedContent, callback.mResponseAsString);

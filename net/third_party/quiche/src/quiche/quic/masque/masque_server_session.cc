@@ -102,17 +102,17 @@ MasqueServerSession::MasqueServerSession(
 
 void MasqueServerSession::OnMessageAcked(QuicMessageId message_id,
                                          QuicTime /*receive_timestamp*/) {
-  QUIC_DVLOG(1) << "Received ack for DATAGRAM frame " << message_id;
+  LOG(INFO) << "Received ack for DATAGRAM frame " << message_id;
 }
 
 void MasqueServerSession::OnMessageLost(QuicMessageId message_id) {
-  QUIC_DVLOG(1) << "We believe DATAGRAM frame " << message_id << " was lost";
+  LOG(INFO) << "We believe DATAGRAM frame " << message_id << " was lost";
 }
 
 void MasqueServerSession::OnConnectionClosed(
     const QuicConnectionCloseFrame& frame, ConnectionCloseSource source) {
   QuicSimpleServerSession::OnConnectionClosed(frame, source);
-  QUIC_DLOG(INFO) << "Closing connection for " << connection_id();
+  LOG(INFO) << "Closing connection for " << connection_id();
   masque_server_backend_->RemoveBackendClient(connection_id());
   // Clearing this state will close all sockets.
   connect_udp_server_states_.clear();
@@ -136,23 +136,23 @@ std::unique_ptr<QuicBackendResponse> MasqueServerSession::HandleMasqueRequest(
   auto protocol_pair = request_headers.find(":protocol");
   auto authority_pair = request_headers.find(":authority");
   if (path_pair == request_headers.end()) {
-    QUIC_DLOG(ERROR) << "MASQUE request is missing :path";
+    LOG(INFO) << "MASQUE request is missing :path";
     return CreateBackendErrorResponse("400", "Missing :path");
   }
   if (scheme_pair == request_headers.end()) {
-    QUIC_DLOG(ERROR) << "MASQUE request is missing :scheme";
+    LOG(INFO) << "MASQUE request is missing :scheme";
     return CreateBackendErrorResponse("400", "Missing :scheme");
   }
   if (method_pair == request_headers.end()) {
-    QUIC_DLOG(ERROR) << "MASQUE request is missing :method";
+    LOG(INFO) << "MASQUE request is missing :method";
     return CreateBackendErrorResponse("400", "Missing :method");
   }
   if (protocol_pair == request_headers.end()) {
-    QUIC_DLOG(ERROR) << "MASQUE request is missing :protocol";
+    LOG(INFO) << "MASQUE request is missing :protocol";
     return CreateBackendErrorResponse("400", "Missing :protocol");
   }
   if (authority_pair == request_headers.end()) {
-    QUIC_DLOG(ERROR) << "MASQUE request is missing :authority";
+    LOG(INFO) << "MASQUE request is missing :authority";
     return CreateBackendErrorResponse("400", "Missing :authority");
   }
   absl::string_view path = path_pair->second;
@@ -161,18 +161,18 @@ std::unique_ptr<QuicBackendResponse> MasqueServerSession::HandleMasqueRequest(
   absl::string_view protocol = protocol_pair->second;
   absl::string_view authority = authority_pair->second;
   if (path.empty()) {
-    QUIC_DLOG(ERROR) << "MASQUE request with empty path";
+    LOG(INFO) << "MASQUE request with empty path";
     return CreateBackendErrorResponse("400", "Empty path");
   }
   if (scheme.empty()) {
     return CreateBackendErrorResponse("400", "Empty scheme");
   }
   if (method != "CONNECT") {
-    QUIC_DLOG(ERROR) << "MASQUE request with bad method \"" << method << "\"";
+    LOG(INFO) << "MASQUE request with bad method \"" << method << "\"";
     return CreateBackendErrorResponse("400", "Bad method");
   }
   if (protocol != "connect-udp") {
-    QUIC_DLOG(ERROR) << "MASQUE request with bad protocol \"" << protocol
+    LOG(INFO) << "MASQUE request with bad protocol \"" << protocol
                      << "\"";
     return CreateBackendErrorResponse("400", "Bad protocol");
   }
@@ -182,17 +182,17 @@ std::unique_ptr<QuicBackendResponse> MasqueServerSession::HandleMasqueRequest(
       path_split[1] != ".well-known" || path_split[2] != "masque" ||
       path_split[3] != "udp" || path_split[4].empty() ||
       path_split[5].empty() || !path_split[6].empty()) {
-    QUIC_DLOG(ERROR) << "MASQUE request with bad path \"" << path << "\"";
+    LOG(INFO) << "MASQUE request with bad path \"" << path << "\"";
     return CreateBackendErrorResponse("400", "Bad path");
   }
   absl::optional<std::string> host = quiche::AsciiUrlDecode(path_split[4]);
   if (!host.has_value()) {
-    QUIC_DLOG(ERROR) << "Failed to decode host \"" << path_split[4] << "\"";
+    LOG(INFO) << "Failed to decode host \"" << path_split[4] << "\"";
     return CreateBackendErrorResponse("500", "Failed to decode host");
   }
   absl::optional<std::string> port = quiche::AsciiUrlDecode(path_split[5]);
   if (!port.has_value()) {
-    QUIC_DLOG(ERROR) << "Failed to decode port \"" << path_split[5] << "\"";
+    LOG(INFO) << "Failed to decode port \"" << path_split[5] << "\"";
     return CreateBackendErrorResponse("500", "Failed to decode port");
   }
 
@@ -204,7 +204,7 @@ std::unique_ptr<QuicBackendResponse> MasqueServerSession::HandleMasqueRequest(
   int result = getaddrinfo(host.value().c_str(), port.value().c_str(), &hint,
                            &info_list);
   if (result != 0 || info_list == nullptr) {
-    QUIC_DLOG(ERROR) << "Failed to resolve " << authority << ": "
+    LOG(INFO) << "Failed to resolve " << authority << ": "
                      << gai_strerror(result);
     return CreateBackendErrorResponse("500", "DNS resolution failed");
   }
@@ -213,13 +213,13 @@ std::unique_ptr<QuicBackendResponse> MasqueServerSession::HandleMasqueRequest(
                                                                  freeaddrinfo);
   QuicSocketAddress target_server_address(info_list->ai_addr,
                                           info_list->ai_addrlen);
-  QUIC_DLOG(INFO) << "Got CONNECT_UDP request on stream ID "
+  LOG(INFO) << "Got CONNECT_UDP request on stream ID "
                   << request_handler->stream_id() << " target_server_address=\""
                   << target_server_address << "\"";
 
   FdWrapper fd_wrapper(target_server_address.host().AddressFamilyToInt());
   if (fd_wrapper.fd() == kQuicInvalidSocketFd) {
-    QUIC_DLOG(ERROR) << "Socket creation failed";
+    LOG(INFO) << "Socket creation failed";
     return CreateBackendErrorResponse("500", "Socket creation failed");
   }
   QuicSocketAddress empty_address(QuicIpAddress::Any6(), 0);
@@ -228,12 +228,12 @@ std::unique_ptr<QuicBackendResponse> MasqueServerSession::HandleMasqueRequest(
   }
   QuicUdpSocketApi socket_api;
   if (!socket_api.Bind(fd_wrapper.fd(), empty_address)) {
-    QUIC_DLOG(ERROR) << "Socket bind failed";
+    LOG(INFO) << "Socket bind failed";
     return CreateBackendErrorResponse("500", "Socket bind failed");
   }
   if (!event_loop_->RegisterSocket(fd_wrapper.fd(), kSocketEventReadable,
                                    this)) {
-    QUIC_DLOG(ERROR) << "Failed to register socket with the event loop";
+    LOG(INFO) << "Failed to register socket with the event loop";
     return CreateBackendErrorResponse("500", "Registering socket failed");
   }
 
@@ -262,7 +262,7 @@ void MasqueServerSession::OnSocketEvent(QuicEventLoop* /*event_loop*/,
                                         QuicUdpSocketFd fd,
                                         QuicSocketEventMask events) {
   if ((events & kSocketEventReadable) == 0) {
-    QUIC_DVLOG(1) << "Ignoring OnEvent fd " << fd << " event mask " << events;
+    LOG(INFO) << "Ignoring OnEvent fd " << fd << " event mask " << events;
     return;
   }
   auto it = absl::c_find_if(connect_udp_server_states_,
@@ -287,7 +287,7 @@ void MasqueServerSession::OnSocketEvent(QuicEventLoop* /*event_loop*/,
   QuicSocketAddress expected_target_server_address =
       it->target_server_address();
   QUICHE_DCHECK(expected_target_server_address.IsInitialized());
-  QUIC_DVLOG(1) << "Received readable event on fd " << fd << " (mask " << events
+  LOG(INFO) << "Received readable event on fd " << fd << " (mask " << events
                 << ") stream ID " << it->stream()->id() << " server "
                 << expected_target_server_address;
   QuicUdpSocketApi socket_api;
@@ -311,7 +311,7 @@ void MasqueServerSession::OnSocketEvent(QuicEventLoop* /*event_loop*/,
     }
     if (read_result.packet_info.peer_address() !=
         expected_target_server_address) {
-      QUIC_DLOG(ERROR) << "Ignoring UDP packet on fd " << fd
+      LOG(INFO) << "Ignoring UDP packet on fd " << fd
                        << " from unexpected server address "
                        << read_result.packet_info.peer_address()
                        << " (expected " << expected_target_server_address
@@ -329,7 +329,7 @@ void MasqueServerSession::OnSocketEvent(QuicEventLoop* /*event_loop*/,
     MessageStatus message_status =
         it->stream()->SendHttp3Datagram(absl::string_view(
             packet_buffer, read_result.packet_buffer.buffer_len + 1));
-    QUIC_DVLOG(1) << "Sent UDP packet from " << expected_target_server_address
+    LOG(INFO) << "Sent UDP packet from " << expected_target_server_address
                   << " of length " << read_result.packet_buffer.buffer_len
                   << " with stream ID " << it->stream()->id()
                   << " and got message status "
@@ -338,15 +338,15 @@ void MasqueServerSession::OnSocketEvent(QuicEventLoop* /*event_loop*/,
 }
 
 bool MasqueServerSession::OnSettingsFrame(const SettingsFrame& frame) {
-  QUIC_DLOG(INFO) << "Received SETTINGS: " << frame;
+  LOG(INFO) << "Received SETTINGS: " << frame;
   if (!QuicSimpleServerSession::OnSettingsFrame(frame)) {
     return false;
   }
   if (!SupportsH3Datagram()) {
-    QUIC_DLOG(ERROR) << "Refusing to use MASQUE without HTTP Datagrams";
+    LOG(INFO) << "Refusing to use MASQUE without HTTP Datagrams";
     return false;
   }
-  QUIC_DLOG(INFO) << "Using HTTP Datagram: " << http_datagram_support();
+  LOG(INFO) << "Using HTTP Datagram: " << http_datagram_support();
   return true;
 }
 
@@ -370,9 +370,9 @@ MasqueServerSession::ConnectUdpServerState::~ConnectUdpServerState() {
     return;
   }
   QuicUdpSocketApi socket_api;
-  QUIC_DLOG(INFO) << "Closing fd " << fd_;
+  LOG(INFO) << "Closing fd " << fd_;
   if (!masque_session_->event_loop()->UnregisterSocket(fd_)) {
-    QUIC_DLOG(ERROR) << "Failed to unregister FD " << fd_;
+    LOG(INFO) << "Failed to unregister FD " << fd_;
   }
   socket_api.Destroy(fd_);
 }
@@ -388,9 +388,9 @@ MasqueServerSession::ConnectUdpServerState::operator=(
     MasqueServerSession::ConnectUdpServerState&& other) {
   if (fd_ != kQuicInvalidSocketFd) {
     QuicUdpSocketApi socket_api;
-    QUIC_DLOG(INFO) << "Closing fd " << fd_;
+    LOG(INFO) << "Closing fd " << fd_;
     if (!masque_session_->event_loop()->UnregisterSocket(fd_)) {
-      QUIC_DLOG(ERROR) << "Failed to unregister FD " << fd_;
+      LOG(INFO) << "Failed to unregister FD " << fd_;
     }
     socket_api.Destroy(fd_);
   }
@@ -412,11 +412,11 @@ void MasqueServerSession::ConnectUdpServerState::OnHttp3Datagram(
   QuicDataReader reader(payload);
   uint64_t context_id;
   if (!reader.ReadVarInt62(&context_id)) {
-    QUIC_DLOG(ERROR) << "Failed to read context ID";
+    LOG(INFO) << "Failed to read context ID";
     return;
   }
   if (context_id != 0) {
-    QUIC_DLOG(ERROR) << "Ignoring HTTP Datagram with unexpected context ID "
+    LOG(INFO) << "Ignoring HTTP Datagram with unexpected context ID "
                      << context_id;
     return;
   }
@@ -426,7 +426,7 @@ void MasqueServerSession::ConnectUdpServerState::OnHttp3Datagram(
   packet_info.SetPeerAddress(target_server_address_);
   WriteResult write_result = socket_api.WritePacket(
       fd_, http_payload.data(), http_payload.length(), packet_info);
-  QUIC_DVLOG(1) << "Wrote packet of length " << http_payload.length() << " to "
+  LOG(INFO) << "Wrote packet of length " << http_payload.length() << " to "
                 << target_server_address_ << " with result " << write_result;
 }
 

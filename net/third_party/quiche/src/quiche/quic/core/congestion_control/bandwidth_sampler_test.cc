@@ -753,7 +753,7 @@ class MaxAckHeightTrackerTest : public QuicTest {
       QuicByteCount extra_acked = tracker_.Update(
           bandwidth_, true, RoundTripCount(), last_sent_packet_number_,
           last_acked_packet_number_, now_, bytes_per_ack);
-      QUIC_VLOG(1) << "T" << now_ << ": Update after " << bytes_per_ack
+      LOG(INFO) << "T" << now_ << ": Update after " << bytes_per_ack
                    << " bytes acked, " << extra_acked << " extra bytes acked";
       // |extra_acked| should be 0 if either
       // [1] We are at the beginning of a aggregation epoch(bytes==0) and the
@@ -772,7 +772,7 @@ class MaxAckHeightTrackerTest : public QuicTest {
     // Advance past the quiet period.
     const QuicTime time_after_aggregation = now_;
     now_ = start_time + total_duration;
-    QUIC_VLOG(1) << "Advanced time from " << time_after_aggregation << " to "
+    LOG(INFO) << "Advanced time from " << time_after_aggregation << " to "
                  << now_ << ". Aggregation time["
                  << (time_after_aggregation - start_time) << "], Quiet time["
                  << (now_ - time_after_aggregation) << "].";

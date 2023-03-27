@@ -120,7 +120,7 @@ QuicByteCount CubicBytes::CongestionWindowAfterAck(
 
   if (!epoch_.IsInitialized()) {
     // First ACK after a loss event.
-    QUIC_DVLOG(1) << "Start of epoch";
+    LOG(INFO) << "Start of epoch";
     epoch_ = event_time;               // Start of epoch.
     acked_bytes_count_ = acked_bytes;  // Reset count.
     // Reset estimated_tcp_congestion_window_ to be in sync with cubic.
@@ -181,7 +181,7 @@ QuicByteCount CubicBytes::CongestionWindowAfterAck(
     target_congestion_window = estimated_tcp_congestion_window_;
   }
 
-  QUIC_DVLOG(1) << "Final target congestion_window: "
+  LOG(INFO) << "Final target congestion_window: "
                 << target_congestion_window;
   return target_congestion_window;
 }

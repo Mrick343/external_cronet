@@ -205,7 +205,7 @@ TEST_F(TcpCubicSenderBytesTest, SlowStartPacketLoss) {
   // Recovery phase. We need to ack every packet in the recovery window before
   // we exit recovery.
   size_t number_of_packets_in_window = expected_send_window / kDefaultTCPMSS;
-  QUIC_DLOG(INFO) << "number_packets: " << number_of_packets_in_window;
+  LOG(INFO) << "number_packets: " << number_of_packets_in_window;
   AckNPackets(packets_in_recovery_window);
   SendAvailableSendWindow();
   EXPECT_EQ(expected_send_window, sender_->GetCongestionWindow());
@@ -267,7 +267,7 @@ TEST_F(TcpCubicSenderBytesTest, SlowStartPacketLossWithLargeReduction) {
   // Recovery phase. We need to ack every packet in the recovery window before
   // we exit recovery.
   size_t number_of_packets_in_window = expected_send_window / kDefaultTCPMSS;
-  QUIC_DLOG(INFO) << "number_packets: " << number_of_packets_in_window;
+  LOG(INFO) << "number_packets: " << number_of_packets_in_window;
   AckNPackets(packets_in_recovery_window);
   SendAvailableSendWindow();
   EXPECT_EQ(expected_send_window, sender_->GetCongestionWindow());

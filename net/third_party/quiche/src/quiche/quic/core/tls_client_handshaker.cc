@@ -47,7 +47,7 @@ TlsClientHandshaker::TlsClientHandshaker(
     const ClientProofSource::CertAndKey* cert_and_key =
         crypto_config->proof_source()->GetCertAndKey(server_id.host());
     if (cert_and_key != nullptr) {
-      QUIC_DVLOG(1) << "Setting client cert and key for " << server_id.host();
+      LOG(INFO) << "Setting client cert and key for " << server_id.host();
       tls_connection_.SetCertChain(cert_and_key->chain->ToCryptoBuffers().value,
                                    cert_and_key->private_key.private_key());
     }
@@ -84,7 +84,7 @@ bool TlsClientHandshaker::CryptoConnect() {
   SSL_set_connect_state(ssl());
   if (QUIC_DLOG_INFO_IS_ON() &&
       !QuicHostnameUtils::IsValidSNI(server_id_.host())) {
-    QUIC_DLOG(INFO) << "Client configured with invalid hostname \""
+    LOG(INFO) << "Client configured with invalid hostname \""
                     << server_id_.host() << "\", not sending as SNI";
   }
   if (!server_id_.host().empty() &&
@@ -208,7 +208,7 @@ bool TlsClientHandshaker::SetAlpn() {
     }
   }
 
-  QUIC_DLOG(INFO) << "Client using ALPN: '" << alpns[0] << "'";
+  LOG(INFO) << "Client using ALPN: '" << alpns[0] << "'";
   return true;
 }
 
@@ -492,7 +492,7 @@ void TlsClientHandshaker::FinishHandshake() {
 
   QUICHE_CHECK(!SSL_in_early_data(ssl()));
 
-  QUIC_LOG(INFO) << "Client: handshake finished";
+  LOG(INFO) << "Client: handshake finished";
 
   std::string error_details;
   if (!ProcessTransportParameters(&error_details)) {
@@ -506,7 +506,7 @@ void TlsClientHandshaker::FinishHandshake() {
   SSL_get0_alpn_selected(ssl(), &alpn_data, &alpn_length);
 
   if (alpn_length == 0) {
-    QUIC_DLOG(ERROR) << "Client: server did not select ALPN";
+    LOG(INFO) << "Client: server did not select ALPN";
     // TODO(b/130164908) this should send no_application_protocol
     // instead of QUIC_HANDSHAKE_FAILED.
     CloseConnection(QUIC_HANDSHAKE_FAILED, "Server did not select ALPN");
@@ -518,7 +518,7 @@ void TlsClientHandshaker::FinishHandshake() {
   std::vector<std::string> offered_alpns = session()->GetAlpnsToOffer();
   if (std::find(offered_alpns.begin(), offered_alpns.end(),
                 received_alpn_string) == offered_alpns.end()) {
-    QUIC_LOG(ERROR) << "Client: received mismatched ALPN '"
+    LOG(INFO) << "Client: received mismatched ALPN '"
                     << received_alpn_string;
     // TODO(b/130164908) this should send no_application_protocol
     // instead of QUIC_HANDSHAKE_FAILED.
@@ -526,7 +526,7 @@ void TlsClientHandshaker::FinishHandshake() {
     return;
   }
   session()->OnAlpnSelected(received_alpn_string);
-  QUIC_DLOG(INFO) << "Client: server selected ALPN: '" << received_alpn_string
+  LOG(INFO) << "Client: server selected ALPN: '" << received_alpn_string
                   << "'";
 
   // Parse ALPS extension.
@@ -589,7 +589,7 @@ bool TlsClientHandshaker::ShouldCloseConnectionOnUnexpectedError(
 }
 
 void TlsClientHandshaker::HandleZeroRttReject() {
-  QUIC_LOG(INFO) << "0-RTT handshake attempted but was rejected by the server";
+  LOG(INFO) << "0-RTT handshake attempted but was rejected by the server";
   QUICHE_DCHECK(session_cache_);
   // Disable encrytion to block outgoing data until 1-RTT keys are available.
   encryption_established_ = false;
@@ -605,7 +605,7 @@ void TlsClientHandshaker::InsertSession(bssl::UniquePtr<SSL_SESSION> session) {
     return;
   }
   if (session_cache_ == nullptr) {
-    QUIC_DVLOG(1) << "No session cache, not inserting a session";
+    LOG(INFO) << "No session cache, not inserting a session";
     return;
   }
   if (has_application_state_ && !received_application_state_) {

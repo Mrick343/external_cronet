@@ -92,7 +92,7 @@ void AppendFlagDescription(const std::string& name,
   std::vector<std::string> qsv;
   for (const auto& s : v) {
     if (!base::IsStringASCII(s)) {
-      QUIC_LOG(ERROR) << "Unable to convert to ASCII: " << s;
+      LOG(INFO) << "Unable to convert to ASCII: " << s;
       continue;
     }
     qsv.push_back(base::WideToASCII(s));
@@ -129,7 +129,7 @@ bool QuicheFlagRegistry::SetFlags(const base::CommandLine& command_line,
           base::StrCat({"Invalid value \"", value, "\" for flag --", name});
       return false;
     }
-    QUIC_LOG(INFO) << "Set flag --" << name << " = " << value;
+    LOG(INFO) << "Set flag --" << name << " = " << value;
   }
   return true;
 }
@@ -137,7 +137,7 @@ bool QuicheFlagRegistry::SetFlags(const base::CommandLine& command_line,
 void QuicheFlagRegistry::ResetFlags() const {
   for (const auto& kv : flags_) {
     kv.second->ResetFlag();
-    QUIC_LOG(INFO) << "Reset flag --" << kv.first;
+    LOG(INFO) << "Reset flag --" << kv.first;
   }
 }
 

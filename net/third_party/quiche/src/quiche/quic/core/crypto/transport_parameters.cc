@@ -1181,7 +1181,7 @@ bool SerializeTransportParameters(const TransportParameters& in,
 
   out->resize(writer.length());
 
-  QUIC_DLOG(INFO) << "Serialized " << in << " as " << writer.length()
+  LOG(INFO) << "Serialized " << in << " as " << writer.length()
                   << " bytes";
 
   return true;
@@ -1486,7 +1486,7 @@ bool ParseTransportParameters(ParsedQuicVersion version,
     return false;
   }
 
-  QUIC_DLOG(INFO) << "Parsed transport parameters " << *out << " from "
+  LOG(INFO) << "Parsed transport parameters " << *out << " from "
                   << in_len << " bytes";
 
   return true;

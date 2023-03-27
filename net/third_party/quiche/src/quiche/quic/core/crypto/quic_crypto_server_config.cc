@@ -83,7 +83,7 @@ class DefaultKeyExchangeSource : public KeyExchangeSource {
       std::string /*server_config_id*/, bool /* is_fallback */, QuicTag type,
       absl::string_view private_key) override {
     if (private_key.empty()) {
-      QUIC_LOG(WARNING) << "Server config contains key exchange method without "
+      LOG(INFO) << "Server config contains key exchange method without "
                            "corresponding private key of type "
                         << QuicTagToString(type);
       return nullptr;
@@ -92,7 +92,7 @@ class DefaultKeyExchangeSource : public KeyExchangeSource {
     std::unique_ptr<SynchronousKeyExchange> ka =
         CreateLocalSynchronousKeyExchange(type, private_key);
     if (!ka) {
-      QUIC_LOG(WARNING) << "Failed to create key exchange method of type "
+      LOG(INFO) << "Failed to create key exchange method of type "
                         << QuicTagToString(type);
     }
     return ka;
@@ -243,7 +243,7 @@ QuicCryptoServerConfig::ConfigOptions::~ConfigOptions() {}
 QuicCryptoServerConfig::ProcessClientHelloContext::
     ~ProcessClientHelloContext() {
   if (done_cb_ != nullptr) {
-    QUIC_LOG(WARNING)
+    LOG(INFO)
         << "Deleting ProcessClientHelloContext with a pending callback.";
   }
 }
@@ -425,21 +425,21 @@ std::unique_ptr<CryptoHandshakeMessage> QuicCryptoServerConfig::AddConfig(
       CryptoFramer::ParseMessage(protobuf.config());
 
   if (!msg) {
-    QUIC_LOG(WARNING) << "Failed to parse server config message";
+    LOG(INFO) << "Failed to parse server config message";
     return nullptr;
   }
 
   quiche::QuicheReferenceCountedPointer<Config> config =
       ParseConfigProtobuf(protobuf, /* is_fallback = */ false);
   if (!config) {
-    QUIC_LOG(WARNING) << "Failed to parse server config message";
+    LOG(INFO) << "Failed to parse server config message";
     return nullptr;
   }
 
   {
     QuicWriterMutexLock locked(&configs_lock_);
     if (configs_.find(config->id) != configs_.end()) {
-      QUIC_LOG(WARNING) << "Failed to add config because another with the same "
+      LOG(INFO) << "Failed to add config because another with the same "
                            "server config id already exists: "
                         << absl::BytesToHexString(config->id);
       return nullptr;
@@ -470,7 +470,7 @@ bool QuicCryptoServerConfig::SetConfigs(
     quiche::QuicheReferenceCountedPointer<Config> config =
         ParseConfigProtobuf(protobuf, /* is_fallback = */ false);
     if (!config) {
-      QUIC_LOG(WARNING) << "Rejecting QUIC configs because of above errors";
+      LOG(INFO) << "Rejecting QUIC configs because of above errors";
       return false;
     }
 
@@ -482,23 +482,23 @@ bool QuicCryptoServerConfig::SetConfigs(
     fallback_config =
         ParseConfigProtobuf(*fallback_protobuf, /* is_fallback = */ true);
     if (!fallback_config) {
-      QUIC_LOG(WARNING) << "Rejecting QUIC configs because of above errors";
+      LOG(INFO) << "Rejecting QUIC configs because of above errors";
       return false;
     }
-    QUIC_LOG(INFO) << "Fallback config has scid "
+    LOG(INFO) << "Fallback config has scid "
                    << absl::BytesToHexString(fallback_config->id);
     parsed_configs.push_back(fallback_config);
   } else {
-    QUIC_LOG(INFO) << "No fallback config provided";
+    LOG(INFO) << "No fallback config provided";
   }
 
   if (parsed_configs.empty()) {
-    QUIC_LOG(WARNING)
+    LOG(INFO)
         << "Rejecting QUIC configs because new config list is empty.";
     return false;
   }
 
-  QUIC_LOG(INFO) << "Updating configs:";
+  LOG(INFO) << "Updating configs:";
 
   QuicWriterMutexLock locked(&configs_lock_);
   ConfigMap new_configs;
@@ -507,7 +507,7 @@ bool QuicCryptoServerConfig::SetConfigs(
        parsed_configs) {
     auto it = configs_.find(config->id);
     if (it != configs_.end()) {
-      QUIC_LOG(INFO) << "Keeping scid: " << absl::BytesToHexString(config->id)
+      LOG(INFO) << "Keeping scid: " << absl::BytesToHexString(config->id)
                      << " orbit: "
                      << absl::BytesToHexString(absl::string_view(
                             reinterpret_cast<const char*>(config->orbit),
@@ -523,7 +523,7 @@ bool QuicCryptoServerConfig::SetConfigs(
       it->second->priority = config->priority;
       new_configs.insert(*it);
     } else {
-      QUIC_LOG(INFO) << "Adding scid: " << absl::BytesToHexString(config->id)
+      LOG(INFO) << "Adding scid: " << absl::BytesToHexString(config->id)
                      << " orbit: "
                      << absl::BytesToHexString(absl::string_view(
                             reinterpret_cast<const char*>(config->orbit),
@@ -1004,7 +1004,7 @@ void QuicCryptoServerConfig::ProcessClientHelloAfterCalculateSharedKeys(
   std::unique_ptr<SynchronousKeyExchange> forward_secure_key_exchange =
       CreateLocalSynchronousKeyExchange(key_exchange_type, context->rand());
   if (!forward_secure_key_exchange) {
-    QUIC_DLOG(WARNING) << "Failed to create keypair";
+    LOG(INFO) << "Failed to create keypair";
     context->Fail(QUIC_INVALID_CRYPTO_MESSAGE_PARAMETER,
                   "Failed to create keypair");
     return;
@@ -1222,7 +1222,7 @@ void QuicCryptoServerConfig::SelectNewPrimaryConfig(
     }
     primary_config_ = new_primary;
     new_primary->is_primary = true;
-    QUIC_DLOG(INFO) << "New primary config.  orbit: "
+    LOG(INFO) << "New primary config.  orbit: "
                     << absl::BytesToHexString(
                            absl::string_view(reinterpret_cast<const char*>(
                                                  primary_config_->orbit),
@@ -1242,7 +1242,7 @@ void QuicCryptoServerConfig::SelectNewPrimaryConfig(
   }
   primary_config_ = new_primary;
   new_primary->is_primary = true;
-  QUIC_DLOG(INFO) << "New primary config.  orbit: "
+  LOG(INFO) << "New primary config.  orbit: "
                   << absl::BytesToHexString(absl::string_view(
                          reinterpret_cast<const char*>(primary_config_->orbit),
                          kOrbitSize))
@@ -1329,7 +1329,7 @@ void QuicCryptoServerConfig::EvaluateClientHello(
     // Invalid client nonce.
     QUIC_LOG_FIRST_N(ERROR, 2)
         << "Invalid client nonce: " << client_hello.DebugString();
-    QUIC_DLOG(INFO) << "Invalid client nonce.";
+    LOG(INFO) << "Invalid client nonce.";
   }
 
   // Server nonce is optional, and used for key derivation if present.
@@ -1584,12 +1584,12 @@ QuicCryptoServerConfig::ParseConfigProtobuf(
       CryptoFramer::ParseMessage(protobuf.config());
 
   if (!msg) {
-    QUIC_LOG(WARNING) << "Failed to parse server config message";
+    LOG(INFO) << "Failed to parse server config message";
     return nullptr;
   }
 
   if (msg->tag() != kSCFG) {
-    QUIC_LOG(WARNING) << "Server config message has tag " << msg->tag()
+    LOG(INFO) << "Server config message has tag " << msg->tag()
                       << ", but expected " << kSCFG;
     return nullptr;
   }
@@ -1607,36 +1607,36 @@ QuicCryptoServerConfig::ParseConfigProtobuf(
 
   absl::string_view scid;
   if (!msg->GetStringPiece(kSCID, &scid)) {
-    QUIC_LOG(WARNING) << "Server config message is missing SCID";
+    LOG(INFO) << "Server config message is missing SCID";
     return nullptr;
   }
   if (GetQuicRestartFlag(quic_return_error_on_empty_scid) && scid.empty()) {
     QUIC_RESTART_FLAG_COUNT(quic_return_error_on_empty_scid);
-    QUIC_LOG(WARNING) << "Server config message contains an empty SCID";
+    LOG(INFO) << "Server config message contains an empty SCID";
     return nullptr;
   }
   QUICHE_DCHECK(!scid.empty());
   config->id = std::string(scid);
 
   if (msg->GetTaglist(kAEAD, &config->aead) != QUIC_NO_ERROR) {
-    QUIC_LOG(WARNING) << "Server config message is missing AEAD";
+    LOG(INFO) << "Server config message is missing AEAD";
     return nullptr;
   }
 
   QuicTagVector kexs_tags;
   if (msg->GetTaglist(kKEXS, &kexs_tags) != QUIC_NO_ERROR) {
-    QUIC_LOG(WARNING) << "Server config message is missing KEXS";
+    LOG(INFO) << "Server config message is missing KEXS";
     return nullptr;
   }
 
   absl::string_view orbit;
   if (!msg->GetStringPiece(kORBT, &orbit)) {
-    QUIC_LOG(WARNING) << "Server config message is missing ORBT";
+    LOG(INFO) << "Server config message is missing ORBT";
     return nullptr;
   }
 
   if (orbit.size() != kOrbitSize) {
-    QUIC_LOG(WARNING) << "Orbit value in server config is the wrong length."
+    LOG(INFO) << "Orbit value in server config is the wrong length."
                          " Got "
                       << orbit.size() << " want " << kOrbitSize;
     return nullptr;
@@ -1675,7 +1675,7 @@ QuicCryptoServerConfig::ParseConfigProtobuf(
     }
     for (const auto& key_exchange : config->key_exchanges) {
       if (key_exchange->type() == tag) {
-        QUIC_LOG(WARNING) << "Duplicate key exchange in config: " << tag;
+        LOG(INFO) << "Duplicate key exchange in config: " << tag;
         return nullptr;
       }
     }
@@ -1685,7 +1685,7 @@ QuicCryptoServerConfig::ParseConfigProtobuf(
 
   uint64_t expiry_seconds;
   if (msg->GetUint64(kEXPY, &expiry_seconds) != QUIC_NO_ERROR) {
-    QUIC_LOG(WARNING) << "Server config message is missing EXPY";
+    LOG(INFO) << "Server config message is missing EXPY";
     return nullptr;
   }
   config->expiry_time = QuicWallTime::FromUNIXSeconds(expiry_seconds);

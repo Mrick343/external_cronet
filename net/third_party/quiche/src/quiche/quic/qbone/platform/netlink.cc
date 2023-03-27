@@ -41,11 +41,11 @@ bool Netlink::OpenSocket() {
   socket_fd_ = kernel_->socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
 
   if (socket_fd_ < 0) {
-    QUIC_PLOG(ERROR) << "can't open netlink socket";
+    LOG(INFO) << "can't open netlink socket";
     return false;
   }
 
-  QUIC_LOG(INFO) << "Opened a new netlink socket fd = " << socket_fd_;
+  LOG(INFO) << "Opened a new netlink socket fd = " << socket_fd_;
 
   // bind a local address to the socket
   sockaddr_nl myaddr;
@@ -53,7 +53,7 @@ bool Netlink::OpenSocket() {
   myaddr.nl_family = AF_NETLINK;
   if (kernel_->bind(socket_fd_, reinterpret_cast<struct sockaddr*>(&myaddr),
                     sizeof(myaddr)) < 0) {
-    QUIC_LOG(INFO) << "can't bind address to socket";
+    LOG(INFO) << "can't bind address to socket";
     CloseSocket();
     return false;
   }
@@ -63,7 +63,7 @@ bool Netlink::OpenSocket() {
 
 void Netlink::CloseSocket() {
   if (socket_fd_ >= 0) {
-    QUIC_LOG(INFO) << "Closing netlink socket fd = " << socket_fd_;
+    LOG(INFO) << "Closing netlink socket fd = " << socket_fd_;
     kernel_->close(socket_fd_);
   }
   ResetRecvBuf(0);
@@ -79,7 +79,7 @@ class LinkInfoParser : public NetlinkParserInterface {
 
   void Run(struct nlmsghdr* netlink_message) override {
     if (netlink_message->nlmsg_type != RTM_NEWLINK) {
-      QUIC_LOG(INFO) << absl::StrCat(
+      LOG(INFO) << absl::StrCat(
           "Unexpected nlmsg_type: ", netlink_message->nlmsg_type,
           " expected: ", RTM_NEWLINK);
       return;
@@ -90,7 +90,7 @@ class LinkInfoParser : public NetlinkParserInterface {
 
     // make sure interface_info is what we asked for.
     if (interface_info->ifi_family != AF_UNSPEC) {
-      QUIC_LOG(INFO) << absl::StrCat(
+      LOG(INFO) << absl::StrCat(
           "Unexpected ifi_family: ", interface_info->ifi_family,
           " expected: ", AF_UNSPEC);
       return;
@@ -112,7 +112,7 @@ class LinkInfoParser : public NetlinkParserInterface {
         case IFLA_ADDRESS: {
           attribute_length = RTA_PAYLOAD(rta);
           if (attribute_length > kHwAddrSize) {
-            QUIC_VLOG(2) << "IFLA_ADDRESS too long: " << attribute_length;
+            LOG(INFO) << "IFLA_ADDRESS too long: " << attribute_length;
             break;
           }
           memmove(hardware_address, RTA_DATA(rta), attribute_length);
@@ -122,7 +122,7 @@ class LinkInfoParser : public NetlinkParserInterface {
         case IFLA_BROADCAST: {
           attribute_length = RTA_PAYLOAD(rta);
           if (attribute_length > kHwAddrSize) {
-            QUIC_VLOG(2) << "IFLA_BROADCAST too long: " << attribute_length;
+            LOG(INFO) << "IFLA_BROADCAST too long: " << attribute_length;
             break;
           }
           memmove(broadcast_address, RTA_DATA(rta), attribute_length);
@@ -139,7 +139,7 @@ class LinkInfoParser : public NetlinkParserInterface {
       }
     }
 
-    QUIC_VLOG(2) << "interface name: " << name
+    LOG(INFO) << "interface name: " << name
                  << ", index: " << interface_info->ifi_index;
 
     if (name == interface_name_) {
@@ -176,7 +176,7 @@ bool Netlink::GetLinkInfo(const std::string& interface_name,
                                   seq_, getpid(), nullptr);
 
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed.";
+    LOG(INFO) << "send failed.";
     return false;
   }
 
@@ -185,7 +185,7 @@ bool Netlink::GetLinkInfo(const std::string& interface_name,
   // messages.
   LinkInfoParser parser(interface_name, link_info);
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "recv failed.";
+    LOG(INFO) << "recv failed.";
     return false;
   }
 
@@ -208,7 +208,7 @@ class LocalAddressParser : public NetlinkParserInterface {
   void Run(struct nlmsghdr* netlink_message) override {
     // each nlmsg contains a header and multiple address attributes.
     if (netlink_message->nlmsg_type != RTM_NEWADDR) {
-      QUIC_LOG(INFO) << "Unexpected nlmsg_type: " << netlink_message->nlmsg_type
+      LOG(INFO) << "Unexpected nlmsg_type: " << netlink_message->nlmsg_type
                      << " expected: " << RTM_NEWADDR;
       return;
     }
@@ -219,7 +219,7 @@ class LocalAddressParser : public NetlinkParserInterface {
     // Make sure this is for an address family we're interested in.
     if (interface_address->ifa_family != AF_INET &&
         interface_address->ifa_family != AF_INET6) {
-      QUIC_VLOG(2) << absl::StrCat("uninteresting ifa family: ",
+      LOG(INFO) << absl::StrCat("uninteresting ifa family: ",
                                    interface_address->ifa_family);
       return;
     }
@@ -234,7 +234,7 @@ class LocalAddressParser : public NetlinkParserInterface {
 
     uint8_t unwanted_flags = interface_address->ifa_flags & unwanted_flags_;
     if (unwanted_flags != 0) {
-      QUIC_VLOG(2) << absl::StrCat("unwanted ifa flags: ", unwanted_flags);
+      LOG(INFO) << absl::StrCat("unwanted ifa flags: ", unwanted_flags);
       return;
     }
 
@@ -250,7 +250,7 @@ class LocalAddressParser : public NetlinkParserInterface {
       // sometimes uses only one or the other. We'll return both so that the
       // caller can decide which to use.
       if (rta->rta_type != IFA_LOCAL && rta->rta_type != IFA_ADDRESS) {
-        QUIC_VLOG(2) << "Ignoring uninteresting rta_type: " << rta->rta_type;
+        LOG(INFO) << "Ignoring uninteresting rta_type: " << rta->rta_type;
         continue;
       }
 
@@ -273,12 +273,12 @@ class LocalAddressParser : public NetlinkParserInterface {
           }
           break;
         default:
-          QUIC_LOG(ERROR) << absl::StrCat("Unknown address family: ",
+          LOG(INFO) << absl::StrCat("Unknown address family: ",
                                           interface_address->ifa_family);
       }
     }
 
-    QUIC_VLOG(2) << "local_address: " << address_info.local_address.ToString()
+    LOG(INFO) << "local_address: " << address_info.local_address.ToString()
                  << " interface_address: "
                  << address_info.interface_address.ToString()
                  << " index: " << interface_address->ifa_index;
@@ -316,7 +316,7 @@ bool Netlink::GetAddresses(int interface_index, uint8_t unwanted_flags,
 
   // the send routine returns the socket to listen on.
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed.";
+    LOG(INFO) << "send failed.";
     return false;
   }
 
@@ -331,7 +331,7 @@ bool Netlink::GetAddresses(int interface_index, uint8_t unwanted_flags,
   // since there may be multiple reply packets each with multiple reply
   // messages.
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "recv failed";
+    LOG(INFO) << "recv failed";
     return false;
   }
   return true;
@@ -342,7 +342,7 @@ namespace {
 class UnknownParser : public NetlinkParserInterface {
  public:
   void Run(struct nlmsghdr* netlink_message) override {
-    QUIC_LOG(INFO) << "nlmsg reply type: " << netlink_message->nlmsg_type;
+    LOG(INFO) << "nlmsg reply type: " << netlink_message->nlmsg_type;
   }
 };
 
@@ -384,13 +384,13 @@ bool Netlink::ChangeLocalAddress(
                           address.ToPackedString().size());
 
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed";
+    LOG(INFO) << "send failed";
     return false;
   }
 
   UnknownParser parser;
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "receive failed.";
+    LOG(INFO) << "receive failed.";
     return false;
   }
   return true;
@@ -405,7 +405,7 @@ class RoutingRuleParser : public NetlinkParserInterface {
 
   void Run(struct nlmsghdr* netlink_message) override {
     if (netlink_message->nlmsg_type != RTM_NEWROUTE) {
-      QUIC_LOG(WARNING) << absl::StrCat(
+      LOG(INFO) << absl::StrCat(
           "Unexpected nlmsg_type: ", netlink_message->nlmsg_type,
           " expected: ", RTM_NEWROUTE);
       return;
@@ -415,7 +415,7 @@ class RoutingRuleParser : public NetlinkParserInterface {
     int payload_length = RTM_PAYLOAD(netlink_message);
 
     if (route->rtm_family != AF_INET && route->rtm_family != AF_INET6) {
-      QUIC_VLOG(2) << absl::StrCat("Uninteresting family: ", route->rtm_family);
+      LOG(INFO) << absl::StrCat("Uninteresting family: ", route->rtm_family);
       return;
     }
 
@@ -461,7 +461,7 @@ class RoutingRuleParser : public NetlinkParserInterface {
                 break;
               }
               default: {
-                QUIC_VLOG(2) << absl::StrCat(
+                LOG(INFO) << absl::StrCat(
                     "Uninteresting RTA_METRICS attribute: ", rtax->rta_type);
               }
             }
@@ -469,7 +469,7 @@ class RoutingRuleParser : public NetlinkParserInterface {
           break;
         }
         default: {
-          QUIC_VLOG(2) << absl::StrCat("Uninteresting attribute: ",
+          LOG(INFO) << absl::StrCat("Uninteresting attribute: ",
                                        rta->rta_type);
         }
       }
@@ -493,13 +493,13 @@ bool Netlink::GetRouteInfo(std::vector<Netlink::RoutingRule>* routing_rules) {
                                    seq_, getpid(), &route_message);
 
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed";
+    LOG(INFO) << "send failed";
     return false;
   }
 
   RoutingRuleParser parser(routing_rules);
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "recv failed";
+    LOG(INFO) << "recv failed";
     return false;
   }
 
@@ -605,13 +605,13 @@ bool Netlink::ChangeRoute(Netlink::Verb verb, uint32_t table,
   }
 
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed";
+    LOG(INFO) << "send failed";
     return false;
   }
 
   UnknownParser parser;
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "receive failed.";
+    LOG(INFO) << "receive failed.";
     return false;
   }
   return true;
@@ -626,7 +626,7 @@ class IpRuleParser : public NetlinkParserInterface {
 
   void Run(struct nlmsghdr* netlink_message) override {
     if (netlink_message->nlmsg_type != RTM_NEWRULE) {
-      QUIC_LOG(WARNING) << absl::StrCat(
+      LOG(INFO) << absl::StrCat(
           "Unexpected nlmsg_type: ", netlink_message->nlmsg_type,
           " expected: ", RTM_NEWRULE);
       return;
@@ -636,7 +636,7 @@ class IpRuleParser : public NetlinkParserInterface {
     int payload_length = RTM_PAYLOAD(netlink_message);
 
     if (rule->rtm_family != AF_INET6) {
-      QUIC_LOG(ERROR) << absl::StrCat("Unexpected family: ", rule->rtm_family);
+      LOG(INFO) << absl::StrCat("Unexpected family: ", rule->rtm_family);
       return;
     }
 
@@ -660,7 +660,7 @@ class IpRuleParser : public NetlinkParserInterface {
           break;
         }
         default: {
-          QUIC_VLOG(2) << absl::StrCat("Uninteresting attribute: ",
+          LOG(INFO) << absl::StrCat("Uninteresting attribute: ",
                                        rta->rta_type);
         }
       }
@@ -683,13 +683,13 @@ bool Netlink::GetRuleInfo(std::vector<Netlink::IpRule>* ip_rules) {
                                   &rule_message);
 
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed";
+    LOG(INFO) << "send failed";
     return false;
   }
 
   IpRuleParser parser(ip_rules);
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "receive failed.";
+    LOG(INFO) << "receive failed.";
     return false;
   }
   return true;
@@ -710,7 +710,7 @@ bool Netlink::ChangeRule(Verb verb, uint32_t table, IpRange source_range) {
   switch (verb) {
     case Verb::kAdd:
       if (!source_range.IsInitialized()) {
-        QUIC_LOG(ERROR) << "Source range must be initialized.";
+        LOG(INFO) << "Source range must be initialized.";
         return false;
       }
       operation = RtnetlinkMessage::Operation::NEW;
@@ -722,7 +722,7 @@ bool Netlink::ChangeRule(Verb verb, uint32_t table, IpRange source_range) {
       operation = RtnetlinkMessage::Operation::DEL;
       break;
     case Verb::kReplace:
-      QUIC_LOG(ERROR) << "Unsupported verb: kReplace";
+      LOG(INFO) << "Unsupported verb: kReplace";
       return false;
   }
   auto message =
@@ -738,13 +738,13 @@ bool Netlink::ChangeRule(Verb verb, uint32_t table, IpRange source_range) {
   }
 
   if (!Send(message.BuildIoVec().get(), message.IoVecSize())) {
-    QUIC_LOG(ERROR) << "send failed";
+    LOG(INFO) << "send failed";
     return false;
   }
 
   UnknownParser parser;
   if (!Recv(seq_++, &parser)) {
-    QUIC_LOG(ERROR) << "receive failed.";
+    LOG(INFO) << "receive failed.";
     return false;
   }
   return true;
@@ -752,7 +752,7 @@ bool Netlink::ChangeRule(Verb verb, uint32_t table, IpRange source_range) {
 
 bool Netlink::Send(struct iovec* iov, size_t iovlen) {
   if (!OpenSocket()) {
-    QUIC_LOG(ERROR) << "can't open socket";
+    LOG(INFO) << "can't open socket";
     return false;
   }
 
@@ -767,7 +767,7 @@ bool Netlink::Send(struct iovec* iov, size_t iovlen) {
       &netlink_address, sizeof(netlink_address), iov, iovlen, nullptr, 0, 0};
 
   if (kernel_->sendmsg(socket_fd_, &msg, 0) < 0) {
-    QUIC_LOG(ERROR) << "sendmsg failed";
+    LOG(INFO) << "sendmsg failed";
     CloseSocket();
     return false;
   }
@@ -789,14 +789,14 @@ bool Netlink::Recv(uint32_t seq, NetlinkParserInterface* parser) {
         socket_fd_, recvbuf_.get(), /* len = */ 0, MSG_PEEK | MSG_TRUNC,
         reinterpret_cast<struct sockaddr*>(&netlink_address), &address_length);
     if (next_packet_size < 0) {
-      QUIC_LOG(ERROR)
+      LOG(INFO)
           << "error recvfrom with MSG_PEEK | MSG_TRUNC to get packet length.";
       CloseSocket();
       return false;
     }
-    QUIC_VLOG(3) << "netlink packet size: " << next_packet_size;
+    LOG(INFO) << "netlink packet size: " << next_packet_size;
     if (next_packet_size > recvbuf_length_) {
-      QUIC_VLOG(2) << "resizing recvbuf to " << next_packet_size;
+      LOG(INFO) << "resizing recvbuf to " << next_packet_size;
       ResetRecvBuf(next_packet_size);
     }
 
@@ -805,9 +805,9 @@ bool Netlink::Recv(uint32_t seq, NetlinkParserInterface* parser) {
     int len = kernel_->recvfrom(
         socket_fd_, recvbuf_.get(), recvbuf_length_, /* flags = */ 0,
         reinterpret_cast<struct sockaddr*>(&netlink_address), &address_length);
-    QUIC_VLOG(3) << "recvfrom returned: " << len;
+    LOG(INFO) << "recvfrom returned: " << len;
     if (len < 0) {
-      QUIC_LOG(INFO) << "can't receive netlink packet";
+      LOG(INFO) << "can't receive netlink packet";
       CloseSocket();
       return false;
     }
@@ -817,11 +817,11 @@ bool Netlink::Recv(uint32_t seq, NetlinkParserInterface* parser) {
     for (netlink_message = reinterpret_cast<struct nlmsghdr*>(recvbuf_.get());
          NLMSG_OK(netlink_message, len);
          netlink_message = NLMSG_NEXT(netlink_message, len)) {
-      QUIC_VLOG(3) << "netlink_message->nlmsg_type = "
+      LOG(INFO) << "netlink_message->nlmsg_type = "
                    << netlink_message->nlmsg_type;
       // make sure this is to us
       if (netlink_message->nlmsg_seq != seq) {
-        QUIC_LOG(INFO) << "netlink_message not meant for us."
+        LOG(INFO) << "netlink_message not meant for us."
                        << " seq: " << seq
                        << " nlmsg_seq: " << netlink_message->nlmsg_seq;
         continue;
@@ -836,14 +836,14 @@ bool Netlink::Recv(uint32_t seq, NetlinkParserInterface* parser) {
             reinterpret_cast<struct nlmsgerr*>(NLMSG_DATA(netlink_message));
         if (netlink_message->nlmsg_len <
             NLMSG_LENGTH(sizeof(struct nlmsgerr))) {
-          QUIC_LOG(INFO) << "netlink_message ERROR truncated";
+          LOG(INFO) << "netlink_message ERROR truncated";
         } else {
           // an ACK
           if (err->error == 0) {
-            QUIC_VLOG(3) << "Netlink sent an ACK";
+            LOG(INFO) << "Netlink sent an ACK";
             return true;
           }
-          QUIC_LOG(INFO) << "netlink_message ERROR: " << err->error;
+          LOG(INFO) << "netlink_message ERROR: " << err->error;
         }
         return false;
       }

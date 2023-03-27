@@ -55,7 +55,7 @@ QuicFlowController::QuicFlowController(
       is_connection_flow_controller_,
       QuicUtils::GetInvalidStreamId(session_->transport_version()) == id_);
 
-  QUIC_DVLOG(1) << ENDPOINT << "Created flow controller for " << LogLabel()
+  LOG(INFO) << ENDPOINT << "Created flow controller for " << LogLabel()
                 << ", setting initial receive window offset to: "
                 << receive_window_offset_
                 << ", max receive window to: " << receive_window_size_
@@ -66,7 +66,7 @@ QuicFlowController::QuicFlowController(
 
 void QuicFlowController::AddBytesConsumed(QuicByteCount bytes_consumed) {
   bytes_consumed_ += bytes_consumed;
-  QUIC_DVLOG(1) << ENDPOINT << LogLabel() << " consumed " << bytes_consumed_
+  LOG(INFO) << ENDPOINT << LogLabel() << " consumed " << bytes_consumed_
                 << " bytes.";
 
   MaybeSendWindowUpdate();
@@ -79,7 +79,7 @@ bool QuicFlowController::UpdateHighestReceivedOffset(
     return false;
   }
 
-  QUIC_DVLOG(1) << ENDPOINT << LogLabel()
+  LOG(INFO) << ENDPOINT << LogLabel()
                 << " highest byte offset increased from "
                 << highest_received_byte_offset_ << " to " << new_offset;
   highest_received_byte_offset_ = new_offset;
@@ -104,13 +104,13 @@ void QuicFlowController::AddBytesSent(QuicByteCount bytes_sent) {
   }
 
   bytes_sent_ += bytes_sent;
-  QUIC_DVLOG(1) << ENDPOINT << LogLabel() << " sent " << bytes_sent_
+  LOG(INFO) << ENDPOINT << LogLabel() << " sent " << bytes_sent_
                 << " bytes.";
 }
 
 bool QuicFlowController::FlowControlViolation() {
   if (highest_received_byte_offset_ > receive_window_offset_) {
-    QUIC_DLOG(INFO) << ENDPOINT << "Flow control violation on " << LogLabel()
+    LOG(INFO) << ENDPOINT << "Flow control violation on " << LogLabel()
                     << ", receive window offset: " << receive_window_offset_
                     << ", highest received byte offset: "
                     << highest_received_byte_offset_;
@@ -133,7 +133,7 @@ void QuicFlowController::MaybeIncreaseMaxWindowSize() {
   QuicTime prev = prev_window_update_time_;
   prev_window_update_time_ = now;
   if (!prev.IsInitialized()) {
-    QUIC_DVLOG(1) << ENDPOINT << "first window update for " << LogLabel();
+    LOG(INFO) << ENDPOINT << "first window update for " << LogLabel();
     return;
   }
 
@@ -145,7 +145,7 @@ void QuicFlowController::MaybeIncreaseMaxWindowSize() {
   QuicTime::Delta rtt =
       connection_->sent_packet_manager().GetRttStats()->smoothed_rtt();
   if (rtt.IsZero()) {
-    QUIC_DVLOG(1) << ENDPOINT << "rtt zero for " << LogLabel();
+    LOG(INFO) << ENDPOINT << "rtt zero for " << LogLabel();
     return;
   }
 
@@ -162,7 +162,7 @@ void QuicFlowController::MaybeIncreaseMaxWindowSize() {
   IncreaseWindowSize();
 
   if (receive_window_size_ > old_window) {
-    QUIC_DVLOG(1) << ENDPOINT << "New max window increase for " << LogLabel()
+    LOG(INFO) << ENDPOINT << "New max window increase for " << LogLabel()
                   << " after " << since_last.ToMicroseconds()
                   << " us, and RTT is " << rtt.ToMicroseconds()
                   << "us. max wndw: " << receive_window_size_;
@@ -207,7 +207,7 @@ void QuicFlowController::MaybeSendWindowUpdate() {
   }
 
   if (available_window >= threshold) {
-    QUIC_DVLOG(1) << ENDPOINT << "Not sending WindowUpdate for " << LogLabel()
+    LOG(INFO) << ENDPOINT << "Not sending WindowUpdate for " << LogLabel()
                   << ", available window: " << available_window
                   << " >= threshold: " << threshold;
     return;
@@ -222,7 +222,7 @@ void QuicFlowController::UpdateReceiveWindowOffsetAndSendWindowUpdate(
   // Update our receive window.
   receive_window_offset_ += (receive_window_size_ - available_window);
 
-  QUIC_DVLOG(1) << ENDPOINT << "Sending WindowUpdate frame for " << LogLabel()
+  LOG(INFO) << ENDPOINT << "Sending WindowUpdate frame for " << LogLabel()
                 << ", consumed bytes: " << bytes_consumed_
                 << ", available window: " << available_window
                 << ", and threshold: " << WindowUpdateThreshold()
@@ -237,7 +237,7 @@ void QuicFlowController::MaybeSendBlocked() {
       last_blocked_send_window_offset_ >= send_window_offset_) {
     return;
   }
-  QUIC_DLOG(INFO) << ENDPOINT << LogLabel() << " is flow control blocked. "
+  LOG(INFO) << ENDPOINT << LogLabel() << " is flow control blocked. "
                   << "Send window: " << SendWindowSize()
                   << ", bytes sent: " << bytes_sent_
                   << ", send limit: " << send_window_offset_;
@@ -257,7 +257,7 @@ bool QuicFlowController::UpdateSendWindowOffset(
     return false;
   }
 
-  QUIC_DVLOG(1) << ENDPOINT << "UpdateSendWindowOffset for " << LogLabel()
+  LOG(INFO) << ENDPOINT << "UpdateSendWindowOffset for " << LogLabel()
                 << " with new offset " << new_send_window_offset
                 << " current offset: " << send_window_offset_
                 << " bytes_sent: " << bytes_sent_;
@@ -291,7 +291,7 @@ uint64_t QuicFlowController::SendWindowSize() const {
 
 void QuicFlowController::UpdateReceiveWindowSize(QuicStreamOffset size) {
   QUICHE_DCHECK_LE(size, receive_window_size_limit_);
-  QUIC_DVLOG(1) << ENDPOINT << "UpdateReceiveWindowSize for " << LogLabel()
+  LOG(INFO) << ENDPOINT << "UpdateReceiveWindowSize for " << LogLabel()
                 << ": " << size;
   if (receive_window_size_ != receive_window_offset_) {
     QUIC_BUG(quic_bug_10836_2)

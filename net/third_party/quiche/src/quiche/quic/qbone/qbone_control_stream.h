@@ -57,7 +57,7 @@ class QUIC_EXPORT_PRIVATE QboneControlStream : public QboneControlStreamBase {
   void OnMessage(const std::string& data) override {
     Incoming request;
     if (!request.ParseFromString(data)) {
-      QUIC_LOG(ERROR) << "Failed to parse incoming request";
+      LOG(INFO) << "Failed to parse incoming request";
       if (handler_ != nullptr) {
         handler_->OnControlError();
       }

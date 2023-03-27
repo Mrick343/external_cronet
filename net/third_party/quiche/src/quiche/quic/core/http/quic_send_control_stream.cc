@@ -67,7 +67,7 @@ void QuicSendControlStream::MaybeSendSettingsFrame() {
   }
 
   std::string settings_frame = HttpEncoder::SerializeSettingsFrame(settings);
-  QUIC_DVLOG(1) << "Control stream " << id() << " is writing settings frame "
+  LOG(INFO) << "Control stream " << id() << " is writing settings frame "
                 << settings;
   if (spdy_session_->debug_visitor()) {
     spdy_session_->debug_visitor()->OnSettingsFrameSent(settings);
@@ -93,7 +93,7 @@ void QuicSendControlStream::WritePriorityUpdate(
 
   std::string frame =
       HttpEncoder::SerializePriorityUpdateFrame(priority_update);
-  QUIC_DVLOG(1) << "Control Stream " << id() << " is writing "
+  LOG(INFO) << "Control Stream " << id() << " is writing "
                 << priority_update;
   WriteOrBufferData(frame, false, nullptr);
 }

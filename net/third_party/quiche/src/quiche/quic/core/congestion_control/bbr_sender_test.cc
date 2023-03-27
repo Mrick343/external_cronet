@@ -117,7 +117,7 @@ class BbrSenderTest : public QuicTest {
       random_seed_ = QuicRandom::GetInstance()->RandUint64();
     }
     random_.set_seed(random_seed_);
-    QUIC_LOG(INFO) << "BbrSenderTest simulator set up.  Seed: " << random_seed_;
+    LOG(INFO) << "BbrSenderTest simulator set up.  Seed: " << random_seed_;
   }
 
   ~BbrSenderTest() {
@@ -236,7 +236,7 @@ class BbrSenderTest : public QuicTest {
     EXPECT_TRUE(simulator_result)
         << "Simple transfer failed.  Bytes remaining: "
         << bbr_sender_.bytes_to_transfer();
-    QUIC_LOG(INFO) << "Simple transfer state: " << sender_->ExportDebugState();
+    LOG(INFO) << "Simple transfer state: " << sender_->ExportDebugState();
   }
 
   // Drive the simulator by sending enough data to enter PROBE_BW.
@@ -391,7 +391,7 @@ TEST_F(BbrSenderTest, RemoveBytesLostInRecovery) {
   QuicByteCount prior_recovery_window =
       sender_->ExportDebugState().recovery_window;
   QuicByteCount prior_inflight = unacked_packets->bytes_in_flight();
-  QUIC_LOG(INFO) << "Recovery window:" << prior_recovery_window
+  LOG(INFO) << "Recovery window:" << prior_recovery_window
                  << ", least_inflight_packet_size:"
                  << least_inflight_packet_size
                  << ", bytes_in_flight:" << prior_inflight;

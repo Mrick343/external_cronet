@@ -134,7 +134,7 @@ QuicTime::Delta PacingSender::TimeUntilSend(
 
   if (burst_tokens_ > 0 || bytes_in_flight == 0 || lumpy_tokens_ > 0) {
     // Don't pace if we have burst tokens available or leaving quiescence.
-    QUIC_DVLOG(1) << "Sending packet now. burst_tokens:" << burst_tokens_
+    LOG(INFO) << "Sending packet now. burst_tokens:" << burst_tokens_
                   << ", bytes_in_flight:" << bytes_in_flight
                   << ", lumpy_tokens:" << lumpy_tokens_;
     return QuicTime::Delta::Zero();
@@ -142,12 +142,12 @@ QuicTime::Delta PacingSender::TimeUntilSend(
 
   // If the next send time is within the alarm granularity, send immediately.
   if (ideal_next_packet_send_time_ > now + alarm_granularity_) {
-    QUIC_DVLOG(1) << "Delaying packet: "
+    LOG(INFO) << "Delaying packet: "
                   << (ideal_next_packet_send_time_ - now).ToMicroseconds();
     return ideal_next_packet_send_time_ - now;
   }
 
-  QUIC_DVLOG(1) << "Sending packet now. ideal_next_packet_send_time: "
+  LOG(INFO) << "Sending packet now. ideal_next_packet_send_time: "
                 << ideal_next_packet_send_time_ << ", now: " << now;
   return QuicTime::Delta::Zero();
 }

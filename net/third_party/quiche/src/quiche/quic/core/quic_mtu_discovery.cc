@@ -19,7 +19,7 @@ void QuicConnectionMtuDiscoverer::Enable(
   QUICHE_DCHECK(!IsEnabled());
 
   if (target_max_packet_length <= max_packet_length) {
-    QUIC_DVLOG(1) << "MtuDiscoverer not enabled. target_max_packet_length:"
+    LOG(INFO) << "MtuDiscoverer not enabled. target_max_packet_length:"
                   << target_max_packet_length
                   << " <= max_packet_length:" << max_packet_length;
     return;
@@ -29,7 +29,7 @@ void QuicConnectionMtuDiscoverer::Enable(
   max_probe_length_ = target_max_packet_length;
   QUICHE_DCHECK(IsEnabled());
 
-  QUIC_DVLOG(1) << "MtuDiscoverer enabled. min:" << min_probe_length_
+  LOG(INFO) << "MtuDiscoverer enabled. min:" << min_probe_length_
                 << ", max:" << max_probe_length_
                 << ", next:" << next_probe_packet_length();
 }
@@ -49,20 +49,20 @@ bool QuicConnectionMtuDiscoverer::ShouldProbeMtu(
   }
 
   if (remaining_probe_count_ == 0) {
-    QUIC_DVLOG(1)
+    LOG(INFO)
         << "ShouldProbeMtu returns false because max probe count reached";
     return false;
   }
 
   if (largest_sent_packet < next_probe_at_) {
-    QUIC_DVLOG(1) << "ShouldProbeMtu returns false because not enough packets "
+    LOG(INFO) << "ShouldProbeMtu returns false because not enough packets "
                      "sent since last probe. largest_sent_packet:"
                   << largest_sent_packet
                   << ", next_probe_at_:" << next_probe_at_;
     return false;
   }
 
-  QUIC_DVLOG(1) << "ShouldProbeMtu returns true. largest_sent_packet:"
+  LOG(INFO) << "ShouldProbeMtu returns true. largest_sent_packet:"
                 << largest_sent_packet;
   return true;
 }
@@ -87,7 +87,7 @@ QuicPacketLength QuicConnectionMtuDiscoverer::GetUpdatedMtuProbeSize(
     --remaining_probe_count_;
   }
 
-  QUIC_DVLOG(1) << "GetUpdatedMtuProbeSize: probe_packet_length:"
+  LOG(INFO) << "GetUpdatedMtuProbeSize: probe_packet_length:"
                 << last_probe_length_
                 << ", New packets_between_probes_:" << packets_between_probes_
                 << ", next_probe_at_:" << next_probe_at_

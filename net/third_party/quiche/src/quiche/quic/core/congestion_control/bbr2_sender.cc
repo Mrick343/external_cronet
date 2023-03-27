@@ -85,7 +85,7 @@ Bbr2Sender::Bbr2Sender(QuicTime now, const RttStats* rtt_stats,
       probe_bw_(this, &model_),
       probe_rtt_(this, &model_),
       last_sample_is_app_limited_(false) {
-  QUIC_DVLOG(2) << this << " Initializing Bbr2Sender. mode:" << mode_
+  LOG(INFO) << this << " Initializing Bbr2Sender. mode:" << mode_
                 << ", PacingRate:" << pacing_rate_ << ", Cwnd:" << cwnd_
                 << ", CwndLimits:" << cwnd_limits() << "  @ " << now;
   QUICHE_DCHECK_EQ(mode_, Bbr2Mode::STARTUP);
@@ -264,7 +264,7 @@ void Bbr2Sender::OnCongestionEvent(bool /*rtt_updated*/,
                                    QuicTime event_time,
                                    const AckedPacketVector& acked_packets,
                                    const LostPacketVector& lost_packets) {
-  QUIC_DVLOG(3) << this
+  LOG(INFO) << this
                 << " OnCongestionEvent. prior_in_flight:" << prior_in_flight
                 << " prior_cwnd:" << cwnd_ << "  @ " << event_time;
   Bbr2CongestionEvent congestion_event;
@@ -297,7 +297,7 @@ void Bbr2Sender::OnCongestionEvent(bool /*rtt_updated*/,
       break;
     }
 
-    QUIC_DVLOG(2) << this << " Mode change:  " << mode_ << " ==> " << next_mode
+    LOG(INFO) << this << " Mode change:  " << mode_ << " ==> " << next_mode
                   << "  @ " << event_time;
     BBR2_MODE_DISPATCH(Leave(event_time, &congestion_event));
     mode_ = next_mode;
@@ -330,7 +330,7 @@ void Bbr2Sender::OnCongestionEvent(bool /*rtt_updated*/,
     OnEnterQuiescence(event_time);
   }
 
-  QUIC_DVLOG(3)
+  LOG(INFO)
       << this
       << " END CongestionEvent(acked:" << quiche::PrintElements(acked_packets)
       << ", lost:" << lost_packets.size() << ") "
@@ -404,7 +404,7 @@ void Bbr2Sender::UpdateCongestionWindow(QuicByteCount bytes_acked) {
 
   cwnd_ = cwnd_limits().ApplyLimits(cwnd_);
 
-  QUIC_DVLOG(3) << this << " Updating CWND. target_cwnd:" << target_cwnd
+  LOG(INFO) << this << " Updating CWND. target_cwnd:" << target_cwnd
                 << ", max_ack_height:" << model_.MaxAckHeight()
                 << ", full_bw:" << model_.full_bandwidth_reached()
                 << ", bytes_acked:" << bytes_acked
@@ -424,7 +424,7 @@ void Bbr2Sender::OnPacketSent(QuicTime sent_time, QuicByteCount bytes_in_flight,
                               QuicPacketNumber packet_number,
                               QuicByteCount bytes,
                               HasRetransmittableData is_retransmittable) {
-  QUIC_DVLOG(3) << this << " OnPacketSent: pkn:" << packet_number
+  LOG(INFO) << this << " OnPacketSent: pkn:" << packet_number
                 << ", bytes:" << bytes << ", cwnd:" << cwnd_
                 << ", inflight:" << bytes_in_flight + bytes
                 << ", total_sent:" << model_.total_bytes_sent() + bytes
@@ -466,7 +466,7 @@ void Bbr2Sender::OnApplicationLimited(QuicByteCount bytes_in_flight) {
   }
 
   model_.OnApplicationLimited();
-  QUIC_DVLOG(2) << this << " Becoming application limited. Last sent packet: "
+  LOG(INFO) << this << " Becoming application limited. Last sent packet: "
                 << model_.last_sent_packet()
                 << ", CWND: " << GetCongestionWindow();
 }

@@ -109,7 +109,7 @@ TEST(TcpPacketTest, CreatedPacketMatchesReference) {
       absl::string_view(reinterpret_cast<const char*>(kReferenceTCPRSTPacket),
                         sizeof(kReferenceTCPRSTPacket));
   CreateTcpResetPacket(syn, [&expected_packet](absl::string_view packet) {
-    QUIC_LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
+    LOG(INFO) << quiche::QuicheTextUtils::HexDump(packet);
     ASSERT_EQ(packet, expected_packet);
   });
 }

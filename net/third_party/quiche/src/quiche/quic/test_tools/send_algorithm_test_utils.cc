@@ -35,7 +35,7 @@ void RecordSendAlgorithmTestResult(uint64_t random_seed,
 void CompareSendAlgorithmTestResult(int64_t actual_simulated_duration_micros) {
   SendAlgorithmTestResult expected;
   ASSERT_TRUE(LoadSendAlgorithmTestResult(&expected));
-  QUIC_LOG(INFO) << "Loaded expected test result: "
+  LOG(INFO) << "Loaded expected test result: "
                  << expected.ShortDebugString();
 
   EXPECT_GE(expected.simulated_duration_micros(),

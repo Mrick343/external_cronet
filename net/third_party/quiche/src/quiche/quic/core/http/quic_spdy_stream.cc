@@ -318,7 +318,7 @@ void QuicSpdyStream::WriteOrBufferBody(absl::string_view data, bool fin) {
   QUICHE_DCHECK(success);
 
   // Write body.
-  QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id()
+  LOG(INFO) << ENDPOINT << "Stream " << id()
                   << " is writing DATA frame payload of length "
                   << data.length() << " with fin " << fin;
   WriteOrBufferData(data, fin, nullptr);
@@ -339,7 +339,7 @@ size_t QuicSpdyStream::WriteTrailers(
     // trailers may be processed out of order at the peer.
     const QuicStreamOffset final_offset =
         stream_bytes_written() + BufferedDataBytes();
-    QUIC_DLOG(INFO) << ENDPOINT << "Inserting trailer: ("
+    LOG(INFO) << ENDPOINT << "Inserting trailer: ("
                     << kFinalOffsetHeaderKey << ", " << final_offset << ")";
     trailer_block.insert(
         std::make_pair(kFinalOffsetHeaderKey, absl::StrCat(final_offset)));
@@ -394,7 +394,7 @@ bool QuicSpdyStream::WriteDataFrameHeader(QuicByteCount data_length,
   unacked_frame_headers_offsets_.Add(
       send_buffer().stream_offset(),
       send_buffer().stream_offset() + header.size());
-  QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id()
+  LOG(INFO) << ENDPOINT << "Stream " << id()
                   << " is writing DATA frame header of length "
                   << header.size();
   if (can_write) {
@@ -420,7 +420,7 @@ QuicConsumedData QuicSpdyStream::WriteBodySlices(
     return {0, false};
   }
 
-  QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id()
+  LOG(INFO) << ENDPOINT << "Stream " << id()
                   << " is writing DATA frame payload of length " << data_size;
   return WriteMemSlices(slices, fin);
 }
@@ -664,7 +664,7 @@ void QuicSpdyStream::OnTrailingHeadersComplete(
   // TODO(b/134706391): remove |fin| argument.
   QUICHE_DCHECK(!trailers_decompressed_);
   if (!VersionUsesHttp3(transport_version()) && fin_received()) {
-    QUIC_DLOG(INFO) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                     << "Received Trailers after FIN, on stream: " << id();
     stream_delegate()->OnStreamError(QUIC_INVALID_HEADERS_STREAM_DATA,
                                      "Trailers after fin");
@@ -672,7 +672,7 @@ void QuicSpdyStream::OnTrailingHeadersComplete(
   }
 
   if (!VersionUsesHttp3(transport_version()) && !fin) {
-    QUIC_DLOG(INFO) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                     << "Trailers must have FIN set, on stream: " << id();
     stream_delegate()->OnStreamError(QUIC_INVALID_HEADERS_STREAM_DATA,
                                      "Fin missing from trailers");
@@ -684,7 +684,7 @@ void QuicSpdyStream::OnTrailingHeadersComplete(
   if (!SpdyUtils::CopyAndValidateTrailers(header_list, expect_final_byte_offset,
                                           &final_byte_offset,
                                           &received_trailers_)) {
-    QUIC_DLOG(ERROR) << ENDPOINT << "Trailers for stream " << id()
+    LOG(INFO) << ENDPOINT << "Trailers for stream " << id()
                      << " are malformed.";
     stream_delegate()->OnStreamError(QUIC_INVALID_HEADERS_STREAM_DATA,
                                      "Trailers are malformed");
@@ -730,7 +730,7 @@ void QuicSpdyStream::OnStreamReset(const QuicRstStreamFrame& frame) {
     return;
   }
 
-  QUIC_DVLOG(1) << ENDPOINT
+  LOG(INFO) << ENDPOINT
                 << "Received QUIC_STREAM_NO_ERROR, not discarding response";
   set_rst_received(true);
   MaybeIncreaseHighestReceivedOffset(frame.byte_offset);
@@ -865,7 +865,7 @@ void QuicSpdyStream::OnClose() {
     if (web_transport == nullptr) {
       // Since there is no guaranteed destruction order for streams, the session
       // could be already removed from the stream map by the time we reach here.
-      QUIC_DLOG(WARNING) << ENDPOINT << "WebTransport stream " << id()
+      LOG(INFO) << ENDPOINT << "WebTransport stream " << id()
                          << " attempted to notify parent session "
                          << web_transport_data_->session_id
                          << ", but the session could not be found.";
@@ -953,7 +953,7 @@ bool QuicSpdyStream::OnDataFramePayload(absl::string_view payload) {
 bool QuicSpdyStream::OnDataFrameEnd() {
   QUICHE_DCHECK(VersionUsesHttp3(transport_version()));
 
-  QUIC_DVLOG(1) << ENDPOINT
+  LOG(INFO) << ENDPOINT
                 << "Reaches the end of a data frame. Total bytes received are "
                 << body_manager_.total_body_bytes_received();
   return true;
@@ -1081,7 +1081,7 @@ bool QuicSpdyStream::OnHeadersFrameEnd() {
 
 void QuicSpdyStream::OnWebTransportStreamFrameType(
     QuicByteCount header_length, WebTransportSessionId session_id) {
-  QUIC_DVLOG(1) << ENDPOINT << " Received WEBTRANSPORT_STREAM on stream "
+  LOG(INFO) << ENDPOINT << " Received WEBTRANSPORT_STREAM on stream "
                 << id() << " for session " << session_id;
   sequencer()->MarkConsumed(header_length);
 
@@ -1119,7 +1119,7 @@ bool QuicSpdyStream::OnUnknownFrameStart(uint64_t frame_type,
                                      payload_length);
 
   // Consume the frame header.
-  QUIC_DVLOG(1) << ENDPOINT << "Consuming " << header_length
+  LOG(INFO) << ENDPOINT << "Consuming " << header_length
                 << " byte long frame header of frame of unknown type "
                 << frame_type << ".";
   sequencer()->MarkConsumed(body_manager_.OnNonBody(header_length));
@@ -1130,7 +1130,7 @@ bool QuicSpdyStream::OnUnknownFramePayload(absl::string_view payload) {
   spdy_session_->OnUnknownFramePayload(id(), payload);
 
   // Consume the frame payload.
-  QUIC_DVLOG(1) << ENDPOINT << "Consuming " << payload.size()
+  LOG(INFO) << ENDPOINT << "Consuming " << payload.size()
                 << " bytes of payload of frame of unknown type.";
   sequencer()->MarkConsumed(body_manager_.OnNonBody(payload.size()));
   return true;
@@ -1168,7 +1168,7 @@ size_t QuicSpdyStream::WriteHeadersImpl(
   if (GetQuicReloadableFlag(quic_one_write_for_headers)) {
     QUIC_RELOADABLE_FLAG_COUNT(quic_one_write_for_headers);
 
-    QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id()
+    LOG(INFO) << ENDPOINT << "Stream " << id()
                     << " is writing HEADERS frame header of length "
                     << headers_frame_header.length()
                     << ", and payload of length " << encoded_headers.length()
@@ -1176,13 +1176,13 @@ size_t QuicSpdyStream::WriteHeadersImpl(
     WriteOrBufferData(absl::StrCat(headers_frame_header, encoded_headers), fin,
                       /*ack_listener=*/nullptr);
   } else {
-    QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id()
+    LOG(INFO) << ENDPOINT << "Stream " << id()
                     << " is writing HEADERS frame header of length "
                     << headers_frame_header.length();
     WriteOrBufferData(headers_frame_header, /* fin = */ false,
                       /* ack_listener = */ nullptr);
 
-    QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id()
+    LOG(INFO) << ENDPOINT << "Stream " << id()
                     << " is writing HEADERS frame payload of length "
                     << encoded_headers.length() << " with fin " << fin;
     WriteOrBufferData(encoded_headers, fin, nullptr);
@@ -1232,14 +1232,14 @@ void QuicSpdyStream::MaybeProcessReceivedWebTransportHeaders() {
       protocol = header_value;
     }
     if (header_name == "datagram-flow-id") {
-      QUIC_DLOG(ERROR) << ENDPOINT
+      LOG(INFO) << ENDPOINT
                        << "Rejecting WebTransport due to unexpected "
                           "Datagram-Flow-Id header";
       return;
     }
     if (header_name == "sec-webtransport-http3-draft02") {
       if (header_value != "1") {
-        QUIC_DLOG(ERROR) << ENDPOINT
+        LOG(INFO) << ENDPOINT
                          << "Rejecting WebTransport due to invalid value of "
                             "Sec-Webtransport-Http3-Draft02 header";
         return;
@@ -1326,7 +1326,7 @@ void QuicSpdyStream::ConvertToWebTransportDataStream(
   WriteOrBufferData(header, /*fin=*/false, nullptr);
   web_transport_data_ =
       std::make_unique<WebTransportDataStream>(this, session_id);
-  QUIC_DVLOG(1) << ENDPOINT << "Successfully opened WebTransport data stream "
+  LOG(INFO) << ENDPOINT << "Successfully opened WebTransport data stream "
                 << id() << " for session " << session_id;
 }
 
@@ -1337,14 +1337,14 @@ QuicSpdyStream::WebTransportDataStream::WebTransportDataStream(
 
 void QuicSpdyStream::HandleReceivedDatagram(absl::string_view payload) {
   if (datagram_visitor_ == nullptr) {
-    QUIC_DLOG(ERROR) << ENDPOINT << "Received datagram without any visitor";
+    LOG(INFO) << ENDPOINT << "Received datagram without any visitor";
     return;
   }
   datagram_visitor_->OnHttp3Datagram(id(), payload);
 }
 
 bool QuicSpdyStream::OnCapsule(const Capsule& capsule) {
-  QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id() << " received capsule "
+  LOG(INFO) << ENDPOINT << "Stream " << id() << " received capsule "
                   << capsule;
   if (!headers_decompressed_) {
     QUIC_PEER_BUG(capsule before headers)
@@ -1369,7 +1369,7 @@ bool QuicSpdyStream::OnCapsule(const Capsule& capsule) {
     } break;
     case CapsuleType::CLOSE_WEBTRANSPORT_SESSION: {
       if (web_transport_ == nullptr) {
-        QUIC_DLOG(ERROR) << ENDPOINT << "Received capsule " << capsule
+        LOG(INFO) << ENDPOINT << "Received capsule " << capsule
                          << " for a non-WebTransport stream.";
         return false;
       }
@@ -1400,12 +1400,12 @@ bool QuicSpdyStream::OnCapsule(const Capsule& capsule) {
 }
 
 void QuicSpdyStream::OnCapsuleParseFailure(const std::string& error_message) {
-  QUIC_DLOG(ERROR) << ENDPOINT << "Capsule parse failure: " << error_message;
+  LOG(INFO) << ENDPOINT << "Capsule parse failure: " << error_message;
   Reset(QUIC_BAD_APPLICATION_PAYLOAD);
 }
 
 void QuicSpdyStream::WriteCapsule(const Capsule& capsule, bool fin) {
-  QUIC_DLOG(INFO) << ENDPOINT << "Stream " << id() << " sending capsule "
+  LOG(INFO) << ENDPOINT << "Stream " << id() << " sending capsule "
                   << capsule;
   quiche::QuicheBuffer serialized_capsule = SerializeCapsule(
       capsule,
@@ -1440,7 +1440,7 @@ void QuicSpdyStream::RegisterHttp3DatagramVisitor(
         << ENDPOINT << "Null datagram visitor for stream ID " << id();
     return;
   }
-  QUIC_DLOG(INFO) << ENDPOINT << "Registering datagram visitor with stream ID "
+  LOG(INFO) << ENDPOINT << "Registering datagram visitor with stream ID "
                   << id();
 
   if (datagram_visitor_ != nullptr) {
@@ -1462,7 +1462,7 @@ void QuicSpdyStream::UnregisterHttp3DatagramVisitor() {
         << id();
     return;
   }
-  QUIC_DLOG(INFO) << ENDPOINT << "Unregistering datagram visitor for stream ID "
+  LOG(INFO) << ENDPOINT << "Unregistering datagram visitor for stream ID "
                   << id();
   datagram_visitor_ = nullptr;
 }
@@ -1481,7 +1481,7 @@ void QuicSpdyStream::RegisterConnectIpVisitor(ConnectIpVisitor* visitor) {
         << ENDPOINT << "Null connect-ip visitor for stream ID " << id();
     return;
   }
-  QUIC_DLOG(INFO) << ENDPOINT
+  LOG(INFO) << ENDPOINT
                   << "Registering CONNECT-IP visitor with stream ID " << id();
 
   if (connect_ip_visitor_ != nullptr) {
@@ -1500,7 +1500,7 @@ void QuicSpdyStream::UnregisterConnectIpVisitor() {
         << id();
     return;
   }
-  QUIC_DLOG(INFO) << ENDPOINT
+  LOG(INFO) << ENDPOINT
                   << "Unregistering CONNECT-IP visitor for stream ID " << id();
   connect_ip_visitor_ = nullptr;
 }
@@ -1519,7 +1519,7 @@ void QuicSpdyStream::SetMaxDatagramTimeInQueue(
 
 void QuicSpdyStream::OnDatagramReceived(QuicDataReader* reader) {
   if (!headers_decompressed_) {
-    QUIC_DLOG(INFO) << "Dropping datagram received before headers on stream ID "
+    LOG(INFO) << "Dropping datagram received before headers on stream ID "
                     << id();
     return;
   }
@@ -1611,11 +1611,11 @@ bool QuicSpdyStream::AreHeadersValid(const QuicHeaderList& header_list) const {
   for (const std::pair<std::string, std::string>& pair : header_list) {
     const std::string& name = pair.first;
     if (std::any_of(name.begin(), name.end(), isInvalidHeaderNameCharacter)) {
-      QUIC_DLOG(ERROR) << "Invalid request header " << name;
+      LOG(INFO) << "Invalid request header " << name;
       return false;
     }
     if (http2::GetInvalidHttp2HeaderSet().contains(name)) {
-      QUIC_DLOG(ERROR) << name << " header is not allowed";
+      LOG(INFO) << name << " header is not allowed";
       return false;
     }
   }

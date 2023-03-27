@@ -224,8 +224,6 @@ filegroup {
         "components/cronet/android/test/**/impl/CronetManifestTest.java",
         "components/cronet/android/test/**/apihelpers/*.java", // haven't enabled this and above
         "components/cronet/android/test/**/NQETest.java", // api removed from HttpEngine
-        "components/cronet/android/test/**/QuicTest.java", // QuicTestServer failing
-        "components/cronet/android/test/**/QuicUploadTest.java", // QuicTestServer failing
         "components/cronet/android/test/**/TestNetworkQualityThroughputListener.java",
         "components/cronet/android/test/**/TestNetworkQualityRttListener.java",
         "components/cronet/android/test/**/RequestFinishedInfoTest.java", // Used Instant.now which is flaky
@@ -279,6 +277,7 @@ android_library {
         "cronet_aml_java__testing",
         "androidx.test.ext.junit",
         "junit",
+        "cts-install-lib",
     ],
     libs: [
         "android.test.base",

@@ -37,7 +37,7 @@ class Counter : public Actor {
 
   void Act() override {
     ++value_;
-    QUIC_DVLOG(1) << name_ << " has value " << value_ << " at time "
+    LOG(INFO) << name_ << " has value " << value_ << " at time "
                   << clock_->Now().ToDebuggingValue();
     Schedule(clock_->Now() + period_);
   }

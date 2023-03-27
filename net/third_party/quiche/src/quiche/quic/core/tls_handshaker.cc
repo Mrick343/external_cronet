@@ -98,7 +98,7 @@ void TlsHandshaker::AdvanceHandshake() {
       SSL_is_server(ssl()) && !handshaker_delegate_->PacketFlusherAttached())
       << "is_server:" << SSL_is_server(ssl());
 
-  QUIC_VLOG(1) << ENDPOINT << "Continuing handshake";
+  LOG(INFO) << ENDPOINT << "Continuing handshake";
   int rv = SSL_do_handshake(ssl());
 
   if (is_connection_closed()) {
@@ -118,7 +118,7 @@ void TlsHandshaker::AdvanceHandshake() {
       return;
     }
 
-    QUIC_VLOG(1) << ENDPOINT
+    LOG(INFO) << ENDPOINT
                  << "SSL_do_handshake returned when entering early data. After "
                  << "retry, rv=" << rv
                  << ", SSL_in_early_data=" << SSL_in_early_data(ssl());
@@ -149,7 +149,7 @@ void TlsHandshaker::AdvanceHandshake() {
   }
   if (ShouldCloseConnectionOnUnexpectedError(ssl_error) &&
       !is_connection_closed()) {
-    QUIC_VLOG(1) << "SSL_do_handshake failed; SSL_get_error returns "
+    LOG(INFO) << "SSL_do_handshake failed; SSL_get_error returns "
                  << ssl_error;
     ERR_print_errors_fp(stderr);
     CloseConnection(QUIC_HANDSHAKE_FAILED, "TLS handshake failed");
@@ -213,7 +213,7 @@ enum ssl_verify_result_t TlsHandshaker::VerifyCert(uint8_t* out_alert) {
         std::string(reinterpret_cast<const char*>(CRYPTO_BUFFER_data(cert)),
                     CRYPTO_BUFFER_len(cert)));
   }
-  QUIC_DVLOG(1) << "VerifyCert: peer cert_chain length: " << certs.size();
+  LOG(INFO) << "VerifyCert: peer cert_chain length: " << certs.size();
 
   ProofVerifierCallbackImpl* proof_verify_callback =
       new ProofVerifierCallbackImpl(this);
@@ -236,7 +236,7 @@ enum ssl_verify_result_t TlsHandshaker::VerifyCert(uint8_t* out_alert) {
     case QUIC_FAILURE:
     default:
       *out_alert = cert_verify_tls_alert_;
-      QUIC_LOG(INFO) << "Cert chain verification failed: "
+      LOG(INFO) << "Cert chain verification failed: "
                      << cert_verify_error_details_;
       return ssl_verify_invalid;
   }
@@ -245,7 +245,7 @@ enum ssl_verify_result_t TlsHandshaker::VerifyCert(uint8_t* out_alert) {
 void TlsHandshaker::SetWriteSecret(EncryptionLevel level,
                                    const SSL_CIPHER* cipher,
                                    absl::Span<const uint8_t> write_secret) {
-  QUIC_DVLOG(1) << ENDPOINT << "SetWriteSecret level=" << level;
+  LOG(INFO) << ENDPOINT << "SetWriteSecret level=" << level;
   std::unique_ptr<QuicEncrypter> encrypter =
       QuicEncrypter::CreateFromCipherSuite(SSL_CIPHER_get_id(cipher));
   const EVP_MD* prf = Prf(cipher);
@@ -271,7 +271,7 @@ void TlsHandshaker::SetWriteSecret(EncryptionLevel level,
 bool TlsHandshaker::SetReadSecret(EncryptionLevel level,
                                   const SSL_CIPHER* cipher,
                                   absl::Span<const uint8_t> read_secret) {
-  QUIC_DVLOG(1) << ENDPOINT << "SetReadSecret level=" << level;
+  LOG(INFO) << ENDPOINT << "SetReadSecret level=" << level;
   std::unique_ptr<QuicDecrypter> decrypter =
       QuicDecrypter::CreateFromCipherSuite(SSL_CIPHER_get_id(cipher));
   const EVP_MD* prf = Prf(cipher);
@@ -371,7 +371,7 @@ void TlsHandshaker::SendAlert(EncryptionLevel level, uint8_t desc) {
   std::string error_details = absl::StrCat(
       "TLS handshake failure (", EncryptionLevelToString(level), ") ",
       static_cast<int>(desc), ": ", SSL_alert_desc_string_long(desc));
-  QUIC_DLOG(ERROR) << error_details;
+  LOG(INFO) << error_details;
   CloseConnection(
       TlsAlertToQuicErrorCode(desc),
       static_cast<QuicIetfTransportErrorCodes>(CRYPTO_ERROR_FIRST + desc),

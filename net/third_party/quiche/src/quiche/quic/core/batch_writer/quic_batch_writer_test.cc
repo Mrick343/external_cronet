@@ -21,7 +21,7 @@ class QuicGsoBatchWriterIOTestDelegate
                           /*receive_buffer_size=*/kDefaultSocketReceiveBuffer,
                           /*send_buffer_size=*/kDefaultSocketReceiveBuffer);
     if (fd < 0) {
-      QUIC_LOG(ERROR) << "CreateSocket() failed: " << strerror(errno);
+      LOG(INFO) << "CreateSocket() failed: " << strerror(errno);
       return false;  // Let the test fail rather than skip it.
     }
     const bool gso_not_supported =
@@ -29,11 +29,11 @@ class QuicGsoBatchWriterIOTestDelegate
     socket_api.Destroy(fd);
 
     if (gso_not_supported) {
-      QUIC_LOG(WARNING) << "Test skipped since GSO is not supported.";
+      LOG(INFO) << "Test skipped since GSO is not supported.";
       return true;
     }
 
-    QUIC_LOG(WARNING) << "OK: GSO is supported.";
+    LOG(INFO) << "OK: GSO is supported.";
     return false;
   }
 

@@ -187,7 +187,7 @@ class FullChloGenerator {
     // Verify output is a REJ.
     EXPECT_THAT(rej->tag(), testing::Eq(kREJ));
 
-    QUIC_VLOG(1) << "Extract valid STK and SCID from\n" << rej->DebugString();
+    LOG(INFO) << "Extract valid STK and SCID from\n" << rej->DebugString();
     absl::string_view srct;
     ASSERT_TRUE(rej->GetStringPiece(kSourceAddressTokenTag, &srct));
 
@@ -380,7 +380,7 @@ void CommunicateHandshakeMessages(PacketSavingConnection* client_conn,
          (!client->one_rtt_keys_available() ||
           !server->one_rtt_keys_available())) {
     ASSERT_GT(client_conn->encrypted_packets_.size(), client_i);
-    QUIC_LOG(INFO) << "Processing "
+    LOG(INFO) << "Processing "
                    << client_conn->encrypted_packets_.size() - client_i
                    << " packets client->server";
     MovePackets(client_conn, &client_i, server, server_conn,
@@ -391,7 +391,7 @@ void CommunicateHandshakeMessages(PacketSavingConnection* client_conn,
       break;
     }
     ASSERT_GT(server_conn->encrypted_packets_.size(), server_i);
-    QUIC_LOG(INFO) << "Processing "
+    LOG(INFO) << "Processing "
                    << server_conn->encrypted_packets_.size() - server_i
                    << " packets server->client";
     MovePackets(server_conn, &server_i, client, client_conn,
@@ -417,7 +417,7 @@ bool CommunicateHandshakeMessagesUntil(PacketSavingConnection* client_conn,
        server_conn->encrypted_packets_.size() >
            server_next_packet_to_deliver)) {
     if (!server_condition()) {
-      QUIC_LOG(INFO) << "Processing "
+      LOG(INFO) << "Processing "
                      << client_conn->encrypted_packets_.size() -
                             client_next_packet_to_deliver
                      << " packets client->server";
@@ -425,7 +425,7 @@ bool CommunicateHandshakeMessagesUntil(PacketSavingConnection* client_conn,
                   server_conn, Perspective::IS_SERVER, process_stream_data);
     }
     if (!client_condition()) {
-      QUIC_LOG(INFO) << "Processing "
+      LOG(INFO) << "Processing "
                      << server_conn->encrypted_packets_.size() -
                             server_next_packet_to_deliver
                      << " packets server->client";
@@ -437,7 +437,7 @@ bool CommunicateHandshakeMessagesUntil(PacketSavingConnection* client_conn,
   server_conn->number_of_packets_delivered_ = server_next_packet_to_deliver;
   bool result = client_condition() && server_condition();
   if (!result) {
-    QUIC_LOG(INFO) << "CommunicateHandshakeMessagesUnti failed with state: "
+    LOG(INFO) << "CommunicateHandshakeMessagesUnti failed with state: "
                       "client connected? "
                    << client_conn->connected() << " server connected? "
                    << server_conn->connected() << " client condition met? "
@@ -454,7 +454,7 @@ std::pair<size_t, size_t> AdvanceHandshake(PacketSavingConnection* client_conn,
                                            QuicCryptoStream* server,
                                            size_t server_i) {
   if (client_conn->encrypted_packets_.size() != client_i) {
-    QUIC_LOG(INFO) << "Processing "
+    LOG(INFO) << "Processing "
                    << client_conn->encrypted_packets_.size() - client_i
                    << " packets client->server";
     MovePackets(client_conn, &client_i, server, server_conn,
@@ -462,7 +462,7 @@ std::pair<size_t, size_t> AdvanceHandshake(PacketSavingConnection* client_conn,
   }
 
   if (server_conn->encrypted_packets_.size() != server_i) {
-    QUIC_LOG(INFO) << "Processing "
+    LOG(INFO) << "Processing "
                    << server_conn->encrypted_packets_.size() - server_i
                    << " packets server->client";
     MovePackets(server_conn, &server_i, client, client_conn,
@@ -723,7 +723,7 @@ void MovePackets(PacketSavingConnection* source_conn,
   size_t index = *inout_packet_index;
   for (; index < source_conn->encrypted_packets_.size(); index++) {
     if (!dest_conn->connected()) {
-      QUIC_LOG(INFO)
+      LOG(INFO)
           << "Destination connection disconnected. Skipping packet at index "
           << index;
       continue;
@@ -761,7 +761,7 @@ void MovePackets(PacketSavingConnection* source_conn,
       // packets should ever be encrypted with the NullEncrypter, instead
       // they're encrypted with an obfuscation cipher based on QUIC version and
       // connection ID.
-      QUIC_LOG(INFO) << "Attempting to decrypt with NullDecrypter: "
+      LOG(INFO) << "Attempting to decrypt with NullDecrypter: "
                         "expect a decryption failure on the next log line.";
       ASSERT_FALSE(null_encryption_framer.ProcessPacket(
           *source_conn->encrypted_packets_[index]))

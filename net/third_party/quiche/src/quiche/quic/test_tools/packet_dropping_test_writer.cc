@@ -23,7 +23,7 @@ class WriteUnblockedAlarm : public QuicAlarm::DelegateWithoutContext {
       : writer_(writer) {}
 
   void OnAlarm() override {
-    QUIC_DLOG(INFO) << "Unblocking socket.";
+    LOG(INFO) << "Unblocking socket.";
     writer_->OnCanWrite();
   }
 
@@ -63,7 +63,7 @@ PacketDroppingTestWriter::PacketDroppingTestWriter()
       fake_bandwidth_(QuicBandwidth::Zero()),
       buffer_size_(0) {
   uint64_t seed = QuicRandom::GetInstance()->RandUint64();
-  QUIC_LOG(INFO) << "Seeding packet loss with " << seed;
+  LOG(INFO) << "Seeding packet loss with " << seed;
   simple_random_.set_seed(seed);
 }
 
@@ -96,7 +96,7 @@ WriteResult PacketDroppingTestWriter::WritePacket(
   if (fake_drop_first_n_packets_ > 0 &&
       num_calls_to_write_ <=
           static_cast<uint64_t>(fake_drop_first_n_packets_)) {
-    QUIC_DVLOG(1) << "Dropping first " << fake_drop_first_n_packets_
+    LOG(INFO) << "Dropping first " << fake_drop_first_n_packets_
                   << " packets (packet number " << num_calls_to_write_ << ")";
     num_consecutive_succesful_writes_ = 0;
     return WriteResult(WRITE_STATUS_OK, buf_len);
@@ -110,7 +110,7 @@ WriteResult PacketDroppingTestWriter::WritePacket(
            kMinSuccesfulWritesAfterPacketLoss &&
        (simple_random_.RandUint64() % 100 <
         static_cast<uint64_t>(fake_packet_loss_percentage_)))) {
-    QUIC_DVLOG(1) << "Dropping packet " << num_calls_to_write_;
+    LOG(INFO) << "Dropping packet " << num_calls_to_write_;
     num_consecutive_succesful_writes_ = 0;
     return WriteResult(WRITE_STATUS_OK, buf_len);
   } else {
@@ -121,7 +121,7 @@ WriteResult PacketDroppingTestWriter::WritePacket(
       simple_random_.RandUint64() % 100 <
           static_cast<uint64_t>(fake_blocked_socket_percentage_)) {
     QUICHE_CHECK(on_can_write_ != nullptr);
-    QUIC_DVLOG(1) << "Blocking socket for packet " << num_calls_to_write_;
+    LOG(INFO) << "Blocking socket for packet " << num_calls_to_write_;
     if (!write_unblocked_alarm_->IsSet()) {
       // Set the alarm to fire immediately.
       write_unblocked_alarm_->Set(clock_->ApproximateNow());
@@ -137,7 +137,7 @@ WriteResult PacketDroppingTestWriter::WritePacket(
   if (!fake_packet_delay_.IsZero() || !fake_bandwidth_.IsZero()) {
     if (buffer_size_ > 0 && buf_len + cur_buffer_size_ > buffer_size_) {
       // Drop packets which do not fit into the buffer.
-      QUIC_DVLOG(1) << "Dropping packet because the buffer is full.";
+      LOG(INFO) << "Dropping packet because the buffer is full.";
       return WriteResult(WRITE_STATUS_OK, buf_len);
     }
 
@@ -196,13 +196,13 @@ QuicTime PacketDroppingTestWriter::ReleaseNextPacket() {
   if (delayed_packets_.size() > 1 && fake_packet_reorder_percentage_ > 0 &&
       simple_random_.RandUint64() % 100 <
           static_cast<uint64_t>(fake_packet_reorder_percentage_)) {
-    QUIC_DLOG(INFO) << "Reordering packets.";
+    LOG(INFO) << "Reordering packets.";
     ++iter;
     // Swap the send times when re-ordering packets.
     delayed_packets_.begin()->send_time = iter->send_time;
   }
 
-  QUIC_DVLOG(1) << "Releasing packet.  " << (delayed_packets_.size() - 1)
+  LOG(INFO) << "Releasing packet.  " << (delayed_packets_.size() - 1)
                 << " remaining.";
   // Grab the next one off the queue and send it.
   QuicPacketWriterWrapper::WritePacket(

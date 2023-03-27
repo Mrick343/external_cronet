@@ -36,7 +36,7 @@ std::unique_ptr<P256KeyExchange> P256KeyExchange::New() {
 // static
 std::unique_ptr<P256KeyExchange> P256KeyExchange::New(absl::string_view key) {
   if (key.empty()) {
-    QUIC_DLOG(INFO) << "Private key is empty";
+    LOG(INFO) << "Private key is empty";
     return nullptr;
   }
 
@@ -44,7 +44,7 @@ std::unique_ptr<P256KeyExchange> P256KeyExchange::New(absl::string_view key) {
   bssl::UniquePtr<EC_KEY> private_key(
       d2i_ECPrivateKey(nullptr, &keyp, key.size()));
   if (!private_key.get() || !EC_KEY_check_key(private_key.get())) {
-    QUIC_DLOG(INFO) << "Private key is invalid.";
+    LOG(INFO) << "Private key is invalid.";
     return nullptr;
   }
 
@@ -53,7 +53,7 @@ std::unique_ptr<P256KeyExchange> P256KeyExchange::New(absl::string_view key) {
                          EC_KEY_get0_public_key(private_key.get()),
                          POINT_CONVERSION_UNCOMPRESSED, public_key,
                          sizeof(public_key), nullptr) != sizeof(public_key)) {
-    QUIC_DLOG(INFO) << "Can't get public key.";
+    LOG(INFO) << "Can't get public key.";
     return nullptr;
   }
 
@@ -65,19 +65,19 @@ std::unique_ptr<P256KeyExchange> P256KeyExchange::New(absl::string_view key) {
 std::string P256KeyExchange::NewPrivateKey() {
   bssl::UniquePtr<EC_KEY> key(EC_KEY_new_by_curve_name(NID_X9_62_prime256v1));
   if (!key.get() || !EC_KEY_generate_key(key.get())) {
-    QUIC_DLOG(INFO) << "Can't generate a new private key.";
+    LOG(INFO) << "Can't generate a new private key.";
     return std::string();
   }
 
   int key_len = i2d_ECPrivateKey(key.get(), nullptr);
   if (key_len <= 0) {
-    QUIC_DLOG(INFO) << "Can't convert private key to string";
+    LOG(INFO) << "Can't convert private key to string";
     return std::string();
   }
   std::unique_ptr<uint8_t[]> private_key(new uint8_t[key_len]);
   uint8_t* keyp = private_key.get();
   if (!i2d_ECPrivateKey(key.get(), &keyp)) {
-    QUIC_DLOG(INFO) << "Can't convert private key to string.";
+    LOG(INFO) << "Can't convert private key to string.";
     return std::string();
   }
   return std::string(reinterpret_cast<char*>(private_key.get()), key_len);
@@ -86,7 +86,7 @@ std::string P256KeyExchange::NewPrivateKey() {
 bool P256KeyExchange::CalculateSharedKeySync(
     absl::string_view peer_public_value, std::string* shared_key) const {
   if (peer_public_value.size() != kUncompressedP256PointBytes) {
-    QUIC_DLOG(INFO) << "Peer public value is invalid";
+    LOG(INFO) << "Peer public value is invalid";
     return false;
   }
 
@@ -98,14 +98,14 @@ bool P256KeyExchange::CalculateSharedKeySync(
                           reinterpret_cast<const uint8_t*>(
                               peer_public_value.data()),
                           peer_public_value.size(), nullptr)) {
-    QUIC_DLOG(INFO) << "Can't convert peer public value to curve point.";
+    LOG(INFO) << "Can't convert peer public value to curve point.";
     return false;
   }
 
   uint8_t result[kP256FieldBytes];
   if (ECDH_compute_key(result, sizeof(result), point.get(), private_key_.get(),
                        nullptr) != sizeof(result)) {
-    QUIC_DLOG(INFO) << "Can't compute ECDH shared key.";
+    LOG(INFO) << "Can't compute ECDH shared key.";
     return false;
   }
 

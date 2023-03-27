@@ -147,14 +147,14 @@ QuicConnectionId LoadBalancerEncoder::GenerateConnectionId() {
   } else if (config_->plaintext_len() == kLoadBalancerBlockSize) {
     // Use one encryption pass.
     if (!config_->BlockEncrypt(block_start, block_start)) {
-      QUIC_LOG(ERROR) << "Block encryption failed";
+      LOG(INFO) << "Block encryption failed";
       return QuicConnectionId();
     }
   } else {
     for (uint8_t i = 1; i <= kNumLoadBalancerCryptoPasses; i++) {
       if (!config_->EncryptionPass(absl::Span<uint8_t>(block_start, length - 1),
                                    i)) {
-        QUIC_LOG(ERROR) << "Block encryption failed";
+        LOG(INFO) << "Block encryption failed";
         return QuicConnectionId();
       }
     }

@@ -64,7 +64,7 @@ QuicByteCount MaxAckHeightTracker::Update(
       last_sent_packet_number_before_epoch_.IsInitialized() &&
       last_acked_packet_number.IsInitialized() &&
       last_acked_packet_number > last_sent_packet_number_before_epoch_) {
-    QUIC_DVLOG(3) << "Force starting a new aggregation epoch. "
+    LOG(INFO) << "Force starting a new aggregation epoch. "
                      "last_sent_packet_number_before_epoch_:"
                   << last_sent_packet_number_before_epoch_
                   << ", last_acked_packet_number:" << last_acked_packet_number;
@@ -91,7 +91,7 @@ QuicByteCount MaxAckHeightTracker::Update(
   // than or equal to the max bandwidth.
   if (aggregation_epoch_bytes_ <=
       ack_aggregation_bandwidth_threshold_ * expected_bytes_acked) {
-    QUIC_DVLOG(3) << "Starting a new aggregation epoch because "
+    LOG(INFO) << "Starting a new aggregation epoch because "
                      "aggregation_epoch_bytes_ "
                   << aggregation_epoch_bytes_
                   << " is smaller than expected. "
@@ -115,7 +115,7 @@ QuicByteCount MaxAckHeightTracker::Update(
   // Compute how many extra bytes were delivered vs max bandwidth.
   QuicByteCount extra_bytes_acked =
       aggregation_epoch_bytes_ - expected_bytes_acked;
-  QUIC_DVLOG(3) << "Updating MaxAckHeight. ack_time:" << ack_time
+  LOG(INFO) << "Updating MaxAckHeight. ack_time:" << ack_time
                 << ", last sent packet:" << last_sent_packet_number
                 << ", bandwidth_estimate:" << bandwidth_estimate
                 << ", bytes_acked:" << bytes_acked
@@ -373,7 +373,7 @@ QuicByteCount BandwidthSampler::OnAckEventEnd(
   // previous epoch, as a A0 candidate.
   if (overestimate_avoidance_ && extra_acked == 0) {
     a0_candidates_.push_back(recent_ack_points_.LessRecentPoint());
-    QUIC_DVLOG(1) << "New a0_candidate:" << a0_candidates_.back();
+    LOG(INFO) << "New a0_candidate:" << a0_candidates_.back();
   }
   return extra_acked;
 }
@@ -438,7 +438,7 @@ BandwidthSample BandwidthSampler::OnPacketAcknowledgedInner(
   AckPoint a0;
   if (overestimate_avoidance_ &&
       ChooseA0Point(sent_packet.send_time_state.total_bytes_acked, &a0)) {
-    QUIC_DVLOG(2) << "Using a0 point: " << a0;
+    LOG(INFO) << "Using a0 point: " << a0;
   } else {
     a0.ack_time = sent_packet.last_acked_packet_ack_time,
     a0.total_bytes_acked = sent_packet.send_time_state.total_bytes_acked;

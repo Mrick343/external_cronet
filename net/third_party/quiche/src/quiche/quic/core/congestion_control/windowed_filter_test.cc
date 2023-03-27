@@ -31,7 +31,7 @@ class WindowedFilterTest : public QuicTest {
     QuicTime::Delta rtt_sample = QuicTime::Delta::FromMilliseconds(10);
     for (int i = 0; i < 5; ++i) {
       windowed_min_rtt_.Update(rtt_sample, now);
-      QUIC_VLOG(1) << "i: " << i << " sample: " << rtt_sample.ToMilliseconds()
+      LOG(INFO) << "i: " << i << " sample: " << rtt_sample.ToMilliseconds()
                    << " mins: "
                    << " " << windowed_min_rtt_.GetBest().ToMilliseconds() << " "
                    << windowed_min_rtt_.GetSecondBest().ToMilliseconds() << " "
@@ -56,7 +56,7 @@ class WindowedFilterTest : public QuicTest {
     QuicBandwidth bw_sample = QuicBandwidth::FromBitsPerSecond(1000);
     for (int i = 0; i < 5; ++i) {
       windowed_max_bw_.Update(bw_sample, now);
-      QUIC_VLOG(1) << "i: " << i << " sample: " << bw_sample.ToBitsPerSecond()
+      LOG(INFO) << "i: " << i << " sample: " << bw_sample.ToBitsPerSecond()
                    << " maxs: "
                    << " " << windowed_max_bw_.GetBest().ToBitsPerSecond() << " "
                    << windowed_max_bw_.GetSecondBest().ToBitsPerSecond() << " "
@@ -114,7 +114,7 @@ TEST_F(WindowedFilterTest, MonotonicallyIncreasingMin) {
     now = now + QuicTime::Delta::FromMilliseconds(25);
     rtt_sample = rtt_sample + QuicTime::Delta::FromMilliseconds(10);
     windowed_min_rtt_.Update(rtt_sample, now);
-    QUIC_VLOG(1) << "i: " << i << " sample: " << rtt_sample.ToMilliseconds()
+    LOG(INFO) << "i: " << i << " sample: " << rtt_sample.ToMilliseconds()
                  << " mins: "
                  << " " << windowed_min_rtt_.GetBest().ToMilliseconds() << " "
                  << windowed_min_rtt_.GetSecondBest().ToMilliseconds() << " "
@@ -144,7 +144,7 @@ TEST_F(WindowedFilterTest, MonotonicallyDecreasingMax) {
     now = now + QuicTime::Delta::FromMilliseconds(25);
     bw_sample = bw_sample - QuicBandwidth::FromBitsPerSecond(100);
     windowed_max_bw_.Update(bw_sample, now);
-    QUIC_VLOG(1) << "i: " << i << " sample: " << bw_sample.ToBitsPerSecond()
+    LOG(INFO) << "i: " << i << " sample: " << bw_sample.ToBitsPerSecond()
                  << " maxs: "
                  << " " << windowed_max_bw_.GetBest().ToBitsPerSecond() << " "
                  << windowed_max_bw_.GetSecondBest().ToBitsPerSecond() << " "
@@ -365,8 +365,8 @@ TEST_F(WindowedFilterTest, ExpireCounterBasedMax) {
   EXPECT_EQ(kBest, max_filter.GetBest());
   UpdateWithIrrelevantSamples(&max_filter, 20, 3);
   EXPECT_EQ(kBest, max_filter.GetBest());
-  QUIC_VLOG(0) << max_filter.GetSecondBest();
-  QUIC_VLOG(0) << max_filter.GetThirdBest();
+  LOG(INFO) << max_filter.GetSecondBest();
+  LOG(INFO) << max_filter.GetThirdBest();
 
   // Insert 20000 at t = 4.  50000 at t = 1 expires, so 40000 becomes the new
   // maximum.

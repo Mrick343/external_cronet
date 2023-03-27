@@ -225,7 +225,7 @@ class EndToEndTest : public QuicTestWithParam<TestParams> {
         override_server_connection_id_length_(
             GetParam().override_server_connection_id_length),
         expected_server_connection_id_length_(kQuicDefaultConnectionIdLength) {
-    QUIC_LOG(INFO) << "Using Configuration: " << GetParam();
+    LOG(INFO) << "Using Configuration: " << GetParam();
 
     // Use different flow control windows for client/server.
     client_config_.SetInitialStreamFlowControlWindowToSend(
@@ -287,14 +287,14 @@ class EndToEndTest : public QuicTestWithParam<TestParams> {
 
   void set_client_initial_stream_flow_control_receive_window(uint32_t window) {
     ASSERT_TRUE(client_ == nullptr);
-    QUIC_DLOG(INFO) << "Setting client initial stream flow control window: "
+    LOG(INFO) << "Setting client initial stream flow control window: "
                     << window;
     client_config_.SetInitialStreamFlowControlWindowToSend(window);
   }
 
   void set_client_initial_session_flow_control_receive_window(uint32_t window) {
     ASSERT_TRUE(client_ == nullptr);
-    QUIC_DLOG(INFO) << "Setting client initial session flow control window: "
+    LOG(INFO) << "Setting client initial session flow control window: "
                     << window;
     client_config_.SetInitialSessionFlowControlWindowToSend(window);
   }
@@ -302,7 +302,7 @@ class EndToEndTest : public QuicTestWithParam<TestParams> {
   void set_client_initial_max_stream_data_incoming_bidirectional(
       uint32_t window) {
     ASSERT_TRUE(client_ == nullptr);
-    QUIC_DLOG(INFO)
+    LOG(INFO)
         << "Setting client initial max stream data incoming bidirectional: "
         << window;
     client_config_.SetInitialMaxStreamDataBytesIncomingBidirectionalToSend(
@@ -312,7 +312,7 @@ class EndToEndTest : public QuicTestWithParam<TestParams> {
   void set_server_initial_max_stream_data_outgoing_bidirectional(
       uint32_t window) {
     ASSERT_TRUE(client_ == nullptr);
-    QUIC_DLOG(INFO)
+    LOG(INFO)
         << "Setting server initial max stream data outgoing bidirectional: "
         << window;
     server_config_.SetInitialMaxStreamDataBytesOutgoingBidirectionalToSend(
@@ -321,14 +321,14 @@ class EndToEndTest : public QuicTestWithParam<TestParams> {
 
   void set_server_initial_stream_flow_control_receive_window(uint32_t window) {
     ASSERT_TRUE(server_thread_ == nullptr);
-    QUIC_DLOG(INFO) << "Setting server initial stream flow control window: "
+    LOG(INFO) << "Setting server initial stream flow control window: "
                     << window;
     server_config_.SetInitialStreamFlowControlWindowToSend(window);
   }
 
   void set_server_initial_session_flow_control_receive_window(uint32_t window) {
     ASSERT_TRUE(server_thread_ == nullptr);
-    QUIC_DLOG(INFO) << "Setting server initial session flow control window: "
+    LOG(INFO) << "Setting server initial session flow control window: "
                     << window;
     server_config_.SetInitialSessionFlowControlWindowToSend(window);
   }
@@ -543,12 +543,12 @@ class EndToEndTest : public QuicTestWithParam<TestParams> {
           /*receive_buffer_size =*/kDefaultSocketReceiveBuffer,
           /*send_buffer_size =*/kDefaultSocketReceiveBuffer);
       if (fd_ == kQuicInvalidSocketFd) {
-        QUIC_LOG(ERROR) << "CreateSocket() failed: " << strerror(errno);
+        LOG(INFO) << "CreateSocket() failed: " << strerror(errno);
         return;
       }
       int rc = socket_api.Bind(fd_, server_address_);
       if (rc < 0) {
-        QUIC_LOG(ERROR) << "Bind failed: " << strerror(errno);
+        LOG(INFO) << "Bind failed: " << strerror(errno);
         return;
       }
     }
@@ -2526,7 +2526,7 @@ TEST_P(EndToEndTest, NegotiateCongestionControl) {
       expected_congestion_control_type = kBBRv2;
       break;
     default:
-      QUIC_DLOG(FATAL) << "Unexpected congestion control tag";
+      LOG(INFO) << "Unexpected congestion control tag";
   }
 
   server_thread_->Pause();
@@ -3863,7 +3863,7 @@ class TestResponseListener : public QuicSpdyClientBase::ResponseListener {
   void OnCompleteResponse(QuicStreamId id,
                           const Http2HeaderBlock& response_headers,
                           const std::string& response_body) override {
-    QUIC_DVLOG(1) << "response for stream " << id << " "
+    LOG(INFO) << "response for stream " << id << " "
                   << response_headers.DebugString() << "\n"
                   << response_body;
   }
@@ -4358,7 +4358,7 @@ TEST_P(EndToEndTest, QUICHE_SLOW_TEST(BadEncryptedData)) {
   // Damage the encrypted data.
   std::string damaged_packet(packet->data(), packet->length());
   damaged_packet[30] ^= 0x01;
-  QUIC_DLOG(INFO) << "Sending bad packet.";
+  LOG(INFO) << "Sending bad packet.";
   client_writer_->WritePacket(
       damaged_packet.data(), damaged_packet.length(),
       client_->client()->network_helper()->GetLatestClientAddress().host(),
@@ -4419,7 +4419,7 @@ class ServerStreamWithErrorResponseBody : public QuicSimpleServerStream {
 
  protected:
   void SendErrorResponse() override {
-    QUIC_DLOG(INFO) << "Sending error response for stream " << id();
+    LOG(INFO) << "Sending error response for stream " << id();
     Http2HeaderBlock headers;
     headers[":status"] = "500";
     headers["content-length"] = absl::StrCat(response_body_.size());
@@ -4474,7 +4474,7 @@ class ServerStreamThatDropsBody : public QuicSimpleServerStream {
         // No more data to read.
         break;
       }
-      QUIC_DVLOG(1) << "Processed " << iov.iov_len << " bytes for stream "
+      LOG(INFO) << "Processed " << iov.iov_len << " bytes for stream "
                     << id();
       MarkConsumed(iov.iov_len);
     }
@@ -5257,7 +5257,7 @@ TEST_P(EndToEndTest, SendMessages) {
 class EndToEndPacketReorderingTest : public EndToEndTest {
  public:
   void CreateClientWithWriter() override {
-    QUIC_LOG(ERROR) << "create client with reorder_writer_";
+    LOG(INFO) << "create client with reorder_writer_";
     reorder_writer_ = new PacketReorderingWriter();
     client_.reset(EndToEndTest::CreateQuicClient(reorder_writer_));
   }
@@ -5344,7 +5344,7 @@ class PacketHoldingWriter : public QuicPacketWriterWrapper {
       return QuicPacketWriterWrapper::WritePacket(buffer, buf_len, self_address,
                                                   peer_address, options);
     }
-    QUIC_DLOG(INFO) << "Packet is held by the writer";
+    LOG(INFO) << "Packet is held by the writer";
     packet_content_ = std::string(buffer, buf_len);
     self_address_ = self_address;
     peer_address_ = peer_address;
@@ -5360,7 +5360,7 @@ class PacketHoldingWriter : public QuicPacketWriterWrapper {
   }
 
   void ReleasePacket() {
-    QUIC_DLOG(INFO) << "Release packet";
+    LOG(INFO) << "Release packet";
     ASSERT_EQ(WRITE_STATUS_OK,
               QuicPacketWriterWrapper::WritePacket(
                   packet_content_.data(), packet_content_.length(),
@@ -5835,7 +5835,7 @@ class BadShloPacketWriter : public QuicPacketWriterWrapper {
     const uint8_t type_byte = buffer[0];
     if (!error_returned_ && (type_byte & FLAGS_LONG_HEADER) &&
         TypeByteIsServerHello(type_byte)) {
-      QUIC_DVLOG(1) << "Return write error for packet containing ServerHello";
+      LOG(INFO) << "Return write error for packet containing ServerHello";
       error_returned_ = true;
       return WriteResult(WRITE_STATUS_ERROR, *MessageTooBigErrorCode());
     }
@@ -5915,11 +5915,11 @@ class BadShloPacketWriter2 : public QuicPacketWriterWrapper {
     if (type_byte & FLAGS_LONG_HEADER) {
       if (((type_byte & 0x30 >> 4) == (version_.UsesV2PacketTypes() ? 2 : 1)) ||
           ((type_byte & 0x7F) == 0x7C)) {
-        QUIC_DVLOG(1) << "Dropping ZERO_RTT_PACKET packet";
+        LOG(INFO) << "Dropping ZERO_RTT_PACKET packet";
         return WriteResult(WRITE_STATUS_OK, buf_len);
       }
     } else if (!error_returned_) {
-      QUIC_DVLOG(1) << "Return write error for short header packet";
+      LOG(INFO) << "Return write error for short header packet";
       error_returned_ = true;
       return WriteResult(WRITE_STATUS_ERROR, *MessageTooBigErrorCode());
     }
