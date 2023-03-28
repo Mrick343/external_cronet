@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ab6281b_15d9c87d",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-28T08:13:32Z",
+      "side": 1,
+      "message": "Do we need this?",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 33
+      },
+      "revId": "798ae6fbdcc94985b31b05676d3a589f8888e0ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "006f6168_cfcdef91",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-28T08:13:32Z",
+      "side": 1,
+      "message": "Please add a bug number to TODOs and ignore annotations.",
+      "range": {
+        "startLine": 94,
+        "startChar": 15,
+        "endLine": 94,
+        "endChar": 16
+      },
+      "revId": "798ae6fbdcc94985b31b05676d3a589f8888e0ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7f04d0c_2ed597e1",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-28T08:13:32Z",
+      "side": 1,
+      "message": "This can be just HttpEngine right? Same elsewhere.",
+      "range": {
+        "startLine": 343,
+        "startChar": 23,
+        "endLine": 343,
+        "endChar": 45
+      },
+      "revId": "798ae6fbdcc94985b31b05676d3a589f8888e0ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "907b13c1_59b8ae0e",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-28T08:13:32Z",
+      "side": 1,
+      "message": "Why?",
+      "range": {
+        "startLine": 572,
+        "startChar": 0,
+        "endLine": 572,
+        "endChar": 123
+      },
+      "revId": "798ae6fbdcc94985b31b05676d3a589f8888e0ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
