@@ -200,10 +200,11 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
     }
 
     /** Queries the ConnectivityManager for information about the current connection. */
-    static class ConnectivityManagerDelegate {
+    @VisibleForTesting
+    public static class ConnectivityManagerDelegate {
         private final ConnectivityManager mConnectivityManager;
 
-        ConnectivityManagerDelegate(Context context) {
+        public ConnectivityManagerDelegate(Context context) {
             mConnectivityManager =
                     (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
