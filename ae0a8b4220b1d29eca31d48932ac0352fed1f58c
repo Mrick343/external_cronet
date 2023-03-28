@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdd7803f_52eb6fad",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-28T18:10:53Z",
+      "side": 1,
+      "message": "Could you move this inside a defaults module in a follow up?",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 51
+      },
+      "revId": "ae0a8b4220b1d29eca31d48932ac0352fed1f58c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16194749_65c0d5f1",
+        "filename": "test_runner/AndroidNetTest.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-28T18:10:53Z",
+      "side": 1,
+      "message": "Should this eventually use MainlineModuleController and SdkIgnoreRunner?",
+      "range": {
+        "startLine": 20,
+        "startChar": 62,
+        "endLine": 20,
+        "endChar": 83
+      },
+      "revId": "ae0a8b4220b1d29eca31d48932ac0352fed1f58c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
