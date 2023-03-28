@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0136e3fb_18b9bf8b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-28T14:23:13Z",
+      "side": 1,
+      "message": "I am still not sure what version this is at.\nFWIW, if you want to separate your changes from upstream changes, you can do something like:\n```\ngit remote add chromium ... (can be a local chromium/src checkout as well, if you want to speed things up)\ngit fetch origin\ngit checkout 918bcb685fcddd98e81228e871f1a90e1cda1ed8 -- components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java\n```\n\nThen to reapply your changes, just:\n```\ngit fetch https://android.googlesource.com/platform/external/cronet refs/changes/41/2507741/7\ngit checkout FETCH_HEAD -- components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java\n```",
+      "parentUuid": "2560b976_4bf6feab",
+      "revId": "fa4694612eeb3015d6b2450a317b843867cef769",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8dc6cb95_fb64faf2",
