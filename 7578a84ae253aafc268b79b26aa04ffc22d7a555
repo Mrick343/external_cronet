@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "98d316d2_6498f0fc",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-28T16:05:43Z",
+      "side": 1,
+      "message": "It makes more sense to use one testserver in our tests where possible, for uniformity. I plan to upstream this.",
+      "parentUuid": "d4581cc0_6deddac8",
+      "range": {
+        "startLine": 93,
+        "startChar": 19,
+        "endLine": 93,
+        "endChar": 57
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "72fca236_4441b627",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2023-03-28T16:01:02Z",
       "side": 1,
       "message": "Did you forget to delete this?",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 14
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b585cc5f_e23f3864",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-28T16:05:43Z",
+      "side": 1,
+      "message": "Yup, will update when the presubmit is done.",
+      "parentUuid": "72fca236_4441b627",
       "range": {
         "startLine": 361,
         "startChar": 4,
@@ -60,6 +108,30 @@
       "writtenOn": "2023-03-28T16:01:02Z",
       "side": 1,
       "message": "Why is this needed?",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42e7d797_71a8ed50",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-28T16:05:43Z",
+      "side": 1,
+      "message": "The test class cannot access this method since it\u0027s in the BCP and package-private.",
+      "parentUuid": "f4a2adb0_a8d5c9b5",
       "range": {
         "startLine": 203,
         "startChar": 4,
