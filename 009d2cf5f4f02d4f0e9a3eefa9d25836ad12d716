@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e690dda_df03b593",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T08:39:25Z",
+      "side": 1,
+      "message": "Thanks for working on this Dan!",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2a5deeb_19db783f",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T08:39:25Z",
+      "side": 1,
+      "message": "`HeaderBlock headerBlock \u003d new HeaderBlockImpl(new CronetUrlRequest.HeadersList());`",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eda9bcd8_e31d5689",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T08:39:25Z",
+      "side": 1,
+      "message": "assertEquals(33, CronetUrlRequest.estimateHeadersSizeInBytes(new HeaderBlockImpl(headersList)));",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4236fdca_dad1dda5",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T08:39:25Z",
+      "side": 1,
+      "message": "Why not use HeaderBlockImpl directly?",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
