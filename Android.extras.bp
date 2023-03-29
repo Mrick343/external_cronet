@@ -173,6 +173,7 @@ filegroup {
     srcs: [
         ":cronet_base_net_javatest_utils",
         "components/cronet/android/test/javatests/**/UrlResponseInfoTest.java",
+        "components/cronet/android/test/javatests/**/CronetManifestTest.java",
         "components/cronet/android/test/javatests/**/CronetTestRule.java",
         "components/cronet/android/test/javatests/**/CronetTestRuleTest.java",
         "components/cronet/android/test/javatests/**/DiskStorageTest.java",
@@ -215,6 +216,7 @@ android_library {
     min_sdk_version: "30",
     manifest: "components/cronet/android/test/src/org/chromium/net/AndroidManifest.xml",
     srcs: [
+        "base/test/android/javatests/**/PackageManagerWrapper.java",
         "base/test/android/javatests/**/UrlUtils.java",
         "components/cronet/android/test/**/CronetTestUtil.java",
         "components/cronet/android/test/**/NativeTestServer.java",

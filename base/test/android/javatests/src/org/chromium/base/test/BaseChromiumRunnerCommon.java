@@ -13,7 +13,7 @@ import android.content.pm.PackageManager;
 import androidx.core.content.ContextCompat;
 
 import org.chromium.base.Log;
-import org.chromium.base.test.util.PackageManagerWrapper;
+import org.chromium.base.test.util.LOG(INFO);
 import org.chromium.build.annotations.MainDex;
 
 import java.io.File;
