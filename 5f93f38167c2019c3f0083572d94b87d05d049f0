@@ -16,6 +16,24 @@
       "message": "I plan to add these methods back, can you instead comment out and add b/267353182 as today with comment to addback classes to ExperimentalHttpEngine?",
       "revId": "5f93f38167c2019c3f0083572d94b87d05d049f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b69a5865_84a929e3",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T13:59:40Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "d2f2fe55_f139da6e",
+      "revId": "5f93f38167c2019c3f0083572d94b87d05d049f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

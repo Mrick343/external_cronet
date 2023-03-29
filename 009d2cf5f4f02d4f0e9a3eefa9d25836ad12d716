@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cebe91d5_cbc22b1b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T13:59:40Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "c2a5deeb_19db783f",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eda9bcd8_e31d5689",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24165978_dc6b1ade",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T13:59:40Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "eda9bcd8_e31d5689",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4236fdca_dad1dda5",
@@ -65,6 +101,24 @@
       "writtenOn": "2023-03-29T08:39:25Z",
       "side": 1,
       "message": "Why not use HeaderBlockImpl directly?",
+      "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a88eaa0_b38345a9",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T13:59:40Z",
+      "side": 1,
+      "message": "This started as an artifact of me figuring out the access issues. When cleaning up the CL I though it\u0027d be moderately useful to also test the code with a non-canonical implementation of the class but in hindsight it\u0027s probably unnecessary as all instances are created internally by Cronet.\n\nI\u0027ll still keep the helper method around, I find the tests to be a bit more readable with it.",
+      "parentUuid": "4236fdca_dad1dda5",
       "revId": "009d2cf5f4f02d4f0e9a3eefa9d25836ad12d716",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
