@@ -284,6 +284,30 @@
       },
       "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c12acfef_ecbef461",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T14:22:32Z",
+      "side": 1,
+      "message": "Maybe @danstahr@google.com has more context/links on the Metalava setup but it only looks at classes within our api/ directory. Otherwise it would hava picked up all the other public classes in our impl/ directory too, like CronetEngineBase.",
+      "parentUuid": "9b488d25_21162276",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
