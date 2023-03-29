@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb87ec05_7bcc6538",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T15:00:42Z",
+      "side": 1,
+      "message": "DO NOT SUBMIT before https://android-review.git.corp.google.com/c/platform/external/cronet/+/2513375/ gets in.",
+      "revId": "4cbb9f2d552a92f55d373943ae65f2f8bebb57ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
