@@ -16,6 +16,24 @@
       "message": "nit: we got a stray here",
       "revId": "5f93f38167c2019c3f0083572d94b87d05d049f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "135ad774_e5716d33",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T08:33:16Z",
+      "side": 1,
+      "message": "Oh just saw the followup. Not a stray.",
+      "parentUuid": "01500f7e_6aefbb1c",
+      "revId": "5f93f38167c2019c3f0083572d94b87d05d049f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
