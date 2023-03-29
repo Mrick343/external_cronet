@@ -260,6 +260,30 @@
       },
       "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b488d25_21162276",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-29T13:53:09Z",
+      "side": 1,
+      "message": "Ohh, this make sense, thanks for the explanation.\n\nThough, I think metalava is going to stop you from doing this? AFAIU, making this public is equivalent to publishing this as an Android API (since it will be available and accessible from the bootclasspath, as you said), which I don\u0027t think we want (+we\u0027re not allowed to do that).",
+      "parentUuid": "d1cf57e2_beaa2b4f",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
