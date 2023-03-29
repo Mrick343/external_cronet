@@ -31,7 +31,7 @@ public class HeaderBlockImpl extends HeaderBlock {
     private final List<Map.Entry<String, String>> mAllHeadersList;
     private Map<String, List<String>> mHeadersMap;
 
-    HeaderBlockImpl(List<Map.Entry<String, String>> allHeadersList) {
+    public HeaderBlockImpl(List<Map.Entry<String, String>> allHeadersList) {
         mAllHeadersList = Collections.unmodifiableList(allHeadersList);
     }
 
