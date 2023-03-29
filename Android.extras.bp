@@ -160,6 +160,7 @@ filegroup {
         ":cronet_aml_java_apihelpers",
         ":cronet_base_net_javatest_utils",
         "components/cronet/android/test/javatests/**/UrlResponseInfoTest.java",
+        "components/cronet/android/test/javatests/**/BidirectionalStreamQuicTest.java",
         "components/cronet/android/test/javatests/**/BrotliTest.java",
         "components/cronet/android/test/javatests/**/CronetLoggerTestRule.java",
         "components/cronet/android/test/javatests/**/CronetLoggerTest.java",
@@ -181,9 +182,6 @@ filegroup {
         "components/cronet/android/test/javatests/**/urlconnection/*.java",
     ],
     exclude_srcs: [
-        // Todo(b/275345637): setup quic test server
-        "components/cronet/android/test/javatests/**/urlconnection/QuicUploadTest.java",
-
         // Todo(b/275345611): fix failure
         "components/cronet/android/test/javatests/**/urlconnection/CronetInputStreamTest.java",
     ],
