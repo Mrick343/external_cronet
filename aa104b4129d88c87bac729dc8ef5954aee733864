@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1933e87_a728f698",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T14:15:40Z",
+      "side": 1,
+      "message": "Can you please summarize the changes you needed to make in the CL description?",
+      "revId": "aa104b4129d88c87bac729dc8ef5954aee733864",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
