@@ -356,6 +356,30 @@
       },
       "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "348ccc02_d483c4b7",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-29T14:48:50Z",
+      "side": 1,
+      "message": "Thanks a lot Dan.\n\nAs it\u0027s not instantly obvious what\u0027s going on, can we add to each of these \"no-modified to public\" changes something along the lines of \"For testing this is not statically linked, but accessed through the bootclasspath. Public visibility is required to make things work\".",
+      "parentUuid": "5c52766c_32a67fcc",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
