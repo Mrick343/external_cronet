@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5b33b709_b7de009e",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T12:38:48Z",
+      "side": 1,
+      "message": "EmbeddedTestServer isn\u0027t currently setup in aosp. \n\nBoth run net::test::EmbeddedTestServer but the difference is that EmbeddedTestServer runs the server as a service in a different process. NativeTestServer is in-process and would definitely be faster. \n\nBut yes before upstreaming, we\u0027ll properly consider the effects.",
+      "parentUuid": "a00c48bb_ba877cd0",
+      "range": {
+        "startLine": 93,
+        "startChar": 19,
+        "endLine": 93,
+        "endChar": 57
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "72fca236_4441b627",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
         "patchSetId": 1
