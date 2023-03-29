@@ -236,6 +236,30 @@
       },
       "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1cf57e2_beaa2b4f",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-29T13:48:39Z",
+      "side": 1,
+      "message": "BootClassPath. This works in chromium because the classes are staticly linked and in the same apk. Here, we are using the classes in the bootclasspath which means we can\u0027t access anything that is not public.",
+      "parentUuid": "e2393fa9_98451356",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
