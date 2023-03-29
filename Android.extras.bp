@@ -173,14 +173,15 @@ filegroup {
     srcs: [
         "components/cronet/android/test/javatests/**/GetStatusTest.java",
         "components/cronet/android/test/javatests/**/UrlResponseInfoTest.java",
+        "components/cronet/android/test/javatests/**/CronetStressTest.java",
         "components/cronet/android/test/javatests/**/CronetTestRule.java",
         "components/cronet/android/test/javatests/**/CronetTestRuleTest.java",
         "components/cronet/android/test/javatests/**/DiskStorageTest.java",
+        "components/cronet/android/test/javatests/**/RequestFinishedInfoTest.java",
+        "components/cronet/android/test/javatests/**/urlconnection/*.java",
         "components/cronet/android/test/javatests/**/Http2TestServer.java",
         "components/cronet/android/test/javatests/**/Test*.java",
         "components/cronet/android/test/javatests/**/MetricsTestUtil.java",
-        "components/cronet/android/test/javatests/**/RequestFinishedInfoTest.java",
-        "components/cronet/android/test/javatests/**/urlconnection/*.java",
     ],
     exclude_srcs: [
         // Todo(b/275345637): setup quic test server
@@ -206,6 +207,8 @@ android_library {
     manifest: "components/cronet/android/test/src/org/chromium/net/AndroidManifest.xml",
     srcs: [
         "base/test/android/javatests/**/UrlUtils.java",
+        // apihelpers aren't part of the public API but some tests make use of them
+        "components/cronet/android/api/**/UploadDataProviders.java",
         "components/cronet/android/test/**/CronetTestUtil.java",
         "components/cronet/android/test/**/NativeTestServer.java",
         "components/cronet/android/test/**/TestFilesInstaller.java",
