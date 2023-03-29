@@ -308,6 +308,30 @@
       },
       "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22a66b0a_bf009622",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-29T14:31:00Z",
+      "side": 1,
+      "message": "As long as the file is not on the list of API classes (https://cs.android.com/android/platform/superproject/+/master:external/cronet/Android.bp;l\u003d31?q\u003dHttpEngine%20f:Android.bp) we\u0027re safe. We\u0027re also safe in this particular case for a different reason:\n\n\u003e Misc other features. For example, if you use the @VisibleForTesting annotation from the support library, where you can express the intended visibility if the method had not required visibility for testing, then metalava will treat that method using the intended visibility instead when generating signature files and stubs.\n\nAs for using a method which is not a part of the official SDK - AFAIU this is controlled by `sdk_version` on the test target, and we\u0027re setting it up for \"free-for-all\".",
+      "parentUuid": "c12acfef_ecbef461",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "7578a84ae253aafc268b79b26aa04ffc22d7a555",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
