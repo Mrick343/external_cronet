@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16a297e3_18baa5f8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-30T16:24:28Z",
+      "side": 1,
+      "message": "I\u0027ve given a quick skim to Android.bp.swp, it looks reasonable but I don\u0027t think there is really a way to review this other than \"things build\".",
+      "revId": "f707789d31455a8434090c186cc06490593dd610",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
