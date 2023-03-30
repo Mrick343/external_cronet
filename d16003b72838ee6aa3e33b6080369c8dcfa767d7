@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e94d2b7_c1cc9b47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-30T10:04:59Z",
+      "side": 1,
+      "message": "LGTM. Left a couple of comment to better understand the reasoning behind some changes in semantics.",
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f604278f_063d82f3",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-30T10:04:59Z",
+      "side": 1,
+      "message": "To confirm my understanding: resetting g_test_data_dir to a different value is a behavior we must support in AOSP?",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
