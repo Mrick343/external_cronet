@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8166ef2c_433485d8",
+        "filename": "android/tools/gn2bp/gen_desc_json.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-03-30T04:03:37Z",
+      "side": 1,
+      "message": "will fix formatting in a follow up.",
+      "range": {
+        "startLine": 147,
+        "startChar": 2,
+        "endLine": 147,
+        "endChar": 102
+      },
+      "revId": "bfc0c0ecccda16410617b0e081fe49273b71a2ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
