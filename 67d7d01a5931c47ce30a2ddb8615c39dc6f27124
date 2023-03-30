@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c713147e_5d3533c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-30T09:45:16Z",
+      "side": 1,
+      "message": "Apparently this was deprecated some time ago https://bugs.chromium.org/p/chromium/issues/detail?id\u003d1366413.\n\nIt\u0027s surprising that Cronet didn\u0027t break on Android \u003c N.",
+      "revId": "67d7d01a5931c47ce30a2ddb8615c39dc6f27124",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
