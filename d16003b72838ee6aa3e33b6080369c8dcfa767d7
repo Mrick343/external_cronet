@@ -63,6 +63,30 @@
       },
       "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e100c03c_b59d0979",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-30T10:37:23Z",
+      "side": 1,
+      "message": "AFAIU, this change does something else: it\u0027s not allowing test files to be stored in something other than external directory, but allowing the test data dir to be changed multiple times at test runtime.\n\nBefore this behavior would have been caught by the CHECK and caused a crash, now it is silently allowed.\n\nSo, what I wanted to understand is: are there scenarios where this happens?",
+      "parentUuid": "abf0844f_c0cc3b06",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
