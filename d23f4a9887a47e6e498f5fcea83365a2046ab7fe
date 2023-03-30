@@ -16,6 +16,24 @@
       "message": "Why are we not using the executor created in the callback class?",
       "revId": "d23f4a9887a47e6e498f5fcea83365a2046ab7fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5dd5fc8_6509565c",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetStressTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-30T09:11:00Z",
+      "side": 1,
+      "message": "Because it\u0027d mean spawning 1000 threads as each callback has their own (https://cs.android.com/android/platform/superproject/+/master:packages/modules/Connectivity/Cronet/tests/cts/src/android/net/http/cts/util/TestUrlRequestCallback.java;l\u003d180?q\u003dTestUrlRequestCallback). Also, using a single executor is more representative of a real life use case and verifies that Cronet is capable of processing many concurrent requests using limited number of callback threads for large number of requests.\n\nI first used a small multi-thread pool but that doesn\u0027t work well with the internal checks of TestUrlRequestCallback which verify that all methods of the callback are executed on the same thread. It could be refactored but the single threaded executor works well enough.",
+      "parentUuid": "138bc9f6_d3cfda7a",
+      "revId": "d23f4a9887a47e6e498f5fcea83365a2046ab7fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
