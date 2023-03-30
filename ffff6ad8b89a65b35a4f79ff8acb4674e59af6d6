@@ -16,6 +16,24 @@
       "message": "\u003e The class itself is public so it\u0027s constructor should be public too.\n\nThis isn\u0027t necessarily true - the ability to use a class is different from the ability to create an object of the class. I don\u0027t think that we want random AOSP / Tethering module code to instantiate this class. If this is solely for testing purposes please mark the constructor as VisibleForTesting wit package-private non-testing visibility.",
       "revId": "ffff6ad8b89a65b35a4f79ff8acb4674e59af6d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a682d66_2273fe9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-30T08:33:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e26e1e1_220b3cf2",
+      "revId": "ffff6ad8b89a65b35a4f79ff8acb4674e59af6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
