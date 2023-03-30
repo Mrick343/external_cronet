@@ -111,6 +111,30 @@
       },
       "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7cf6fc8_7c2479ff",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-03-30T12:08:27Z",
+      "side": 1,
+      "message": "The call surface doesn\u0027t seem to be that big[1] and it seems limited to servers we own (unless there is some additional layer of indirection)?\n\nWhat I was trying to say is that unless we have a strong use case to that requires resetting the test file directory I think we should avoid doing that. IMHO, keeping that immutable is really good w.r.t. tests flakiness.\n\nAlso, changing the caller instead of the callee has the nice property of making these things upstreamable (we own the caller but not the callee).\n\n[1] https://cs.android.com/search?q\u003dcontent:InitAndroidTestPaths%20file:external%2Fcronet\u0026sq\u003d",
+      "parentUuid": "9176fc58_6aa1c5d9",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
