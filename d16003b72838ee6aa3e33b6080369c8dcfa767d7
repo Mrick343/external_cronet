@@ -39,6 +39,30 @@
       },
       "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abf0844f_c0cc3b06",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-03-30T10:21:48Z",
+      "side": 1,
+      "message": "Yes, chromium pushes files to an external/directory, the testrunner here pushes them to something else. We tried pushing the files to the same directory as chromium, but access to external storage is limited especially for recent versions of Android(we\u0027ll eventually face this problem in chromium when we start testing higher versions, 12+).",
+      "parentUuid": "f604278f_063d82f3",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
