@@ -135,6 +135,30 @@
       },
       "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c93e63fc_55d6cd2c",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-30T12:38:33Z",
+      "side": 1,
+      "message": "\u003e What I was trying to say is that unless we have a strong use case to that requires resetting the test file directory I think we should avoid doing that. IMHO, keeping that immutable is really good w.r.t. tests flakiness.\n\nI have the exact opposite opinion. In order to prevent tests from affecting each other each test case should use a custom isolated folder (we\u0027re not doing that now admittedly). This makes each case more hermetic and hopefully less flaky. \n\nI agree with you that ideally we shouldn\u0027t change the scope within a single test case. However, note that `test_support_android`\u0027s lifespan is larger than a single test case. Our test cases create one server each in their setUp() step. When this was a CHECK all those servers were forced to use the same test data path. There\u0027s no reason for that other than \"we don\u0027t need to change the path because it\u0027s fixed in Chromium\", as far as I can tell, and such limitation feels arbitrary.",
+      "parentUuid": "e7cf6fc8_7c2479ff",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
