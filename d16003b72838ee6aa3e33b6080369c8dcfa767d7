@@ -87,6 +87,30 @@
       },
       "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9176fc58_6aa1c5d9",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-03-30T10:58:18Z",
+      "side": 1,
+      "message": "Chidera did answer that question, although not explicitly.\n\nIn Chromium, the test infra places all files in the same folder. Because of that, parts of the test infra assume that the folder never needs to change, and hardcode this assumption. This also applies to callers of this method outside of the direct Cronet tests which point it at a nonexistent (in AOSP) folder.\n\nIn some cases we remedy the situation later (e.g. through the quic test server) by calling this method with a different parameter, the path to where the files actually are. With the old implementation this would be disallowed.\n\nThe alternative is doing a large scale refactor of all the places that call into this method, which seems like a subpar option given that setting the folder twice doesn\u0027t seem to do any harm.",
+      "parentUuid": "e100c03c_b59d0979",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d16003b72838ee6aa3e33b6080369c8dcfa767d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
