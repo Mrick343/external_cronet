@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -235,7 +236,7 @@ public final class CronetLoggerTest {
         ExperimentalHttpEngine.Builder builder =
                 (ExperimentalHttpEngine.Builder) mTestFramework.mBuilder;
         builder.setExperimentalOptions(experimentalOptions);
-        HttpEngine engine = builder.build();
+        HttpEngine engine = mTestFramework.startEngine();
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
@@ -251,6 +252,7 @@ public final class CronetLoggerTest {
 
     @Test
     @SmallTest
+    // @Ignore
     public void testEngineCreation() throws JSONException {
         JSONObject staleDns = new JSONObject()
                                       .put("enable", true)
@@ -286,7 +288,7 @@ public final class CronetLoggerTest {
         // builder.enableNetworkQualityEstimator(isNetworkQualityEstimatorEnabled);
         builder.setThreadPriority(threadPriority);
 
-        HttpEngine engine = builder.build();
+        HttpEngine engine = mTestFramework.startEngine();
         final CronetEngineBuilderInfo builderInfo = mTestLogger.getLastCronetEngineBuilderInfo();
         final CronetVersion version = mTestLogger.getLastCronetVersion();
         final CronetSource source = mTestLogger.getLastCronetSource();
