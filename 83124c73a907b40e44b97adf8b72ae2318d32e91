@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "781c146a_7f435fa1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-04-04T13:10:08Z",
+      "side": 1,
+      "message": "Would it be better to simply submit a new CL? The commit message is getting convoluted and in my eyes CL description starting with \"Revert\" ted to bring the codebase to a known good state which this one doesn\u0027t. How about something like\n\n\n```\nEnable FooTest\n\nThis is a reland of aosp/initialAttempt, crashes were addressed by aosp/fix.\n```",
+      "revId": "83124c73a907b40e44b97adf8b72ae2318d32e91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
