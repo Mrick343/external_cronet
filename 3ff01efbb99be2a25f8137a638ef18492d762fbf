@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f158363_c115d1ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-04-04T18:20:11Z",
+      "side": 1,
+      "message": "We can fix this forward. Just disabling those targets in tm-mainline-prod.",
+      "revId": "3ff01efbb99be2a25f8137a638ef18492d762fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
