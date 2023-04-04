@@ -186,7 +186,11 @@ filegroup {
     ],
     exclude_srcs: [
         // Todo(b/275345637): setup quic test server
+<<<<<<< PATCH SET (83124c Revert "Revert "[Cronet] Enable HttpURLConnectionTest"")
+        "components/cronet/android/test/javatests/**/urlconnection/QuicUploadTest.java",
+=======
         "components/cronet/android/test/javatests/**/urlconnection/CronetHttpURLConnectionTest.java",
+>>>>>>> BASE      (05d952 Merge "[Cronet] Start cronetEngine with testFramework in Cro)
 
         // Todo(b/275345611): fix failure
         "components/cronet/android/test/javatests/**/urlconnection/CronetInputStreamTest.java",
