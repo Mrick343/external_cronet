@@ -34,6 +34,24 @@
       "parentUuid": "3f158363_c115d1ae",
       "revId": "3ff01efbb99be2a25f8137a638ef18492d762fbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4855ff70_2e2db455",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-04-04T18:33:26Z",
+      "side": 1,
+      "message": "I\u0027ve sent out a CL(aosp/2522875) to fix this. This should disable the compilation of Cronet on tm-mainline. I am not sure why this was not caught during presubmit as I got a +2 on presubmits 😞",
+      "parentUuid": "08468ba0_b1e46e85",
+      "revId": "3ff01efbb99be2a25f8137a638ef18492d762fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
