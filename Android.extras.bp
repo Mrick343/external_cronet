@@ -133,7 +133,10 @@ filegroup {
 
 android_test_helper_app {
     name: "cronet_tester_app",
-    defaults: ["cronet_native_unittests_defaults"],
+    defaults: [
+        "cronet_native_unittests_defaults",
+        "CronetTestJavaDefaults",
+    ],
     manifest: "test_runner/AndroidManifest.xml",
     jni_libs: [
         "cronet_aml_components_cronet_android_cronet_unittests_android__library__testing",
@@ -146,7 +149,10 @@ android_test_helper_app {
 
 android_test_helper_app {
     name: "cronet_net_tester_app",
-    defaults: ["cronet_native_unittests_defaults"],
+    defaults: [
+        "cronet_native_unittests_defaults",
+        "CronetTestJavaDefaults",
+    ],
     manifest: "test_runner/AndroidNetManifest.xml",
     jni_libs: [
         "cronet_aml_net_net_unittests__library__testing",
