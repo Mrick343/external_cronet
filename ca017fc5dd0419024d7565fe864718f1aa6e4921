@@ -22,6 +22,208 @@
       },
       "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e26bed0e_c892debc",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "set -u should already effectively do that, since ${FOO} will fail if FOO is not set",
+      "parentUuid": "92c0a250_e498e959",
+      "range": {
+        "startLine": 19,
+        "startChar": 24,
+        "endLine": 19,
+        "endChar": 41
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6f4c695_af964b99",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "not sure what the purpose of this is",
+      "range": {
+        "startLine": 23,
+        "startChar": 13,
+        "endLine": 23,
+        "endChar": 23
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8652ab98_3dfa1076",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "I\u0027d recommend\n\negrep \u0027[.]gni?$\u0027\nor\negrep \u0027\\.(gn|gni)$\u0027\n\ncould also do something like\n\nif git ... | egrep -q \u0027[.]gni?$\u0027; then\n  foo\nelse\n  bar\nfi\n\n(also in general use single quotes unless you want some variable expansion)",
+      "range": {
+        "startLine": 23,
+        "startChar": 63,
+        "endLine": 23,
+        "endChar": 77
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b69e9f70_e4b3571f",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "*really* weird ordering here... normally you\u0027d write HEAD~..HEAD to generate a forward diff",
+      "range": {
+        "startLine": 23,
+        "startChar": 41,
+        "endLine": 23,
+        "endChar": 53
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb784496_f2a5910b",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "[[ ... ]] doesn\u0027t invoke a subprocess",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 4
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b36d3178_576f6f0a",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "[[",
+      "range": {
+        "startLine": 34,
+        "startChar": 3,
+        "endLine": 34,
+        "endChar": 4
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13d1ef46_480cb684",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "would be more correct to rename",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 65
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8f58a51_e8b39b2d",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "1 is spurious",
+      "range": {
+        "startLine": 48,
+        "startChar": 15,
+        "endLine": 48,
+        "endChar": 16
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67ae3be4_4c9f5353",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2023-04-05T21:31:34Z",
+      "side": 1,
+      "message": "in general recommend\n\nmain() {\n  ...rest of code...\n}\n\nmain \"$@\"; exit\n\nthen you can also use local for variables\n\nfurthermore bash will read the script and be immune to script modifications while the script is running",
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
