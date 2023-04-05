@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30ad019f_65d6c360",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-05T10:48:20Z",
+      "side": 1,
+      "message": "Looking at https://stackoverflow.com/a/67245016 it seems that this might go wrong in many ways?\n\nIt\u0027s definitely better than not having anything though, so let\u0027s see how this goes.",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 48
+      },
+      "revId": "bf6a885456945afc78ad7ef0e1ee99fbcbb27d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0efacc32_ff49540a",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-05T10:48:20Z",
+      "side": 1,
+      "message": "🥸",
+      "range": {
+        "startLine": 35,
+        "startChar": 58,
+        "endLine": 35,
+        "endChar": 59
+      },
+      "revId": "bf6a885456945afc78ad7ef0e1ee99fbcbb27d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afece98a_b1043d36",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-05T10:48:20Z",
+      "side": 1,
+      "message": "Would setting (and checking at the start of this script) an env variable work?\n\nI don\u0027t mind it as is, but if the above works it might be less esoteric.",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 31
+      },
+      "revId": "bf6a885456945afc78ad7ef0e1ee99fbcbb27d9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
