@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92c0a250_e498e959",
+        "filename": "android/tools/githooks/post-commit",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-05T18:50:46Z",
+      "side": 1,
+      "message": "we should probably add a check to make sure this is set / lunch was called.",
+      "range": {
+        "startLine": 19,
+        "startChar": 24,
+        "endLine": 19,
+        "endChar": 41
+      },
+      "revId": "ca017fc5dd0419024d7565fe864718f1aa6e4921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
