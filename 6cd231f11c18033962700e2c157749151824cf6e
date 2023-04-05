@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cabc3381_77e5b96a",
+        "filename": "android/tools/gn2bp/gen_desc_json.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-05T10:35:45Z",
+      "side": 1,
+      "message": "What does `-r` do? I tried googling it but I couldn\u0027t find anything (the only thing I can\u0027t think of is making the variable readonly/const).",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 10
+      },
+      "revId": "6cd231f11c18033962700e2c157749151824cf6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
