@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a51eac44_faa2e32f",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-05T21:52:53Z",
+      "side": 1,
+      "message": "nit: maybe name this \"gn_module_type\" or just \"gn_type\"",
+      "range": {
+        "startLine": 490,
+        "startChar": 9,
+        "endLine": 490,
+        "endChar": 26
+      },
+      "revId": "24e634f9127ea37b5b47671be7fe9385fe035571",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
