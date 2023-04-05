@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bbbe3b1_b42efce3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-05T10:26:26Z",
+      "side": 1,
+      "message": "P.S. Upstream I ended up #if\u0027ing the calls https://chromium-review.googlesource.com/c/chromium/src/+/4365859/19/net/dns/dns_hosts.cc",
+      "revId": "a128eebd17511910009a04faefbedb31c77cc997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
