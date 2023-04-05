@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4d82a29_25c09176",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-05T09:57:37Z",
+      "side": 1,
+      "message": "We might want to discuss this upstream? Assuming we will need this for the long term (I\u0027m not familiar with the nitty-gritty details of JNI in AOSP).",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 50
+      },
+      "revId": "abdba9a766eb6430f5c4cef00311f6eb54a852f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
