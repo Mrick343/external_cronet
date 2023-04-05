@@ -22,6 +22,30 @@
       },
       "revId": "abdba9a766eb6430f5c4cef00311f6eb54a852f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ec41602_a0116bbf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-05T16:43:30Z",
+      "side": 1,
+      "message": "(marking unresolved for visibility)\n\nAgreed, I we tried to revert it upstream at some point, but I don\u0027t know where that conversation ended up.",
+      "parentUuid": "d4d82a29_25c09176",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 50
+      },
+      "revId": "abdba9a766eb6430f5c4cef00311f6eb54a852f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
