@@ -36,6 +36,7 @@ java_test_host {
         "cronet_net_tester_app",
     ],
     data: [
+        ":cronet_net_tester_app",
         ":net_unittests_data",
     ],
     test_suites: [
@@ -82,4 +83,7 @@ java_test_host {
             enabled: false,
         },
     },
+    data: [
+        ":cronet_tester_app",
+    ],
 }
