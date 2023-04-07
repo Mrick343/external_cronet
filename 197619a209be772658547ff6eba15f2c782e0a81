@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c57a04b1_da7b68bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-07T18:45:40Z",
+      "side": 1,
+      "message": "Putting this here since I am OOO this week, and you have run into this problem before:\n\nWhen merging this, make sure that \"Parent 2\" references the Merged-As SHA of aosp/2529063 (or whatever change ends up last on that chain). Note that if aosp/2529063 is not a fast-forward merge, it\u0027s Merged-As SHA will differ from Patchset 1\u0027s SHA.",
+      "revId": "197619a209be772658547ff6eba15f2c782e0a81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
