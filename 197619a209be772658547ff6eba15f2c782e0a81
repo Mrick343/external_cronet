@@ -16,6 +16,24 @@
       "message": "Putting this here since I am OOO this week, and you have run into this problem before:\n\nWhen merging this, make sure that \"Parent 2\" references the Merged-As SHA of aosp/2529063 (or whatever change ends up last on that chain). Note that if aosp/2529063 is not a fast-forward merge, it\u0027s Merged-As SHA will differ from Patchset 1\u0027s SHA.",
       "revId": "197619a209be772658547ff6eba15f2c782e0a81",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e85dfab2_aa307e37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-11T12:44:52Z",
+      "side": 1,
+      "message": "aosp/2529063\u0027s Merged-As SHA is 8c5f24ab8bea4c520a0f0260da26ecea00b3e089. \"Parent 2\" is pointing to 8c5f24ab8bea4c520a0f0260da26ecea00b3e089 which is the same SHA. I think that\u0027s what you mean, so we should be good. I\u0027ll try and merge this now.",
+      "parentUuid": "c57a04b1_da7b68bb",
+      "revId": "197619a209be772658547ff6eba15f2c782e0a81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
