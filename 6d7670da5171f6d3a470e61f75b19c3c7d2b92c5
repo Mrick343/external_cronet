@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63eb8e0c_781094a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-11T10:52:39Z",
+      "side": 1,
+      "message": "P.S. I think that somehow we are not referencing components/cronet/android/test/javatests/src/org/chromium/net/FileUtils.java in our Android.bp?\n\nThere is a FileUtils class in net just for Cronet\u0027s sake. The one in base has been updated to make use of java.util.function.Function (which is unavailable on Android \u003c\u003d M). See https://crrev.com/c/4055100 and https://crbug.com/1393109.\n\nIdeall, we should be using that (which lives in the org.chromium.net package, hence the missing import) to maintain upstream-downstream consistency (this can be forward fixed).",
+      "revId": "6d7670da5171f6d3a470e61f75b19c3c7d2b92c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
