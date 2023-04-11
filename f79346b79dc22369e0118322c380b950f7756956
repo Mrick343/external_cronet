@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9343b9d6_2f24ae9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-11T10:53:36Z",
+      "side": 1,
+      "message": "See my comment in https://android-review.git.corp.google.com/c/platform/external/cronet/+/2528087/comments/63eb8e0c_781094a5.\n\nThis is only necessary because the previous CL started using base\u0027s FileUtils instead of net\u0027s.",
+      "revId": "f79346b79dc22369e0118322c380b950f7756956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
