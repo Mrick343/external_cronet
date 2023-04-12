@@ -1,0 +1,74 @@
+From 748a6312b393ecf7f888bfe7dff0c6eadaa2b7bb Mon Sep 17 00:00:00 2001
+From: Colin Cross <ccross@android.com>
+Date: Wed, 12 Apr 2023 21:12:55 +0000
+Subject: [PATCH] Support musl libc in scoped_file_linux.cc
+
+musl libc does not have a __close symbol.  Rather than assuming the name
+of a libc internal, use dlsym(RTLD_NEXT, "close") to find the overridden
+close symbol.
+
+This reapplies https://crrev.com/1129073 with a fix to disable cfi icall
+checks.
+
+Change-Id: Icdf356f2ccb95c3dfcd740841511ca94ff1ddea0
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4418528
+Reviewed-by: Lei Zhang <thestig@chromium.org>
+Commit-Queue: Colin Cross <ccross@google.com>
+Cr-Commit-Position: refs/heads/main@{#1129485}
+(cherry picked from commit 7db9de3166ef46caf47ecbcd683e46c268711c76)
+---
+ base/files/scoped_file_linux.cc | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/base/files/scoped_file_linux.cc b/base/files/scoped_file_linux.cc
+index e72b5b7248..61ee19f9c8 100644
+--- a/base/files/scoped_file_linux.cc
++++ b/base/files/scoped_file_linux.cc
+@@ -4,6 +4,8 @@
+ 
+ #include "base/files/scoped_file.h"
+ 
++#include <dlfcn.h>
++
+ #include <algorithm>
+ #include <array>
+ #include <atomic>
+@@ -79,14 +81,32 @@ bool IsFDOwned(int fd) {
+ 
+ }  // namespace base
+ 
+-extern "C" {
++using LibcCloseFuncPtr = int (*)(int);
++
++// Load the libc close symbol to forward to from the close wrapper.
++LibcCloseFuncPtr LoadCloseSymbol() {
++#if defined(THREAD_SANITIZER)
++  // If TSAN is enabled use __interceptor___close first to make sure the TSAN
++  // wrapper gets called.
++  return reinterpret_cast<LibcCloseFuncPtr>(
++      dlsym(RTLD_DEFAULT, "__interceptor___close"));
++#else
++  return reinterpret_cast<LibcCloseFuncPtr>(dlsym(RTLD_NEXT, "close"));
++#endif
++}
+ 
+-int __close(int);
++extern "C" {
+ 
++NO_SANITIZE("cfi-icall")
+ __attribute__((visibility("default"), noinline)) int close(int fd) {
++  static LibcCloseFuncPtr libc_close = LoadCloseSymbol();
+   if (base::IsFDOwned(fd) && g_is_ownership_enforced)
+     CrashOnFdOwnershipViolation();
+-  return __close(fd);
++  if (libc_close == nullptr) {
++    RAW_LOG(ERROR, "close symbol missing\n");
++    base::ImmediateCrash();
++  }
++  return libc_close(fd);
+ }
+ 
+ }  // extern "C"
+-- 
+2.40.0.634.g4ca3ef3211-goog
+
