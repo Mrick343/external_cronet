@@ -16,6 +16,24 @@
       "message": "Does this do any harm?",
       "revId": "dd90d69a4016de549dc113caa72d5e114379b0f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b67d4b0_769637f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-12T10:21:13Z",
+      "side": 1,
+      "message": "Nope. This is just a Chromium\u0027s test runner thing (IIRC it\u0027s mostly additional information to perform better sharding or something like that) and it has already been dropped upstream https://chromium-review.googlesource.com/c/chromium/src/+/4214772.",
+      "parentUuid": "719a4569_08129090",
+      "revId": "dd90d69a4016de549dc113caa72d5e114379b0f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
