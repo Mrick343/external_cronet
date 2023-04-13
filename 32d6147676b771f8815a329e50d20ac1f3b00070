@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70622b7f_6e4518b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-13T11:46:35Z",
+      "side": 1,
+      "message": "Can you also update https://cs.android.com/android/platform/superproject/+/master:external/cronet/third_party/libevent/BUILD.gn? Even though it\u0027s useless, I think that what we usually do?",
+      "revId": "32d6147676b771f8815a329e50d20ac1f3b00070",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
