@@ -16,6 +16,24 @@
       "message": "Why were those lines commented in the first place? The bug does not explain that. Other than that LGTM",
       "revId": "08fdd7119cb97a2f66911901dcae61729db30a5f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b935b172_51683596",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-04-13T13:00:14Z",
+      "side": 1,
+      "message": "Unsolved",
+      "parentUuid": "691255c6_a9672fbd",
+      "revId": "08fdd7119cb97a2f66911901dcae61729db30a5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
