@@ -6,8 +6,8 @@ package org.chromium.net.impl;
 
 import android.content.Context;
 
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.IHttpEngineBuilder;
+import android.net.http.apihelpers.ExperimentalHttpEngine;
+import android.net.http.apihelpers.IHttpEngineBuilder;
 
 /**
  * Implementation of {@link IHttpEngineBuilder} that builds native Cronet engine.

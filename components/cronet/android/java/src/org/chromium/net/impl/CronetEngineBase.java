@@ -7,11 +7,11 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
 import android.net.http.BidirectionalStream;
-import android.net.http.ExperimentalBidirectionalStream;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.ExperimentalUrlRequest;
+import android.net.http.apihelpers.ExperimentalBidirectionalStream;
+import android.net.http.apihelpers.ExperimentalHttpEngine;
+import android.net.http.apihelpers.ExperimentalUrlRequest;
 import android.net.http.HeaderBlock;
-import android.net.http.RequestFinishedInfo;
+import android.net.http.apihelpers.RequestFinishedInfo;
 import android.net.http.UrlRequest;
 
 import java.lang.annotation.Retention;
