@@ -34,6 +34,24 @@
       "parentUuid": "3afd76cf_14e95186",
       "revId": "cd160e44f34406e9a3ecc041f42a18bb79a8fe70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c4d69ba_8649775e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-17T11:50:58Z",
+      "side": 1,
+      "message": "It\u0027s only to keep the codebase the same upstream and downstream and avoid possible merge conflicts on new imports.\n\nI would merge there as is with a comment explaining that this is needed downstream (maybe linking to this CL?).",
+      "parentUuid": "948f9f35_b5963863",
+      "revId": "cd160e44f34406e9a3ecc041f42a18bb79a8fe70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
