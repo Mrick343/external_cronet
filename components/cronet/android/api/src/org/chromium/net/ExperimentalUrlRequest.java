@@ -1,7 +1,7 @@
 // Copyright 2016 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-package android.net.http;
+package org.chromium.net;
 
 import java.util.concurrent.Executor;
 
@@ -39,6 +39,21 @@ public abstract class ExperimentalUrlRequest extends UrlRequest {
          * @return the builder to facilitate chaining.
          */
         public Builder disableConnectionMigration() {
+            return this;
+        }
+
+        /**
+         * Binds the request to the specified network handle. Cronet will send this request only
+         * using the network associated to this handle. If this network disconnects the request will
+         * fail, the exact error will depend on the stage of request processing when the network
+         * disconnects. Network handles can be obtained through {@code Network#getNetworkHandle}.
+         * Only available starting from Android Marshmallow.
+         *
+         * @param networkHandle the network handle to bind the request to. Specify {@link
+         * ExperimentalCronetEngine#UNBIND_NETWORK_HANDLE} to unbind.
+         * @return the builder to facilitate chaining.
+         */
+        public Builder bindToNetwork(long networkHandle) {
             return this;
         }
 
@@ -81,7 +96,7 @@ public abstract class ExperimentalUrlRequest extends UrlRequest {
         public abstract Builder addHeader(String header, String value);
 
         @Override
-        public abstract Builder setCacheDisabled(boolean disableCache);
+        public abstract Builder disableCache();
 
         @Override
         public abstract Builder setPriority(int priority);
@@ -91,7 +106,7 @@ public abstract class ExperimentalUrlRequest extends UrlRequest {
                 UploadDataProvider uploadDataProvider, Executor executor);
 
         @Override
-        public abstract Builder setDirectExecutorAllowed(boolean allowDirectExecutor);
+        public abstract Builder allowDirectExecutor();
 
         @Override
         public abstract ExperimentalUrlRequest build();

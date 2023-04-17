@@ -8,6 +8,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Network;
 
+import org.chromium.net.ExperimentalCronetEngine;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -516,8 +518,8 @@ public abstract class HttpEngine {
                 Class<?> clazz = context.getClassLoader().loadClass(
                         "android.net.connectivity.org.chromium.net.impl.NativeCronetEngineBuilderImpl");
 
-                return (IHttpEngineBuilder) clazz.getConstructor(Context.class).newInstance(
-                        context);
+                return new AndroidHttpEngineBuilderWrapper((ExperimentalCronetEngine.Builder)
+                        clazz.getConstructor(Context.class).newInstance(context));
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }

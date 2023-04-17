@@ -70,7 +70,7 @@ public abstract class IHttpEngineBuilder {
 
     public abstract String getDefaultUserAgent();
 
-    public abstract ExperimentalHttpEngine build();
+    public abstract HttpEngine build();
 
     /**
      * Returns the set of configuration options the builder is able to support natively. This is
