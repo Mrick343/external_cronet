@@ -5,9 +5,8 @@
 package org.chromium.net;
 
 import android.net.Network;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.HttpEngine;
-import android.net.http.UrlRequest;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.UrlRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +62,7 @@ public class CronetTestUtil {
     public static class NetworkThreadTestConnector {
         private final CronetUrlRequestContext mRequestContext;
 
-        public NetworkThreadTestConnector(HttpEngine cronetEngine) {
+        public NetworkThreadTestConnector(CronetEngine cronetEngine) {
             mRequestContext = (CronetUrlRequestContext) cronetEngine;
             nativePrepareNetworkThread(mRequestContext.getUrlRequestContextAdapter());
         }
@@ -82,19 +81,19 @@ public class CronetTestUtil {
     }
 
     public static boolean doesURLRequestContextExistForTesting(
-            HttpEngine engine, Network network) {
+            CronetEngine engine, Network network) {
         CronetUrlRequestContext context = (CronetUrlRequestContext) engine;
         return nativeURLRequestContextExistsForTesting(
                 context.getUrlRequestContextAdapter(), network.getNetworkHandle());
     }
 
     public static void setMockCertVerifierForTesting(
-            ExperimentalHttpEngine.Builder builder, long mockCertVerifier) {
+             ExperimentalCronetEngine.Builder builder, long mockCertVerifier) {
         getCronetEngineBuilderImpl(builder).setMockCertVerifierForTesting(mockCertVerifier);
     }
 
     public static CronetEngineBuilderImpl getCronetEngineBuilderImpl(
-            ExperimentalHttpEngine.Builder builder) {
+            ExperimentalCronetEngine.Builder builder) {
         return (CronetEngineBuilderImpl) builder.getBuilderDelegate();
     }
 

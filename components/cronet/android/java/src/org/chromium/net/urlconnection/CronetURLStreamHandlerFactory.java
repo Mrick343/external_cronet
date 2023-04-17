@@ -4,7 +4,7 @@
 
 package org.chromium.net.urlconnection;
 
-import android.net.http.ExperimentalHttpEngine;
+import org.chromium.net.ExperimentalCronetEngine;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -18,7 +18,7 @@ import java.net.URLStreamHandlerFactory;
  * Cronet does not use certain HTTP features provided via the system:
  * <ul>
  * <li>the HTTP cache installed via
- *     {@link android.net.http.HttpResponseCache#install}</li>
+ *     {@link org.chromium.net.HttpResponseCache#install}</li>
  * <li>the HTTP authentication method installed via
  *     {@link java.net.Authenticator#setDefault}</li>
  * <li>the HTTP cookie storage installed via {@link java.net.CookieHandler#setDefault}</li>
@@ -40,7 +40,7 @@ import java.net.URLStreamHandlerFactory;
  * {@hide}
  */
 public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
-    private final ExperimentalHttpEngine mCronetEngine;
+    private final ExperimentalCronetEngine mCronetEngine;
 
     /**
      * Creates a {@link CronetURLStreamHandlerFactory} to handle HTTP and HTTPS
@@ -48,7 +48,7 @@ public class CronetURLStreamHandlerFactory implements URLStreamHandlerFactory {
      * @param cronetEngine the {@link CronetEngine} to be used.
      * @throws NullPointerException if config is null.
      */
-    public CronetURLStreamHandlerFactory(ExperimentalHttpEngine cronetEngine) {
+    public CronetURLStreamHandlerFactory(ExperimentalCronetEngine cronetEngine) {
         if (cronetEngine == null) {
             throw new NullPointerException("CronetEngine is null.");
         }
