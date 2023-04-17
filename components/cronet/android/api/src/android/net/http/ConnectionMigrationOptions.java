@@ -7,6 +7,8 @@ package android.net.http;
 import android.annotation.IntDef;
 import android.annotation.SuppressLint;
 
+import org.chromium.net.Test;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -34,7 +36,7 @@ import java.time.Duration;
  */
 // SuppressLint to be consistent with other cronet code
 @SuppressLint("UserHandleName")
-public class ConnectionMigrationOptions {
+public class ConnectionMigrationOptions extends Test {
     private final @MigrationOptionState int mEnableDefaultNetworkMigration;
     private final @MigrationOptionState int mEnablePathDegradationMigration;
     @Nullable
