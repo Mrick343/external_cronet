@@ -34,6 +34,24 @@
       "parentUuid": "af685fe2_5dae5bca",
       "revId": "dc414db662ca1e11a52fae752024c790b1f34f60",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61cb34da_019aa24d",
+        "filename": "patches/0026-Support-musl-libc-in-scoped_file_linux.cc.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-17T15:09:05Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "7aff0b68_f5edb9c4",
+      "revId": "dc414db662ca1e11a52fae752024c790b1f34f60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
