@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3193e011_aa02a0f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1288034
+      },
+      "writtenOn": "2023-04-17T08:05:13Z",
+      "side": 1,
+      "message": "LGTM but I don\u0027t know much about the cc_genrules so someone else should probably have a look too",
+      "revId": "b0391078bbac5ae1b747e8f098a05dd7eed7cb20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
