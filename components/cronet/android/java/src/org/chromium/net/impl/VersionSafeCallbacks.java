@@ -4,20 +4,19 @@
 
 package org.chromium.net.impl;
 
-import android.net.http.BidirectionalStream;
-import android.net.http.HeaderBlock;
-import android.net.http.HttpException;
-import android.net.http.NetworkQualityRttListener;
-import android.net.http.NetworkQualityThroughputListener;
-import android.net.http.RequestFinishedInfo;
-import android.net.http.UploadDataProvider;
-import android.net.http.UploadDataSink;
-import android.net.http.UrlRequest;
-import android.net.http.UrlResponseInfo;
+import org.chromium.net.BidirectionalStream;
+import org.chromium.net.UrlResponseInfo.HeaderBlock;
+import org.chromium.net.CronetException;
+import org.chromium.net.NetworkQualityRttListener;
+import org.chromium.net.NetworkQualityThroughputListener;
+import org.chromium.net.RequestFinishedInfo;
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UploadDataSink;
+import org.chromium.net.UrlRequest;
+import org.chromium.net.UrlResponseInfo;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.time.Instant;
 import java.util.concurrent.Executor;
 
 /**
@@ -34,7 +33,7 @@ public class VersionSafeCallbacks {
     /**
      * Wrap a {@link UrlRequest.Callback} in a version safe manner.
      */
-    public static final class UrlRequestCallback implements UrlRequest.Callback {
+    public static final class UrlRequestCallback extends UrlRequest.Callback {
         private final UrlRequest.Callback mWrappedCallback;
 
         public UrlRequestCallback(UrlRequest.Callback callback) {
@@ -64,7 +63,7 @@ public class VersionSafeCallbacks {
         }
 
         @Override
-        public void onFailed(UrlRequest request, UrlResponseInfo info, HttpException error) {
+        public void onFailed(UrlRequest request, UrlResponseInfo info, CronetException error) {
             mWrappedCallback.onFailed(request, info, error);
         }
 
@@ -77,7 +76,7 @@ public class VersionSafeCallbacks {
     /**
      * Wrap a {@link UrlRequest.StatusListener} in a version safe manner.
      */
-    public static final class UrlRequestStatusListener implements UrlRequest.StatusListener {
+    public static final class UrlRequestStatusListener extends UrlRequest.StatusListener {
         private final UrlRequest.StatusListener mWrappedListener;
 
         public UrlRequestStatusListener(UrlRequest.StatusListener listener) {
@@ -93,7 +92,7 @@ public class VersionSafeCallbacks {
     /**
      * Wrap a {@link BidirectionalStream.Callback} in a version safe manner.
      */
-    public static final class BidirectionalStreamCallback implements BidirectionalStream.Callback {
+    public static final class BidirectionalStreamCallback extends BidirectionalStream.Callback {
         private final BidirectionalStream.Callback mWrappedCallback;
 
         public BidirectionalStreamCallback(BidirectionalStream.Callback callback) {
@@ -135,7 +134,7 @@ public class VersionSafeCallbacks {
 
         @Override
         public void onFailed(
-                BidirectionalStream stream, UrlResponseInfo info, HttpException error) {
+                BidirectionalStream stream, UrlResponseInfo info, CronetException error) {
             mWrappedCallback.onFailed(stream, info, error);
         }
 
@@ -212,8 +211,8 @@ public class VersionSafeCallbacks {
         }
 
         @Override
-        public void onRttObservation(int rttMs, Instant observationInstant, int source) {
-            mWrappedListener.onRttObservation(rttMs, observationInstant, source);
+        public void onRttObservation(int rttMs, long whenMs, int source) {
+            mWrappedListener.onRttObservation(rttMs, whenMs, source);
         }
 
         @Override
@@ -250,8 +249,8 @@ public class VersionSafeCallbacks {
         }
 
         @Override
-        public void onThroughputObservation(int throughputKbps, Instant observationInstant, int source) {
-            mWrappedListener.onThroughputObservation(throughputKbps, observationInstant, source);
+        public void onThroughputObservation(int throughputKbps, long whenMs, int source) {
+            mWrappedListener.onThroughputObservation(throughputKbps, whenMs, source);
         }
 
         @Override
