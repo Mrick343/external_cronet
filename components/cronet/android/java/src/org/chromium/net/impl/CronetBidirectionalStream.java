@@ -16,11 +16,10 @@ import android.net.http.BidirectionalStream;
 import android.net.http.CallbackException;
 import android.net.http.HeaderBlock;
 import android.net.http.HttpException;
-import android.net.http.ExperimentalBidirectionalStream;
+import android.net.http.apihelpers.ExperimentalBidirectionalStream;
 import android.net.http.NetworkException;
-import android.net.http.RequestFinishedInfo;
+import android.net.http.apihelpers.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
-import android.net.http.UrlResponseInfo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

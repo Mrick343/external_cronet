@@ -7,6 +7,7 @@ package android.net.http;
 import android.annotation.IntDef;
 import android.annotation.SuppressLint;
 import android.net.Network;
+import android.net.http.apihelpers.RequestFinishedInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +15,6 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -27,7 +26,8 @@ import java.util.concurrent.Executor;
  */
 public abstract class UrlRequest {
 
-    UrlRequest() {}
+    /** @hide **/
+    public UrlRequest() {}
 
     /**
      * Lowest request priority. Passed to {@link Builder#setPriority}.
@@ -61,7 +61,8 @@ public abstract class UrlRequest {
     @SuppressLint("StaticFinalBuilder")
     public abstract static class Builder {
 
-        Builder() {}
+        /** @hide **/
+        public Builder() {}
 
         /**
          * Sets the HTTP method verb to use for this request.

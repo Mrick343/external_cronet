@@ -12,7 +12,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.VisibleForTesting;
 
 import android.net.http.HttpEngine;
-import android.net.http.IHttpEngineBuilder;
+import android.net.http.apihelpers.IHttpEngineBuilder;
 
 import java.io.File;
 import java.lang.annotation.Retention;

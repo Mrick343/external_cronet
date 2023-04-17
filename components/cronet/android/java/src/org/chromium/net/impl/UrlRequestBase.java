@@ -5,7 +5,7 @@ package org.chromium.net.impl;
 
 import androidx.annotation.IntDef;
 
-import android.net.http.ExperimentalUrlRequest;
+import android.net.http.apihelpers.ExperimentalUrlRequest;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;
 
