@@ -3,17 +3,16 @@
 // found in the LICENSE file.
 package org.chromium.net.impl;
 
-import static android.net.http.ExperimentalHttpEngine.UNBIND_NETWORK_HANDLE;
+import static android.net.http.apihelpers.ExperimentalHttpEngine.UNBIND_NETWORK_HANDLE;
 import static android.net.http.UrlRequest.REQUEST_PRIORITY_MEDIUM;
 
 import android.annotation.SuppressLint;
 import android.net.Network;
 import android.util.Log;
-import android.util.Pair;
 
 import android.net.http.HttpEngine;
-import android.net.http.ExperimentalUrlRequest;
-import android.net.http.RequestFinishedInfo;
+import android.net.http.apihelpers.ExperimentalUrlRequest;
+import android.net.http.apihelpers.RequestFinishedInfo;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;
 

@@ -6,6 +6,8 @@ package android.net.http;
 
 import android.annotation.IntDef;
 import android.annotation.SuppressLint;
+import android.net.http.apihelpers.ExperimentalHttpEngine;
+import android.net.http.apihelpers.RequestFinishedInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +15,6 @@ import androidx.annotation.Nullable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**

@@ -1,7 +1,8 @@
 // Copyright 2016 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-package android.net.http;
+
+package android.net.http.apihelpers;
 
 import static android.net.http.ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED;
 import static android.net.http.ConnectionMigrationOptions.MIGRATION_OPTION_UNSPECIFIED;
@@ -9,7 +10,13 @@ import static android.net.http.DnsOptions.DNS_OPTION_ENABLED;
 import static android.net.http.DnsOptions.DNS_OPTION_UNSPECIFIED;
 
 import android.content.Context;
+import android.net.http.BidirectionalStream;
+import android.net.http.ConnectionMigrationOptions;
+import android.net.http.DnsOptions;
 import android.net.http.DnsOptions.StaleDnsOptions;
+import android.net.http.HttpEngine;
+import android.net.http.QuicOptions;
+import android.net.http.UrlRequest;
 
 import androidx.annotation.VisibleForTesting;
 
