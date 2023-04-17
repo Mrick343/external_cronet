@@ -8,7 +8,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
 import android.net.http.HttpException;
-import android.net.http.RequestFinishedInfo;
+import android.net.http.apihelpers.RequestFinishedInfo;
 import android.net.http.UrlResponseInfo;
 
 import java.lang.annotation.Retention;

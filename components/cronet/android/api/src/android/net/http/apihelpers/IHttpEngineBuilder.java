@@ -1,7 +1,13 @@
 // Copyright 2016 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-package android.net.http;
+
+package android.net.http.apihelpers;
+
+import android.net.http.ConnectionMigrationOptions;
+import android.net.http.DnsOptions;
+import android.net.http.HttpEngine;
+import android.net.http.QuicOptions;
 
 import java.time.Instant;
 import java.util.Collections;

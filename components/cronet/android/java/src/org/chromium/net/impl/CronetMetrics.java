@@ -7,7 +7,7 @@ package org.chromium.net.impl;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import android.net.http.RequestFinishedInfo;
+import android.net.http.apihelpers.RequestFinishedInfo;
 
 import java.time.Instant;
 

@@ -10,7 +10,7 @@ import android.os.Build;
 
 import android.net.http.BidirectionalStream;
 import android.net.http.HttpEngine;
-import android.net.http.ExperimentalBidirectionalStream;
+import android.net.http.apihelpers.ExperimentalBidirectionalStream;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
