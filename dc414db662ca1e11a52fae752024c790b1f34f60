@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af685fe2_5dae5bca",
+        "filename": "patches/0026-Support-musl-libc-in-scoped_file_linux.cc.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-17T11:57:51Z",
+      "side": 1,
+      "message": "You can drop the .patch file as this doesn\u0027t affect BUILD.gn files, as these are the only changes we really need to keep track of for the sake of gn to bp (I can also do that myself in a followup CL).",
+      "revId": "dc414db662ca1e11a52fae752024c790b1f34f60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
