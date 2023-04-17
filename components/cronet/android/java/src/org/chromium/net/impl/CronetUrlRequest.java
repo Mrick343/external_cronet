@@ -23,7 +23,7 @@ import android.net.http.HttpException;
 import org.chromium.net.Idempotency;
 import android.net.http.InlineExecutionProhibitedException;
 import android.net.http.NetworkException;
-import android.net.http.RequestFinishedInfo;
+import android.net.http.apihelpers.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
 import android.net.http.UploadDataProvider;
 import android.net.http.UrlRequest;

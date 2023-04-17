@@ -11,7 +11,7 @@ import android.util.Pair;
 
 import android.net.http.HttpEngine;
 import android.net.http.HttpException;
-import android.net.http.ExperimentalUrlRequest;
+import android.net.http.apihelpers.ExperimentalUrlRequest;
 import android.net.http.UrlRequest;
 import android.net.http.UrlResponseInfo;
 

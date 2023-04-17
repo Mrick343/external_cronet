@@ -4,7 +4,7 @@
 
 package org.chromium.net.urlconnection;
 
-import android.net.http.ExperimentalHttpEngine;
+import android.net.http.apihelpers.ExperimentalHttpEngine;
 
 import androidx.annotation.VisibleForTesting;
 

@@ -7,6 +7,10 @@ package android.net.http;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Network;
+import android.net.http.apihelpers.IHttpEngineBuilder;
+import android.net.http.apihelpers.NetworkQualityRttListener;
+import android.net.http.apihelpers.NetworkQualityThroughputListener;
+import android.net.http.apihelpers.RequestFinishedInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +19,6 @@ import com.android.internal.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
@@ -135,7 +138,7 @@ public abstract class HttpEngine {
         /**
          * Reference to the actual builder implementation. {@hide exclude from JavaDoc}.
          */
-        protected final IHttpEngineBuilder mBuilderDelegate;
+        public final IHttpEngineBuilder mBuilderDelegate;
 
         /**
          * Constructs a {@link Builder} object that facilitates creating a
@@ -159,7 +162,7 @@ public abstract class HttpEngine {
          *
          * {@hide}
          */
-        Builder(@NonNull IHttpEngineBuilder builderDelegate) {
+        public Builder(@NonNull IHttpEngineBuilder builderDelegate) {
             mBuilderDelegate = builderDelegate;
         }
 
