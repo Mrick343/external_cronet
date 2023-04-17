@@ -6,7 +6,7 @@ package org.chromium.net.impl;
 
 import static java.lang.Math.max;
 
-import android.net.http.HeaderBlock;
+import org.chromium.net.HeaderBlock;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -18,15 +18,15 @@ import org.chromium.base.annotations.JNIAdditionalImport;
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeClassQualifiedName;
 import org.chromium.base.annotations.NativeMethods;
-import android.net.http.CallbackException;
-import android.net.http.HttpException;
+import org.chromium.net.CallbackException;
+import org.chromium.net.CronetException;
 import org.chromium.net.Idempotency;
-import android.net.http.InlineExecutionProhibitedException;
-import android.net.http.NetworkException;
-import android.net.http.RequestFinishedInfo;
+import org.chromium.net.InlineExecutionProhibitedException;
+import org.chromium.net.NetworkException;
+import org.chromium.net.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
-import android.net.http.UploadDataProvider;
-import android.net.http.UrlRequest;
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UrlRequest;
 import org.chromium.net.impl.CronetLogger.CronetTrafficInfo;
 
 import java.nio.ByteBuffer;
@@ -110,7 +110,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
     // UrlRequest.Callback's and RequestFinishedInfo.Listener's executors after the last update.
     @RequestFinishedInfoImpl.FinishedReason
     private int mFinishedReason;
-    private HttpException mException;
+    private CronetException mException;
     private CronetMetrics mMetrics;
     private boolean mQuicConnectionMigrationAttempted;
     private boolean mQuicConnectionMigrationSuccessful;
@@ -604,7 +604,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
     /**
      * Fails the request with an exception on any thread.
      */
-    private void failWithException(final HttpException exception) {
+    private void failWithException(final CronetException exception) {
         synchronized (mUrlRequestAdapterLock) {
             if (isDoneLocked()) {
                 return;

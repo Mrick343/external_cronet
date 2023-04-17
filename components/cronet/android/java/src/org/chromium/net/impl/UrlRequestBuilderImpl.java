@@ -3,19 +3,19 @@
 // found in the LICENSE file.
 package org.chromium.net.impl;
 
-import static android.net.http.ExperimentalHttpEngine.UNBIND_NETWORK_HANDLE;
-import static android.net.http.UrlRequest.REQUEST_PRIORITY_MEDIUM;
+import static org.chromium.net.ExperimentalCronetEngine.UNBIND_NETWORK_HANDLE;
+import static org.chromium.net.UrlRequest.REQUEST_PRIORITY_MEDIUM;
 
 import android.annotation.SuppressLint;
 import android.net.Network;
 import android.util.Log;
 import android.util.Pair;
 
-import android.net.http.HttpEngine;
-import android.net.http.ExperimentalUrlRequest;
-import android.net.http.RequestFinishedInfo;
-import android.net.http.UploadDataProvider;
-import android.net.http.UrlRequest;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.ExperimentalUrlRequest;
+import org.chromium.net.RequestFinishedInfo;
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UrlRequest;
 
 import androidx.annotation.Nullable;
 
@@ -82,7 +82,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
      * @param url URL for the generated requests.
      * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
-     * @param cronetEngine {@link HttpEngine} used to execute this request.
+     * @param cronetEngine {@link CronetEngine} used to execute this request.
      */
     UrlRequestBuilderImpl(String url, UrlRequest.Callback callback, Executor executor,
             CronetEngineBase cronetEngine) {

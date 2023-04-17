@@ -6,13 +6,13 @@ package org.chromium.net.impl;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
-import android.net.http.BidirectionalStream;
-import android.net.http.ExperimentalBidirectionalStream;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.ExperimentalUrlRequest;
-import android.net.http.HeaderBlock;
-import android.net.http.RequestFinishedInfo;
-import android.net.http.UrlRequest;
+import org.chromium.net.BidirectionalStream;
+import org.chromium.net.ExperimentalBidirectionalStream;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.ExperimentalUrlRequest;
+import org.chromium.net.UrlResponseInfo.HeaderBlock;
+import org.chromium.net.RequestFinishedInfo;
+import org.chromium.net.UrlRequest;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 /**
  * Base class of {@link CronetUrlRequestContext}.
  */
-public abstract class CronetEngineBase extends ExperimentalHttpEngine {
+public abstract class CronetEngineBase extends ExperimentalCronetEngine {
     /*
      * Network handle representing the default network. To be used when a network has not been
      * explicitly set.

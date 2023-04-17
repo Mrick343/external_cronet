@@ -5,8 +5,8 @@
 package org.chromium.net.impl;
 
 import android.net.Network;
-import android.net.http.ApiVersion;
-import android.net.http.HeaderBlock;
+import org.chromium.net.ApiVersion;
+import org.chromium.net.UrlResponseInfo.HeaderBlock;
 import android.os.ConditionVariable;
 import android.os.Process;
 
@@ -20,16 +20,16 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeClassQualifiedName;
 import org.chromium.base.annotations.NativeMethods;
 import org.chromium.build.annotations.UsedByReflection;
-import android.net.http.BidirectionalStream;
-import android.net.http.HttpEngine;
+import org.chromium.net.BidirectionalStream;
+import org.chromium.net.CronetEngine;
 import org.chromium.net.EffectiveConnectionType;
-import android.net.http.ExperimentalBidirectionalStream;
-import android.net.http.NetworkQualityRttListener;
-import android.net.http.NetworkQualityThroughputListener;
-import android.net.http.RequestFinishedInfo;
+import org.chromium.net.ExperimentalBidirectionalStream;
+import org.chromium.net.NetworkQualityRttListener;
+import org.chromium.net.NetworkQualityThroughputListener;
+import org.chromium.net.RequestFinishedInfo;
 import org.chromium.net.RequestContextConfigOptions;
 import org.chromium.net.RttThroughputValues;
-import android.net.http.UrlRequest;
+import org.chromium.net.UrlRequest;
 import org.chromium.net.impl.CronetLogger.CronetEngineBuilderInfo;
 import org.chromium.net.impl.CronetLogger.CronetSource;
 import org.chromium.net.impl.CronetLogger.CronetVersion;
@@ -244,7 +244,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     static CronetSource getCronetSource() {
-        ClassLoader apiClassLoader = HttpEngine.class.getClassLoader();
+        ClassLoader apiClassLoader = CronetEngine.class.getClassLoader();
         ClassLoader implClassLoader = CronetUrlRequest.class.getClassLoader();
         return apiClassLoader.equals(implClassLoader) ? CronetSource.CRONET_SOURCE_STATICALLY_LINKED
                                                       : CronetSource.CRONET_SOURCE_PLAY_SERVICES;
