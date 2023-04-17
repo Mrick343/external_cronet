@@ -16,6 +16,23 @@
       "message": "LGTM but I don\u0027t know much about the cc_genrules so someone else should probably have a look too",
       "revId": "b0391078bbac5ae1b747e8f098a05dd7eed7cb20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c24b9524_1d5b8e12",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-04-17T08:06:46Z",
+      "side": 1,
+      "message": "p",
+      "revId": "b0391078bbac5ae1b747e8f098a05dd7eed7cb20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
