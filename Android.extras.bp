@@ -23,7 +23,7 @@ license {
         "SPDX-license-identifier-BSD-3-Clause",
         "SPDX-license-identifier-BSD-Source-Code",
         "SPDX-license-identifier-BSD-2-Clause",
-        "SPDX-license-identifier-BSD-4-Clause",
+        "SPDX-license-identifier-BSD-4-Clausetest_lib",
         "SPDX-license-identifier-BSL-1.0",
         "SPDX-license-identifier-ICU",
         "SPDX-license-identifier-ISC",
@@ -53,6 +53,20 @@ java_library {
         "androidx.annotation_annotation",
         "framework-annotations-lib",
         "framework-connectivity.stubs.module_lib",
+    ],
+    static_libs: [
+        "test_lib",
+    ],
+    sdk_version: "module_current",
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+}
+
+java_library {
+    name: "test_lib",
+    srcs: [
+        "components/cronet/android/api/src/org/chromium/net/Test.java",
     ],
     sdk_version: "module_current",
     visibility: [
