@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89b63784_08e8f023",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-19T08:17:47Z",
+      "side": 1,
+      "message": "Hi Jahim, we need to changes to be able to collect coverage from these tests. See b/276710489. I looked at the linked bug but I don\u0027t really understand the problem. Could you summarise it? Thanks.",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
