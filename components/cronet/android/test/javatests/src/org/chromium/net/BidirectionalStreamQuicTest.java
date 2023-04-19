@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import static org.chromium.base.CollectionUtil.newHashSet;
 import static org.chromium.net.CronetTestRule.getContext;
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 import android.net.http.BidirectionalStream;
 import android.net.http.ExperimentalBidirectionalStream;
 import android.net.http.ExperimentalHttpEngine;
@@ -19,6 +20,8 @@ import android.net.http.QuicException;
 import android.net.http.RequestFinishedInfo;
 import android.net.http.UrlResponseInfo;
 
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 

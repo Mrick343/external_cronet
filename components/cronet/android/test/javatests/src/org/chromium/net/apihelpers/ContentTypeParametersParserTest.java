@@ -9,8 +9,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 import android.net.http.apihelpers.ContentTypeParametersParser;
 
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 

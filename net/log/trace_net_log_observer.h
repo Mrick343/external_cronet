@@ -7,8 +7,12 @@
 
 #include "base/memory/raw_ptr.h"
 #include "base/memory/weak_ptr.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/trace_event/base_tracing.h"
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "net/base/net_export.h"
+#include "net/base/tracing.h"
 #include "net/log/net_log.h"
 
 namespace net {

@@ -7,10 +7,14 @@
 #include <set>
 #include <utility>
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/trace_event/base_tracing.h"
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "net/base/connection_endpoint_metadata.h"
 #include "net/base/net_errors.h"
 #include "net/base/trace_constants.h"
+#include "net/base/tracing.h"
 #include "net/dns/public/host_resolver_results.h"
 #include "net/dns/public/secure_dns_policy.h"
 #include "net/http/http_auth_controller.h"

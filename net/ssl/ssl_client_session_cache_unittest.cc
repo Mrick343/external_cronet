@@ -9,9 +9,15 @@
 #include "base/test/simple_test_clock.h"
 #include "base/test/task_environment.h"
 #include "base/time/time.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/trace_event/base_tracing.h"
+=======
+#include "base/trace_event/memory_allocator_dump.h"
+#include "base/trace_event/process_memory_dump.h"
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "net/base/network_anonymization_key.h"
 #include "net/base/schemeful_site.h"
+#include "net/base/tracing.h"
 #include "testing/gmock/include/gmock/gmock.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "third_party/boringssl/src/include/openssl/ssl.h"
@@ -427,7 +433,7 @@ TEST_F(SSLClientSessionCacheTest, FlushForServer) {
   key2.server = HostPortPair("a.test", 443);
   key2.dest_ip_addr = IPAddress::IPv4Localhost();
   key2.network_anonymization_key =
-      NetworkAnonymizationKey(kSiteB, kSiteB, /*is_cross_site=*/false);
+      NetworkAnonymizationKey::CreateSameSite(kSiteB);
   key2.privacy_mode = PRIVACY_MODE_ENABLED;
   auto session2 = NewSSLSession();
   cache.Insert(key2, bssl::UpRef(session2));
@@ -445,7 +451,7 @@ TEST_F(SSLClientSessionCacheTest, FlushForServer) {
   SSLClientSessionCache::Key key5;
   key5.server = HostPortPair("b.test", 443);
   key5.network_anonymization_key =
-      NetworkAnonymizationKey(kSiteA, kSiteA, /*is_cross_site=*/false);
+      NetworkAnonymizationKey::CreateSameSite(kSiteA);
   auto session5 = NewSSLSession();
   cache.Insert(key5, bssl::UpRef(session5));
 

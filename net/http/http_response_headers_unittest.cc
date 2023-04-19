@@ -14,12 +14,24 @@
 #include "base/pickle.h"
 #include "base/ranges/algorithm.h"
 #include "base/time/time.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/trace_event/base_tracing.h"
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "base/values.h"
+#include "net/base/cronet_buildflags.h"
+#include "net/base/tracing.h"
 #include "net/http/http_byte_range.h"
 #include "net/http/http_util.h"
 #include "net/log/net_log_capture_mode.h"
 #include "testing/gtest/include/gtest/gtest.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+
+#if !BUILDFLAG(CRONET_BUILD)
+#include "third_party/perfetto/include/perfetto/test/traced_value_test_support.h"
+#endif
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
 namespace net {
 
@@ -1823,7 +1835,13 @@ TEST(HttpResponseHeadersTest, SetHeader) {
       ToSimpleString(headers));
 }
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 TEST(HttpResponseHeadersTest, DISABLED_TracingSupport) {
+=======
+#if !BUILDFLAG(CRONET_BUILD)
+// Cronet disables tracing so this test would fail.
+TEST(HttpResponseHeadersTest, TracingSupport) {
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
   scoped_refptr<HttpResponseHeaders> headers = HttpResponseHeaders::TryToCreate(
       "HTTP/1.1 200 OK\n"
       "connection: keep-alive\n");
@@ -1832,6 +1850,7 @@ TEST(HttpResponseHeadersTest, DISABLED_TracingSupport) {
   EXPECT_EQ(perfetto::TracedValueToString(headers),
             "{response_code:200,headers:[{name:connection,value:keep-alive}]}");
 }
+#endif
 
 struct RemoveHeaderTestData {
   const char* orig_headers;

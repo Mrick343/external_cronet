@@ -70,6 +70,23 @@ public class CronetTestRuleTest {
 
     @Test
     @SmallTest
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+    public void testRunBothImplsMustRun() {
+        if (mTestRule.testingJavaImpl()) {
+            assertFalse(mTestWasRun);
+            mTestWasRun = true;
+            assertEquals(mTestFramework.mCronetEngine.getClass(), JavaCronetEngine.class);
+        } else {
+            assertFalse(mTestWasRun);
+            mTestWasRun = true;
+            assertEquals(mTestFramework.mCronetEngine.getClass(), CronetUrlRequestContext.class);
+        }
+    }
+
+    @Test
+    @SmallTest
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
     @OnlyRunNativeCronet
     public void testRunOnlyNativeMustRun() {
         assertFalse(mTestRule.testingJavaImpl());
@@ -78,4 +95,16 @@ public class CronetTestRuleTest {
         assertEquals(mTestFramework.mCronetEngine.getClass(), CronetUrlRequestContext.class);
     }
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+    @Test
+    @SmallTest
+    @OnlyRunJavaCronet
+    public void testRunOnlyJavaMustRun() {
+        assertTrue(mTestRule.testingJavaImpl());
+        assertFalse(mTestWasRun);
+        mTestWasRun = true;
+        assertEquals(mTestFramework.mCronetEngine.getClass(), JavaCronetEngine.class);
+    }
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 }

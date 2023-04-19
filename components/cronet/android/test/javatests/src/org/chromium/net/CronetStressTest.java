@@ -9,8 +9,11 @@ import static org.junit.Assert.assertTrue;
 
 import static org.chromium.net.CronetTestRule.getContext;
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 import android.net.http.UrlRequest;
 
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -20,7 +23,10 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 import android.net.http.apihelpers.UploadDataProviders;
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

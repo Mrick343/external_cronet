@@ -12,8 +12,12 @@
 
 #include "base/check.h"
 #include "base/json/json_writer.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/trace_event/base_tracing.h"
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "base/values.h"
+#include "net/base/tracing.h"
 #include "net/log/net_log_entry.h"
 #include "net/log/net_log_event_type.h"
 
@@ -26,12 +30,12 @@ constexpr const char kNetLogTracingCategory[] = "netlog";
 
 class TracedValue : public base::trace_event::ConvertableToTraceFormat {
  public:
-  explicit TracedValue(base::Value value) : value_(std::move(value)) {}
+  explicit TracedValue(base::Value::Dict value) : value_(std::move(value)) {}
   ~TracedValue() override = default;
 
  private:
   void AppendAsTraceFormat(std::string* out) const override {
-    if (!value_.is_none()) {
+    if (!value_.empty()) {
       std::string tmp;
       base::JSONWriter::Write(value_, &tmp);
       *out += tmp;
@@ -41,7 +45,7 @@ class TracedValue : public base::trace_event::ConvertableToTraceFormat {
   }
 
  private:
-  base::Value value_;
+  base::Value::Dict value_;
 };
 
 }  // namespace
@@ -54,7 +58,7 @@ TraceNetLogObserver::~TraceNetLogObserver() {
 }
 
 void TraceNetLogObserver::OnAddEntry(const NetLogEntry& entry) {
-  base::Value params = entry.params.Clone();
+  base::Value::Dict params = entry.params.Clone();
   switch (entry.phase) {
     case NetLogEventPhase::BEGIN:
       TRACE_EVENT_NESTABLE_ASYNC_BEGIN2(

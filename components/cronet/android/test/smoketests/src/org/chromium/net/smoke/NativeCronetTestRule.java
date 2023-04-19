@@ -42,8 +42,12 @@ public class NativeCronetTestRule extends CronetSmokeTestRule {
     }
 
     private void ruleSetUp() throws Exception {
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         ContextUtils.initApplicationContext(
                  ApplicationProvider.getApplicationContext());
+=======
+        ContextUtils.initApplicationContext(ApplicationProvider.getApplicationContext());
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         PathUtils.setPrivateDataDirectorySuffix(PRIVATE_DATA_DIRECTORY_SUFFIX);
         mTestSupport.loadTestNativeLibrary();
     }

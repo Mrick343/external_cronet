@@ -4,11 +4,15 @@
 
 #include "net/test/embedded_test_server/controllable_http_response.h"
 
-#include "base/bind.h"
 #include "base/check_op.h"
+#include "base/functional/bind.h"
 #include "base/strings/stringprintf.h"
 #include "base/trace_event/base_tracing.h"
 #include "base/task/single_thread_task_runner.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+#include "net/base/tracing.h"
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "net/test/embedded_test_server/http_response.h"
 
 namespace net::test_server {

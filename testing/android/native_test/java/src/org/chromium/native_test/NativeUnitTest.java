@@ -59,9 +59,23 @@ public class NativeUnitTest extends NativeTest {
     private void loadLibrary(String library) {
 
         LibraryLoader.setEnvForNative();
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         Log.i(TAG, "loading: %s", library);
         System.loadLibrary(library);
         Log.i(TAG, "loaded: %s", library);
+=======
+        for (String library : NativeLibraries.LIBRARIES) {
+            // Do not load this library early so that
+            // |LibunwindstackUnwinderAndroidTest.ReparsesMapsOnNewDynamicLibraryLoad| test can
+            // observe the change in /proc/self/maps before and after loading the library.
+            if (library.equals("base_profiler_reparsing_test_support_library")) {
+                continue;
+            }
+            Log.i(TAG, "loading: %s", library);
+            System.loadLibrary(library);
+            Log.i(TAG, "loaded: %s", library);
+        }
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         NativeUnitTestLibraryLoader.setLibrariesLoaded();
     }
 }

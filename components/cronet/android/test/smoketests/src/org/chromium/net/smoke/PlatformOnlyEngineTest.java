@@ -7,7 +7,10 @@ package org.chromium.net.smoke;
 import static org.chromium.net.smoke.CronetSmokeTestRule.assertJavaEngine;
 import static org.chromium.net.smoke.CronetSmokeTestRule.assertSuccessfulNonEmptyResponse;
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;

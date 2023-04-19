@@ -5,6 +5,10 @@
 package org.chromium.net.smoke;
 
 import android.content.Context;
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Assert;

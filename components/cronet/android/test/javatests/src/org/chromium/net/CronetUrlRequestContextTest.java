@@ -43,6 +43,10 @@ import org.junit.runner.RunWith;
 
 import org.chromium.base.PathUtils;
 import org.chromium.base.annotations.JNINamespace;
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+import org.chromium.base.annotations.NativeMethods;
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import org.chromium.net.CronetTestRule.CronetTestFramework;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import org.chromium.net.CronetTestRule.RequiresMinAndroidApi;
@@ -359,8 +363,12 @@ public class CronetUrlRequestContextTest {
     public void testNetworkBoundContextLifetime() throws Exception {
         // Multi-network API is available starting from Android Lollipop.
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         ConnectivityManagerDelegate delegate =
                 new ConnectivityManagerDelegate(getContext());
+=======
+        ConnectivityManagerDelegate delegate = new ConnectivityManagerDelegate(getContext());
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         Network defaultNetwork = delegate.getDefaultNetwork();
         if (defaultNetwork == null) {
             testFramework.mCronetEngine.shutdown();
@@ -429,9 +437,14 @@ public class CronetUrlRequestContextTest {
         callback.setAutoAdvance(false);
         UrlRequest.Builder urlRequestBuilder =
                 testFramework.mCronetEngine.newUrlRequestBuilder(
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
                         mUrl, callback.getExecutor(), callback);
         ConnectivityManagerDelegate delegate =
                 new ConnectivityManagerDelegate(getContext());
+=======
+                        mUrl, callback, callback.getExecutor());
+        ConnectivityManagerDelegate delegate = new ConnectivityManagerDelegate(getContext());
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         Network defaultNetwork = delegate.getDefaultNetwork();
         if (defaultNetwork == null) {
             testFramework.mCronetEngine.shutdown();
@@ -591,7 +604,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     public void testGetActiveRequestCount() throws Exception {
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
         CronetEngine cronetEngine = testFramework.mCronetEngine;
@@ -621,7 +633,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     public void testGetActiveRequestCountOnReachingSucceeded() throws Exception {
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
         CronetEngine cronetEngine = testFramework.mCronetEngine;
@@ -644,7 +655,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     public void testGetActiveRequestCountOnReachingCancel() throws Exception {
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
         CronetEngine cronetEngine = testFramework.mCronetEngine;
@@ -666,7 +676,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     public void testGetActiveRequestCountOnReachingFail() throws Exception {
         final String badUrl = "www.unreachable-url.com";
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
@@ -688,7 +697,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     public void testGetActiveRequestCountWithCancel() throws Exception {
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
         CronetEngine cronetEngine = testFramework.mCronetEngine;
@@ -718,7 +726,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     public void testGetActiveRequestCountWithError() throws Exception {
         final String badUrl = "www.unreachable-url.com";
         final CronetTestFramework testFramework = mTestRule.startCronetTestFramework();
@@ -749,7 +756,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @Feature({"Cronet"})
     @OnlyRunNativeCronet
     // Tests that NetLog contains events emitted by all live CronetEngines.
     public void testNetLogContainEventsFromAllLiveEngines() throws Exception {
@@ -1435,11 +1441,18 @@ public class CronetUrlRequestContextTest {
         // Test that concurrently instantiating Cronet context's upon various
         // different versions of the same Android Context does not cause crashes
         // like crbug.com/453845
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         HttpEngine firstEngine = new HttpEngine.Builder(getContext()).build();
         HttpEngine secondEngine =
                 new HttpEngine.Builder(getContext()).build();
         HttpEngine thirdEngine =
                 new HttpEngine.Builder(new ContextWrapper(getContext())).build();
+=======
+        CronetEngine firstEngine = new CronetEngine.Builder(getContext()).build();
+        CronetEngine secondEngine = new CronetEngine.Builder(getContext()).build();
+        CronetEngine thirdEngine =
+                new CronetEngine.Builder(new ContextWrapper(getContext())).build();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         firstEngine.shutdown();
         secondEngine.shutdown();
         thirdEngine.shutdown();
@@ -1487,16 +1500,17 @@ public class CronetUrlRequestContextTest {
         builder.setUserAgent("efgh");
         builder.setExperimentalOptions("");
         builder.setStoragePath(getTestStorage(getContext()));
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         builder.setEnablePublicKeyPinningBypassForLocalTrustAnchors(false);
         nativeVerifyUrlRequestContextConfig(
+=======
+        builder.enablePublicKeyPinningBypassForLocalTrustAnchors(false);
+        CronetUrlRequestContextTestJni.get().verifyUrlRequestContextConfig(
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
                 CronetUrlRequestContext.createNativeUrlRequestContextConfig(
                         (CronetEngineBuilderImpl) builder.getBuilderDelegate()),
                 getTestStorage(getContext()));
     }
-
-    // Verifies that CronetEngine.Builder config from testCronetEngineBuilderConfig() is properly
-    // translated to a native UrlRequestContextConfig.
-    private static native void nativeVerifyUrlRequestContextConfig(long config, String storagePath);
 
     @Test
     @SmallTest
@@ -1514,17 +1528,66 @@ public class CronetUrlRequestContextTest {
         builder.setExperimentalOptions("");
         builder.setUserAgent("efgh");
         builder.setStoragePath(getTestStorage(getContext()));
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         builder.setEnablePublicKeyPinningBypassForLocalTrustAnchors(false);
         nativeVerifyUrlRequestContextQuicOffConfig(
+=======
+        builder.enablePublicKeyPinningBypassForLocalTrustAnchors(false);
+        CronetUrlRequestContextTestJni.get().verifyUrlRequestContextQuicOffConfig(
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
                 CronetUrlRequestContext.createNativeUrlRequestContextConfig(
                         (CronetEngineBuilderImpl) builder.getBuilderDelegate()),
                 getTestStorage(getContext()));
     }
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
     // Verifies that CronetEngine.Builder config from testCronetEngineQuicOffConfig() is properly
     // translated to a native UrlRequestContextConfig and QUIC is turned off.
     private static native void nativeVerifyUrlRequestContextQuicOffConfig(
             long config, String storagePath);
+=======
+    private static class TestBadLibraryLoader extends CronetEngine.Builder.LibraryLoader {
+        private boolean mWasCalled;
+
+        @Override
+        public void loadLibrary(String libName) {
+            // Report that this method was called, but don't load the library
+            mWasCalled = true;
+        }
+
+        boolean wasCalled() {
+            return mWasCalled;
+        }
+    }
+
+    @Test
+    @SmallTest
+    @OnlyRunNativeCronet
+    public void testSetLibraryLoaderIsEnforcedByDefaultEmbeddedProvider() throws Exception {
+        CronetEngine.Builder builder = new CronetEngine.Builder(getContext());
+        TestBadLibraryLoader loader = new TestBadLibraryLoader();
+        builder.setLibraryLoader(loader);
+        try {
+            builder.build();
+            fail("Native library should not be loaded");
+        } catch (UnsatisfiedLinkError e) {
+            assertTrue(loader.wasCalled());
+        }
+    }
+
+    @Test
+    @SmallTest
+    @OnlyRunNativeCronet
+    public void testSetLibraryLoaderIsIgnoredInNativeCronetEngineBuilderImpl() throws Exception {
+        CronetEngine.Builder builder =
+                new CronetEngine.Builder(new NativeCronetEngineBuilderImpl(getContext()));
+        TestBadLibraryLoader loader = new TestBadLibraryLoader();
+        builder.setLibraryLoader(loader);
+        CronetEngine engine = builder.build();
+        assertNotNull(engine);
+        assertFalse(loader.wasCalled());
+    }
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
     // Creates a CronetEngine on another thread and then one on the main thread.  This shouldn't
     // crash.
@@ -1671,5 +1734,16 @@ public class CronetUrlRequestContextTest {
             assertEquals(threadPriority, getThreadPriority(engine));
             engine.shutdown();
         }
+    }
+
+    @NativeMethods("cronet_tests")
+    interface Natives {
+        // Verifies that CronetEngine.Builder config from testCronetEngineBuilderConfig() is
+        // properly translated to a native UrlRequestContextConfig.
+        void verifyUrlRequestContextConfig(long config, String storagePath);
+
+        // Verifies that CronetEngine.Builder config from testCronetEngineQuicOffConfig() is
+        // properly translated to a native UrlRequestContextConfig and QUIC is turned off.
+        void verifyUrlRequestContextQuicOffConfig(long config, String storagePath);
     }
 }

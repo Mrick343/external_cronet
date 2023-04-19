@@ -26,8 +26,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.chromium.base.Log;
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 import android.net.http.HttpEngine;
 import android.net.http.HttpException;
+=======
+import org.chromium.net.CronetEngine;
+import org.chromium.net.CronetException;
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import org.chromium.net.CronetTestRule;
 import org.chromium.net.CronetTestRule.CompareDefaultWithCronet;
 import org.chromium.net.CronetTestRule.OnlyRunCronetHttpURLConnection;

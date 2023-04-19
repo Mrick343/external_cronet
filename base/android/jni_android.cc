@@ -11,12 +11,14 @@
 #include "base/android/jni_string.h"
 #include "base/android/jni_utils.h"
 #include "base/base_jni_headers/PiiElider_jni.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/containers/flat_map.h"
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "base/debug/debugging_buildflags.h"
-#include "base/lazy_instance.h"
 #include "base/logging.h"
-#include "base/threading/thread_local.h"
 #include "build/build_config.h"
+#include "third_party/abseil-cpp/absl/base/attributes.h"
 
 namespace base {
 namespace android {
@@ -27,8 +29,7 @@ jobject g_class_loader = nullptr;
 jmethodID g_class_loader_load_class_method_id = 0;
 
 #if BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
-base::LazyInstance<base::ThreadLocalPointer<void>>::Leaky
-    g_stack_frame_pointer = LAZY_INSTANCE_INITIALIZER;
+ABSL_CONST_INIT thread_local void* stack_frame_pointer = nullptr;
 #endif
 
 bool g_fatal_exception_occurred = false;
@@ -126,6 +127,10 @@ void InitVM(JavaVM* vm) {
 
 bool IsVMInitialized() {
   return g_jvm != nullptr;
+}
+
+JavaVM* GetVM() {
+  return g_jvm;
 }
 
 void InitGlobalClassLoader(JNIEnv* env) {
@@ -298,17 +303,13 @@ std::string GetJavaExceptionInfo(JNIEnv* env, jthrowable java_throwable) {
 
 #if BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
 
-JNIStackFrameSaver::JNIStackFrameSaver(void* current_fp) {
-  previous_fp_ = g_stack_frame_pointer.Pointer()->Get();
-  g_stack_frame_pointer.Pointer()->Set(current_fp);
-}
+JNIStackFrameSaver::JNIStackFrameSaver(void* current_fp)
+    : resetter_(&stack_frame_pointer, current_fp) {}
 
-JNIStackFrameSaver::~JNIStackFrameSaver() {
-  g_stack_frame_pointer.Pointer()->Set(previous_fp_);
-}
+JNIStackFrameSaver::~JNIStackFrameSaver() = default;
 
 void* JNIStackFrameSaver::SavedFrame() {
-  return g_stack_frame_pointer.Pointer()->Get();
+  return stack_frame_pointer;
 }
 
 #endif  // BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)

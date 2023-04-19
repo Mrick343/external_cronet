@@ -6,6 +6,11 @@ package org.chromium.net;
 
 import org.chromium.base.ContextUtils;
 import org.chromium.base.annotations.JNINamespace;
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+import org.chromium.base.annotations.NativeMethods;
+import org.chromium.base.test.util.UrlUtils;
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
 /**
  * A Java wrapper to supply a net::MockCertVerifier which can be then passed
@@ -23,8 +28,13 @@ public class MockCertVerifier {
      * @return a pointer to the newly created net::MockCertVerifier.
      */
     public static long createMockCertVerifier(String[] certs, boolean knownRoot) {
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         return nativeCreateMockCertVerifier(certs, knownRoot,
                 TestFilesInstaller.getInstalledPath(ContextUtils.getApplicationContext()));
+=======
+        return MockCertVerifierJni.get().createMockCertVerifier(
+                certs, knownRoot, UrlUtils.getIsolatedTestRoot());
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
     }
 
     /**
@@ -33,11 +43,12 @@ public class MockCertVerifier {
      * @return a pointer to the newly created net::MockCertVerifier.
      */
     public static long createFreeForAllMockCertVerifier() {
-        return nativeCreateFreeForAllMockCertVerifier();
+        return MockCertVerifierJni.get().createFreeForAllMockCertVerifier();
     }
 
-    private static native long nativeCreateMockCertVerifier(
-            String[] certs, boolean knownRoot, String testDataDir);
-
-    private static native long nativeCreateFreeForAllMockCertVerifier();
+    @NativeMethods("cronet_tests")
+    interface Natives {
+        long createMockCertVerifier(String[] certs, boolean knownRoot, String testDataDir);
+        long createFreeForAllMockCertVerifier();
+    }
 }

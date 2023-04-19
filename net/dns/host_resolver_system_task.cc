@@ -17,13 +17,17 @@
 #include "base/task/task_traits.h"
 #include "base/task/thread_pool.h"
 #include "base/threading/scoped_blocking_call.h"
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 #include "base/trace_event/base_tracing.h"
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 #include "base/types/pass_key.h"
 #include "dns_reloader.h"
 #include "net/base/net_errors.h"
 #include "net/base/network_interfaces.h"
 #include "net/base/sys_addrinfo.h"
 #include "net/base/trace_constants.h"
+#include "net/base/tracing.h"
 #include "net/dns/address_info.h"
 #include "net/dns/dns_names_util.h"
 
@@ -116,9 +120,10 @@ int ResolveOnWorkerThread(scoped_refptr<HostResolverProc> resolver_proc,
 }
 
 // Creates NetLog parameters when the resolve failed.
-base::Value NetLogHostResolverSystemTaskFailedParams(uint32_t attempt_number,
-                                                     int net_error,
-                                                     int os_error) {
+base::Value::Dict NetLogHostResolverSystemTaskFailedParams(
+    uint32_t attempt_number,
+    int net_error,
+    int os_error) {
   base::Value::Dict dict;
   if (attempt_number)
     dict.Set("attempt_number", base::saturated_cast<int>(attempt_number));
@@ -144,7 +149,7 @@ base::Value NetLogHostResolverSystemTaskFailedParams(uint32_t attempt_number,
 #endif
   }
 
-  return base::Value(std::move(dict));
+  return dict;
 }
 
 using SystemDnsResolverOverrideCallback =
@@ -353,10 +358,8 @@ void HostResolverSystemTask::OnLookupComplete(const uint32_t attempt_number,
 }
 
 void EnsureSystemHostResolverCallReady() {
-#if BUILDFLAG(IS_POSIX) && !BUILDFLAG(IS_APPLE) && !BUILDFLAG(IS_OPENBSD) && \
-    !BUILDFLAG(IS_ANDROID)
   EnsureDnsReloaderInit();
-#elif BUILDFLAG(IS_WIN)
+#if BUILDFLAG(IS_WIN)
   EnsureWinsockInit();
 #endif
 }
@@ -438,11 +441,8 @@ int SystemHostResolverCall(const std::string& host,
   // current process during that time.
   base::ScopedBlockingCall scoped_blocking_call(FROM_HERE,
                                                 base::BlockingType::WILL_BLOCK);
-
-#if BUILDFLAG(IS_POSIX) && \
-    !(BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_OPENBSD) || BUILDFLAG(IS_ANDROID))
   DnsReloaderMaybeReload();
-#endif
+
   auto [ai, err, os_error] = AddressInfo::Get(host, hints, nullptr, network);
   bool should_retry = false;
   // If the lookup was restricted (either by address family, or address

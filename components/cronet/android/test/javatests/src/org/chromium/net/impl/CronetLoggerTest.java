@@ -33,6 +33,10 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+import org.chromium.net.CronetEngine;
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 import org.chromium.net.CronetLoggerTestRule;
 import org.chromium.net.CronetTestRule;
 import org.chromium.net.CronetTestRule.CronetTestFramework;
@@ -228,16 +232,20 @@ public final class CronetLoggerTest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    public void testLoggingKillSwitch() throws JSONException {
+    public void testTelemetryDefaultDisabled() throws JSONException {
         final String url = NativeTestServer.getEchoBodyURL();
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         JSONObject jsonExperimentalOptions = new JSONObject().put("skip_logging", true);
         final String experimentalOptions = jsonExperimentalOptions.toString();
         ExperimentalHttpEngine.Builder builder =
                 (ExperimentalHttpEngine.Builder) mTestFramework.mBuilder;
         builder.setExperimentalOptions(experimentalOptions);
         HttpEngine engine = mTestFramework.startEngine();
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
+        CronetEngine engine = mTestFramework.startEngine();
         UrlRequest.Builder requestBuilder =
                 engine.newUrlRequestBuilder(url, callback, callback.getExecutor());
         UrlRequest request = requestBuilder.build();
@@ -251,6 +259,10 @@ public final class CronetLoggerTest {
 
     @Test
     @SmallTest
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
+=======
+    @OnlyRunNativeCronet
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
     public void testEngineCreation() throws JSONException {
         JSONObject staleDns = new JSONObject()
                                       .put("enable", true)
@@ -258,7 +270,8 @@ public final class CronetLoggerTest {
                                       .put("allow_other_network", true)
                                       .put("persist_to_disk", true)
                                       .put("persist_delay_ms", 0);
-        final JSONObject jsonExperimentalOptions = new JSONObject().put("StaleDNS", staleDns);
+        final JSONObject jsonExperimentalOptions =
+                new JSONObject().put("StaleDNS", staleDns).put("enable_telemetry", true);
         final String experimentalOptions = jsonExperimentalOptions.toString();
         final boolean isPublicKeyPinningBypassForLocalTrustAnchorsEnabled = false;
         final String userAgent = "myUserAgent";
@@ -286,7 +299,11 @@ public final class CronetLoggerTest {
         // builder.enableNetworkQualityEstimator(isNetworkQualityEstimatorEnabled);
         builder.setThreadPriority(threadPriority);
 
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         mTestFramework.startEngine();
+=======
+        CronetEngine engine = mTestFramework.startEngine();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         final CronetEngineBuilderInfo builderInfo = mTestLogger.getLastCronetEngineBuilderInfo();
         final CronetVersion version = mTestLogger.getLastCronetVersion();
         final CronetSource source = mTestLogger.getLastCronetSource();
@@ -317,9 +334,23 @@ public final class CronetLoggerTest {
 
     @Test
     @SmallTest
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
     public void testEngineCreationAndTrafficInfoEngineId() {
+=======
+    @OnlyRunNativeCronet
+    public void testEngineCreationAndTrafficInfoEngineId() throws Exception {
+        JSONObject jsonExperimentalOptions = new JSONObject().put("enable_telemetry", true);
+        final String experimentalOptions = jsonExperimentalOptions.toString();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         final String url = "www.example.com";
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         HttpEngine engine = mTestFramework.startEngine();
+=======
+        ExperimentalCronetEngine.Builder builder =
+                (ExperimentalCronetEngine.Builder) mTestFramework.mBuilder;
+        builder.setExperimentalOptions(experimentalOptions);
+        CronetEngine engine = mTestFramework.startEngine();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         final int engineId = mTestLogger.getLastCronetEngineId();
 
         TestUrlRequestCallback callback1 = new TestUrlRequestCallback();
@@ -350,9 +381,22 @@ public final class CronetLoggerTest {
 
     @Test
     @SmallTest
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
     public void testMultipleEngineCreationAndTrafficInfoEngineId() {
+=======
+    @OnlyRunNativeCronet
+    public void testMultipleEngineCreationAndTrafficInfoEngineId() throws Exception {
+        JSONObject jsonExperimentalOptions = new JSONObject().put("enable_telemetry", true);
+        final String experimentalOptions = jsonExperimentalOptions.toString();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
         final String url = "www.example.com";
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         final HttpEngine.Builder engineBuilder = mTestFramework.mBuilder;
+=======
+        ExperimentalCronetEngine.Builder engineBuilder =
+                (ExperimentalCronetEngine.Builder) mTestFramework.mBuilder;
+        engineBuilder.setExperimentalOptions(experimentalOptions);
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
         HttpEngine engine1 = engineBuilder.build();
         final int engine1Id = mTestLogger.getLastCronetEngineId();
@@ -383,14 +427,26 @@ public final class CronetLoggerTest {
 
         assertEquals(2, mTestLogger.callsToLogCronetEngineCreation());
         assertEquals(2, mTestLogger.callsToLogCronetTrafficInfo());
+
+        engine1.shutdown();
+        engine2.shutdown();
     }
 
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    public void testSuccessfulRequestNative() {
+    public void testSuccessfulRequestNative() throws Exception {
+        JSONObject jsonExperimentalOptions = new JSONObject().put("enable_telemetry", true);
+        final String experimentalOptions = jsonExperimentalOptions.toString();
         final String url = NativeTestServer.getEchoBodyURL();
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         HttpEngine engine = mTestFramework.startEngine();
+=======
+        ExperimentalCronetEngine.Builder engineBuilder =
+                (ExperimentalCronetEngine.Builder) mTestFramework.mBuilder;
+        engineBuilder.setExperimentalOptions(experimentalOptions);
+        CronetEngine engine = mTestFramework.startEngine();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
@@ -421,9 +477,18 @@ public final class CronetLoggerTest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    public void testFailedRequestNative() {
+    public void testFailedRequestNative() throws Exception {
+        JSONObject jsonExperimentalOptions = new JSONObject().put("enable_telemetry", true);
         final String url = "www.unreachable-url.com";
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         HttpEngine engine = mTestFramework.startEngine();
+=======
+        final String experimentalOptions = jsonExperimentalOptions.toString();
+        ExperimentalCronetEngine.Builder engineBuilder =
+                (ExperimentalCronetEngine.Builder) mTestFramework.mBuilder;
+        engineBuilder.setExperimentalOptions(experimentalOptions);
+        CronetEngine engine = mTestFramework.startEngine();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder requestBuilder =
@@ -455,9 +520,18 @@ public final class CronetLoggerTest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    public void testCanceledRequestNative() {
+    public void testCanceledRequestNative() throws Exception {
+        JSONObject jsonExperimentalOptions = new JSONObject().put("enable_telemetry", true);
+        final String experimentalOptions = jsonExperimentalOptions.toString();
         final String url = NativeTestServer.getEchoBodyURL();
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
         HttpEngine engine = mTestFramework.startEngine();
+=======
+        ExperimentalCronetEngine.Builder engineBuilder =
+                (ExperimentalCronetEngine.Builder) mTestFramework.mBuilder;
+        engineBuilder.setExperimentalOptions(experimentalOptions);
+        CronetEngine engine = mTestFramework.startEngine();
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         callback.setAutoAdvance(false);
@@ -532,8 +606,11 @@ public final class CronetLoggerTest {
         );
         assertEquals(33, CronetUrlRequest.estimateHeadersSizeInBytes(asHeaderBlock(headersList)));
     }
+<<<<<<< HEAD   (8c5f24 cronet: update METADATA to version 110)
 
     private static HeaderBlock asHeaderBlock(List<Map.Entry<String, String>> headers) {
         return new HeaderBlockImpl(headers);
     }
+=======
+>>>>>>> BRANCH (eddec1 Import Cronet version 114.0.5715.0)
 }
