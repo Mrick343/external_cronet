@@ -16,6 +16,24 @@
       "message": "Hi Jahim, we need to changes to be able to collect coverage from these tests. See b/276710489. I looked at the linked bug but I don\u0027t really understand the problem. Could you summarise it? Thanks.",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dde8b502_2d1c66b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1903040
+      },
+      "writtenOn": "2023-04-19T23:18:20Z",
+      "side": 1,
+      "message": "using `test_suites` for the helper apps installs the helper apps in those suites and when you use `required` for a module, those required helper apps will be installed wherever this module is installed.\n\nWe prefer declaring this kind of dependency in the `data` field. when `data` field is used to declare dependencies, they are copied to the same folder as the test. This allow Tradefed to isolate test modules and enable features like partial download(we will only download dependencies that a test needs instead of everything that was included in the suites zip file).\n\nWhen you declare dependencies with `data` field, you don\u0027t need to separately use `test_suites` for the helper apps. They will be installed wherever the test module is installed.",
+      "parentUuid": "89b63784_08e8f023",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
