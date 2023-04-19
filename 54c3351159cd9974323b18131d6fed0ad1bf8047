@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf4c5fef_4c826cdf",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-19T17:05:53Z",
+      "side": 0,
+      "message": "We probably want this instead of nativeWriteToHostCache and nativeExperimentalOptionsParsingIsAllowedToFail.",
+      "range": {
+        "startLine": 1349,
+        "startChar": 0,
+        "endLine": 1358,
+        "endChar": 5
+      },
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
