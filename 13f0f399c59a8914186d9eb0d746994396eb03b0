@@ -34,6 +34,24 @@
       "parentUuid": "89b63784_08e8f023",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "450ea097_ef266825",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T21:02:22Z",
+      "side": 1,
+      "message": "Hi Jahin, thanks for the full explanation. Unfortunately, when we add the dep as data, the script copied over the non-coverage enabled apk. See log[1] with data config vs log[2] with `required + test_suites` config.\n\n@kunniu@google.com, are you aware of the java_test_host config we can use to allow us use `data` config and still copy the coverage-enabled apk in test_suites_x86_64_coverage?\n\n[1] https://android-build.googleplex.com/builds/build-details/9871123/targets/test_suites_x86_64_coverage : file logs/build.log\n[2] https://android-build.corp.google.com/build_explorer/artifacts_list/9974746/test_suites_x86_64_coverage/latest/",
+      "parentUuid": "dde8b502_2d1c66b0",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
