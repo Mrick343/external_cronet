@@ -6,6 +6,7 @@ package org.chromium.net.impl;
 
 import android.net.Network;
 import android.net.http.ApiVersion;
+import android.net.http.HeaderBlock;
 import android.os.ConditionVariable;
 import android.os.Process;
 
@@ -26,6 +27,7 @@ import android.net.http.ExperimentalBidirectionalStream;
 import android.net.http.NetworkQualityRttListener;
 import android.net.http.NetworkQualityThroughputListener;
 import android.net.http.RequestFinishedInfo;
+import org.chromium.net.RequestContextConfigOptions;
 import org.chromium.net.RttThroughputValues;
 import android.net.http.UrlRequest;
 import org.chromium.net.impl.CronetLogger.CronetEngineBuilderInfo;
@@ -251,14 +253,8 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     @VisibleForTesting
     public static long createNativeUrlRequestContextConfig(CronetEngineBuilderImpl builder) {
         final long urlRequestContextConfig =
-                CronetUrlRequestContextJni.get().createRequestContextConfig(builder.getUserAgent(),
-                        builder.storagePath(), builder.quicEnabled(),
-                        builder.getDefaultQuicUserAgentId(), builder.http2Enabled(),
-                        builder.brotliEnabled(), builder.cacheDisabled(), builder.httpCacheMode(),
-                        builder.httpCacheMaxSize(), builder.experimentalOptions(),
-                        builder.mockCertVerifier(), builder.networkQualityEstimatorEnabled(),
-                        builder.publicKeyPinningBypassForLocalTrustAnchorsEnabled(),
-                        builder.threadPriority(Process.THREAD_PRIORITY_BACKGROUND));
+                CronetUrlRequestContextJni.get().createRequestContextConfig(
+                        createRequestContextConfigOptions(builder).toByteArray());
         if (urlRequestContextConfig == 0) {
             throw new IllegalArgumentException("Experimental options parsing failed.");
         }
@@ -273,9 +269,46 @@ public class CronetUrlRequestContext extends CronetEngineBase {
         return urlRequestContextConfig;
     }
 
+    private static RequestContextConfigOptions createRequestContextConfigOptions(
+            CronetEngineBuilderImpl engineBuilder) {
+        RequestContextConfigOptions.Builder resultBuilder =
+                RequestContextConfigOptions.newBuilder()
+                        .setQuicEnabled(engineBuilder.quicEnabled())
+                        .setHttp2Enabled(engineBuilder.http2Enabled())
+                        .setBrotliEnabled(engineBuilder.brotliEnabled())
+                        .setDisableCache(engineBuilder.cacheDisabled())
+                        .setHttpCacheMode(engineBuilder.httpCacheMode())
+                        .setHttpCacheMaxSize(engineBuilder.httpCacheMaxSize())
+                        .setMockCertVerifier(engineBuilder.mockCertVerifier())
+                        .setEnableNetworkQualityEstimator(
+                                engineBuilder.networkQualityEstimatorEnabled())
+                        .setBypassPublicKeyPinningForLocalTrustAnchors(
+                                engineBuilder.publicKeyPinningBypassForLocalTrustAnchorsEnabled())
+                        .setNetworkThreadPriority(
+                                engineBuilder.threadPriority(Process.THREAD_PRIORITY_BACKGROUND));
+
+        if (engineBuilder.getUserAgent() != null) {
+            resultBuilder.setUserAgent(engineBuilder.getUserAgent());
+        }
+
+        if (engineBuilder.storagePath() != null) {
+            resultBuilder.setStoragePath(engineBuilder.storagePath());
+        }
+
+        if (engineBuilder.getDefaultQuicUserAgentId() != null) {
+            resultBuilder.setQuicDefaultUserAgentId(engineBuilder.getDefaultQuicUserAgentId());
+        }
+
+        if (engineBuilder.experimentalOptions() != null) {
+            resultBuilder.setExperimentalOptions(engineBuilder.experimentalOptions());
+        }
+
+        return resultBuilder.build();
+    }
+
     @Override
     public ExperimentalBidirectionalStream.Builder newBidirectionalStreamBuilder(
-            String url, BidirectionalStream.Callback callback, Executor executor) {
+            String url, Executor executor, BidirectionalStream.Callback callback) {
         return new BidirectionalStreamBuilderImpl(url, callback, executor, this);
     }
 
@@ -285,7 +318,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
             boolean disableConnectionMigration, boolean allowDirectExecutor,
             boolean trafficStatsTagSet, int trafficStatsTag, boolean trafficStatsUidSet,
             int trafficStatsUid, RequestFinishedInfo.Listener requestFinishedListener,
-            int idempotency, long networkHandle) {
+            int idempotency, long networkHandle, HeaderBlock headerBlock) {
         if (networkHandle == DEFAULT_NETWORK_HANDLE) {
             networkHandle = mNetworkHandle;
         }
@@ -294,7 +327,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
             return new CronetUrlRequest(this, url, priority, callback, executor, requestAnnotations,
                     disableCache, disableConnectionMigration, allowDirectExecutor,
                     trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet, trafficStatsUid,
-                    requestFinishedListener, idempotency, networkHandle);
+                    requestFinishedListener, idempotency, networkHandle, headerBlock);
         }
     }
 
@@ -315,6 +348,11 @@ public class CronetUrlRequestContext extends CronetEngineBase {
                     requestAnnotations, trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet,
                     trafficStatsUid, networkHandle);
         }
+    }
+
+    @Override
+    public int getActiveRequestCount() {
+        return mActiveRequestCount.get();
     }
 
     private CronetVersion buildCronetVersion() {
@@ -600,22 +638,16 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     @Override
-    public URLStreamHandlerFactory createURLStreamHandlerFactory() {
+    public URLStreamHandlerFactory createUrlStreamHandlerFactory() {
         return new CronetURLStreamHandlerFactory(this);
     }
 
-    /**
-     * Mark request as started to prevent shutdown when there are active
-     * requests.
-     */
+    /** Mark request as started to prevent shutdown when there are active requests. */
     void onRequestStarted() {
         mActiveRequestCount.incrementAndGet();
     }
 
-    /**
-     * Mark request as finished to allow shutdown when there are no active
-     * requests.
-     */
+    /** Mark request as finished to allow shutdown when there are no active requests. */
     void onRequestDestroyed() {
         mActiveRequestCount.decrementAndGet();
     }
@@ -641,8 +673,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     /**
-     * @return loggingLevel see {@link #LOG_NONE}, {@link #LOG_DEBUG} and
-     *         {@link #LOG_VERBOSE}.
+     * @return loggingLevel see {@link #LOG_NONE}, {@link #LOG_DEBUG} and {@link #LOG_VERBOSE}.
      */
     private int getLoggingLevel() {
         int loggingLevel;
@@ -768,12 +799,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     // Native methods are implemented in cronet_url_request_context_adapter.cc.
     @NativeMethods
     interface Natives {
-        long createRequestContextConfig(String userAgent, String storagePath, boolean quicEnabled,
-                String quicUserAgentId, boolean http2Enabled, boolean brotliEnabled,
-                boolean disableCache, int httpCacheMode, long httpCacheMaxSize,
-                String experimentalOptions, long mockCertVerifier,
-                boolean enableNetworkQualityEstimator,
-                boolean bypassPublicKeyPinningForLocalTrustAnchors, int networkThreadPriority);
+        long createRequestContextConfig(byte[] serializedRequestContextConfigOptions);
 
         void addQuicHint(long urlRequestContextConfig, String host, int port, int alternatePort);
         void addPkp(long urlRequestContextConfig, String host, byte[][] hashes,

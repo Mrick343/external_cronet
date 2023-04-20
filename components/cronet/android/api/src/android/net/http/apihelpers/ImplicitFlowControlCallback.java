@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
  * An implementation of {@link UrlRequest.Callback} that takes away the difficulty of managing the
  * request lifecycle away, and automatically proceeds to read the response entirely.
  */
-public abstract class ImplicitFlowControlCallback extends UrlRequest.Callback {
+public abstract class ImplicitFlowControlCallback implements UrlRequest.Callback {
     private static final int BYTE_BUFFER_CAPACITY = 32 * 1024;
 
     /**
@@ -30,7 +30,7 @@ public abstract class ImplicitFlowControlCallback extends UrlRequest.Callback {
      * @param newLocationUrl Location where request is redirected.
      * @return true if the redirect should be followed, false if the request should be canceled.
      * @throws Exception if an error occurs while processing a redirect. {@link #onFailed} will be
-     *     called with the thrown exception set as the cause of the {@link CallbackException}.
+     * called with the thrown exception set as the cause of the {@link CallbackException}.
      */
     protected abstract boolean shouldFollowRedirect(UrlResponseInfo info, String newLocationUrl)
             throws Exception;
@@ -43,7 +43,7 @@ public abstract class ImplicitFlowControlCallback extends UrlRequest.Callback {
      * @param info Response information.
      * @throws Exception if an error occurs while processing response start. {@link #onFailed} will
      *         be
-     *     called with the thrown exception set as the cause of the {@link CallbackException}.
+     * called with the thrown exception set as the cause of the {@link CallbackException}.
      */
     protected abstract void onResponseStarted(UrlResponseInfo info) throws Exception;
 
@@ -57,7 +57,7 @@ public abstract class ImplicitFlowControlCallback extends UrlRequest.Callback {
      * @param bodyChunk The buffer that contains the received data, flipped for reading.
      * @throws Exception if an error occurs while processing a read completion. {@link #onFailed}
      *         will
-     *     be called with the thrown exception set as the cause of the {@link CallbackException}.
+     * be called with the thrown exception set as the cause of the {@link CallbackException}.
      */
     protected abstract void onBodyChunkRead(UrlResponseInfo info, ByteBuffer bodyChunk)
             throws Exception;

@@ -4,6 +4,8 @@
 
 package android.net.http;
 
+import androidx.annotation.Nullable;
+
 /**
  * Exception passed to {@link UrlRequest.Callback#onFailed UrlRequest.Callback.onFailed()} when
  * the HTTP stack fails to process a network request. In this case {@link #getErrorCode} can be used
@@ -20,9 +22,9 @@ public abstract class NetworkException extends HttpException {
     public static final int ERROR_INTERNET_DISCONNECTED = 2;
     /**
      * Error code indicating that as the request was processed the network configuration changed.
-     * When {@link #getErrorCode} returns this code, this exception may be cast to
-     * {@link QuicException} for more information if <a href="https://www.chromium.org/quic">
-     * QUIC</a> protocol is used.
+     * When
+     * {@link #getErrorCode} returns this code, this exception may be cast to {@link QuicException}
+     * for more information if <a href="https://www.chromium.org/quic"> QUIC</a> protocol is used.
      */
     public static final int ERROR_NETWORK_CHANGED = 3;
     /**
@@ -67,10 +69,10 @@ public abstract class NetworkException extends HttpException {
      *
      * @param message explanation of failure.
      * @param cause the cause (which is saved for later retrieval by the {@link
-     *         java.io.IOException#getCause getCause()} method). A null value is permitted, and
-     *         indicates that the cause is nonexistent or unknown.
+     * java.io.IOException#getCause getCause()} method). A null value is permitted, and indicates
+     * that the cause is nonexistent or unknown.
      */
-    public NetworkException(String message, Throwable cause) {
+    public NetworkException(@Nullable String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 
@@ -98,15 +100,14 @@ public abstract class NetworkException extends HttpException {
 
     /**
      * Returns {@code true} if retrying this request right away might succeed, {@code false}
-     * otherwise. For example returns {@code true} when {@link #getErrorCode} returns
-     * {@link #ERROR_NETWORK_CHANGED} because trying the request might succeed using the new
-     * network configuration, but {@code false} when {@code getErrorCode()} returns
-     * {@link #ERROR_INTERNET_DISCONNECTED} because retrying the request right away will
-     * encounter the same failure (instead retrying should be delayed until device regains
-     * network connectivity).
+     * otherwise. For example returns {@code true} when {@link #getErrorCode} returns {@link
+     * #ERROR_NETWORK_CHANGED} because trying the request might succeed using the new network
+     * configuration, but {@code false} when {@code getErrorCode()} returns {@link
+     * #ERROR_INTERNET_DISCONNECTED} because retrying the request right away will encounter the same
+     * failure (instead retrying should be delayed until device regains network connectivity).
      *
      * @return {@code true} if retrying this request right away might succeed, {@code false}
-     *         otherwise.
+     * otherwise.
      */
     public abstract boolean isImmediatelyRetryable();
 }

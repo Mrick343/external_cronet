@@ -6,21 +6,20 @@
 
 #include <stdint.h>
 
-#include <algorithm>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <unordered_set>
 
 #include "base/pickle.h"
+#include "base/ranges/algorithm.h"
 #include "base/time/time.h"
-#include "base/trace_event/trace_event.h"
+#include "base/trace_event/base_tracing.h"
 #include "base/values.h"
 #include "net/http/http_byte_range.h"
 #include "net/http/http_util.h"
 #include "net/log/net_log_capture_mode.h"
 #include "testing/gtest/include/gtest/gtest.h"
-#include "third_party/perfetto/include/perfetto/test/traced_value_test_support.h"
 
 namespace net {
 
@@ -118,8 +117,8 @@ std::string ToSimpleString(const scoped_refptr<HttpResponseHeaders>& parsed) {
 
     // Verify that |name| and |value| do not contain ':' or '\n' (if they did
     // it would make this serialized format ambiguous).
-    if (std::count(new_line.begin(), new_line.end(), '\n') != 1 ||
-        std::count(new_line.begin(), new_line.end(), ':') != 1) {
+    if (base::ranges::count(new_line, '\n') != 1 ||
+        base::ranges::count(new_line, ':') != 1) {
       ADD_FAILURE() << "Unexpected characters in the header name or value: "
                     << new_line;
       return result;
@@ -1824,7 +1823,7 @@ TEST(HttpResponseHeadersTest, SetHeader) {
       ToSimpleString(headers));
 }
 
-TEST(HttpResponseHeadersTest, TracingSupport) {
+TEST(HttpResponseHeadersTest, DISABLED_TracingSupport) {
   scoped_refptr<HttpResponseHeaders> headers = HttpResponseHeaders::TryToCreate(
       "HTTP/1.1 200 OK\n"
       "connection: keep-alive\n");

@@ -36,6 +36,7 @@
 #include "base/task/thread_pool.h"
 #include "base/trace_event/base_tracing.h"
 #include "build/chromeos_buildflags.h"
+#include "net/base/cronet_buildflags.h"
 #include "net/base/features.h"
 #include "net/base/io_buffer.h"
 #include "net/base/ip_address.h"
@@ -48,7 +49,6 @@
 #include "net/log/net_log_event_type.h"
 #include "net/log/net_log_source.h"
 #include "net/log/net_log_source_type.h"
-#include "net/socket/ios_cronet_buildflags.h"
 #include "net/socket/socket_descriptor.h"
 #include "net/socket/socket_options.h"
 #include "net/socket/socket_tag.h"
@@ -222,6 +222,7 @@ void UDPSocketPosix::ReceivedActivityMonitor::OnTimerFired() {
 
 void UDPSocketPosix::Close() {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+  CHECK(!dont_close_);
 
   owned_socket_count_.Reset();
 
@@ -1068,6 +1069,10 @@ int UDPSocketPosix::SetIOSNetworkServiceType(int ios_network_service_type) {
   }
 #endif  // BUILDFLAG(IS_IOS)
   return OK;
+}
+
+void UDPSocketPosix::SetDontClose(bool dont_close) {
+  dont_close_ = dont_close;
 }
 
 }  // namespace net
