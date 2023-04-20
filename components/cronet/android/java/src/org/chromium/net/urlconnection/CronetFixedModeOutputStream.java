@@ -9,6 +9,8 @@ import androidx.annotation.VisibleForTesting;
 import android.net.http.UploadDataProvider;
 import android.net.http.UploadDataSink;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.net.HttpRetryException;
 import java.net.ProtocolException;
@@ -21,13 +23,14 @@ import java.nio.ByteBuffer;
  * It does not support rewind. Note that {@link #write} should only be called
  * from the thread on which the {@link #mConnection} is created.
  */
-final class CronetFixedModeOutputStream extends CronetOutputStream {
+@VisibleForTesting
+public final class CronetFixedModeOutputStream extends CronetOutputStream {
     // CronetFixedModeOutputStream buffers up to this value and wait for UploadDataStream
     // to consume the data. This field is non-final, so it can be changed for tests.
     // Using 16384 bytes is because the internal read buffer is 14520 for QUIC,
     // 16384 for SPDY, and 16384 for normal HTTP/1.1 stream.
     @VisibleForTesting
-    private static int sDefaultBufferLength = 16384;
+    public static int sDefaultBufferLength = 16384;
     private final CronetHttpURLConnection mConnection;
     private final MessageLoop mMessageLoop;
     private final long mContentLength;
@@ -201,7 +204,7 @@ final class CronetFixedModeOutputStream extends CronetOutputStream {
      * Sets the default buffer length for use in tests.
      */
     @VisibleForTesting
-    static void setDefaultBufferLengthForTesting(int length) {
+    public static void setDefaultBufferLengthForTesting(int length) {
         sDefaultBufferLength = length;
     }
 }
