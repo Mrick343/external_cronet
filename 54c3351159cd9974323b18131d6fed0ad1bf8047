@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7c2fc7e3_3ad2611a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T11:37:06Z",
+      "side": 0,
+      "message": "undelete this.",
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf4c5fef_4c826cdf",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
         "patchSetId": 1
@@ -20,6 +37,91 @@
         "endLine": 1358,
         "endChar": 5
       },
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a1d5a47_d9b76ef8",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T11:37:06Z",
+      "side": 0,
+      "message": "we want the new code",
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f388365e_247c56bd",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T11:37:06Z",
+      "side": 0,
+      "message": "we want the new code",
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32c3fc28_944cd79c",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T11:37:06Z",
+      "side": 0,
+      "message": "we want this",
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a24677b_ad926ead",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T11:37:06Z",
+      "side": 0,
+      "message": "ditto",
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32c0bdde_a8524ffd",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-20T11:37:06Z",
+      "side": 0,
+      "message": "ditto",
       "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
