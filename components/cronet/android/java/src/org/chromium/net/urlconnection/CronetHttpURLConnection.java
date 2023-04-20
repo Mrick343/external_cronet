@@ -15,6 +15,8 @@ import android.net.http.ExperimentalUrlRequest;
 import android.net.http.UrlRequest;
 import android.net.http.UrlResponseInfo;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -257,7 +259,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
         }
         final ExperimentalUrlRequest.Builder requestBuilder =
                 (ExperimentalUrlRequest.Builder) mCronetEngine.newUrlRequestBuilder(
-                        getURL().toString(), new CronetUrlRequestCallback(), mMessageLoop);
+                        getURL().toString(), mMessageLoop, new CronetUrlRequestCallback());
         if (doOutput) {
             if (method.equals("GET")) {
                 method = "POST";
@@ -286,9 +288,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
         for (Pair<String, String> requestHeader : mRequestHeaders) {
             requestBuilder.addHeader(requestHeader.first, requestHeader.second);
         }
-        if (!getUseCaches()) {
-            requestBuilder.disableCache();
-        }
+        requestBuilder.setCacheDisabled(!getUseCaches());
         // Set HTTP method.
         requestBuilder.setHttpMethod(method);
         if (checkTrafficStatsTag()) {
@@ -456,7 +456,8 @@ public class CronetHttpURLConnection extends HttpURLConnection {
      * Since byteBuffer is passed to the UrlRequest, it must be a direct
      * ByteBuffer.
      */
-    void getMoreData(ByteBuffer byteBuffer) throws IOException {
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+    public void getMoreData(ByteBuffer byteBuffer) throws IOException {
         mRequest.read(byteBuffer);
         mMessageLoop.loop(getReadTimeout());
     }
@@ -523,7 +524,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
         return -1;
     }
 
-    private class CronetUrlRequestCallback extends UrlRequest.Callback {
+    private class CronetUrlRequestCallback implements UrlRequest.Callback {
         public CronetUrlRequestCallback() {}
 
         @Override

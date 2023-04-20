@@ -2,6 +2,7 @@
 #define QUICHE_OBLIVIOUS_HTTP_OBLIVIOUS_HTTP_GATEWAY_H_
 
 #include <memory>
+#include <string>
 
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
@@ -23,7 +24,7 @@ namespace quiche {
 // This class is immutable (except moves) and thus trivially thread-safe,
 // assuming the `QuicheRandom* quiche_random` passed in with `Create` is
 // thread-safe. Note that default `QuicheRandom::GetInstance()` is thread-safe.
-class QUICHE_EXPORT_PRIVATE ObliviousHttpGateway {
+class QUICHE_EXPORT ObliviousHttpGateway {
  public:
   // @params: If callers would like to pass in their own `QuicheRandom`
   // instance, they can make use of the param `quiche_random`. Otherwise, the
@@ -61,7 +62,7 @@ class QUICHE_EXPORT_PRIVATE ObliviousHttpGateway {
   // `ObliviousHttpRequest` and pass in to this method in order to handle the
   // response flow back to the client.
   absl::StatusOr<ObliviousHttpResponse> CreateObliviousHttpResponse(
-      absl::string_view plaintext_data,
+      std::string plaintext_data,
       ObliviousHttpRequest::Context& oblivious_http_request_context) const;
 
  private:

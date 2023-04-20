@@ -6,6 +6,7 @@
 
 #include "base/callback_helpers.h"
 #include "base/run_loop.h"
+#include "base/task/single_thread_task_runner.h"
 #include "base/task/thread_pool.h"
 #include "build/build_config.h"
 #include "net/base/mock_network_change_notifier.h"
@@ -28,6 +29,7 @@
 #include "net/traffic_annotation/network_traffic_annotation_test_helper.h"
 #include "net/url_request/url_request.h"
 #include "net/url_request/url_request_test_util.h"
+#include "net/base/cronet_buildflags.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "testing/platform_test.h"
 #include "url/gurl.h"
@@ -45,8 +47,11 @@
 
 #if BUILDFLAG(ENABLE_REPORTING)
 #include "base/files/scoped_temp_dir.h"
-#include "base/threading/thread_task_runner_handle.h"
-#include "net/extras/sqlite/sqlite_persistent_reporting_and_nel_store.h"
+#if !BUILDFLAG(CRONET_BUILD)
+// gn check does not account for BUILDFLAG(), specify nogncheck to stop it from
+// yelling.
+#include "net/extras/sqlite/sqlite_persistent_reporting_and_nel_store.h"  // nogncheck
+#endif
 #include "net/reporting/reporting_context.h"
 #include "net/reporting/reporting_policy.h"
 #include "net/reporting/reporting_service.h"
@@ -180,7 +185,7 @@ TEST_F(URLRequestContextBuilderTest, CustomHttpAuthHandlerFactory) {
                 host_resolver_.get(), &handler));
 }
 
-#if BUILDFLAG(ENABLE_REPORTING)
+#if BUILDFLAG(ENABLE_REPORTING) && !BUILDFLAG(CRONET_BUILD)
 // See crbug.com/935209. This test ensures that shutdown occurs correctly and
 // does not crash while destoying the NEL and Reporting services in the process
 // of destroying the URLRequestContext whilst Reporting has a pending upload.
@@ -200,7 +205,7 @@ TEST_F(URLRequestContextBuilderTest, ShutDownNELAndReportingWithPendingUpload) {
       std::make_unique<SQLitePersistentReportingAndNelStore>(
           scoped_temp_dir.GetPath().Append(
               FILE_PATH_LITERAL("ReportingAndNelStore")),
-          base::ThreadTaskRunnerHandle::Get(),
+          base::SingleThreadTaskRunner::GetCurrentDefault(),
           base::ThreadPool::CreateSequencedTaskRunner(
               {base::MayBlock(),
                net::GetReportingAndNelStoreBackgroundSequencePriority(),

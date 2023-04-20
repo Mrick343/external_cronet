@@ -3,6 +3,11 @@
 // found in the LICENSE file.
 package android.net.http;
 
+import static android.net.http.ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED;
+import static android.net.http.ConnectionMigrationOptions.MIGRATION_OPTION_UNSPECIFIED;
+import static android.net.http.DnsOptions.DNS_OPTION_ENABLED;
+import static android.net.http.DnsOptions.DNS_OPTION_UNSPECIFIED;
+
 import android.content.Context;
 import android.net.http.DnsOptions.StaleDnsOptions;
 
@@ -130,6 +135,24 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
         }
 
         /**
+         * Enables the network quality estimator, which collects and reports
+         * measurements of round trip time (RTT) and downstream throughput at
+         * various layers of the network stack. After enabling the estimator,
+         * listeners of RTT and throughput can be added with
+         * {@link #addRttListener} and {@link #addThroughputListener} and
+         * removed with {@link #removeRttListener} and
+         * {@link #removeThroughputListener}. The estimator uses memory and CPU
+         * only when enabled.
+         * @param value {@code true} to enable network quality estimator,
+         *            {@code false} to disable.
+         * @return the builder to facilitate chaining.
+         */
+        public Builder enableNetworkQualityEstimator(boolean value) {
+            mBuilderDelegate.enableNetworkQualityEstimator(value);
+            return this;
+        }
+
+        /**
          * Sets the thread priority of the internal thread.
          *
          * @param priority the thread priority of the internal thread.
@@ -199,9 +222,9 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
 
                 // Note: using the experimental APIs always overwrites what's in the experimental
                 // JSON, even though "repeated" fields could in theory be additive.
-                if (!options.getQuicHostAllowlist().isEmpty()) {
+                if (!options.getAllowedQuicHosts().isEmpty()) {
                     quicOptions.put(
-                            "host_whitelist", String.join(",", options.getQuicHostAllowlist()));
+                            "host_whitelist", String.join(",", options.getAllowedQuicHosts()));
                 }
                 if (!options.getEnabledQuicVersions().isEmpty()) {
                     quicOptions.put(
@@ -220,7 +243,7 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                             "set_quic_flags", String.join(",", options.getExtraQuicheFlags()));
                 }
 
-                if (options.getInMemoryServerConfigsCacheSize() != null) {
+                if (options.hasInMemoryServerConfigsCacheSize()) {
                     quicOptions.put("max_server_configs_stored_in_properties",
                             options.getInMemoryServerConfigsCacheSize());
                 }
@@ -300,18 +323,21 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
                 JSONObject asyncDnsOptions = createDefaultIfAbsent(experimentalOptions, "AsyncDNS");
 
-                if (options.getUseHttpStackDnsResolver() != null) {
-                    asyncDnsOptions.put("enable", options.getUseHttpStackDnsResolver());
+                if (options.getUseHttpStackDnsResolver() != DNS_OPTION_UNSPECIFIED) {
+                    asyncDnsOptions.put("enable",
+                            options.getUseHttpStackDnsResolver() == DNS_OPTION_ENABLED);
                 }
 
                 JSONObject staleDnsOptions = createDefaultIfAbsent(experimentalOptions, "StaleDNS");
 
-                if (options.getEnableStaleDns() != null) {
-                    staleDnsOptions.put("enable", options.getEnableStaleDns());
+                if (options.getStaleDns() != DNS_OPTION_UNSPECIFIED) {
+                    staleDnsOptions.put("enable",
+                            options.getStaleDns() == DNS_OPTION_ENABLED);
                 }
 
-                if (options.getPersistHostCache() != null) {
-                    staleDnsOptions.put("persist_to_disk", options.getPersistHostCache());
+                if (options.getPersistHostCache() != DNS_OPTION_UNSPECIFIED) {
+                    staleDnsOptions.put("persist_to_disk",
+                            options.getPersistHostCache() == DNS_OPTION_ENABLED);
                 }
 
                 if (options.getPersistHostCachePeriod() != null) {
@@ -322,31 +348,37 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                 if (options.getStaleDnsOptions() != null) {
                     StaleDnsOptions staleDnsOptionsJava = options.getStaleDnsOptions();
 
-                    if (staleDnsOptionsJava.getAllowCrossNetworkUsage() != null) {
+                    if (staleDnsOptionsJava.getAllowCrossNetworkUsage()
+                            != DNS_OPTION_UNSPECIFIED) {
                         staleDnsOptions.put("allow_other_network",
-                                staleDnsOptionsJava.getAllowCrossNetworkUsage());
+                                staleDnsOptionsJava.getAllowCrossNetworkUsage()
+                                        == DNS_OPTION_ENABLED);
                     }
 
-                    if (staleDnsOptionsJava.getFreshLookupTimeoutMillis() != null) {
+                    if (staleDnsOptionsJava.getFreshLookupTimeout() != null) {
                         staleDnsOptions.put(
-                                "delay_ms", staleDnsOptionsJava.getFreshLookupTimeoutMillis());
+                                "delay_ms", staleDnsOptionsJava.getFreshLookupTimeout().toMillis());
                     }
 
-                    if (staleDnsOptionsJava.getUseStaleOnNameNotResolved() != null) {
+                    if (staleDnsOptionsJava.getUseStaleOnNameNotResolved()
+                            != DNS_OPTION_UNSPECIFIED) {
                         staleDnsOptions.put("use_stale_on_name_not_resolved",
-                                staleDnsOptionsJava.getUseStaleOnNameNotResolved());
+                                staleDnsOptionsJava.getUseStaleOnNameNotResolved()
+                                        == DNS_OPTION_ENABLED);
                     }
 
-                    if (staleDnsOptionsJava.getMaxExpiredDelayMillis() != null) {
+                    if (staleDnsOptionsJava.getMaxExpiredDelay() != null) {
                         staleDnsOptions.put("max_expired_time_ms",
-                                staleDnsOptionsJava.getMaxExpiredDelayMillis());
+                                staleDnsOptionsJava.getMaxExpiredDelay().toMillis());
                     }
                 }
 
                 JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
-                if (options.getPreestablishConnectionsToStaleDnsResults() != null) {
+                if (options.getPreestablishConnectionsToStaleDnsResults()
+                        != DNS_OPTION_UNSPECIFIED) {
                     quicOptions.put("race_stale_dns_on_connection",
-                            options.getPreestablishConnectionsToStaleDnsResults());
+                            options.getPreestablishConnectionsToStaleDnsResults()
+                                    == DNS_OPTION_ENABLED);
                 }
             });
             return this;
@@ -366,9 +398,10 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
             mExperimentalOptionsPatches.add((experimentalOptions) -> {
                 JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
 
-                if (options.getEnableDefaultNetworkMigration() != null) {
+                if (options.getDefaultNetworkMigration() != MIGRATION_OPTION_UNSPECIFIED) {
                     quicOptions.put("migrate_sessions_on_network_change_v2",
-                            options.getEnableDefaultNetworkMigration());
+                            options.getDefaultNetworkMigration()
+                                    == MIGRATION_OPTION_ENABLED);
                 }
                 if (options.getAllowServerMigration() != null) {
                     quicOptions.put("allow_server_migration", options.getAllowServerMigration());
@@ -392,13 +425,17 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
                     quicOptions.put("max_migrations_to_non_default_network_on_write_error",
                             options.getMaxWriteErrorNonDefaultNetworkMigrationsCount());
                 }
-                if (options.getEnablePathDegradationMigration() != null) {
-                    boolean pathDegradationValue = options.getEnablePathDegradationMigration();
+                if (options.getPathDegradationMigration() != MIGRATION_OPTION_UNSPECIFIED) {
+                    boolean pathDegradationValue = (options.getPathDegradationMigration()
+                            == MIGRATION_OPTION_ENABLED);
 
                     boolean skipPortMigrationFlag = false;
 
-                    if (options.getAllowNonDefaultNetworkUsage() != null) {
-                        boolean nonDefaultNetworkValue = options.getAllowNonDefaultNetworkUsage();
+                    if (options.getAllowNonDefaultNetworkUsage()
+                            != MIGRATION_OPTION_UNSPECIFIED) {
+                        boolean nonDefaultNetworkValue =
+                                (options.getAllowNonDefaultNetworkUsage()
+                                        == MIGRATION_OPTION_ENABLED);
                         if (!pathDegradationValue && nonDefaultNetworkValue) {
                             // Misconfiguration which doesn't translate easily to the JSON flags
                             throw new IllegalArgumentException(
@@ -502,11 +539,11 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
 
     @Override
     public abstract ExperimentalBidirectionalStream.Builder newBidirectionalStreamBuilder(
-            String url, BidirectionalStream.Callback callback, Executor executor);
+            String url, Executor executor, BidirectionalStream.Callback callback);
 
     @Override
     public abstract ExperimentalUrlRequest.Builder newUrlRequestBuilder(
-            String url, UrlRequest.Callback callback, Executor executor);
+            String url, Executor executor, UrlRequest.Callback callback);
 
     /**
      * Starts NetLog logging to a specified directory with a bounded size. The NetLog will contain
@@ -599,7 +636,7 @@ public abstract class ExperimentalHttpEngine extends HttpEngine {
      * using the given proxy.
      * <p>
      * <b>Note:</b> this {@link java.net.HttpURLConnection} implementation is subject to certain
-     * limitations, see {@link #createURLStreamHandlerFactory} for details.
+     * limitations, see {@link #createUrlStreamHandlerFactory} for details.
      *
      * @param url URL of resource to connect to.
      * @param proxy proxy to use when establishing connection.
