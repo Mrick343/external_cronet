@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e3ed079_cf46610a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-20T16:32:31Z",
+      "side": 1,
+      "message": "Thanks a lot for all the comments! As discussed, let\u0027s merge this and address all comments in follow-up CLs.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d558793d_7fffcd08",
