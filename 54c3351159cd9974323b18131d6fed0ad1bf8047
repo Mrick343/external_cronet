@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f7024dfa_eb4ae2e9",
+        "filename": "base/android/java/src/org/chromium/base/ApiCompatibilityUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 0,
+      "message": "We should pick HEAD here since we don\u0027t want androidx dependencies.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 36
+      },
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c2fc7e3_3ad2611a",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
         "patchSetId": 1
@@ -31,6 +54,30 @@
       "writtenOn": "2023-04-19T17:05:53Z",
       "side": 0,
       "message": "We probably want this instead of nativeWriteToHostCache and nativeExperimentalOptionsParsingIsAllowedToFail.",
+      "range": {
+        "startLine": 1349,
+        "startChar": 0,
+        "endLine": 1358,
+        "endChar": 5
+      },
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c519190e_4031440b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 0,
+      "message": "Yes, we should pick just this portion out of upstream.",
+      "parentUuid": "cf4c5fef_4c826cdf",
       "range": {
         "startLine": 1349,
         "startChar": 0,

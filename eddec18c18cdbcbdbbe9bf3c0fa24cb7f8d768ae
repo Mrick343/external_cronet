@@ -1,0 +1,297 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c54a561_6dd702af",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "We should stop dropping this and import the .gni file to aosp instead.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 56
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "191918da_430823c7",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "These (and all the stuff below) should also be kept and either split through some refactoring or hidden away a new cronet_mainline gn arg.",
+      "range": {
+        "startLine": 335,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 1
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2272ed3e_f3e6349b",
+        "filename": "components/cronet/android/cronet_impl_native_proguard.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "Does proguard complain if we mention a class that doesn\u0027t exist?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 1
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc23f8d4_291a9a7c",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "We should probably consider reintroducing this if it doesn\u0027t hurt AOSP.",
+      "range": {
+        "startLine": 199,
+        "startChar": 4,
+        "endLine": 214,
+        "endChar": 5
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "743b41d3_aa4dc305",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "If integrated mode is annoying to have downstream, we should probably also drop it upstream.",
+      "range": {
+        "startLine": 53,
+        "startChar": 16,
+        "endLine": 53,
+        "endChar": 67
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eaedcc6_1da5dd0a",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "We should upstream aosp/2512037",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 5
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cad454f2_625eda92",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "Can the changes specific to this made in aosp/2475845 be upstreamed?",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 66
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a66e19e_9bfd7e47",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "To me: look into whether we can keep this somehow.",
+      "range": {
+        "startLine": 355,
+        "startChar": 4,
+        "endLine": 357,
+        "endChar": 5
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7369cf23_fae465fa",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "Hmm, maybe the wrapper layer will be able to get rid of this diff. Leaving this comment so that I don\u0027t forget.",
+      "range": {
+        "startLine": 516,
+        "startChar": 12,
+        "endLine": 519,
+        "endChar": 9
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0402bc74_313e857d",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/UserAgent.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "To me: remember to look into this.",
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2bf54ca_c4216a7e",
+        "filename": "components/cronet/android/sample/src/org/chromium/cronet_sample_apk/CronetSampleActivity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "To me: ??",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 44
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c08ce499_ba47178b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/BidirectionalStreamTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "to me: remember to look into \"run tests with java impl and native impl\"",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 157,
+        "endChar": 0
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c595556_fba44681",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": -2,
+      "message": "We should consider whether we should go back to http2testserver to maintain compatibility with upstream or upstream aosp/2513496",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 60
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

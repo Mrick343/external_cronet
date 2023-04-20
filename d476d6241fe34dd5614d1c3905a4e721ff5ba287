@@ -1,6 +1,526 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9bb50c2_e496dd89",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "I\u0027ve taken this as an opportunity to fully evaluate our diff against upstream. The majority of the comments are related to the diffs I\u0027ve found (and how we should try to fix them w.r.t. our two OKRs) and not the the merge itself. So, feel free to ignore them or discuss if you have opinions.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d558793d_7fffcd08",
+        "filename": "base/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 2317,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Is this still needed?",
+      "range": {
+        "startLine": 2311,
+        "startChar": 2,
+        "endLine": 2317,
+        "endChar": 3
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48d535b7_6d731275",
+        "filename": "base/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 4240,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "For myself: if I end up doing what I mentioned in my comment above (base/android/java/src/org/chromium/base/BuildInfo.java), this could go behind an upstreamable `is_cronet_mainline_build` gn arg.",
+      "range": {
+        "startLine": 4240,
+        "startChar": 4,
+        "endLine": 4240,
+        "endChar": 27
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5fb0a86a_41db5b3f",
+        "filename": "base/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 4487,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Already listed at line 4483",
+      "range": {
+        "startLine": 4487,
+        "startChar": 6,
+        "endLine": 4487,
+        "endChar": 63
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efa66a50_fda01850",
+        "filename": "base/allocator/partition_allocator/partition_alloc.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We haven\u0027t tried to upstream these (i.e., aosp/2523122 and aosp/2523118) yet, right?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50d1a4b4_aeae8557",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "I think this is the only remaining pain point for which I haven\u0027t thought of an upstreamable solution yet. But at least this is straightforward to fix.\n\n(this comment is mostly for myself)\nMaybe the best solution is just to refactor all BuildCompat calls into an external interface. Then, for the sake of AOSP builds dependencies, we can implement an upstream fake that doesn\u0027t depend on androidx, while Chromium builds would still pick the Chromium implementation.\n\nThat should allow the dependency checker to stop listing androidx as a dependency. Also, this would allow AOSP to just implement locally the interface, avoiding merge conflicts altogether.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c15881d3_4bdfeead",
+        "filename": "base/android/java/src/org/chromium/base/PiiElider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Do we not have org.chromium.base.Log here? This is what ends up being used upstream.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 24
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8f24ee3_c8647a7a",
+        "filename": "base/android/jni_android.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "IIUC, for all JNI changes, you\u0027ve always picked the upstream version to solve this conflicts (+ adapt some stuff which didn\u0027t conflict). This makes sense since Mohannad upstreamed all the JNI changes.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "022a9ffa_d31e5959",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "I\u0027m not too familiar with these changes, so I\u0027ll let Mohannad take a look (best way to look at this is by diffing against Parent 2).",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "daa0a017_bd039430",
+        "filename": "base/message_loop/message_pump_android.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "I see that this was added in aosp/2482076. I\u0027m not really sure what\u0027s going on in ag/19458612, but wouldn\u0027t make more sense to have this define live within android/looper.h?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 0
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c365ec40_331bd54d",
+        "filename": "base/test/android/javatests/src/org/chromium/base/test/util/PackageManagerWrapper.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "I see that this was added in aosp/2513495. Any thoughts on how to upstream this?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0b33962_67aa383a",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Same as my other comment above.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 0
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a667b096_ac4bcaf7",
+        "filename": "base/test/test_support_android.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Leaving this comment to remember to act on https://android-review.git.corp.google.com/c/platform/external/cronet/+/2509135/comment/f604278f_063d82f3/ (change caller instead of callee)",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 59
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9232103_b3c95fc8",
+        "filename": "base/trace_event/memory_dump_manager.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "This might no longer be needed?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 42
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e024143c_23214431",
+        "filename": "base/trace_event/trace_event_stub.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should check whether these are still needed and possibly upstream these through net/base/tracing.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7688180_f52c20dd",
+        "filename": "build/.gitignore",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Any reason for having this downstream?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80ae0f49_563520b3",
+        "filename": "build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/TestStatusReceiver.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Can this (aosp/2514495) be upstreamed?",
+      "range": {
+        "startLine": 54,
+        "startChar": 48,
+        "endLine": 54,
+        "endChar": 73
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59a602e4_a8832443",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "The merge conflict resolution diff is extremely confusing. I\u0027m not entirely sure what\u0027s going on here. I\u0027ll need to look at the final outcome to reason about this.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68726102_489aa152",
+        "filename": "components/cronet/android/api/src/android/net/http/apihelpers/HttpResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Given that we\u0027re aiming to wrap the chromium API with the AOSP API, it might be better not to rename the apihelpers at all (IIRC we don\u0027t expose these through AOSP\u0027s API yet?)?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2369b6e_309ad22b",
+        "filename": "components/cronet/android/api/src/org/chromium/net/apihelpers/InMemoryTransformCronetCallback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should filter out the apihelpers subdir at the copybara level if we\u0027re not using it.\n\nThough, this won\u0027t be an issue anymore after we have the org.chromium.net/android.net.http encapsulation/wrapper.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d051ffa_ab04ee14",
+        "filename": "components/cronet/android/cronet_library_loader.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "Let\u0027s remember to discuss the symlink (?) approach for zlib.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eb94fdc_0c665d89",
+        "filename": "components/cronet/android/fake/javatests/org/chromium/net/test/FakeCronetControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should start filtering out the java and fake implementation at the copybara-script level.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca82386c_968e2542",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLogger.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should upstream aosp/2450562",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 286,
+        "endChar": 0
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec14201e_c70fa411",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetMetrics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "All these changes should probably be handled at the wrapper layer?",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 51
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "196281a7_32d0849f",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUploadDataStream.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should probably upstream aosp/2512036",
+      "range": {
+        "startLine": 397,
+        "startChar": 4,
+        "endLine": 397,
+        "endChar": 10
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47c9eab3_717b4c6a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "For the tests, a lot of merge conflicts seems to be due to APIs being a difference package and CronetEngine-\u003eHttpEngine renames.\n\nThe encapsulation CL should fix this once and for all (we will be able to go back to having tests say CronetEngine).",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecb16237_b029c288",
@@ -14,6 +534,218 @@
       "writtenOn": "2023-04-20T11:37:06Z",
       "side": 1,
       "message": "Use proxynatives?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad2e79c1_c129bb3c",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/MetricsTestUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should look into upstreaming this (aosp/2510258)?",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 69
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28c2624a_0122b91a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/NQETest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should consider upstreaming aosp/2514500 or moving back to EmbeddedTestServer",
+      "range": {
+        "startLine": 61,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 73
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "354b9272_b7e29ad2",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/NetworkChangeNotifierTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should upstream aosp/2510262",
+      "range": {
+        "startLine": 98,
+        "startChar": 52,
+        "endLine": 99,
+        "endChar": 85
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44f9d167_229bbf2f",
+        "filename": "components/cronet/android/test/src/org/chromium/net/TestFilesInstaller.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should probably not import this at the copybara level and just keep the local copy.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c21b9f18_46da386a",
+        "filename": "net/android/http_auth_negotiate_android_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should file a bug for this if it doesn\u0027t exist yet",
+      "range": {
+        "startLine": 19,
+        "startChar": 35,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb48155d_f1a3249a",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifierAutoDetect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should consider whether/how to upstream aosp/2510260",
+      "range": {
+        "startLine": 203,
+        "startChar": 5,
+        "endLine": 204,
+        "endChar": 10
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3ff585f_b2aeeecd",
+        "filename": "net/android/network_change_notifier_android_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should file a bug for this if it doesn\u0027t exist yet",
+      "range": {
+        "startLine": 369,
+        "startChar": 7,
+        "endLine": 369,
+        "endChar": 63
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4322b5f_6e8e0426",
+        "filename": "net/android/network_change_notifier_android_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should file a bug for this if it doesn\u0027t exist yet",
+      "range": {
+        "startLine": 381,
+        "startChar": 7,
+        "endLine": 381,
+        "endChar": 65
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5774d43_8f40315e",
+        "filename": "net/base/network_delegate.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "For all of these picking upstream (which you did) should be the correct choice.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "596fb7d4_2d5edc44",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-20T13:35:01Z",
+      "side": 1,
+      "message": "We should file a bug for all these if it doesn\u0027t exist yet",
       "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
