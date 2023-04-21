@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "749b48f1_db551f46",
+        "filename": "base/android/java/src/org/chromium/base/ApiCompatibilityUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:39:51Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "f7024dfa_eb4ae2e9",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 36
+      },
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c2fc7e3_3ad2611a",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-04-20T11:37:06Z",
       "side": 0,
       "message": "undelete this.",
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e60b8ec6_16f2bb6a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:39:51Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "7c2fc7e3_3ad2611a",
       "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -78,6 +120,30 @@
       "side": 0,
       "message": "Yes, we should pick just this portion out of upstream.",
       "parentUuid": "cf4c5fef_4c826cdf",
+      "range": {
+        "startLine": 1349,
+        "startChar": 0,
+        "endLine": 1358,
+        "endChar": 5
+      },
+      "revId": "54c3351159cd9974323b18131d6fed0ad1bf8047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47b135e1_79a72508",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:39:51Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "c519190e_4031440b",
       "range": {
         "startLine": 1349,
         "startChar": 0,

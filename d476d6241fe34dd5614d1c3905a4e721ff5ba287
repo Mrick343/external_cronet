@@ -121,6 +121,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed6e16ed_fbd1ec6f",
+        "filename": "base/allocator/partition_allocator/partition_alloc.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:39:51Z",
+      "side": 1,
+      "message": "we have now 😊",
+      "parentUuid": "efa66a50_fda01850",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50d1a4b4_aeae8557",
@@ -414,6 +432,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7de6c287_b47e5d40",
+        "filename": "components/cronet/android/api/src/org/chromium/net/apihelpers/InMemoryTransformCronetCallback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:39:51Z",
+      "side": 1,
+      "message": "If we were to filter them out, we would also have to separate the BUILD.gn. Otherwise, we introduce further diversion.",
+      "parentUuid": "c2369b6e_309ad22b",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d051ffa_ab04ee14",
         "filename": "components/cronet/android/cronet_library_loader.cc",
         "patchSetId": 1
@@ -551,6 +587,24 @@
       "writtenOn": "2023-04-20T11:37:06Z",
       "side": 1,
       "message": "Use proxynatives?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88118fc1_0c9818fc",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1514,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecb16237_b029c288",
       "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
