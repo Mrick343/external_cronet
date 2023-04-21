@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4290a160_1da295fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-21T23:45:44Z",
+      "side": 1,
+      "message": "I noticed gen_desc_json.sh is still missing in upstream-staging. 😊",
+      "revId": "6e52b272e6b679eb0095d2023aab56178dac9f08",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
