@@ -52,6 +52,24 @@
       "parentUuid": "9f82fd19_0a4dbc42",
       "revId": "abaa30e91fd8cf5ca773d75f6bce759de10bc6dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a34397ae_e33d80b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-24T14:52:58Z",
+      "side": 1,
+      "message": "Yeah, I\u0027m aware of the underlying issue. This is not an aosp-only issue so I don\u0027t think it was ever fixed. The proposed fix was to move the translation to the builderDelegate but this would change the setExperimentalOptions from abstract.",
+      "parentUuid": "490603ea_f57d14b4",
+      "revId": "abaa30e91fd8cf5ca773d75f6bce759de10bc6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
