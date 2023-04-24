@@ -16,6 +16,24 @@
       "message": "\u003e testQuicHostAllowlist passes when I switch from\nExperimentalHttpEngine to HttpEngine. The test shouldn\u0027t\npass.\n\nWhy should it not pass? They\u0027re created using the very same builder. Both constructors ultimately call into this: https://cs.android.com/android/platform/superproject/+/refs/heads/master:external/cronet/components/cronet/android/api/src/android/net/http/HttpEngine.java;drc\u003d7346c436e5a11ce08f6a80dcfeb8ef941ca30176;l\u003d417 which does support setting experimental options internally.",
       "revId": "abaa30e91fd8cf5ca773d75f6bce759de10bc6dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f82fd19_0a4dbc42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-24T14:35:35Z",
+      "side": 1,
+      "message": "The translation from the xOptions to the JSON experimentalOptions happens in the experimentalEngine class eg: https://cs.android.com/android/platform/superproject/+/refs/heads/master:external/cronet/components/cronet/android/api/src/android/net/http/ExperimentalHttpEngine.java;bpv\u003d1;bpt\u003d1;l\u003d211.\n\nIt shouldn\u0027t pass because quicURL is not in the allowlist so shouldn\u0027t use quic.",
+      "parentUuid": "a02fe76b_1c7de019",
+      "revId": "abaa30e91fd8cf5ca773d75f6bce759de10bc6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
