@@ -34,6 +34,24 @@
       "parentUuid": "a02fe76b_1c7de019",
       "revId": "abaa30e91fd8cf5ca773d75f6bce759de10bc6dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "490603ea_f57d14b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-04-24T14:43:41Z",
+      "side": 1,
+      "message": "Ah, I see. Didn\u0027t this change with a recent bump to a newer Cronet version? I thought we manually ported the new APIs which had this addressed.\n\nThe issue is that the quic options don\u0027t get translated so the allowlist remains empty, which means that QUIC is allowed to be spoken everywhere. Fixing this is annoying given the Android style guide prefers to use constructors over factory methods.",
+      "parentUuid": "9f82fd19_0a4dbc42",
+      "revId": "abaa30e91fd8cf5ca773d75f6bce759de10bc6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
