@@ -52,6 +52,23 @@
       "parentUuid": "dde8b502_2d1c66b0",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "571dc493_2d64ab15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-04-24T11:07:11Z",
+      "side": 1,
+      "message": "I\u0027d be against this as this is what we originally had and didn\u0027t work as we intended.\n\nThe problem is that targets under `data` seems to be compiled without native-code coverage. Until that is fixed then we can\u0027t really migrate to using `data` as we risk losing coverage data.",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
