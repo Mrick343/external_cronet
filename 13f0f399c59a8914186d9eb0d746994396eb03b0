@@ -69,6 +69,24 @@
       "message": "I\u0027d be against this as this is what we originally had and didn\u0027t work as we intended.\n\nThe problem is that targets under `data` seems to be compiled without native-code coverage. Until that is fixed then we can\u0027t really migrate to using `data` as we risk losing coverage data.",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17792c8b_c0740300",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1121894
+      },
+      "writtenOn": "2023-04-25T17:07:34Z",
+      "side": 1,
+      "message": "What\u0027s the status here ? I am not sure i understand the coverage thing, but what i see from build system standpoint is that your test doesn\u0027t declare that dependency and use it, which is straight up wrong and will be prevented soon.\n@joeo@google.com for input on what we are missing .\n\nDeclaring a dependency in data is the usual way of doing this. I don\u0027t see this CL as doing something outrageous. If you have additional scripts or things with incorrect assumption, could you take an AI to fix those ?",
+      "parentUuid": "450ea097_ef266825",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
