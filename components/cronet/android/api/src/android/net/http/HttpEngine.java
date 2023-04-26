@@ -137,7 +137,7 @@ public abstract class HttpEngine {
         /**
          * Reference to the actual builder implementation. {@hide exclude from JavaDoc}.
          */
-        protected final IHttpEngineBuilder mBuilderDelegate;
+        protected final HttpEngine.Builder mBuilderDelegate;
 
         /**
          * Constructs a {@link Builder} object that facilitates creating a
@@ -161,7 +161,7 @@ public abstract class HttpEngine {
          *
          * {@hide}
          */
-        Builder(@NonNull IHttpEngineBuilder builderDelegate) {
+        Builder(@NonNull HttpEngine.Builder builderDelegate) {
             mBuilderDelegate = builderDelegate;
         }
 
@@ -507,13 +507,13 @@ public abstract class HttpEngine {
         }
 
         /**
-         * Creates an implementation of {@link IHttpEngineBuilder} that can be used
+         * Creates an implementation of {@link HttpEngine.Builder} that can be used
          * to delegate the builder calls to.
          *
          * @param context Android Context to use.
-         * @return the created {@link IHttpEngineBuilder}.
+         * @return the created {@link HttpEngine.Builder}.
          */
-        private static IHttpEngineBuilder createBuilderDelegate(Context context) {
+        private static HttpEngine.Builder createBuilderDelegate(Context context) {
             try {
                 Class<?> clazz = context.getClassLoader().loadClass(
                         "android.net.connectivity.org.chromium.net.impl.NativeCronetEngineBuilderImpl");
