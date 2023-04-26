@@ -70,6 +70,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c027a632_e0156915",
+        "filename": "components/cronet/android/cronet_impl_native_proguard.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": -2,
+      "message": "https://android-review.git.corp.google.com/c/platform/external/cronet/+/2563159",
+      "parentUuid": "2272ed3e_f3e6349b",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 1
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc23f8d4_291a9a7c",
@@ -238,6 +262,30 @@
       "writtenOn": "2023-04-20T13:35:01Z",
       "side": -2,
       "message": "To me: ??",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 44
+      },
+      "revId": "eddec18c18cdbcbdbbe9bf3c0fa24cb7f8d768ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "957b8d7f_a2cab65c",
+        "filename": "components/cronet/android/sample/src/org/chromium/cronet_sample_apk/CronetSampleActivity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": -2,
+      "message": "https://android-review.git.corp.google.com/c/platform/external/cronet/+/2565490",
+      "parentUuid": "c2bf54ca_c4216a7e",
       "range": {
         "startLine": 20,
         "startChar": 0,

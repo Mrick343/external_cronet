@@ -104,6 +104,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "880d7b88_6c9fddd8",
+        "filename": "base/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 4487,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": 1,
+      "message": "https://android-review.git.corp.google.com/c/platform/external/cronet/+/2563217",
+      "parentUuid": "5fb0a86a_41db5b3f",
+      "range": {
+        "startLine": 4487,
+        "startChar": 6,
+        "endLine": 4487,
+        "endChar": 63
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "efa66a50_fda01850",
@@ -322,6 +346,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e097468c_994381bf",
+        "filename": "base/trace_event/memory_dump_manager.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": 1,
+      "message": "https://android-review.git.corp.google.com/c/platform/external/cronet/+/2563158",
+      "parentUuid": "d9232103_b3c95fc8",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 42
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e024143c_23214431",
@@ -339,6 +387,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b03ee1f_03104c7d",
+        "filename": "base/trace_event/trace_event_stub.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": 1,
+      "message": "https://android-review.git.corp.google.com/c/platform/external/cronet/+/2563218",
+      "parentUuid": "e024143c_23214431",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7688180_f52c20dd",
@@ -352,6 +418,24 @@
       "writtenOn": "2023-04-20T13:35:01Z",
       "side": 1,
       "message": "Any reason for having this downstream?",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3499bac2_a77cfa7d",
+        "filename": "build/.gitignore",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/c/platform/external/cronet/+/2565136",
+      "parentUuid": "e7688180_f52c20dd",
       "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -392,6 +476,24 @@
       "writtenOn": "2023-04-20T13:35:01Z",
       "side": 1,
       "message": "The merge conflict resolution diff is extremely confusing. I\u0027m not entirely sure what\u0027s going on here. I\u0027ll need to look at the final outcome to reason about this.",
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "458be9ea_4b9c2bc5",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-26T15:00:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59a602e4_a8832443",
       "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
