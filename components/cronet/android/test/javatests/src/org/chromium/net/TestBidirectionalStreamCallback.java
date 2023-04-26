@@ -4,10 +4,9 @@
 
 package org.chromium.net;
 
-import android.net.http.BidirectionalStream;
-import android.net.http.HttpException;
-import android.net.http.HeaderBlock;
-import android.net.http.UrlResponseInfo;
+import org.chromium.net.BidirectionalStream;
+import org.chromium.net.CronetException;
+import org.chromium.net.UrlResponseInfo;
 import android.os.ConditionVariable;
 
 import static junit.framework.Assert.assertEquals;
@@ -28,9 +27,9 @@ import java.util.concurrent.ThreadFactory;
  * method to block thread until the stream completes on another thread.
  * Allows to cancel, block stream or throw an exception from an arbitrary step.
  */
-public class TestBidirectionalStreamCallback implements BidirectionalStream.Callback {
+public class TestBidirectionalStreamCallback extends BidirectionalStream.Callback {
     public UrlResponseInfo mResponseInfo;
-    public HttpException mError;
+    public CronetException mError;
 
     public ResponseStep mResponseStep = ResponseStep.NOTHING;
 
@@ -40,7 +39,7 @@ public class TestBidirectionalStreamCallback implements BidirectionalStream.Call
     public int mHttpResponseDataLength;
     public String mResponseAsString = "";
 
-    public HeaderBlock mTrailers;
+    public UrlResponseInfo.HeaderBlock mTrailers;
 
     private static final int READ_BUFFER_SIZE = 32 * 1024;
 
@@ -266,7 +265,7 @@ public class TestBidirectionalStreamCallback implements BidirectionalStream.Call
 
     @Override
     public void onResponseTrailersReceived(BidirectionalStream stream, UrlResponseInfo info,
-            HeaderBlock trailers) {
+            UrlResponseInfo.HeaderBlock trailers) {
         checkOnValidThread();
         assertFalse(stream.isDone());
         assertNull(mError);
@@ -299,7 +298,7 @@ public class TestBidirectionalStreamCallback implements BidirectionalStream.Call
     }
 
     @Override
-    public void onFailed(BidirectionalStream stream, UrlResponseInfo info, HttpException error) {
+    public void onFailed(BidirectionalStream stream, UrlResponseInfo info, CronetException error) {
         checkOnValidThread();
         assertTrue(stream.isDone());
         // Shouldn't happen after success.

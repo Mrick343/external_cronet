@@ -4,7 +4,7 @@
 
 package org.chromium.net;
 
-import android.net.http.UrlResponseInfo;
+import org.chromium.net.UrlResponseInfo;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
@@ -57,18 +57,18 @@ public class UrlResponseInfoTest {
         }
         Assert.assertEquals(info.getHttpStatusCode(), httpStatusCode);
         Assert.assertEquals(info.getHttpStatusText(), httpStatusText);
-        Assert.assertEquals(info.getHeaders().getAsList(), allHeadersList);
+        Assert.assertEquals(info.getAllHeaders(), allHeadersList);
         try {
-            info.getHeaders().getAsList().add(
+            info.getAllHeadersAsList().add(
                     new AbstractMap.SimpleImmutableEntry<String, String>("X", "Y"));
-            Assert.fail("getHeaders().getAsList() returned modifyable list.");
+            Assert.fail("getAllHeaders() returned modifyable list.");
         } catch (UnsupportedOperationException e) {
             // Expected.
         }
-        Assert.assertEquals(info.getHeaders().getAsMap().size(), allHeadersList.size());
+        Assert.assertEquals(info.getAllHeaders().size(), allHeadersList.size());
         Assert.assertEquals(
-                info.getHeaders().getAsMap().get(allHeadersList.get(0).getKey()).size(), 1);
-        Assert.assertEquals(info.getHeaders().getAsMap().get(allHeadersList.get(0).getKey()).get(0),
+                info.getAllHeaders().get(allHeadersList.get(0).getKey()).size(), 1);
+        Assert.assertEquals(info.getAllHeaders().get(allHeadersList.get(0).getKey()).get(0),
                 allHeadersList.get(0).getValue());
         Assert.assertEquals(info.wasCached(), wasCached);
         Assert.assertEquals(info.getNegotiatedProtocol(), negotiatedProtocol);

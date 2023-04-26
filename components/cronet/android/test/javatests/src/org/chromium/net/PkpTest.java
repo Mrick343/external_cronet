@@ -14,10 +14,10 @@ import static org.chromium.net.CronetTestRule.SERVER_KEY_PKCS8_PEM;
 import static org.chromium.net.CronetTestRule.getContext;
 import static org.chromium.net.CronetTestRule.getTestStorage;
 
-import android.net.http.HttpEngine;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.NetworkException;
-import android.net.http.UrlRequest;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.NetworkException;
+import org.chromium.net.UrlRequest;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
@@ -57,8 +57,8 @@ public class PkpTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();
 
-    private HttpEngine mCronetEngine;
-    private ExperimentalHttpEngine.Builder mBuilder;
+    private CronetEngine mCronetEngine;
+    private ExperimentalCronetEngine.Builder mBuilder;
     private TestUrlRequestCallback mListener;
     private String mServerUrl; // https://test.example.com:8443
     private String mServerHost; // test.example.com
@@ -387,7 +387,7 @@ public class PkpTest {
      */
     private void assertErrorResponse() {
         assertNotNull("Expected an error", mListener.mError);
-        int errorCode = ((NetworkException) mListener.mError).getInternalErrorCode();
+        int errorCode = ((NetworkException) mListener.mError).getCronetInternalErrorCode();
         Set<Integer> expectedErrors = new HashSet<>();
         expectedErrors.add(NetError.ERR_CONNECTION_REFUSED);
         expectedErrors.add(NetError.ERR_SSL_PINNED_KEY_NOT_IN_CERT_CHAIN);
@@ -402,7 +402,7 @@ public class PkpTest {
     private void assertSuccessfulResponse() {
         if (mListener.mError != null) {
             fail("Did not expect an error but got error code "
-                    + ((NetworkException) mListener.mError).getInternalErrorCode());
+                    + ((NetworkException) mListener.mError).getCronetInternalErrorCode());
         }
         assertNotNull("Expected non-null response from the server", mListener.mResponseInfo);
         assertEquals(200, mListener.mResponseInfo.getHttpStatusCode());
@@ -411,14 +411,14 @@ public class PkpTest {
     private void createCronetEngineBuilder(boolean bypassPinningForLocalAnchors, boolean knownRoot)
             throws Exception {
         // Set common CronetEngine parameters
-        mBuilder = new ExperimentalHttpEngine.Builder(getContext());
-        mBuilder.setEnablePublicKeyPinningBypassForLocalTrustAnchors(bypassPinningForLocalAnchors);
+        mBuilder = new ExperimentalCronetEngine.Builder(getContext());
+        mBuilder.enablePublicKeyPinningBypassForLocalTrustAnchors(bypassPinningForLocalAnchors);
         JSONObject hostResolverParams = CronetTestUtil.generateHostResolverRules();
         JSONObject experimentalOptions = new JSONObject()
                                                  .put("HostResolverRules", hostResolverParams);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
         mBuilder.setStoragePath(getTestStorage(getContext()));
-        mBuilder.setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, 1000 * 1024);
+        mBuilder.enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, 1000 * 1024);
         final String[] server_certs = {SERVER_CERT_PEM};
         CronetTestUtil.setMockCertVerifierForTesting(
                 mBuilder, MockCertVerifier.createMockCertVerifier(server_certs, knownRoot));

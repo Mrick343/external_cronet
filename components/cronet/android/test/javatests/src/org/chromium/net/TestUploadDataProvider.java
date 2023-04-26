@@ -4,8 +4,8 @@
 
 package org.chromium.net;
 
-import android.net.http.UploadDataProvider;
-import android.net.http.UploadDataSink;
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UploadDataSink;
 import android.os.ConditionVariable;
 
 import java.io.IOException;
