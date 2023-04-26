@@ -54,7 +54,7 @@ filegroup {
         "components/cronet/android/api/src/org/chromium/net/UploadDataSink.java",
         "components/cronet/android/api/src/org/chromium/net/UrlRequest.java",
         "components/cronet/android/api/src/org/chromium/net/UrlResponseInfo.java",
-        "components/cronet/android/api/src/org/chromium/net/apihelpers/*.java",
+	"components/cronet/android/api/src/org/chromium/net/apihelpers/UploadDataProviders.java",
     ],
     visibility: [
         "//packages/modules/Connectivity:__subpackages__",
