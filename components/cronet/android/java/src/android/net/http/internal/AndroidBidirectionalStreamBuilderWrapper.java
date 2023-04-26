@@ -50,9 +50,4 @@ public class AndroidBidirectionalStreamBuilderWrapper
 
   }
 
-  @Override
-  public android.net.http.BidirectionalStream.Builder addRequestAnnotation(Object annotation) {
-    delegate.addRequestAnnotation(annotation);
-    return this;
-  }
 }

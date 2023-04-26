@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicReference;
 import android.net.http.HeaderBlock;
 
+import org.chromium.net.impl.CronetUrlRequest;
+
 class AndroidUrlRequestWrapper extends android.net.http.UrlRequest
     implements ReusableWrapper<org.chromium.net.ExperimentalUrlRequest, AndroidUrlRequestWrapper> {
 
@@ -61,47 +63,46 @@ class AndroidUrlRequestWrapper extends android.net.http.UrlRequest
 
 @Override
     public String getHttpMethod() {
-      return getDelegate().getHttpMethod();
-
+      return null;
     }
 
 @Override
     public HeaderBlock getHeaders() {
-      return getDelegate().getHeaders();
+      return null;
 }
 
 @Override
     public boolean isCacheDisabled() {
-      return getDelegate().isCacheDisabled();
+      return false;
 }
 
 @Override
     public boolean isDirectExecutorAllowed() {
-      return getDelegate().isDirectExecutorAllowed();
+      return false;
 }
 
 @Override
     public int getPriority() {
-      return getDelegate().getPriority();
+      return 0;
 }
 
 @Override
     public boolean hasTrafficStatsTag() {
-      return getDelegate().hasTrafficStatsTag();
+      return false;
 }
 
 @Override
     public int getTrafficStatsTag() {
-      return getDelegate().getTrafficStatsTag();
+      return 0;
 }
 
 @Override
     public boolean hasTrafficStatsUid() {
-      return getDelegate().hasTrafficStatsUid();
+      return false;
 }
 
 @Override
     public int getTrafficStatsUid() {
-      return getDelegate().getTrafficStatsUid();
+      return 0;
 }
 }

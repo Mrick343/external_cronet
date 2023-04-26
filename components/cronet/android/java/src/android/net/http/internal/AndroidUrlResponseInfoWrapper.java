@@ -47,11 +47,6 @@ public class AndroidUrlResponseInfoWrapper extends android.net.http.UrlResponseI
   }
 
   @Override
-  public String getProxyServer() {
-    return null;
-  }
-
-  @Override
   public long getReceivedByteCount() {
     return getDelegate().getReceivedByteCount();
   }
