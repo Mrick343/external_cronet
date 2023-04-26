@@ -23,22 +23,6 @@ class AndroidHttpEngineWrapper extends HttpEngine {
   }
 
   @Override
-  public void startNetLogToFile(String fileName, boolean logAll) {
-    // TODO(danstahr): Hidden API access
-  }
-
-  @Override
-  public void stopNetLog() {
-    // TODO(danstahr): Hidden API access
-  }
-
-  @Override
-  public byte[] getGlobalMetricsDeltas() {
-    // TODO(danstahr): Hidden API access
-    return new byte[0];
-  }
-
-  @Override
   public URLConnection openConnection(URL url) throws IOException {
     return CronetExceptionTranslationUtils.executeTranslatingCronetExceptions(
         () -> delegate.openConnection(url), IOException.class);
