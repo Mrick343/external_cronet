@@ -27,12 +27,6 @@ public class AndroidNetworkExceptionWrapper extends android.net.http.NetworkExce
   }
 
   @Override
-  public int getInternalErrorCode() {
-    // TODO(danstahr): Hidden API
-    return mDelegate.getCronetInternalErrorCode();
-  }
-
-  @Override
   public boolean isImmediatelyRetryable() {
     return mDelegate.immediatelyRetryable();
   }

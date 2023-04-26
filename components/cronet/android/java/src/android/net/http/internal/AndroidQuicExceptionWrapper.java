@@ -10,19 +10,8 @@ public class AndroidQuicExceptionWrapper extends android.net.http.QuicException 
   }
 
   @Override
-  public int getQuicDetailedErrorCode() {
-    // TODO(danstahr: hidden API
-    return 0;
-  }
-
-  @Override
   public int getErrorCode() {
     return networkExceptionWrapper.getErrorCode();
-  }
-
-  @Override
-  public int getInternalErrorCode() {
-    return networkExceptionWrapper.getInternalErrorCode();
   }
 
   @Override
