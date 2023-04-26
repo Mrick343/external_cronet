@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a522014_cd8ff1a4",
+        "filename": "patches/0009-Remove-fake-Cronet-classes.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-26T22:17:25Z",
+      "side": 1,
+      "message": "We might be able to drop this patch. Even though referenced classes don\u0027t exist in the source tree (though they will be restored eventually), gn gen / desc should still succeed. As long as none of the affected targets are a dependency of the mainline build (which they shouldn\u0027t be, otherwise that needs to be fixed), deleting this patch and some of the follow-ups should be fine.",
+      "range": {
+        "startLine": 1,
+        "startChar": 5,
+        "endLine": 1,
+        "endChar": 45
+      },
+      "revId": "e64a08ab3f7dd934d527387be17877490ca16f6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
