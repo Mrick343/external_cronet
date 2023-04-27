@@ -22,6 +22,30 @@
       },
       "revId": "8ce9ffcb018c2bbc9810eb845f6cb16da06b4472",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df6826d2_0376a084",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-27T17:44:22Z",
+      "side": 1,
+      "message": "Yup. thanks for catching this.",
+      "parentUuid": "bfaea713_fde404b4",
+      "range": {
+        "startLine": 235,
+        "startChar": 8,
+        "endLine": 235,
+        "endChar": 20
+      },
+      "revId": "8ce9ffcb018c2bbc9810eb845f6cb16da06b4472",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
