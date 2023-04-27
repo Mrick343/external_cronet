@@ -104,6 +104,24 @@
       "message": "@yudiliu - This is soong build not roboleaf, but it does seem like coverage should propagate through the \u0027data\u0027 dependency.  Thoughts?",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8e79770_27695664",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1124746
+      },
+      "writtenOn": "2023-04-27T18:06:18Z",
+      "side": 1,
+      "message": "When you want to run code coverage on CI build you will have to explicitly specify the coverage flags in the gcl file for your build and test targets, so in this change if you remove mts-tethering from the test_suites, this module won\u0027t be built with coverage enabled, for example, this test_suites_x86_64_coverage target builds the listed modules with coverage flags enabled, with this change the module won\u0027t be built as part of mts, so it won have code coverage enabled: https://source.corp.google.com/piper///depot/google3/configs/wireless/android/busytown/platform/git_udc/git_udc-release.gcl;l\u003d2562",
+      "parentUuid": "042d06fc_43d8c9c3",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
