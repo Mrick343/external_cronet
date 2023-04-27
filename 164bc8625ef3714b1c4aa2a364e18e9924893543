@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "11877daa_d561e22f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-04-27T16:31:55Z",
+      "side": 1,
+      "message": "+2 for the gen_android_bp\n\nI couldn\u0027t read the entirety of Android.bp but if it compiles then LGTM.",
+      "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a13ddab_22dc8205",
