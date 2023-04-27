@@ -176,6 +176,24 @@
       "parentUuid": "571dc493_2d64ab15",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db1f3a3e_444ea8dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1124746
+      },
+      "writtenOn": "2023-04-27T21:12:09Z",
+      "side": 1,
+      "message": "So it looks like that the coverage variant of the data property is not created/taken by the current module, there might be multiple factors that could cause this, if this is something needed you can open a bug and assign to us to take a further investigation.",
+      "parentUuid": "71a1c3fe_b16f5ca6",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
