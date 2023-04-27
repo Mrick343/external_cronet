@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "982f214e_832d9aae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-27T15:23:34Z",
+      "side": 1,
+      "message": "Note that the .swp file includes *all* changes for the 114 update.",
+      "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
