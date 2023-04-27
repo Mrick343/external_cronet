@@ -140,6 +140,24 @@
       "parentUuid": "c8e79770_27695664",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47e00f2a_f729ae5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-04-27T19:14:32Z",
+      "side": 1,
+      "message": "cronet_net_tester_app is the app containing the code under test and the code which we want coverage for. So it is not about being built and packaged. It is about being built and packaged with coverage enabled.",
+      "parentUuid": "71a1c3fe_b16f5ca6",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
