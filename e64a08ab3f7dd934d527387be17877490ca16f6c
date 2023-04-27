@@ -22,6 +22,30 @@
       },
       "revId": "e64a08ab3f7dd934d527387be17877490ca16f6c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "870297c9_9637a67e",
+        "filename": "patches/0009-Remove-fake-Cronet-classes.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-27T10:05:54Z",
+      "side": 1,
+      "message": "Yes, I plan on modularizing our upstream BUILD.gn files. Once that is done this , and a couple of other patches (e.g., the Java impl one), should no longer be needed.",
+      "parentUuid": "9a522014_cd8ff1a4",
+      "range": {
+        "startLine": 1,
+        "startChar": 5,
+        "endLine": 1,
+        "endChar": 45
+      },
+      "revId": "e64a08ab3f7dd934d527387be17877490ca16f6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
