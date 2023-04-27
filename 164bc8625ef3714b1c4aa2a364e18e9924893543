@@ -16,6 +16,29 @@
       "message": "Note that the .swp file includes *all* changes for the 114 update.",
       "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a13ddab_22dc8205",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5771,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-27T15:38:32Z",
+      "side": 1,
+      "message": "Huh, for some reason perfetto gets enabled again.",
+      "range": {
+        "startLine": 5771,
+        "startChar": 54,
+        "endLine": 5771,
+        "endChar": 91
+      },
+      "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
