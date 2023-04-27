@@ -820,6 +820,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1f9b068_186798e8",
+        "filename": "net/android/http_auth_negotiate_android_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-27T14:13:04Z",
+      "side": 1,
+      "message": "b/272756726",
+      "parentUuid": "c21b9f18_46da386a",
+      "range": {
+        "startLine": 19,
+        "startChar": 35,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cb48155d_f1a3249a",
@@ -890,6 +914,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa2594fa_5c6274f6",
+        "filename": "net/android/network_change_notifier_android_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-27T14:13:04Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "14c6486f_e0111a76",
+      "range": {
+        "startLine": 369,
+        "startChar": 7,
+        "endLine": 369,
+        "endChar": 63
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4322b5f_6e8e0426",
@@ -903,6 +951,30 @@
       "writtenOn": "2023-04-20T13:35:01Z",
       "side": 1,
       "message": "We should file a bug for this if it doesn\u0027t exist yet",
+      "range": {
+        "startLine": 381,
+        "startChar": 7,
+        "endLine": 381,
+        "endChar": 65
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b973a558_c2565791",
+        "filename": "net/android/network_change_notifier_android_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-27T14:13:04Z",
+      "side": 1,
+      "message": "b/272756726",
+      "parentUuid": "a4322b5f_6e8e0426",
       "range": {
         "startLine": 381,
         "startChar": 7,
