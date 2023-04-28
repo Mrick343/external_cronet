@@ -828,6 +828,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78f69a6a_9693bbe5",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/NetworkChangeNotifierTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-28T12:33:12Z",
+      "side": 1,
+      "message": "See crrev/c/4488943",
+      "parentUuid": "354b9272_b7e29ad2",
+      "range": {
+        "startLine": 98,
+        "startChar": 52,
+        "endLine": 99,
+        "endChar": 85
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44f9d167_229bbf2f",
