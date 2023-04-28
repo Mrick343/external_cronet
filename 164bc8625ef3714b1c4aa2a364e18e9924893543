@@ -37,6 +37,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "70e38364_a8b0c915",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3516,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-04-28T11:16:31Z",
+      "side": 1,
+      "message": "It looks script path was changed and `WriteBuildDateHeaderSanitizer` was not used.",
+      "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a13ddab_22dc8205",
         "filename": "android/tools/gn2bp/Android.bp.swp",
         "patchSetId": 1
