@@ -56,6 +56,30 @@
       },
       "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1eb41b43_1a2108c4",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5771,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-04-28T10:49:14Z",
+      "side": 1,
+      "message": "From quick glance this just affects targets that Cronet doesn\u0027t use https://source.chromium.org/search?q\u003dcontent:USE_PERFETTO_CLIENT_LIBRARY%20-file:out%20-file:gen. Though, I will look into this further.\n\nThe perfetto dep has been dropped here, so we have confidence that we compile without upstream https://chromium-review.googlesource.com/c/chromium/src/+/4392590.",
+      "parentUuid": "4a13ddab_22dc8205",
+      "range": {
+        "startLine": 5771,
+        "startChar": 54,
+        "endLine": 5771,
+        "endChar": 91
+      },
+      "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
