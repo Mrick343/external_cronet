@@ -260,6 +260,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "15cfb522_8587da42",
+        "filename": "base/message_loop/message_pump_android.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-28T11:46:13Z",
+      "side": 1,
+      "message": "BIONIC is the c_library used in Android and REMOVED_IN is always defined for android. ie android/looper does not expect to not have the flag defined. I tried defining it in the looper header but they basically said the host_supported targets should define it instead. Which is understandable since we are using it outside the what it supports.",
+      "parentUuid": "daa0a017_bd039430",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 0
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c365ec40_331bd54d",
@@ -453,6 +477,30 @@
       "writtenOn": "2023-04-20T13:35:01Z",
       "side": 1,
       "message": "Can this (aosp/2514495) be upstreamed?",
+      "range": {
+        "startLine": 54,
+        "startChar": 48,
+        "endLine": 54,
+        "endChar": 73
+      },
+      "revId": "d476d6241fe34dd5614d1c3905a4e721ff5ba287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4708434e_5ac78792",
+        "filename": "build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/TestStatusReceiver.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-04-28T11:46:13Z",
+      "side": 1,
+      "message": "This is supported for api level 26+, we can\u0027t upstream yet unless we add an APILEVEL check.",
+      "parentUuid": "80ae0f49_563520b3",
       "range": {
         "startLine": 54,
         "startChar": 48,
