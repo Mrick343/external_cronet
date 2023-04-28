@@ -52,6 +52,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f26b280_cc398674",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3516,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-04-28T21:51:16Z",
+      "side": 1,
+      "message": "Yeah, this is fixed in a follow-up. 😊",
+      "parentUuid": "70e38364_a8b0c915",
+      "revId": "164bc8625ef3714b1c4aa2a364e18e9924893543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a13ddab_22dc8205",
