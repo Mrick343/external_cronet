@@ -63,6 +63,30 @@
       },
       "revId": "316fa74a3173416f37e1adba3b88ff38e454fad4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c990785_eea9aa20",
+        "filename": "net/http/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-02T16:58:50Z",
+      "side": 1,
+      "message": "See crrev.com/c/4093098 \nThe change added dependencies on the pins files, without properly specifying them in the inputs (which means, gn2bp doesn\u0027t list them as srcs and the cmd therefore can\u0027t properly reference the file).\nLet me update gn desc and the Android.bp.swp, and it might become clearer.",
+      "parentUuid": "36dd07bb_eac1ff27",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 58
+      },
+      "revId": "316fa74a3173416f37e1adba3b88ff38e454fad4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
