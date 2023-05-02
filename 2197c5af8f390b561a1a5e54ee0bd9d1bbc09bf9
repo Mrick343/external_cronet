@@ -16,6 +16,23 @@
       "message": "note the pins.json changes in Android.bp.swp that you have previously asked about.",
       "revId": "2197c5af8f390b561a1a5e54ee0bd9d1bbc09bf9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12ca6e8e_a45277e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-02T19:35:08Z",
+      "side": 1,
+      "message": "By the way, this now builds cronet_aml_components_cronet_android_cronet 😊",
+      "revId": "2197c5af8f390b561a1a5e54ee0bd9d1bbc09bf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
