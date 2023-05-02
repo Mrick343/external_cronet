@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af487ce3_e97c232b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-02T19:34:31Z",
+      "side": 1,
+      "message": "note the pins.json changes in Android.bp.swp that you have previously asked about.",
+      "revId": "2197c5af8f390b561a1a5e54ee0bd9d1bbc09bf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
