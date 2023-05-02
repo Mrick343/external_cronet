@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64ca59ce_92c67269",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-02T19:33:29Z",
+      "side": 1,
+      "message": "I realize that we might still need some of them for the tests, but looking to find a more maintainable solution than what we have right now.\n\nJust to get things building right now (apart from the native tests), it was easiest to revert this file back to upstream.",
+      "revId": "36d781ea570bfd7b0741dff47dd5cac4ca0133f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
