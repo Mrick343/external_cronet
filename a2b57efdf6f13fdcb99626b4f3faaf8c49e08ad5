@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57cef321_6ee650bb",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-02T14:50:45Z",
+      "side": 1,
+      "message": "So IIUC, right now we end up running this against a compiled class?",
+      "range": {
+        "startLine": 1554,
+        "startChar": 6,
+        "endLine": 1554,
+        "endChar": 83
+      },
+      "revId": "a2b57efdf6f13fdcb99626b4f3faaf8c49e08ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
