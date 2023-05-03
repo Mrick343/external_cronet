@@ -46,6 +46,30 @@
       },
       "revId": "a2b57efdf6f13fdcb99626b4f3faaf8c49e08ad5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c764fdac_901faba0",
+        "filename": "base/android/jni_generator/jni_generator.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-03T09:56:02Z",
+      "side": 1,
+      "message": "I think it\u0027s a downstream problem here. The gn2bp generator shouldn\u0027t blindly add \"package_prefix\" to every JNI generator genrule. It should be added where it is effective. \n\nBasically this would change the JNI generator to check if it uses classes or sources and only apply it for sources.",
+      "parentUuid": "c815c322_208f2cb2",
+      "range": {
+        "startLine": 1554,
+        "startChar": 6,
+        "endLine": 1554,
+        "endChar": 83
+      },
+      "revId": "a2b57efdf6f13fdcb99626b4f3faaf8c49e08ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
