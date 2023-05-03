@@ -16,6 +16,24 @@
       "message": "I realize that we might still need some of them for the tests, but looking to find a more maintainable solution than what we have right now.\n\nJust to get things building right now (apart from the native tests), it was easiest to revert this file back to upstream.",
       "revId": "36d781ea570bfd7b0741dff47dd5cac4ca0133f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a69325be_ebc613d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-03T10:34:31Z",
+      "side": 1,
+      "message": "Yeah, we will probably need to move these to the stubbing in net. But a good portion of this might no longer be needed.\n\nAs you said, let\u0027s start with this and iterate.",
+      "parentUuid": "64ca59ce_92c67269",
+      "revId": "36d781ea570bfd7b0741dff47dd5cac4ca0133f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
