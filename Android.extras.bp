@@ -60,6 +60,16 @@ java_library {
     ],
 }
 
+java_plugin {
+    name: "cronet_jni_annotation_preprocessor_defaults",
+    exported_plugins: [
+        "cronet_aml_java_jni_annotation_preprocessor",
+    ],
+    visibility: [
+        "//visibility:public",
+    ],
+}
+
 // ------------------------------ NATIVE TEST TARGETS --------------------------------------------
 
 java_defaults {
@@ -286,6 +296,12 @@ java_library {
         // android.net.TrafficStats apis
         "framework-connectivity-t",
     ],
-    lint: { test: true }
+    lint: { test: true },
+    plugins: [
+        "cronet_aml_java_jni_annotation_preprocessor",
+    ],
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
 }
 
