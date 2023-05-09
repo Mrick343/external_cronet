@@ -197,7 +197,7 @@ class GnParser(object):
       for key in ('cflags', 'defines', 'deps', 'include_dirs', 'ldflags',
                   'source_set_deps', 'proto_deps', 'transitive_proto_deps',
                   'libs', 'proto_paths'):
-        self.__dict__[key].update(other.__dict__.get(key, []))
+        getattr(self, key).update(getattr(other, key, []))
 
       for key_in_arch in ('cflags', 'defines', 'include_dirs', 'source_set_deps', 'ldflags'):
         self.arch[arch].__dict__[key_in_arch].update(
