@@ -527,7 +527,8 @@ TEST_F(CertNetFetcherURLRequestTest, CancelAfterRunningMessageLoop) {
 
 // Fetch the same URLs in parallel and verify that only 1 request is made per
 // URL.
-TEST_F(CertNetFetcherURLRequestTest, ParallelFetchDuplicates) {
+// Disabled due to flakiness (crbug/1439282)
+TEST_F(CertNetFetcherURLRequestTest, DISABLED_ParallelFetchDuplicates) {
   ASSERT_TRUE(test_server_.Start());
 
   CreateFetcher();
