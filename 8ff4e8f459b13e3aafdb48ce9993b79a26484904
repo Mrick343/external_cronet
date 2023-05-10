@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea53cbb3_3cecc1ee",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1519,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-10T16:41:38Z",
+      "side": 0,
+      "message": "this if statement was previously missing an `else: module_target.static_libs.add(dep_module.name)`. That\u0027s where the diff in Android.bp.swp comes from.",
+      "range": {
+        "startLine": 1519,
+        "startChar": 8,
+        "endLine": 1519,
+        "endChar": 61
+      },
+      "revId": "8ff4e8f459b13e3aafdb48ce9993b79a26484904",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
