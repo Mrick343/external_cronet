@@ -24,6 +24,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd8880b7_0ab05375",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-11T09:25:59Z",
+      "side": 1,
+      "message": "Nit: I think you meant `Do not access target.archs directly` in the commit title.",
+      "revId": "aabd6aa57bca1c1e0652d324e57f071db2f8dfa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d7c3aadf_1d9a003e",
