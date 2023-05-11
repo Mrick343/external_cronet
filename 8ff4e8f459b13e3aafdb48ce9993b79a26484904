@@ -22,6 +22,29 @@
       },
       "revId": "8ff4e8f459b13e3aafdb48ce9993b79a26484904",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e91a5db_e965c9a1",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1451,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-05-11T06:19:48Z",
+      "side": 0,
+      "message": "`source_set_deps` will be not used?\nIf so, it seems we can remove `source_set_deps` since this was the only use.",
+      "range": {
+        "startLine": 1451,
+        "startChar": 41,
+        "endLine": 1451,
+        "endChar": 56
+      },
+      "revId": "8ff4e8f459b13e3aafdb48ce9993b79a26484904",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
