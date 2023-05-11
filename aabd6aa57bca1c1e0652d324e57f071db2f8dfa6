@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39a7d655_04189285",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-05-11T05:51:43Z",
+      "side": 1,
+      "message": "nits: arch?",
+      "range": {
+        "startLine": 7,
+        "startChar": 28,
+        "endLine": 7,
+        "endChar": 32
+      },
+      "revId": "aabd6aa57bca1c1e0652d324e57f071db2f8dfa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7c3aadf_1d9a003e",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-05-11T05:51:43Z",
+      "side": 1,
+      "message": "nits: Updating to self._arch would help to clarify this should not be used directly outside the class.",
+      "range": {
+        "startLine": 167,
+        "startChar": 11,
+        "endLine": 167,
+        "endChar": 15
+      },
+      "revId": "aabd6aa57bca1c1e0652d324e57f071db2f8dfa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
