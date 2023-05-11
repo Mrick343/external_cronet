@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0803a734_4127c71e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-05-11T04:01:28Z",
+      "side": 1,
+      "message": "You mean if the script is different between archs, `merge_modules` would throw Exception?\nhttps://source.corp.google.com/aosp-master/external/cronet/android/tools/gn2bp/gen_android_bp;l\u003d1257-1259?q\u003dgen_android_bp\u0026ss\u003dpiper%2FGoogle%2Faosp-master",
+      "range": {
+        "startLine": 13,
+        "startChar": 14,
+        "endLine": 13,
+        "endChar": 59
+      },
+      "revId": "1b504a7384d68c743fdb05a0b5d7bcb12316427b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87f6529e_8960c1f3",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-05-11T04:01:28Z",
+      "side": 1,
+      "message": "I think we assumption that some fields must be the same between archs.\nI want to have the explicit check for that to guarantee the script throw Exception in that case.\n\nBut maybe that\u0027s not worth to do for this script.",
+      "revId": "1b504a7384d68c743fdb05a0b5d7bcb12316427b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
