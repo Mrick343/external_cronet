@@ -45,6 +45,30 @@
       },
       "revId": "aabd6aa57bca1c1e0652d324e57f071db2f8dfa6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc27c43b_f54b2ac3",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-05-11T06:06:31Z",
+      "side": 1,
+      "message": "From the following CLs, it seems we still want to access target.arch directly in some cases.",
+      "parentUuid": "d7c3aadf_1d9a003e",
+      "range": {
+        "startLine": 167,
+        "startChar": 11,
+        "endLine": 167,
+        "endChar": 15
+      },
+      "revId": "aabd6aa57bca1c1e0652d324e57f071db2f8dfa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
