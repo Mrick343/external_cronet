@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42afae19_c4e5e567",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-12T22:42:20Z",
+      "side": 1,
+      "message": "Actually, even before that, get_action_sanitizer would throw an exception because target.script would be None.",
+      "parentUuid": "0803a734_4127c71e",
+      "range": {
+        "startLine": 13,
+        "startChar": 14,
+        "endLine": 13,
+        "endChar": 59
+      },
+      "revId": "1b504a7384d68c743fdb05a0b5d7bcb12316427b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87f6529e_8960c1f3",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-05-11T04:01:28Z",
       "side": 1,
       "message": "I think we assumption that some fields must be the same between archs.\nI want to have the explicit check for that to guarantee the script throw Exception in that case.\n\nBut maybe that\u0027s not worth to do for this script.",
+      "revId": "1b504a7384d68c743fdb05a0b5d7bcb12316427b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70916306_18a44c9a",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-12T22:42:20Z",
+      "side": 1,
+      "message": "We could do that, but then we should apply it consistently to all properties. Maybe we can add setters for them?",
+      "parentUuid": "87f6529e_8960c1f3",
       "revId": "1b504a7384d68c743fdb05a0b5d7bcb12316427b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
