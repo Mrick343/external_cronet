@@ -3,22 +3,31 @@ package android.net.http;
 import android.net.http.HttpException;
 import org.chromium.net.CronetException;
 
+import android.util.Log;
+
 public class CronetExceptionTranslationUtils {
+  final static String LOG = "CronetExceptionTranslationUtils";
 
   @SuppressWarnings("unchecked")
   public static <T, E extends Exception> T executeTranslatingCronetExceptions(
       CronetWork<T, E> work, Class<E> nonCronetException)
       throws HttpException, E {
+        Log.w(LOG, "inside executeTranslatingCronetExceptions");
     try {
+      Log.w(LOG, "Inside CronetExceptionTranslationUtils#executeTranslating: before work.run()");
       return work.run();
     } catch (Exception e) {
       if (isUncheckedAndroidCronetException(e)) {
+        Log.w(LOG, "isUncheckedAndroidCronetException");
         throw translateUncheckedAndroidCronetException(e);
       } else if (isCheckedAndroidCronetException(e)) {
+        Log.w(LOG, "isCheckedAndroidCronetException");
         throw translateCheckedAndroidCronetException(e);
       } else if (nonCronetException.isInstance(e)) {
-        throw (E) e;
+        Log.w(LOG, "nonCronetException");
+        throw e;
       } else {
+        Log.w(LOG, "Unexpected exception");
         throw new AssertionError("Unexpected exception", e);
       }
     }

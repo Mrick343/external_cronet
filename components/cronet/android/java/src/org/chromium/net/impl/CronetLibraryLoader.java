@@ -85,26 +85,40 @@ public class CronetLibraryLoader {
      * init thread native MessageLoop is initialized.
      */
     static void ensureInitializedOnInitThread() {
+        Log.e(TAG, "before assert onInitThread();");
         assert onInitThread();
+        Log.e(TAG, "after assert onInitThread();");
+        Log.e(TAG, "before if (sInitThreadInitDone) {");
         if (sInitThreadInitDone) {
             return;
         }
+        Log.e(TAG, "after if (sInitThreadInitDone) {");
+        Log.e(TAG, "before NetworkChangeNotifier.init();");
         NetworkChangeNotifier.init();
+        Log.e(TAG, "after NetworkChangeNotifier.init();");
         // Registers to always receive network notifications. Note
         // that this call is fine for Cronet because Cronet
         // embedders do not have API access to create network change
         // observers. Existing observers in the net stack do not
         // perform expensive work.
+        Log.e(TAG, "before NetworkChangeNotifier.registerToReceiveNotificationsAlways());");
         NetworkChangeNotifier.registerToReceiveNotificationsAlways();
+        Log.e(TAG, "after NetworkChangeNotifier.registerToReceiveNotificationsAlways());");
         // Wait for loadLibrary() to complete so JNI is registered.
+        Log.e(TAG, "before sWaitForLibLoad.block();");
         sWaitForLibLoad.block();
+        Log.e(TAG, "after sWaitForLibLoad.block();");
 
+        Log.e(TAG, "before assert sLibraryLoaded;");
         assert sLibraryLoaded;
+        Log.e(TAG, "after assert sLibraryLoaded;");
         // registerToReceiveNotificationsAlways() is called before the native
         // NetworkChangeNotifierAndroid is created, so as to avoid receiving
         // the undesired initial network change observer notification, which
         // will cause active requests to fail with ERR_NETWORK_CHANGED.
+        Log.e(TAG, "before CronetLibraryLoaderJni.get().cronetInitOnInitThread();");
         CronetLibraryLoaderJni.get().cronetInitOnInitThread();
+        Log.e(TAG, "after CronetLibraryLoaderJni.get().cronetInitOnInitThread();");
         sInitThreadInitDone = true;
     }
 
