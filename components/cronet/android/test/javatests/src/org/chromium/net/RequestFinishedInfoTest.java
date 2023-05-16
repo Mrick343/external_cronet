@@ -13,6 +13,7 @@ import static org.junit.Assert.fail;
 import static org.chromium.base.CollectionUtil.newHashSet;
 import static org.chromium.net.CronetTestRule.getContext;
 
+import android.util.Log;
 import org.chromium.net.ExperimentalCronetEngine;
 import org.chromium.net.ExperimentalUrlRequest;
 import org.chromium.net.NetworkException;
@@ -78,15 +79,25 @@ public class RequestFinishedInfoTest {
 
     @Before
     public void setUp() throws Exception {
+        Log.e("RequestFinishedInfoTest", "before assertTrue(NativeTestServer.startNativeTestServer(getContext()));");
         assertTrue(NativeTestServer.startNativeTestServer(getContext()));
+        Log.e("RequestFinishedInfoTest", "after NativeTestServer.startNativeTestServer(getContext()))");
+        Log.e("RequestFinishedInfoTest", "before mUrl = NativeTestServer.getSuccessURL()");
         mUrl = NativeTestServer.getSuccessURL();
+        Log.e("RequestFinishedInfoTest", "after mUrl = NativeTestServer.getSuccessURL()");
+        Log.e("RequestFinishedInfoTest", "before mTestFramework = mTestRule.startCronetTestFramework();");
         mTestFramework = mTestRule.startCronetTestFramework();
+        Log.e("RequestFinishedInfoTest", "after mTestFramework = mTestRule.startCronetTestFramework();");
     }
 
     @After
     public void tearDown() throws Exception {
-        mTestFramework.mCronetEngine.shutdown();
+        Log.e("RequestFinishedInfoTest", "before mTestFramework.shutdownEngine();");
+        mTestFramework.shutdownEngine();
+        Log.e("RequestFinishedInfoTest", "after mTestFramework.shutdownEngine();");
+        Log.e("RequestFinishedInfoTest", "before NativeTestServer.shutdownNativeTestServer();");
         NativeTestServer.shutdownNativeTestServer();
+        Log.e("RequestFinishedInfoTest", "after NativeTestServer.shutdownNativeTestServer();");
     }
 
     static class DirectExecutor implements Executor {

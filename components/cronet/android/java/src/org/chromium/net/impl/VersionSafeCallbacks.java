@@ -5,7 +5,7 @@
 package org.chromium.net.impl;
 
 import org.chromium.net.BidirectionalStream;
-import org.chromium.net.UrlResponseInfo.HeaderBlock;
+import org.chromium.net.CronetEngine;
 import org.chromium.net.CronetException;
 import org.chromium.net.NetworkQualityRttListener;
 import org.chromium.net.NetworkQualityThroughputListener;
@@ -123,7 +123,7 @@ public class VersionSafeCallbacks {
 
         @Override
         public void onResponseTrailersReceived(BidirectionalStream stream, UrlResponseInfo info,
-                HeaderBlock trailers) {
+                UrlResponseInfo.HeaderBlock trailers) {
             mWrappedCallback.onResponseTrailersReceived(stream, info, trailers);
         }
 
@@ -270,6 +270,22 @@ public class VersionSafeCallbacks {
             }
             return mWrappedListener.equals(
                     ((NetworkQualityThroughputListenerWrapper) o).mWrappedListener);
+        }
+    }
+
+    /**
+     * Wrap a {@link CronetEngine.Builder.LibraryLoader} in a version safe manner.
+     */
+    public static final class LibraryLoader extends CronetEngine.Builder.LibraryLoader {
+        private final CronetEngine.Builder.LibraryLoader mWrappedLoader;
+
+        public LibraryLoader(CronetEngine.Builder.LibraryLoader libraryLoader) {
+            mWrappedLoader = libraryLoader;
+        }
+
+        @Override
+        public void loadLibrary(String libName) {
+            mWrappedLoader.loadLibrary(libName);
         }
     }
 }

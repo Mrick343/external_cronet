@@ -9,12 +9,12 @@ import org.chromium.net.ApiVersion;
 import org.chromium.net.UrlResponseInfo.HeaderBlock;
 import android.os.ConditionVariable;
 import android.os.Build;
+import android.util.Log;
 import android.os.Process;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import org.chromium.base.Log;
 import org.chromium.base.ObserverList;
 import org.chromium.base.annotations.CalledByNative;
 import org.chromium.base.annotations.JNINamespace;
@@ -366,29 +366,41 @@ public class CronetUrlRequestContext extends CronetEngineBase {
 
     @Override
     public void shutdown() {
+        Log.e("CronetUrlRequestContext", "before");
         if (mInUseStoragePath != null) {
             synchronized (sInUseStoragePaths) {
                 sInUseStoragePaths.remove(mInUseStoragePath);
             }
         }
         synchronized (mLock) {
+            Log.e("CronetUrlRequestContext", "before checkHaveAdapter();");
             checkHaveAdapter();
+            Log.e("CronetUrlRequestContext", "after checkHaveAdapter();");
+            Log.e("CronetUrlRequestContext", "before if (mActiveRequestCount.get() != 0) {");
             if (mActiveRequestCount.get() != 0) {
                 throw new IllegalStateException("Cannot shutdown with active requests.");
             }
+            Log.e("CronetUrlRequestContext", "after if (mActiveRequestCount.get() != 0) {");
+            Log.e("CronetUrlRequestContext", "before if (Thread.currentThread() == mNetworkThread) {");
             // Destroying adapter stops the network thread, so it cannot be
             // called on network thread.
             if (Thread.currentThread() == mNetworkThread) {
                 throw new IllegalThreadStateException("Cannot shutdown from network thread.");
             }
+            Log.e("CronetUrlRequestContext", "after if (Thread.currentThread() == mNetworkThread) {");
         }
         // Wait for init to complete on init and network thread (without lock,
         // so other thread could access it).
+        Log.e("CronetUrlRequestContext", "before mInitCompleted.block();");
         mInitCompleted.block();
+        Log.e("CronetUrlRequestContext", "after mInitCompleted.block();");
 
         // If not logging, this is a no-op.
+        Log.e("CronetUrlRequestContext", "before stopNetLog();");
         stopNetLog();
+        Log.e("CronetUrlRequestContext", "after stopNetLog();");
 
+        Log.e("CronetUrlRequestContext", "before synchronized (mLock) {");
         synchronized (mLock) {
             // It is possible that adapter is already destroyed on another thread.
             if (!haveRequestContextAdapter()) {
@@ -398,6 +410,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
                     mUrlRequestContextAdapter, CronetUrlRequestContext.this);
             mUrlRequestContextAdapter = 0;
         }
+        Log.e("CronetUrlRequestContext", "after synchronized (mLock) {");
     }
 
     @Override
@@ -715,11 +728,17 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     @SuppressWarnings("unused")
     @CalledByNative
     private void initNetworkThread() {
+        Log.e("CronetUrlRequestContext", "before mNetworkThread = Thread.currentThread();");
         mNetworkThread = Thread.currentThread();
+        Log.e("CronetUrlRequestContext", "after mNetworkThread = Thread.currentThread();");
+        Log.e("CronetUrlRequestContext", "before mInitCompleted.open();");
         mInitCompleted.open();
+        Log.e("CronetUrlRequestContext", "after mInitCompleted.open();");
         // In integrated mode, network thread is shared from the host.
         // Cronet shouldn't change the property of the thread.
+        Log.e("CronetUrlRequestContext", "before Thread.currentThread().setName");
         Thread.currentThread().setName("ChromiumNet");
+        Log.e("CronetUrlRequestContext", "after Thread.currentThread().setName");
     }
 
     @SuppressWarnings("unused")
