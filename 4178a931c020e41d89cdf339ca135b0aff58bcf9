@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "778694e7_84a889b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-17T16:05:07Z",
+      "side": 1,
+      "message": "Do you have a link to the flakiness of this test? It might be good to mention it either here or on the bug itself.",
+      "revId": "4178a931c020e41d89cdf339ca135b0aff58bcf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e30ba4b_96a18b1f",
+        "filename": "net/cert_net/cert_net_fetcher_url_request_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-17T16:05:07Z",
+      "side": 1,
+      "message": "nit: I think the bug is usually the TODO target. This way there is no need to mention anyone\u0027s in the TODO itself",
+      "range": {
+        "startLine": 530,
+        "startChar": 8,
+        "endLine": 530,
+        "endChar": 14
+      },
+      "revId": "4178a931c020e41d89cdf339ca135b0aff58bcf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
