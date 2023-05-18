@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e4e589e_1654e74e",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-18T13:53:08Z",
+      "side": 1,
+      "message": "What does \"1\" mean? Can you either add a parameter name comment, or better, add a constant with a descriptive name?",
+      "range": {
+        "startLine": 97,
+        "startChar": 64,
+        "endLine": 97,
+        "endChar": 65
+      },
+      "revId": "6b9a594ee075d5bc01e014ae8b62679b084a0d85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72af25d7_d442c26b",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-18T13:53:08Z",
+      "side": 1,
+      "message": "Optional: Consider using a custom type. \n\ngo/java-practices/exceptions#abstract_throwables",
+      "range": {
+        "startLine": 101,
+        "startChar": 22,
+        "endLine": 101,
+        "endChar": 38
+      },
+      "revId": "6b9a594ee075d5bc01e014ae8b62679b084a0d85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5fe2d3b_cf623973",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-18T13:53:08Z",
+      "side": 1,
+      "message": "Do we really want to silently swallow a soft error like this?",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 9
+      },
+      "revId": "6b9a594ee075d5bc01e014ae8b62679b084a0d85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d2b4d44_27add0a6",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-18T13:53:08Z",
+      "side": 1,
+      "message": "The logic after initialization is the same. Branch just on the init, and keep the rest consistent. You can use MultiLineReceiver as the common interface.",
+      "range": {
+        "startLine": 113,
+        "startChar": 7,
+        "endLine": 121,
+        "endChar": 9
+      },
+      "revId": "6b9a594ee075d5bc01e014ae8b62679b084a0d85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
