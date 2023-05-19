@@ -79,25 +79,15 @@ public class RequestFinishedInfoTest {
 
     @Before
     public void setUp() throws Exception {
-        Log.e("RequestFinishedInfoTest", "before assertTrue(NativeTestServer.startNativeTestServer(getContext()));");
         assertTrue(NativeTestServer.startNativeTestServer(getContext()));
-        Log.e("RequestFinishedInfoTest", "after NativeTestServer.startNativeTestServer(getContext()))");
-        Log.e("RequestFinishedInfoTest", "before mUrl = NativeTestServer.getSuccessURL()");
         mUrl = NativeTestServer.getSuccessURL();
-        Log.e("RequestFinishedInfoTest", "after mUrl = NativeTestServer.getSuccessURL()");
-        Log.e("RequestFinishedInfoTest", "before mTestFramework = mTestRule.startCronetTestFramework();");
         mTestFramework = mTestRule.startCronetTestFramework();
-        Log.e("RequestFinishedInfoTest", "after mTestFramework = mTestRule.startCronetTestFramework();");
     }
 
     @After
     public void tearDown() throws Exception {
-        Log.e("RequestFinishedInfoTest", "before mTestFramework.shutdownEngine();");
         mTestFramework.shutdownEngine();
-        Log.e("RequestFinishedInfoTest", "after mTestFramework.shutdownEngine();");
-        Log.e("RequestFinishedInfoTest", "before NativeTestServer.shutdownNativeTestServer();");
         NativeTestServer.shutdownNativeTestServer();
-        Log.e("RequestFinishedInfoTest", "after NativeTestServer.shutdownNativeTestServer();");
     }
 
     static class DirectExecutor implements Executor {

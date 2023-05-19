@@ -3,8 +3,6 @@ package android.net.http;
 import android.net.http.HttpException;
 import org.chromium.net.CronetException;
 
-import android.util.Log;
-
 public class CronetExceptionTranslationUtils {
   final static String LOG = "CronetExceptionTranslationUtils";
 
@@ -12,24 +10,22 @@ public class CronetExceptionTranslationUtils {
   public static <T, E extends Exception> T executeTranslatingCronetExceptions(
       CronetWork<T, E> work, Class<E> nonCronetException)
       throws HttpException, E {
-        Log.w(LOG, "inside executeTranslatingCronetExceptions");
     try {
-      Log.w(LOG, "Inside CronetExceptionTranslationUtils#executeTranslating: before work.run()");
       return work.run();
     } catch (Exception e) {
       if (isUncheckedAndroidCronetException(e)) {
-        Log.w(LOG, "isUncheckedAndroidCronetException");
         throw translateUncheckedAndroidCronetException(e);
-      } else if (isCheckedAndroidCronetException(e)) {
-        Log.w(LOG, "isCheckedAndroidCronetException");
-        throw translateCheckedAndroidCronetException(e);
-      } else if (nonCronetException.isInstance(e)) {
-        Log.w(LOG, "nonCronetException");
-        throw e;
-      } else {
-        Log.w(LOG, "Unexpected exception");
-        throw new AssertionError("Unexpected exception", e);
       }
+
+      if (isCheckedAndroidCronetException(e)) {
+        throw translateCheckedAndroidCronetException(e);
+      }
+
+      if (nonCronetException.isInstance(e)) {
+        throw e;
+      }
+
+      throw new AssertionError("Unexpected exception", e);
     }
   }
 
@@ -50,7 +46,8 @@ public class CronetExceptionTranslationUtils {
       // InlineExecutionProhibitedException is final so we can't have our own flavor
       android.net.http.InlineExecutionProhibitedException wrappedException =
           new android.net.http.InlineExecutionProhibitedException();
-      wrappedException.initCause(e);
+      Throwable cause = e.getCause();
+      wrappedException.initCause(translateNestedException(cause));
       return wrappedException;
     }
 
@@ -63,16 +60,35 @@ public class CronetExceptionTranslationUtils {
     }
 
     if (e instanceof org.chromium.net.QuicException) {
-      return new AndroidQuicExceptionWrapper((org.chromium.net.QuicException) e);
-    } else if (e instanceof org.chromium.net.NetworkException) {
+      new AndroidQuicExceptionWrapper((org.chromium.net.QuicException) e);
+    }
+
+    if (e instanceof org.chromium.net.NetworkException) {
       return new AndroidNetworkExceptionWrapper((org.chromium.net.NetworkException) e);
-    } else if (e instanceof org.chromium.net.CallbackException) {
+    }
+
+    if (e instanceof org.chromium.net.CallbackException) {
       return new AndroidCallbackExceptionWrapper((org.chromium.net.CallbackException) e);
-    } else if (e instanceof CronetException) {
+    }
+
+    if (e instanceof CronetException) {
       return new AndroidHttpExceptionWrapper((CronetException) e);
     }
 
     throw new UnsupportedOperationException("Checked exception translation discrepancy", e);
+  }
+
+  public static Throwable translateNestedException(Throwable t) {
+    if (t instanceof Exception) {
+      Exception e = (Exception) t;
+    if (isUncheckedAndroidCronetException(e)) {
+      return translateUncheckedAndroidCronetException(e);
+    }
+    if (isCheckedAndroidCronetException(e)) {
+      return translateCheckedAndroidCronetException(e);
+    }
+    }
+      return t;
   }
 
   interface CronetWork<T, E extends Exception> {

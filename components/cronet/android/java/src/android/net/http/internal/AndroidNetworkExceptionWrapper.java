@@ -10,7 +10,7 @@ public class AndroidNetworkExceptionWrapper extends android.net.http.NetworkExce
 
   AndroidNetworkExceptionWrapper(
       org.chromium.net.NetworkException delegate, boolean expectQuicException) {
-    super(delegate.getMessage(), delegate);
+    super(delegate.getMessage(), CronetExceptionTranslationUtils.translateNestedException(delegate.getCause()));
     this.mDelegate = delegate;
 
     if (!expectQuicException && delegate instanceof org.chromium.net.QuicException) {
