@@ -1,5 +1,6 @@
 package android.net.http;
 
+import org.chromium.net.ExperimentalCronetEngine;
 import java.util.concurrent.Executor;
 import android.net.Network;
 
@@ -50,7 +51,11 @@ public class AndroidUrlRequestBuilderWrapper extends android.net.http.UrlRequest
 
   @Override
   public android.net.http.UrlRequest.Builder bindToNetwork(Network network) {
-    delegate.bindToNetwork(network.getNetworkHandle());
+    long networkHandle = ExperimentalCronetEngine.UNBIND_NETWORK_HANDLE;
+    if (network != null) {
+      networkHandle = network.getNetworkHandle();
+    }
+    delegate.bindToNetwork(networkHandle);
     return this;
   }
 

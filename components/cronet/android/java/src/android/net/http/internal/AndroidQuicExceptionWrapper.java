@@ -5,7 +5,7 @@ public class AndroidQuicExceptionWrapper extends android.net.http.QuicException 
   private final AndroidNetworkExceptionWrapper networkExceptionWrapper;
 
   AndroidQuicExceptionWrapper(org.chromium.net.QuicException delegate) {
-    super(delegate.getMessage(), delegate);
+    super(delegate.getMessage(), CronetExceptionTranslationUtils.translateNestedException(delegate.getCause()));
     this.networkExceptionWrapper = new AndroidNetworkExceptionWrapper(delegate, true);
   }
 

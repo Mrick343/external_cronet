@@ -38,6 +38,19 @@ public abstract class ICronetEngineBuilder {
         return this;
     }
 
+    public ICronetEngineBuilder setQuicOptions(QuicOptions quicOptions) {
+        return this;
+    }
+
+    public ICronetEngineBuilder setDnsOptions(DnsOptions dnsOptions) {
+        return this;
+    }
+
+    public ICronetEngineBuilder setConnectionMigrationOptions(
+            ConnectionMigrationOptions connectionMigrationOptions) {
+        return this;
+    }
+
     public abstract ICronetEngineBuilder setExperimentalOptions(String options);
 
     public abstract ICronetEngineBuilder setLibraryLoader(

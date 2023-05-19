@@ -94,7 +94,9 @@ public class CronetTestUtil {
 
     public static CronetEngineBuilderImpl getCronetEngineBuilderImpl(
             ExperimentalCronetEngine.Builder builder) {
-        return (CronetEngineBuilderImpl) builder.getBuilderDelegate();
+        return (CronetEngineBuilderImpl) ((ExperimentalOptionsTranslatingCronetEngineBuilder)
+                                                  builder.getBuilderDelegate())
+                .getDelegate();
     }
 
     /**

@@ -70,7 +70,7 @@ public abstract class HttpEngine {
         /**
          * Reference to the actual builder implementation. {@hide exclude from JavaDoc}.
          */
-        protected final HttpEngine.Builder mBuilderDelegate;
+        protected final IHttpEngineBuilder mBuilderDelegate;
 
         /**
          * Constructs a {@link Builder} object that facilitates creating a
@@ -94,16 +94,16 @@ public abstract class HttpEngine {
          *
          * {@hide}
          */
-        Builder(@NonNull HttpEngine.Builder builderDelegate) {
+        Builder(@NonNull IHttpEngineBuilder builderDelegate) {
             mBuilderDelegate = builderDelegate;
         }
 
         /**
          * {@hide}
          */
-        protected Builder() {
-          mBuilderDelegate = this;
-        }
+//        protected Builder() {
+//          mBuilderDelegate = this;
+//        }
 
         /**
          * Constructs a default User-Agent string including the system build version, model and id,
@@ -384,7 +384,7 @@ public abstract class HttpEngine {
          * @param context Android Context to use.
          * @return the created {@link HttpEngine.Builder}.
          */
-        private static HttpEngine.Builder createBuilderDelegate(Context context) {
+        private static IHttpEngineBuilder createBuilderDelegate(Context context) {
             try {
                 Class<?> clazz = context.getClassLoader().loadClass(
                         "android.net.connectivity.org.chromium.net.impl.NativeCronetEngineBuilderImpl");
