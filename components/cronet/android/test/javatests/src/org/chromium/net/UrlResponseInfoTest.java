@@ -9,11 +9,15 @@ import org.chromium.net.UrlResponseInfo;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
+import java.util.Collections;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.chromium.net.impl.UrlResponseInfoImpl;
+
+import android.util.Log;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -35,10 +39,10 @@ public class UrlResponseInfoTest {
         urlChain.add("chromium.org");
         final int httpStatusCode = 200;
         final String httpStatusText = "OK";
-        final List<Map.Entry<String, String>> allHeadersList =
-                new ArrayList<Map.Entry<String, String>>();
+        List<Map.Entry<String, String>> allHeadersList = new ArrayList<Map.Entry<String, String>>();
         allHeadersList.add(new AbstractMap.SimpleImmutableEntry<String, String>(
-                "Date", "Fri, 30 Oct 2015 14:26:41 GMT"));
+               "Date", "Fri, 30 Oct 2015 14:26:41 GMT"));
+        allHeadersList = Collections.unmodifiableList(allHeadersList);
         final boolean wasCached = true;
         final String negotiatedProtocol = "quic/1+spdy/3";
         final String proxyServer = "example.com";
@@ -57,6 +61,10 @@ public class UrlResponseInfoTest {
         }
         Assert.assertEquals(info.getHttpStatusCode(), httpStatusCode);
         Assert.assertEquals(info.getHttpStatusText(), httpStatusText);
+        Log.e("AAAA", "info.getAllHeaders().getClass().getName(): " + String.valueOf(info.getAllHeaders().getClass().getName()));
+        Log.e("AAAA", "allHeadersList.getClass().getName(): " + String.valueOf(allHeadersList.getClass().getName()));
+        Log.e("AAAA", "info.getAllHeaders(): " + String.valueOf(info.getAllHeaders()));
+        Log.e("AAAA", "allHeadersList: " + String.valueOf(allHeadersList));
         Assert.assertEquals(info.getAllHeaders(), allHeadersList);
         try {
             info.getAllHeadersAsList().add(

@@ -263,15 +263,14 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     @DisabledTest(message = "https://crbug.com/1404719")
     // Experimental options should be specified through a JSON compliant string. When that is not
-    // the case building a Cronet engine should fail.
+    // the case building a Cronet engine should fail when it is allowed to do so.
     public void testWrongJsonExperimentalOptions() throws Exception {
-        try {
-            mBuilder.setExperimentalOptions("Not a serialized JSON object");
-            CronetEngine cronetEngine = mBuilder.build();
-            fail("Setting invalid JSON should have thrown an exception.");
-        } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().contains("Experimental options parsing failed"));
+        if (nativeExperimentalOptionsParsingIsAllowedToFail()) {
+            expectedException.expect(IllegalArgumentException.class);
+            expectedException.expectMessage("Experimental options parsing failed");
         }
+        mBuilder.setExperimentalOptions("Not a serialized JSON object");
+        CronetEngine cronetEngine = mBuilder.build();
     }
 
     @Test

@@ -11,8 +11,6 @@ public class AndroidBidirectionalStreamCallbackWrapper extends org.chromium.net.
 
   private final AndroidBidirectionalStreamWrapper bidirectionalStreamWrapper =
       new AndroidBidirectionalStreamWrapper();
-  private final AndroidUrlResponseInfoWrapper urlResponseInfoWrapper =
-      new AndroidUrlResponseInfoWrapper();
   private final AndroidHeaderBlockWrapper headerBlockWrapper = new AndroidHeaderBlockWrapper();
   private final android.net.http.BidirectionalStream.Callback delegate;
 
@@ -32,11 +30,12 @@ public class AndroidBidirectionalStreamCallbackWrapper extends org.chromium.net.
   @Override
   public void onResponseHeadersReceived(
       BidirectionalStream bidirectionalStream, UrlResponseInfo urlResponseInfo) {
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-            urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream)) {
-      delegate.onResponseHeadersReceived(specializedStream, specializedResponseInfo);
+      delegate.onResponseHeadersReceived(specializedStream,
+            new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo)
+          );
     }
   }
 
@@ -47,11 +46,12 @@ public class AndroidBidirectionalStreamCallbackWrapper extends org.chromium.net.
       ByteBuffer byteBuffer,
       boolean endOfStream) {
 
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-            urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream)) {
-      delegate.onReadCompleted(specializedStream, specializedResponseInfo, byteBuffer, endOfStream);
+      delegate.onReadCompleted(specializedStream,
+          new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo),
+          byteBuffer, endOfStream);
     }
   }
 
@@ -61,12 +61,13 @@ public class AndroidBidirectionalStreamCallbackWrapper extends org.chromium.net.
       UrlResponseInfo urlResponseInfo,
       ByteBuffer byteBuffer,
       boolean endOfStream) {
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-            urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream)) {
       delegate.onWriteCompleted(
-          specializedStream, specializedResponseInfo, byteBuffer, endOfStream);
+          specializedStream,
+            new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo),
+          byteBuffer, endOfStream);
     }
   }
 
@@ -75,50 +76,53 @@ public class AndroidBidirectionalStreamCallbackWrapper extends org.chromium.net.
       BidirectionalStream bidirectionalStream,
       UrlResponseInfo urlResponseInfo,
       HeaderBlock headerBlock) {
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-        urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream);
         AndroidHeaderBlockWrapper specializedHeaderBlock =
             headerBlockWrapper.withDelegate(headerBlock)) {
       delegate.onResponseTrailersReceived(
-          specializedStream, specializedResponseInfo, specializedHeaderBlock);
+          specializedStream,
+        new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo),
+          specializedHeaderBlock);
     }
   }
 
   @Override
   public void onSucceeded(
       BidirectionalStream bidirectionalStream, UrlResponseInfo urlResponseInfo) {
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-            urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream)) {
-      delegate.onSucceeded(specializedStream, specializedResponseInfo);
+      delegate.onSucceeded(specializedStream,
+            new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo)
+          );
     }
   }
 
   @Override
   public void onFailed(
       BidirectionalStream bidirectionalStream, UrlResponseInfo urlResponseInfo, CronetException e) {
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-            urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream)) {
       delegate.onFailed(
           specializedStream,
-          specializedResponseInfo,
-          CronetExceptionTranslationUtils.translateCheckedAndroidCronetException(e));
+            new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo),
+          CronetExceptionTranslationUtils.translateCheckedAndroidCronetException(e)
+          );
     }
   }
 
   @Override
   public void onCanceled(
       BidirectionalStream bidirectionalStream, UrlResponseInfo urlResponseInfo) {
-    try (AndroidUrlResponseInfoWrapper specializedResponseInfo =
-            urlResponseInfoWrapper.withDelegate(urlResponseInfo);
+    try (
         AndroidBidirectionalStreamWrapper specializedStream =
             bidirectionalStreamWrapper.withDelegate((ExperimentalBidirectionalStream)bidirectionalStream)) {
-      delegate.onCanceled(specializedStream, specializedResponseInfo);
+      delegate.onCanceled(specializedStream,
+            new AndroidUrlResponseInfoWrapper().withDelegate(urlResponseInfo)
+          );
     }
   }
 }
