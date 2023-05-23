@@ -73,6 +73,7 @@ public class ChromiumHostDrivenTest extends GTest {
                 .addArgument(STDOUT_FILE_KEY, GTEST_OUTPUT_PATH)
                 .addArgument(COMMAND_LINE_FLAGS_KEY,
                         String.format("'%s'", getAllGTestFlags("")));
+        LogUtil.CLog.i("aymanm " + getAllGTestFlags(""));
         if (mCoverage) {
             builder.addArgument(DUMP_COVERAGE_KEY, "true");
         }
@@ -94,10 +95,12 @@ public class ChromiumHostDrivenTest extends GTest {
         String cmd = createRunAllTestsCommand();
         printHostLogs(cmd);
         getDevice().executeShellCommand(CLEAR_CLANG_COVERAGE_FILES);
+        ITestInvocationListener listenerWithTime = new TestListenerWithTime(
+                System.currentTimeMillis(), listener);
         getDevice().executeShellCommand(cmd, new CollectingOutputReceiver(),
                 testsTimeout.toMinutes(), TimeUnit.MINUTES, /* retryAttempts */ 1);
         try {
-            parseAndReport(getDevice().pullFile(GTEST_OUTPUT_PATH), listener);
+            parseAndReport(getDevice().pullFile(GTEST_OUTPUT_PATH), listenerWithTime);
         } catch (IOException e) {
             throw new FailedReportingException("Failed to parse and report test results",
                     e.getCause());
