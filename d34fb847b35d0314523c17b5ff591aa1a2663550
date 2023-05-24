@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "367cf629_e8fee8e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-24T16:14:38Z",
+      "side": 1,
+      "message": "Apologies in advance for this messy change. I couldn\u0027t figure out how to reasonably split it up into smaller changes.\n\nFWIW, there is still some cleanup we can do in Android.extras.bp after this change has merged. (And I really want to find a solution to let the script handle the translation of these rules -- especially if we have to live with these imported tests for a longer period of time.)",
+      "revId": "d34fb847b35d0314523c17b5ff591aa1a2663550",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
