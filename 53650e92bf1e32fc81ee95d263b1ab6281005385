@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2be631d4_991c25f6",
+        "filename": "components/cronet/android/test/src/org/chromium/net/MockUrlRequestJobFactory.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-25T09:56:00Z",
+      "side": 1,
+      "message": "nit: should we add `@VisibleForTesting`?",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 10
+      },
+      "revId": "53650e92bf1e32fc81ee95d263b1ab6281005385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
