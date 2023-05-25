@@ -16,6 +16,24 @@
       "message": "I now understand what you mean by terrible patch, I\u0027m surprised you managed to make this work at all haha.\n\nI\u0027ve looked a bit at the auto-generated Android.bp and things are not particularly prettier there. Though, all this complexity is hidden behind the script logic...\nSo yeah, I don\u0027t think there is a better approach to this other than \"let\u0027s handle this inside gn2bp\".\n\nP.S. Thanks a lot for the detailed commit message, it made this much easier to digest.",
       "revId": "e40ba590c8ae68e48b07205f1a248dd096f7fe83",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ece1fe99_52316f3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-25T21:49:34Z",
+      "side": 1,
+      "message": "\u003e I\u0027ve looked a bit at the auto-generated Android.bp and things are not particularly prettier there. Though, all this complexity is hidden behind the script logic...\n\nIt really isn\u0027t. At least for C++, it\u0027s a direct translation of what the GN dependency tree dictates. For java, we essentially manually create the jni_registration_generator genrule that consists of all sources inside cronet_aml_java. Not great, but manageable since there\u0027s only one jar. Obviously with tests this becomes a bit harder.\n\nI think the main problem is that we don\u0027t add the test sources directly to the test jar (that\u0027s something I want to fix -- after the release obviously). I understand that different tests have a different set of java dependencies, but nothing should stop us from just adding them all to one big test support jar...",
+      "parentUuid": "88d0c85e_d9c56082",
+      "revId": "e40ba590c8ae68e48b07205f1a248dd096f7fe83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
