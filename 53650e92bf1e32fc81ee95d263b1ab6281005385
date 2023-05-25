@@ -22,6 +22,30 @@
       },
       "revId": "53650e92bf1e32fc81ee95d263b1ab6281005385",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd75e364_c7839e54",
+        "filename": "components/cronet/android/test/src/org/chromium/net/MockUrlRequestJobFactory.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-25T21:57:10Z",
+      "side": 1,
+      "message": "Same as the previous CL. I don\u0027t really see much value in it. Hopefully we can just fix the jarjar rules and revert these patches...",
+      "parentUuid": "2be631d4_991c25f6",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 10
+      },
+      "revId": "53650e92bf1e32fc81ee95d263b1ab6281005385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
