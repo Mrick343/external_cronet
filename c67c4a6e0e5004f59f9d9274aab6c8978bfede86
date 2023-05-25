@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b40ad76_d4e48af3",
+        "filename": "components/cronet/android/test/src/org/chromium/net/MockCertVerifier.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-25T09:55:10Z",
+      "side": 1,
+      "message": "nit: should also add a `@VisibleForTesting` tag?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 10
+      },
+      "revId": "c67c4a6e0e5004f59f9d9274aab6c8978bfede86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
