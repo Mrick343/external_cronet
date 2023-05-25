@@ -33,6 +33,23 @@
       "message": "This makes sense to me. I\u0027ll let aymanm@ +2 as he has more context in gn2bp",
       "revId": "5aa2fbe107ffc24aa23535f7140b90aa0d8ca02b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "add6ae2d_49dd2030",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-25T10:44:51Z",
+      "side": 1,
+      "message": "I will LGTM it for the moment but I realize there is something that should be done about the both prod Java and testing Java modules. Atleast trying to minimize the manual maintenance job.",
+      "revId": "5aa2fbe107ffc24aa23535f7140b90aa0d8ca02b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
