@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88d0c85e_d9c56082",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-25T09:53:13Z",
+      "side": 1,
+      "message": "I now understand what you mean by terrible patch, I\u0027m surprised you managed to make this work at all haha.\n\nI\u0027ve looked a bit at the auto-generated Android.bp and things are not particularly prettier there. Though, all this complexity is hidden behind the script logic...\nSo yeah, I don\u0027t think there is a better approach to this other than \"let\u0027s handle this inside gn2bp\".\n\nP.S. Thanks a lot for the detailed commit message, it made this much easier to digest.",
+      "revId": "e40ba590c8ae68e48b07205f1a248dd096f7fe83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
