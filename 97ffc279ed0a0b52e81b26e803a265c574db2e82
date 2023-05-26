@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3f707a14_5d2fe31d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-26T18:54:21Z",
+      "side": 1,
+      "message": "https://source.chromium.org/chromium/chromium/src/+/main:net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java?q\u003dEmbeddedTestServerImpl\u0026ss\u003dchromium is one example.\n\nI can try dropping it, my WIP gn2bp parser does not actually find it as a dependency of the tests.",
+      "parentUuid": "93a662e6_bbbaa1f3",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 14
+      },
+      "revId": "97ffc279ed0a0b52e81b26e803a265c574db2e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "50ceb93d_dfe8b8c7",
         "filename": "Android.bp",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "writtenOn": "2023-05-26T10:09:01Z",
       "side": 1,
       "message": "To confirm my understanding: this is equivalent to applying `jni_registration_generator_defaults` to `cronet_native_unittests_defaults_srcs` + old `cronet_aml_components_cronet_android_cronet_jni_registration__java__testing`\u0027s srcs, correct?\n\n(It\u0027s a bit confusing that gn2bp jni_generator genrules mix the \"action\" with the sources)",
+      "range": {
+        "startLine": 203,
+        "startChar": 8,
+        "endLine": 206,
+        "endChar": 49
+      },
+      "revId": "97ffc279ed0a0b52e81b26e803a265c574db2e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0d664b1_fe57f033",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-26T18:54:21Z",
+      "side": 1,
+      "message": "Yeah. Using a genrule rather than a filegroup was a smaller diff in Android.bp. List attributes in defaults are additive, but string attributes can only be defined in one of the defaults (hence, jni_registration_generator_defaults.cmd conflicts with cronet_aml_components_cronet_android_cronet_jni_registration__java__testing_defaults.cmd -- but it\u0027s essentially the same, so jni_registration_generator_defaults can just be removed).",
+      "parentUuid": "fe1d233a_3d262aad",
       "range": {
         "startLine": 203,
         "startChar": 8,
