@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93a662e6_bbbaa1f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-26T10:09:01Z",
+      "side": 1,
+      "message": "Do you happen to know which dependencies are these?\n\nAs a long term solution, I think it might be possible to either:\n* Change them to `@NativeMethods(\"cronet_tests\")`, if they\u0027re just stuff we\u0027ve missed\n* Drop the dependency from the test jar, if they are already bundled in the non test jar (I\u0027ve recently fixed something similar upstream https://crrev.com/c/4539083)\n\nIn google3 we ended up with stuff working without having to resort to a \"global GEN_JNI\" (we temporarily adopted this same solution though).",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 14
+      },
+      "revId": "97ffc279ed0a0b52e81b26e803a265c574db2e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50ceb93d_dfe8b8c7",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7815,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-26T10:09:01Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 7815,
+        "startChar": 74,
+        "endLine": 7815,
+        "endChar": 75
+      },
+      "revId": "97ffc279ed0a0b52e81b26e803a265c574db2e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe1d233a_3d262aad",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-26T10:09:01Z",
+      "side": 1,
+      "message": "To confirm my understanding: this is equivalent to applying `jni_registration_generator_defaults` to `cronet_native_unittests_defaults_srcs` + old `cronet_aml_components_cronet_android_cronet_jni_registration__java__testing`\u0027s srcs, correct?\n\n(It\u0027s a bit confusing that gn2bp jni_generator genrules mix the \"action\" with the sources)",
+      "range": {
+        "startLine": 203,
+        "startChar": 8,
+        "endLine": 206,
+        "endChar": 49
+      },
+      "revId": "97ffc279ed0a0b52e81b26e803a265c574db2e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
