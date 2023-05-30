@@ -47,8 +47,12 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
 import org.chromium.base.test.util.DisabledTest;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
+<<<<<<< HEAD   (97ffc2 cronet import: fix proxy native generation for native unit t)
 import android.net.http.DnsOptions.StaleDnsOptions;
 import org.chromium.net.MetricsTestUtil.TestRequestFinishedListener;
+=======
+import org.chromium.net.DnsOptions.StaleDnsOptions;
+>>>>>>> BRANCH (6e619f Import Cronet version 114.0.5735.53)
 import org.chromium.net.impl.CronetUrlRequestContext;
 
 import java.io.File;

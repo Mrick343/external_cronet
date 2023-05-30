@@ -287,14 +287,17 @@ public class BuildInfo {
     public static boolean targetsAtLeastU() {
         int target = ContextUtils.getApplicationContext().getApplicationInfo().targetSdkVersion;
 
+<<<<<<< HEAD   (97ffc2 cronet import: fix proxy native generation for native unit t)
         // Logic for pre-API-finalization:
         return SdkLevel.isAtLeastU() && target == Build.VERSION_CODES.CUR_DEVELOPMENT;
 
+=======
+>>>>>>> BRANCH (6e619f Import Cronet version 114.0.5735.53)
         // Logic for after API finalization but before public SDK release has to
         // just hardcode the appropriate SDK integer. This will include Android
         // builds with the finalized SDK, and also pre-API-finalization builds
         // (because CUR_DEVELOPMENT == 10000).
-        // return target >= <integer placeholder for U>;
+        return target >= 34;
 
         // Once the public SDK is upstreamed we can use the defined constant,
         // deprecate this, then eventually inline this at all callsites and
