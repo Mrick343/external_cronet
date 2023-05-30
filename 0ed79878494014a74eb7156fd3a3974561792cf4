@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67250266_04b0019a",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T12:42:19Z",
+      "side": 1,
+      "message": "Prefer to inject a time source for easier testing. \n\nhttps://engdoc.corp.google.com/eng/doc/devguide/java/practices/time.md?cl\u003dhead#clock",
+      "range": {
+        "startLine": 98,
+        "startChar": 16,
+        "endLine": 98,
+        "endChar": 42
+      },
+      "revId": "0ed79878494014a74eb7156fd3a3974561792cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50dac677_8d324448",
+        "filename": "test_runner/src/com.android.tests.chromium.host/TestListenerWithTime.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T12:42:19Z",
+      "side": 1,
+      "message": "Can you please arrange the methods  with custom behavior to a single block, and the ones that just delegate to another?",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 70
+      },
+      "revId": "0ed79878494014a74eb7156fd3a3974561792cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deae2569_aa08b8d6",
+        "filename": "test_runner/src/com.android.tests.chromium.host/TestListenerWithTime.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T12:42:19Z",
+      "side": 1,
+      "message": "Can you add a parameter name comment?",
+      "range": {
+        "startLine": 84,
+        "startChar": 52,
+        "endLine": 84,
+        "endChar": 53
+      },
+      "revId": "0ed79878494014a74eb7156fd3a3974561792cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "892f9fe1_c7e9028c",
+        "filename": "test_runner/src/com.android.tests.chromium.host/TestListenerWithTime.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T12:42:19Z",
+      "side": 1,
+      "message": "Given this is an override, can you just delegate without calling upgradeConvert manually?",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 95
+      },
+      "revId": "0ed79878494014a74eb7156fd3a3974561792cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
