@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b47f1ac_9189e405",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-30T22:42:13Z",
+      "side": 1,
+      "message": "Marked as OSL -2 to temporarily block submission until 114.0.5735.53 has been merged to udc-dev (since 114.0.5735.53 is a merge commit, it can\u0027t be cherry-picked into udc-dev but requires a merge instead). Let\u0027s submit this next week.",
+      "revId": "f827a53b9dc035751ea4d5330b6e26c3ca60e17f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcdddbd6_3556ec70",
+        "filename": "components/cronet/cronet_context.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-05-30T22:42:13Z",
+      "side": 1,
+      "message": "nit: can you match the formatting of the upstream commit to reduce conflict potential? (i.e. remove comment, and add the line break equivalent to the upstream commit)",
+      "range": {
+        "startLine": 527,
+        "startChar": 4,
+        "endLine": 531,
+        "endChar": 0
+      },
+      "revId": "f827a53b9dc035751ea4d5330b6e26c3ca60e17f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
