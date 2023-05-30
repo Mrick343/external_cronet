@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5fa8d40_ecf71450",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "It\u0027d be helpful to have @NonNull / @Nullable annotations on parameters of methods to reason about what can be null, given the class makes quite heavy use of nulls.",
+      "range": {
+        "startLine": 59,
+        "startChar": 13,
+        "endLine": 59,
+        "endChar": 35
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c04aef1_140e47e3",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "Nit: formatting",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 99
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1856116_d1c94962",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "This is quite naive in error handling compared to createFlagFileOnDevice for instance. Is that intentional and if so, can you document the reason?",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 47
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c58f6ec_c9c51b00",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "Nitty nit: `\u0027\u003d\u0027` for appending a single character",
+      "range": {
+        "startLine": 118,
+        "startChar": 26,
+        "endLine": 118,
+        "endChar": 29
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6e73ded_90cd4a82",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "If you\u0027re using a StringBuilder already, don\u0027t create intermediate Strings: https://goto.google.com/ej3e-63",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 67
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a6592d0_ff764331",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "What\u0027s the difference between the two approaches, i.e. why is writing the file better? Wouldn\u0027t it be sufficient to just use ADB all the time?",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 92
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bab9cc6_c26dfb5f",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "This occurs at multiple places, can you wrap the entire method in a single try-finally?",
+      "range": {
+        "startLine": 167,
+        "startChar": 11,
+        "endLine": 167,
+        "endChar": 45
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bb15f05_30508303",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "Nit: don\u0027t use closing tags where unnecessary in Javadoc. For instance, note the lack of a closing paragraph tag here: https://github.com/AdoptOpenJDK/openjdk-jdk11/blob/master/src/java.base/share/classes/java/util/concurrent/ExecutorService.java#L57",
+      "range": {
+        "startLine": 188,
+        "startChar": 93,
+        "endLine": 188,
+        "endChar": 98
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20dde570_61be5f5e",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "Why do you strip the IOException? Usually you don\u0027t need to prune the exception chain: go/java-practices/exceptions#pruning",
+      "range": {
+        "startLine": 251,
+        "startChar": 76,
+        "endLine": 251,
+        "endChar": 88
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddd740a1_8060ffff",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T13:03:23Z",
+      "side": 1,
+      "message": "Optional: Comments aren\u0027t necessary where the parameter name is obvious from what\u0027s being passed to the method. Unless there\u0027s tooling in place that warns you if the parameter names don\u0027t match the expected ones.",
+      "range": {
+        "startLine": 259,
+        "startChar": 16,
+        "endLine": 259,
+        "endChar": 42
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
