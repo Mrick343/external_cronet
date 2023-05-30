@@ -238,6 +238,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65fab014_787b03c9",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T15:38:49Z",
+      "side": 1,
+      "message": "You can use a class that allows you to pass a StringBuilder, for example Guava\u0027;s Joiner: https://cs.android.com/android/platform/superproject/+/master:external/guava/android/guava/src/com/google/common/base/Joiner.java;l\u003d101?q\u003dJoiner",
+      "parentUuid": "1a4d8d95_328e2cc1",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 67
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8a6592d0_ff764331",
         "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
         "patchSetId": 1
@@ -273,6 +297,30 @@
       "side": 1,
       "message": "This is to avoid passing the command line maximum character limit. Since the command is issued as a shell command which has a size limit.",
       "parentUuid": "8a6592d0_ff764331",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 92
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a391d66_223214e6",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T15:38:49Z",
+      "side": 1,
+      "message": "The new implementation that throws makes more sense, thanks!",
+      "parentUuid": "d00afd7d_4ea8f27d",
       "range": {
         "startLine": 141,
         "startChar": 0,
@@ -414,6 +462,30 @@
       "side": 1,
       "message": "I don\u0027t understand what you mean exactly by exception pruning? Is it because I am calling `getCause()` on the exception?",
       "parentUuid": "20dde570_61be5f5e",
+      "range": {
+        "startLine": 251,
+        "startChar": 76,
+        "endLine": 251,
+        "endChar": 88
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fe30e21_789e2747",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1978840
+      },
+      "writtenOn": "2023-05-30T15:38:49Z",
+      "side": 1,
+      "message": "Yes. Consider the following snippet:\n\n```\n    public static void main(String[] args) {\n        new Foo().topmost();\n    }\n\n    private void topmost() {\n        middle();\n    }\n\n    private void middle() {\n        try {\n            some();\n            longLong();\n            bottom();\n            implementation();\n        } catch (RuntimeException e) {\n            throw new IllegalStateException(\"Error!\", e.getCause());\n        }\n    }\n```\n\nIf the cause itself has a cause, you might be able to get *some* information about here the failure came from, but good luck chasing the root cause from this:\n\n```\n    Exception in thread \"main\" java.lang.IllegalStateException: Error!\n\tat Foo.middle(Foo.java:18)\n\tat Foo.topmost(Foo.java:8)\n\tat Foo.main(Foo.java:4)\n```\n\nCompare to passing `e` instead of `e.getCause()` to the ISE constructor:\n\n```\nException in thread \"main\" java.lang.IllegalStateException: Error!\n\tat Foo.middle(Foo.java:18)\n\tat Foo.topmost(Foo.java:8)\n\tat Foo.main(Foo.java:4)\nCaused by: java.lang.UnsupportedOperationException\n\tat Foo.longLong(Foo.java:43)\n\tat Foo.middle(Foo.java:14)\n\t... 2 more\n```",
+      "parentUuid": "35b82b09_9187c922",
       "range": {
         "startLine": 251,
         "startChar": 76,
