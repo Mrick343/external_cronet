@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cd1b7c5_7200f843",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5fa8d40_ecf71450",
+      "range": {
+        "startLine": 59,
+        "startChar": 13,
+        "endLine": 59,
+        "endChar": 35
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c04aef1_140e47e3",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-30T13:03:23Z",
       "side": 1,
       "message": "Nit: formatting",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 99
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c48d72c_faacf31f",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c04aef1_140e47e3",
       "range": {
         "startLine": 90,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c0f09a1_85c73968",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "I refactored the whole part to catch the IOException and rethrow as a runtime exception since the test runner can not recover from not creating essential files.",
+      "parentUuid": "c1856116_d1c94962",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 47
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c58f6ec_c9c51b00",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-05-30T13:03:23Z",
       "side": 1,
       "message": "Nitty nit: `\u0027\u003d\u0027` for appending a single character",
+      "range": {
+        "startLine": 118,
+        "startChar": 26,
+        "endLine": 118,
+        "endChar": 29
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10b6dc4b_f5f65a96",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c58f6ec_c9c51b00",
       "range": {
         "startLine": 118,
         "startChar": 26,
@@ -118,6 +214,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1a4d8d95_328e2cc1",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "ArrayUtil.join concatenate the elements of includeFilters joined by \":\". The only way to avoid the intermediate String would be to re-implement the join method myself. This would hurt the code clarity.",
+      "parentUuid": "b6e73ded_90cd4a82",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 67
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8a6592d0_ff764331",
         "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
         "patchSetId": 1
@@ -129,6 +249,30 @@
       "writtenOn": "2023-05-30T13:03:23Z",
       "side": 1,
       "message": "What\u0027s the difference between the two approaches, i.e. why is writing the file better? Wouldn\u0027t it be sufficient to just use ADB all the time?",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 92
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d00afd7d_4ea8f27d",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "This is to avoid passing the command line maximum character limit. Since the command is issued as a shell command which has a size limit.",
+      "parentUuid": "8a6592d0_ff764331",
       "range": {
         "startLine": 141,
         "startChar": 0,
@@ -162,6 +306,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fa33d9d_06bfe8d3",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bab9cc6_c26dfb5f",
+      "range": {
+        "startLine": 167,
+        "startChar": 11,
+        "endLine": 167,
+        "endChar": 45
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bb15f05_30508303",
@@ -185,6 +353,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e1aac5f_21be792b",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "I was not going to but intelliJ seemed persistent on adding a closing tag for each opening tag ;(",
+      "parentUuid": "1bb15f05_30508303",
+      "range": {
+        "startLine": 188,
+        "startChar": 93,
+        "endLine": 188,
+        "endChar": 98
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "20dde570_61be5f5e",
@@ -198,6 +390,30 @@
       "writtenOn": "2023-05-30T13:03:23Z",
       "side": 1,
       "message": "Why do you strip the IOException? Usually you don\u0027t need to prune the exception chain: go/java-practices/exceptions#pruning",
+      "range": {
+        "startLine": 251,
+        "startChar": 76,
+        "endLine": 251,
+        "endChar": 88
+      },
+      "revId": "a004db5aef2672bd7a7a68746338b9e892d92309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35b82b09_9187c922",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-05-30T15:18:23Z",
+      "side": 1,
+      "message": "I don\u0027t understand what you mean exactly by exception pruning? Is it because I am calling `getCause()` on the exception?",
+      "parentUuid": "20dde570_61be5f5e",
       "range": {
         "startLine": 251,
         "startChar": 76,
