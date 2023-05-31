@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8c8809d_4b210e85",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-05-31T09:51:32Z",
+      "side": 1,
+      "message": "P.S. Current official stable version is 114.0.5735.58 (https://chromiumdash.appspot.com/fetch_releases?channel\u003dstable\u0026platform\u003dandroid\u0026num\u003d1). Google3 is currently pinned at 114.0.5735.33.\n\nIdeally, we should release the first official cut that contains this CL from Dan https://chromium-review.googlesource.com/c/chromium/src/+/4562533. We could also manually cherry-pick it and pin to one of the official stable versions.",
+      "revId": "6e619ff2daf1f025aed9c3b67a7492b4b858f981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
