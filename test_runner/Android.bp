@@ -28,9 +28,7 @@ java_test_host {
     test_config: "AndroidNetTest.xml",
     libs: [
         "tradefed",
-    ],
-    defaults: [
-        "CronetTestJavaDefaults",
+        "framework-annotations-lib",
     ],
     required: [
         "cronet_net_tester_app",
@@ -42,10 +40,8 @@ java_test_host {
         "general-tests",
         "mts-tethering",
     ],
-    // It will get build error if just set enabled to true. It fails with "windows_common"
-    // depends on some disabled modules that are used by this test and it looks like set
-    // CronetTestJavaDefaults to true also enables "windows" variant. Thus,
-    // disable this on target windows.
+    // This build fails on windows targets with "windows_common" depends on some disabled modules
+    // that are used by this test. Thus, disable this on target windows.
     // TODO(aymanm): Remove this when b/201754360 is fixed.
     target: {
         windows: {
@@ -61,9 +57,7 @@ java_test_host {
     test_config: "AndroidTest.xml",
     libs: [
         "tradefed",
-    ],
-    defaults: [
-        "CronetTestJavaDefaults",
+        "framework-annotations-lib",
     ],
     required: [
         "cronet_tester_app",
@@ -72,10 +66,8 @@ java_test_host {
         "general-tests",
         "mts-tethering",
     ],
-    // It will get build error if just set enabled to true. It fails with "windows_common"
-    // depends on some disabled modules that are used by this test and it looks like set
-    // CronetTestJavaDefaults to true also enables "windows" variant. Thus,
-    // disable this on target windows.
+    // This build fails on windows targets with "windows_common" depends on some disabled modules
+    // that are used by this test. Thus, disable this on target windows.
     // TODO(aymanm): Remove this when b/201754360 is fixed.
     target: {
         windows: {
