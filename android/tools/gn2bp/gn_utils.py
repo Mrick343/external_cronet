@@ -311,6 +311,7 @@ class GnParser(object):
     self.builtin_deps = builtin_deps
     self.all_targets = {}
     self.java_sources = collections.defaultdict(set)
+    self.java_test_sources = set()
     self.aidl_local_include_dirs = set()
     self.java_actions = collections.defaultdict(set)
 
@@ -489,14 +490,13 @@ class GnParser(object):
       # dependency of the __dex target)
       # Note: this skips prebuilt java dependencies. These will have to be
       # added manually when building the jar.
-      if target.name.endswith('__dex'):
-        if dep.name.endswith('__compile_java'):
+      if re.match('.*__dex(__testing)?$', target.name):
+        if re.match('.*__compile_java(__testing)?$', dep.name):
           log.debug('Adding java sources for %s', dep.name)
           java_srcs = [src for src in dep.inputs if _is_java_source(src)]
-          if not is_test_target:
-            # TODO(aymanm): Fix collecting sources for testing modules for java.
-            # Don't collect java source files for test targets.
-            # We only need a specific set of java sources which are hardcoded in gen_android_bp
+          if is_test_target:
+            self.java_test_sources.update(java_srcs)
+          else:
             self.java_sources[java_group_name].update(java_srcs)
       if dep.type in ["action"] and target.type == "java_group":
         # GN uses an action to compile aidl files. However, this is not needed in soong
