@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25e94e61_c4d46dbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-02T23:00:25Z",
+      "side": 1,
+      "message": "Please pay special attention to this one. It was difficult to ensure sure no previous modifications to get lost.",
+      "revId": "7a422e73dcf0d06ca1cc46f8b4dfd81baeb85995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
