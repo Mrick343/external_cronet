@@ -333,8 +333,7 @@ class GnParser(object):
   def _is_java_group(self, type_, target_name):
     # Per https://chromium.googlesource.com/chromium/src/build/+/HEAD/android/docs/java_toolchain.md
     # java target names must end in "_java".
-    # TODO: There are some other possible variations we might need to support.
-    return type_ == 'group' and target_name.endswith('_java')
+    return type_ == 'group' and '_java' in target_name
 
   def _get_arch(self, toolchain):
     if toolchain == '//build/toolchain/android:android_clang_x86':
