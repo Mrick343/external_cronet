@@ -1538,6 +1538,9 @@ def create_java_module(blueprint, gn, is_test_target):
     bp_module_name += gn_utils.TESTING_SUFFIX
   module = Module('java_library', bp_module_name, '//gn:java')
   module.srcs.update([gn_utils.label_to_path(source) for source in get_non_api_java_sources(gn)])
+  if is_test_target:
+    module.srcs.update([gn_utils.label_to_path(source) for source in gn.java_test_sources])
+
   module.libs = {
     "androidx.annotation_annotation",
     "androidx.annotation_annotation-experimental-nodeps",
