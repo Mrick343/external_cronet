@@ -511,10 +511,27 @@ public class ExperimentalOptionsTest {
     @Test
     @MediumTest
     @OnlyRunNativeCronet
-    public void testExperimentalOptions_allSet() throws Exception {
+    public void testExperimentalOptions_allSet_viaExperimentalEngine() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
+<<<<<<< HEAD   (a11c55 cronet import: add missing import to TestRequestFinishedList)
         mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+=======
+        testExperimentalOptionsAllSetImpl(
+                new ExperimentalCronetEngine.Builder(mockBuilderImpl), mockBuilderImpl);
+    }
+>>>>>>> BRANCH (d12afe Import Cronet version 114.0.5735.84)
 
+    @Test
+    @MediumTest
+    @OnlyRunNativeCronet
+    public void testExperimentalOptions_allSet_viaNonExperimentalEngine() throws Exception {
+        MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
+        testExperimentalOptionsAllSetImpl(
+                new CronetEngine.Builder(mockBuilderImpl), mockBuilderImpl);
+    }
+
+    private static void testExperimentalOptionsAllSetImpl(
+            CronetEngine.Builder builder, MockCronetBuilderImpl mockBuilderImpl) throws Exception {
         QuicOptions quicOptions =
                 QuicOptions.builder()
                         .addAllowedQuicHost("quicHost1.com")
@@ -601,7 +618,7 @@ public class ExperimentalOptionsTest {
                                 toTelephoneKeyboardSequence("badPathErr"))
                         .build();
 
-        mBuilder.setDnsOptions(dnsOptions)
+        builder.setDnsOptions(dnsOptions)
                 .setConnectionMigrationOptions(connectionMigrationOptions)
                 .setQuicOptions(quicOptions)
                 .build();

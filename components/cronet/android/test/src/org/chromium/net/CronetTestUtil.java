@@ -97,9 +97,17 @@ public class CronetTestUtil {
         getCronetEngineBuilderImpl(builder).setMockCertVerifierForTesting(mockCertVerifier);
     }
 
+<<<<<<< HEAD   (a11c55 cronet import: add missing import to TestRequestFinishedList)
     public static CronetEngineBuilderImpl getCronetEngineBuilderImpl(
             ExperimentalHttpEngine.Builder builder) {
         return (CronetEngineBuilderImpl) builder.getBuilderDelegate();
+=======
+    static CronetEngineBuilderImpl getCronetEngineBuilderImpl(
+            ExperimentalCronetEngine.Builder builder) {
+        return (CronetEngineBuilderImpl) ((ExperimentalOptionsTranslatingCronetEngineBuilder)
+                                                  builder.getBuilderDelegate())
+                .getDelegate();
+>>>>>>> BRANCH (d12afe Import Cronet version 114.0.5735.84)
     }
 
     /**
