@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed0ef584_5284e4f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-05T18:33:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25e94e61_c4d46dbb",
+      "revId": "7a422e73dcf0d06ca1cc46f8b4dfd81baeb85995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4e2dae2_bddb65b3",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-06-05T09:48:00Z",
       "side": 1,
       "message": "Actually wait, `DnsOptions#getRetryPreHandshakeErrorsOnAlternateNetwork` doesn\u0027t exist in AOSP?\n\nIn that case, I think it would be best not to set the experimental options (and keep the default behavior).",
+      "range": {
+        "startLine": 272,
+        "startChar": 24,
+        "endLine": 272,
+        "endChar": 93
+      },
+      "revId": "7a422e73dcf0d06ca1cc46f8b4dfd81baeb85995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a3865a6_54dd64d9",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalOptionsTranslatingHttpEngineBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-05T18:33:27Z",
+      "side": 1,
+      "message": "We explicitly changed this in aosp/2434298 (though unfortunately with very little commentary...).",
+      "parentUuid": "b4e2dae2_bddb65b3",
       "range": {
         "startLine": 272,
         "startChar": 24,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0083d90d_23b61acf",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-05T18:33:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a8d7821_e86d0976",
+      "range": {
+        "startLine": 526,
+        "startChar": 20,
+        "endLine": 526,
+        "endChar": 42
+      },
+      "revId": "7a422e73dcf0d06ca1cc46f8b4dfd81baeb85995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9653254f_41a7b189",
@@ -77,6 +143,30 @@
       "writtenOn": "2023-06-05T09:48:00Z",
       "side": 1,
       "message": "Same as above.",
+      "range": {
+        "startLine": 530,
+        "startChar": 12,
+        "endLine": 530,
+        "endChar": 34
+      },
+      "revId": "7a422e73dcf0d06ca1cc46f8b4dfd81baeb85995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ef30527_72363d8b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-05T18:33:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9653254f_41a7b189",
       "range": {
         "startLine": 530,
         "startChar": 12,
