@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6337c758_ecc846a8",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalOptionsTranslatingHttpEngineBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-05T09:48:00Z",
+      "side": 0,
+      "message": "I\u0027m not sure whether it\u0027s best to ignore this config or throw an error instead (if `options.getAllowNonDefaultNetworkUsage() \u003d\u003d MIGRATION_OPTION_UNSPECIFIED`). \n\nUpstream we end up [DCHECKING in native code](https://source.chromium.org/chromium/chromium/src/+/refs/heads/main:net/quic/quic_stream_factory.cc;l\u003d2200;drc\u003d73265a30d5b5a3873dbf3b92f01abc5c2892ece3).",
+      "range": {
+        "startLine": 229,
+        "startChar": 12,
+        "endLine": 232,
+        "endChar": 13
+      },
+      "revId": "4b93e820f0d2b33d4da592b2c69ddedecb194bab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
