@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8bcf13c_93b02452",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-05T09:31:20Z",
+      "side": 1,
+      "message": "I\u0027ve spent some time looking at both diffs (parent 1 and 2) and it looks correct to me.",
+      "revId": "034f8d104a19aeee914aac965a6b784df2c2a2fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
