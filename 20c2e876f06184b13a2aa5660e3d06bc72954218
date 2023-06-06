@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3aa0bed_e09d37d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-06T15:36:42Z",
+      "side": 1,
+      "message": "Discussed offline, will address my open comments in a follow-up",
+      "revId": "20c2e876f06184b13a2aa5660e3d06bc72954218",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
