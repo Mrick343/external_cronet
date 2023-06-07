@@ -83,6 +83,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6a902bf_3f58e215",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalOptionsTranslatingHttpEngineBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-07T16:50:31Z",
+      "side": 1,
+      "message": "per our discussion: fixed in aosp/2618163",
+      "parentUuid": "9a3865a6_54dd64d9",
+      "range": {
+        "startLine": 272,
+        "startChar": 24,
+        "endLine": 272,
+        "endChar": 93
+      },
+      "revId": "7a422e73dcf0d06ca1cc46f8b4dfd81baeb85995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a8d7821_e86d0976",

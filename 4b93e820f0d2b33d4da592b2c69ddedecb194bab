@@ -22,6 +22,30 @@
       },
       "revId": "4b93e820f0d2b33d4da592b2c69ddedecb194bab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fac025f_19c1f5d9",
+        "filename": "components/cronet/android/api/src/android/net/http/ExperimentalOptionsTranslatingHttpEngineBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-07T16:50:31Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "6337c758_ecc846a8",
+      "range": {
+        "startLine": 229,
+        "startChar": 12,
+        "endLine": 232,
+        "endChar": 13
+      },
+      "revId": "4b93e820f0d2b33d4da592b2c69ddedecb194bab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
