@@ -48,7 +48,6 @@ import org.chromium.base.annotations.NativeMethods;
 import org.chromium.base.test.util.DisabledTest;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
 import android.net.http.DnsOptions.StaleDnsOptions;
-import org.chromium.net.MetricsTestUtil.TestRequestFinishedListener;
 import org.chromium.net.impl.CronetUrlRequestContext;
 
 import java.io.File;
@@ -512,10 +511,24 @@ public class ExperimentalOptionsTest {
     @Test
     @MediumTest
     @OnlyRunNativeCronet
-    public void testExperimentalOptions_allSet() throws Exception {
+    public void testExperimentalOptions_allSet_viaExperimentalEngine() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        testExperimentalOptionsAllSetImpl(
+                new ExperimentalHttpEngine.Builder(mockBuilderImpl), mockBuilderImpl);
+    }
 
+    @Test
+    @MediumTest
+    @OnlyRunNativeCronet
+    public void testExperimentalOptions_allSet_viaNonExperimentalEngine() throws Exception {
+        MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
+        testExperimentalOptionsAllSetImpl(
+                new HttpEngine.Builder(mockBuilderImpl), mockBuilderImpl);
+    }
+
+    private static void testExperimentalOptionsAllSetImpl(
+            HttpEngine.Builder builder,
+            MockCronetBuilderImpl mockBuilderImpl) throws Exception {
         QuicOptions quicOptions =
                 QuicOptions.builder()
                         .addAllowedQuicHost("quicHost1.com")
@@ -602,7 +615,7 @@ public class ExperimentalOptionsTest {
                                 toTelephoneKeyboardSequence("badPathErr"))
                         .build();
 
-        mBuilder.setDnsOptions(dnsOptions)
+        builder.setDnsOptions(dnsOptions)
                 .setConnectionMigrationOptions(connectionMigrationOptions)
                 .setQuicOptions(quicOptions)
                 .build();
