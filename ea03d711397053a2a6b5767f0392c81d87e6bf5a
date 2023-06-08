@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0195e5c0_0d26927a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-08T20:43:18Z",
+      "side": 1,
+      "message": "Downstream merge is ready, thanks for waiting!",
+      "revId": "ea03d711397053a2a6b5767f0392c81d87e6bf5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
