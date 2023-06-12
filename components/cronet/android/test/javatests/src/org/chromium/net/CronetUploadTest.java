@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 import static org.chromium.net.CronetTestRule.getContext;
 
-import android.net.http.UrlRequest;
+import org.chromium.net.UrlRequest;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
