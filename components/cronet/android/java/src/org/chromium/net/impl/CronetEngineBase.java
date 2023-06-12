@@ -6,13 +6,13 @@ package org.chromium.net.impl;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
-import android.net.http.BidirectionalStream;
-import android.net.http.ExperimentalBidirectionalStream;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.ExperimentalUrlRequest;
-import android.net.http.HeaderBlock;
-import android.net.http.RequestFinishedInfo;
-import android.net.http.UrlRequest;
+import org.chromium.net.BidirectionalStream;
+import org.chromium.net.ExperimentalBidirectionalStream;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.ExperimentalUrlRequest;
+import org.chromium.net.UrlResponseInfo.HeaderBlock;
+import org.chromium.net.RequestFinishedInfo;
+import org.chromium.net.UrlRequest;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 /**
  * Base class of {@link CronetUrlRequestContext}.
  */
-public abstract class CronetEngineBase extends ExperimentalHttpEngine {
+public abstract class CronetEngineBase extends ExperimentalCronetEngine {
     /*
      * Network handle representing the default network. To be used when a network has not been
      * explicitly set.
@@ -71,7 +71,7 @@ public abstract class CronetEngineBase extends ExperimentalHttpEngine {
             boolean disableCache, boolean disableConnectionMigration, boolean allowDirectExecutor,
             boolean trafficStatsTagSet, int trafficStatsTag, boolean trafficStatsUidSet,
             int trafficStatsUid, @Nullable RequestFinishedInfo.Listener requestFinishedListener,
-            @Idempotency int idempotency, long networkHandle, HeaderBlock headerBlock);
+            @Idempotency int idempotency, long networkHandle);
 
     /**
      * Creates a {@link BidirectionalStream} object. {@code callback} methods will
@@ -110,22 +110,22 @@ public abstract class CronetEngineBase extends ExperimentalHttpEngine {
 
     @Override
     public ExperimentalUrlRequest.Builder newUrlRequestBuilder(
-            String url, Executor executor, UrlRequest.Callback callback) {
+            String url, UrlRequest.Callback callback, Executor executor) {
         return new UrlRequestBuilderImpl(url, callback, executor, this);
     }
 
-    @IntDef({UrlRequest.REQUEST_PRIORITY_IDLE, UrlRequest.REQUEST_PRIORITY_LOWEST,
-            UrlRequest.REQUEST_PRIORITY_LOW, UrlRequest.REQUEST_PRIORITY_MEDIUM,
-            UrlRequest.REQUEST_PRIORITY_HIGHEST})
+    @IntDef({UrlRequest.Builder.REQUEST_PRIORITY_IDLE, UrlRequest.Builder.REQUEST_PRIORITY_LOWEST,
+            UrlRequest.Builder.REQUEST_PRIORITY_LOW, UrlRequest.Builder.REQUEST_PRIORITY_MEDIUM,
+            UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST})
     @Retention(RetentionPolicy.SOURCE)
     public @interface RequestPriority {}
 
     @IntDef({
-            BidirectionalStream.STREAM_PRIORITY_IDLE,
-            BidirectionalStream.STREAM_PRIORITY_LOWEST,
-            BidirectionalStream.STREAM_PRIORITY_LOW,
-            BidirectionalStream.STREAM_PRIORITY_MEDIUM,
-            BidirectionalStream.STREAM_PRIORITY_HIGHEST,
+            BidirectionalStream.Builder.STREAM_PRIORITY_IDLE,
+            BidirectionalStream.Builder.STREAM_PRIORITY_LOWEST,
+            BidirectionalStream.Builder.STREAM_PRIORITY_LOW,
+            BidirectionalStream.Builder.STREAM_PRIORITY_MEDIUM,
+            BidirectionalStream.Builder.STREAM_PRIORITY_HIGHEST,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface StreamPriority {}
