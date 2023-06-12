@@ -16,15 +16,14 @@ import static org.chromium.net.CronetTestRule.assertContains;
 import static org.chromium.net.CronetTestRule.getContext;
 import static org.chromium.net.CronetTestRule.getTestStorage;
 
-import android.net.http.BidirectionalStream;
-import android.net.http.ConnectionMigrationOptions;
-import android.net.http.DnsOptions;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.HttpEngine;
-import android.net.http.IHttpEngineBuilder;
-import android.net.http.NetworkException;
-import android.net.http.QuicOptions;
-import android.net.http.UrlRequest;
+import org.chromium.net.BidirectionalStream;
+import org.chromium.net.DnsOptions;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.ICronetEngineBuilder;
+import org.chromium.net.NetworkException;
+import org.chromium.net.QuicOptions;
+import org.chromium.net.UrlRequest;
 
 import androidx.annotation.OptIn;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -44,10 +43,10 @@ import org.junit.runner.RunWith;
 import org.chromium.base.Log;
 import org.chromium.base.PathUtils;
 import org.chromium.base.annotations.JNINamespace;
-import org.chromium.base.annotations.NativeMethods;
 import org.chromium.base.test.util.DisabledTest;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
-import android.net.http.DnsOptions.StaleDnsOptions;
+import org.chromium.net.DnsOptions.StaleDnsOptions;
+import org.chromium.net.MetricsTestUtil.TestRequestFinishedListener;
 import org.chromium.net.impl.CronetUrlRequestContext;
 
 import java.io.File;
@@ -82,12 +81,12 @@ public class ExperimentalOptionsTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     private static final String TAG = ExperimentalOptionsTest.class.getSimpleName();
-    private ExperimentalHttpEngine.Builder mBuilder;
+    private ExperimentalCronetEngine.Builder mBuilder;
     private CountDownLatch mHangingUrlLatch;
 
     @Before
     public void setUp() throws Exception {
-        mBuilder = new ExperimentalHttpEngine.Builder(getContext());
+        mBuilder = new ExperimentalCronetEngine.Builder(getContext());
         mHangingUrlLatch = new CountDownLatch(1);
         CronetTestUtil.setMockCertVerifierForTesting(
                mBuilder, QuicTestServer.createMockCertVerifier());
@@ -114,7 +113,7 @@ public class ExperimentalOptionsTest {
                 new JSONObject().put("HostResolverRules", hostResolverParams);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
 
-        HttpEngine cronetEngine = mBuilder.build();
+        CronetEngine cronetEngine = mBuilder.build();
         cronetEngine.startNetLogToFile(logfile.getPath(), false);
         String url = Http2TestServer.getEchoMethodUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
@@ -167,7 +166,7 @@ public class ExperimentalOptionsTest {
 
         JSONObject experimentalOptions = new JSONObject().put("ssl_key_log_file", file.getPath());
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        HttpEngine cronetEngine = mBuilder.build();
+        CronetEngine cronetEngine = mBuilder.build();
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
@@ -239,7 +238,7 @@ public class ExperimentalOptionsTest {
         String testUrl = new URL("http", testHost, realPort, javaUrl.getPath()).toString();
 
         mBuilder.setStoragePath(getTestStorage(getContext()))
-                .setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 0);
+                .enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK, 0);
 
         // Set a short delay so the pref gets written quickly.
         JSONObject staleDns = new JSONObject()
@@ -288,11 +287,11 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     @DisabledTest(message = "https://crbug.com/1404719")
     // Experimental options should be specified through a JSON compliant string. When that is not
-    // the case building a Cronet engine should fail.
+    // the case building a Cronet engine should fail when it is allowed to do so.
     public void testWrongJsonExperimentalOptions() throws Exception {
         try {
             mBuilder.setExperimentalOptions("Not a serialized JSON object");
-            HttpEngine cronetEngine = mBuilder.build();
+            CronetEngine cronetEngine = mBuilder.build();
             fail("Setting invalid JSON should have thrown an exception.");
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().contains("Experimental options parsing failed"));
@@ -309,7 +308,7 @@ public class ExperimentalOptionsTest {
         JSONObject experimentalOptions =
                 new JSONObject().put("bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        HttpEngine cronetEngine = mBuilder.build();
+        ExperimentalCronetEngine cronetEngine = (ExperimentalCronetEngine) mBuilder.build();
 
         TestBidirectionalStreamCallback callback = new TestBidirectionalStreamCallback();
         BidirectionalStream.Builder builder =
@@ -338,7 +337,7 @@ public class ExperimentalOptionsTest {
         JSONObject experimentalOptions =
                 new JSONObject().put("bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        ExperimentalHttpEngine cronetEngine = mBuilder.build();
+        ExperimentalCronetEngine cronetEngine = mBuilder.build();
         cronetEngine.addRequestFinishedListener(requestFinishedListener);
         BidirectionalStream.Builder builder =
                 cronetEngine
@@ -352,7 +351,7 @@ public class ExperimentalOptionsTest {
         assertContains("Exception in BidirectionalStream: net::ERR_HTTP2_PING_FAILED",
                 callback.mError.getMessage());
         assertEquals(NetError.ERR_HTTP2_PING_FAILED,
-                ((NetworkException) callback.mError).getInternalErrorCode());
+                ((NetworkException) callback.mError).getCronetInternalErrorCode());
         cronetEngine.shutdown();
     }
 
@@ -875,4 +874,5 @@ public class ExperimentalOptionsTest {
         // parsing.
         boolean experimentalOptionsParsingIsAllowedToFail();
     }
+
 }

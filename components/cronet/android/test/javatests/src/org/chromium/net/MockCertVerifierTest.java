@@ -10,8 +10,8 @@ import static org.chromium.net.CronetTestRule.SERVER_CERT_PEM;
 import static org.chromium.net.CronetTestRule.SERVER_KEY_PKCS8_PEM;
 import static org.chromium.net.CronetTestRule.getContext;
 
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.UrlRequest;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.UrlRequest;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
@@ -32,7 +32,7 @@ public class MockCertVerifierTest {
     @Rule
     public final CronetTestRule mTestRule = new CronetTestRule();
 
-    private ExperimentalHttpEngine mCronetEngine;
+    private ExperimentalCronetEngine mCronetEngine;
 
     @Before
     public void setUp() throws Exception {
@@ -54,8 +54,8 @@ public class MockCertVerifierTest {
     @Test
     @SmallTest
     public void testRequest_failsWithoutMockVerifier() {
-        ExperimentalHttpEngine.Builder builder =
-                new ExperimentalHttpEngine.Builder(getContext());
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(getContext());
         mCronetEngine = builder.build();
 
         String url = Http2TestServer.getEchoAllHeadersUrl();
@@ -67,8 +67,8 @@ public class MockCertVerifierTest {
     @Test
     @SmallTest
     public void testRequest_passesWithMockVerifier() {
-        ExperimentalHttpEngine.Builder builder =
-                new ExperimentalHttpEngine.Builder(getContext());
+        ExperimentalCronetEngine.Builder builder =
+                new ExperimentalCronetEngine.Builder(getContext());
 
         CronetTestUtil.setMockCertVerifierForTesting(
                 builder, MockCertVerifier.createFreeForAllMockCertVerifier());

@@ -6,7 +6,7 @@ package org.chromium.net;
 
 import static junit.framework.Assert.assertEquals;
 
-import android.net.http.NetworkQualityThroughputListener;
+import org.chromium.net.NetworkQualityThroughputListener;
 import android.os.ConditionVariable;
 
 import java.time.Instant;
@@ -31,7 +31,7 @@ class TestNetworkQualityThroughputListener extends NetworkQualityThroughputListe
     }
 
     @Override
-    public void onThroughputObservation(int throughputKbps, Instant when, int source) {
+    public void onThroughputObservation(int throughputKbps, long when, int source) {
         synchronized (mLock) {
             mWaitForThroughput.open();
             mThroughputObservationCount++;

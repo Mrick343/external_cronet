@@ -4,16 +4,20 @@
 
 package org.chromium.net;
 
-import android.net.http.UrlResponseInfo;
+import org.chromium.net.UrlResponseInfo;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+
+import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.chromium.net.impl.UrlResponseInfoImpl;
+
+import android.util.Log;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -35,10 +39,10 @@ public class UrlResponseInfoTest {
         urlChain.add("chromium.org");
         final int httpStatusCode = 200;
         final String httpStatusText = "OK";
-        final List<Map.Entry<String, String>> allHeadersList =
-                new ArrayList<Map.Entry<String, String>>();
+        List<Map.Entry<String, String>> allHeadersList = new ArrayList<Map.Entry<String, String>>();
         allHeadersList.add(new AbstractMap.SimpleImmutableEntry<String, String>(
-                "Date", "Fri, 30 Oct 2015 14:26:41 GMT"));
+               "Date", "Fri, 30 Oct 2015 14:26:41 GMT"));
+        allHeadersList = Collections.unmodifiableList(allHeadersList);
         final boolean wasCached = true;
         final String negotiatedProtocol = "quic/1+spdy/3";
         final String proxyServer = "example.com";
@@ -57,18 +61,17 @@ public class UrlResponseInfoTest {
         }
         Assert.assertEquals(info.getHttpStatusCode(), httpStatusCode);
         Assert.assertEquals(info.getHttpStatusText(), httpStatusText);
-        Assert.assertEquals(info.getHeaders().getAsList(), allHeadersList);
+        Assert.assertEquals(info.getAllHeadersAsList(), allHeadersList);
         try {
-            info.getHeaders().getAsList().add(
+            info.getAllHeadersAsList().add(
                     new AbstractMap.SimpleImmutableEntry<String, String>("X", "Y"));
-            Assert.fail("getHeaders().getAsList() returned modifyable list.");
+            Assert.fail("getAllHeadersAsList() returned modifyable list.");
         } catch (UnsupportedOperationException e) {
             // Expected.
         }
-        Assert.assertEquals(info.getHeaders().getAsMap().size(), allHeadersList.size());
-        Assert.assertEquals(
-                info.getHeaders().getAsMap().get(allHeadersList.get(0).getKey()).size(), 1);
-        Assert.assertEquals(info.getHeaders().getAsMap().get(allHeadersList.get(0).getKey()).get(0),
+        Assert.assertEquals(info.getAllHeaders().size(), allHeadersList.size());
+        Assert.assertEquals(info.getAllHeaders().get(allHeadersList.get(0).getKey()).size(), 1);
+        Assert.assertEquals(info.getAllHeaders().get(allHeadersList.get(0).getKey()).get(0),
                 allHeadersList.get(0).getValue());
         Assert.assertEquals(info.wasCached(), wasCached);
         Assert.assertEquals(info.getNegotiatedProtocol(), negotiatedProtocol);
