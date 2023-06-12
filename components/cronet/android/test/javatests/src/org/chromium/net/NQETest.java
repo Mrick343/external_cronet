@@ -11,8 +11,8 @@ import static org.junit.Assert.fail;
 import static org.chromium.net.CronetTestRule.getContext;
 import static org.chromium.net.CronetTestRule.getTestStorage;
 
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.UrlRequest;
+import org.chromium.net.ExperimentalCronetEngine;
+import org.chromium.net.UrlRequest;
 import android.os.StrictMode;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -94,9 +94,9 @@ public class NQETest {
     @SmallTest
     @OnlyRunNativeCronet
     public void testNotEnabled() throws Exception {
-        ExperimentalHttpEngine.Builder cronetEngineBuilder =
-                new ExperimentalHttpEngine.Builder(getContext());
-        final ExperimentalHttpEngine cronetEngine = cronetEngineBuilder.build();
+        ExperimentalCronetEngine.Builder cronetEngineBuilder =
+                new ExperimentalCronetEngine.Builder(getContext());
+        final ExperimentalCronetEngine cronetEngine = cronetEngineBuilder.build();
         Executor networkQualityExecutor = Executors.newSingleThreadExecutor();
         TestNetworkQualityRttListener rttListener =
                 new TestNetworkQualityRttListener(networkQualityExecutor);
@@ -128,13 +128,13 @@ public class NQETest {
     @SmallTest
     @OnlyRunNativeCronet
     public void testListenerRemoved() throws Exception {
-        ExperimentalHttpEngine.Builder cronetEngineBuilder =
-                new ExperimentalHttpEngine.Builder(getContext());
+        ExperimentalCronetEngine.Builder cronetEngineBuilder =
+                new ExperimentalCronetEngine.Builder(getContext());
         TestExecutor networkQualityExecutor = new TestExecutor();
         TestNetworkQualityRttListener rttListener =
                 new TestNetworkQualityRttListener(networkQualityExecutor);
         cronetEngineBuilder.enableNetworkQualityEstimator(true);
-        final ExperimentalHttpEngine cronetEngine = cronetEngineBuilder.build();
+        final ExperimentalCronetEngine cronetEngine = cronetEngineBuilder.build();
         cronetEngine.configureNetworkQualityEstimatorForTesting(true, true, false);
 
         cronetEngine.addRttListener(rttListener);
@@ -166,16 +166,16 @@ public class NQETest {
     @DisabledTest(message = "crbug.com/796260")
     @Ignore("crbug.com/796260")
     public void testQuicDisabled() throws Exception {
-        ExperimentalHttpEngine.Builder cronetEngineBuilder =
-                new ExperimentalHttpEngine.Builder(getContext());
+        ExperimentalCronetEngine.Builder cronetEngineBuilder =
+                new ExperimentalCronetEngine.Builder(getContext());
         assertTrue(RttThroughputValues.INVALID_RTT_THROUGHPUT < 0);
         Executor listenersExecutor = Executors.newSingleThreadExecutor(new ExecutorThreadFactory());
         TestNetworkQualityRttListener rttListener =
                 new TestNetworkQualityRttListener(listenersExecutor);
         TestNetworkQualityThroughputListener throughputListener =
                 new TestNetworkQualityThroughputListener(listenersExecutor);
-        cronetEngineBuilder.enableNetworkQualityEstimator(true).setEnableHttp2(true)
-                .setEnableQuic(false);
+        cronetEngineBuilder.enableNetworkQualityEstimator(true).enableHttp2(true)
+                .enableQuic(false);
 
         // The pref may not be written if the computed Effective Connection Type (ECT) matches the
         // default ECT for the current connection type. Force the ECT to "Slow-2G". Since "Slow-2G"
@@ -187,7 +187,7 @@ public class NQETest {
         cronetEngineBuilder.setExperimentalOptions(experimentalOptions.toString());
 
         cronetEngineBuilder.setStoragePath(getTestStorage(getContext()));
-        final ExperimentalHttpEngine cronetEngine = cronetEngineBuilder.build();
+        final ExperimentalCronetEngine cronetEngine = cronetEngineBuilder.build();
         cronetEngine.configureNetworkQualityEstimatorForTesting(true, true, true);
 
         cronetEngine.addRttListener(rttListener);
@@ -279,15 +279,15 @@ public class NQETest {
         // When the loop is run for the first time, network quality is written to the disk. The
         // test verifies that in the next loop, the network quality is read back.
         for (int i = 0; i <= 1; ++i) {
-            ExperimentalHttpEngine.Builder cronetEngineBuilder =
-                    new ExperimentalHttpEngine.Builder(getContext());
+            ExperimentalCronetEngine.Builder cronetEngineBuilder =
+                    new ExperimentalCronetEngine.Builder(getContext());
             assertTrue(RttThroughputValues.INVALID_RTT_THROUGHPUT < 0);
             Executor listenersExecutor =
                     Executors.newSingleThreadExecutor(new ExecutorThreadFactory());
             TestNetworkQualityRttListener rttListener =
                     new TestNetworkQualityRttListener(listenersExecutor);
-            cronetEngineBuilder.enableNetworkQualityEstimator(true).setEnableHttp2(true)
-                    .setEnableQuic(false);
+            cronetEngineBuilder.enableNetworkQualityEstimator(true).enableHttp2(true)
+                    .enableQuic(false);
 
             // The pref may not be written if the computed Effective Connection Type (ECT) matches
             // the default ECT for the current connection type. Force the ECT to "Slow-2G". Since
@@ -302,7 +302,7 @@ public class NQETest {
 
             cronetEngineBuilder.setStoragePath(getTestStorage(getContext()));
 
-            final ExperimentalHttpEngine cronetEngine = cronetEngineBuilder.build();
+            final ExperimentalCronetEngine cronetEngine = cronetEngineBuilder.build();
             cronetEngine.configureNetworkQualityEstimatorForTesting(true, true, true);
             cronetEngine.addRttListener(rttListener);
 
@@ -377,8 +377,8 @@ public class NQETest {
     @DisabledTest(message = "crbug.com/796260")
     @Ignore("crbug.com/796260")
     public void testQuicDisabledWithParams() throws Exception {
-        ExperimentalHttpEngine.Builder cronetEngineBuilder =
-                new ExperimentalHttpEngine.Builder(getContext());
+        ExperimentalCronetEngine.Builder cronetEngineBuilder =
+                new ExperimentalCronetEngine.Builder(getContext());
         Executor listenersExecutor = Executors.newSingleThreadExecutor(new ExecutorThreadFactory());
         TestNetworkQualityRttListener rttListener =
                 new TestNetworkQualityRttListener(listenersExecutor);
@@ -394,10 +394,10 @@ public class NQETest {
                 new JSONObject().put("NetworkQualityEstimator", nqeOptions);
         experimentalOptions.put("SomeOtherFieldTrialName", new JSONObject());
 
-        cronetEngineBuilder.enableNetworkQualityEstimator(true).setEnableHttp2(true)
-                .setEnableQuic(false);
+        cronetEngineBuilder.enableNetworkQualityEstimator(true).enableHttp2(true)
+                .enableQuic(false);
         cronetEngineBuilder.setExperimentalOptions(experimentalOptions.toString());
-        final ExperimentalHttpEngine cronetEngine = cronetEngineBuilder.build();
+        final ExperimentalCronetEngine cronetEngine = cronetEngineBuilder.build();
         cronetEngine.configureNetworkQualityEstimatorForTesting(true, true, false);
 
         cronetEngine.addRttListener(rttListener);
