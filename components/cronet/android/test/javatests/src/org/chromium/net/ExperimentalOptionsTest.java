@@ -16,16 +16,6 @@ import static org.chromium.net.CronetTestRule.assertContains;
 import static org.chromium.net.CronetTestRule.getContext;
 import static org.chromium.net.CronetTestRule.getTestStorage;
 
-import android.net.http.BidirectionalStream;
-import android.net.http.ConnectionMigrationOptions;
-import android.net.http.DnsOptions;
-import android.net.http.ExperimentalHttpEngine;
-import android.net.http.HttpEngine;
-import android.net.http.IHttpEngineBuilder;
-import android.net.http.NetworkException;
-import android.net.http.QuicOptions;
-import android.net.http.UrlRequest;
-
 import androidx.annotation.OptIn;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -47,7 +37,8 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
 import org.chromium.base.test.util.DisabledTest;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
-import android.net.http.DnsOptions.StaleDnsOptions;
+import org.chromium.net.DnsOptions.StaleDnsOptions;
+import org.chromium.net.MetricsTestUtil.TestRequestFinishedListener;
 import org.chromium.net.impl.CronetUrlRequestContext;
 
 import java.io.File;
@@ -55,8 +46,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,15 +71,15 @@ public class ExperimentalOptionsTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     private static final String TAG = ExperimentalOptionsTest.class.getSimpleName();
-    private ExperimentalHttpEngine.Builder mBuilder;
+    private ExperimentalCronetEngine.Builder mBuilder;
     private CountDownLatch mHangingUrlLatch;
 
     @Before
     public void setUp() throws Exception {
-        mBuilder = new ExperimentalHttpEngine.Builder(getContext());
+        mBuilder = new ExperimentalCronetEngine.Builder(getContext());
         mHangingUrlLatch = new CountDownLatch(1);
         CronetTestUtil.setMockCertVerifierForTesting(
-               mBuilder, QuicTestServer.createMockCertVerifier());
+                mBuilder, QuicTestServer.createMockCertVerifier());
         assertTrue(Http2TestServer.startHttp2TestServer(
                 getContext(), SERVER_CERT_PEM, SERVER_KEY_PKCS8_PEM, mHangingUrlLatch));
     }
@@ -114,7 +103,7 @@ public class ExperimentalOptionsTest {
                 new JSONObject().put("HostResolverRules", hostResolverParams);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
 
-        HttpEngine cronetEngine = mBuilder.build();
+        CronetEngine cronetEngine = mBuilder.build();
         cronetEngine.startNetLogToFile(logfile.getPath(), false);
         String url = Http2TestServer.getEchoMethodUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
@@ -139,7 +128,7 @@ public class ExperimentalOptionsTest {
         JSONObject experimentalOptions = new JSONObject().put("enable_telemetry", true);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
 
-        HttpEngine cronetEngine = mBuilder.build();
+        CronetEngine cronetEngine = mBuilder.build();
         CronetUrlRequestContext context = (CronetUrlRequestContext) mBuilder.build();
         assertTrue(context.getEnableTelemetryForTesting());
         cronetEngine.shutdown();
@@ -149,7 +138,7 @@ public class ExperimentalOptionsTest {
     @MediumTest
     @OnlyRunNativeCronet
     public void testEnableTelemetryDefault() throws Exception {
-        HttpEngine cronetEngine = mBuilder.build();
+        CronetEngine cronetEngine = mBuilder.build();
         CronetUrlRequestContext context = (CronetUrlRequestContext) mBuilder.build();
         assertFalse(context.getEnableTelemetryForTesting());
         cronetEngine.shutdown();
@@ -167,7 +156,7 @@ public class ExperimentalOptionsTest {
 
         JSONObject experimentalOptions = new JSONObject().put("ssl_key_log_file", file.getPath());
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        HttpEngine cronetEngine = mBuilder.build();
+        CronetEngine cronetEngine = mBuilder.build();
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
@@ -239,7 +228,7 @@ public class ExperimentalOptionsTest {
         String testUrl = new URL("http", testHost, realPort, javaUrl.getPath()).toString();
 
         mBuilder.setStoragePath(getTestStorage(getContext()))
-                .setEnableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISK, 0);
+                .enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK, 0);
 
         // Set a short delay so the pref gets written quickly.
         JSONObject staleDns = new JSONObject()
@@ -292,7 +281,7 @@ public class ExperimentalOptionsTest {
     public void testWrongJsonExperimentalOptions() throws Exception {
         try {
             mBuilder.setExperimentalOptions("Not a serialized JSON object");
-            HttpEngine cronetEngine = mBuilder.build();
+            CronetEngine cronetEngine = mBuilder.build();
             fail("Setting invalid JSON should have thrown an exception.");
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().contains("Experimental options parsing failed"));
@@ -309,10 +298,10 @@ public class ExperimentalOptionsTest {
         JSONObject experimentalOptions =
                 new JSONObject().put("bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        HttpEngine cronetEngine = mBuilder.build();
+        ExperimentalCronetEngine cronetEngine = (ExperimentalCronetEngine) mBuilder.build();
 
         TestBidirectionalStreamCallback callback = new TestBidirectionalStreamCallback();
-        BidirectionalStream.Builder builder =
+        ExperimentalBidirectionalStream.Builder builder =
                 cronetEngine.newBidirectionalStreamBuilder(url, callback, callback.getExecutor())
                         .setHttpMethod("GET");
         BidirectionalStream stream = builder.build();
@@ -338,9 +327,9 @@ public class ExperimentalOptionsTest {
         JSONObject experimentalOptions =
                 new JSONObject().put("bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        ExperimentalHttpEngine cronetEngine = mBuilder.build();
+        ExperimentalCronetEngine cronetEngine = (ExperimentalCronetEngine) mBuilder.build();
         cronetEngine.addRequestFinishedListener(requestFinishedListener);
-        BidirectionalStream.Builder builder =
+        ExperimentalBidirectionalStream.Builder builder =
                 cronetEngine
                         .newBidirectionalStreamBuilder(hangingUrl, callback, callback.getExecutor())
                         .setHttpMethod("GET");
@@ -352,7 +341,7 @@ public class ExperimentalOptionsTest {
         assertContains("Exception in BidirectionalStream: net::ERR_HTTP2_PING_FAILED",
                 callback.mError.getMessage());
         assertEquals(NetError.ERR_HTTP2_PING_FAILED,
-                ((NetworkException) callback.mError).getInternalErrorCode());
+                ((NetworkException) callback.mError).getCronetInternalErrorCode());
         cronetEngine.shutdown();
     }
 
@@ -361,12 +350,10 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void testEnableDefaultNetworkConnectionMigrationApi_noBuilderSupport() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(
-                ConnectionMigrationOptions.builder()
-                        .setDefaultNetworkMigration(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                ConnectionMigrationOptions.builder().enableDefaultNetworkMigration(true));
         mBuilder.build();
 
         assertNull(mockBuilderImpl.mConnectionMigrationOptions);
@@ -379,16 +366,13 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void enableDefaultNetworkConnectionMigrationApi_builderSupport() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(
-                ConnectionMigrationOptions.builder()
-                        .setDefaultNetworkMigration(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                ConnectionMigrationOptions.builder().enableDefaultNetworkMigration(true));
         mBuilder.build();
 
-        assertEquals(ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED,
-                mockBuilderImpl.mConnectionMigrationOptions.getDefaultNetworkMigration());
+        assertTrue(mockBuilderImpl.mConnectionMigrationOptions.getEnableDefaultNetworkMigration());
         assertNull(mockBuilderImpl.mEffectiveExperimentalOptions);
     }
 
@@ -398,12 +382,10 @@ public class ExperimentalOptionsTest {
     public void
     testEnableDefaultNetworkConnectionMigrationApi_noBuilderSupport_setterTakesPrecedence() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(
-                ConnectionMigrationOptions.builder()
-                        .setDefaultNetworkMigration(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                ConnectionMigrationOptions.builder().enableDefaultNetworkMigration(true));
         mBuilder.setExperimentalOptions(
                 "{\"QUIC\": {\"migrate_sessions_on_network_change_v2\": false}}");
         mBuilder.build();
@@ -418,12 +400,10 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_justNonDefaultNetwork() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(
-                ConnectionMigrationOptions.builder()
-                        .setAllowNonDefaultNetworkUsage(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                ConnectionMigrationOptions.builder().allowNonDefaultNetworkUsage(true));
         mBuilder.build();
 
         assertNull(mockBuilderImpl.mConnectionMigrationOptions);
@@ -435,12 +415,10 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_justPort() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(
-                ConnectionMigrationOptions.builder()
-                        .setPathDegradationMigration(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                ConnectionMigrationOptions.builder().enablePathDegradationMigration(true));
         mBuilder.build();
 
         assertNull(mockBuilderImpl.mConnectionMigrationOptions);
@@ -454,12 +432,11 @@ public class ExperimentalOptionsTest {
     @Ignore("b/267353182 fix failure")
     public void testEnablePathDegradingConnectionMigration_bothTrue() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
-                .setPathDegradationMigration(ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED)
-                .setAllowNonDefaultNetworkUsage(
-                        ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                                                       .enablePathDegradationMigration(true)
+                                                       .allowNonDefaultNetworkUsage(true));
         mBuilder.build();
 
         assertNull(mockBuilderImpl.mConnectionMigrationOptions);
@@ -472,12 +449,11 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_trueAndFalse() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
-                .setPathDegradationMigration(ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED)
-                .setAllowNonDefaultNetworkUsage(
-                        ConnectionMigrationOptions.MIGRATION_OPTION_DISABLED));
+                                                       .enablePathDegradationMigration(true)
+                                                       .allowNonDefaultNetworkUsage(false));
         mBuilder.build();
 
         assertNull(mockBuilderImpl.mConnectionMigrationOptions);
@@ -491,12 +467,11 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_invalid() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
-                .setPathDegradationMigration(ConnectionMigrationOptions.MIGRATION_OPTION_DISABLED)
-                .setAllowNonDefaultNetworkUsage(
-                        ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED));
+                                                       .enablePathDegradationMigration(false)
+                                                       .allowNonDefaultNetworkUsage(true));
 
         try {
             mBuilder.build();
@@ -511,24 +486,10 @@ public class ExperimentalOptionsTest {
     @Test
     @MediumTest
     @OnlyRunNativeCronet
-    public void testExperimentalOptions_allSet_viaExperimentalEngine() throws Exception {
+    public void testExperimentalOptions_allSet() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        testExperimentalOptionsAllSetImpl(
-                new ExperimentalHttpEngine.Builder(mockBuilderImpl), mockBuilderImpl);
-    }
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
-    @Test
-    @MediumTest
-    @OnlyRunNativeCronet
-    public void testExperimentalOptions_allSet_viaNonExperimentalEngine() throws Exception {
-        MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        testExperimentalOptionsAllSetImpl(
-                new HttpEngine.Builder(mockBuilderImpl), mockBuilderImpl);
-    }
-
-    private static void testExperimentalOptionsAllSetImpl(
-            HttpEngine.Builder builder,
-            MockCronetBuilderImpl mockBuilderImpl) throws Exception {
         QuicOptions quicOptions =
                 QuicOptions.builder()
                         .addAllowedQuicHost("quicHost1.com")
@@ -545,77 +506,63 @@ public class ExperimentalOptionsTest {
                         .addExtraQuicheFlag("extraQuicheFlag1")
                         .addExtraQuicheFlag("extraQuicheFlag2")
                         .addExtraQuicheFlag("extraQuicheFlag1")
-                        .setCryptoHandshakeTimeout(Duration.ofSeconds(
-                                toTelephoneKeyboardSequence("cryptoHs")))
-                        .setIdleConnectionTimeout(
-                                Duration.ofSeconds(
-                                        toTelephoneKeyboardSequence("idleConTimeout")))
+                        .setCryptoHandshakeTimeoutSeconds(toTelephoneKeyboardSequence("cryptoHs"))
+                        .setIdleConnectionTimeoutSeconds(
+                                toTelephoneKeyboardSequence("idleConTimeout"))
                         .setHandshakeUserAgent("handshakeUserAgent")
                         .setInitialBrokenServicePeriodSeconds(
-                                Duration.ofSeconds(
-                                        toTelephoneKeyboardSequence(
-                                                "initialBrokenServicePeriod")))
+                                toTelephoneKeyboardSequence("initialBrokenServicePeriod"))
                         .setInMemoryServerConfigsCacheSize(
                                 toTelephoneKeyboardSequence("inMemoryCacheSize"))
-                        .setPreCryptoHandshakeIdleTimeout(
-                                Duration.ofSeconds(toTelephoneKeyboardSequence("preCryptoHs")))
-                        .setRetransmittableOnWireTimeout(
-                                Duration.ofMillis(
-                                        toTelephoneKeyboardSequence("retransmitOnWireTo")))
-                        .setRetryWithoutAltSvcOnQuicErrors(false)
-                        .setEnableTlsZeroRtt(true)
-                        .setCloseSessionsOnIpChange(false)
-                        .setGoawaySessionsOnIpChange(true)
-                        .setDelayJobsWithAvailableSpdySession(false)
-                        .setIncreaseBrokenServicePeriodExponentially(true)
+                        .setPreCryptoHandshakeIdleTimeoutSeconds(
+                                toTelephoneKeyboardSequence("preCryptoHs"))
+                        .setRetransmittableOnWireTimeoutMillis(
+                                toTelephoneKeyboardSequence("retransmitOnWireTo"))
+                        .retryWithoutAltSvcOnQuicErrors(false)
+                        .enableTlsZeroRtt(true)
+                        .closeSessionsOnIpChange(false)
+                        .goawaySessionsOnIpChange(true)
+                        .delayJobsWithAvailableSpdySession(false)
+                        .increaseBrokenServicePeriodExponentially(true)
                         .build();
 
         DnsOptions dnsOptions =
                 DnsOptions.builder()
-                        .setStaleDns(DnsOptions.DNS_OPTION_ENABLED)
-                        .setPreestablishConnectionsToStaleDnsResults(DnsOptions.DNS_OPTION_DISABLED)
-                        .setPersistHostCache(DnsOptions.DNS_OPTION_ENABLED)
-                        .setPersistHostCachePeriod(
-                                Duration.ofMillis(
-                                        toTelephoneKeyboardSequence("persistDelay")))
-                        .setUseHttpStackDnsResolver(DnsOptions.DNS_OPTION_DISABLED)
+                        .enableStaleDns(true)
+                        .preestablishConnectionsToStaleDnsResults(false)
+                        .persistHostCache(true)
+                        .setPersistHostCachePeriodMillis(
+                                toTelephoneKeyboardSequence("persistDelay"))
+                        .useBuiltInDnsResolver(false)
                         .setStaleDnsOptions(
                                 StaleDnsOptions.builder()
-                                        .setAllowCrossNetworkUsage(DnsOptions.DNS_OPTION_ENABLED)
-                                        .setFreshLookupTimeout(
-                                                Duration.ofMillis(
-                                                        toTelephoneKeyboardSequence(
-                                                                "freshLookup")))
-                                        .setMaxExpiredDelay(
-                                                Duration.ofMillis(
-                                                        toTelephoneKeyboardSequence(
-                                                                "maxExpAge")))
-                                        .setUseStaleOnNameNotResolved(
-                                                DnsOptions.DNS_OPTION_DISABLED))
+                                        .allowCrossNetworkUsage(true)
+                                        .setFreshLookupTimeoutMillis(
+                                                toTelephoneKeyboardSequence("freshLookup"))
+                                        .setMaxExpiredDelayMillis(
+                                                toTelephoneKeyboardSequence("maxExpAge"))
+                                        .useStaleOnNameNotResolved(false))
                         .build();
 
         ConnectionMigrationOptions connectionMigrationOptions =
                 ConnectionMigrationOptions.builder()
-                        .setDefaultNetworkMigration(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_DISABLED)
-                        .setPathDegradationMigration(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED)
-                        .setAllowServerMigration(false)
-                        .setMigrateIdleConnections(true)
-                        .setIdleMigrationPeriodSeconds(
-                                Duration.ofSeconds(toTelephoneKeyboardSequence("idlePeriod")))
-                        .setAllowNonDefaultNetworkUsage(
-                                ConnectionMigrationOptions.MIGRATION_OPTION_ENABLED)
+                        .enableDefaultNetworkMigration(false)
+                        .enablePathDegradationMigration(true)
+                        .allowServerMigration(false)
+                        .migrateIdleConnections(true)
+                        .setIdleConnectionMigrationPeriodSeconds(
+                                toTelephoneKeyboardSequence("idlePeriod"))
+                        .retryPreHandshakeErrorsOnNonDefaultNetwork(false)
+                        .allowNonDefaultNetworkUsage(true)
                         .setMaxTimeOnNonDefaultNetworkSeconds(
-                                Duration.ofSeconds(toTelephoneKeyboardSequence(
-                                        "maxTimeNotDefault")))
+                                toTelephoneKeyboardSequence("maxTimeNotDefault"))
                         .setMaxWriteErrorNonDefaultNetworkMigrationsCount(
                                 toTelephoneKeyboardSequence("writeErr"))
                         .setMaxPathDegradingNonDefaultNetworkMigrationsCount(
                                 toTelephoneKeyboardSequence("badPathErr"))
                         .build();
 
-        builder.setDnsOptions(dnsOptions)
+        mBuilder.setDnsOptions(dnsOptions)
                 .setConnectionMigrationOptions(connectionMigrationOptions)
                 .setQuicOptions(quicOptions)
                 .build();
@@ -639,6 +586,7 @@ public class ExperimentalOptionsTest {
                 + "    \"allow_server_migration\": false,"
                 + "    \"migrate_idle_sessions\": true,"
                 + "    \"idle_session_migration_period_seconds\": 435370463,"
+                + "    \"retry_on_alternate_network_before_handshake\": false,"
                 + "    \"max_time_on_non_default_network_seconds\": 629840858,"
                 + "    \"max_migrations_to_non_default_network_on_path_degrading\": 223720377,"
                 + "    \"max_migrations_to_non_default_network_on_write_error\": 7483377,"
@@ -673,7 +621,7 @@ public class ExperimentalOptionsTest {
     @OnlyRunNativeCronet
     public void testExperimentalOptions_noneSet() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalHttpEngine.Builder(mockBuilderImpl);
+        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
         mBuilder.setQuicOptions(QuicOptions.builder().build())
                 .setConnectionMigrationOptions(ConnectionMigrationOptions.builder().build())
@@ -765,7 +713,7 @@ public class ExperimentalOptionsTest {
     }
 
     // Mocks make life downstream miserable so use a custom mock-like class.
-    private static class MockCronetBuilderImpl extends IHttpEngineBuilder {
+    private static class MockCronetBuilderImpl extends ICronetEngineBuilder {
         private ConnectionMigrationOptions mConnectionMigrationOptions;
         private String mTempExperimentalOptions;
         private String mEffectiveExperimentalOptions;
@@ -785,55 +733,60 @@ public class ExperimentalOptionsTest {
         }
 
         @Override
-        public IHttpEngineBuilder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
-                boolean includeSubdomains, Instant expirationDate) {
+        public ICronetEngineBuilder addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
+                boolean includeSubdomains, Date expirationDate) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder addQuicHint(String host, int port, int alternatePort) {
+        public ICronetEngineBuilder addQuicHint(String host, int port, int alternatePort) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder enableHttp2(boolean value) {
+        public ICronetEngineBuilder enableHttp2(boolean value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder enableHttpCache(int cacheMode, long maxSize) {
+        public ICronetEngineBuilder enableHttpCache(int cacheMode, long maxSize) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder enablePublicKeyPinningBypassForLocalTrustAnchors(
+        public ICronetEngineBuilder enablePublicKeyPinningBypassForLocalTrustAnchors(
                 boolean value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder enableQuic(boolean value) {
+        public ICronetEngineBuilder enableQuic(boolean value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder enableSdch(boolean value) {
+        public ICronetEngineBuilder enableSdch(boolean value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder setExperimentalOptions(String options) {
+        public ICronetEngineBuilder setExperimentalOptions(String options) {
             mTempExperimentalOptions = options;
             return this;
         }
 
         @Override
-        public IHttpEngineBuilder setStoragePath(String value) {
+        public ICronetEngineBuilder setLibraryLoader(CronetEngine.Builder.LibraryLoader loader) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public IHttpEngineBuilder setUserAgent(String userAgent) {
+        public ICronetEngineBuilder setStoragePath(String value) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public ICronetEngineBuilder setUserAgent(String userAgent) {
             throw new UnsupportedOperationException();
         }
 
@@ -843,7 +796,7 @@ public class ExperimentalOptionsTest {
         }
 
         @Override
-        public IHttpEngineBuilder setConnectionMigrationOptions(
+        public ICronetEngineBuilder setConnectionMigrationOptions(
                 ConnectionMigrationOptions options) {
             mConnectionMigrationOptions = options;
             return this;
@@ -852,14 +805,14 @@ public class ExperimentalOptionsTest {
         @Override
         public Set<Integer> getSupportedConfigOptions() {
             if (mSupportsConnectionMigrationConfigOption) {
-                return Collections.singleton(IHttpEngineBuilder.CONNECTION_MIGRATION_OPTIONS);
+                return Collections.singleton(ICronetEngineBuilder.CONNECTION_MIGRATION_OPTIONS);
             } else {
                 return Collections.emptySet();
             }
         }
 
         @Override
-        public ExperimentalHttpEngine build() {
+        public ExperimentalCronetEngine build() {
             mEffectiveExperimentalOptions = mTempExperimentalOptions;
             return null;
         }
