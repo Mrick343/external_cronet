@@ -12,11 +12,11 @@ import static junit.framework.Assert.assertTrue;
 
 import static org.chromium.net.CronetTestRule.assertContains;
 
-import android.net.http.CallbackException;
-import android.net.http.HttpException;
-import android.net.http.InlineExecutionProhibitedException;
-import android.net.http.UrlRequest;
-import android.net.http.UrlResponseInfo;
+import org.chromium.net.CallbackException;
+import org.chromium.net.CronetException;
+import org.chromium.net.InlineExecutionProhibitedException;
+import org.chromium.net.UrlRequest;
+import org.chromium.net.UrlResponseInfo;
 import android.os.ConditionVariable;
 import android.os.StrictMode;
 
@@ -32,11 +32,11 @@ import java.util.concurrent.TimeUnit;
  * method to block thread until the request completes on another thread.
  * Allows to cancel, block request or throw an exception from an arbitrary step.
  */
-public class TestUrlRequestCallback implements UrlRequest.Callback {
+public class TestUrlRequestCallback extends UrlRequest.Callback {
     public ArrayList<UrlResponseInfo> mRedirectResponseInfoList = new ArrayList<UrlResponseInfo>();
     public ArrayList<String> mRedirectUrlList = new ArrayList<String>();
     public UrlResponseInfo mResponseInfo;
-    public HttpException mError;
+    public CronetException mError;
 
     public ResponseStep mResponseStep = ResponseStep.NOTHING;
 
@@ -299,7 +299,7 @@ public class TestUrlRequestCallback implements UrlRequest.Callback {
     }
 
     @Override
-    public void onFailed(UrlRequest request, UrlResponseInfo info, HttpException error) {
+    public void onFailed(UrlRequest request, UrlResponseInfo info, CronetException error) {
         // If the failure is because of prohibited direct execution, the test shouldn't fail
         // since the request already did.
         if (error.getCause() instanceof InlineExecutionProhibitedException) {
