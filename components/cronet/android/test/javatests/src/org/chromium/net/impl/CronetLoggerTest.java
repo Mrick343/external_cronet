@@ -231,7 +231,7 @@ public final class CronetLoggerTest {
         final String url = NativeTestServer.getEchoBodyURL();
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
-        HttpEngine engine = mTestFramework.startEngine();
+        CronetEngine engine = mTestFramework.startEngine();
         UrlRequest.Builder requestBuilder =
                 engine.newUrlRequestBuilder(url, callback, callback.getExecutor());
         UrlRequest request = requestBuilder.build();
@@ -318,7 +318,7 @@ public final class CronetLoggerTest {
         final String experimentalOptions = jsonExperimentalOptions.toString();
         final String url = "www.example.com";
         ExperimentalCronetEngine.Builder builder =
-                (ExperimentalHCronetEngine.Builder) mTestFramework.mBuilder;
+                (ExperimentalCronetEngine.Builder) mTestFramework.mBuilder;
         builder.setExperimentalOptions(experimentalOptions);
         CronetEngine engine = mTestFramework.startEngine();
         final int engineId = mTestLogger.getLastCronetEngineId();
