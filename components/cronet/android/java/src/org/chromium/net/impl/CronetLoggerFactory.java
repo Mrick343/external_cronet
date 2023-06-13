@@ -27,7 +27,7 @@ public final class CronetLoggerFactory {
 
     // Class that is packaged for Cronet telemetry.
     private static final String CRONET_LOGGER_IMPL_CLASS =
-            "com.google.net.cronet.telemetry.CronetLoggerImpl";
+            "android.net.connectivity.CronetLoggerImpl";
 
     /**
      * Bypasses CronetLoggerFactory logic and always creates a NoOpLogger.
@@ -45,8 +45,7 @@ public final class CronetLoggerFactory {
         if (sTestingLogger != null) return sTestingLogger;
 
         // The CronetLoggerImpl only works from apiLevel 30
-        if (!CronetManifest.isAppOptedInForTelemetry(ctx, source)
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+        if (!CronetManifest.isAppOptedInForTelemetry(ctx, source)) {
             return sDefaultLogger;
         }
 
