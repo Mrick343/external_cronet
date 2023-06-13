@@ -249,10 +249,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     static CronetSource getCronetSource() {
-        ClassLoader apiClassLoader = HttpEngine.class.getClassLoader();
-        ClassLoader implClassLoader = CronetUrlRequest.class.getClassLoader();
-        return apiClassLoader.equals(implClassLoader) ? CronetSource.CRONET_SOURCE_STATICALLY_LINKED
-                                                      : CronetSource.CRONET_SOURCE_PLAY_SERVICES;
+        return CronetSource.CRONET_SOURCE_PLATFORM;
     }
 
     @VisibleForTesting
