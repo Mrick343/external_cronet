@@ -23,6 +23,8 @@ public abstract class CronetLogger {
         CRONET_SOURCE_PLAY_SERVICES,
         // The application is using the fallback implementation
         CRONET_SOURCE_FALLBACK,
+        // The application is using the platform implementation
+        CRONET_SOURCE_PLATFORM,
     }
 
     /**
