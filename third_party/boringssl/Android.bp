@@ -116,6 +116,7 @@ cc_object {
         // to help prevent
         // merge conflicts.
         fuzzer: false,
+        memtag_globals: false,
     },
     target: {
         android: {
