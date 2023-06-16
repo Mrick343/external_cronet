@@ -310,7 +310,7 @@ URLRequestContextConfig::URLRequestContextConfig(
       network_thread_priority(network_thread_priority),
       bidi_stream_detect_broken_connection(false),
       heartbeat_interval(base::Seconds(0)),
-      enable_telemetry(false) {
+      enable_telemetry(true) {
   SetContextConfigExperimentalOptions();
 }
 
