@@ -51,42 +51,30 @@ public class CronetManifestTest {
     @SmallTest
     @OnlyRunNativeCronet
     public void testTelemetryOptIn_whenNoMetadata() throws Exception {
-        assertFalse(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_STATICALLY_LINKED));
-        assertFalse(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_PLAY_SERVICES));
-        assertFalse(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_FALLBACK));
+        assertTrue(CronetManifest.isAppOptedInForTelemetry(
+                mMockContext, CronetSource.CRONET_SOURCE_PLATFORM));
     }
 
     @Test
     @SmallTest
     @OnlyRunNativeCronet
     public void testTelemetryOptIn_whenMetadataIsTrue() throws Exception {
-        mMetadata.putBoolean(CronetManifest.TELEMETRY_OPT_IN_META_DATA_STR, true);
+        mMetadata.putBoolean(CronetManifest.TELEMETRY_OPT_OUT_META_DATA_STR, true);
         mAppInfo.metaData = mMetadata;
 
-        assertTrue(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_STATICALLY_LINKED));
-        assertTrue(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_PLAY_SERVICES));
-        assertTrue(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_FALLBACK));
+        assertFalse(CronetManifest.isAppOptedInForTelemetry(
+                mMockContext, CronetSource.CRONET_SOURCE_PLATFORM));
     }
 
     @Test
     @SmallTest
     @OnlyRunNativeCronet
     public void testTelemetryOptIn_whenMetadataIsFalse() throws Exception {
-        mMetadata.putBoolean(CronetManifest.TELEMETRY_OPT_IN_META_DATA_STR, false);
+        mMetadata.putBoolean(CronetManifest.TELEMETRY_OPT_OUT_META_DATA_STR, false);
         mAppInfo.metaData = mMetadata;
 
-        assertFalse(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_STATICALLY_LINKED));
-        assertFalse(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_PLAY_SERVICES));
-        assertFalse(CronetManifest.isAppOptedInForTelemetry(
-                mMockContext, CronetSource.CRONET_SOURCE_FALLBACK));
+        assertTrue(CronetManifest.isAppOptedInForTelemetry(
+                mMockContext, CronetSource.CRONET_SOURCE_PLATFORM));
     }
 
     private class MockContext extends ContextWrapper {
