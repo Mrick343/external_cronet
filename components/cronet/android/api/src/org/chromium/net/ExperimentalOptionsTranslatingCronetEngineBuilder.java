@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * <p>{@hide internal class}
  */
-final class ExperimentalOptionsTranslatingCronetEngineBuilder extends ICronetEngineBuilder {
+public final class ExperimentalOptionsTranslatingCronetEngineBuilder extends ICronetEngineBuilder {
     private static final Set<Integer> SUPPORTED_OPTIONS = Collections.unmodifiableSet(
             new HashSet(Arrays.asList(ICronetEngineBuilder.CONNECTION_MIGRATION_OPTIONS,
                     ICronetEngineBuilder.DNS_OPTIONS, ICronetEngineBuilder.QUIC_OPTIONS)));
@@ -334,7 +334,7 @@ final class ExperimentalOptionsTranslatingCronetEngineBuilder extends ICronetEng
     }
 
     @VisibleForTesting
-    ICronetEngineBuilder getDelegate() {
+    public ICronetEngineBuilder getDelegate() {
         return mDelegate;
     }
 

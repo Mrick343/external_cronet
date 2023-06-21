@@ -4,25 +4,19 @@
 
 package org.chromium.net;
 
-import android.annotation.SuppressLint;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Configuration options for QUIC.
+ * Configuration options for QUIC in Cronet.
  *
  * <p>The settings in this class are only relevant if QUIC is enabled. Use
- * {@link HttpEngine.Builder#setEnableQuic(boolean)} to enable / disable QUIC for
- * the HTTP engine.
+ * {@link org.chromium.net.CronetEngine.Builder#enableQuic(boolean)} to enable / disable QUIC for
+ * the Cronet engine.
  */
-// SuppressLint to be consistent with other cronet code
-@SuppressLint("UserHandleName")
 public class QuicOptions {
     private final Set<String> mQuicHostAllowlist;
     private final Set<String> mEnabledQuicVersions;
@@ -39,14 +33,14 @@ public class QuicOptions {
     private final Boolean mEnableTlsZeroRtt;
 
     @Nullable
-    private final Duration mPreCryptoHandshakeIdleTimeout;
+    private final Long mPreCryptoHandshakeIdleTimeoutSeconds;
     @Nullable
-    private final Duration mCryptoHandshakeTimeout;
+    private final Long mCryptoHandshakeTimeoutSeconds;
 
     @Nullable
-    private final Duration mIdleConnectionTimeout;
+    private final Long mIdleConnectionTimeoutSeconds;
     @Nullable
-    private final Duration mRetransmittableOnWireTimeout;
+    private final Long mRetransmittableOnWireTimeoutMillis;
 
     @Nullable
     private final Boolean mCloseSessionsOnIpChange;
@@ -54,7 +48,7 @@ public class QuicOptions {
     private final Boolean mGoawaySessionsOnIpChange;
 
     @Nullable
-    private final Duration mInitialBrokenServicePeriod;
+    private final Long mInitialBrokenServicePeriodSeconds;
     @Nullable
     private final Boolean mIncreaseBrokenServicePeriodExponentially;
     @Nullable
@@ -75,13 +69,13 @@ public class QuicOptions {
         this.mHandshakeUserAgent = builder.mHandshakeUserAgent;
         this.mRetryWithoutAltSvcOnQuicErrors = builder.mRetryWithoutAltSvcOnQuicErrors;
         this.mEnableTlsZeroRtt = builder.mEnableTlsZeroRtt;
-        this.mPreCryptoHandshakeIdleTimeout = builder.mPreCryptoHandshakeIdleTimeout;
-        this.mCryptoHandshakeTimeout = builder.mCryptoHandshakeTimeout;
-        this.mIdleConnectionTimeout = builder.mIdleConnectionTimeout;
-        this.mRetransmittableOnWireTimeout = builder.mRetransmittableOnWireTimeout;
+        this.mPreCryptoHandshakeIdleTimeoutSeconds = builder.mPreCryptoHandshakeIdleTimeoutSeconds;
+        this.mCryptoHandshakeTimeoutSeconds = builder.mCryptoHandshakeTimeoutSeconds;
+        this.mIdleConnectionTimeoutSeconds = builder.mIdleConnectionTimeoutSeconds;
+        this.mRetransmittableOnWireTimeoutMillis = builder.mRetransmittableOnWireTimeoutMillis;
         this.mCloseSessionsOnIpChange = builder.mCloseSessionsOnIpChange;
         this.mGoawaySessionsOnIpChange = builder.mGoawaySessionsOnIpChange;
-        this.mInitialBrokenServicePeriod = builder.mInitialBrokenServicePeriod;
+        this.mInitialBrokenServicePeriodSeconds = builder.mInitialBrokenServicePeriodSeconds;
         this.mIncreaseBrokenServicePeriodExponentially =
                 builder.mIncreaseBrokenServicePeriodExponentially;
         this.mDelayJobsWithAvailableSpdySession = builder.mDelayJobsWithAvailableSpdySession;
@@ -89,203 +83,91 @@ public class QuicOptions {
                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mExtraQuicheFlags));
     }
 
-    /**
-     * See {@link Builder#addAllowedQuicHost}
-     */
-    @NonNull
-    public Set<String> getAllowedQuicHosts() {
+    public Set<String> getQuicHostAllowlist() {
         return mQuicHostAllowlist;
     }
 
-    /**
-     * See {@link Builder#addEnabledQuicVersion}
-     *
-     * {@hide}
-     */
-    @QuichePassthroughOption
     public Set<String> getEnabledQuicVersions() {
         return mEnabledQuicVersions;
     }
 
-    /**
-     * See {@link Builder#addConnectionOption}
-     *
-     * {@hide}
-     */
-    @QuichePassthroughOption
     public Set<String> getConnectionOptions() {
         return mConnectionOptions;
     }
 
-    /**
-     * See {@link Builder#addClientConnectionOption}
-     *
-     * {@hide}
-     */
-    @QuichePassthroughOption
     public Set<String> getClientConnectionOptions() {
         return mClientConnectionOptions;
     }
 
-    /**
-     * See {@link Builder#setInMemoryServerConfigsCacheSize}
-     */
-     public boolean hasInMemoryServerConfigsCacheSize() {
-        return mInMemoryServerConfigsCacheSize != null;
-     }
-
-    /**
-     * See {@link Builder#setInMemoryServerConfigsCacheSize}
-     */
-    public int getInMemoryServerConfigsCacheSize() {
-        if (!hasInMemoryServerConfigsCacheSize()) {
-            throw new IllegalStateException("InMemoryServerConfigsCacheSize is not set");
-        }
+    @Nullable
+    public Integer getInMemoryServerConfigsCacheSize() {
         return mInMemoryServerConfigsCacheSize;
     }
 
-    /**
-     * See {@link Builder#setHandshakeUserAgent}
-     */
     @Nullable
     public String getHandshakeUserAgent() {
         return mHandshakeUserAgent;
     }
 
-    /**
-     * See {@link Builder#setRetryWithoutAltSvcOnQuicErrors}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
     public Boolean getRetryWithoutAltSvcOnQuicErrors() {
         return mRetryWithoutAltSvcOnQuicErrors;
     }
 
-    /**
-     * See {@link Builder#setEnableTlsZeroRtt}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
     public Boolean getEnableTlsZeroRtt() {
         return mEnableTlsZeroRtt;
     }
 
-    /**
-     * See {@link Builder#setPreCryptoHandshakeIdleTimeout}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
-    public Duration getPreCryptoHandshakeIdleTimeout() {
-        return mPreCryptoHandshakeIdleTimeout;
+    public Long getPreCryptoHandshakeIdleTimeoutSeconds() {
+        return mPreCryptoHandshakeIdleTimeoutSeconds;
     }
 
-    /**
-     * See {@link Builder#setCryptoHandshakeTimeout}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
-    public Duration getCryptoHandshakeTimeout() {
-        return mCryptoHandshakeTimeout;
+    public Long getCryptoHandshakeTimeoutSeconds() {
+        return mCryptoHandshakeTimeoutSeconds;
     }
 
-    /**
-     * See {@link Builder#setIdleConnectionTimeout}
-     */
-    @Experimental
     @Nullable
-    public Duration getIdleConnectionTimeout() {
-        return mIdleConnectionTimeout;
+    public Long getIdleConnectionTimeoutSeconds() {
+        return mIdleConnectionTimeoutSeconds;
     }
 
-    /**
-     * See {@link Builder#setRetransmittableOnWireTimeout}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
-    public Duration getRetransmittableOnWireTimeout() {
-        return mRetransmittableOnWireTimeout;
+    public Long getRetransmittableOnWireTimeoutMillis() {
+        return mRetransmittableOnWireTimeoutMillis;
     }
 
-    /**
-     * See {@link Builder#setCloseSessionsOnIpChange}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
     public Boolean getCloseSessionsOnIpChange() {
         return mCloseSessionsOnIpChange;
     }
 
-    /**
-     * See {@link Builder#setGoawaySessionsOnIpChange}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
     public Boolean getGoawaySessionsOnIpChange() {
         return mGoawaySessionsOnIpChange;
     }
 
-    /**
-     * See {@link Builder#setInitialBrokenServicePeriodSeconds}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
-    public Duration getInitialBrokenServicePeriod() {
-        return mInitialBrokenServicePeriod;
+    public Long getInitialBrokenServicePeriodSeconds() {
+        return mInitialBrokenServicePeriodSeconds;
     }
 
-    /**
-     * See {@link Builder#setIncreaseBrokenServicePeriodExponentially}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
     public Boolean getIncreaseBrokenServicePeriodExponentially() {
         return mIncreaseBrokenServicePeriodExponentially;
     }
 
-    /**
-     * See {@link Builder#setDelayJobsWithAvailableSpdySession}
-     *
-     * {@hide}
-     */
-    @Experimental
     @Nullable
     public Boolean getDelayJobsWithAvailableSpdySession() {
         return mDelayJobsWithAvailableSpdySession;
     }
 
-    /**
-     * See {@link Builder#addExtraQuicheFlag}
-     *
-     * {@hide}
-     */
-    @QuichePassthroughOption
     public Set<String> getExtraQuicheFlags() {
         return mExtraQuicheFlags;
     }
 
-    /**
-     * Create a new {@code QuicOptions} builder.
-     *
-     * {@hide}
-     */
     public static Builder builder() {
         return new Builder();
     }
@@ -293,7 +175,7 @@ public class QuicOptions {
     /**
      * Builder for {@link QuicOptions}.
      */
-    public static final class Builder {
+    public static class Builder {
         private final Set<String> mQuicHostAllowlist = new LinkedHashSet<>();
         private final Set<String> mEnabledQuicVersions = new LinkedHashSet<>();
         private final Set<String> mConnectionOptions = new LinkedHashSet<>();
@@ -307,37 +189,37 @@ public class QuicOptions {
         @Nullable
         private Boolean mEnableTlsZeroRtt;
         @Nullable
-        private Duration mPreCryptoHandshakeIdleTimeout;
+        private Long mPreCryptoHandshakeIdleTimeoutSeconds;
         @Nullable
-        private Duration mCryptoHandshakeTimeout;
+        private Long mCryptoHandshakeTimeoutSeconds;
         @Nullable
-        private Duration mIdleConnectionTimeout;
+        private Long mIdleConnectionTimeoutSeconds;
         @Nullable
-        private Duration mRetransmittableOnWireTimeout;
+        private Long mRetransmittableOnWireTimeoutMillis;
         @Nullable
         private Boolean mCloseSessionsOnIpChange;
         @Nullable
         private Boolean mGoawaySessionsOnIpChange;
         @Nullable
-        private Duration mInitialBrokenServicePeriod;
+        private Long mInitialBrokenServicePeriodSeconds;
         @Nullable
         private Boolean mIncreaseBrokenServicePeriodExponentially;
         @Nullable
         private Boolean mDelayJobsWithAvailableSpdySession;
+        @Nullable
         private final Set<String> mExtraQuicheFlags = new LinkedHashSet<>();
 
-        public Builder() {}
+        Builder() {}
 
         /**
          * Adds a host to the QUIC allowlist.
          *
          * <p>If no hosts are specified, the per-host allowlist functionality is disabled.
-         * Otherwise, the HTTP stack will only use QUIC when talking to hosts on the allowlist.
+         * Otherwise, Cronet will only use QUIC when talking to hosts on the allowlist.
          *
          * @return the builder for chaining
          */
-        @NonNull
-        public Builder addAllowedQuicHost(@NonNull String quicHost) {
+        public Builder addAllowedQuicHost(String quicHost) {
             mQuicHostAllowlist.add(quicHost);
             return this;
         }
@@ -345,17 +227,15 @@ public class QuicOptions {
         /**
          * Adds a QUIC version to the list of QUIC versions to enable.
          *
-         * <p>If no versions are specified, the HTTP stack will use a list of default QUIC versions.
+         * <p>If no versions are specified, Cronet will use a list of default QUIC versions.
          *
          * <p>The version format is specified by
          * <a
          * href="https://github.com/google/quiche/blob/main/quiche/quic/core/quic_versions.cc#L344">QUICHE</a>.
-         * Outside of filtering out values known to be obsolete, the values are passed along
-         * to QUICHE without further processing.
+         * Outside of filtering out values known to be obsolete, Cronet doesn't process the versions
+         * anyhow and simply passes them along to QUICHE.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @QuichePassthroughOption
         public Builder addEnabledQuicVersion(String enabledQuicVersion) {
@@ -370,14 +250,12 @@ public class QuicOptions {
          * (for instance, {@code NBHD}).
          *
          * <p>As the QUIC tags are under active development and some are only relevant to the
-         * server, the HTTP stack doesn't attempt to maintain a complete list of all supported QUIC
-         * flags as a part of the API. The flags. Flags supported by QUICHE, a QUIC implementation
-         * used by this HTTP stack and Google servers, can be found
-         * <a href=https://github.com/google/quiche/blob/main/quiche/quic/core/crypto/crypto_protocol.h">here</a>.
+         * server, Cronet doesn't attempt to maintain a complete list of all supported QUIC flags as
+         * a part of the API. The flags. Flags supported by QUICHE, a QUIC implementation used by
+         * Cronet and Google servers, can be found <a
+         * href=https://github.com/google/quiche/blob/main/quiche/quic/core/crypto/crypto_protocol.h">here</a>.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @QuichePassthroughOption
         public Builder addConnectionOption(String connectionOption) {
@@ -390,8 +268,6 @@ public class QuicOptions {
          * the client.
          *
          * <p>See {@link #addConnectionOption(String)} for more details.
-         *
-         * {@hide}
          */
         @QuichePassthroughOption
         public Builder addClientConnectionOption(String clientConnectionOption) {
@@ -403,12 +279,12 @@ public class QuicOptions {
          * Sets how many server configurations (metadata like list of alt svc, whether QUIC is
          * supported, etc.) should be held in memory.
          *
-         * <p>If the storage path is set ({@link HttpEngine.Builder#setStoragePath(String)},
-         * the HTTP stack will also persist the server configurations on disk.
+         * <p>If the storage path is set ({@link
+         * org.chromium.net.CronetEngine.Builder#setStoragePath(String)}, Cronet will also persist
+         * the server configurations on disk.
          *
          * @return the builder for chaining
          */
-        @NonNull
         public Builder setInMemoryServerConfigsCacheSize(int inMemoryServerConfigsCacheSize) {
             this.mInMemoryServerConfigsCacheSize = inMemoryServerConfigsCacheSize;
             return this;
@@ -419,12 +295,11 @@ public class QuicOptions {
          * handshakes).
          *
          * <p>To set the default user agent for HTTP requests, use
-         * {@link HttpEngine.Builder#setUserAgent(String)} instead.
+         * {@link CronetEngine.Builder#setUserAgent(String)} instead.
          *
          * @return the builder for chaining
          */
-        @NonNull
-        public Builder setHandshakeUserAgent(@NonNull String handshakeUserAgent) {
+        public Builder setHandshakeUserAgent(String handshakeUserAgent) {
             this.mHandshakeUserAgent = handshakeUserAgent;
             return this;
         }
@@ -434,11 +309,9 @@ public class QuicOptions {
          * using any {@code alt-svc} servers.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setRetryWithoutAltSvcOnQuicErrors(boolean retryWithoutAltSvcOnQuicErrors) {
+        public Builder retryWithoutAltSvcOnQuicErrors(boolean retryWithoutAltSvcOnQuicErrors) {
             this.mRetryWithoutAltSvcOnQuicErrors = retryWithoutAltSvcOnQuicErrors;
             return this;
         }
@@ -453,11 +326,9 @@ public class QuicOptions {
          *         blogpost</a>
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setEnableTlsZeroRtt(boolean enableTlsZeroRtt) {
+        public Builder enableTlsZeroRtt(boolean enableTlsZeroRtt) {
             this.mEnableTlsZeroRtt = enableTlsZeroRtt;
             return this;
         }
@@ -466,13 +337,11 @@ public class QuicOptions {
          * Sets the maximum idle time for a connection which hasn't completed a SSL handshake yet.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setPreCryptoHandshakeIdleTimeout(
-                Duration preCryptoHandshakeIdleTimeout) {
-            this.mPreCryptoHandshakeIdleTimeout = preCryptoHandshakeIdleTimeout;
+        public Builder setPreCryptoHandshakeIdleTimeoutSeconds(
+                long preCryptoHandshakeIdleTimeoutSeconds) {
+            this.mPreCryptoHandshakeIdleTimeoutSeconds = preCryptoHandshakeIdleTimeoutSeconds;
             return this;
         }
 
@@ -480,48 +349,39 @@ public class QuicOptions {
          * Sets the timeout for a connection SSL handshake.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setCryptoHandshakeTimeout(Duration cryptoHandshakeTimeoutSeconds) {
-            this.mCryptoHandshakeTimeout = cryptoHandshakeTimeoutSeconds;
+        public Builder setCryptoHandshakeTimeoutSeconds(long cryptoHandshakeTimeoutSeconds) {
+            this.mCryptoHandshakeTimeoutSeconds = cryptoHandshakeTimeoutSeconds;
             return this;
         }
 
         /**
-         * Sets the maximum idle time for a connection. The actual value for the idle timeout is
-         * the minimum of this value and the server's and is negotiated during the handshake. Thus,
-         * it only applies after the handshake has completed. If no activity is detected
-         * on the connection for the set duration, the connection is closed.
+         * Sets the maximum idle time for a connection.
          *
-         * <p>See <a href="https://www.rfc-editor.org/rfc/rfc9114.html#name-idle-connections">RFC
-         * 9114, section 5.1 </a> for more details.
-         * 
+         * TODO what happens to connection that are idle for too long?
+         *
          * @return the builder for chaining
          */
-        @NonNull
-        public Builder setIdleConnectionTimeout(@NonNull Duration idleConnectionTimeout) {
-            this.mIdleConnectionTimeout = idleConnectionTimeout;
+        public Builder setIdleConnectionTimeoutSeconds(long idleConnectionTimeoutSeconds) {
+            this.mIdleConnectionTimeoutSeconds = idleConnectionTimeoutSeconds;
             return this;
         }
 
         /**
          * Sets the maximum desired time between packets on wire.
          *
-         * <p>When the retransmittable-on-wire time is exceeded the HTTP stack will probe quality
-         * of the network using artificial traffic. Smaller timeouts will typically result in faster
+         * <p>When the retransmittable-on-wire time is exceeded Cronet will probe quality of the
+         * network using artificial traffic. Smaller timeouts will typically  result in faster
          * discovery of a broken or degrading path, but also larger usage of resources (battery,
          * data).
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setRetransmittableOnWireTimeout(
-                Duration retransmittableOnWireTimeout) {
-            this.mRetransmittableOnWireTimeout = retransmittableOnWireTimeout;
+        public Builder setRetransmittableOnWireTimeoutMillis(
+                long retransmittableOnWireTimeoutMillis) {
+            this.mRetransmittableOnWireTimeoutMillis = retransmittableOnWireTimeoutMillis;
             return this;
         }
 
@@ -532,11 +392,9 @@ public class QuicOptions {
          * (configured using {@link ConnectionMigrationOptions}).
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setCloseSessionsOnIpChange(boolean closeSessionsOnIpChange) {
+        public Builder closeSessionsOnIpChange(boolean closeSessionsOnIpChange) {
             this.mCloseSessionsOnIpChange = closeSessionsOnIpChange;
             return this;
         }
@@ -548,37 +406,33 @@ public class QuicOptions {
          * (configured using {@link ConnectionMigrationOptions}).
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setGoawaySessionsOnIpChange(boolean goawaySessionsOnIpChange) {
+        public Builder goawaySessionsOnIpChange(boolean goawaySessionsOnIpChange) {
             this.mGoawaySessionsOnIpChange = goawaySessionsOnIpChange;
             return this;
         }
 
         /**
-         * Sets the initial for which the HTTP stack shouldn't attempt to use QUIC for a given
-         * server after the server's QUIC support turned out to be broken.
+         * Sets the initial for which Cronet shouldn't attempt to use QUIC for a given server after
+         * the server's QUIC support turned out to be broken.
          *
-         * <p>Once the HTTP stack detects that a server advertises QUIC but doesn't actually speak
-         * it, it marks the server as broken and doesn't attempt to use QUIC when talking
-         * to the server for an amount of time. Once past this point it will try using QUIC again.
-         * This is to balance short term (there's no point wasting resources to try QUIC
-         * if the server is broken) and long term (the breakage might have been temporary, using
-         * QUIC is generally beneficial) interests.
+         * <p>Once Cronet detects that a server advertises QUIC but doesn't actually speak it, it
+         * marks the server as broken and doesn't attempt to use QUIC when talking to the server for
+         * an amount of time. Once Cronet is past this point it will try using QUIC again. This is
+         * to balance short term (there's no point wasting resources to try QUIC if the server is
+         * broken) and long term (the breakage might have been temporary, using QUIC is generally
+         * beneficial) interests.
          *
          * <p>The delay is increased every unsuccessful consecutive retry. See
-         * {@link #setIncreaseBrokenServicePeriodExponentially(boolean)} for details.
+         * {@link #increaseBrokenServicePeriodExponentially(boolean)} for details.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
         public Builder setInitialBrokenServicePeriodSeconds(
-                Duration initialBrokenServicePeriod) {
-            this.mInitialBrokenServicePeriod = initialBrokenServicePeriod;
+                long initialBrokenServicePeriodSeconds) {
+            this.mInitialBrokenServicePeriodSeconds = initialBrokenServicePeriodSeconds;
             return this;
         }
 
@@ -591,11 +445,9 @@ public class QuicOptions {
          * scale linearly (SCALING_FACTOR * NUM_TRIES * delay).
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setIncreaseBrokenServicePeriodExponentially(
+        public Builder increaseBrokenServicePeriodExponentially(
                 boolean increaseBrokenServicePeriodExponentially) {
             this.mIncreaseBrokenServicePeriodExponentially =
                     increaseBrokenServicePeriodExponentially;
@@ -603,16 +455,14 @@ public class QuicOptions {
         }
 
         /**
-         * Sets whether the HTTP stack should wait for the primary path (usually QUIC) to be ready
-         * even if there's a secondary path of reaching the server (SPDY / HTTP2) which is ready
+         * Sets whether Cronet should wait for the primary path (usually QUIC) to be ready even if
+         * there's a secondary path of reaching the server (SPDY / HTTP2) which is ready
          * immediately.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @Experimental
-        public Builder setDelayJobsWithAvailableSpdySession(
+        public Builder delayJobsWithAvailableSpdySession(
                 boolean delayJobsWithAvailableSpdySession) {
             this.mDelayJobsWithAvailableSpdySession = delayJobsWithAvailableSpdySession;
             return this;
@@ -626,8 +476,6 @@ public class QuicOptions {
          * of flags.
          *
          * @return the builder for chaining
-         *
-         * {@hide}
          */
         @QuichePassthroughOption
         public Builder addExtraQuicheFlag(String extraQuicheFlag) {
@@ -639,7 +487,6 @@ public class QuicOptions {
          * Creates and returns the final {@link QuicOptions} instance, based on the values
          * in this builder.
          */
-        @NonNull
         public QuicOptions build() {
             return new QuicOptions(this);
         }
@@ -659,8 +506,6 @@ public class QuicOptions {
      *
      * <p>If you still want to use an experimental API in production, you're doing so at your
      * own risk. You have been warned.
-     *
-     * {@hide}
      */
     public @interface Experimental {}
 
@@ -678,8 +523,6 @@ public class QuicOptions {
      * (stability and readability of the API, capacity to propagate new QUICHE changes). Most Cronet
      * customers shouldn't need to use those APIs directly. Mature QUICHE features that are
      * generally useful will be exposed by Cronet as proper top level APIs or configuration options.
-     *
-     * {@hide}
      */
     public @interface QuichePassthroughOption {}
 }
