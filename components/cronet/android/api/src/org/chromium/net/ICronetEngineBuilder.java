@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 package org.chromium.net;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
