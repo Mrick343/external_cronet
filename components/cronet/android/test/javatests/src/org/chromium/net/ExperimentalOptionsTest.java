@@ -4,10 +4,14 @@
 
 package org.chromium.net;
 
+import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.common.truth.Truth.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import static org.chromium.net.CronetTestRule.SERVER_CERT_PEM;
@@ -346,116 +350,113 @@ public class ExperimentalOptionsTest {
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testEnableDefaultNetworkConnectionMigrationApi_noBuilderSupport() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(
+        builder.setConnectionMigrationOptions(
                 ConnectionMigrationOptions.builder().enableDefaultNetworkMigration(true));
-        mBuilder.build();
+        builder.build();
 
-        assertNull(mockBuilderImpl.mConnectionMigrationOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions).isNull();
         assertJsonEquals(EXPECTED_CONNECTION_MIGRATION_ENABLED_STRING,
                 mockBuilderImpl.mEffectiveExperimentalOptions);
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void enableDefaultNetworkConnectionMigrationApi_builderSupport() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(
+        builder.setConnectionMigrationOptions(
                 ConnectionMigrationOptions.builder().enableDefaultNetworkMigration(true));
-        mBuilder.build();
+        builder.build();
 
-        assertTrue(mockBuilderImpl.mConnectionMigrationOptions.getEnableDefaultNetworkMigration());
-        assertNull(mockBuilderImpl.mEffectiveExperimentalOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions.getEnableDefaultNetworkMigration())
+                .isTrue();
+        assertThat(mockBuilderImpl.mEffectiveExperimentalOptions).isNull();
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void
     testEnableDefaultNetworkConnectionMigrationApi_noBuilderSupport_setterTakesPrecedence() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        // This test must instantiate an ExperimentalCronetEngine.Builder since we want to call
+        // setExperimentalOptions. We still cast it down to CronetEngine.Builder to confirm
+        // things work properly when using that (see crbug/1448520).
+        CronetEngine.Builder builder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(
+        builder.setConnectionMigrationOptions(
                 ConnectionMigrationOptions.builder().enableDefaultNetworkMigration(true));
-        mBuilder.setExperimentalOptions(
-                "{\"QUIC\": {\"migrate_sessions_on_network_change_v2\": false}}");
-        mBuilder.build();
+        ((ExperimentalCronetEngine.Builder) builder)
+                .setExperimentalOptions(
+                        "{\"QUIC\": {\"migrate_sessions_on_network_change_v2\": false}}");
+        builder.build();
 
-        assertNull(mockBuilderImpl.mConnectionMigrationOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions).isNull();
         assertJsonEquals(EXPECTED_CONNECTION_MIGRATION_ENABLED_STRING,
                 mockBuilderImpl.mEffectiveExperimentalOptions);
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_justNonDefaultNetwork() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(
+        builder.setConnectionMigrationOptions(
                 ConnectionMigrationOptions.builder().allowNonDefaultNetworkUsage(true));
-        mBuilder.build();
+        builder.build();
 
-        assertNull(mockBuilderImpl.mConnectionMigrationOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions).isNull();
         assertJsonEquals("{\"QUIC\":{}}", mockBuilderImpl.mEffectiveExperimentalOptions);
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_justPort() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(
+        builder.setConnectionMigrationOptions(
                 ConnectionMigrationOptions.builder().enablePathDegradationMigration(true));
-        mBuilder.build();
+        builder.build();
 
-        assertNull(mockBuilderImpl.mConnectionMigrationOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions).isNull();
         assertJsonEquals("{\"QUIC\":{\"allow_port_migration\":true}}",
                 mockBuilderImpl.mEffectiveExperimentalOptions);
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
-    @Ignore("b/267353182 fix failure")
     public void testEnablePathDegradingConnectionMigration_bothTrue() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
-                                                       .enablePathDegradationMigration(true)
-                                                       .allowNonDefaultNetworkUsage(true));
-        mBuilder.build();
+        builder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
+                                                      .enablePathDegradationMigration(true)
+                                                      .allowNonDefaultNetworkUsage(true));
+        builder.build();
 
-        assertNull(mockBuilderImpl.mConnectionMigrationOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions).isNull();
         assertJsonEquals("{\"QUIC\":{\"migrate_sessions_early_v2\":true}}",
                 mockBuilderImpl.mEffectiveExperimentalOptions);
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_trueAndFalse() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
-                                                       .enablePathDegradationMigration(true)
-                                                       .allowNonDefaultNetworkUsage(false));
-        mBuilder.build();
+        builder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
+                                                      .enablePathDegradationMigration(true)
+                                                      .allowNonDefaultNetworkUsage(false));
+        builder.build();
 
-        assertNull(mockBuilderImpl.mConnectionMigrationOptions);
+        assertThat(mockBuilderImpl.mConnectionMigrationOptions).isNull();
         assertJsonEquals(
                 "{\"QUIC\":{\"migrate_sessions_early_v2\":false,\"allow_port_migration\":true}}",
                 mockBuilderImpl.mEffectiveExperimentalOptions);
@@ -463,37 +464,29 @@ public class ExperimentalOptionsTest {
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testEnablePathDegradingConnectionMigration_invalid() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder = new CronetEngine.Builder(mockBuilderImpl);
 
-        mBuilder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
-                                                       .enablePathDegradationMigration(false)
-                                                       .allowNonDefaultNetworkUsage(true));
+        builder.setConnectionMigrationOptions(ConnectionMigrationOptions.builder()
+                                                      .enablePathDegradationMigration(false)
+                                                      .allowNonDefaultNetworkUsage(true));
 
-        try {
-            mBuilder.build();
-            fail();
-        } catch (IllegalArgumentException expected) {
-            assertTrue(expected.getMessage().contains(
-                    "Unable to turn on non-default network usage without path degradation"
-                    + " migration"));
-        }
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, builder::build);
+        assertThat(e).hasMessageThat().contains(
+                "Unable to turn on non-default network usage without path degradation migration");
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
-    public void testExperimentalOptions_allSet() throws Exception {
+    public void testExperimentalOptions_allSet_viaExperimentalEngine() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
         testExperimentalOptionsAllSetImpl(
-                new ExperimentalCronetEngine.Builder(mockBuilderImpl), mockBuilderImpl);
+                new CronetEngine.Builder(mockBuilderImpl), mockBuilderImpl);
     }
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testExperimentalOptions_allSet_viaNonExperimentalEngine() throws Exception {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
         testExperimentalOptionsAllSetImpl(
@@ -501,8 +494,7 @@ public class ExperimentalOptionsTest {
     }
 
     private static void testExperimentalOptionsAllSetImpl(
-            CronetEngine.Builder builder,
-            MockCronetBuilderImpl mockBuilderImpl) throws Exception {
+            CronetEngine.Builder builder, MockCronetBuilderImpl mockBuilderImpl) throws Exception {
         QuicOptions quicOptions =
                 QuicOptions.builder()
                         .addAllowedQuicHost("quicHost1.com")
@@ -631,16 +623,15 @@ public class ExperimentalOptionsTest {
 
     @Test
     @MediumTest
-    @OnlyRunNativeCronet
     public void testExperimentalOptions_noneSet() {
         MockCronetBuilderImpl mockBuilderImpl = MockCronetBuilderImpl.withoutNativeSetterSupport();
-        mBuilder = new ExperimentalCronetEngine.Builder(mockBuilderImpl);
+        CronetEngine.Builder builder =
+                new CronetEngine.Builder(mockBuilderImpl)
+                        .setQuicOptions(QuicOptions.builder().build())
+                        .setConnectionMigrationOptions(ConnectionMigrationOptions.builder().build())
+                        .setDnsOptions(DnsOptions.builder().build());
 
-        mBuilder.setQuicOptions(QuicOptions.builder().build())
-                .setConnectionMigrationOptions(ConnectionMigrationOptions.builder().build())
-                .setDnsOptions(DnsOptions.builder().build());
-
-        mBuilder.build();
+        builder.build();
         assertJsonEquals("{\"QUIC\":{},\"AsyncDNS\":{},\"StaleDNS\":{}}",
                 mockBuilderImpl.mEffectiveExperimentalOptions);
     }
@@ -683,15 +674,15 @@ public class ExperimentalOptionsTest {
             JSONObject expectedJson = new JSONObject(expected);
             JSONObject actualJson = new JSONObject(actual);
 
-            assertJsonEquals(expectedJson, actualJson);
+            assertJsonEquals(expectedJson, actualJson, "");
         } catch (JSONException e) {
             throw new AssertionError(e);
         }
     }
 
-    private static void assertJsonEquals(JSONObject expected, JSONObject actual)
+    private static void assertJsonEquals(JSONObject expected, JSONObject actual, String currentPath)
             throws JSONException {
-        assertEquals(jsonKeys(expected), jsonKeys(actual));
+        assertThat(jsonKeys(actual)).isEqualTo(jsonKeys(expected));
 
         for (String key : jsonKeys(expected)) {
             Object expectedValue = expected.get(key);
@@ -699,15 +690,16 @@ public class ExperimentalOptionsTest {
             if (expectedValue == actualValue) {
                 continue;
             }
+            String fullKey = currentPath.isEmpty() ? key : currentPath + "." + key;
             if (expectedValue instanceof JSONObject) {
-                if (actualValue instanceof JSONObject) {
-                    assertJsonEquals((JSONObject) expectedValue, (JSONObject) actualValue);
-                } else {
-                    fail("key [" + key + "]: expected [" + expectedValue + "] but got ["
-                            + actualValue + "]");
-                }
+                assertWithMessage("key is '" + fullKey + "'")
+                        .that(actualValue)
+                        .isInstanceOf(JSONObject.class);
+                assertJsonEquals((JSONObject) expectedValue, (JSONObject) actualValue, fullKey);
             } else {
-                assertEquals(expectedValue, actualValue);
+                assertWithMessage("key is '" + fullKey + "'")
+                        .that(actualValue)
+                        .isEqualTo(expectedValue);
             }
         }
     }
@@ -830,7 +822,6 @@ public class ExperimentalOptionsTest {
             return null;
         }
     }
-
 
     @NativeMethods("cronet_tests")
     interface Natives {

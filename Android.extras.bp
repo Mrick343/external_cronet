@@ -424,6 +424,7 @@ android_library {
         "androidx.test.ext.junit",
         "androidx.test.rules",
         "cronet_aml_java__testing",
+	"cronet_aml_api_java_chromium",
         "guava",
         "hamcrest-library",
         "junit",
