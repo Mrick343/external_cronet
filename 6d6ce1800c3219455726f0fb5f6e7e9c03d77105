@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c30028_290edfac",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13667,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-22T10:28:10Z",
+      "side": 1,
+      "message": "If this isn\u0027t generated via the gn2bp, it should be in android.extras.bp",
+      "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27f285b7_4c3248f9",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-22T10:28:10Z",
+      "side": 1,
+      "message": "Is this being used anywhere?",
+      "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37c07c51_ee2b259b",
+        "filename": "components/cronet/android/sample/src/android/net/http/internal/Empty.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-22T10:28:10Z",
+      "side": 1,
+      "message": "why is this here?",
+      "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
