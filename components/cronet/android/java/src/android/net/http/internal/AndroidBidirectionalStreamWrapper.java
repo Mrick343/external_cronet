@@ -63,41 +63,41 @@ public class AndroidBidirectionalStreamWrapper extends android.net.http.Bidirect
 
   @Override
   public boolean isDelayRequestHeadersUntilFirstFlushEnabled() {
-    return false;
+    return getDelegate().isDelayRequestHeadersUntilFirstFlushEnabled();
   }
 
   @Override
   public int getPriority() {
-    return 0;
+    return getDelegate().getPriority();
   }
 
   @Override
-  public  String getHttpMethod() {
-    return null;
+  public String getHttpMethod() {
+    return getDelegate().getHttpMethod();
   }
 
     @Override
     public  boolean hasTrafficStatsTag() {
-      return false;
+      return getDelegate().hasTrafficStatsTag();
     }
 
     @Override
     public int getTrafficStatsTag() {
-      return 0;
+      return getDelegate().getTrafficStatsTag();
     }
 
     @Override
-    public  boolean hasTrafficStatsUid() {
-      return false;
+    public boolean hasTrafficStatsUid() {
+      return getDelegate().hasTrafficStatsUid();
     }
     @Override
     public int getTrafficStatsUid() {
-      return 0;
+      return getDelegate().getTrafficStatsUid();
     }
 
     @Override
     public HeaderBlock getHeaders() {
-      return null;
+      return getDelegate().getHeaders();
     }
 
 }
