@@ -44,7 +44,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     private String mMethod;
 
     // List of request headers, stored as header field name and value pairs.
-    private final ArrayList<Pair<String, String>> mRequestHeaders = new ArrayList<>();
+    private final ArrayList<Map.Entry<String, String>> mRequestHeaders = new ArrayList<>();
     // Disable the cache for just this request.
     private boolean mDisableCache;
     // Disable connection migration for just this request.
@@ -126,7 +126,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
                     new Exception());
             return this;
         }
-        mRequestHeaders.add(Pair.create(header, value));
+        mRequestHeaders.add(new AbstractMap.SimpleImmutableEntry<String, String>(header, value));
         return this;
     }
 
@@ -225,12 +225,9 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
         final UrlRequestBase request = mCronetEngine.createRequest(mUrl, mCallback, mExecutor,
                 mPriority, mRequestAnnotations, mDisableCache, mDisableConnectionMigration,
                 mAllowDirectExecutor, mTrafficStatsTagSet, mTrafficStatsTag, mTrafficStatsUidSet,
-                mTrafficStatsUid, mRequestFinishedListener, mIdempotency, mNetworkHandle);
+                mTrafficStatsUid, mRequestFinishedListener, mIdempotency, mNetworkHandle, new UrlResponseInfoImpl.HeaderBlockImpl(mRequestHeaders));
         if (mMethod != null) {
             request.setHttpMethod(mMethod);
-        }
-        for (Pair<String, String> header : mRequestHeaders) {
-            request.addHeader(header.first, header.second);
         }
         if (mUploadDataProvider != null) {
             request.setUploadDataProvider(mUploadDataProvider, mUploadDataProviderExecutor);

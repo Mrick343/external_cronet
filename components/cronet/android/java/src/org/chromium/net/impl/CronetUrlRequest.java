@@ -5,6 +5,11 @@
 package org.chromium.net.impl;
 
 import static java.lang.Math.max;
+import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_IDLE;
+import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_LOWEST;
+import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_LOW;
+import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_MEDIUM;
+import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST;
 
 import android.os.Build;
 
@@ -26,6 +31,7 @@ import org.chromium.net.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
 import org.chromium.net.UploadDataProvider;
 import org.chromium.net.UrlRequest;
+import org.chromium.net.UrlResponseInfo.HeaderBlock;
 import org.chromium.net.impl.CronetLogger.CronetTrafficInfo;
 
 import java.nio.ByteBuffer;
@@ -89,6 +95,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
     private final int mIdempotency;
     private String mInitialMethod;
     private final HeadersList mRequestHeaders = new HeadersList();
+    private final HeaderBlock mHeaderBlock;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mDisableCache;
     private final boolean mDisableConnectionMigration;
@@ -156,7 +163,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
             boolean disableCache, boolean disableConnectionMigration, boolean allowDirectExecutor,
             boolean trafficStatsTagSet, int trafficStatsTag, boolean trafficStatsUidSet,
             int trafficStatsUid, RequestFinishedInfo.Listener requestFinishedListener,
-            int idempotency, long networkHandle) {
+            int idempotency, long networkHandle, HeaderBlock headerBlock) {
         if (url == null) {
             throw new NullPointerException("URL is required");
         }
@@ -188,6 +195,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
                 : null;
         mIdempotency = convertIdempotency(idempotency);
         mNetworkHandle = networkHandle;
+        mHeaderBlock =  headerBlock;
     }
 
     @Override
@@ -220,6 +228,69 @@ public final class CronetUrlRequest extends UrlRequestBase {
             mInitialMethod = "POST";
         }
         mUploadDataStream = new CronetUploadDataStream(uploadDataProvider, executor, this);
+    }
+
+    @Override
+    public String getHttpMethod() {
+        return mInitialMethod;
+    }
+
+    @Override
+    public boolean isDirectExecutorAllowed() {
+        return mAllowDirectExecutor;
+    }
+
+    @Override
+    public boolean isCacheDisabled() {
+        return mDisableCache;
+    }
+
+    @Override
+    public boolean hasTrafficStatsTag() {
+        return mTrafficStatsTagSet;
+    }
+
+    @Override
+    public int getTrafficStatsTag() {
+        if (!hasTrafficStatsTag()) {
+            throw new IllegalStateException("TrafficStatsTag is not set");
+        }
+        return mTrafficStatsTag;
+    }
+
+    @Override
+    public boolean hasTrafficStatsUid() {
+        return mTrafficStatsUidSet;
+    }
+
+    @Override
+    public int getTrafficStatsUid() {
+        if (!hasTrafficStatsUid()) {
+            throw new IllegalStateException("TrafficStatsUid is not set");
+        }
+        return mTrafficStatsUid;
+    }
+    @Override
+    public int getPriority() {
+        switch (mPriority) {
+            case RequestPriority.IDLE:
+                return REQUEST_PRIORITY_IDLE;
+            case RequestPriority.LOWEST:
+                return REQUEST_PRIORITY_LOWEST;
+            case RequestPriority.LOW:
+                return REQUEST_PRIORITY_LOW;
+            case RequestPriority.MEDIUM:
+                return REQUEST_PRIORITY_MEDIUM;
+            case RequestPriority.HIGHEST:
+                return REQUEST_PRIORITY_HIGHEST;
+            default:
+                throw new IllegalStateException("Invalid request priority: " + mPriority);
+        }
+    }
+
+    @Override
+    public HeaderBlock getHeaders() {
+        return mHeaderBlock;
     }
 
     @Override
