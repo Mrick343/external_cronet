@@ -28,3 +28,4 @@ public final class RateLimiterTest {
         () -> new RateLimiter(samplesPerSecond));
   }
 }
+

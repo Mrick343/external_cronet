@@ -1,13 +1,13 @@
 package android.net.connectivity;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.net.cronet.telemetry.utils.ExperimentalOptions.UNSET_INT_VALUE;
-import static com.google.net.cronet.telemetry.utils.ExperimentalOptions.validConnectionOptions;
+import static android.net.connectivity.ExperimentalOptions.UNSET_INT_VALUE;
+import static android.net.connectivity.ExperimentalOptions.validConnectionOptions;
 import static org.junit.Assert.assertEquals;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.common.base.Splitter;
-import com.google.net.cronet.telemetry.utils.ExperimentalOptions.OptionalBoolean;
+import android.net.connectivity.ExperimentalOptions.OptionalBoolean;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
