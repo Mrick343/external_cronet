@@ -13595,6 +13595,7 @@ java_library {
         "build/android/java/src/org/chromium/build/annotations/MainDex.java",
         "build/android/java/src/org/chromium/build/annotations/MockedInTests.java",
         "build/android/java/src/org/chromium/build/annotations/UsedByReflection.java",
+        "components/cronet/android/java/src/android/net/connectivity/CronetLoggerImpl.java",
         "components/cronet/android/java/src/org/chromium/net/impl/BidirectionalStreamBuilderImpl.java",
         "components/cronet/android/java/src/org/chromium/net/impl/BidirectionalStreamNetworkException.java",
         "components/cronet/android/java/src/org/chromium/net/impl/CallbackExceptionImpl.java",
@@ -13656,6 +13657,9 @@ java_library {
         "url/android/java/src/org/chromium/url/IDNStringUtil.java",
     ],
     static_libs: [
+        "cronet_experimental_options",
+        "cronet_rate_limiter",
+        "cronet_size_buckets",
         "libprotobuf-java-lite",
         "modules-utils-build_system",
     ],
