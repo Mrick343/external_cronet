@@ -63,46 +63,46 @@ class AndroidUrlRequestWrapper extends android.net.http.UrlRequest
 
 @Override
     public String getHttpMethod() {
-      return null;
+      return getDelegate().getHttpMethod();
     }
 
 @Override
     public HeaderBlock getHeaders() {
-      return null;
+      return (new AndroidHeaderBlockWrapper()).withDelegate(getDelegate().getHeaders());
 }
 
 @Override
     public boolean isCacheDisabled() {
-      return false;
+      return getDelegate().isCacheDisabled();
 }
 
 @Override
     public boolean isDirectExecutorAllowed() {
-      return false;
+      return getDelegate().isDirectExecutorAllowed();
 }
 
 @Override
     public int getPriority() {
-      return 0;
+      return getDelegate().getPriority();
 }
 
 @Override
     public boolean hasTrafficStatsTag() {
-      return false;
+      return getDelegate().hasTrafficStatsTag();
 }
 
 @Override
     public int getTrafficStatsTag() {
-      return 0;
+      return getDelegate().getTrafficStatsTag();
 }
 
 @Override
     public boolean hasTrafficStatsUid() {
-      return false;
+      return getDelegate().hasTrafficStatsUid();
 }
 
 @Override
     public int getTrafficStatsUid() {
-      return 0;
+      return getDelegate().getTrafficStatsUid();
 }
 }
