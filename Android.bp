@@ -13700,6 +13700,7 @@ java_library {
     ],
     visibility: [
         "//packages/modules/Connectivity:__subpackages__",
+        "//external/cronet:__subpackages__",
     ],
 }
 
