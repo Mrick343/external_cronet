@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d8bdb46_4c20614c",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13667,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-26T13:05:46Z",
+      "side": 1,
+      "message": "Discussed offline with aymanm@. The long term plan is for gn2bp cronet_aml_java to become a filegroup, that will allow us to add the impl logger file in Android.extras.bp.\n\nFor the time being, I\u0027ve made gn2bp aware of this additional dependency (see child CL).",
+      "parentUuid": "e3c30028_290edfac",
+      "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27f285b7_4c3248f9",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c18d4ad3_aa4f64dd",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-26T13:05:46Z",
+      "side": 1,
+      "message": "It\u0027s used by cronet_java_tests (above in this same file).",
+      "parentUuid": "27f285b7_4c3248f9",
+      "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37c07c51_ee2b259b",
@@ -48,6 +84,24 @@
       "writtenOn": "2023-06-22T10:28:10Z",
       "side": 1,
       "message": "why is this here?",
+      "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e355a85_2b576c68",
+        "filename": "components/cronet/android/sample/src/android/net/http/internal/Empty.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-26T13:05:46Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "37c07c51_ee2b259b",
       "revId": "6d6ce1800c3219455726f0fb5f6e7e9c03d77105",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
