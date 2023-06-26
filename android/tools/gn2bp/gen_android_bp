@@ -128,6 +128,16 @@ def get_linker_script_ldflag(script_path):
 
 # Additional arguments to apply to Android.bp rules.
 additional_args = {
+    'cronet_aml_java': [
+      ('srcs', {
+        "components/cronet/android/java/src/android/net/connectivity/CronetLoggerImpl.java",
+      }),
+      ('static_libs', {
+        "cronet_experimental_options",
+        "cronet_rate_limiter",
+        "cronet_size_buckets",
+      })
+    ],
     'cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen_headers': [
       ('export_include_dirs', {
         "net/third_party/quiche/src",
