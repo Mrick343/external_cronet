@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8460c585_d2d62215",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:07:14Z",
+      "side": 1,
+      "message": "can you add the source of this file in the commit message (also for the previous commit).",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 3
+      },
+      "revId": "b95f919c9ee29e94f5d32d7bb448d73ea1475d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5611c1e_33ecbcf2",
+        "filename": "logging/ExperimentalOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:07:14Z",
+      "side": 1,
+      "message": "copyright notice",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "b95f919c9ee29e94f5d32d7bb448d73ea1475d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
