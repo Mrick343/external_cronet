@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc0aceb2_5af054ca",
+        "filename": "logging/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T19:44:53Z",
+      "side": 1,
+      "message": "copyright notice",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "0dd633651b8d52653d5f6de33615196a97dcce64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48dd40d2_d720ecd6",
+        "filename": "logging/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T19:44:53Z",
+      "side": 1,
+      "message": "nit: Should this be android.net.http? android.net.connectivity is used as a jarjar target, but IIUC, this does not need to be jarjar\u0027ed.",
+      "range": {
+        "startLine": 4,
+        "startChar": 82,
+        "endLine": 4,
+        "endChar": 106
+      },
+      "revId": "0dd633651b8d52653d5f6de33615196a97dcce64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45396cfa_6d6ba54b",
+        "filename": "logging/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T19:44:53Z",
+      "side": 1,
+      "message": "nit: since it\u0027s Android code, should it be HttpClientStatsLog / HttpEngineStatsLog?",
+      "range": {
+        "startLine": 5,
+        "startChar": 34,
+        "endLine": 5,
+        "endChar": 48
+      },
+      "revId": "0dd633651b8d52653d5f6de33615196a97dcce64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
