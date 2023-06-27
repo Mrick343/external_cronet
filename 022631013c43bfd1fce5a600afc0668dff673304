@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6629f369_f1c1ac5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:04:29Z",
+      "side": 1,
+      "message": "I am assuming this is a copy from google3. Can you put the src in the commit message for future reference?",
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54d092e8_6980c08d",
+        "filename": "logging/SizeBuckets.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:04:29Z",
+      "side": 1,
+      "message": "copyright notice",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 33
+      },
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deb0dff3_e2e6e785",
+        "filename": "logging/SizeBuckets.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:04:29Z",
+      "side": 1,
+      "message": "Usually, the package name matches the subdirectory, but I see this is fixed later on anyways. That being said, I wonder if it wouldn\u0027t be best to put these inside //android/logging/java/src/...\nThat way it\u0027s clear that this code is *owned* by the Android project, and doesn\u0027t get imported (we could also rename //android to //aosp if that makes it even clearer).",
+      "range": {
+        "startLine": 1,
+        "startChar": 8,
+        "endLine": 1,
+        "endChar": 32
+      },
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
