@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cc31c63_27bbffdf",
+        "filename": "logging/RateLimiter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:06:16Z",
+      "side": 1,
+      "message": "copyright note",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "50f7f181d46c05adbcea3b42154e3a031eba6875",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
