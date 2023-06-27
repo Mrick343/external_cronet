@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02801681_14d97bdb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-06-27T09:14:09Z",
+      "side": 1,
+      "message": "Adding a note here(reminder for me): It would be great if we could in the future create a file_group of the java files and have the java_library manually created in `android.extras.bp` to avoid changing the gn2bp.",
+      "revId": "7b507aabdfbc77d694049b58a8a994b9fa3ec1b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
