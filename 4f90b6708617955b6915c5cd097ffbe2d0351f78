@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da4944d4_d394ec76",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13667,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-27T20:14:59Z",
+      "side": 1,
+      "message": "If I understand this correctly, CronetLoggerImpl needs to link against cronet_aml_java to get access to CronetLogger.\n\nCould we do something like:\n```\njava_library {\n  name: \"http_client_logging\",\n  static_libs: [\"cronet_aml_java\"],\n  srcs: [\"logging/CronetLoggerImpl.java\"],\n}\n\n// simplified\njava_library {\n  name: \"framework-connectivity\",\n  static_libs: [\"http_client_logging\", \"cronet_aml_java\", ...],\n  ...\n}\n```\n\nThis should work because CronetLoggerFactory doesn\u0027t directly depend on CronetLoggerImpl, but does the class lookup via `loader.loadClass(CRONET_LOGGER_IMPL_CLASS).asSubclass(CronetLogger.class);`, right?\n\nIf this does work, then this might genuinely be a pattern we want to adopt for all aosp-only code. We could even think about putting the logging code directly inside p/m/C -- technically, there wouldn\u0027t be a reason for it to be in external/cronet.",
+      "range": {
+        "startLine": 13667,
+        "startChar": 9,
+        "endLine": 13667,
+        "endChar": 40
+      },
+      "revId": "4f90b6708617955b6915c5cd097ffbe2d0351f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
