@@ -335,7 +335,7 @@ public final class ExperimentalOptionsTranslatingCronetEngineBuilder extends ICr
     }
 
     @VisibleForTesting
-    ICronetEngineBuilder getDelegate() {
+    public ICronetEngineBuilder getDelegate() {
         return mDelegate;
     }
 
