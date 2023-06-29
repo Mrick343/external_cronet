@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e58f329_84362b5f",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:23:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc4c8617_fa133fce",
+      "revId": "bfa00f9d0b781577866d58b97cd5e7c0137c5c96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed22ac73_c10ac14d",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-06-29T16:06:11Z",
       "side": 1,
       "message": "This is not needed anymore since the loggerimpl class will always be here? Will also simplify this file.",
+      "revId": "bfa00f9d0b781577866d58b97cd5e7c0137c5c96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08415424_7b7322e5",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:23:14Z",
+      "side": 1,
+      "message": "We should still try not to change downstream unless it\u0027s required (as usual to avoid merge conflicts during imports).\n\nI also plan on cleaning up the hacks I\u0027ve added downstream in my wrapper CLs (all the local changes should go away).",
+      "parentUuid": "ed22ac73_c10ac14d",
       "revId": "bfa00f9d0b781577866d58b97cd5e7c0137c5c96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
