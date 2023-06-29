@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c19fd9ca_55b864e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T13:00:20Z",
+      "side": 1,
+      "message": "I\u0027ll add a local patch for the change to components/cronet/android/BUILD.gn.\n\nThough, that should go away with the next import.",
+      "revId": "41e788fe3d1c4e83ce90fd8be4b3451b63358fc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
