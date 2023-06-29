@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d9bd0c_d2379b76",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:12:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8460c585_d2d62215",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 3
+      },
+      "revId": "b95f919c9ee29e94f5d32d7bb448d73ea1475d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5611c1e_33ecbcf2",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-06-27T20:07:14Z",
       "side": 1,
       "message": "copyright notice",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "b95f919c9ee29e94f5d32d7bb448d73ea1475d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "322e0f7c_538cbee2",
+        "filename": "logging/ExperimentalOptions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:12:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5611c1e_33ecbcf2",
       "range": {
         "startLine": 1,
         "startChar": 0,
