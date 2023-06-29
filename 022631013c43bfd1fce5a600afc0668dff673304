@@ -62,6 +62,30 @@
       },
       "revId": "022631013c43bfd1fce5a600afc0668dff673304",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2b1dff6_cc2a7068",
+        "filename": "logging/SizeBuckets.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-29T15:47:47Z",
+      "side": 1,
+      "message": "+1. Also +1 to renaming from //android to //aosp for clarity.",
+      "parentUuid": "deb0dff3_e2e6e785",
+      "range": {
+        "startLine": 1,
+        "startChar": 8,
+        "endLine": 1,
+        "endChar": 32
+      },
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
