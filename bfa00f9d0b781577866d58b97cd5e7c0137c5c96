@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc4c8617_fa133fce",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-29T16:03:29Z",
+      "side": 1,
+      "message": "`android.net.http`?",
+      "revId": "bfa00f9d0b781577866d58b97cd5e7c0137c5c96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
