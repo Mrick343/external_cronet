@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e08f3765_fcfee0f3",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetManifest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-29T19:17:08Z",
+      "side": 0,
+      "message": "Since this made it into the U release, I am afraid we might be stuck supporting it.\n\nParticularly, if an app that targets U explicitly sets \"org.chromium.net.EnableCronetTelemetry\" to false (despite it being false by default), I think we shouldn\u0027t start enabling metrics.",
+      "revId": "de103558d4c94f19a6f838804487bcb7c16f7360",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

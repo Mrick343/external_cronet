@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abdb44da_ff0b60d1",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetManifest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-29T19:17:08Z",
+      "side": 1,
+      "message": "nit: referencing a bug number is usually better practice then a username since bugs are trackable and can include more context (the second part being much less important for this particular example).",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 20
+      },
+      "revId": "b2670099b053a1712b4cc4b03ecee669044f6448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
