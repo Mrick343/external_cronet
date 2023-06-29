@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d84f8d4_37c0d133",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:11:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6629f369_f1c1ac5d",
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54d092e8_6980c08d",
@@ -78,6 +96,54 @@
       "side": 1,
       "message": "+1. Also +1 to renaming from //android to //aosp for clarity.",
       "parentUuid": "deb0dff3_e2e6e785",
+      "range": {
+        "startLine": 1,
+        "startChar": 8,
+        "endLine": 1,
+        "endChar": 32
+      },
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c871d80_48286d7a",
+        "filename": "logging/SizeBuckets.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:11:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d092e8_6980c08d",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 33
+      },
+      "revId": "022631013c43bfd1fce5a600afc0668dff673304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6570d53_66c0dcb8",
+        "filename": "logging/SizeBuckets.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:11:38Z",
+      "side": 1,
+      "message": "Done. I\u0027ll rename to aosp in a follow-up.",
+      "parentUuid": "c2b1dff6_cc2a7068",
       "range": {
         "startLine": 1,
         "startChar": 8,
