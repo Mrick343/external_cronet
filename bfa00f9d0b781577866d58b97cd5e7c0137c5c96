@@ -16,6 +16,23 @@
       "message": "`android.net.http`?",
       "revId": "bfa00f9d0b781577866d58b97cd5e7c0137c5c96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed22ac73_c10ac14d",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-29T16:06:11Z",
+      "side": 1,
+      "message": "This is not needed anymore since the loggerimpl class will always be here? Will also simplify this file.",
+      "revId": "bfa00f9d0b781577866d58b97cd5e7c0137c5c96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
