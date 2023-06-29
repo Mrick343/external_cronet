@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "21f9d859_8e391ab1",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:27:56Z",
+      "side": 1,
+      "message": "This should happen during the next upstream import (I think I\u0027ve already fixed it there? I\u0027ll check tomorrow).",
+      "parentUuid": "06164c68_872446de",
+      "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ea37b1e3_a2af9c7d",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
         "patchSetId": 3
@@ -31,6 +49,24 @@
       "writtenOn": "2023-06-29T16:40:22Z",
       "side": 1,
       "message": "I was wondering, this might be confusing during importing. Is it possible to have something in, maybe CroentLoggerTestRule that adds the enable_telemetry option based on if we are in aosp or not?",
+      "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1054abd3_b58ee468",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:27:56Z",
+      "side": 1,
+      "message": "I think part of the confusion is due to us not having a wrapper.\n\nBut also, I think I shouldn\u0027t have removed these lines. There should just be a single tests that confirms that telemetry is on by default (and that would be the only diff from upstream), while the others can always force-enable it.\n\nI\u0027ll revert these tomorrow.",
+      "parentUuid": "ea37b1e3_a2af9c7d",
       "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
