@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc5c24ec_70a0116e",
+        "filename": "logging/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T16:14:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc0aceb2_5af054ca",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "0dd633651b8d52653d5f6de33615196a97dcce64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48dd40d2_d720ecd6",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe31daba_ea8ad6ad",
+        "filename": "logging/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T16:14:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48dd40d2_d720ecd6",
+      "range": {
+        "startLine": 4,
+        "startChar": 82,
+        "endLine": 4,
+        "endChar": 106
+      },
+      "revId": "0dd633651b8d52653d5f6de33615196a97dcce64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "45396cfa_6d6ba54b",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-06-27T19:44:53Z",
       "side": 1,
       "message": "nit: since it\u0027s Android code, should it be HttpClientStatsLog / HttpEngineStatsLog?",
+      "range": {
+        "startLine": 5,
+        "startChar": 34,
+        "endLine": 5,
+        "endChar": 48
+      },
+      "revId": "0dd633651b8d52653d5f6de33615196a97dcce64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ea7e238_2e28ce3b",
+        "filename": "logging/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T16:14:20Z",
+      "side": 1,
+      "message": "I\u0027ve thought about this some more. Internally this is called CronetStatsLog, so it might be easier to keep as is.\n\nWe plan on having AOSP be the source of truth and then setting up some sort of copybara to google3. Let\u0027s wait until then to finalize the name for this.",
+      "parentUuid": "45396cfa_6d6ba54b",
       "range": {
         "startLine": 5,
         "startChar": 34,
