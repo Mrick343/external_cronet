@@ -16,6 +16,29 @@
       "message": "I\u0027ll add a local patch for the change to components/cronet/android/BUILD.gn.\n\nThough, that should go away with the next import.",
       "revId": "41e788fe3d1c4e83ce90fd8be4b3451b63358fc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17849ac8_855392d3",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 7180,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T13:01:50Z",
+      "side": 1,
+      "message": "Do you know if there\u0027s any reason why we don\u0027t set this for the testing variant of `//components/cronet/android:cronet`?",
+      "range": {
+        "startLine": 7180,
+        "startChar": 4,
+        "endLine": 7180,
+        "endChar": 36
+      },
+      "revId": "41e788fe3d1c4e83ce90fd8be4b3451b63358fc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
