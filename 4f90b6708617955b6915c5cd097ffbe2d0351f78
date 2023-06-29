@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f49b2277_2c836c12",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13667,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:21:28Z",
+      "side": 1,
+      "message": "Yeah, the fact that we use reflection simplifies things a lot. I\u0027ve done as you suggested.\n\n\u003e If this does work, then this might genuinely be a pattern we want to adopt for all aosp-only code.\n\nAgreed. We should try to leverage this where possible.",
+      "parentUuid": "da4944d4_d394ec76",
+      "range": {
+        "startLine": 13667,
+        "startChar": 9,
+        "endLine": 13667,
+        "endChar": 40
+      },
+      "revId": "4f90b6708617955b6915c5cd097ffbe2d0351f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a98bc313_9d28b4db",
@@ -41,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0582d13_f404524b",
+        "filename": "logging/CronetLoggerImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:21:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a98bc313_9d28b4db",
+      "revId": "4f90b6708617955b6915c5cd097ffbe2d0351f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db70dcde_d335cf13",
@@ -54,6 +96,24 @@
       "writtenOn": "2023-06-29T15:58:45Z",
       "side": 1,
       "message": "missing visibility annotation and javadoc comment",
+      "revId": "4f90b6708617955b6915c5cd097ffbe2d0351f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a522eb75_1941c644",
+        "filename": "logging/CronetLoggerImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-29T17:21:28Z",
+      "side": 1,
+      "message": "Done. I\u0027ve dropped the javadoc because we don\u0027t want to expose what it says externally.",
+      "parentUuid": "db70dcde_d335cf13",
       "revId": "4f90b6708617955b6915c5cd097ffbe2d0351f78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
