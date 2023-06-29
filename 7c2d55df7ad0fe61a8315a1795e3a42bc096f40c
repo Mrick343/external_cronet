@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06164c68_872446de",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-29T16:40:22Z",
+      "side": 1,
+      "message": "nit: we can switch to HttpEngine.Builder directly.",
+      "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea37b1e3_a2af9c7d",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-06-29T16:40:22Z",
+      "side": 1,
+      "message": "I was wondering, this might be confusing during importing. Is it possible to have something in, maybe CroentLoggerTestRule that adds the enable_telemetry option based on if we are in aosp or not?",
+      "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
