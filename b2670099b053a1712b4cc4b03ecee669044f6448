@@ -22,6 +22,30 @@
       },
       "revId": "b2670099b053a1712b4cc4b03ecee669044f6448",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c614df1_714c078c",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetManifest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-30T14:30:48Z",
+      "side": 1,
+      "message": "Thanks, I forgot to do that.",
+      "parentUuid": "abdb44da_ff0b60d1",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 20
+      },
+      "revId": "b2670099b053a1712b4cc4b03ecee669044f6448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
