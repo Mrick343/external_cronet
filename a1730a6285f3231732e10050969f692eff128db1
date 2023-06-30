@@ -117,6 +117,30 @@
       },
       "revId": "a1730a6285f3231732e10050969f692eff128db1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a05e1f30_99cae26f",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-30T10:56:06Z",
+      "side": 0,
+      "message": "I\u0027ve created a PoC. Let\u0027s move the discussion to aosp/2646839",
+      "parentUuid": "709eb978_2a89ab84",
+      "range": {
+        "startLine": 252,
+        "startChar": 2,
+        "endLine": 255,
+        "endChar": 97
+      },
+      "revId": "a1730a6285f3231732e10050969f692eff128db1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
