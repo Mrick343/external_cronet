@@ -42,20 +42,90 @@ license {
     ],
 }
 
+filegroup {
+    name: "cronet_aml_api_sources",
+    srcs: [
+        ":cronet_aml_components_cronet_android_interface_api_version",
+        // TODO(danstahr): add the API helpers separately after the main API is checked in and thoroughly reviewed
+        "components/cronet/android/api/src/android/net/http/BidirectionalStream.java",
+        "components/cronet/android/api/src/android/net/http/CallbackException.java",
+        "components/cronet/android/api/src/android/net/http/ConnectionMigrationOptions.java",
+        "components/cronet/android/api/src/android/net/http/DnsOptions.java",
+        "components/cronet/android/api/src/android/net/http/HeaderBlock.java",
+        "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "components/cronet/android/api/src/android/net/http/IHttpEngineBuilder.java",
+        "components/cronet/android/api/src/android/net/http/HttpException.java",
+        "components/cronet/android/api/src/android/net/http/InlineExecutionProhibitedException.java",
+        "components/cronet/android/api/src/android/net/http/NetworkException.java",
+        "components/cronet/android/api/src/android/net/http/QuicException.java",
+        "components/cronet/android/api/src/android/net/http/QuicOptions.java",
+        "components/cronet/android/api/src/android/net/http/UploadDataProvider.java",
+        "components/cronet/android/api/src/android/net/http/UploadDataSink.java",
+        "components/cronet/android/api/src/android/net/http/UrlRequest.java",
+        "components/cronet/android/api/src/android/net/http/UrlResponseInfo.java",
+    ],
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+}
+
+filegroup {
+    name: "cronet_wrapper_sources",
+    srcs: [
+        "components/cronet/android/java/src/android/net/http/internal/*.java",
+    ],
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+}
+
 java_library {
-    // Don't change the name of the module.
     name: "cronet_aml_api_java",
     srcs: [
         ":cronet_aml_api_sources",
+        ":cronet_wrapper_sources",
+    ],
+    libs: [
+        "androidx.annotation_annotation",
+        "framework-annotations-lib",
+        "framework-connectivity.stubs.module_lib",
+	"cronet_aml_java_chromium",
+    ],
+    static_libs: [
+	"cronet_aml_api_java_chromium",
+    ],
+    sdk_version: "module_current",
+    min_sdk_version: "30",
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+    apex_available: [
+        "com.android.tethering",
+    ],
+}
+
+java_library {
+    name: "cronet_aml_java",
+    srcs: [
+        ":cronet_aml_api_sources",
+        ":cronet_wrapper_sources",
     ],
     libs: [
         "androidx.annotation_annotation",
         "framework-annotations-lib",
         "framework-connectivity.stubs.module_lib",
     ],
+    static_libs: [
+	"cronet_aml_api_java",
+	"cronet_aml_java_chromium",
+    ],
     sdk_version: "module_current",
+    min_sdk_version: "30",
     visibility: [
         "//packages/modules/Connectivity:__subpackages__",
+    ],
+    apex_available: [
+        "com.android.tethering",
     ],
 }
 
@@ -354,6 +424,7 @@ android_library {
         "androidx.test.ext.junit",
         "androidx.test.rules",
         "cronet_aml_java__testing",
+	"cronet_aml_api_java_chromium",
         "guava",
         "hamcrest-library",
         "junit",
