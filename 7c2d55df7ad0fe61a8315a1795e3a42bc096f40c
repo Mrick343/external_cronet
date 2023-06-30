@@ -69,6 +69,24 @@
       "parentUuid": "ea37b1e3_a2af9c7d",
       "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de6e2886_a3c76976",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/impl/CronetLoggerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-30T11:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1054abd3_b58ee468",
+      "revId": "7c2d55df7ad0fe61a8315a1795e3a42bc096f40c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
