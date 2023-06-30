@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6d1fc4c_5baef4cf",
+        "filename": "Android.extras.bp",
+        "patchSetId": 15
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-30T19:59:06Z",
+      "side": 1,
+      "message": "suggest putting this inside //android",
+      "range": {
+        "startLine": 382,
+        "startChar": 34,
+        "endLine": 382,
+        "endChar": 51
+      },
+      "revId": "05afec072b014947b35341dc907cded7f26eb691",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
