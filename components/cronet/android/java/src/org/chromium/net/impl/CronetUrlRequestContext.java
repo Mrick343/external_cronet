@@ -63,6 +63,9 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     private static final int LOG_NONE = 3; // LOG(FATAL), no VLOG.
     private static final int LOG_DEBUG = -1; // LOG(FATAL...INFO), VLOG(1)
     private static final int LOG_VERBOSE = -2; // LOG(FATAL...INFO), VLOG(2)
+    private static final String CRONET_IMPL_CLASS =
+                    "android.net.http.AospCronetImpl";
+
     static final String LOG_TAG = CronetUrlRequestContext.class.getSimpleName();
 
     /**
@@ -175,6 +178,9 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     /** The logger to be used for logging. */
     private final CronetLogger mLogger;
 
+    private final CronetImpl mCronetImpl;
+
+
     int getCronetEngineId() {
         return mCronetEngineId;
     }
@@ -191,6 +197,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     @UsedByReflection("CronetEngine.java")
     public CronetUrlRequestContext(final CronetEngineBuilderImpl builder) {
         mCronetEngineId = hashCode();
+        mCronetImpl = Class.forName(CRONET_IMPL_CLASS).newInstance();
         mRttListenerList.disableThreadAsserts();
         mThroughputListenerList.disableThreadAsserts();
         mNetworkQualityEstimatorEnabled = builder.networkQualityEstimatorEnabled();
@@ -249,7 +256,7 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     static CronetSource getCronetSource() {
-        return CronetSource.CRONET_SOURCE_PLATFORM;
+        return mCronetImpl.getCronetSource();
     }
 
     @VisibleForTesting
