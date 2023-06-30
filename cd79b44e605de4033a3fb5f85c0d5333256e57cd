@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b6facf88_d774cb55",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetImpl.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-06-30T19:00:14Z",
+      "side": 1,
+      "message": "Correction: I guess java_cpp_strings is the right action to use, not java_cpp_features as in //net/base:java_features_srcjar.",
+      "parentUuid": "6c9d5ddd_8ba4e586",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 29
+      },
+      "revId": "cd79b44e605de4033a3fb5f85c0d5333256e57cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "470f2309_fd8c8128",
         "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
         "patchSetId": 7
