@@ -255,7 +255,7 @@ public final class CronetLoggerTest {
                                       .put("persist_to_disk", true)
                                       .put("persist_delay_ms", 0);
         final JSONObject jsonExperimentalOptions =
-                new JSONObject().put("StaleDNS", staleDns).put("enable_telemetry", true);
+                new JSONObject().put("StaleDNS", staleDns);
         final String experimentalOptions = jsonExperimentalOptions.toString();
         final boolean isPublicKeyPinningBypassForLocalTrustAnchorsEnabled = false;
         final String userAgent = "myUserAgent";
