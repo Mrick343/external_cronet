@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "516af80c_74bd89d4",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-30T10:40:18Z",
+      "side": 0,
+      "message": "Nope, just a leftover from my debugging. Fixed.",
+      "parentUuid": "66844604_3d2420ee",
+      "range": {
+        "startLine": 49,
+        "startChar": 16,
+        "endLine": 49,
+        "endChar": 67
+      },
+      "revId": "a1730a6285f3231732e10050969f692eff128db1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b90864c_838307ef",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-06-29T19:04:54Z",
       "side": 0,
       "message": "(only slightly related, disregard with respect to this specific change): We might want to adopt a Dependencies pattern similar to what we do to make code testable in AOSP. It\u0027s not particularly pretty, but in this case, it would be a great tool to get rid of local changes. Maybe that\u0027s what we should do for https://docs.google.com/document/d/1KkTVC8Q_0_lS9ZKwn6ghE5jarcRvjHZJYAvvtzxTdVo/edit?",
+      "range": {
+        "startLine": 252,
+        "startChar": 2,
+        "endLine": 255,
+        "endChar": 97
+      },
+      "revId": "a1730a6285f3231732e10050969f692eff128db1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "751d0344_9a110446",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-06-30T10:40:18Z",
+      "side": 0,
+      "message": "Yes, one option is to move this in an AOSP/Chromium only file, but I\u0027m not entirely sure where. CronetSource is kind of a property of the implementation (since only the impl gets loaded from different sources), so it also makes sense for this to be here. Maybe this logic should live within CronetSource itself?\n\nOtherwise, maybe there is a way to check whether this is being called from platform\u0027s code?",
+      "parentUuid": "9b90864c_838307ef",
       "range": {
         "startLine": 252,
         "startChar": 2,
