@@ -227,7 +227,7 @@ public final class CronetLoggerTest {
     @Test
     @SmallTest
     @OnlyRunNativeCronet
-    public void testTelemetryDefaultDisabled() throws JSONException {
+    public void testTelemetryDefaultEnabled() throws JSONException {
         final String url = NativeTestServer.getEchoBodyURL();
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
@@ -238,9 +238,9 @@ public final class CronetLoggerTest {
         request.start();
         callback.blockForDone();
 
-        // Test-logger should be bypassed.
-        assertEquals(0, mTestLogger.callsToLogCronetEngineCreation());
-        assertEquals(0, mTestLogger.callsToLogCronetTrafficInfo());
+        // Test-logger should not be bypassed.
+        assertEquals(1, mTestLogger.callsToLogCronetEngineCreation());
+        assertEquals(1, mTestLogger.callsToLogCronetTrafficInfo());
     }
 
     @Test

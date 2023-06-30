@@ -334,7 +334,7 @@ TEST(URLRequestContextConfigTest, TestExperimentalOptionParsing) {
   EXPECT_EQ(base::FeatureList::IsEnabled(net::features::kUseDnsHttpsSvcbAlpn),
             params->use_dns_https_svcb_alpn);
 
-  EXPECT_FALSE(config->enable_telemetry);
+  EXPECT_TRUE(config->enable_telemetry);
 }
 
 TEST(URLRequestContextConfigTest, SetSupportedQuicVersionByAlpn) {
@@ -1785,7 +1785,7 @@ TEST(URLRequestContextConfigTest, WrongSkipLoggingValue) {
   config->ConfigureURLRequestContextBuilder(&builder);
   EXPECT_FALSE(
       config->effective_experimental_options.contains("enable_telemetry"));
-  EXPECT_FALSE(config->enable_telemetry);
+  EXPECT_TRUE(config->enable_telemetry);
 }
 
 // See stale_host_resolver_unittest.cc for test of StaleDNS options.

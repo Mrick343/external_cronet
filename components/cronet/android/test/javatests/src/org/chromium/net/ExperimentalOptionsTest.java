@@ -145,7 +145,7 @@ public class ExperimentalOptionsTest {
     public void testEnableTelemetryDefault() throws Exception {
         CronetEngine cronetEngine = mBuilder.build();
         CronetUrlRequestContext context = (CronetUrlRequestContext) mBuilder.build();
-        assertFalse(context.getEnableTelemetryForTesting());
+        assertTrue(context.getEnableTelemetryForTesting());
         cronetEngine.shutdown();
     }
 
