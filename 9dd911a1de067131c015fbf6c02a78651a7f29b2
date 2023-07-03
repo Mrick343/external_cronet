@@ -22,6 +22,30 @@
       },
       "revId": "9dd911a1de067131c015fbf6c02a78651a7f29b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51ad740b_5bfae560",
+        "filename": "Android.extras.bp",
+        "patchSetId": 10
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-03T16:09:57Z",
+      "side": 1,
+      "message": "Done in child CL aosp/2647867",
+      "parentUuid": "c64c9c24_a210b64a",
+      "range": {
+        "startLine": 338,
+        "startChar": 0,
+        "endLine": 346,
+        "endChar": 0
+      },
+      "revId": "9dd911a1de067131c015fbf6c02a78651a7f29b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
