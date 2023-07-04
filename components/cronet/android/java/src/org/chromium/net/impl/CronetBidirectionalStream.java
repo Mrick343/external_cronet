@@ -99,7 +99,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     private final int mInitialPriority;
     private final String mInitialMethod;
     private final String mRequestHeaders[];
-    private final HeaderBlock mRequestHeaderBlock;
+    private final UrlResponseInfo.HeaderBlock mRequestHeaderBlock;
     private final boolean mDelayRequestHeadersUntilFirstFlush;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mTrafficStatsTagSet;
@@ -301,7 +301,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     }
 
     @Override
-    public HeaderBlock getHeaders() {
+    public UrlResponseInfo.HeaderBlock getHeaders() {
         return mRequestHeaderBlock;
     }
 
