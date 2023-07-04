@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package android.net.http;
+package org.chromium.net;
 
 import androidx.annotation.Nullable;
 
-import java.time.Instant;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.Executor;
 
 /**
@@ -17,15 +17,9 @@ import java.util.concurrent.Executor;
  * UrlRequest.Builder#addRequestAnnotation} to add a unique identifier when creating the
  * request, and call {@link #getAnnotations} when the {@link RequestFinishedInfo} is received to
  * retrieve the identifier.
- *
- * {@hide}
  */
 public abstract class RequestFinishedInfo {
-    /**
-     * Listens for finished requests for the purpose of collecting metrics.
-     *
-     * {@hide}
-     */
+    /** Listens for finished requests for the purpose of collecting metrics. */
     public abstract static class Listener {
         private final Executor mExecutor;
 
@@ -104,7 +98,7 @@ public abstract class RequestFinishedInfo {
          *     timestamp will match the system clock at the time it represents.
          */
         @Nullable
-        public abstract Instant getRequestStart();
+        public abstract Date getRequestStart();
 
         /**
          * Returns time when DNS lookup started. This and {@link #getDnsEnd} will return non-null
@@ -114,7 +108,7 @@ public abstract class RequestFinishedInfo {
          *     socket was reused (see {@link #getSocketReused}).
          */
         @Nullable
-        public abstract Instant getDnsStart();
+        public abstract Date getDnsStart();
 
         /**
          * Returns time when DNS lookup finished. This and {@link #getDnsStart} will return non-null
@@ -124,7 +118,7 @@ public abstract class RequestFinishedInfo {
          *     socket was reused (see {@link #getSocketReused}).
          */
         @Nullable
-        public abstract Instant getDnsEnd();
+        public abstract Date getDnsEnd();
 
         /**
          * Returns time when connection establishment started.
@@ -135,7 +129,7 @@ public abstract class RequestFinishedInfo {
          *     #getSocketReused}).
          */
         @Nullable
-        public abstract Instant getConnectStart();
+        public abstract Date getConnectStart();
 
         /**
          * Returns time when connection establishment finished.
@@ -148,7 +142,7 @@ public abstract class RequestFinishedInfo {
          *     #getSocketReused}).
          */
         @Nullable
-        public abstract Instant getConnectEnd();
+        public abstract Date getConnectEnd();
 
         /**
          * Returns time when SSL handshake started. For QUIC, this will be the same time as {@link
@@ -159,7 +153,7 @@ public abstract class RequestFinishedInfo {
          *     is not used or if the socket was reused (see {@link #getSocketReused}).
          */
         @Nullable
-        public abstract Instant getSslStart();
+        public abstract Date getSslStart();
 
         /**
          * Returns time when SSL handshake finished. For QUIC, this will be the same time as {@link
@@ -170,7 +164,7 @@ public abstract class RequestFinishedInfo {
          *     is not used or if the socket was reused (see {@link #getSocketReused}).
          */
         @Nullable
-        public abstract Instant getSslEnd();
+        public abstract Date getSslEnd();
 
         /**
          * Returns time when sending the request started.
@@ -178,7 +172,7 @@ public abstract class RequestFinishedInfo {
          * @return {@link java.util.Date} representing when sending HTTP request headers started.
          */
         @Nullable
-        public abstract Instant getSendingStart();
+        public abstract Date getSendingStart();
 
         /**
          * Returns time when sending the request finished.
@@ -188,7 +182,7 @@ public abstract class RequestFinishedInfo {
          *     request body happens after sending request headers.)
          */
         @Nullable
-        public abstract Instant getSendingEnd();
+        public abstract Date getSendingEnd();
 
         /**
          * Returns time when first byte of HTTP/2 server push was received.
@@ -198,7 +192,7 @@ public abstract class RequestFinishedInfo {
          *     received. {@code null} if server push is not used.
          */
         @Nullable
-        public abstract Instant getPushStart();
+        public abstract Date getPushStart();
 
         /**
          * Returns time when last byte of HTTP/2 server push was received.
@@ -208,7 +202,7 @@ public abstract class RequestFinishedInfo {
          *     received. {@code null} if server push is not used.
          */
         @Nullable
-        public abstract Instant getPushEnd();
+        public abstract Date getPushEnd();
 
         /**
          * Returns time when the end of the response headers was received.
@@ -217,7 +211,7 @@ public abstract class RequestFinishedInfo {
          *     received.
          */
         @Nullable
-        public abstract Instant getResponseStart();
+        public abstract Date getResponseStart();
 
         /**
          * Returns time when the request finished.
@@ -225,7 +219,7 @@ public abstract class RequestFinishedInfo {
          * @return {@link java.util.Date} representing when the request finished.
          */
         @Nullable
-        public abstract Instant getRequestEnd();
+        public abstract Date getRequestEnd();
 
         /**
          * Returns whether the socket was reused from a previous request. In HTTP/2 or QUIC, if
@@ -237,6 +231,23 @@ public abstract class RequestFinishedInfo {
          *     connection, and SSL times will be {@code null}.
          */
         public abstract boolean getSocketReused();
+
+        /**
+         * Returns milliseconds between request initiation and first byte of response headers, or
+         * {@code null} if not collected. TODO(mgersh): Remove once new API works
+         * http://crbug.com/629194
+         * {@hide}
+         */
+        @Nullable
+        public abstract Long getTtfbMs();
+
+        /**
+         * Returns milliseconds between request initiation and finish, including a failure or
+         * cancellation, or {@code null} if not collected. TODO(mgersh): Remove once new API works
+         * http://crbug.com/629194 {@hide}
+         */
+        @Nullable
+        public abstract Long getTotalTimeMs();
 
         /**
          * Returns total bytes sent over the network transport layer, or {@code null} if not
@@ -318,11 +329,11 @@ public abstract class RequestFinishedInfo {
     public abstract UrlResponseInfo getResponseInfo();
 
     /**
-     * If the request failed, returns the same {@link HttpException} provided to
-     * {@link UrlRequest.Callback#onFailed}.
+     * If the request failed, returns the same {@link CronetException} provided to {@link
+     * UrlRequest.Callback#onFailed}.
      *
-     * @return the request's {@link HttpException}, if the request failed
+     * @return the request's {@link CronetException}, if the request failed
      */
     @Nullable
-    public abstract HttpException getException();
+    public abstract CronetException getException();
 }
