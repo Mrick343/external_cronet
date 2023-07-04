@@ -383,8 +383,9 @@ public abstract class HttpEngine {
                 Class<?> clazz = context.getClassLoader().loadClass(
                         "android.net.connectivity.org.chromium.net.impl.NativeCronetEngineBuilderImpl");
 
-                return (IHttpEngineBuilder) clazz.getConstructor(Context.class).newInstance(
-                                            context);
+                ICronetEngineBuilder builderImpl = (ICronetEngineBuilder)
+                        clazz.getConstructor(Context.class).newInstance(context);
+                return new CronetEngineBuilderWrapper(new ExperimentalCronetEngine.Builder(builderImpl));
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }
