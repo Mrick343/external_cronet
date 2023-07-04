@@ -2,17 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package android.net.http;
+package org.chromium.net;
 
-import java.time.Instant;
 import java.util.concurrent.Executor;
 
 /**
  * Watches observations of various round trip times (RTTs) at various layers of the network stack.
  * These include RTT estimates by QUIC and TCP, as well as the time between when a URL request is
  * sent and when the first byte of the response is received.
- *
- * @hide
  */
 public abstract class NetworkQualityRttListener {
     /**
@@ -39,8 +36,8 @@ public abstract class NetworkQualityRttListener {
      * Reports a new round trip time observation.
      *
      * @param rttMs the round trip time in milliseconds.
-     * @param observationInstant when the observation was recorded
-     * @param source the observation source from {@link NetworkQualityObservationSource}.
+     * @param whenMs milliseconds since the Epoch (January 1st 1970, 00:00:00.000).
+     * @param source the observation source from {@code NetworkQualityObservationSource}.
      */
-    public abstract void onRttObservation(int rttMs, Instant observationInstant, int source);
+    public abstract void onRttObservation(int rttMs, long whenMs, int source);
 }
