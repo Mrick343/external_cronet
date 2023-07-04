@@ -567,7 +567,7 @@ public class ExperimentalOptionsTest {
                                 toTelephoneKeyboardSequence("badPathErr"))
                         .build();
 
-        mBuilder.setDnsOptions(dnsOptions)
+        builder.setDnsOptions(dnsOptions)
                 .setConnectionMigrationOptions(connectionMigrationOptions)
                 .setQuicOptions(quicOptions)
                 .build();
