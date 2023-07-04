@@ -392,7 +392,7 @@ public abstract class HttpEngine {
 
                 ICronetEngineBuilder builderImpl = (ICronetEngineBuilder)
                         clazz.getConstructor(Context.class).newInstance(context);
-                return new AndroidHttpEngineBuilderWrapper(new ExperimentalCronetEngine.Builder(builderImpl));
+                return new CronetEngineBuilderWrapper(new ExperimentalCronetEngine.Builder(builderImpl));
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }
