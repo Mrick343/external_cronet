@@ -2,15 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package android.net.http;
+package org.chromium.net;
 
-import java.time.Instant;
 import java.util.concurrent.Executor;
 
 /**
  * Listener that is notified of throughput observations from the network quality estimator.
- *
- * {@hide}
  */
 public abstract class NetworkQualityThroughputListener {
     /**
@@ -37,8 +34,8 @@ public abstract class NetworkQualityThroughputListener {
      * Reports a new throughput observation.
      *
      * @param throughputKbps the downstream throughput in kilobits per second.
-     * @param observationInstant when the observation was recorded
-     * @param source the observation source from {@link NetworkQualityObservationSource}.
+     * @param whenMs milliseconds since the Epoch (January 1st 1970, 00:00:00.000).
+     * @param source the observation source from {@code NetworkQualityObservationSource}.
      */
-    public abstract void onThroughputObservation(int throughputKbps, Instant observationInstant, int source);
+    public abstract void onThroughputObservation(int throughputKbps, long whenMs, int source);
 }
