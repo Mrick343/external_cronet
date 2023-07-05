@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d46c752_dc28640f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T21:46:16Z",
+      "side": 1,
+      "message": "I diffed this against upstream import and only found diffs in CronetEngine.java (commented) and ExperimentalCronetEngine.java (which both seem to be remnants of adopting crrev/c/4562533 downstream). LGTM.",
+      "revId": "8cbaf57c5f40e0747736f270bcf2c3bd889af773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7a885f2_6c1c7024",
+        "filename": "components/cronet/android/api/src/org/chromium/net/CronetEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T21:46:16Z",
+      "side": 1,
+      "message": "upstream diff:\n```\n--- a/components/cronet/android/api/src/org/chromium/net/CronetEngine.java\n+++ b/components/cronet/android/api/src/org/chromium/net/CronetEngine.java\n@@ -137,13 +137,7 @@ public abstract class CronetEngine {\n          * \u003cp\u003e{@hide}\n          */\n         public Builder(ICronetEngineBuilder builderDelegate) {\n-            if (builderDelegate instanceof ExperimentalOptionsTranslatingCronetEngineBuilder) {\n-                // Already wrapped at the top level, no need to do it again\n-                mBuilderDelegate \u003d builderDelegate;\n-            } else {\n-                mBuilderDelegate \u003d\n-                        new ExperimentalOptionsTranslatingCronetEngineBuilder(builderDelegate);\n-            }\n+            mBuilderDelegate \u003d builderDelegate;\n         }\n\n         /**\n```\n\nShould ExperimentalOptionsTranslatingCronetEngineBuilder be introduced downstream? (This is probably addressed somewhere later on. I am leaving a comment to keep track of it.)",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 47
+      },
+      "revId": "8cbaf57c5f40e0747736f270bcf2c3bd889af773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
