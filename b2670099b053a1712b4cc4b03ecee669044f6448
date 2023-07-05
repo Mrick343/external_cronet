@@ -92,6 +92,30 @@
       },
       "revId": "b2670099b053a1712b4cc4b03ecee669044f6448",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "691f25a8_89241018",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetManifest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2023-07-05T16:30:37Z",
+      "side": 1,
+      "message": "Here\u0027s a WIP CL for visibility: https://crrev.com/c/4667153\n\n(Currently the CL falls back to the old flag name to preserve the current behavior in AGSA which is the only user of the flag, but as discussed offline I\u0027m planning to drop the fallback as we could simply update AGSA to specify both flags.)",
+      "parentUuid": "a70faa0e_071e8ece",
+      "range": {
+        "startLine": 23,
+        "startChar": 59,
+        "endLine": 23,
+        "endChar": 102
+      },
+      "revId": "b2670099b053a1712b4cc4b03ecee669044f6448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
