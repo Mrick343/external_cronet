@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4868fb24_2f7d155c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T21:52:02Z",
+      "side": 1,
+      "message": "Again, the only diff in ExperimentalOptionsTranslatingCronetEngineBuilder are public modifiers and a VisibleForTesting annotation.",
+      "revId": "3e95fbc2c24512e914de509d035a1b8dd9bcb179",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
