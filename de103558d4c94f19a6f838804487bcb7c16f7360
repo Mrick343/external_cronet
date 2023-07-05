@@ -52,6 +52,24 @@
       "parentUuid": "b00a2554_c27d85d4",
       "revId": "de103558d4c94f19a6f838804487bcb7c16f7360",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ec7d441_5602b56f",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetManifest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-05T13:01:19Z",
+      "side": 0,
+      "message": "Lorenzo types, \"by the time the code on the left ships, the source code will already have been updated with the new name. It seems super unlikely that an app will have tried to write code using platform Cronet before Cronet actually ships\".\n\n- Lorenzo",
+      "parentUuid": "8a6cf2d0_ba79841a",
+      "revId": "de103558d4c94f19a6f838804487bcb7c16f7360",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
