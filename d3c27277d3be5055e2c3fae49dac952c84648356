@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0b594d1_92a93efb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T21:49:30Z",
+      "side": 1,
+      "message": "git diff upstream-import shows the only diff being public modifiers and VisibleForTesting annotations (presumably to fix tests that may be part of a different package).",
+      "revId": "d3c27277d3be5055e2c3fae49dac952c84648356",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
