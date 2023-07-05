@@ -39,6 +39,30 @@
       },
       "revId": "8cbaf57c5f40e0747736f270bcf2c3bd889af773",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e4a4d2a_786335d9",
+        "filename": "components/cronet/android/api/src/org/chromium/net/CronetEngine.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T21:50:38Z",
+      "side": 1,
+      "message": "addressed in aosp/2646728.",
+      "parentUuid": "b7a885f2_6c1c7024",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 47
+      },
+      "revId": "8cbaf57c5f40e0747736f270bcf2c3bd889af773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
