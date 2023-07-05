@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d2587ab_6a257912",
+        "filename": "android/java/src/android/net/http/UrlResponseInfoWrapper.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:57:31Z",
+      "side": 1,
+      "message": "(artifact from aosp/2475845): nit for another CL: Per comment on line 72, this should probably be volatile.",
+      "range": {
+        "startLine": 59,
+        "startChar": 42,
+        "endLine": 59,
+        "endChar": 53
+      },
+      "revId": "fe656e1cdabc3d89ddcbec0de7defc5e4563d784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
