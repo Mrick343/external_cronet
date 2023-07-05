@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5b54fdc_87a015e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:00:22Z",
+      "side": 1,
+      "message": "I diff\u0027ed against upstream-import which shows existing modifications in:\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetEngineBuilderImpl.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetLogger.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetLoggerFactory.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetUploadDataStream.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java\ncomponents/cronet/android/java/src/org/chromium/net/impl/UserAgent.java\n\nI commented on specific downstream changes still present in the files modified by this CL (ignoring visibility modifiers and VisibleForTesting annotations), so we get some sense of what\u0027s left. LGTM.",
+      "revId": "4c31cf82006908ebf5ac63a35e095da0d8bffd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57a78364_c1a16439",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetBidirectionalStream.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:00:22Z",
+      "side": 1,
+      "message": "downstream change: aosp/2471845",
+      "range": {
+        "startLine": 264,
+        "startChar": 2,
+        "endLine": 321,
+        "endChar": 5
+      },
+      "revId": "4c31cf82006908ebf5ac63a35e095da0d8bffd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e651d7aa_612c67a0",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBuilderImpl.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:00:22Z",
+      "side": 1,
+      "message": "downstream change: aosp/2374760.",
+      "range": {
+        "startLine": 171,
+        "startChar": 15,
+        "endLine": 171,
+        "endChar": 38
+      },
+      "revId": "4c31cf82006908ebf5ac63a35e095da0d8bffd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16ecf3c1_54861cc0",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetEngineBuilderImpl.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:00:22Z",
+      "side": 1,
+      "message": "downstream change: aosp/2374760",
+      "range": {
+        "startLine": 235,
+        "startChar": 40,
+        "endLine": 235,
+        "endChar": 65
+      },
+      "revId": "4c31cf82006908ebf5ac63a35e095da0d8bffd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c079410d_722fcf36",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:00:22Z",
+      "side": 1,
+      "message": "downstream changes: aosp/2471845",
+      "range": {
+        "startLine": 225,
+        "startChar": 4,
+        "endLine": 286,
+        "endChar": 5
+      },
+      "revId": "4c31cf82006908ebf5ac63a35e095da0d8bffd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7ef97ed_298f9569",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T23:00:22Z",
+      "side": 1,
+      "message": "downstream change: aosp/2450562",
+      "range": {
+        "startLine": 366,
+        "startChar": 1,
+        "endLine": 366,
+        "endChar": 64
+      },
+      "revId": "4c31cf82006908ebf5ac63a35e095da0d8bffd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
