@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b91cebb0_b4f36384",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-05T16:30:48Z",
+      "side": 0,
+      "message": "`mRequestHeaders` was changed downstream to be a `HeaderBlock`. Instead, upstream it is a `HeadersList` (i.e., `ArrayList\u003cMap.Entry\u003cString, String\u003e\u003e`).\n\nThis implements the downstream-only getter on top of the upstream-way of storing the headers.",
+      "range": {
+        "startLine": 285,
+        "startChar": 15,
+        "endLine": 285,
+        "endChar": 30
+      },
+      "revId": "8e16d48a42bf61795213782b328d3856d9baeb63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

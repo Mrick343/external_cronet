@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99a8073b_dbe47d72",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-05T16:30:48Z",
+      "side": 1,
+      "message": "Downstream these were moved to `UrlRequest` from `UrlRequest.Builder`.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 75
+      },
+      "revId": "8f0d1cbd99ac41f5222ee85b5dae433c7665ffd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
