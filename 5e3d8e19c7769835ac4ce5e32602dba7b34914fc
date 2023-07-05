@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22ff57ab_bcd5da78",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-05T22:35:29Z",
+      "side": 1,
+      "message": "delete?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 11
+      },
+      "revId": "5e3d8e19c7769835ac4ce5e32602dba7b34914fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
