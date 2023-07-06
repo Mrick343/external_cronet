@@ -1,4 +1,4 @@
-package android.net.http;
+package android.net.http.wrapper;
 
 public class CallbackExceptionWrapper extends android.net.http.CallbackException {
 

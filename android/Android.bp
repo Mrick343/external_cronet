@@ -15,7 +15,7 @@
 filegroup {
     name: "cronet_wrapper_sources",
     srcs: [
-        "java/src/android/net/http/*.java",
+        "java/src/android/net/http/wrapper/*.java",
     ],
     visibility: [
         "//packages/modules/Connectivity:__subpackages__",
