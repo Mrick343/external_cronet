@@ -19,6 +19,80 @@ filegroup {
     ],
     visibility: [
         "//packages/modules/Connectivity:__subpackages__",
-        "//external/cronet:__subpackages__",
+    ],
+}
+
+filegroup {
+    name: "httpclient_api_sources",
+    srcs: [
+        ":httpclient_api_version",
+        "java/src/android/net/http/BidirectionalStream.java",
+        "java/src/android/net/http/CallbackException.java",
+        "java/src/android/net/http/ConnectionMigrationOptions.java",
+        "java/src/android/net/http/DnsOptions.java",
+        "java/src/android/net/http/HeaderBlock.java",
+        "java/src/android/net/http/HttpEngine.java",
+        "java/src/android/net/http/IHttpEngineBuilder.java",
+        "java/src/android/net/http/HttpException.java",
+        "java/src/android/net/http/InlineExecutionProhibitedException.java",
+        "java/src/android/net/http/NetworkException.java",
+        "java/src/android/net/http/QuicException.java",
+        "java/src/android/net/http/QuicOptions.java",
+        "java/src/android/net/http/UploadDataProvider.java",
+        "java/src/android/net/http/UploadDataSink.java",
+        "java/src/android/net/http/UrlRequest.java",
+        "java/src/android/net/http/UrlResponseInfo.java",
+    ],
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+}
+
+java_genrule {
+    name: "httpclient_api_version",
+    cmd: "$(location build/util/version.py) --official " +
+         "-f " +
+         "$(location chrome/VERSION) " +
+         "-f " +
+         "$(location build/util/LASTCHANGE) " +
+         "-e " +
+         "'API_LEVEL=24' " +
+         "-o " +
+         "$(out) " +
+         "$(location java/src/android/net/http/ApiVersion.template)",
+    out: [
+        "java/src/android/net/http/ApiVersion.java",
+    ],
+    tool_files: [
+        "build/util/LASTCHANGE",
+        "build/util/android_chrome_version.py",
+        "build/util/version.py",
+        "chrome/VERSION",
+        "java/src/org/chromium/net/ApiVersion.template",
+    ],
+}
+
+java_library {
+    name: "httpclient",
+    srcs: [
+        ":cronet_wrapper_sources",
+        ":httpclient_api_sources",
+    ],
+    libs: [
+        "androidx.annotation_annotation",
+        "framework-annotations-lib",
+        "framework-connectivity.stubs.module_lib",
+    ],
+    static_libs: [
+        "cronet_aml_api_java",
+        "cronet_aml_java",
+    ],
+    sdk_version: "module_current",
+    min_sdk_version: "30",
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+    apex_available: [
+        "com.android.tethering",
     ],
 }
