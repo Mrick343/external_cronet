@@ -1,4 +1,4 @@
-package android.net.http;
+package android.net.http.wrapper;
 
 public class BidirectionalStreamBuilderWrapper
         extends android.net.http.BidirectionalStream.Builder {

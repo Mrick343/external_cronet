@@ -1,4 +1,4 @@
-package android.net.http;
+package android.net.http.wrapper;
 
 import org.chromium.net.CronetException;
 
