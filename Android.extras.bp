@@ -42,6 +42,33 @@ license {
     ],
 }
 
+java_genrule {
+    name: "httpclient_api_version",
+    cmd: "$(location build/util/version.py) --official " +
+         "-f " +
+         "$(location chrome/VERSION) " +
+         "-f " +
+         "$(location build/util/LASTCHANGE) " +
+         "-e " +
+         "'API_LEVEL=24' " +
+         "-o " +
+         "$(out) " +
+         "$(location components/cronet/android/api/src/org/chromium/net/ApiVersion.template)",
+    out: [
+        "android/templates/android/net/http/ApiVersion.java",
+    ],
+    tool_files: [
+        "build/util/LASTCHANGE",
+        "build/util/android_chrome_version.py",
+        "build/util/version.py",
+        "chrome/VERSION",
+        "components/cronet/android/api/src/org/chromium/net/ApiVersion.template",
+    ],
+    visibility: [
+        "//external/cronet/android:__subpackages__",
+    ],
+}
+
 java_library {
     // Don't change the name of the module.
     name: "cronet_aml_api_java",
