@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51e34ddf_203b51ca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-07T21:11:27Z",
+      "side": 1,
+      "message": "I am not sure how to feel about the duplication of the logic in ExperimentalOptionsTranslatingCronetEngineBuilder here. I guess wrapping Quic/DnsOptions is slightly painful because of the existence of a Builder class and a generally large API surface. We can discuss this on Monday.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 35
+      },
+      "revId": "6c2420772c1542028905bcc96348ed7d913f4820",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
