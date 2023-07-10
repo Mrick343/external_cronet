@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d14fa701_78331dbc",
+        "filename": "android/java/src/android/net/http/CronetEngineBuilderWrapper.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T17:53:08Z",
+      "side": 1,
+      "message": "max_server_configs_stored_in_properties is publicly accessible in QuicOptions (via setInMemoryServerConfigsCacheSize) and missing here.\n\n(This feels like an easy trap to fall into, can we just add everything that\u0027s part of ExperimentalOptionsTranslatingHttpEngineBuilder?)",
+      "range": {
+        "startLine": 114,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 19
+      },
+      "revId": "ea0ad94b710fd03d3999c6c5faa711c3587d783b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00cb597c_b828aefd",
+        "filename": "android/java/src/android/net/http/CronetEngineBuilderWrapper.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T17:53:08Z",
+      "side": 1,
+      "message": "nit: putting declarations before use improves readability.",
+      "range": {
+        "startLine": 139,
+        "startChar": 4,
+        "endLine": 139,
+        "endChar": 51
+      },
+      "revId": "ea0ad94b710fd03d3999c6c5faa711c3587d783b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ef46ca2_95baf801",
+        "filename": "android/java/src/android/net/http/CronetEngineBuilderWrapper.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T17:53:08Z",
+      "side": 1,
+      "message": "is this missing:\n```\n\n            if (options.getUseHttpStackDnsResolver() !\u003d DNS_OPTION_UNSPECIFIED) {\n                asyncDnsOptions.put(\"enable\",\n                        options.getUseHttpStackDnsResolver() \u003d\u003d DNS_OPTION_ENABLED);\n            }\n```",
+      "range": {
+        "startLine": 160,
+        "startChar": 28,
+        "endLine": 160,
+        "endChar": 49
+      },
+      "revId": "ea0ad94b710fd03d3999c6c5faa711c3587d783b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
