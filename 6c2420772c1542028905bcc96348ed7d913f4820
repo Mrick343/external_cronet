@@ -22,6 +22,30 @@
       },
       "revId": "6c2420772c1542028905bcc96348ed7d913f4820",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9a376e5_c71f7ba6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-10T15:34:24Z",
+      "side": 1,
+      "message": "Discussed offline. I\u0027ll look into this after merging things as they are, I\u0027ve filed b/290617849.",
+      "parentUuid": "51e34ddf_203b51ca",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 35
+      },
+      "revId": "6c2420772c1542028905bcc96348ed7d913f4820",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
