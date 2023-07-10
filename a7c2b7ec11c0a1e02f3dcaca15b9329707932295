@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f2c75ad_a2fea000",
+        "filename": "android/java/src/android/net/http/CronetExceptionTranslationUtils.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-10T12:24:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bbcb1bf0_4f2df997",
+      "range": {
+        "startLine": 8,
+        "startChar": 4,
+        "endLine": 8,
+        "endChar": 58
+      },
+      "revId": "a7c2b7ec11c0a1e02f3dcaca15b9329707932295",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c09ca98_70fb6e73",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f34e7529_ee4bd74e",
+        "filename": "android/java/src/android/net/http/CronetExceptionTranslationUtils.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-10T12:24:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c09ca98_70fb6e73",
+      "range": {
+        "startLine": 37,
+        "startChar": 21,
+        "endLine": 37,
+        "endChar": 31
+      },
+      "revId": "a7c2b7ec11c0a1e02f3dcaca15b9329707932295",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d13034a_8bb60d92",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-07-07T20:31:44Z",
       "side": 1,
       "message": "nit: moving declarations to before they are used improves top-down readability.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 5
+      },
+      "revId": "a7c2b7ec11c0a1e02f3dcaca15b9329707932295",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "335aa02d_cf56f0d7",
+        "filename": "android/java/src/android/net/http/CronetExceptionTranslationUtils.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-10T12:24:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d13034a_8bb60d92",
       "range": {
         "startLine": 37,
         "startChar": 0,
