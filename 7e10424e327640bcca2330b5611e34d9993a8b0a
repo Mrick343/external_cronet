@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3834f91_6e1256c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T17:58:07Z",
+      "side": 1,
+      "message": "we really need to stop excluding the *Test classes from being jarjar\u0027ed...",
+      "revId": "7e10424e327640bcca2330b5611e34d9993a8b0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
