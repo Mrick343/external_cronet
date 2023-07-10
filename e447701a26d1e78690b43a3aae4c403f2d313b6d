@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bf33a34_544c605d",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T17:56:52Z",
+      "side": 1,
+      "message": "could we just compile this as part of the same library and get rid of the reflection for this class?",
+      "range": {
+        "startLine": 385,
+        "startChar": 25,
+        "endLine": 385,
+        "endChar": 34
+      },
+      "revId": "e447701a26d1e78690b43a3aae4c403f2d313b6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
