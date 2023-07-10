@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0395df40_8546bfc5",
+        "filename": "android/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T18:21:07Z",
+      "side": 1,
+      "message": "do we actually need this filegroup?",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "83bb6840abf3ae18a4d5be9d94f8340f4b19c546",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a518cc2_4f2379ff",
+        "filename": "android/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T18:21:07Z",
+      "side": 1,
+      "message": "curious if this is actually required here?",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 26
+      },
+      "revId": "83bb6840abf3ae18a4d5be9d94f8340f4b19c546",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea0fcaba_d25e5535",
+        "filename": "android/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T18:21:07Z",
+      "side": 1,
+      "message": "this doesn\u0027t actually go anywhere though, right? It\u0027s just used for the prejarjar target (and potentially tests), IIRC. So I don\u0027t think it would have to be made apex_available.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 6
+      },
+      "revId": "83bb6840abf3ae18a4d5be9d94f8340f4b19c546",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
