@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f382ad7_98062ae0",
+        "filename": "Android.extras.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-10T18:06:32Z",
+      "side": 1,
+      "message": "why is this necessary? can\u0027t you just use cronet_aml_components_cronet_android_interface_api_version?",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "09d2e2a8461b555ab621d99f946f877675deb0a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
