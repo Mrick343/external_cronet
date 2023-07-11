@@ -22,6 +22,30 @@
       },
       "revId": "09d2e2a8461b555ab621d99f946f877675deb0a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "024aba1d_7561958e",
+        "filename": "Android.extras.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T13:16:56Z",
+      "side": 1,
+      "message": "I didn\u0027t like that we were reporting Chromium\u0027s `ApiLevel#getMaximumAvailableApiLevel` (etc.), since that will not always be true (that wouldn\u0027t be the case until we a new `org.chromium.net` API to `android.net.http`).\n\nBut now that I think more about this, this is not really an issue. The methods I mentioned above are only used by GMSCore dynamite loading, and this currently doesn\u0027t interact with that in any way.\n\nChanged this back to rely on `cronet_aml_components_cronet_android_interface_api_version`.",
+      "parentUuid": "1f382ad7_98062ae0",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "09d2e2a8461b555ab621d99f946f877675deb0a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
