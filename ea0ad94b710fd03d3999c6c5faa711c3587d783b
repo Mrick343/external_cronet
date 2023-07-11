@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "29596f25_c0fb138e",
+        "filename": "android/java/src/android/net/http/CronetEngineBuilderWrapper.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T10:38:29Z",
+      "side": 1,
+      "message": "\u003e max_server_configs_stored_in_properties is publicly accessible in QuicOptions (via setInMemoryServerConfigsCacheSize) and missing here.\n\nThanks for catching this.\n\n\u003e (This feels like an easy trap to fall into, can we just add everything that\u0027s part of ExperimentalOptionsTranslatingHttpEngineBuilder?)\n\nThis is what I started with, but I had to remove everything which was previously @hide (since now these api are gone from android.net.http).",
+      "parentUuid": "d14fa701_78331dbc",
+      "range": {
+        "startLine": 114,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 19
+      },
+      "revId": "ea0ad94b710fd03d3999c6c5faa711c3587d783b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00cb597c_b828aefd",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acbeb488_dbacf2ca",
+        "filename": "android/java/src/android/net/http/CronetEngineBuilderWrapper.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T10:38:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00cb597c_b828aefd",
+      "range": {
+        "startLine": 139,
+        "startChar": 4,
+        "endLine": 139,
+        "endChar": 51
+      },
+      "revId": "ea0ad94b710fd03d3999c6c5faa711c3587d783b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ef46ca2_95baf801",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-07-10T17:53:08Z",
       "side": 1,
       "message": "is this missing:\n```\n\n            if (options.getUseHttpStackDnsResolver() !\u003d DNS_OPTION_UNSPECIFIED) {\n                asyncDnsOptions.put(\"enable\",\n                        options.getUseHttpStackDnsResolver() \u003d\u003d DNS_OPTION_ENABLED);\n            }\n```",
+      "range": {
+        "startLine": 160,
+        "startChar": 28,
+        "endLine": 160,
+        "endChar": 49
+      },
+      "revId": "ea0ad94b710fd03d3999c6c5faa711c3587d783b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d85b0af_167b4cd4",
+        "filename": "android/java/src/android/net/http/CronetEngineBuilderWrapper.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T10:38:29Z",
+      "side": 1,
+      "message": "Done. Thanks for catching this (I\u0027ll look into adding tests for these).",
+      "parentUuid": "4ef46ca2_95baf801",
       "range": {
         "startLine": 160,
         "startChar": 28,
