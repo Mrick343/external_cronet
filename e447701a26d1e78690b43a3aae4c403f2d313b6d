@@ -22,6 +22,30 @@
       },
       "revId": "e447701a26d1e78690b43a3aae4c403f2d313b6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6abda1d_3fcc648e",
+        "filename": "components/cronet/android/api/src/android/net/http/HttpEngine.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T12:06:35Z",
+      "side": 1,
+      "message": "I went down this path because `CronetJavaDefaults` in Connectivity\u0027s `framework/Android.bp` currently splits `cronet_aml*` into `srcs` (where we currently only have `android.net.http`\u0027s APIs) and `impl_only_static_libs`.\n\nTechnically, the wrapper is not part of the sources, and if we were not use reflection this would introduce a circular dependency in the jarjar target (`httpclient_api` \u003c-\u003e `httpclient_wrapper\u0027), while `CronetJavaDefaults` would probably be fine?\n\nMaybe it\u0027s possible to merge entirely `httpclient_api` and `httpclient_wrapper` without triggering metalava?\n\nI\u0027ll merge as is but let\u0027s keep discussing this.",
+      "parentUuid": "4bf33a34_544c605d",
+      "range": {
+        "startLine": 385,
+        "startChar": 25,
+        "endLine": 385,
+        "endChar": 34
+      },
+      "revId": "e447701a26d1e78690b43a3aae4c403f2d313b6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
