@@ -22,6 +22,30 @@
       },
       "revId": "d885f5987b87db370eac47c0831444b263a9bd3a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e46aa58_7a479a82",
+        "filename": "Android.extras.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T13:23:37Z",
+      "side": 1,
+      "message": "I\u0027ve updated the CL description.",
+      "parentUuid": "d48d0824_11c54686",
+      "range": {
+        "startLine": 80,
+        "startChar": 8,
+        "endLine": 80,
+        "endChar": 61
+      },
+      "revId": "d885f5987b87db370eac47c0831444b263a9bd3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
