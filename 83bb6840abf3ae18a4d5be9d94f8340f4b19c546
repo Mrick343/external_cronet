@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "622ee703_bb28d423",
+        "filename": "android/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T13:17:19Z",
+      "side": 1,
+      "message": "We do not. Merged in `httpclient_impl`.",
+      "parentUuid": "0395df40_8546bfc5",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "83bb6840abf3ae18a4d5be9d94f8340f4b19c546",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a518cc2_4f2379ff",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d5f0edb_27f53c56",
+        "filename": "android/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T13:17:19Z",
+      "side": 1,
+      "message": "I think I needed at some point during my various rebases, but it doesn\u0027t seem to be needed anymore. Thanks for catching this!",
+      "parentUuid": "2a518cc2_4f2379ff",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 26
+      },
+      "revId": "83bb6840abf3ae18a4d5be9d94f8340f4b19c546",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea0fcaba_d25e5535",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-07-10T18:21:07Z",
       "side": 1,
       "message": "this doesn\u0027t actually go anywhere though, right? It\u0027s just used for the prejarjar target (and potentially tests), IIRC. So I don\u0027t think it would have to be made apex_available.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 6
+      },
+      "revId": "83bb6840abf3ae18a4d5be9d94f8340f4b19c546",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ace05792_040fc2c9",
+        "filename": "android/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-11T13:17:19Z",
+      "side": 1,
+      "message": "Same as above. Thanks again.",
+      "parentUuid": "ea0fcaba_d25e5535",
       "range": {
         "startLine": 68,
         "startChar": 0,
