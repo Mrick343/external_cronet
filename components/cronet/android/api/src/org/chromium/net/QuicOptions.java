@@ -57,7 +57,7 @@ public class QuicOptions {
 
     private final Set<String> mExtraQuicheFlags;
 
-    QuicOptions(Builder builder) {
+    protected QuicOptions(Builder builder) {
         this.mQuicHostAllowlist =
                 Collections.unmodifiableSet(new LinkedHashSet<>(builder.mQuicHostAllowlist));
         this.mEnabledQuicVersions =
