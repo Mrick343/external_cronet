@@ -24,77 +24,14 @@ import java.util.Set;
 // SuppressLint to be consistent with other cronet code
 @SuppressLint("UserHandleName")
 public class QuicOptions {
-    private final Set<String> mQuicHostAllowlist;
-    private final Set<String> mEnabledQuicVersions;
-
-    private final Set<String> mConnectionOptions;
-    private final Set<String> mClientConnectionOptions;
-    @Nullable
-    private final Integer mInMemoryServerConfigsCacheSize;
-    @Nullable
-    private final String mHandshakeUserAgent;
-    @Nullable
-    private final Boolean mRetryWithoutAltSvcOnQuicErrors;
-    @Nullable
-    private final Boolean mEnableTlsZeroRtt;
-
-    @Nullable
-    private final Duration mPreCryptoHandshakeIdleTimeout;
-    @Nullable
-    private final Duration mCryptoHandshakeTimeout;
-
-    @Nullable
-    private final Duration mIdleConnectionTimeout;
-    @Nullable
-    private final Duration mRetransmittableOnWireTimeout;
-
-    @Nullable
-    private final Boolean mCloseSessionsOnIpChange;
-    @Nullable
-    private final Boolean mGoawaySessionsOnIpChange;
-
-    @Nullable
-    private final Duration mInitialBrokenServicePeriod;
-    @Nullable
-    private final Boolean mIncreaseBrokenServicePeriodExponentially;
-    @Nullable
-    private final Boolean mDelayJobsWithAvailableSpdySession;
-
-    private final Set<String> mExtraQuicheFlags;
-
-    QuicOptions(Builder builder) {
-        this.mQuicHostAllowlist =
-                Collections.unmodifiableSet(new LinkedHashSet<>(builder.mQuicHostAllowlist));
-        this.mEnabledQuicVersions =
-                Collections.unmodifiableSet(new LinkedHashSet<>(builder.mEnabledQuicVersions));
-        this.mConnectionOptions =
-                Collections.unmodifiableSet(new LinkedHashSet<>(builder.mConnectionOptions));
-        this.mClientConnectionOptions =
-                Collections.unmodifiableSet(new LinkedHashSet<>(builder.mClientConnectionOptions));
-        this.mInMemoryServerConfigsCacheSize = builder.mInMemoryServerConfigsCacheSize;
-        this.mHandshakeUserAgent = builder.mHandshakeUserAgent;
-        this.mRetryWithoutAltSvcOnQuicErrors = builder.mRetryWithoutAltSvcOnQuicErrors;
-        this.mEnableTlsZeroRtt = builder.mEnableTlsZeroRtt;
-        this.mPreCryptoHandshakeIdleTimeout = builder.mPreCryptoHandshakeIdleTimeout;
-        this.mCryptoHandshakeTimeout = builder.mCryptoHandshakeTimeout;
-        this.mIdleConnectionTimeout = builder.mIdleConnectionTimeout;
-        this.mRetransmittableOnWireTimeout = builder.mRetransmittableOnWireTimeout;
-        this.mCloseSessionsOnIpChange = builder.mCloseSessionsOnIpChange;
-        this.mGoawaySessionsOnIpChange = builder.mGoawaySessionsOnIpChange;
-        this.mInitialBrokenServicePeriod = builder.mInitialBrokenServicePeriod;
-        this.mIncreaseBrokenServicePeriodExponentially =
-                builder.mIncreaseBrokenServicePeriodExponentially;
-        this.mDelayJobsWithAvailableSpdySession = builder.mDelayJobsWithAvailableSpdySession;
-        this.mExtraQuicheFlags =
-                Collections.unmodifiableSet(new LinkedHashSet<>(builder.mExtraQuicheFlags));
-    }
+    final org.chromium.net.QuicOptions backend;
 
     /**
      * See {@link Builder#addAllowedQuicHost}
      */
     @NonNull
     public Set<String> getAllowedQuicHosts() {
-        return mQuicHostAllowlist;
+        return backend.getQuicHostAllowlist();
     }
 
 
@@ -102,7 +39,7 @@ public class QuicOptions {
      * See {@link Builder#setInMemoryServerConfigsCacheSize}
      */
      public boolean hasInMemoryServerConfigsCacheSize() {
-        return mInMemoryServerConfigsCacheSize != null;
+        return backend.getInMemoryServerConfigsCacheSize() != null;
      }
 
     /**
@@ -112,7 +49,7 @@ public class QuicOptions {
         if (!hasInMemoryServerConfigsCacheSize()) {
             throw new IllegalStateException("InMemoryServerConfigsCacheSize is not set");
         }
-        return mInMemoryServerConfigsCacheSize;
+        return backend.getInMemoryServerConfigsCacheSize();
     }
 
     /**
@@ -120,7 +57,7 @@ public class QuicOptions {
      */
     @Nullable
     public String getHandshakeUserAgent() {
-        return mHandshakeUserAgent;
+        return backend.getHandshakeUserAgent();
     }
 
     /**
@@ -128,7 +65,11 @@ public class QuicOptions {
      */
     @Nullable
     public Duration getIdleConnectionTimeout() {
-        return mIdleConnectionTimeout;
+        Long timeout = backend.getIdleConnectionTimeoutSeconds();
+        if (timeout == null) {
+          return null;
+        }
+        return Duration.ofSeconds(timeout);
     }
 
     /**
@@ -140,43 +81,19 @@ public class QuicOptions {
         return new Builder();
     }
 
+    QuicOptions(Builder builder) {
+      backend = builder.backend.build();
+    }
+
     /**
      * Builder for {@link QuicOptions}.
      */
     public static final class Builder {
-        private final Set<String> mQuicHostAllowlist = new LinkedHashSet<>();
-        private final Set<String> mEnabledQuicVersions = new LinkedHashSet<>();
-        private final Set<String> mConnectionOptions = new LinkedHashSet<>();
-        private final Set<String> mClientConnectionOptions = new LinkedHashSet<>();
-        @Nullable
-        private Integer mInMemoryServerConfigsCacheSize;
-        @Nullable
-        private String mHandshakeUserAgent;
-        @Nullable
-        private Boolean mRetryWithoutAltSvcOnQuicErrors;
-        @Nullable
-        private Boolean mEnableTlsZeroRtt;
-        @Nullable
-        private Duration mPreCryptoHandshakeIdleTimeout;
-        @Nullable
-        private Duration mCryptoHandshakeTimeout;
-        @Nullable
-        private Duration mIdleConnectionTimeout;
-        @Nullable
-        private Duration mRetransmittableOnWireTimeout;
-        @Nullable
-        private Boolean mCloseSessionsOnIpChange;
-        @Nullable
-        private Boolean mGoawaySessionsOnIpChange;
-        @Nullable
-        private Duration mInitialBrokenServicePeriod;
-        @Nullable
-        private Boolean mIncreaseBrokenServicePeriodExponentially;
-        @Nullable
-        private Boolean mDelayJobsWithAvailableSpdySession;
-        private final Set<String> mExtraQuicheFlags = new LinkedHashSet<>();
+        private final org.chromium.net.QuicOptions.Builder backend;
 
-        public Builder() {}
+        public Builder() {
+          backend = org.chromium.net.QuicOptions.builder();
+        }
 
         /**
          * Adds a host to the QUIC allowlist.
@@ -188,7 +105,7 @@ public class QuicOptions {
          */
         @NonNull
         public Builder addAllowedQuicHost(@NonNull String quicHost) {
-            mQuicHostAllowlist.add(quicHost);
+            backend.addAllowedQuicHost(quicHost);
             return this;
         }
 
@@ -203,7 +120,7 @@ public class QuicOptions {
          */
         @NonNull
         public Builder setInMemoryServerConfigsCacheSize(int inMemoryServerConfigsCacheSize) {
-            this.mInMemoryServerConfigsCacheSize = inMemoryServerConfigsCacheSize;
+            backend.setInMemoryServerConfigsCacheSize(inMemoryServerConfigsCacheSize);
             return this;
         }
 
@@ -218,7 +135,7 @@ public class QuicOptions {
          */
         @NonNull
         public Builder setHandshakeUserAgent(@NonNull String handshakeUserAgent) {
-            this.mHandshakeUserAgent = handshakeUserAgent;
+            backend.setHandshakeUserAgent(handshakeUserAgent);
             return this;
         }
 
@@ -235,7 +152,7 @@ public class QuicOptions {
          */
         @NonNull
         public Builder setIdleConnectionTimeout(@NonNull Duration idleConnectionTimeout) {
-            this.mIdleConnectionTimeout = idleConnectionTimeout;
+            backend.setIdleConnectionTimeoutSeconds(idleConnectionTimeout.getSeconds());
             return this;
         }
 

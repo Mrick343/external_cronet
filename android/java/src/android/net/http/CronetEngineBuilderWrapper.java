@@ -129,32 +129,7 @@ public class CronetEngineBuilderWrapper extends IHttpEngineBuilder {
 
     @Override
     public IHttpEngineBuilder setQuicOptions(@NonNull android.net.http.QuicOptions options) {
-        mExperimentalOptionsPatches.add(
-                (experimentalOptions) -> {
-                    JSONObject quicOptions = createDefaultIfAbsent(experimentalOptions, "QUIC");
-
-                    if (!options.getAllowedQuicHosts().isEmpty()) {
-                        quicOptions.put(
-                                "host_whitelist", String.join(",", options.getAllowedQuicHosts()));
-                    }
-
-                    if (options.hasInMemoryServerConfigsCacheSize()) {
-                        quicOptions.put(
-                                "max_server_configs_stored_in_properties",
-                                options.getInMemoryServerConfigsCacheSize());
-                    }
-
-                    if (options.getHandshakeUserAgent() != null) {
-                        quicOptions.put("user_agent_id", options.getHandshakeUserAgent());
-                    }
-
-                    if (options.getIdleConnectionTimeout() != null) {
-                        quicOptions.put(
-                                "idle_connection_timeout_seconds",
-                                options.getIdleConnectionTimeout().toSeconds());
-                    }
-                });
-
+        backend.setQuicOptions(options.backend);
         return this;
     }
 
