@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b88aff25_1ce61bdd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-12T13:07:17Z",
+      "side": 1,
+      "message": "This is what the wrapping would look like.\n\nIt\u0027s still not trivial to figure out if we\u0027re dropping something that exists in the android.net.http interface. Though, it\u0027s probably better than handling JSON strings.",
+      "revId": "ced093f63695b8c398df89b122704b407de575e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
