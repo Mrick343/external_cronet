@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e443dfff_f3f62c89",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-12T22:32:56Z",
+      "side": 1,
+      "message": "QuicOptions 😊",
+      "range": {
+        "startLine": 11,
+        "startChar": 17,
+        "endLine": 11,
+        "endChar": 26
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "479a916b_8c5d05c7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-12T22:32:56Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 12,
+        "startChar": 17,
+        "endLine": 12,
+        "endChar": 26
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2317e17a_22cf028c",
+        "filename": "android/java/src/android/net/http/QuicOptionsWrapper.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-12T22:32:56Z",
+      "side": 1,
+      "message": "I think we should override all the functions here (even if they aren\u0027t used), just so it\u0027s less likely we miss one when we add more.",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 5
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "883706ad_d90ffd68",
+        "filename": "components/cronet/android/api/src/org/chromium/net/QuicOptions.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-07-12T22:32:56Z",
+      "side": 1,
+      "message": "I think this should be protected, not public.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 10
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
