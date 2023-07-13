@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc7d89b1_87e859f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-13T13:50:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e443dfff_f3f62c89",
+      "range": {
+        "startLine": 11,
+        "startChar": 17,
+        "endLine": 11,
+        "endChar": 26
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "479a916b_8c5d05c7",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-07-12T22:32:56Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 12,
+        "startChar": 17,
+        "endLine": 12,
+        "endChar": 26
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdeea339_632e11d6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-13T13:50:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "479a916b_8c5d05c7",
       "range": {
         "startLine": 12,
         "startChar": 17,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5828b367_6c57302d",
+        "filename": "android/java/src/android/net/http/QuicOptionsWrapper.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-13T13:50:23Z",
+      "side": 1,
+      "message": "I\u0027m not entirely sure this would be better. Regardless of what we do we\u0027ll never be sure that we\u0027re overriding all the ones provided by `android.net.http.QuicOptions`. Unless there is a way to enforce everything to be overridden (I\u0027m not aware of such a thing)?\n\nSo, by not overriding the ones that exist only in `org.chromium.net.QuicOptions`, I feel there is less bloat and it\u0027s easier to spot if something missing.",
+      "parentUuid": "2317e17a_22cf028c",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 5
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "883706ad_d90ffd68",
         "filename": "components/cronet/android/api/src/org/chromium/net/QuicOptions.java",
         "patchSetId": 5
@@ -83,6 +155,30 @@
       "writtenOn": "2023-07-12T22:32:56Z",
       "side": 1,
       "message": "I think this should be protected, not public.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 10
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f879f01_41e6f92d",
+        "filename": "components/cronet/android/api/src/org/chromium/net/QuicOptions.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-13T13:50:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "883706ad_d90ffd68",
       "range": {
         "startLine": 60,
         "startChar": 4,
