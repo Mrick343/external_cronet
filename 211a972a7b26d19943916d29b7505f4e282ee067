@@ -142,6 +142,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fa70347_de17f3d5",
+        "filename": "android/java/src/android/net/http/QuicOptionsWrapper.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-14T13:11:36Z",
+      "side": 1,
+      "message": "Well, scratch everything I\u0027ve said.\n\nSince this class is non-abstract, we shouldn\u0027t have a wrapper in the first place. I\u0027ve updated things so that android.net.http.QuicOptions is itself the wrapper.",
+      "parentUuid": "5828b367_6c57302d",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 5
+      },
+      "revId": "211a972a7b26d19943916d29b7505f4e282ee067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "883706ad_d90ffd68",
