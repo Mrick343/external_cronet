@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "705903f1_7f727fab",
+        "filename": "android/java/src/android/net/http/QuicOptions.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-14T13:21:12Z",
+      "side": 1,
+      "message": "P.S. This should probably go away since it\u0027s `{@hide}`. I\u0027m guessing we had it here since it exists upstream?",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 82,
+        "endChar": 5
+      },
+      "revId": "f82c52bfaed90e4b7df9a7d3329ecf975d67fa3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
