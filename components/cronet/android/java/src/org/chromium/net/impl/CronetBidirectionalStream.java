@@ -4,12 +4,6 @@
 
 package org.chromium.net.impl;
 
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_IDLE;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_LOWEST;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_LOW;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_MEDIUM;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_HIGHEST;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.VisibleForTesting;
 
@@ -99,7 +93,6 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     private final int mInitialPriority;
     private final String mInitialMethod;
     private final String mRequestHeaders[];
-    private final UrlResponseInfo.HeaderBlock mRequestHeaderBlock;
     private final boolean mDelayRequestHeadersUntilFirstFlush;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mTrafficStatsTagSet;
@@ -257,7 +250,6 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mExecutor = executor;
         mInitialMethod = httpMethod;
         mRequestHeaders = stringsFromHeaderList(requestHeaders);
-        mRequestHeaderBlock = new UrlResponseInfoImpl.HeaderBlockImpl(requestHeaders);
         mDelayRequestHeadersUntilFirstFlush = delayRequestHeadersUntilNextFlush;
         mPendingData = new LinkedList<>();
         mFlushData = new LinkedList<>();
@@ -301,7 +293,7 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     }
 
     @Override
-    public UrlResponseInfo.HeaderBlock getHeaders() {
+    public HeaderBlock getHeaders() {
         return mRequestHeaderBlock;
     }
 
