@@ -16,6 +16,24 @@
       "message": "branch is upstream-staging, you are probably interested in main",
       "revId": "4298697d28c6ad6ec205b71277968b8780d83f20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b70fa79_425dcdf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1293545
+      },
+      "writtenOn": "2023-07-17T01:40:09Z",
+      "side": 1,
+      "message": "To fix a build break, the build corp should revert any changes that caused the build to break. The files owner should then add the following labels to the affected files:\n\n- Merged-In: This label indicates that the changes have been merged into the main branch.\n- DO NOT MERGE: This label prevents the changes from being merged again in the future.\n\nFile owners has responsibility to ensure that the build line is green anyhow.",
+      "parentUuid": "056011e5_81cc4da0",
+      "revId": "4298697d28c6ad6ec205b71277968b8780d83f20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
