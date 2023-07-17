@@ -34,6 +34,24 @@
       "parentUuid": "056011e5_81cc4da0",
       "revId": "4298697d28c6ad6ec205b71277968b8780d83f20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bb984cd_2729b49c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-17T09:00:01Z",
+      "side": 1,
+      "message": "This has been reverted through https://android-review.git.corp.google.com/q/topic:%22revert-2647150-httpclient-wrapper-GZUDLKEBSH%22",
+      "parentUuid": "2b70fa79_425dcdf9",
+      "revId": "4298697d28c6ad6ec205b71277968b8780d83f20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
