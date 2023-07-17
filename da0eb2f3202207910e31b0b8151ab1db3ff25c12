@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "640816c0_94b0fdc1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-07-17T14:15:07Z",
+      "side": 1,
+      "message": "This should have been fixed by this revert https://android-review.git.corp.google.com/q/topic:%22revert-2647150-httpclient-wrapper-GZUDLKEBSH%22",
+      "revId": "da0eb2f3202207910e31b0b8151ab1db3ff25c12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
