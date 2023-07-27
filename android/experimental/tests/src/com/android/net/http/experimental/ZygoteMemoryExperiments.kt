@@ -34,22 +34,31 @@ private const val TAG = "ZygoteMemoryExperiments"
 class ZygoteMemoryExperiments {
     private val context by lazy { InstrumentationRegistry.getInstrumentation().context }
 
-    private fun logMeminfo(test: String, componentName: ComponentName) {
+    private fun logMeminfo(test: String, processName: String, componentName: ComponentName) {
         assertNotNull(componentName, "Did the service failed to start?")
-        val serviceName = "${componentName.packageName}:Http:${componentName.className}"
+        val serviceName = "${componentName.packageName}:$processName:${componentName.className}"
         val result = runShellCommand("dumpsys meminfo -d $serviceName")
         Log.i(TAG, "$test: $result")
     }
 
     @Test
     fun testIsolatedService() {
-        Log.i(TAG, "start isolated service")
         val serviceIntent = Intent(context, EmptyIsolatedService::class.java)
         val componentName = context.startService(serviceIntent)
 
         // TODO: don't sleep and use bindService() instead.
         Thread.sleep(2000)
-        logMeminfo("testIsolatedService", componentName)
+        logMeminfo("testIsolatedService", "EmptyService", componentName)
+    }
+
+    @Test
+    fun testAppZygoteIsolatedService() {
+        val serviceIntent = Intent(context, EmptyAppZygoteIsolatedService::class.java)
+        val componentName = context.startService(serviceIntent)
+
+        // TODO: don't sleep and use bindService() instead.
+        Thread.sleep(2000)
+        logMeminfo("testAppZygoteIsolatedService", "EmptyAppZygoteService", componentName)
     }
 }
 

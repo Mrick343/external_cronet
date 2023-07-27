@@ -18,8 +18,13 @@
           package="com.android.net.http.experimental">
     <application>
         <service android:name=".EmptyIsolatedService"
-                 android:process=":Http"
+                 android:process=":EmptyService"
                  android:isolatedProcess="true" />
+
+        <service android:name=".EmptyAppZygoteIsolatedService"
+                 android:process=":EmptyAppZygoteService"
+                 android:isolatedProcess="true"
+                 android:useAppZygote="true" />
     </application>
 
     <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
