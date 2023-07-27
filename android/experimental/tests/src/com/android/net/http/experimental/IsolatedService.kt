@@ -32,3 +32,14 @@ class EmptyIsolatedService : Service() {
     // disallow binding
     override fun onBind(intent: Intent): IBinder? = null
 }
+
+class EmptyAppZygoteIsolatedService : Service() {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Log.e(this::class.simpleName, "service: started isolated service")
+        return 0
+    }
+
+    // disallow binding
+    override fun onBind(intent: Intent): IBinder? = null
+}
+
