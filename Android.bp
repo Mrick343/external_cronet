@@ -380,7 +380,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -415,23 +414,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-march=armv8-a+memtag",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -513,7 +521,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -556,6 +563,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
             local_include_dirs: [
@@ -576,9 +584,30 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-march=armv8-a+memtag",
                 "-mno-outline",
+            ],
+            local_include_dirs: [
+                "third_party/android_ndk/sources/android/cpufeatures/",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "base/allocator/partition_allocator/partition_alloc_base/files/file_path.cc",
+                "base/allocator/partition_allocator/partition_alloc_base/native_library.cc",
+                "base/allocator/partition_allocator/partition_alloc_base/native_library_posix.cc",
+                "base/allocator/partition_allocator/partition_alloc_base/time/time_android.cc",
+            ],
+            static_libs: [
+                "cronet_aml_third_party_android_ndk_cpu_features__testing",
+            ],
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-fstack-protector",
             ],
             local_include_dirs: [
                 "third_party/android_ndk/sources/android/cpufeatures/",
@@ -598,6 +627,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
             local_include_dirs: [
@@ -618,6 +648,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -632,6 +663,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-fstack-protector",
@@ -684,6 +716,18 @@ cc_genrule {
          "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
          "then " +
          "echo '--flags HAS_64_BIT_POINTERS=\"true\" USE_PARTITION_ALLOC=\"false\" USE_PARTITION_ALLOC_AS_MALLOC=\"false\" ENABLE_BACKUP_REF_PTR_SUPPORT=\"false\" ENABLE_BACKUP_REF_PTR_SLOW_CHECKS=\"false\" ENABLE_BACKUP_REF_PTR_FEATURE_FLAG=\"false\" ENABLE_RAW_PTR_EXPERIMENTAL=\"false\" ENABLE_DANGLING_RAW_PTR_CHECKS=\"false\" ENABLE_DANGLING_RAW_PTR_FEATURE_FLAG=\"false\" ENABLE_DANGLING_RAW_PTR_PERF_EXPERIMENT=\"false\" ENABLE_POINTER_SUBTRACTION_CHECK=\"false\" BACKUP_REF_PTR_POISON_OOB_PTR=\"false\" PUT_REF_COUNT_IN_PREVIOUS_SLOT=\"false\" USE_ASAN_BACKUP_REF_PTR=\"false\" USE_ASAN_UNOWNED_PTR=\"false\" USE_HOOKABLE_RAW_PTR=\"false\" ENABLE_GWP_ASAN_SUPPORT=\"false\" FORCE_ENABLE_RAW_PTR_EXCLUSION=\"false\" RECORD_ALLOC_INFO=\"false\" USE_FREESLOT_BITMAP=\"false\" GLUE_CORE_POOLS=\"false\" ENABLE_POINTER_COMPRESSION=\"false\" ENABLE_SHADOW_METADATA_FOR_64_BITS_POINTERS=\"false\" USE_STARSCAN=\"false\" PCSCAN_STACK_SUPPORTED=\"true\" ENABLE_PKEYS=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base/allocator/partition_allocator:partition_alloc_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags HAS_64_BIT_POINTERS=\"true\" USE_PARTITION_ALLOC=\"false\" USE_PARTITION_ALLOC_AS_MALLOC=\"false\" ENABLE_BACKUP_REF_PTR_SUPPORT=\"false\" ENABLE_BACKUP_REF_PTR_SLOW_CHECKS=\"false\" ENABLE_BACKUP_REF_PTR_FEATURE_FLAG=\"false\" ENABLE_RAW_PTR_EXPERIMENTAL=\"false\" ENABLE_DANGLING_RAW_PTR_CHECKS=\"false\" ENABLE_DANGLING_RAW_PTR_FEATURE_FLAG=\"false\" ENABLE_DANGLING_RAW_PTR_PERF_EXPERIMENT=\"false\" ENABLE_POINTER_SUBTRACTION_CHECK=\"false\" BACKUP_REF_PTR_POISON_OOB_PTR=\"false\" PUT_REF_COUNT_IN_PREVIOUS_SLOT=\"false\" USE_ASAN_BACKUP_REF_PTR=\"false\" USE_ASAN_UNOWNED_PTR=\"false\" USE_HOOKABLE_RAW_PTR=\"false\" ENABLE_GWP_ASAN_SUPPORT=\"false\" FORCE_ENABLE_RAW_PTR_EXCLUSION=\"false\" RECORD_ALLOC_INFO=\"false\" USE_FREESLOT_BITMAP=\"false\" GLUE_CORE_POOLS=\"false\" ENABLE_POINTER_COMPRESSION=\"false\" ENABLE_SHADOW_METADATA_FOR_64_BITS_POINTERS=\"false\" USE_STARSCAN=\"false\" PCSCAN_STACK_SUPPORTED=\"false\" ENABLE_PKEYS=\"false\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
          "$(out) " +
          "--rulename " +
@@ -766,6 +810,18 @@ cc_genrule {
          ". " +
          "--definitions " +
          "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags HAS_64_BIT_POINTERS=\"true\" USE_PARTITION_ALLOC=\"false\" USE_PARTITION_ALLOC_AS_MALLOC=\"false\" ENABLE_BACKUP_REF_PTR_SUPPORT=\"false\" ENABLE_BACKUP_REF_PTR_SLOW_CHECKS=\"false\" ENABLE_BACKUP_REF_PTR_FEATURE_FLAG=\"false\" ENABLE_RAW_PTR_EXPERIMENTAL=\"false\" ENABLE_DANGLING_RAW_PTR_CHECKS=\"false\" ENABLE_DANGLING_RAW_PTR_FEATURE_FLAG=\"false\" ENABLE_DANGLING_RAW_PTR_PERF_EXPERIMENT=\"false\" ENABLE_POINTER_SUBTRACTION_CHECK=\"false\" BACKUP_REF_PTR_POISON_OOB_PTR=\"false\" PUT_REF_COUNT_IN_PREVIOUS_SLOT=\"false\" USE_ASAN_BACKUP_REF_PTR=\"false\" USE_ASAN_UNOWNED_PTR=\"false\" USE_HOOKABLE_RAW_PTR=\"false\" ENABLE_GWP_ASAN_SUPPORT=\"false\" FORCE_ENABLE_RAW_PTR_EXCLUSION=\"false\" RECORD_ALLOC_INFO=\"false\" USE_FREESLOT_BITMAP=\"false\" GLUE_CORE_POOLS=\"false\" ENABLE_POINTER_COMPRESSION=\"false\" ENABLE_SHADOW_METADATA_FOR_64_BITS_POINTERS=\"false\" USE_STARSCAN=\"false\" PCSCAN_STACK_SUPPORTED=\"false\" ENABLE_PKEYS=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base/allocator/partition_allocator:partition_alloc_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
          "fi;",
     host_supported: true,
     out: [
@@ -782,7 +838,9 @@ cc_genrule {
 // GN: //base:anchor_functions_buildflags
 cc_genrule {
     name: "cronet_aml_base_anchor_functions_buildflags",
-    cmd: "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"true\"' | " +
+    cmd: "if [[ ( $$CC_ARCH == 'x86_64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"true\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
          "$(out) " +
          "--rulename " +
@@ -790,7 +848,56 @@ cc_genrule {
          "--gen-dir " +
          ". " +
          "--definitions " +
-         "/dev/stdin",
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'x86' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"true\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:anchor_functions_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'arm' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"true\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:anchor_functions_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"true\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:anchor_functions_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:anchor_functions_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi;",
     out: [
         "base/android/library_loader/anchor_functions_buildflags.h",
     ],
@@ -856,6 +963,18 @@ cc_genrule {
          "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
          "then " +
          "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"true\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:anchor_functions_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags USE_LLD=\"true\" SUPPORTS_CODE_ORDERING=\"false\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
          "$(out) " +
          "--rulename " +
@@ -1614,7 +1733,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -1680,6 +1798,7 @@ cc_library_static {
                 "base/trace_event/cfi_backtrace_android.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
@@ -1689,8 +1808,18 @@ cc_library_static {
                 "base/profiler/frame_pointer_unwinder.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "base/android/reached_code_profiler_stub.cc",
+            ],
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -1698,6 +1827,7 @@ cc_library_static {
                 "base/android/reached_code_profiler_stub.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
@@ -1706,6 +1836,7 @@ cc_library_static {
                 "base/android/reached_code_profiler_stub.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -2226,7 +2357,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -2354,6 +2484,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
             local_include_dirs: [
@@ -2468,8 +2599,123 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+            local_include_dirs: [
+                "third_party/android_ndk/sources/android/cpufeatures/",
+            ],
+            generated_headers: [
+                "cronet_aml_base_android_runtime_jni_headers__testing",
+                "cronet_aml_base_android_runtime_unchecked_jni_headers__testing",
+                "cronet_aml_base_base_jni_headers__testing",
+                "cronet_aml_base_debugging_buildflags__testing",
+                "cronet_aml_base_logging_buildflags__testing",
+                "cronet_aml_build_chromeos_buildflags__testing",
+            ],
+            ldflags: [
+                "-Wl,-wrap,asprintf",
+                "-Wl,-wrap,calloc",
+                "-Wl,-wrap,free",
+                "-Wl,-wrap,getcwd",
+                "-Wl,-wrap,malloc",
+                "-Wl,-wrap,malloc_usable_size",
+                "-Wl,-wrap,memalign",
+                "-Wl,-wrap,posix_memalign",
+                "-Wl,-wrap,pvalloc",
+                "-Wl,-wrap,realloc",
+                "-Wl,-wrap,realpath",
+                "-Wl,-wrap,strdup",
+                "-Wl,-wrap,strndup",
+                "-Wl,-wrap,valloc",
+                "-Wl,-wrap,vasprintf",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "base/allocator/partition_allocator/shim/allocator_shim_default_dispatch_to_linker_wrapped_symbols.cc",
+                "base/android/android_hardware_buffer_compat.cc",
+                "base/android/android_image_reader_compat.cc",
+                "base/android/apk_assets.cc",
+                "base/android/application_status_listener.cc",
+                "base/android/base_feature_list.cc",
+                "base/android/base_features.cc",
+                "base/android/base_jni_onload.cc",
+                "base/android/build_info.cc",
+                "base/android/bundle_utils.cc",
+                "base/android/callback_android.cc",
+                "base/android/child_process_service.cc",
+                "base/android/command_line_android.cc",
+                "base/android/content_uri_utils.cc",
+                "base/android/cpu_features.cc",
+                "base/android/early_trace_event_binding.cc",
+                "base/android/event_log.cc",
+                "base/android/feature_list_jni.cc",
+                "base/android/features_jni.cc",
+                "base/android/field_trial_list.cc",
+                "base/android/important_file_writer_android.cc",
+                "base/android/int_string_callback.cc",
+                "base/android/java_exception_reporter.cc",
+                "base/android/java_handler_thread.cc",
+                "base/android/java_heap_dump_generator.cc",
+                "base/android/java_runtime.cc",
+                "base/android/jni_android.cc",
+                "base/android/jni_array.cc",
+                "base/android/jni_registrar.cc",
+                "base/android/jni_string.cc",
+                "base/android/jni_utils.cc",
+                "base/android/jni_weak_ref.cc",
+                "base/android/library_loader/anchor_functions.cc",
+                "base/android/library_loader/library_loader_hooks.cc",
+                "base/android/library_loader/library_prefetcher.cc",
+                "base/android/library_loader/library_prefetcher_hooks.cc",
+                "base/android/locale_utils.cc",
+                "base/android/meminfo_dump_provider.cc",
+                "base/android/memory_pressure_listener_android.cc",
+                "base/android/native_uma_recorder.cc",
+                "base/android/path_service_android.cc",
+                "base/android/path_utils.cc",
+                "base/android/radio_utils.cc",
+                "base/android/reached_addresses_bitset.cc",
+                "base/android/reached_code_profiler_stub.cc",
+                "base/android/remove_stale_data.cc",
+                "base/android/scoped_hardware_buffer_fence_sync.cc",
+                "base/android/scoped_hardware_buffer_handle.cc",
+                "base/android/scoped_java_ref.cc",
+                "base/android/statistics_recorder_android.cc",
+                "base/android/sys_utils.cc",
+                "base/android/task_scheduler/post_task_android.cc",
+                "base/android/task_scheduler/task_runner_android.cc",
+                "base/android/thread_instruction_count.cc",
+                "base/android/timezone_utils.cc",
+                "base/android/trace_event_binding.cc",
+                "base/android/unguessable_token_android.cc",
+                "base/base_paths_android.cc",
+                "base/debug/stack_trace_android.cc",
+                "base/files/file_util_android.cc",
+                "base/files/scoped_file_android.cc",
+                "base/memory/platform_shared_memory_mapper_android.cc",
+                "base/memory/platform_shared_memory_region_android.cc",
+                "base/message_loop/message_pump_android.cc",
+                "base/os_compat_android.cc",
+                "base/power_monitor/power_monitor_device_source_android.cc",
+                "base/process/process_android.cc",
+                "base/profiler/stack_sampler_android.cc",
+                "base/system/sys_info_android.cc",
+                "base/threading/platform_thread_android.cc",
+                "base/time/time_android.cc",
+            ],
+            static_libs: [
+                "cronet_aml_third_party_android_ndk_cpu_features__testing",
+                "cronet_aml_third_party_ashmem_ashmem__testing",
+            ],
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
             ],
             local_include_dirs: [
                 "third_party/android_ndk/sources/android/cpufeatures/",
@@ -2582,6 +2828,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
             local_include_dirs: [
@@ -2695,6 +2942,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -2753,6 +3001,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-fstack-protector",
@@ -3374,7 +3623,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -3405,22 +3653,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -3452,7 +3709,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -3486,6 +3742,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
@@ -3494,8 +3751,17 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -3503,6 +3769,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
@@ -3511,6 +3778,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -3522,6 +3790,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-fstack-protector",
@@ -3709,6 +3978,18 @@ cc_genrule {
          ". " +
          "--definitions " +
          "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags DCHECK_IS_CONFIGURABLE=\"false\" ENABLE_PROFILING=\"false\" CAN_UNWIND_WITH_FRAME_POINTERS=\"false\" UNSAFE_DEVELOPER_BUILD=\"false\" CAN_UNWIND_WITH_CFI_TABLE=\"false\" EXCLUDE_UNWIND_TABLES=\"true\" ENABLE_GDBINIT_WARNING=\"false\" ENABLE_LLDBINIT_WARNING=\"false\" EXPENSIVE_DCHECKS_ARE_ON=\"false\" ENABLE_STACK_TRACE_LINE_NUMBERS=\"false\" ENABLE_COMMANDLINE_SEQUENCE_CHECKS=\"false\" ENABLE_ALLOCATION_STACK_TRACE_RECORDER=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:debugging_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
          "fi;",
     out: [
         "base/debug/debugging_buildflags.h",
@@ -3775,6 +4056,18 @@ cc_genrule {
          "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
          "then " +
          "echo '--flags DCHECK_IS_CONFIGURABLE=\"false\" ENABLE_PROFILING=\"false\" CAN_UNWIND_WITH_FRAME_POINTERS=\"true\" UNSAFE_DEVELOPER_BUILD=\"false\" CAN_UNWIND_WITH_CFI_TABLE=\"false\" EXCLUDE_UNWIND_TABLES=\"true\" ENABLE_GDBINIT_WARNING=\"false\" ENABLE_LLDBINIT_WARNING=\"false\" EXPENSIVE_DCHECKS_ARE_ON=\"false\" ENABLE_STACK_TRACE_LINE_NUMBERS=\"false\" ENABLE_COMMANDLINE_SEQUENCE_CHECKS=\"false\" ENABLE_ALLOCATION_STACK_TRACE_RECORDER=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:debugging_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags DCHECK_IS_CONFIGURABLE=\"false\" ENABLE_PROFILING=\"false\" CAN_UNWIND_WITH_FRAME_POINTERS=\"false\" UNSAFE_DEVELOPER_BUILD=\"false\" CAN_UNWIND_WITH_CFI_TABLE=\"false\" EXCLUDE_UNWIND_TABLES=\"true\" ENABLE_GDBINIT_WARNING=\"false\" ENABLE_LLDBINIT_WARNING=\"false\" EXPENSIVE_DCHECKS_ARE_ON=\"false\" ENABLE_STACK_TRACE_LINE_NUMBERS=\"false\" ENABLE_COMMANDLINE_SEQUENCE_CHECKS=\"false\" ENABLE_ALLOCATION_STACK_TRACE_RECORDER=\"false\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
          "$(out) " +
          "--rulename " +
@@ -3982,7 +4275,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -4034,22 +4326,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -4278,7 +4580,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -4309,22 +4610,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -4354,7 +4664,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -4387,6 +4696,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
             ],
@@ -4396,9 +4706,19 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -4406,6 +4726,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-msse3",
             ],
@@ -4415,6 +4736,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-msse3",
@@ -4427,6 +4749,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-O2",
@@ -4582,6 +4905,18 @@ cc_genrule {
          ". " +
          "--definitions " +
          "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags ENABLE_ARM_CFI_TABLE=\"false\" IOS_STACK_PROFILER_ENABLED=\"true\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:profiler_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
          "fi;",
     out: [
         "base/profiler/profiler_buildflags.h",
@@ -4646,6 +4981,18 @@ cc_genrule {
          "/dev/stdin; " +
          "fi; " +
          "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags ENABLE_ARM_CFI_TABLE=\"false\" IOS_STACK_PROFILER_ENABLED=\"true\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:profiler_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
          "then " +
          "echo '--flags ENABLE_ARM_CFI_TABLE=\"false\" IOS_STACK_PROFILER_ENABLED=\"true\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
@@ -4962,7 +5309,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -5011,22 +5357,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -5240,7 +5596,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -5297,22 +5652,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -5404,7 +5769,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -5435,22 +5799,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -5483,7 +5856,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -5516,6 +5888,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
             ],
@@ -5525,9 +5898,19 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -5535,6 +5918,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-msse3",
             ],
@@ -5544,6 +5928,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-msse3",
@@ -5556,6 +5941,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-O2",
@@ -5622,6 +6008,11 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -5697,6 +6088,14 @@ cc_library_static {
                 "-DHAVE_SYS_UIO_H",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -5808,6 +6207,18 @@ cc_genrule {
          "/dev/stdin; " +
          "fi; " +
          "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags ENABLE_BASE_TRACING=\"false\" USE_PERFETTO_CLIENT_LIBRARY=\"false\" OPTIONAL_TRACE_EVENTS_ENABLED=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//base:tracing_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
          "then " +
          "echo '--flags ENABLE_BASE_TRACING=\"false\" USE_PERFETTO_CLIENT_LIBRARY=\"false\" OPTIONAL_TRACE_EVENTS_ENABLED=\"false\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
@@ -6166,6 +6577,18 @@ cc_genrule {
          ". " +
          "--definitions " +
          "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags CLANG_PGO=\"0\" SYMBOL_LEVEL=\"1\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//build/config/compiler:compiler_buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
          "fi;",
     host_supported: true,
     out: [
@@ -6291,6 +6714,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -6444,6 +6876,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -6569,6 +7010,18 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "buildtools/third_party/libc++abi/cxa_demangle_stub.cc",
+            ],
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -6705,6 +7158,18 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "buildtools/third_party/libc++abi/cxa_demangle_stub.cc",
+            ],
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -6934,7 +7399,6 @@ cc_library_shared {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -6991,22 +7455,32 @@ cc_library_shared {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -7149,7 +7623,6 @@ cc_library_shared {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -7206,22 +7679,32 @@ cc_library_shared {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -8437,7 +8920,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -8490,22 +8972,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -8671,7 +9163,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -8724,22 +9215,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -8930,7 +9431,6 @@ cc_library_shared {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -8993,22 +9493,32 @@ cc_library_shared {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -9267,7 +9777,6 @@ cc_library_shared {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -9330,22 +9839,32 @@ cc_library_shared {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -9910,7 +10429,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -9963,22 +10481,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -10126,7 +10654,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -10179,22 +10706,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -10366,7 +10903,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -10425,22 +10961,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -10471,7 +11017,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -10502,22 +11047,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -10548,7 +11102,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -10579,22 +11132,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -10758,7 +11320,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -10807,22 +11368,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -10934,7 +11505,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -10983,22 +11553,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -11161,7 +11741,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -11220,22 +11799,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -11361,7 +11950,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -11411,22 +11999,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -11552,7 +12150,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -11602,22 +12199,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -11831,7 +12438,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -11880,22 +12486,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -12041,7 +12657,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -12090,22 +12705,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -12217,7 +12842,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -12266,22 +12890,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -12393,7 +13027,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -12442,22 +13075,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -12599,7 +13242,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -12654,22 +13296,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -12853,7 +13505,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -12902,22 +13553,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -13046,7 +13707,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -13092,6 +13752,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
             ],
@@ -13122,9 +13783,41 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+            ldflags: [
+                "-Wl,-wrap,asprintf",
+                "-Wl,-wrap,calloc",
+                "-Wl,-wrap,free",
+                "-Wl,-wrap,getcwd",
+                "-Wl,-wrap,malloc",
+                "-Wl,-wrap,malloc_usable_size",
+                "-Wl,-wrap,memalign",
+                "-Wl,-wrap,posix_memalign",
+                "-Wl,-wrap,pvalloc",
+                "-Wl,-wrap,realloc",
+                "-Wl,-wrap,realpath",
+                "-Wl,-wrap,strdup",
+                "-Wl,-wrap,strndup",
+                "-Wl,-wrap,valloc",
+                "-Wl,-wrap,vasprintf",
+            ],
+        },
+        android_riscv64: {
+            static_libs: [
+                "cronet_aml_third_party_android_ndk_cpu_features__testing",
+                "cronet_aml_third_party_ashmem_ashmem__testing",
+            ],
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-DOPENSSL_NO_ASM",
+                "-Oz",
+                "-fstack-protector",
             ],
             ldflags: [
                 "-Wl,-wrap,asprintf",
@@ -13153,6 +13846,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-msse3",
             ],
@@ -13183,6 +13877,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-msse3",
@@ -13212,6 +13907,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-O2",
@@ -13328,7 +14024,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -13377,22 +14072,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -14283,6 +14988,18 @@ cc_genrule {
          ". " +
          "--definitions " +
          "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags POSIX_BYPASS_MMAP=\"true\" DISABLE_FILE_SUPPORT=\"true\" ENABLE_MDNS=\"false\" ENABLE_REPORTING=\"true\" ENABLE_WEBSOCKETS=\"false\" INCLUDE_TRANSPORT_SECURITY_STATE_PRELOAD_LIST=\"false\" USE_KERBEROS=\"true\" USE_EXTERNAL_GSSAPI=\"false\" TRIAL_COMPARISON_CERT_VERIFIER_SUPPORTED=\"false\" CHROME_ROOT_STORE_OPTIONAL=\"false\" CHROME_ROOT_STORE_ONLY=\"false\" CHROME_ROOT_STORE_SUPPORTED=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//net:buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
          "fi;",
     out: [
         "net/net_buildflags.h",
@@ -14335,6 +15052,18 @@ cc_genrule {
          "/dev/stdin; " +
          "fi; " +
          "if [[ ( $$CC_ARCH == 'arm64' && $$CC_OS == 'android' ) ]]; " +
+         "then " +
+         "echo '--flags POSIX_BYPASS_MMAP=\"true\" DISABLE_FILE_SUPPORT=\"true\" ENABLE_MDNS=\"false\" ENABLE_REPORTING=\"true\" ENABLE_WEBSOCKETS=\"false\" INCLUDE_TRANSPORT_SECURITY_STATE_PRELOAD_LIST=\"false\" USE_KERBEROS=\"true\" USE_EXTERNAL_GSSAPI=\"false\" TRIAL_COMPARISON_CERT_VERIFIER_SUPPORTED=\"false\" CHROME_ROOT_STORE_OPTIONAL=\"false\" CHROME_ROOT_STORE_ONLY=\"false\" CHROME_ROOT_STORE_SUPPORTED=\"false\"' | " +
+         "$(location build/write_buildflag_header.py) --output " +
+         "$(out) " +
+         "--rulename " +
+         "//net:buildflags " +
+         "--gen-dir " +
+         ". " +
+         "--definitions " +
+         "/dev/stdin; " +
+         "fi; " +
+         "if [[ ( $$CC_ARCH == 'riscv64' && $$CC_OS == 'android' ) ]]; " +
          "then " +
          "echo '--flags POSIX_BYPASS_MMAP=\"true\" DISABLE_FILE_SUPPORT=\"true\" ENABLE_MDNS=\"false\" ENABLE_REPORTING=\"true\" ENABLE_WEBSOCKETS=\"false\" INCLUDE_TRANSPORT_SECURITY_STATE_PRELOAD_LIST=\"false\" USE_KERBEROS=\"true\" USE_EXTERNAL_GSSAPI=\"false\" TRIAL_COMPARISON_CERT_VERIFIER_SUPPORTED=\"false\" CHROME_ROOT_STORE_OPTIONAL=\"false\" CHROME_ROOT_STORE_ONLY=\"false\" CHROME_ROOT_STORE_SUPPORTED=\"false\"' | " +
          "$(location build/write_buildflag_header.py) --output " +
@@ -14564,7 +15293,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -14618,22 +15346,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -14802,7 +15540,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -14856,22 +15593,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -15008,7 +15755,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -15062,22 +15808,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -15214,7 +15970,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -15268,22 +16023,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -15426,7 +16191,6 @@ cc_library_static {
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
         "-DUNIT_TEST",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -15482,22 +16246,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -15641,7 +16415,6 @@ cc_library_static {
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
         "-DUNIT_TEST",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -15697,22 +16470,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -15903,7 +16686,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -15962,22 +16744,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -16153,7 +16945,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -16212,22 +17003,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -16365,7 +17166,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -16419,22 +17219,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -16572,7 +17382,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -16626,22 +17435,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -17428,7 +18247,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -17485,6 +18303,7 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
@@ -17493,8 +18312,18 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
+            ],
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -17502,6 +18331,7 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
@@ -17510,6 +18340,7 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -18136,7 +18967,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -18193,6 +19023,7 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
@@ -18201,8 +19032,18 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            srcs: [
+                "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
+            ],
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -18210,6 +19051,7 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
@@ -18218,6 +19060,7 @@ cc_library_static {
                 "net/disk_cache/blockfile/mapped_file_bypass_mmap_posix.cc",
             ],
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -18361,7 +19204,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -18412,22 +19254,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -18571,7 +19423,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -18622,22 +19473,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -19066,7 +19927,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -19119,22 +19979,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -19269,7 +20139,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -19322,22 +20191,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -19928,7 +20807,6 @@ cc_library_shared {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -19991,22 +20869,32 @@ cc_library_shared {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -20118,7 +21006,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -20167,22 +21054,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -20294,7 +21191,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -20343,22 +21239,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -20490,7 +21396,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -20543,22 +21448,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -20737,7 +21652,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -20796,22 +21710,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -20950,7 +21874,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -21003,22 +21926,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -21159,7 +22092,6 @@ cc_library_static {
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
         "-DUNIT_TEST",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -21215,22 +22147,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -21474,7 +22416,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -21533,22 +22474,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -22143,7 +23094,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -22196,22 +23146,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -22624,7 +23584,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -22677,22 +23636,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -22956,7 +23925,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -23015,22 +23983,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -23430,7 +24408,6 @@ cc_library_static {
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
         "-DUNIT_TEST",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -23486,22 +24463,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -23656,7 +24643,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -23709,22 +24695,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -23832,7 +24828,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -23878,6 +24873,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
             ],
@@ -23908,9 +24904,41 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+            ldflags: [
+                "-Wl,-wrap,asprintf",
+                "-Wl,-wrap,calloc",
+                "-Wl,-wrap,free",
+                "-Wl,-wrap,getcwd",
+                "-Wl,-wrap,malloc",
+                "-Wl,-wrap,malloc_usable_size",
+                "-Wl,-wrap,memalign",
+                "-Wl,-wrap,posix_memalign",
+                "-Wl,-wrap,pvalloc",
+                "-Wl,-wrap,realloc",
+                "-Wl,-wrap,realpath",
+                "-Wl,-wrap,strdup",
+                "-Wl,-wrap,strndup",
+                "-Wl,-wrap,valloc",
+                "-Wl,-wrap,vasprintf",
+            ],
+        },
+        android_riscv64: {
+            static_libs: [
+                "cronet_aml_third_party_android_ndk_cpu_features__testing",
+                "cronet_aml_third_party_ashmem_ashmem__testing",
+            ],
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-DOPENSSL_NO_ASM",
+                "-Oz",
+                "-fstack-protector",
             ],
             ldflags: [
                 "-Wl,-wrap,asprintf",
@@ -23939,6 +24967,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-msse3",
             ],
@@ -23969,6 +24998,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-msse3",
@@ -23998,6 +25028,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-O2",
@@ -24114,7 +25145,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -24163,22 +25193,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -24586,7 +25626,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -24635,22 +25674,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -24768,7 +25817,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -24817,22 +25865,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -24945,7 +26003,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -24994,22 +26051,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -25122,7 +26189,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -25171,22 +26237,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -25349,7 +26425,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -25398,22 +26473,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -25563,7 +26648,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -25618,22 +26702,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -25753,7 +26847,6 @@ cc_library_static {
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
         "-DUNIT_TEST",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -25803,22 +26896,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -25892,6 +26994,11 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -25979,6 +27086,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -26077,6 +27193,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -26153,6 +27274,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -26257,6 +27387,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -26339,6 +27474,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -26440,6 +27584,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -26519,6 +27668,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -26617,6 +27775,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -26693,6 +27856,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -26791,6 +27963,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -26867,6 +28044,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -26969,6 +28155,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -27049,6 +28240,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -27171,6 +28371,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -27271,6 +28476,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -27397,6 +28611,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -27503,6 +28722,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -27605,6 +28833,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -27687,6 +28920,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -27800,6 +29042,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -27891,6 +29138,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -28002,6 +29258,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -28091,6 +29352,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -28197,6 +29467,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -28281,6 +29556,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -28385,6 +29669,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -28467,6 +29756,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -28571,6 +29869,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -28653,6 +29956,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -28766,6 +30078,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -28857,6 +30174,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -28971,6 +30297,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -29063,6 +30394,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -29166,6 +30506,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -29247,6 +30592,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -29358,6 +30712,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -29447,6 +30806,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -29551,6 +30919,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -29633,6 +31006,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -29745,6 +31127,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -29835,6 +31222,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -29940,6 +31336,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -30023,6 +31424,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -30163,6 +31573,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -30285,6 +31700,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -30396,6 +31820,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -30487,6 +31916,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -30626,6 +32064,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -30747,6 +32190,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -30849,6 +32301,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -30931,6 +32388,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -31045,6 +32511,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -31137,6 +32608,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -31249,6 +32729,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -31339,6 +32824,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -31477,6 +32971,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -31595,6 +33094,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -31726,6 +33234,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -31839,6 +33352,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -31935,6 +33457,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -32011,6 +33538,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -32119,6 +33655,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -32205,6 +33746,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -32317,6 +33867,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -32407,6 +33962,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -32520,6 +34084,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -32611,6 +34180,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -32709,6 +34287,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -32785,6 +34368,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -32883,6 +34475,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -32959,6 +34556,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -33068,6 +34674,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -33155,6 +34766,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -33259,6 +34879,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -33341,6 +34966,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -33457,6 +35091,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -33551,6 +35190,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -33660,6 +35308,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -33747,6 +35400,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -33850,6 +35512,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -33931,6 +35598,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -34033,6 +35709,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -34113,6 +35794,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -34219,6 +35909,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -34303,6 +35998,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -34412,6 +36116,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -34499,6 +36208,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -34597,6 +36315,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -34673,6 +36396,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -34790,6 +36522,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -34885,6 +36622,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -35018,6 +36764,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -35129,6 +36880,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -35263,6 +37023,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -35375,6 +37140,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -35506,6 +37280,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -35615,6 +37394,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -35733,6 +37521,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -35829,6 +37622,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -35932,6 +37734,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -36013,6 +37820,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -36133,6 +37949,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -36231,6 +38052,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -36359,6 +38189,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -36467,6 +38302,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -36571,6 +38415,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -36655,6 +38504,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -36769,6 +38627,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -36861,6 +38724,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -36982,6 +38854,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -37081,6 +38958,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -37186,6 +39072,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -37269,6 +39160,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -37381,6 +39281,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -37471,6 +39376,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -37601,6 +39515,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -37711,6 +39630,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -37807,6 +39735,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -37883,6 +39816,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -37992,6 +39934,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -38079,6 +40026,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -38194,6 +40150,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -38287,6 +40248,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -38389,6 +40359,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -38469,6 +40444,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -38571,6 +40555,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -38651,6 +40640,15 @@ cc_library_static {
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -38748,6 +40746,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -38820,6 +40823,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -38854,7 +40862,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -38885,22 +40892,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -38928,7 +40944,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -38959,22 +40974,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -39312,6 +41336,16 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-DOPENSSL_NO_ASM",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -39364,7 +41398,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -39413,6 +41446,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
             ],
@@ -39439,9 +41473,20 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-DOPENSSL_NO_ASM",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -39464,6 +41509,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-msse3",
             ],
@@ -39495,6 +41541,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-msse3",
@@ -39529,6 +41576,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-O2",
@@ -39565,7 +41613,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -39597,22 +41644,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -39645,7 +41701,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -39677,22 +41732,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -39762,6 +41826,11 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -39842,6 +41911,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -39917,6 +41991,11 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -40047,7 +42126,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -40098,22 +42176,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -40296,6 +42383,12 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -40625,6 +42718,11 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -40961,6 +43059,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -41269,6 +43376,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -41559,6 +43671,15 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-DANDROID",
@@ -41669,6 +43790,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -41760,6 +43886,17 @@ cc_library_static {
                 "-DHAVE_SYS_UIO_H",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+            local_include_dirs: [
+                "third_party/libevent/android/",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-fstack-protector",
             ],
             local_include_dirs: [
                 "third_party/libevent/android/",
@@ -41910,6 +44047,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -41958,7 +44100,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -41993,22 +44134,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -42051,7 +44201,6 @@ cc_library_static {
         "-DU_ENABLE_TRACING=1",
         "-DU_STATIC_IMPLEMENTATION",
         "-DU_USING_ICU_NAMESPACE=0",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -42086,22 +44235,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -42411,7 +44569,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -42442,22 +44599,31 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -42483,7 +44649,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -42516,6 +44681,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
             ],
@@ -42525,9 +44691,19 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-DANDROID",
+                "-DANDROID_NDK_VERSION_ROLL=r23_1",
+                "-DHAVE_SYS_UIO_H",
+                "-Oz",
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -42535,6 +44711,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-msse3",
             ],
@@ -42544,6 +44721,7 @@ cc_library_static {
                 "-DANDROID",
                 "-DANDROID_NDK_VERSION_ROLL=r23_1",
                 "-DHAVE_SYS_UIO_H",
+                "-D_FORTIFY_SOURCE=2",
                 "-Oz",
                 "-fstack-protector",
                 "-msse3",
@@ -42556,6 +44734,7 @@ cc_library_static {
                 "-DUSE_OZONE=1",
                 "-DUSE_UDEV",
                 "-D_FILE_OFFSET_BITS=64",
+                "-D_FORTIFY_SOURCE=2",
                 "-D_LARGEFILE64_SOURCE",
                 "-D_LARGEFILE_SOURCE",
                 "-O2",
@@ -42810,6 +44989,11 @@ cc_library_static {
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
                 "-msse3",
@@ -42918,6 +45102,11 @@ cc_library_static {
             cflags: [
                 "-fstack-protector",
                 "-mno-outline",
+            ],
+        },
+        android_riscv64: {
+            cflags: [
+                "-fstack-protector",
             ],
         },
         android_x86: {
@@ -43384,7 +45573,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -43433,22 +45621,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],
@@ -43597,7 +45795,6 @@ cc_library_static {
         "-DNO_UNWIND_TABLES",
         "-DNVALGRIND",
         "-DOFFICIAL_BUILD",
-        "-D_FORTIFY_SOURCE=2",
         "-D_GNU_SOURCE",
         "-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS",
         "-D_LIBCPP_ENABLE_ASSERTIONS=1",
@@ -43646,22 +45843,32 @@ cc_library_static {
     target: {
         android_arm: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
             ],
         },
         android_arm64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-mno-outline",
             ],
         },
+        android_riscv64: {
+            cflags: [
+                "-DOPENSSL_NO_ASM",
+                "-fstack-protector",
+            ],
+        },
         android_x86: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-msse3",
             ],
         },
         android_x86_64: {
             cflags: [
+                "-D_FORTIFY_SOURCE=2",
                 "-fstack-protector",
                 "-msse3",
             ],

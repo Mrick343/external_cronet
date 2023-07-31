@@ -165,4 +165,5 @@ gn_desc x86 "${chromium_dir}"
 gn_desc x64 "${chromium_dir}"
 gn_desc arm "${chromium_dir}"
 gn_desc arm64 "${chromium_dir}"
+gn_desc riscv64 "${chromium_dir}"
 
