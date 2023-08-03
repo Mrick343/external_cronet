@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46c6fff9_6778590e",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleNew.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-03T14:53:45Z",
+      "side": 1,
+      "message": "whats this for?",
+      "revId": "6b0b654241eb600b96194a5de8a0781033623a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
