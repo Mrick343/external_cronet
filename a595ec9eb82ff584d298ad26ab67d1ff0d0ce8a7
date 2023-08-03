@@ -16,6 +16,24 @@
       "message": "wondering if we still need this visibility since your changes to the wrapper.",
       "revId": "a595ec9eb82ff584d298ad26ab67d1ff0d0ce8a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82d0ee9c_be0e8c33",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetManifest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-03T15:46:04Z",
+      "side": 0,
+      "message": "We need to stop jarjar\u0027ing the tests for that to become unnecessary. I think the wrapper makes this possible, but I haven\u0027t got to doing it yet.",
+      "parentUuid": "a2e20d0d_8aab54bf",
+      "revId": "a595ec9eb82ff584d298ad26ab67d1ff0d0ce8a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

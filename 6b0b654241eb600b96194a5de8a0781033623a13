@@ -16,6 +16,24 @@
       "message": "whats this for?",
       "revId": "6b0b654241eb600b96194a5de8a0781033623a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1639aa6a_51bf248a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleNew.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-03T15:46:04Z",
+      "side": 1,
+      "message": "Unfortunately there are a lot of CLs in between https://crrev.com/c/4667153 and what is currently in AOSP.\n\nI\u0027ve decided to temporarily fork CronetTestRule into CronetTestRuleNew (which is a copy of upstream\u0027s CronetTestRule) to avoid having to cherry-pick every single CL.\n\nDoing this allows to only update CronetManifestTest.java (which is the only test file that has been touched by the CL I\u0027m trying to cherry-pick) to its upstream state, and allows to leave every other test file untouched.",
+      "parentUuid": "46c6fff9_6778590e",
+      "revId": "6b0b654241eb600b96194a5de8a0781033623a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
