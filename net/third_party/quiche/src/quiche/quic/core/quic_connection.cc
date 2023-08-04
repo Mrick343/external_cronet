@@ -631,6 +631,8 @@ void QuicConnection::SetFromConfig(const QuicConfig& config) {
   }
   if (config.HasReceivedStatelessResetToken()) {
     default_path_.stateless_reset_token = config.ReceivedStatelessResetToken();
+    visitor_->OnStatelessResetTokenUpdated(
+      self_address(), peer_address(), default_path_.stateless_reset_token);
   }
   if (config.HasReceivedAckDelayExponent()) {
     framer_.set_peer_ack_delay_exponent(config.ReceivedAckDelayExponent());

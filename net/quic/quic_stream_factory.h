@@ -252,7 +252,8 @@ class NET_EXPORT_PRIVATE QuicStreamFactory
     : public NetworkChangeNotifier::IPAddressObserver,
       public NetworkChangeNotifier::NetworkObserver,
       public CertDatabase::Observer,
-      public CertVerifier::Observer {
+      public CertVerifier::Observer,
+      public quic::QuicSession::Visitor {
  public:
   // This class encompasses |destination| and |server_id|.
   // |destination| is a HostPortPair which is resolved
@@ -734,6 +735,30 @@ class NET_EXPORT_PRIVATE QuicStreamFactory
       quic::kQuicDefaultConnectionIdLength};
 
   base::WeakPtrFactory<QuicStreamFactory> weak_factory_{this};
+
+  // For quic::QuicSession::Visitor
+  void OnConnectionClosed(quic::QuicConnectionId server_connection_id,
+                                  quic::QuicErrorCode error,
+                                  const std::string& error_details,
+                                  quic::ConnectionCloseSource source){}
+  void OnWriteBlocked(quic::QuicBlockedWriterInterface* blocked_writer) override {}
+  void OnRstStreamReceived(const quic::QuicRstStreamFrame& frame) override {}
+  void OnStopSendingReceived(const quic::QuicStopSendingFrame& frame) override {}
+  bool TryAddNewConnectionId(
+      const quic::QuicConnectionId& server_connection_id,
+      const quic::QuicConnectionId& new_connection_id) override {
+      // true is a default behavior without visitor
+      return true;
+  };
+  void OnConnectionIdRetired(
+      const quic::QuicConnectionId& server_connection_id) override {}
+
+  void OnServerPreferredAddressAvailable(
+      const quic::QuicSocketAddress& /*server_preferred_address*/) override {}
+
+  void OnStatelessResetTokenUpdated(
+      const quic::QuicSocketAddress& local_address, const quic::QuicSocketAddress& peer_address,
+      const absl::optional<quic::StatelessResetToken> token) override;
 };
 
 }  // namespace net

@@ -31,6 +31,9 @@
 #include "base/time/default_tick_clock.h"
 #include "base/values.h"
 #include "crypto/openssl_util.h"
+#if BUILDFLAG(IS_ANDROID)
+#include "net/android/network_library.h"
+#endif
 #include "net/base/address_list.h"
 #include "net/base/features.h"
 #include "net/base/ip_address.h"
@@ -2042,7 +2045,7 @@ bool QuicStreamFactory::CreateSessionHelper(
       std::move(crypto_config_handle), dns_resolution_start_time,
       dns_resolution_end_time, tick_clock_, task_runner_,
       std::move(socket_performance_watcher), endpoint_result,
-      net_log.net_log());
+      net_log.net_log(), this);
 
   all_sessions_[*session] = key;  // owning pointer
   writer->set_delegate(*session);
@@ -2438,4 +2441,39 @@ bool QuicStreamFactory::CryptoConfigCacheIsEmptyForTesting(
   return !cached || cached->IsEmpty();
 }
 
+void QuicStreamFactory::OnStatelessResetTokenUpdated(
+  const quic::QuicSocketAddress& local_address, const quic::QuicSocketAddress& remote_address,
+  const absl::optional<quic::StatelessResetToken> token) {
+#if BUILDFLAG(IS_ANDROID)
+     const uint8_t *local_address_bytes;
+     size_t local_address_len;
+     if (local_address.host().IsIPv4()){
+           in_addr local_raw_address = local_address.host().GetIPv4();
+           in_addr remote_raw_address = remote_address.host().GetIPv4();
+
+           android::updateStatelessResetToken(
+             reinterpret_cast<const uint8_t*>(&local_raw_address),
+             sizeof(local_raw_address),
+             local_address.port(),
+             reinterpret_cast<const uint8_t*>(&remote_raw_address),
+             sizeof(remote_raw_address),
+             remote_address.port(),
+             (uint8_t *)token->data(),
+             token->size());
+     } else {
+           in6_addr local_raw_address = local_address.host().GetIPv6();
+           in6_addr remote_raw_address = remote_address.host().GetIPv6();
+
+           android::updateStatelessResetToken(
+             reinterpret_cast<const uint8_t*>(&local_raw_address),
+             sizeof(local_raw_address),
+             local_address.port(),
+             reinterpret_cast<const uint8_t*>(&remote_raw_address),
+             sizeof(remote_raw_address),
+             remote_address.port(),
+             (uint8_t *)token->data(),
+             token->size());
+     }
+#endif
+    }
 }  // namespace net
