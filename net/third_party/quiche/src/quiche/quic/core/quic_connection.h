@@ -266,6 +266,13 @@ class QUICHE_EXPORT QuicConnectionVisitorInterface {
 
   // Get from session the flow control send window for stream |id|.
   virtual QuicByteCount GetFlowControlSendWindowSize(QuicStreamId id) = 0;
+
+  // Called when the stateless reset token is changed.
+  virtual void OnStatelessResetTokenUpdated(
+      const QuicConnectionId& connection_id,
+      const QuicSocketAddress& local_address,
+      const QuicSocketAddress& peer_address,
+      const absl::optional<StatelessResetToken> token) = 0;
 };
 
 // Interface which gets callbacks from the QuicConnection at interesting

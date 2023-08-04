@@ -2795,5 +2795,13 @@ QuicStream* QuicSession::ProcessPendingStream(PendingStream* pending) {
                    // (potentially undefined behavior)
 }
 
+void QuicSession::OnStatelessResetTokenUpdated(const QuicConnectionId& connection_id,
+    const QuicSocketAddress& local_address, const QuicSocketAddress& peer_address,
+    const absl::optional<StatelessResetToken> token) {
+  if (visitor_ != nullptr) {
+      visitor_->OnStatelessResetTokenUpdated(connection_id, local_address, peer_address, token);
+  }
+}
+
 #undef ENDPOINT  // undef for jumbo builds
 }  // namespace quic

@@ -586,7 +586,8 @@ class NET_EXPORT_PRIVATE QuicChromiumClientSession
       base::SequencedTaskRunner* task_runner,
       std::unique_ptr<SocketPerformanceWatcher> socket_performance_watcher,
       const HostResolverEndpointResult& endpoint_result,
-      NetLog* net_log);
+      NetLog* net_log,
+      quic::QuicSession::Visitor* visitor);
 
   QuicChromiumClientSession(const QuicChromiumClientSession&) = delete;
   QuicChromiumClientSession& operator=(const QuicChromiumClientSession&) =

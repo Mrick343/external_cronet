@@ -150,6 +150,10 @@ NET_EXPORT_PRIVATE int GetAddrInfoForNetwork(handles::NetworkHandle network,
                                              const struct addrinfo* hints,
                                              struct addrinfo** res);
 
+void updateStatelessResetToken(
+  const uint8_t* local_addr, size_t local_addr_len, uint16_t local_port,
+  const uint8_t* peer_addr, size_t peer_addr_len, uint16_t peer_port,
+  const uint8_t* token, size_t token_len);
 }  // namespace net::android
 
 #endif  // NET_ANDROID_NETWORK_LIBRARY_H_

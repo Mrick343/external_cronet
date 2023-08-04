@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.InetAddresses;
 import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -46,6 +47,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -700,6 +702,25 @@ class AndroidNetworkLibrary {
         }
         if (uid != TrafficStatsUid.UNSET) {
             ThreadStatsUid.clear();
+        }
+    }
+
+    @CalledByNative
+    public static void updateStatelessResetToken(byte[] local_addr, int local_port, byte[] remote_addr, int remote_port, byte[] reset_packet) {
+        try {
+            Log.e(TAG, "chromium AndroidNetworkLibrary#updateStatelessRestToken: "
+                    + new InetSocketAddress(InetAddress.getByAddress(local_addr), local_port) + " -> "
+                    + new InetSocketAddress(InetAddress.getByAddress(remote_addr), remote_port) + ": "
+                    + reset_packet.length);
+//            ConnectivityManager connectivityManager =
+//                    (ConnectivityManager) ContextUtils.getApplicationContext().getSystemService(
+//                            Context.CONNECTIVITY_SERVICE);
+//            connectivityManager.updateCronetStatelessResetPacket(
+//                    new InetSocketAddress(InetAddress.getByAddress(local_addr), local_port),
+//                    new InetSocketAddress(InetAddress.getByAddress(remote_addr), remote_port)
+//                    , reset_packet);
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to update Cronet stateless reset token: " + e);
         }
     }
 }
