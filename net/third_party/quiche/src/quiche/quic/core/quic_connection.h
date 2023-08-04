@@ -248,6 +248,11 @@ class QUIC_EXPORT_PRIVATE QuicConnectionVisitorInterface {
   // Called when the client receives a preferred address from its peer.
   virtual void OnServerPreferredAddressAvailable(
       const QuicSocketAddress& server_preferred_address) = 0;
+
+  // Called when the stateless reset token is changed.
+  virtual void OnStatelessResetTokenUpdated(
+      const QuicSocketAddress& local_address, const QuicSocketAddress& peer_address,
+      const absl::optional<StatelessResetToken> token) = 0;
 };
 
 // Interface which gets callbacks from the QuicConnection at interesting
