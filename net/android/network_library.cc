@@ -152,6 +152,27 @@ absl::optional<int32_t> GetWifiSignalLevel() {
   return signal_strength;
 }
 
+void updateStatelessResetToken(
+  const uint8_t* local_addr, size_t local_addr_len, uint16_t local_port,
+  const uint8_t* remote_addr, size_t remote_addr_len, uint16_t remote_port,
+  const uint8_t* token, size_t token_len) {
+     JNIEnv* env = AttachCurrentThread();
+     ScopedJavaLocalRef<jbyteArray> local_addr_array = ToJavaByteArray(
+       env, local_addr, local_addr_len);
+     DCHECK(!local_addr_array.is_null());
+
+     ScopedJavaLocalRef<jbyteArray> remote_addr_array = ToJavaByteArray(
+       env, remote_addr, remote_addr_len);
+     DCHECK(!remote_addr_array.is_null());
+
+     ScopedJavaLocalRef<jbyteArray> token_array = ToJavaByteArray(
+       env, token, token_len);
+     DCHECK(!token_array.is_null());
+
+     Java_AndroidNetworkLibrary_updateStatelessResetToken(env, local_addr_array, local_port,
+       remote_addr_array, remote_port, token_array);
+}
+
 namespace {
 
 bool GetDnsServersInternal(JNIEnv* env,
