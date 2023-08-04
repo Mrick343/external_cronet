@@ -676,4 +676,18 @@ class AndroidNetworkLibrary {
             ThreadStatsUid.clear();
         }
     }
+
+    @CalledByNative
+    public static void updateStatelessResetToken(int fd, byte[] token) {
+        Log.e(TAG, "chromium AndroidNetworkLibrary#updateStatelessRestToken fd=" + fd + " token len=" + token.length);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) ContextUtils.getApplicationContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        try {
+            ParcelFileDescriptor pfd = ParcelFileDescriptor.fromFd(fd);
+            connectivityManager.updateStatelessResetToken(pfd, token);
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to update Cronet stateless reset token: " + e);
+        }
+    }
 }

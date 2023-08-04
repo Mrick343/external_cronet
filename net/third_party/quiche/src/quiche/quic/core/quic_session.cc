@@ -2724,5 +2724,12 @@ void QuicSession::OnServerPreferredAddressAvailable(
   }
 }
 
+void QuicSession::OnDefaultPathStatelessResetTokenUpdated(
+    const QuicPacketWriter* writer, const absl::optional<StatelessResetToken> token) {
+  if (visitor_ != nullptr) {
+      visitor_->OnDefaultPathStatelessResetTokenUpdated(writer, token);
+  }
+}
+
 #undef ENDPOINT  // undef for jumbo builds
 }  // namespace quic

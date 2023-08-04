@@ -179,6 +179,10 @@ int UDPSocketPosix::AdoptOpenedSocket(AddressFamily address_family,
   return ConfigureOpenedSocket();
 }
 
+int UDPSocketPosix::GetDescriptor() {
+  return socket_;
+}
+
 int UDPSocketPosix::ConfigureOpenedSocket() {
 #if BUILDFLAG(IS_APPLE) && !BUILDFLAG(CRONET_BUILD)
   PCHECK(change_fdguard_np(socket_, nullptr, 0, &kSocketFdGuard,

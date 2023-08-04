@@ -280,6 +280,8 @@ class NET_EXPORT UDPSocketPosix {
   // not bound or connected to an address.
   int AdoptOpenedSocket(AddressFamily address_family, int socket);
 
+  int GetDescriptor();
+
  private:
   enum SocketOptions {
     SOCKET_OPTION_MULTICAST_LOOP = 1 << 0

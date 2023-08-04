@@ -104,6 +104,9 @@ class QUIC_EXPORT_PRIVATE QuicSession
 
     virtual void OnServerPreferredAddressAvailable(
         const QuicSocketAddress& /*server_preferred_address*/) = 0;
+
+    virtual void OnDefaultPathStatelessResetTokenUpdated(
+        const QuicPacketWriter* writer, const absl::optional<StatelessResetToken> token) = 0;
   };
 
   // Does not take ownership of |connection| or |visitor|.
@@ -189,6 +192,8 @@ class QUIC_EXPORT_PRIVATE QuicSession
       std::unique_ptr<QuicPathValidationContext> /*context*/) override {}
   void OnServerPreferredAddressAvailable(
       const QuicSocketAddress& /*server_preferred_address*/) override;
+  void OnDefaultPathStatelessResetTokenUpdated(
+      const QuicPacketWriter* writer, const absl::optional<StatelessResetToken> token) override;
 
   // QuicStreamFrameDataProducer
   WriteStreamDataResult WriteStreamData(QuicStreamId id,

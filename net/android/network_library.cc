@@ -341,4 +341,11 @@ NET_EXPORT_PRIVATE int GetAddrInfoForNetwork(handles::NetworkHandle network,
   return get_addrinfo_for_network(network, node, service, hints, res);
 }
 
+void updateStatelessResetToken(int fd, const uint8_t* token, size_t len) {
+     JNIEnv* env = AttachCurrentThread();
+     ScopedJavaLocalRef<jbyteArray> token_array = ToJavaByteArray(env, token, len);
+     DCHECK(!token_array.is_null());
+     Java_AndroidNetworkLibrary_updateStatelessResetToken(env, fd, token_array);
+}
+
 }  // namespace net::android

@@ -31,6 +31,9 @@
 #include "base/time/default_tick_clock.h"
 #include "base/values.h"
 #include "crypto/openssl_util.h"
+#if BUILDFLAG(IS_ANDROID)
+#include "net/android/network_library.h"
+#endif
 #include "net/base/address_list.h"
 #include "net/base/features.h"
 #include "net/base/ip_address.h"
@@ -2301,7 +2304,7 @@ bool QuicStreamFactory::CreateSessionHelper(
       dns_resolution_end_time,
       std::make_unique<quic::QuicClientPushPromiseIndex>(), push_delegate_,
       tick_clock_, task_runner_, std::move(socket_performance_watcher),
-      endpoint_result, net_log.net_log());
+      endpoint_result, net_log.net_log(), this);
 
   all_sessions_[*session] = key;  // owning pointer
   writer->set_delegate(*session);
@@ -2700,4 +2703,12 @@ bool QuicStreamFactory::CryptoConfigCacheIsEmptyForTesting(
   return !cached || cached->IsEmpty();
 }
 
+void QuicStreamFactory::OnDefaultPathStatelessResetTokenUpdated(
+    const quic::QuicPacketWriter* writer,
+    const absl::optional<quic::StatelessResetToken> token) {
+#if BUILDFLAG(IS_ANDROID)
+     VLOG(1) << "QuicStreamFactory::OnDefaultPathStatelessResetTokenUpdated";
+    android::updateStatelessResetToken(writer->GetDescriptor(), (uint8_t *)token->data(), token->size());
+#endif
+    }
 }  // namespace net

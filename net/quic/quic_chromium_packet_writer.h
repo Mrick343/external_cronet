@@ -103,6 +103,7 @@ class NET_EXPORT_PRIVATE QuicChromiumPacketWriter
       const quic::QuicIpAddress& self_address,
       const quic::QuicSocketAddress& peer_address) override;
   quic::WriteResult Flush() override;
+  int GetDescriptor() const override;
 
   void OnWriteComplete(int rv);
 

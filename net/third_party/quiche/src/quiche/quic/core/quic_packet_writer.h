@@ -164,6 +164,8 @@ class QUIC_EXPORT_PRIVATE QuicPacketWriter {
   //   were on memory acquired via GetNextWriteLocation() should be released and
   //   the batch should be dropped.
   virtual WriteResult Flush() = 0;
+
+  virtual int GetDescriptor() const = 0;
 };
 
 }  // namespace quic

@@ -272,4 +272,8 @@ quic::WriteResult QuicChromiumPacketWriter::Flush() {
   return quic::WriteResult(quic::WRITE_STATUS_OK, 0);
 }
 
+int QuicChromiumPacketWriter::GetDescriptor() const {
+  return socket_->GetDescriptor();
+}
+
 }  // namespace net

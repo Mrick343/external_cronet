@@ -178,6 +178,10 @@ void UDPClientSocket::SetIOSNetworkServiceType(int ios_network_service_type) {
 #endif
 }
 
+int UDPClientSocket::GetDescriptor() {
+  return socket_.GetDescriptor();
+}
+
 void UDPClientSocket::AdoptOpenedSocket(AddressFamily address_family,
                                         SocketDescriptor socket) {
   socket_.AdoptOpenedSocket(address_family, socket);
