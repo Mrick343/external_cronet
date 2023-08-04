@@ -1000,9 +1000,10 @@ QuicChromiumClientSession::QuicChromiumClientSession(
     base::SequencedTaskRunner* task_runner,
     std::unique_ptr<SocketPerformanceWatcher> socket_performance_watcher,
     const HostResolverEndpointResult& endpoint_result,
-    NetLog* net_log)
+    NetLog* net_log,
+    quic::QuicSession::Visitor* visitor)
     : quic::QuicSpdyClientSessionBase(connection,
-                                      /*visitor=*/nullptr,
+                                      visitor,
                                       push_promise_index.get(),
                                       config,
                                       connection->supported_versions()),
