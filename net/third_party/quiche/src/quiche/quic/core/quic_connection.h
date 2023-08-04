@@ -263,6 +263,13 @@ class QUICHE_EXPORT QuicConnectionVisitorInterface {
 
   // Asks session to bundle data opportunistically with outgoing data.
   virtual void MaybeBundleOpportunistically() = 0;
+
+  // Called when the stateless reset token is changed.
+  virtual void OnStatelessResetTokenUpdated(
+      const QuicConnectionId& connection_id,
+      const QuicSocketAddress& local_address,
+      const QuicSocketAddress& peer_address,
+      const absl::optional<StatelessResetToken> token) = 0;
 };
 
 // Interface which gets callbacks from the QuicConnection at interesting

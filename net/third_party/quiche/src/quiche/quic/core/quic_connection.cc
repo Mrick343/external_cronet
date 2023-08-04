@@ -631,6 +631,8 @@ void QuicConnection::SetFromConfig(const QuicConfig& config) {
   }
   if (config.HasReceivedStatelessResetToken()) {
     default_path_.stateless_reset_token = config.ReceivedStatelessResetToken();
+    visitor_->OnStatelessResetTokenUpdated(connection_id(), self_address(), peer_address(),
+                                           default_path_.stateless_reset_token);
   }
   if (config.HasReceivedAckDelayExponent()) {
     framer_.set_peer_ack_delay_exponent(config.ReceivedAckDelayExponent());
@@ -1903,6 +1905,8 @@ void QuicConnection::OnClientConnectionIdAvailable() {
     default_path_.client_connection_id = unused_cid_data->connection_id;
     default_path_.stateless_reset_token =
         unused_cid_data->stateless_reset_token;
+    visitor_->OnStatelessResetTokenUpdated(connection_id(), self_address(), peer_address(),
+                                           default_path_.stateless_reset_token);
     QUICHE_DCHECK(!packet_creator_.HasPendingFrames());
     QUICHE_DCHECK(packet_creator_.GetDestinationConnectionId().IsEmpty());
     packet_creator_.SetClientConnectionId(default_path_.client_connection_id);
@@ -5332,6 +5336,8 @@ void QuicConnection::StartEffectivePeerMigration(AddressChangeType type) {
                   current_effective_peer_address, client_connection_id,
                   last_received_packet_info_.destination_connection_id,
                   stateless_reset_token));
+    visitor_->OnStatelessResetTokenUpdated(connection_id(), self_address(), peer_address(),
+                                           default_path_.stateless_reset_token);
     // The path is considered validated if its peer IP address matches any
     // validated path's peer IP address.
     default_path_.validated =
@@ -6422,6 +6428,8 @@ void QuicConnection::OnPeerIssuedConnectionIdRetired() {
       *default_path_cid = unused_connection_id_data->connection_id;
       default_path_.stateless_reset_token =
           unused_connection_id_data->stateless_reset_token;
+      visitor_->OnStatelessResetTokenUpdated(connection_id(), self_address(), peer_address(),
+                                            default_path_.stateless_reset_token);
       if (perspective_ == Perspective::IS_CLIENT) {
         packet_creator_.SetServerConnectionId(
             unused_connection_id_data->connection_id);
@@ -6804,6 +6812,9 @@ bool QuicConnection::UpdateConnectionIdsOnMigration(
     default_path_.server_connection_id = alternative_path_.server_connection_id;
     default_path_.stateless_reset_token =
         alternative_path_.stateless_reset_token;
+
+    visitor_->OnStatelessResetTokenUpdated(connection_id(), self_address(), peer_address(),
+                                          default_path_.stateless_reset_token);
     return true;
   }
   // Client migration is without path validation.
@@ -6829,6 +6840,8 @@ bool QuicConnection::UpdateConnectionIdsOnMigration(
     default_path_.server_connection_id = connection_id_data->connection_id;
     default_path_.stateless_reset_token =
         connection_id_data->stateless_reset_token;
+    visitor_->OnStatelessResetTokenUpdated(connection_id(), self_address(), peer_address(),
+                                          default_path_.stateless_reset_token);
   }
   return true;
 }
