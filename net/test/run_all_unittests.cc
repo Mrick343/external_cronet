@@ -45,8 +45,11 @@ bool VerifyBuildIsTimely() {
 }  // namespace
 
 int main(int argc, char** argv) {
+#if 0
+  // TODO(294304120): Re-enable once the underlying bug has been fixed.
   if (!VerifyBuildIsTimely())
     return 1;
+#endif
 
   NetTestSuite test_suite(argc, argv);
   net::TransportClientSocketPool::set_connect_backup_jobs_enabled(false);
