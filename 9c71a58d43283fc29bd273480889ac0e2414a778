@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e250f61_eb6a9ccb",
+        "filename": "Android.extras.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-07T16:45:35Z",
+      "side": 1,
+      "message": "We should create a single library in android/logging that contains these libraries. This was only useful internally as we ran each test separately which we don\u0027t do here.",
+      "revId": "9c71a58d43283fc29bd273480889ac0e2414a778",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
