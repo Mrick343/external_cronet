@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b6cbd47_0fbe539f",
+        "filename": "Android.extras.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-07T16:31:13Z",
+      "side": 1,
+      "message": "nit: please add a todo to remove this with a reference bug and the reason why it\u0027s here in the first place so we dont lose track.",
+      "revId": "303dc8ec217c91518f4509ac9feaa20e7cb42038",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
