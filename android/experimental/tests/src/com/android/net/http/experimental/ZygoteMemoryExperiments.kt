@@ -19,46 +19,53 @@ package com.android.net.http.experimental
 import android.content.Intent
 import android.content.ComponentName
 import android.util.Log
-import androidx.test.filters.SmallTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.android.compatibility.common.util.SystemUtil.runShellCommand
 import kotlin.test.assertNotNull
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
 private const val TAG = "ZygoteMemoryExperiments"
 
 /**
  * Not an actual test but a convenient utility to run different Zygote memory experiments.
  */
-@SmallTest
+@RunWith(AndroidJUnit4::class)
 class ZygoteMemoryExperiments {
     private val context by lazy { InstrumentationRegistry.getInstrumentation().context }
 
-    private fun logMeminfo(test: String, processName: String, componentName: ComponentName) {
-        assertNotNull(componentName, "Did the service failed to start?")
-        val serviceName = "${componentName.packageName}:$processName:${componentName.className}"
-        val result = runShellCommand("dumpsys meminfo -d $serviceName")
-        Log.i(TAG, "$test: $result")
+    private fun startPerfettoTrace() {
+        // Clean up output after previous test run.
+        val perfettoConfig = "/data/misc/perfetto-traces/perfetto-config.txt"
+        val traceOut = "/data/misc/perfetto-traces/trace"
+        runShellCommand("rm $traceOut")
+        runShellCommand("perfetto -c $perfettoConfig --txt -o $traceOut")
+    }
+
+    @Before
+    fun setUp() {
+        startPerfettoTrace()
+    }
+
+    @After
+    fun tearDown() {
+        // HACK: Wait for trace to complete
+        Thread.sleep(5000)
     }
 
     @Test
     fun testIsolatedService() {
         val serviceIntent = Intent(context, EmptyIsolatedService::class.java)
-        val componentName = context.startService(serviceIntent)
-
-        // TODO: don't sleep and use bindService() instead.
-        Thread.sleep(2000)
-        logMeminfo("testIsolatedService", "EmptyService", componentName)
+        context.startService(serviceIntent)
     }
 
     @Test
     fun testAppZygoteIsolatedService() {
         val serviceIntent = Intent(context, EmptyAppZygoteIsolatedService::class.java)
-        val componentName = context.startService(serviceIntent)
-
-        // TODO: don't sleep and use bindService() instead.
-        Thread.sleep(2000)
-        logMeminfo("testAppZygoteIsolatedService", "EmptyAppZygoteService", componentName)
+        context.startService(serviceIntent)
     }
 }
 

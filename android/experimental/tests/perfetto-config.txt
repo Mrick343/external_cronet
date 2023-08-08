@@ -1,0 +1,37 @@
+buffers: {
+    size_kb: 522240
+    fill_policy: DISCARD
+}
+buffers: {
+    size_kb: 2048
+    fill_policy: DISCARD
+}
+data_sources: {
+    config {
+        name: "android.packages_list"
+        target_buffer: 1
+    }
+}
+data_sources: {
+    config {
+        name: "linux.process_stats"
+        target_buffer: 1
+        process_stats_config {
+            proc_stats_poll_ms: 1000
+        }
+    }
+}
+data_sources: {
+    config {
+        name: "linux.ftrace"
+        ftrace_config {
+            ftrace_events: "ftrace/print"
+            atrace_categories: "am"
+            atrace_categories: "dalvik"
+            atrace_categories: "ss"
+            atrace_apps: "*"
+        }
+    }
+}
+duration_ms: 5000
+
