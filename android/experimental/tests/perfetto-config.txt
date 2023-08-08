@@ -26,6 +26,8 @@ data_sources: {
         name: "linux.ftrace"
         ftrace_config {
             ftrace_events: "ftrace/print"
+            ftrace_events: "task/task_newtask"
+            ftrace_events: "task/task_rename"
             atrace_categories: "am"
             atrace_categories: "dalvik"
             atrace_categories: "ss"
