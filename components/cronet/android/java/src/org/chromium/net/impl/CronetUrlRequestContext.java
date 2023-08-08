@@ -8,6 +8,7 @@ import org.chromium.net.ApiVersion;
 import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
+import android.os.Debug;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -187,6 +188,8 @@ public class CronetUrlRequestContext extends CronetEngineBase {
 
     @UsedByReflection("CronetEngine.java")
     public CronetUrlRequestContext(final CronetEngineBuilderImpl builder) {
+        Debug.traceMemoryFootprintBegin("CronetUrlRequestContext::CronetUrlRequestContext()");
+        try {
         mCronetEngineId = hashCode();
         mRttListenerList.disableThreadAsserts();
         mThroughputListenerList.disableThreadAsserts();
@@ -206,9 +209,11 @@ public class CronetUrlRequestContext extends CronetEngineBase {
             mInUseStoragePath = null;
         }
         synchronized (mLock) {
+            Debug.traceMemoryFootprintBegin("createRequestContextAdapter");
             mUrlRequestContextAdapter =
                     CronetUrlRequestContextJni.get().createRequestContextAdapter(
                             createNativeUrlRequestContextConfig(builder));
+            Debug.traceMemoryFootprintEnd();
             if (mUrlRequestContextAdapter == 0) {
                 throw new NullPointerException("Context Adapter creation failed.");
             }
@@ -243,6 +248,9 @@ public class CronetUrlRequestContext extends CronetEngineBase {
                 }
             }
         });
+        } finally {
+            Debug.traceMemoryFootprintEnd();
+        }
     }
 
     static CronetSource getCronetSource() {
