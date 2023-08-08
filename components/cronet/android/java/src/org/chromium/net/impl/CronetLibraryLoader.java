@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
+import android.os.Debug;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -85,17 +86,24 @@ public class CronetLibraryLoader {
      * init thread native MessageLoop is initialized.
      */
     static void ensureInitializedOnInitThread() {
+        Debug.traceMemoryFootprintBegin("ensureInitializedOnInitThread");
+        try {
         assert onInitThread();
         if (sInitThreadInitDone) {
             return;
         }
+        Debug.traceMemoryFootprintBegin("createOrUpdateClassLoaderLocked");
         NetworkChangeNotifier.init();
+        Debug.traceMemoryFootprintEnd();
+
         // Registers to always receive network notifications. Note
         // that this call is fine for Cronet because Cronet
         // embedders do not have API access to create network change
         // observers. Existing observers in the net stack do not
         // perform expensive work.
+        Debug.traceMemoryFootprintBegin("createOrUpdateClassLoaderLocked");
         NetworkChangeNotifier.registerToReceiveNotificationsAlways();
+        Debug.traceMemoryFootprintEnd();
         // Wait for loadLibrary() to complete so JNI is registered.
         sWaitForLibLoad.block();
 
@@ -104,8 +112,13 @@ public class CronetLibraryLoader {
         // NetworkChangeNotifierAndroid is created, so as to avoid receiving
         // the undesired initial network change observer notification, which
         // will cause active requests to fail with ERR_NETWORK_CHANGED.
+        Debug.traceMemoryFootprintBegin("createOrUpdateClassLoaderLocked");
         CronetLibraryLoaderJni.get().cronetInitOnInitThread();
+        Debug.traceMemoryFootprintEnd();
         sInitThreadInitDone = true;
+        } finally {
+          Debug.traceMemoryFootprintEnd();
+        }
     }
 
     /**
