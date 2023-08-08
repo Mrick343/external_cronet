@@ -25,7 +25,9 @@ import com.android.compatibility.common.util.SystemUtil.runShellCommand
 import kotlin.test.assertNotNull
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestName
 import org.junit.runner.RunWith
 
 private const val TAG = "ZygoteMemoryExperiments"
@@ -35,12 +37,14 @@ private const val TAG = "ZygoteMemoryExperiments"
  */
 @RunWith(AndroidJUnit4::class)
 class ZygoteMemoryExperiments {
+    @get:Rule val testName = TestName()
+
     private val context by lazy { InstrumentationRegistry.getInstrumentation().context }
 
     private fun startPerfettoTrace() {
         // Clean up output after previous test run.
         val perfettoConfig = "/data/misc/perfetto-traces/perfetto-config.txt"
-        val traceOut = "/data/misc/perfetto-traces/trace"
+        val traceOut = "/data/misc/perfetto-traces/trace-${testName.methodName}"
         runShellCommand("rm $traceOut")
         runShellCommand("perfetto -c $perfettoConfig --txt -o $traceOut")
     }
