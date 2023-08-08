@@ -67,5 +67,13 @@ class ZygoteMemoryExperiments {
         val serviceIntent = Intent(context, EmptyAppZygoteIsolatedService::class.java)
         context.startService(serviceIntent)
     }
+
+    @Test
+    fun testMultipleAppZygoteIsolatedServices() {
+        val serviceIntent = Intent(context, EmptyAppZygoteIsolatedService::class.java)
+        context.startService(serviceIntent)
+        val serviceIntent2 = Intent(context, EmptyAppZygoteIsolatedServiceCopy::class.java)
+        context.startService(serviceIntent2)
+    }
 }
 

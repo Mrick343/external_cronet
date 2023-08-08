@@ -25,6 +25,10 @@
                  android:process=":EmptyAppZygoteService"
                  android:isolatedProcess="true"
                  android:useAppZygote="true" />
+        <service android:name=".EmptyAppZygoteIsolatedServiceCopy"
+                 android:process=":EmptyAppZygoteServiceCopy"
+                 android:isolatedProcess="true"
+                 android:useAppZygote="true" />
     </application>
 
     <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"

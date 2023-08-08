@@ -21,11 +21,9 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 
-private val TAG = "EmptyIsolatedService"
-
 class EmptyIsolatedService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.e(TAG, "service: started isolated service")
+        Log.e(this::class.simpleName, "service: started isolated service")
         return 0
     }
 
@@ -34,6 +32,16 @@ class EmptyIsolatedService : Service() {
 }
 
 class EmptyAppZygoteIsolatedService : Service() {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Log.e(this::class.simpleName, "service: started isolated service")
+        return 0
+    }
+
+    // disallow binding
+    override fun onBind(intent: Intent): IBinder? = null
+}
+
+class EmptyAppZygoteIsolatedServiceCopy : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.e(this::class.simpleName, "service: started isolated service")
         return 0
