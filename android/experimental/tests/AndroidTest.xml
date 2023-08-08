@@ -24,6 +24,10 @@
         <option name="cleanup" value="true" />
         <option name="push" value="perfetto-config.txt->/data/misc/perfetto-traces/perfetto-config.txt" />
     </target_preparer>
+    <target_preparer class="com.android.tradefed.targetprep.RunCommandTargetPreparer">
+        <!-- delete old traces if present -->
+        <option name="run-command" value="rm /data/misc/perfetto-traces/trace*" />
+    </target_preparer>
     <test class="com.android.tradefed.testtype.AndroidJUnitTest" >
         <option name="package" value="com.android.net.http.experimental" />
         <option name="runtime-hint" value="10s" />

@@ -45,7 +45,6 @@ class ZygoteMemoryExperiments {
         // Clean up output after previous test run.
         val perfettoConfig = "/data/misc/perfetto-traces/perfetto-config.txt"
         val traceOut = "/data/misc/perfetto-traces/trace-${testName.methodName}"
-        runShellCommand("rm $traceOut")
         runShellCommand("perfetto -c $perfettoConfig --txt -o $traceOut")
     }
 
