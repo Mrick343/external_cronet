@@ -31,6 +31,17 @@ class EmptyIsolatedService : Service() {
     override fun onBind(intent: Intent): IBinder? = null
 }
 
+class EmptyService : Service() {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Log.e(this::class.simpleName, "service: started isolated service")
+        doUrlRequest(this, "www.google.com/search?q=EmptyService")
+        return 0
+    }
+
+    // disallow binding
+    override fun onBind(intent: Intent): IBinder? = null
+}
+
 class EmptyAppZygoteIsolatedService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.e(this::class.simpleName, "service: started isolated service")
