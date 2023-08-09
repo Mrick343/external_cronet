@@ -23,6 +23,14 @@ data_sources: {
 }
 data_sources: {
     config {
+        name: "android.log"
+        android_log_config {
+        }
+    }
+}
+
+data_sources: {
+    config {
         name: "linux.ftrace"
         ftrace_config {
             ftrace_events: "ftrace/print"
