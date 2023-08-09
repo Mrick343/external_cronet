@@ -34,7 +34,7 @@ class EmptyIsolatedService : Service() {
 class EmptyService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.e(this::class.simpleName, "service: started isolated service")
-        doUrlRequest(this, "www.google.com/search?q=EmptyService")
+        doUrlRequest(this, "https://www.google.com/search?q=EmptyService")
         return 0
     }
 

@@ -55,7 +55,7 @@ class MyCallback : UrlRequest.Callback {
 
         override fun onFailed(
                 request: UrlRequest, info: UrlResponseInfo?, error: HttpException) {
-          Log.i(TAG, "onFailed")
+          Log.i(TAG, "onFailed: ", error)
         }
 
         override fun onCanceled(request: UrlRequest, info: UrlResponseInfo?) {

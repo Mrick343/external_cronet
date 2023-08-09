@@ -60,12 +60,6 @@ class ZygoteMemoryExperiments {
     }
 
     @Test
-    fun testIsolatedService() {
-        val serviceIntent = Intent(context, EmptyIsolatedService::class.java)
-        context.startService(serviceIntent)
-    }
-
-    @Test
     fun testService() {
         val serviceIntent = Intent(context, EmptyService::class.java)
         context.startService(serviceIntent)
@@ -73,20 +67,6 @@ class ZygoteMemoryExperiments {
 
     @Test
     fun testInProcess() {
-      doUrlRequest(context, "www.google.com/search?q=testInProcess")
-    }
-
-    @Test
-    fun testAppZygoteIsolatedService() {
-        val serviceIntent = Intent(context, EmptyAppZygoteIsolatedService::class.java)
-        context.startService(serviceIntent)
-    }
-
-    @Test
-    fun testMultipleAppZygoteIsolatedServices() {
-        val serviceIntent = Intent(context, EmptyAppZygoteIsolatedService::class.java)
-        context.startService(serviceIntent)
-        val serviceIntent2 = Intent(context, EmptyAppZygoteIsolatedServiceCopy::class.java)
-        context.startService(serviceIntent2)
+      doUrlRequest(context, "https://www.google.com/search?q=testInProcess")
     }
 }
