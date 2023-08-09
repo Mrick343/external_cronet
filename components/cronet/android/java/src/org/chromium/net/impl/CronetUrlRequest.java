@@ -12,6 +12,7 @@ import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_MEDIUM;
 import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST;
 
 import android.os.Build;
+import android.os.Debug;
 
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
@@ -294,23 +295,32 @@ public final class CronetUrlRequest extends UrlRequestBase {
     @Override
     public void start() {
         synchronized (mUrlRequestAdapterLock) {
+            Debug.traceMemoryFootprintBegin("CronetUrlRequest");
+            try {
+            Debug.traceMemoryFootprintBegin("CronetUrlRequest.start");
             checkNotStarted();
 
             try {
+                Debug.traceMemoryFootprintBegin("CronetUrlRequestJni.get().createRequestAdapter");
                 mUrlRequestAdapter = CronetUrlRequestJni.get().createRequestAdapter(
                         CronetUrlRequest.this, mRequestContext.getUrlRequestContextAdapter(),
                         mInitialUrl, mPriority, mDisableCache, mDisableConnectionMigration,
                         mTrafficStatsTagSet, mTrafficStatsTag, mTrafficStatsUidSet,
                         mTrafficStatsUid, mIdempotency, mNetworkHandle);
+                Debug.traceMemoryFootprintEnd();
                 mRequestContext.onRequestStarted();
                 if (mInitialMethod != null) {
                     if (!CronetUrlRequestJni.get().setHttpMethod(
                                 mUrlRequestAdapter, CronetUrlRequest.this, mInitialMethod)) {
+                        Debug.traceMemoryFootprintEnd(); // Debug.traceMemoryFootprintBegin("CronetUrlRequest");
+                                                         //
                         throw new IllegalArgumentException("Invalid http method " + mInitialMethod);
                     }
                 }
 
+                Debug.traceMemoryFootprintBegin("CronetUrlRequst.addRequestHeaders");
                 boolean hasContentType = false;
+                try {
                 for (Map.Entry<String, String> header : mRequestHeaders) {
                     if (header.getKey().equalsIgnoreCase("Content-Type")
                             && !header.getValue().isEmpty()) {
@@ -321,6 +331,9 @@ public final class CronetUrlRequest extends UrlRequestBase {
                         throw new IllegalArgumentException(
                                 "Invalid header " + header.getKey() + "=" + header.getValue());
                     }
+                }
+                } finally {
+                    Debug.traceMemoryFootprintEnd();
                 }
                 if (mUploadDataStream != null) {
                     if (!hasContentType) {
@@ -347,10 +360,14 @@ public final class CronetUrlRequest extends UrlRequestBase {
                 // If there's an exception, cleanup and then throw the exception to the caller.
                 // start() is synchronized so we do not acquire mUrlRequestAdapterLock here.
                 destroyRequestAdapterLocked(RequestFinishedInfo.FAILED);
+                Debug.traceMemoryFootprintEnd(); // Debug.traceMemoryFootprintBegin("CronetUrlRequest");
                 throw e;
             }
             mStarted = true;
             startInternalLocked();
+            } finally {
+              Debug.traceMemoryFootprintEnd();
+            }
         }
     }
 
@@ -360,7 +377,9 @@ public final class CronetUrlRequest extends UrlRequestBase {
      */
     @GuardedBy("mUrlRequestAdapterLock")
     private void startInternalLocked() {
+        Debug.traceMemoryFootprintBegin("CronetUrlRequestJni.get().start");
         CronetUrlRequestJni.get().start(mUrlRequestAdapter, CronetUrlRequest.this);
+        Debug.traceMemoryFootprintEnd();
     }
 
     @Override
@@ -780,6 +799,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
             }
         };
         postTaskToExecutor(task);
+        Debug.traceMemoryFootprintEnd();
     }
 
     /**
@@ -808,6 +828,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
             failWithException(new NetworkExceptionImpl(
                     "Exception in CronetUrlRequest: " + errorString, javaError, nativeError));
         }
+        Debug.traceMemoryFootprintEnd();
     }
 
     /**
@@ -828,6 +849,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
             }
         };
         postTaskToExecutor(task);
+        Debug.traceMemoryFootprintEnd();
     }
 
     /**
