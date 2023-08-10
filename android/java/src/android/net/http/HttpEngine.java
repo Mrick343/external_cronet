@@ -15,6 +15,7 @@ import org.chromium.net.ApiVersion;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.util.Log;
 import android.os.Debug;
 
 import com.android.internal.annotations.VisibleForTesting;
@@ -49,9 +50,18 @@ public abstract class HttpEngine {
     protected HttpEngine() {}
 
     public static void loadLibrary() {
+      Log.i("HttpEngine", "loadLibrary start");
       Debug.traceMemoryFootprintBegin("System.loadLibrary(cronet)");
       System.loadLibrary("cronet.114.0.5735.84");
       Debug.traceMemoryFootprintEnd();
+      Log.i("HttpEngine", "loadLibrary end");
+    }
+
+    public static void doNothing() {
+      Log.i("HttpEngine", "doNothing start");
+      Debug.traceMemoryFootprintBegin("System.loadLibrary(cronet)");
+      Debug.traceMemoryFootprintEnd();
+      Log.i("HttpEngine", "doNothing end");
     }
 
     /**
