@@ -16,6 +16,24 @@
       "message": "We should create a single library in android/logging that contains these libraries. This was only useful internally as we ran each test separately which we don\u0027t do here.",
       "revId": "9c71a58d43283fc29bd273480889ac0e2414a778",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "873a7932_13a4c8c5",
+        "filename": "Android.extras.bp",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-10T09:38:57Z",
+      "side": 1,
+      "message": "I think it\u0027s still worthwhile to keep them separate to better represent their dependencies. I think this should also speed up compilation times, as changing ExperimentalOptions.java will only require recompiling cronet_experimental_options, while other jars can be reused.\n\nP.S. In a child CL (https://android-review.git.corp.google.com/c/platform/external/cronet/+/2647867/9) I end up merging them into a final http_client_logging library.",
+      "parentUuid": "5e250f61_eb6a9ccb",
+      "revId": "9c71a58d43283fc29bd273480889ac0e2414a778",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
