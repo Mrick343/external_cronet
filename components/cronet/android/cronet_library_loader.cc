@@ -81,21 +81,36 @@ bool OnInitThread() {
   return g_init_task_executor->task_runner()->RunsTasksInCurrentSequence();
 }
 
-// In integrated mode, Cronet native library is built and loaded together with
-// the native library of the host app.
-#if !BUILDFLAG(INTEGRATED_MODE)
-// Checks the available version of JNI. Also, caches Java reflection artifacts.
-jint CronetOnLoad(JavaVM* vm, void* reserved) {
-  base::android::InitVM(vm);
-  JNIEnv* env = base::android::AttachCurrentThread();
+int CronetOnLoad(JNIEnv* env) {
   if (!RegisterNatives(env)) {
     return -1;
   }
   if (!base::android::OnJNIOnLoadInit())
     return -1;
   NativeInit();
+  return 0;
+}
+
+// In integrated mode, Cronet native library is built and loaded together with
+// the native library of the host app.
+#if !BUILDFLAG(INTEGRATED_MODE)
+// Checks the available version of JNI. Also, caches Java reflection artifacts.
+jint LazyCronetOnLoad(JavaVM* vm, void* reserved) {
+  base::android::InitVM(vm);
+  JNIEnv* env = base::android::AttachCurrentThread();
+
+  jclass c = env->FindClass("android/net/connectivity/org/chromium/net/impl/CronetLibraryLoader");
+
+  static const JNINativeMethod methods[] = {
+      {"cronetOnLoad", "()I", reinterpret_cast<void*>(CronetOnLoad)},
+  };
+
+  int rc = env->RegisterNatives(c, methods, 1);
+  if (rc != JNI_OK) return rc;
+
   return JNI_VERSION_1_6;
 }
+
 
 void CronetOnUnLoad(JavaVM* jvm, void* reserved) {
   if (base::ThreadPoolInstance::Get())
