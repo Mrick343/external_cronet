@@ -34,6 +34,24 @@
       "parentUuid": "7814d5e4_b5078f98",
       "revId": "bb3721a2612df9f9b104fd15366f4636ef9aab88",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e420d95e_1ebbc0f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-15T13:19:45Z",
+      "side": 1,
+      "message": "Yeah, I meant to say that it\u0027s probably best that you send every import-related CL to the same reviewer, then add others just as FYI in cc.\n\nI think, ideally, the reviewer should be the last \"cronet-mainline importer/reviewer\", since they\u0027ll have context on the current hacks etc.",
+      "parentUuid": "83cca335_72d7ac56",
+      "revId": "bb3721a2612df9f9b104fd15366f4636ef9aab88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
