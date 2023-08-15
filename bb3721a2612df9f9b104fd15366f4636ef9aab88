@@ -16,6 +16,24 @@
       "message": "P.S. I noticed you sent the import -\u003e staging merge to colibie@. It\u0027s probably best if a single reviewer reviews all of the CLs to update Cronet. This will be a lot of work for the reviewer but otherwise there might things we miss.",
       "revId": "bb3721a2612df9f9b104fd15366f4636ef9aab88",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83cca335_72d7ac56",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T13:11:15Z",
+      "side": 1,
+      "message": "It\u0027s always the dilemma that if two people are to review something then they might expect the other person to actually review it. I can add you to the list of reviewers since you were the last person to touch AOSP code.\n\n:D",
+      "parentUuid": "7814d5e4_b5078f98",
+      "revId": "bb3721a2612df9f9b104fd15366f4636ef9aab88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
