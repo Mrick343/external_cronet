@@ -1,0 +1,203 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a48a6f1_86fa5e07",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "Keep the visibility?",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a57be26_0a5f4e2a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "Keep HEAD",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7d8772c_c7eba740",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "Keep native tag",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77c729ea_4753546d",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1541,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "ditto",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e2487b1_c6cf271d",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1578,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "ditto",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb34aa54_f4abb52a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "we want HEAD for this test.",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "509c1090_287ccbfb",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "keep the @ignore.",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "364a1659_74b09d1b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "ditto",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37d89c8a_69fcf020",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/NQETest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "downstream uses NativeTestServer. This change hasn\u0027t been done upstream.",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66adc64e_0e71ef3f",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/RequestFinishedInfoTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "ditto re nativetestserver",
+      "range": {
+        "startLine": 75,
+        "startChar": 22,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11073305_4fd1b3db",
+        "filename": "components/cronet/android/test/src/org/chromium/net/QuicTestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2023-08-15T13:59:35Z",
+      "side": 0,
+      "message": "this should remain",
+      "range": {
+        "startLine": 36,
+        "startChar": 7,
+        "endLine": 39,
+        "endChar": 72
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
