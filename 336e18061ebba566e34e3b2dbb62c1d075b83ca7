@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b22af12_341dfdde",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "This was removed upstream in Chromium. However, it was re-added once again in the latest release. I will add it.",
+      "parentUuid": "6a48a6f1_86fa5e07",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8a57be26_0a5f4e2a",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-08-15T13:59:35Z",
       "side": 0,
       "message": "Keep HEAD",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42bf3494_2a2e26db",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "8a57be26_0a5f4e2a",
       "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8f6e3b9_81d16899",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "f7d8772c_c7eba740",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77c729ea_4753546d",
@@ -65,6 +119,24 @@
       "writtenOn": "2023-08-15T13:59:35Z",
       "side": 0,
       "message": "ditto",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e73ae3ee_fd6be074",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1541,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "77c729ea_4753546d",
       "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -86,6 +158,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "09aff0ae_796108ed",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1578,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "3e2487b1_c6cf271d",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb34aa54_f4abb52a",
@@ -99,6 +189,24 @@
       "writtenOn": "2023-08-15T13:59:35Z",
       "side": 0,
       "message": "we want HEAD for this test.",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "482c3afb_c9f87db3",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "fb34aa54_f4abb52a",
       "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -120,6 +228,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6550f845_34b5af8a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "509c1090_287ccbfb",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "364a1659_74b09d1b",
@@ -137,6 +263,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a6b995f_d8c0881a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "364a1659_74b09d1b",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37d89c8a_69fcf020",
@@ -150,6 +294,24 @@
       "writtenOn": "2023-08-15T13:59:35Z",
       "side": 0,
       "message": "downstream uses NativeTestServer. This change hasn\u0027t been done upstream.",
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea19c844_1ca970fc",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/NQETest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "37d89c8a_69fcf020",
       "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -177,6 +339,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b8c5a53_c410cb58",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/RequestFinishedInfoTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "66adc64e_0e71ef3f",
+      "range": {
+        "startLine": 75,
+        "startChar": 22,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "11073305_4fd1b3db",
@@ -190,6 +376,30 @@
       "writtenOn": "2023-08-15T13:59:35Z",
       "side": 0,
       "message": "this should remain",
+      "range": {
+        "startLine": 36,
+        "startChar": 7,
+        "endLine": 39,
+        "endChar": 72
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab980a09_7723eb09",
+        "filename": "components/cronet/android/test/src/org/chromium/net/QuicTestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-15T17:17:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "11073305_4fd1b3db",
       "range": {
         "startLine": 36,
         "startChar": 7,
