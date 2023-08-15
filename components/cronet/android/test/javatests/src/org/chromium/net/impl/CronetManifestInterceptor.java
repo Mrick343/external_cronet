@@ -20,7 +20,11 @@ import org.chromium.net.ContextInterceptor;
  *
  * @see org.chromium.net.impl.CronetManifest
  */
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
 public final class CronetManifestInterceptor implements ContextInterceptor {
+=======
+final class CronetManifestInterceptor implements ContextInterceptor {
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
     private final Bundle mMetaData;
 
     /**

@@ -4,6 +4,7 @@
 
 package org.chromium.net;
 
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.truth.Truth.assertThat;
 
@@ -13,21 +14,27 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
+=======
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
 
-import static org.chromium.net.CronetTestRule.SERVER_CERT_PEM;
-import static org.chromium.net.CronetTestRule.SERVER_KEY_PKCS8_PEM;
-import static org.chromium.net.CronetTestRule.assertContains;
-import static org.chromium.net.CronetTestRule.getContext;
+import static org.junit.Assert.assertThrows;
+
 import static org.chromium.net.CronetTestRule.getTestStorage;
+import static org.chromium.net.truth.UrlResponseInfoSubject.assertThat;
 
 import androidx.annotation.OptIn;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
 import com.android.testutils.SkipPresubmit;
 
 import org.json.JSONException;
+=======
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -43,7 +50,6 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
 import org.chromium.base.test.util.DisabledTest;
 import org.chromium.net.CronetTestRule.OnlyRunNativeCronet;
-import org.chromium.net.DnsOptions.StaleDnsOptions;
 import org.chromium.net.impl.CronetUrlRequestContext;
 
 import java.io.File;
@@ -51,14 +57,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 /** Tests for experimental options. */
@@ -67,32 +65,30 @@ import java.util.concurrent.CountDownLatch;
 @OptIn(markerClass = {ConnectionMigrationOptions.Experimental.class, DnsOptions.Experimental.class,
                QuicOptions.Experimental.class, QuicOptions.QuichePassthroughOption.class})
 public class ExperimentalOptionsTest {
-    private static final String EXPECTED_CONNECTION_MIGRATION_ENABLED_STRING =
-            "{\"QUIC\":{\"migrate_sessions_on_network_change_v2\":true}}";
-
     @Rule
-    public final CronetTestRule mTestRule = new CronetTestRule();
+    public final CronetTestRule mTestRule = CronetTestRule.withManualEngineStartup();
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     private static final String TAG = ExperimentalOptionsTest.class.getSimpleName();
-    private ExperimentalCronetEngine.Builder mBuilder;
     private CountDownLatch mHangingUrlLatch;
 
     @Before
     public void setUp() throws Exception {
-        mBuilder = new ExperimentalCronetEngine.Builder(getContext());
         mHangingUrlLatch = new CountDownLatch(1);
-        CronetTestUtil.setMockCertVerifierForTesting(
-                mBuilder, QuicTestServer.createMockCertVerifier());
-        assertTrue(Http2TestServer.startHttp2TestServer(
-                getContext(), SERVER_CERT_PEM, SERVER_KEY_PKCS8_PEM, mHangingUrlLatch));
+        mTestRule.getTestFramework().applyEngineBuilderPatch(
+                (builder)
+                        -> CronetTestUtil.setMockCertVerifierForTesting(
+                                builder, QuicTestServer.createMockCertVerifier()));
+        assertThat(Http2TestServer.startHttp2TestServer(
+                           mTestRule.getTestFramework().getContext(), mHangingUrlLatch))
+                .isTrue();
     }
 
     @After
     public void tearDown() throws Exception {
         mHangingUrlLatch.countDown();
-        assertTrue(Http2TestServer.shutdownHttp2TestServer());
+        assertThat(Http2TestServer.shutdownHttp2TestServer()).isTrue();
     }
 
     @Test
@@ -103,12 +99,15 @@ public class ExperimentalOptionsTest {
     public void testNetLog() throws Exception {
         File directory = new File(PathUtils.getDataDirectory());
         File logfile = File.createTempFile("cronet", "json", directory);
-        JSONObject hostResolverParams = CronetTestUtil.generateHostResolverRules();
-        JSONObject experimentalOptions =
-                new JSONObject().put("HostResolverRules", hostResolverParams);
-        mBuilder.setExperimentalOptions(experimentalOptions.toString());
 
-        CronetEngine cronetEngine = mBuilder.build();
+        mTestRule.getTestFramework().applyEngineBuilderPatch((builder) -> {
+            JSONObject hostResolverParams = CronetTestUtil.generateHostResolverRules();
+            JSONObject experimentalOptions =
+                    new JSONObject().put("HostResolverRules", hostResolverParams);
+            builder.setExperimentalOptions(experimentalOptions.toString());
+        });
+        CronetEngine cronetEngine = mTestRule.getTestFramework().startEngine();
+
         cronetEngine.startNetLogToFile(logfile.getPath(), false);
         String url = Http2TestServer.getEchoMethodUrl();
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
@@ -117,40 +116,61 @@ public class ExperimentalOptionsTest {
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
-        assertEquals("GET", callback.mResponseAsString);
+        assertThat(callback.getResponseInfoWithChecks()).hasHttpStatusCodeThat().isEqualTo(200);
+        assertThat(callback.mResponseAsString).isEqualTo("GET");
         cronetEngine.stopNetLog();
         assertFileContainsString(logfile, "HostResolverRules");
-        assertTrue(logfile.delete());
-        assertFalse(logfile.exists());
-        cronetEngine.shutdown();
+        assertThat(logfile.delete()).isTrue();
+        assertThat(logfile.exists()).isFalse();
     }
 
     @Test
     @MediumTest
     @OnlyRunNativeCronet
     public void testEnableTelemetryFalse() throws Exception {
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         JSONObject experimentalOptions = new JSONObject().put("enable_telemetry", false);
         mBuilder.setExperimentalOptions(experimentalOptions.toString());
+=======
+        mTestRule.getTestFramework().applyEngineBuilderPatch((builder) -> {
+            JSONObject experimentalOptions = new JSONObject().put("enable_telemetry", false);
+            builder.setExperimentalOptions(experimentalOptions.toString());
+        });
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
 
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         CronetEngine cronetEngine = mBuilder.build();
         CronetUrlRequestContext context = (CronetUrlRequestContext) mBuilder.build();
         assertFalse(context.getEnableTelemetryForTesting());
         cronetEngine.shutdown();
+=======
+        CronetUrlRequestContext context =
+                (CronetUrlRequestContext) mTestRule.getTestFramework().startEngine();
+        assertThat(context.getEnableTelemetryForTesting()).isFalse();
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
     }
 
     @Test
     @MediumTest
     @OnlyRunNativeCronet
     public void testEnableTelemetryDefault() throws Exception {
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         CronetEngine cronetEngine = mBuilder.build();
         CronetUrlRequestContext context = (CronetUrlRequestContext) mBuilder.build();
         assertTrue(context.getEnableTelemetryForTesting());
         cronetEngine.shutdown();
+=======
+        CronetUrlRequestContext context =
+                (CronetUrlRequestContext) mTestRule.getTestFramework().startEngine();
+        assertThat(context.getEnableTelemetryForTesting()).isTrue();
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
     }
 
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
     @DisabledTest(message = "crbug.com/1021941")
     @Ignore("b/275345637 Needs HTTP2 Server")
+=======
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
     @Test
     @MediumTest
     @OnlyRunNativeCronet
@@ -159,9 +179,13 @@ public class ExperimentalOptionsTest {
         File dir = new File(PathUtils.getDataDirectory());
         File file = File.createTempFile("ssl_key_log_file", "", dir);
 
-        JSONObject experimentalOptions = new JSONObject().put("ssl_key_log_file", file.getPath());
-        mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        CronetEngine cronetEngine = mBuilder.build();
+        mTestRule.getTestFramework().applyEngineBuilderPatch((builder) -> {
+            JSONObject experimentalOptions =
+                    new JSONObject().put("ssl_key_log_file", file.getPath());
+            builder.setExperimentalOptions(experimentalOptions.toString());
+        });
+
+        CronetEngine cronetEngine = mTestRule.getTestFramework().startEngine();
 
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
         UrlRequest.Builder builder =
@@ -169,13 +193,12 @@ public class ExperimentalOptionsTest {
         UrlRequest urlRequest = builder.build();
         urlRequest.start();
         callback.blockForDone();
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
-        assertEquals("GET", callback.mResponseAsString);
+        assertThat(callback.getResponseInfoWithChecks()).hasHttpStatusCodeThat().isEqualTo(200);
+        assertThat(callback.mResponseAsString).isEqualTo("GET");
 
-        assertFileContainsString(file, "CLIENT_RANDOM");
-        assertTrue(file.delete());
-        assertFalse(file.exists());
-        cronetEngine.shutdown();
+        assertFileContainsString(file, "CLIENT_HANDSHAKE_TRAFFIC_SECRET");
+        assertThat(file.delete()).isTrue();
+        assertThat(file.exists()).isFalse();
     }
 
     // Helper method to assert that file contains content. It retries 5 times
@@ -188,7 +211,7 @@ public class ExperimentalOptionsTest {
             Log.i(TAG, "Retrying...");
             Thread.sleep(100);
         }
-        assertTrue("file content doesn't match", contains);
+        assertWithMessage("file content doesn't match").that(contains).isTrue();
     }
 
     // Returns whether a file contains a particular string.
@@ -224,7 +247,12 @@ public class ExperimentalOptionsTest {
     // Tests that basic Cronet functionality works when host cache persistence is enabled, and that
     // persistence works.
     public void testHostCachePersistence() throws Exception {
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         assertTrue(NativeTestServer.startNativeTestServer(getContext()));
+=======
+        EmbeddedTestServer testServer =
+                EmbeddedTestServer.createAndStartServer(mTestRule.getTestFramework().getContext());
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
 
         String realUrl = NativeTestServer.getSuccessURL();
         URL javaUrl = new URL(realUrl);
@@ -233,7 +261,11 @@ public class ExperimentalOptionsTest {
         String testHost = "host-cache-test-host";
         String testUrl = new URL("http", testHost, realPort, javaUrl.getPath()).toString();
 
-        mBuilder.setStoragePath(getTestStorage(getContext()))
+        ExperimentalCronetEngine.Builder builder =
+                mTestRule.getTestFramework().createNewSecondaryBuilder(
+                        mTestRule.getTestFramework().getContext());
+
+        builder.setStoragePath(getTestStorage(mTestRule.getTestFramework().getContext()))
                 .enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK, 0);
 
         // Set a short delay so the pref gets written quickly.
@@ -244,8 +276,8 @@ public class ExperimentalOptionsTest {
                                       .put("persist_to_disk", true)
                                       .put("persist_delay_ms", 0);
         JSONObject experimentalOptions = new JSONObject().put("StaleDNS", staleDns);
-        mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        CronetUrlRequestContext context = (CronetUrlRequestContext) mBuilder.build();
+        builder.setExperimentalOptions(experimentalOptions.toString());
+        CronetUrlRequestContext context = (CronetUrlRequestContext) builder.build();
 
         // Create a HostCache entry for "host-cache-test-host".
         ExperimentalOptionsTestJni.get().writeToHostCache(
@@ -253,27 +285,25 @@ public class ExperimentalOptionsTest {
 
         // Do a request for the test URL to make sure it's cached.
         TestUrlRequestCallback callback = new TestUrlRequestCallback();
-        UrlRequest.Builder builder =
-                context.newUrlRequestBuilder(testUrl, callback, callback.getExecutor());
-        UrlRequest urlRequest = builder.build();
+        ;
+        UrlRequest urlRequest =
+                context.newUrlRequestBuilder(testUrl, callback, callback.getExecutor()).build();
         urlRequest.start();
         callback.blockForDone();
-        assertNull(callback.mError);
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+        assertThat(callback.getResponseInfoWithChecks()).hasHttpStatusCodeThat().isEqualTo(200);
 
         // Shut down the context, persisting contents to disk, and build a new one.
         context.shutdown();
-        context = (CronetUrlRequestContext) mBuilder.build();
+        context = (CronetUrlRequestContext) builder.build();
 
         // Use the test URL without creating a new cache entry first. It should use the persisted
         // one.
         callback = new TestUrlRequestCallback();
-        builder = context.newUrlRequestBuilder(testUrl, callback, callback.getExecutor());
-        urlRequest = builder.build();
+        urlRequest =
+                context.newUrlRequestBuilder(testUrl, callback, callback.getExecutor()).build();
         urlRequest.start();
         callback.blockForDone();
-        assertNull(callback.mError);
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
+        assertThat(callback.getResponseInfoWithChecks()).hasHttpStatusCodeThat().isEqualTo(200);
         context.shutdown();
         NativeTestServer.shutdownNativeTestServer();
     }
@@ -281,17 +311,18 @@ public class ExperimentalOptionsTest {
     @Test
     @MediumTest
     @OnlyRunNativeCronet
-    @DisabledTest(message = "https://crbug.com/1404719")
-    // Experimental options should be specified through a JSON compliant string. When that is not
-    // the case building a Cronet engine should fail.
+    // Experimental options should be specified through a JSON compliant string.
     public void testWrongJsonExperimentalOptions() throws Exception {
-        try {
-            mBuilder.setExperimentalOptions("Not a serialized JSON object");
-            CronetEngine cronetEngine = mBuilder.build();
-            fail("Setting invalid JSON should have thrown an exception.");
-        } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().contains("Experimental options parsing failed"));
-        }
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                ()
+                        -> mTestRule.getTestFramework().applyEngineBuilderPatch(
+                                (builder)
+                                        -> builder.setExperimentalOptions(
+                                                "Not a serialized JSON object")));
+        // The top level exception is a side effect of using applyEngineBuilderPatch
+        assertThat(e).hasCauseThat().isInstanceOf(IllegalArgumentException.class);
+        assertThat(e).hasCauseThat().hasMessageThat().contains(
+                "Experimental options parsing failed");
     }
 
     @Test
@@ -300,11 +331,13 @@ public class ExperimentalOptionsTest {
     @Ignore("b/275345637 Needs HTTP2 Server")
     public void testDetectBrokenConnection() throws Exception {
         String url = Http2TestServer.getEchoMethodUrl();
-        int heartbeatIntervalSecs = 1;
-        JSONObject experimentalOptions =
-                new JSONObject().put("bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
-        mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        ExperimentalCronetEngine cronetEngine = (ExperimentalCronetEngine) mBuilder.build();
+        mTestRule.getTestFramework().applyEngineBuilderPatch((builder) -> {
+            int heartbeatIntervalSecs = 1;
+            JSONObject experimentalOptions = new JSONObject().put(
+                    "bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
+            builder.setExperimentalOptions(experimentalOptions.toString());
+        });
+        ExperimentalCronetEngine cronetEngine = mTestRule.getTestFramework().startEngine();
 
         TestBidirectionalStreamCallback callback = new TestBidirectionalStreamCallback();
         ExperimentalBidirectionalStream.Builder builder =
@@ -313,9 +346,8 @@ public class ExperimentalOptionsTest {
         BidirectionalStream stream = builder.build();
         stream.start();
         callback.blockForDone();
-        assertEquals(200, callback.mResponseInfo.getHttpStatusCode());
-        assertEquals("GET", callback.mResponseAsString);
-        cronetEngine.shutdown();
+        assertThat(callback.getResponseInfoWithChecks()).hasHttpStatusCodeThat().isEqualTo(200);
+        assertThat(callback.mResponseAsString).isEqualTo("GET");
     }
 
     @DisabledTest(message = "crbug.com/1320725")
@@ -329,11 +361,15 @@ public class ExperimentalOptionsTest {
         String hangingUrl = Http2TestServer.getHangingRequestUrl();
         TestBidirectionalStreamCallback callback = new TestBidirectionalStreamCallback();
         TestRequestFinishedListener requestFinishedListener = new TestRequestFinishedListener();
-        int heartbeatIntervalSecs = 1;
-        JSONObject experimentalOptions =
-                new JSONObject().put("bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
-        mBuilder.setExperimentalOptions(experimentalOptions.toString());
-        ExperimentalCronetEngine cronetEngine = (ExperimentalCronetEngine) mBuilder.build();
+
+        mTestRule.getTestFramework().applyEngineBuilderPatch((builder) -> {
+            int heartbeatIntervalSecs = 1;
+            JSONObject experimentalOptions = new JSONObject().put(
+                    "bidi_stream_detect_broken_connection", heartbeatIntervalSecs);
+            builder.setExperimentalOptions(experimentalOptions.toString());
+        });
+
+        ExperimentalCronetEngine cronetEngine = mTestRule.getTestFramework().startEngine();
         cronetEngine.addRequestFinishedListener(requestFinishedListener);
         ExperimentalBidirectionalStream.Builder builder =
                 cronetEngine
@@ -342,15 +378,17 @@ public class ExperimentalOptionsTest {
         BidirectionalStream stream = builder.build();
         stream.start();
         callback.blockForDone();
-        assertTrue(stream.isDone());
-        assertTrue(callback.mOnErrorCalled);
-        assertContains("Exception in BidirectionalStream: net::ERR_HTTP2_PING_FAILED",
-                callback.mError.getMessage());
-        assertEquals(NetError.ERR_HTTP2_PING_FAILED,
-                ((NetworkException) callback.mError).getCronetInternalErrorCode());
+        assertThat(stream.isDone()).isTrue();
+        assertThat(callback.mOnErrorCalled).isTrue();
+        assertThat(callback.mError)
+                .hasMessageThat()
+                .contains("Exception in BidirectionalStream: net::ERR_HTTP2_PING_FAILED");
+        assertThat(((NetworkException) callback.mError).getCronetInternalErrorCode())
+                .isEqualTo(NetError.ERR_HTTP2_PING_FAILED);
         cronetEngine.shutdown();
     }
 
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
     @Test
     @MediumTest
     public void testEnableDefaultNetworkConnectionMigrationApi_noBuilderSupport() {
@@ -826,6 +864,8 @@ public class ExperimentalOptionsTest {
         }
     }
 
+=======
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
     @NativeMethods("cronet_tests")
     interface Natives {
         // Sets a host cache entry with hostname "host-cache-test-host" and an AddressList

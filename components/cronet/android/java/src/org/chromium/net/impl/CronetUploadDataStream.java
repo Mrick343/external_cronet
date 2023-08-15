@@ -381,7 +381,6 @@ public final class CronetUploadDataStream extends UploadDataSink {
      * CronetUploadDataStream for testing.
      * @return the address of the native CronetUploadDataStream object.
      */
-    @VisibleForTesting
     public long createUploadDataStreamForTesting() throws IOException {
         synchronized (mLock) {
             mUploadDataStreamAdapter = CronetUploadDataStreamJni.get().createAdapterForTesting(
@@ -393,8 +392,12 @@ public final class CronetUploadDataStream extends UploadDataSink {
         }
     }
 
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
     @VisibleForTesting
     public void setOnDestroyedCallbackForTesting(Runnable onDestroyedCallbackForTesting) {
+=======
+    void setOnDestroyedCallbackForTesting(Runnable onDestroyedCallbackForTesting) {
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
         mOnDestroyedCallbackForTesting = onDestroyedCallbackForTesting;
     }
 
