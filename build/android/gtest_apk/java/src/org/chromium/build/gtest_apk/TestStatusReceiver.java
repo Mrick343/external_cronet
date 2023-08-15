@@ -51,7 +51,15 @@ public class TestStatusReceiver extends BroadcastReceiver {
 
     /** Register this receiver using the provided context. */
     public void register(Context c) {
+<<<<<<< HEAD   (bb3721 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         c.registerReceiver(this, INTENT_FILTER, Context.RECEIVER_EXPORTED);
+=======
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            c.registerReceiver(this, INTENT_FILTER, Context.RECEIVER_EXPORTED);
+        } else {
+            c.registerReceiver(this, INTENT_FILTER);
+        }
+>>>>>>> BRANCH (ec3a8e Import Cronet version 117.0.5938.0)
     }
 
     /**
