@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98c34ed6_b67480df",
+        "filename": "components/cronet/android/fake/java/org/chromium/net/test/FakeCronetEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 0,
+      "message": "I think we should keep these classes (now that we\u0027ve wrapped the API it\u0027s a bit easier to do so) simply for the fact that they\u0027ll create a conflict every single time there\u0027s an upstream change to them. They\u0027ll continue to be unused / unchanged in Android.",
+      "range": {
+        "startLine": 401,
+        "startChar": 8,
+        "endLine": 401,
+        "endChar": 58
+      },
+      "revId": "3467217c0f359fd3c5317dd1ee13547a4071cc70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee967b8f_513f404a",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/JavaCronetEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 0,
+      "message": "same for these, I\u0027d leave them there. Let\u0027s just make sure they don\u0027t get built.",
+      "range": {
+        "startLine": 266,
+        "startChar": 8,
+        "endLine": 266,
+        "endChar": 58
+      },
+      "revId": "3467217c0f359fd3c5317dd1ee13547a4071cc70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ce02095_656da629",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/RequestFinishedInfoTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 0,
+      "message": "setUp / tearDown are inconsistent here.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 5
+      },
+      "revId": "3467217c0f359fd3c5317dd1ee13547a4071cc70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "174dcf52_25d03dc2",
+        "filename": "components/cronet/android/test/quic_test_server.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 0,
+      "message": "I think we want this.",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 25
+      },
+      "revId": "3467217c0f359fd3c5317dd1ee13547a4071cc70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

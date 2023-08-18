@@ -107,6 +107,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "34782fe6_35d5f74b",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 0,
+      "message": "apparently (crrev.com/c/4624843). Looks like this will make our build process a bit easier too though (once we\u0027ve caught up with the changes of course).",
+      "parentUuid": "35d3552b_a5263ee6",
+      "range": {
+        "startLine": 547,
+        "startChar": 0,
+        "endLine": 548,
+        "endChar": 58
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27918043_8b61f39d",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java",
         "patchSetId": 1

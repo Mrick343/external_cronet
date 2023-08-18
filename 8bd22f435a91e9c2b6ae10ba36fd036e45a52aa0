@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdaab30c_a176a959",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 1,
+      "message": "+2 to unblock. It might be easier to address some of the comments in follow up. What I would still do in this merge CL is reintroduce the deleted files.",
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b398202_118dd5da",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 1,
+      "message": "You can either remove the @VisibleForTesting (to match upstream) or make this package-private again. The tests will tell you which one it should be.",
+      "range": {
+        "startLine": 82,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 11
+      },
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2d7f0dd_8a9262b9",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 1,
+      "message": "indentation",
+      "range": {
+        "startLine": 47,
+        "startChar": 8,
+        "endLine": 47,
+        "endChar": 9
+      },
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0362499b_3f144db3",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 1,
+      "message": "not sure if this should be removed -- can we use Http2TestServer? Also, the `assertThat(Http2TestServer.startHttp2TestServer(mTestRule.getTestFramework().getContext()))\n                .isTrue();` in setUp() was removed.",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 71
+      },
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15c4febf_385a38c4",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 1,
+      "message": "indentation",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87e10b98_9dd3a9cc",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1594463
+      },
+      "writtenOn": "2023-08-18T20:05:06Z",
+      "side": 1,
+      "message": "indentation",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 4
+      },
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
