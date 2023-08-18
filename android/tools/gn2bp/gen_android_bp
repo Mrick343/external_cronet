@@ -951,14 +951,13 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
     return arg
 
   def _sanitize_args(self):
-    self._set_value_arg('--jar_file', '$(location :current_android_jar)', False)
-    if self._has_arg('--jar_file'):
-      self._append_arg('--javap', '$$(find $${OUT_DIR:-out}/.path -name javap)')
-    self._update_value_arg('--output_dir', self._sanitize_filepath)
-    self._update_value_arg('--includes', self._sanitize_filepath, False)
-    self._delete_value_arg('--prev_output_dir', False)
-    self._update_list_arg('--input_file', self._sanitize_filepath)
-    self._update_list_arg('--input_file', self._add_location_tag_to_filepath)
+    self._set_value_arg('--jar-file', '$(location :current_android_jar)', False)
+    if self._has_arg('--jar-file'):
+      self._set_value_arg('--javap', '$$(find $${OUT_DIR:-out}/.path -name javap)')
+    self._update_value_arg('--output-dir', self._sanitize_filepath)
+    self._update_value_arg('--extra-include', self._sanitize_filepath, False)
+    self._update_list_arg('--input-file', self._sanitize_filepath)
+    self._update_list_arg('--input-file', self._add_location_tag_to_filepath)
     if not self.is_test_target:
       # Only jarjar platform code
       self._append_arg('--package_prefix', 'android.net.connectivity')
