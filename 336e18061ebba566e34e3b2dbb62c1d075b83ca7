@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d59eb8ef_e9c3beb4",
+        "filename": "base/android/java/src/org/chromium/base/ApiCompatibilityUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "This is already implemented [here](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/libs/modules-utils/java/com/android/modules/utils/build/SdkLevel.java;drc\u003d35fe27c981cc4304c33d8579076fbedd404ec68b;l\u003d62). I just changed the line.",
+      "parentUuid": "3f323355_91f6c59e",
+      "range": {
+        "startLine": 297,
+        "startChar": 13,
+        "endLine": 297,
+        "endChar": 32
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8aac5e12_4f1e9f68",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "We don\u0027t want this upstream (can\u0027t depend on androidx)",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 36
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c61816b_51d62f15",
+        "filename": "base/android/java/src/org/chromium/base/BuildInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Removed the @OptIn. I have no idea of what is the consequences but my goal is to get gn2bp to work.",
+      "parentUuid": "8aac5e12_4f1e9f68",
       "range": {
         "startLine": 24,
         "startChar": 0,
@@ -129,6 +177,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9626f738_a3209ec8",
+        "filename": "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Just moved to a different directory.",
+      "parentUuid": "35d3552b_a5263ee6",
+      "range": {
+        "startLine": 547,
+        "startChar": 0,
+        "endLine": 548,
+        "endChar": 58
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27918043_8b61f39d",
@@ -152,6 +224,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2498370f_285acb72",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Deleted both tests as JavaCronetEngine is not in AOSP.",
+      "parentUuid": "27918043_8b61f39d",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 5
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fae33d9e_9d74ca18",
@@ -165,6 +261,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "same as comment above",
+      "range": {
+        "startLine": 108,
+        "startChar": 16,
+        "endLine": 108,
+        "endChar": 38
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27e9b2e0_426f2da2",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRuleTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Deleted both tests as JavaCronetEngine is not in AOSP.",
+      "parentUuid": "fae33d9e_9d74ca18",
       "range": {
         "startLine": 108,
         "startChar": 16,
@@ -233,6 +353,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc9cdb21_6bc4a908",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "I believe we should try to minimize the differences between upstream and downstream, especially ones like this.",
+      "parentUuid": "d7c68356_f158281e",
+      "range": {
+        "startLine": 552,
+        "startChar": 8,
+        "endLine": 552,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "391a9a49_ee61d727",
@@ -246,6 +390,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "Same as above",
+      "range": {
+        "startLine": 617,
+        "startChar": 8,
+        "endLine": 617,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5e9482c_e99a91cd",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "391a9a49_ee61d727",
       "range": {
         "startLine": 617,
         "startChar": 8,
@@ -279,6 +447,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c8e136b_049d7fd1",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "bb2495a0_83f6ea2d",
+      "range": {
+        "startLine": 1008,
+        "startChar": 8,
+        "endLine": 1011,
+        "endChar": 41
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2fda640e_584064a2",
@@ -292,6 +484,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "Same as above",
+      "range": {
+        "startLine": 1188,
+        "startChar": 8,
+        "endLine": 1188,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8399fafb_bb52d211",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1188,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "2fda640e_584064a2",
       "range": {
         "startLine": 1188,
         "startChar": 8,
@@ -325,6 +541,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb055848_e1d601a0",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "5b8bf911_2c34c28e",
+      "range": {
+        "startLine": 1253,
+        "startChar": 8,
+        "endLine": 1253,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4498792_7b69c2c4",
@@ -348,6 +588,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "263101f0_7d1e670e",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "c4498792_7b69c2c4",
+      "range": {
+        "startLine": 1320,
+        "startChar": 8,
+        "endLine": 1320,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6c68adad_bf1eaae1",
@@ -361,6 +625,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "Same as above",
+      "range": {
+        "startLine": 1385,
+        "startChar": 8,
+        "endLine": 1385,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98667750_f615684a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "6c68adad_bf1eaae1",
       "range": {
         "startLine": 1385,
         "startChar": 8,
@@ -501,6 +789,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8fc3e8b7_b9fe17f0",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1807,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Leaving it open for now.",
+      "parentUuid": "cb0a960c_f0247858",
+      "range": {
+        "startLine": 1768,
+        "startChar": 4,
+        "endLine": 1807,
+        "endChar": 5
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fb34aa54_f4abb52a",
         "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java",
         "patchSetId": 1
@@ -617,6 +929,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "IIRC these got moved to a different file upstream. Did you importing the new file (I think so, just asking to be sure)?",
+      "range": {
+        "startLine": 394,
+        "startChar": 16,
+        "endLine": 394,
+        "endChar": 79
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e726a79_e70aae02",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Yes. They are imported as seen here https://android.googlesource.com/platform/external/cronet/+/refs/heads/upstream-import#:~:text\u003dcomponents/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTranslationTest.java",
+      "parentUuid": "dcfc16b2_66b61293",
       "range": {
         "startLine": 394,
         "startChar": 16,
@@ -802,6 +1138,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3366c57a_8480c8b3",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "ec8632d0_de551d57",
+      "range": {
+        "startLine": 381,
+        "startChar": 2,
+        "endLine": 382,
+        "endChar": 55
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "111e7520_cd2827f7",
@@ -815,6 +1175,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "Keep this instead to reduce diff from upstream?",
+      "range": {
+        "startLine": 398,
+        "startChar": 2,
+        "endLine": 398,
+        "endChar": 79
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6cd058b_f74739cf",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "111e7520_cd2827f7",
       "range": {
         "startLine": 398,
         "startChar": 2,
@@ -848,6 +1232,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "05d46983_351cf321",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "e9f83081_661f3caf",
+      "range": {
+        "startLine": 418,
+        "startChar": 2,
+        "endLine": 418,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73e9e36a_0d3f5ea4",
@@ -861,6 +1269,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "Keep this instead to reduce diff from upstream?",
+      "range": {
+        "startLine": 434,
+        "startChar": 2,
+        "endLine": 434,
+        "endChar": 73
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4bcefc3_5caa3fd1",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "73e9e36a_0d3f5ea4",
       "range": {
         "startLine": 434,
         "startChar": 2,
@@ -894,6 +1326,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e2def73_dd5dc9f4",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "5f8c9eeb_d96734da",
+      "range": {
+        "startLine": 447,
+        "startChar": 2,
+        "endLine": 448,
+        "endChar": 67
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e1af826_5de4e771",
@@ -907,6 +1363,30 @@
       "writtenOn": "2023-08-15T18:47:04Z",
       "side": 0,
       "message": "Keep this instead to reduce diff from upstream?",
+      "range": {
+        "startLine": 477,
+        "startChar": 2,
+        "endLine": 479,
+        "endChar": 79
+      },
+      "revId": "336e18061ebba566e34e3b2dbb62c1d075b83ca7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52ccd7d8_32644774",
+        "filename": "net/der/parse_values_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "4e1af826_5de4e771",
       "range": {
         "startLine": 477,
         "startChar": 2,

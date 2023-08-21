@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d75c22a_7c0de3e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-21T13:14:19Z",
+      "side": 1,
+      "message": "I will merge this CL and address the issues in follow-up CLs as I have already built upon them.",
+      "revId": "8bd22f435a91e9c2b6ae10ba36fd036e45a52aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b398202_118dd5da",
