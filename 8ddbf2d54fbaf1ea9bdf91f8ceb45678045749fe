@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c423ba53_ea3448d2",
+        "filename": "patches/0009-Remove-fake-Cronet-classes.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-21T13:03:25Z",
+      "side": 1,
+      "message": "You probably want to keep this?",
+      "range": {
+        "startLine": 111,
+        "startChar": 12,
+        "endLine": 111,
+        "endChar": 59
+      },
+      "revId": "8ddbf2d54fbaf1ea9bdf91f8ceb45678045749fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
