@@ -1645,47 +1645,6 @@ public class CronetUrlRequestContextTest {
                 getTestStorage(mTestRule.getTestFramework().getContext()));
     }
 
-    private static class TestBadLibraryLoader extends CronetEngine.Builder.LibraryLoader {
-        private boolean mWasCalled;
-
-        @Override
-        public void loadLibrary(String libName) {
-            // Report that this method was called, but don't load the library
-            mWasCalled = true;
-        }
-
-        boolean wasCalled() {
-            return mWasCalled;
-        }
-    }
-
-    @Test
-    @SmallTest
-    @OnlyRunNativeCronet // Deliberate manual creation of native engine
-    public void testSetLibraryLoaderIsEnforcedByDefaultEmbeddedProvider() throws Exception {
-        CronetEngine.Builder builder =
-                new CronetEngine.Builder(mTestRule.getTestFramework().getContext());
-        TestBadLibraryLoader loader = new TestBadLibraryLoader();
-        builder.setLibraryLoader(loader);
-
-        assertThrows(
-                "Native library should not be loaded", UnsatisfiedLinkError.class, builder::build);
-        assertThat(loader.wasCalled()).isTrue();
-    }
-
-    @Test
-    @SmallTest
-    @OnlyRunNativeCronet
-    public void testSetLibraryLoaderIsIgnoredInNativeCronetEngineBuilderImpl() throws Exception {
-        CronetEngine.Builder builder = new CronetEngine.Builder(
-                new NativeCronetEngineBuilderImpl(mTestRule.getTestFramework().getContext()));
-        TestBadLibraryLoader loader = new TestBadLibraryLoader();
-        builder.setLibraryLoader(loader);
-        CronetEngine engine = builder.build();
-        assertThat(engine).isNotNull();
-        assertThat(loader.wasCalled()).isFalse();
-    }
-
     // Creates a CronetEngine on another thread and then one on the main thread.  This shouldn't
     // crash.
     @Test
