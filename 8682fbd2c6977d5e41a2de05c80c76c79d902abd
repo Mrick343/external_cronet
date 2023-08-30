@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0b0cab_ac3a46be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-30T14:58:34Z",
+      "side": 1,
+      "message": "Can you file a bug about this? I find it weird that this works within Chromium but not AOSP",
+      "revId": "8682fbd2c6977d5e41a2de05c80c76c79d902abd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
