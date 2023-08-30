@@ -22,6 +22,30 @@
       },
       "revId": "261cf74e3621e6649815257b365a0ac47f9f6918",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a57c97b9_347eabca",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-30T17:28:02Z",
+      "side": 1,
+      "message": "I think this is the other way around, cronet-code will call into non-cronet code. Actually this does not change the status quo. We used to stamp every jni_generator method with `package_prefix` but this was only used if `javap` was not used.\n\nWhen `--jar-file` exist then this path is taken https://source.chromium.org/chromium/chromium/src/+/main:third_party/jni_zero/jni_zero.py;l\u003d34 and we decided that we don\u0027t need to jar-jaring for code that exist outside of Cronet. \n\ntl;dr: This is used for native code to call in SDK code. We don\u0027t need to jar-jar this.",
+      "parentUuid": "53366f32_971076fa",
+      "range": {
+        "startLine": 963,
+        "startChar": 8,
+        "endLine": 965,
+        "endChar": 23
+      },
+      "revId": "261cf74e3621e6649815257b365a0ac47f9f6918",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
