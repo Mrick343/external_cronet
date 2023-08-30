@@ -16,6 +16,24 @@
       "message": "See https://googleplex-android-review.git.corp.google.com/c/platform/external/cronet/+/24601747/comments/9c6d05c3_09ae8a65",
       "revId": "ede7923eec05c56158d1668c80d92c628be5634a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ae376ec_0337189e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-30T09:26:23Z",
+      "side": 1,
+      "message": "Discussed offline. We should be able to merge this once https://googleplex-android-review.git.corp.google.com/c/platform/frameworks/base/+/24601647 lands.\n\n+2\u0027ing so that you can merge once TH is happy.",
+      "parentUuid": "fce43a73_252c072d",
+      "revId": "ede7923eec05c56158d1668c80d92c628be5634a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
