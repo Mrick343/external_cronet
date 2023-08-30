@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c98b7413_d913d3c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-30T12:46:32Z",
+      "side": 1,
+      "message": "\"args\": [ \"from-jar\", \"--output-dir\", \"gen/jni_headers/base/android_runtime_unchecked_jni_headers\", \"--extra-include\", \"../../../../../../base/android/jni_generator/jni_generator_helper.h\", \"--jar-file\", \"../../third_party/android_sdk/public/platforms/android-34/android.jar\", \"--javap\", \"../../third_party/jdk/current/bin/javap\", \"--unchecked-exceptions\", \"--output-name\", \"Runnable_jni.h\", \"--input-file\u003djava/lang/Runnable.class\" ],\n\nthis is how the args look like from the desc.json file for this script\n\nPreviously, there was no --javap argument so we added it but now it exists so we just change it.",
+      "revId": "322853010e837359724b3a82b60263f43dd85daa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
