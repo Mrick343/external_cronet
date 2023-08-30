@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53366f32_971076fa",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-30T14:53:47Z",
+      "side": 1,
+      "message": "Wouldn\u0027t this allow non-cronet code to call into the classes bundled within Cronet.jar?",
+      "range": {
+        "startLine": 963,
+        "startChar": 8,
+        "endLine": 965,
+        "endChar": 23
+      },
+      "revId": "261cf74e3621e6649815257b365a0ac47f9f6918",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
