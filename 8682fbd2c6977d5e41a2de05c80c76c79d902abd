@@ -16,6 +16,24 @@
       "message": "Can you file a bug about this? I find it weird that this works within Chromium but not AOSP",
       "revId": "8682fbd2c6977d5e41a2de05c80c76c79d902abd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11881a52_b3f74fa6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-30T17:30:46Z",
+      "side": 1,
+      "message": "This is normal from what I have discussed with Patrick. Apparently Chromium compiles aosp-internal into one big jar and use it on their side. However, we are developing in aosp-main so some changes are not yet visible to us but they are visible to the chrome people.\n\nI can file a bug to have chrome switch to the aosp-main version but I don\u0027t think they would be happy about that.",
+      "parentUuid": "0f0b0cab_ac3a46be",
+      "revId": "8682fbd2c6977d5e41a2de05c80c76c79d902abd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
