@@ -16,6 +16,24 @@
       "message": "Can you disable them instead?",
       "revId": "eea47991e74a9869f7904f5d68fedc21dfd9a908",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "609051e2_1c5946c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-31T13:41:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a21b7dd_da994af0",
+      "revId": "eea47991e74a9869f7904f5d68fedc21dfd9a908",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
