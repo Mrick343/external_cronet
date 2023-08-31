@@ -46,6 +46,30 @@
       },
       "revId": "53281872f5fc70c0b64502a14181deeb64abd5b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02b61130_959e1b72",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-31T13:14:12Z",
+      "side": 1,
+      "message": "So this is the results of removing \"cronet.so\" from the MTS tests\n\n```\njava.lang.UnsatisfiedLinkError: dlopen failed: library \"libcronet.117.0.5938.0.so\" not found        at java.lang.Runtime.loadLibrary0(Runtime.java:1082)        at java.lang.Runtime.loadLibrary0(Runtime.java:1003)        at java.lang.System.loadLibrary(System.java:1661)        at org.chromium.net.impl.CronetLibraryLoader.ensureInitialized(CronetLibraryLoader.java:60)        at org.chromium.net.impl.CronetUrlRequestContext.\u003cinit\u003e(CronetUrlRequestContext.java:208)        at org.chromium.net.impl.NativeCronetEngineBuilderImpl.build(NativeCronetEngineBuilderImpl.java:32)        at org.chromium.net.ExperimentalOptionsTranslatingCronetEngineBuilder.build(ExperimentalOptionsTranslatingCronetEngineBuilder.java:295)        at org.chromium.net.ExperimentalCronetEngine$Builder.build(ExperimentalCronetEngine.java:474)        at org.chromium.net.CronetUrlRequestContextTest$7$1.run(CronetUrlRequestContextTest.java:1664)\n```\n\nSo the problem is that the codepath still tries to load libcronet which is not there anymore 😀.\n\nAh also look at the instrumentation tests `cronet_test_instrumentation_apk`\nhttps://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/BUILD.gn;l\u003d1134\nThey still include both libcronet.so and libcronet_tests.so so it makes sense to do the same on AOSP",
+      "parentUuid": "a2960ff4_c182ec63",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 54,
+        "endChar": 38
+      },
+      "revId": "53281872f5fc70c0b64502a14181deeb64abd5b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
