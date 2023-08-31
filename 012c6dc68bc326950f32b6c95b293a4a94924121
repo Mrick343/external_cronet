@@ -22,6 +22,30 @@
       },
       "revId": "012c6dc68bc326950f32b6c95b293a4a94924121",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63714572_07e1e2ae",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9312,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-31T15:59:14Z",
+      "side": 1,
+      "message": "Done. Moved the JNI hacks to the android.extras.bp as seen in the previous commit.",
+      "parentUuid": "44567d87_a6bcb92b",
+      "range": {
+        "startLine": 9312,
+        "startChar": 3,
+        "endLine": 9312,
+        "endChar": 26
+      },
+      "revId": "012c6dc68bc326950f32b6c95b293a4a94924121",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
