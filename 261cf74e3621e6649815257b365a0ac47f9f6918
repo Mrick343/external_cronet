@@ -46,6 +46,30 @@
       },
       "revId": "261cf74e3621e6649815257b365a0ac47f9f6918",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "435eb367_c8bf52c0",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-31T11:54:11Z",
+      "side": 1,
+      "message": "Discussed offline. There are actual cases where C++ code calls directly into non-Chromium Java code: https://source.chromium.org/chromium/chromium/src/+/main:base/BUILD.gn;l\u003d4197-4200;drc\u003d5185eb0f09d810e5c0dd34fab83bf1b0a4707a78 which generates https://source.chromium.org/chromium/chromium/src/+/main:out/webview-Debug/gen/jni_headers/base/android_runtime_unchecked_jni_headers/Runnable_jni.h",
+      "parentUuid": "a57c97b9_347eabca",
+      "range": {
+        "startLine": 963,
+        "startChar": 8,
+        "endLine": 965,
+        "endChar": 23
+      },
+      "revId": "261cf74e3621e6649815257b365a0ac47f9f6918",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
