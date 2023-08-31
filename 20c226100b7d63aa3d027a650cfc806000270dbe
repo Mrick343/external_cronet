@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28b077c3_b3ce1f80",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-31T10:35:09Z",
+      "side": 1,
+      "message": "Can you mention what this does?\n\n(From a quick googling it stops aapt from compressing .dat files)",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 26
+      },
+      "revId": "20c226100b7d63aa3d027a650cfc806000270dbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12c14293_43b942b3",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-31T10:35:09Z",
+      "side": 1,
+      "message": "It\u0027s fine to leave as is but it\u0027s a bit confusing that this target is introduced by the child CL (leaving this comment just for posterity).",
+      "range": {
+        "startLine": 231,
+        "startChar": 39,
+        "endLine": 231,
+        "endChar": 108
+      },
+      "revId": "20c226100b7d63aa3d027a650cfc806000270dbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
