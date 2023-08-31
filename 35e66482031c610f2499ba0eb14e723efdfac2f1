@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f53de20a_c555e8f2",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/BrotliTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-08-31T09:33:29Z",
+      "side": 1,
+      "message": "You can drop this as it\u0027s called from within `NativeTestServer.startNativeTestServer` https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/components/cronet/android/test/src/org/chromium/net/NativeTestServer.java;l\u003d23;drc\u003de370d8996e657f49acb8b2ed095e099cefe7e003",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 86
+      },
+      "revId": "35e66482031c610f2499ba0eb14e723efdfac2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
