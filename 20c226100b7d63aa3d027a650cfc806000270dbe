@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b2471ec_b914c835",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-31T15:58:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9782dc7_e0ab6d64",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 26
+      },
+      "revId": "20c226100b7d63aa3d027a650cfc806000270dbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "12c14293_43b942b3",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "I added all the manual JNI hacks to android.bp that\u0027s why the target is generated in the child CL. I can move it to Android.extras.bp if that would make it better.",
       "parentUuid": "12c14293_43b942b3",
+      "range": {
+        "startLine": 231,
+        "startChar": 39,
+        "endLine": 231,
+        "endChar": 108
+      },
+      "revId": "20c226100b7d63aa3d027a650cfc806000270dbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66a4fc50_cd1b4f5d",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-31T15:58:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6af8a61e_b1b08b2a",
       "range": {
         "startLine": 231,
         "startChar": 39,
