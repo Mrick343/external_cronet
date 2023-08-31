@@ -70,6 +70,30 @@
       },
       "revId": "53281872f5fc70c0b64502a14181deeb64abd5b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a9e78b0_61413223",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-08-31T13:43:10Z",
+      "side": 1,
+      "message": "We discussed this offline aswell and reached the conclusion that `DEFAULT_TESTS` is a confusing name as it implies that the targets contains tests while in reality they are just targets generated without jar-jaring.\n\nTODO: Change `DEFAULT_TESTS` to something else.",
+      "parentUuid": "02b61130_959e1b72",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 54,
+        "endChar": 38
+      },
+      "revId": "53281872f5fc70c0b64502a14181deeb64abd5b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
