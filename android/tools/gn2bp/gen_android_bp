@@ -51,6 +51,7 @@ DEFAULT_TESTS = [
   '//components/cronet/android:cronet_unittests_android__library',
   '//net:net_unittests__library',
   '//components/cronet/android:cronet_tests',
+  '//components/cronet/android:cronet'
 ]
 
 EXTRAS_ANDROID_BP_FILE = "Android.extras.bp"
@@ -951,17 +952,20 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
     return arg
 
   def _sanitize_args(self):
-    self._set_value_arg('--jar_file', '$(location :current_android_jar)', False)
-    if self._has_arg('--jar_file'):
-      self._append_arg('--javap', '$$(find $${OUT_DIR:-out}/.path -name javap)')
-    self._update_value_arg('--output_dir', self._sanitize_filepath)
-    self._update_value_arg('--includes', self._sanitize_filepath, False)
-    self._delete_value_arg('--prev_output_dir', False)
-    self._update_list_arg('--input_file', self._sanitize_filepath)
-    self._update_list_arg('--input_file', self._add_location_tag_to_filepath)
-    if not self.is_test_target:
+    self._set_value_arg('--jar-file', '$(location :current_android_jar)', False)
+    if self._has_arg('--jar-file'):
+      self._set_value_arg('--javap', '$$(find $${OUT_DIR:-out}/.path -name javap)')
+    self._update_value_arg('--srcjar-path', self._sanitize_filepath, False)
+    self._update_value_arg('--output-dir', self._sanitize_filepath)
+    self._update_value_arg('--extra-include', self._sanitize_filepath, False)
+    self._update_list_arg('--input-file', self._sanitize_filepath)
+    self._update_list_arg('--input-file', self._add_location_tag_to_filepath)
+    if not self.is_test_target and not self._has_arg('--jar-file'):
+      # Don't jarjar classes that already exists within the java SDK. The headers generated
+      # from those genrule can simply call into the original class as it exists outside
+      # of cronet's jar.
       # Only jarjar platform code
-      self._append_arg('--package_prefix', 'android.net.connectivity')
+      self._append_arg('--package-prefix', 'android.net.connectivity')
     super()._sanitize_args()
 
   def _sanitize_outputs(self):
@@ -971,14 +975,38 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
 
   def get_tool_files(self):
     tool_files = super().get_tool_files()
-    # android_jar.classes should be part of the tools as it list implicit classes
-    # for the script to generate JNI headers.
-    tool_files.add("base/android/jni_generator/android_jar.classes")
 
     # Filter android.jar and add :current_android_jar
     tool_files = {file if not file.endswith('android.jar') else ':current_android_jar'
                   for file in tool_files }
+    # Filter bin/javap
+    tool_files = {file for file in tool_files if not file.endswith('bin/javap') }
     return tool_files
+
+class JavaJniGeneratorSanitizer(JniGeneratorSanitizer):
+  def __init__(self, target, arch, is_test_target):
+    self.is_test_target = is_test_target
+    super().__init__(target, arch, is_test_target)
+
+  def _sanitize_outputs(self):
+    # fix target.output directory to match #include statements.
+    self.target.outputs = {re.sub('^jni_headers/', '', out) for out in self.target.outputs}
+    self.target.outputs = [out for out in self.target.outputs if
+                           out.endswith(".srcjar")]
+    super()._sanitize_outputs()
+
+  def get_cmd(self):
+    cmd = super().get_cmd()
+    # Delete intermediates
+    commands = [cmd,
+                "&& zipinfo -1 {src_jar} | grep GEN_JNI.java | zip -d -@ {src_jar}".format(src_jar =self._get_value_arg('--srcjar-path'))]
+    return NEWLINE.join(commands)
+
+  def get_name(self):
+    name = super().get_name() + "__java"
+    if self.is_test_target:
+      name += gn_utils.TESTING_SUFFIX
+    return name
 
 class JniRegistrationGeneratorSanitizer(BaseActionSanitizer):
   def __init__(self, target, arch, is_test_target):
@@ -996,13 +1024,10 @@ class JniRegistrationGeneratorSanitizer(BaseActionSanitizer):
     self._update_value_arg('--srcjar-path', self._sanitize_filepath)
     self._update_value_arg('--header-path', self._sanitize_filepath)
     self._delete_value_arg('--depfile', False)
-    self._set_value_arg('--sources-files', '$(genDir)/java.sources')
-    # update_jni_registration_module removes them from the srcs of the module
-    # It might be better to remove sources by '--sources-exclusions'
-    self._delete_value_arg('--file-exclusions')
+    self._set_value_arg('--java-sources-file', '$(genDir)/java.sources')
     if not self.is_test_target:
       # Only jarjar platform code
-      self._append_arg('--package_prefix', 'android.net.connectivity')
+      self._append_arg('--package-prefix', 'android.net.connectivity')
     super()._sanitize_args()
 
   def get_cmd(self):
@@ -1106,13 +1131,6 @@ def get_action_sanitizer(gn, target, type, arch, is_test_target):
     return WriteBuildFlagHeaderSanitizer(target, arch)
   elif target.script == "//base/write_build_date_header.py":
     return WriteBuildDateHeaderSanitizer(target, arch)
-  elif target.script == '//base/android/jni_generator/jni_generator.py':
-    return JniGeneratorSanitizer(target, arch, is_test_target)
-  elif target.script == '//base/android/jni_generator/jni_registration_generator.py':
-    if type == 'java_genrule':
-      return JavaJniRegistrationGeneratorSanitizer(target, arch, is_test_target)
-    else:
-      return JniRegistrationGeneratorSanitizer(target, arch, is_test_target)
   elif target.script == "//build/util/version.py":
     return VersionSanitizer(target, arch)
   elif target.script == "//build/android/gyp/java_cpp_enum.py":
@@ -1129,6 +1147,17 @@ def get_action_sanitizer(gn, target, type, arch, is_test_target):
     return GnRunBinarySanitizer(target, arch)
   elif target.script == '//build/protoc_java.py':
     return ProtocJavaSanitizer(target, arch, gn)
+  elif target.script == '//third_party/jni_zero/jni_zero.py':
+    if target.args[0] == 'generate-final':
+      if type == 'java_genrule':
+        return JavaJniRegistrationGeneratorSanitizer(target, arch, is_test_target)
+      else:
+        return JniRegistrationGeneratorSanitizer(target, arch, is_test_target)
+    else:
+      if type == 'cc_genrule':
+        return JniGeneratorSanitizer(target, arch, is_test_target)
+      else:
+        return JavaJniGeneratorSanitizer(target, arch, is_test_target)
   else:
     raise Exception('Unsupported action %s' % target.script)
 
@@ -1482,31 +1511,6 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_test_target):
                       (dep_module.name, target.name, dep_module.type))
   return module
 
-def create_java_jni_preprocessor(blueprint):
-  bp_module_name = module_prefix + 'java_jni_annotation_preprocessor'
-  module = Module('java_plugin', bp_module_name, '//base/android/jni_generator:jni_processor')
-  module.srcs.update(
-  [
-    "base/android/jni_generator/java/src/org/chromium/jni_generator/JniProcessor.java",
-    # Avoids a circular dependency with base:base_java. This is okay because
-    # no target should ever expect to package an annotation processor.
-    "build/android/java/src/org/chromium/build/annotations/CheckDiscard.java",
-    "build/android/java/src/org/chromium/build/annotations/MainDex.java",
-    "base/android/java/src/org/chromium/base/JniStaticTestMocker.java",
-    "base/android/java/src/org/chromium/base/NativeLibraryLoadedStatus.java",
-    "base/android/java/src/org/chromium/base/annotations/NativeMethods.java",
-    "base/android/java/src/org/chromium/base/JniException.java",
-    ":cronet_aml_build_android_build_config_gen",
-  ])
-  module.static_libs.update({
-      "javapoet",
-      "guava",
-      "auto_service_annotations",
-  })
-  module.processor_class = "org.chromium.jni_generator.JniProcessor"
-  blueprint.add_module(module)
-  return module
-
 def get_java_sources(gn, predicate):
   java_sources = set()
   for target_name, sources in gn.java_sources.items():
@@ -1565,8 +1569,6 @@ def create_java_module(blueprint, gn, is_test_target):
   # would be less likely to conflict with upstream changes if the revert is not
   # accepted.
   module.javacflags.add("-Aorg.chromium.chrome.skipGenJni")
-  if not is_test_target:
-    module.javacflags.add("-Apackage_prefix=android.net.connectivity")
   for dep in get_non_api_java_actions(gn):
     target = gn.get_target(dep)
     if target.script == '//build/android/gyp/gcc_preprocess.py':
@@ -1575,9 +1577,8 @@ def create_java_module(blueprint, gn, is_test_target):
       module.srcs.add(':' + create_action_module(blueprint, gn, target,
                                                  'java_genrule',
                                                  is_test_target).name)
-  preprocessor_module = create_java_jni_preprocessor(blueprint)
-  module.plugins.add(preprocessor_module.name)
   module.visibility.append(connectivity_visibility)
+  module.visibility.append("//external/cronet/android:__subpackages__")
   blueprint.add_module(module)
   return module
 
@@ -1599,7 +1600,7 @@ def create_java_api_module(blueprint, gn):
 def update_jni_registration_module(module, gn):
   # TODO: java_sources might not contain all the required java files
   module.srcs.update([gn_utils.label_to_path(source)
-                      for source in get_non_api_java_sources(gn)
+                    for source in get_non_api_java_sources(gn)
                       if source.endswith('.java')])
 
 
