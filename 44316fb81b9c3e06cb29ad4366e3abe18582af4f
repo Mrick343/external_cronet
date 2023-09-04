@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "163a8249_ad20cce9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-09-04T08:14:04Z",
+      "side": 1,
+      "message": "I guess, for the same reason, we should also rename the libcrypto.so we bundle and dynamically load then?",
+      "revId": "44316fb81b9c3e06cb29ad4366e3abe18582af4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74d53e09_c306ed6a",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6987,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-09-04T08:14:04Z",
+      "side": 1,
+      "message": "nit: `libhttpclient` to match with names in https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/android/Android.bp?",
+      "range": {
+        "startLine": 6987,
+        "startChar": 11,
+        "endLine": 6987,
+        "endChar": 24
+      },
+      "revId": "44316fb81b9c3e06cb29ad4366e3abe18582af4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
