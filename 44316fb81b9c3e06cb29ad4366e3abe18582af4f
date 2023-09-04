@@ -39,6 +39,30 @@
       },
       "revId": "44316fb81b9c3e06cb29ad4366e3abe18582af4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "340a0414_7b1cbd13",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6987,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2023-09-04T11:58:50Z",
+      "side": 1,
+      "message": "Personally I would call this something like `libhtttpenginecronet` or `libandroidcronet` or something like that. I don\u0027t think it makes sense to drop the term \"Cronet\" because the internal code uses the \"Cronet\" terminology anyway (HttpEngine terminology is only used for the public API surface). The library is still loaded by a class called `CronetLibraryLoader`, after all.\n\nI don\u0027t feel strongly about any of this though.",
+      "parentUuid": "74d53e09_c306ed6a",
+      "range": {
+        "startLine": 6987,
+        "startChar": 11,
+        "endLine": 6987,
+        "endChar": 24
+      },
+      "revId": "44316fb81b9c3e06cb29ad4366e3abe18582af4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
