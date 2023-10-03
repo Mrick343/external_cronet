@@ -212,6 +212,24 @@
       "parentUuid": "db1f3a3e_444ea8dc",
       "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1b3058d_967b1aa5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1124746
+      },
+      "writtenOn": "2023-10-03T20:05:31Z",
+      "side": 1,
+      "message": "I put some comments in this bug, someone needs to verify if this change really affects the native coverage",
+      "parentUuid": "a7bc8312_a907de96",
+      "revId": "13f0f399c59a8914186d9eb0d746994396eb03b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
