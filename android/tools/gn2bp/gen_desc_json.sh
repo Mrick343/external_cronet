@@ -120,6 +120,7 @@ function gn_desc() (
     "enable_resource_allowlist_generation=false"
     "exclude_unwind_tables=true"
     "symbol_level=1"
+    "enable_rust=false"
   )
   gn_args+=("target_cpu = \"${target_cpu}\"")
 
@@ -165,8 +166,8 @@ if [ -z "${ANDROID_BUILD_TOP}" ]; then
 fi
 
 
-setup_chromium_src_repo "${rev}" "${chromium_dir}" "${force_reset}"
-apply_patches "${chromium_dir}"
+# setup_chromium_src_repo "${rev}" "${chromium_dir}" "${force_reset}"
+# apply_patches "${chromium_dir}"
 gn_desc x86 "${chromium_dir}"
 gn_desc x64 "${chromium_dir}"
 gn_desc arm "${chromium_dir}"
