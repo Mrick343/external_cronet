@@ -161,6 +161,10 @@ class GnParser(object):
       self.output_name = None
       # Local Includes used for AIDL
       self.local_aidl_includes = set()
+      # Deps for JNI Registration
+      self.jni_registration_java_deps = set()
+      # Transitive Java Sources
+      self.transitive_java_sources = set()
 
     # Properties to forward access to common arch.
     # TODO: delete these after the transition has been completed.
@@ -401,7 +405,7 @@ class GnParser(object):
     target.testonly = desc.get('testonly', False)
 
     proto_target_type, proto_desc = self.get_proto_target_type(gn_desc, gn_target_name)
-    deps = desc.get("deps", [])
+    deps = desc.get("deps", {})
     if proto_target_type is not None:
       target.type = 'proto_library'
       target.proto_plugin = proto_target_type
@@ -419,6 +423,7 @@ class GnParser(object):
       target.arch[arch].sources.update(desc.get('sources', []))
     elif target.type == 'java_library':
       target.sources.update(java_source for java_source in metadata.get("source_files", []) if not java_source.startswith("//out"))
+      target.transitive_java_sources.update(target.sources)
       deps = desc["metadata"].get("all_deps", {})
       log.info('Found Java Target %s', target.name)
     elif target.script == "//build/android/gyp/aidl.py":
@@ -435,6 +440,7 @@ class GnParser(object):
       target.script = desc['script']
       target.arch[arch].args = desc['args']
       target.arch[arch].response_file_contents = self._get_response_file_contents(desc)
+      target.jni_registration_java_deps.update(metadata.get("java_deps", set()))
     elif target.type == 'copy':
       # TODO: copy rules are not currently implemented.
       pass
@@ -457,8 +463,15 @@ class GnParser(object):
       target.rtti = True
 
     # Recurse in dependencies.
-    for gn_dep_name in deps:
+    for gn_dep_name in (set(deps) | target.jni_registration_java_deps):
       dep = self.parse_gn_desc(gn_desc, gn_dep_name, java_group_name, is_test_target)
+
+      if gn_dep_name in target.jni_registration_java_deps:
+        # Do not add jni_registration_java_deps as part of the deps as we only need to collect the
+        # java sources that comes from those dependencies.
+        target.sources.update(dep.transitive_java_sources)
+        continue
+
       if dep.type == 'proto_library':
         target.proto_deps.add(dep.name)
         target.transitive_proto_deps.add(dep.name)
@@ -473,6 +486,7 @@ class GnParser(object):
         target.arch[arch].deps.add(dep.name)
       elif dep.type == 'java_library':
         target.deps.add(dep.name)
+        target.transitive_java_sources.update(dep.transitive_java_sources)
 
       if dep.type in ['static_library', 'source_set']:
         # Bubble up static_libs and source_set. Necessary, since soong does not propagate
