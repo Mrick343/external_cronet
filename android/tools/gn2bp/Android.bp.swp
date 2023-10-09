@@ -11597,6 +11597,33 @@ java_genrule {
     ],
 }
 
+// GN: //components/cronet/android:repackage_native
+java_import {
+    name: "cronet_aml_components_cronet_android_repackage_native",
+    visibility: [
+        "//packages/modules/Connectivity:__subpackages__",
+    ],
+    jars: [
+        ":cronet_aml_components_cronet_android_cronet_jni_registration_java",
+        ":cronet_aml_components_cronet_android_repackage_native_impl",
+    ],
+}
+
+// GN: //components/cronet/android:repackage_native_impl
+java_import {
+    name: "cronet_aml_components_cronet_android_repackage_native_impl",
+    jars: [
+        ":cronet_aml_base_base_java",
+        ":cronet_aml_base_jni_java",
+        ":cronet_aml_build_android_build_java",
+        ":cronet_aml_components_cronet_android_cronet_impl_native_base_java",
+        ":cronet_aml_components_cronet_android_cronet_urlconnection_impl_java",
+        ":cronet_aml_components_cronet_android_request_context_config_java_proto",
+        ":cronet_aml_net_android_net_java",
+        ":cronet_aml_url_url_java",
+    ],
+}
+
 // GN: //components/cronet/android:request_context_config_java_proto
 java_library {
     name: "cronet_aml_components_cronet_android_request_context_config_java_proto",

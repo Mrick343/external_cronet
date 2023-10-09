@@ -426,10 +426,14 @@ class GnParser(object):
       target.transitive_java_sources.update(target.sources)
       deps = desc["metadata"].get("all_deps", {})
       log.info('Found Java Target %s', target.name)
-    elif target.script == "//build/android/gyp/aidl.py":
+    elif desc.get("script", "") == "//build/android/gyp/aidl.py":
       target.type = "java_library"
       target.sources.update(desc.get('sources', {}))
       target.local_aidl_includes = _extract_includes_from_aidl_args(desc.get('args', ''))
+    elif desc.get("script", "") == '//build/android/gyp/zip.py':
+      target.type = 'java_import'
+      # Ignore build_config dependencies as those are only used upstream in chromium.
+      deps = set(dep for dep in deps if "__build_config" not in dep)
     elif target.type in ['action', 'action_foreach']:
       target.arch[arch].inputs.update(desc.get('inputs', []))
       target.arch[arch].sources.update(desc.get('sources', []))
@@ -484,7 +488,7 @@ class GnParser(object):
           target.arch[arch].deps.add(dep.name)
       elif dep.is_linker_unit_type():
         target.arch[arch].deps.add(dep.name)
-      elif dep.type == 'java_library':
+      elif dep.type in ['java_library', 'java_import']:
         target.deps.add(dep.name)
         target.transitive_java_sources.update(dep.transitive_java_sources)
 
