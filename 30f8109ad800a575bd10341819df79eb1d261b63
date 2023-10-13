@@ -3,6 +3,75 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "322a5fd2_ceeaa00f",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5679,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:53:47Z",
+      "side": 1,
+      "message": "Is the aidl file not bundled by Cronet or are we losing pieces along the way?",
+      "range": {
+        "startLine": 5677,
+        "startChar": 0,
+        "endLine": 5679,
+        "endChar": 1
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23e746f6_016be8cb",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 8743,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:53:47Z",
+      "side": 1,
+      "message": "Given my other comment about Cronet\u0027s Java api not being bundled in the new default target. How are we getting to this?",
+      "range": {
+        "startLine": 8743,
+        "startChar": 11,
+        "endLine": 8743,
+        "endChar": 63
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7ade43a_70d9f943",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26299,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:53:47Z",
+      "side": 1,
+      "message": "Which direction of jni is this generating?",
+      "range": {
+        "startLine": 26299,
+        "startChar": 9,
+        "endLine": 26299,
+        "endChar": 30
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "938affb8_f55724ed",
         "filename": "android/tools/gn2bp/gen_android_bp",
         "patchSetId": 2
