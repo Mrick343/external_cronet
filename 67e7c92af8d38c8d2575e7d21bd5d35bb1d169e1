@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14721047_b79587e1",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:42:50Z",
+      "side": 0,
+      "message": "Is this no longer needed? Are we covering all the previous use cases by parsing metadata and handling `//build/android/gyp/aidl.py` separately?",
+      "range": {
+        "startLine": 412,
+        "startChar": 36,
+        "endLine": 412,
+        "endChar": 55
+      },
+      "revId": "67e7c92af8d38c8d2575e7d21bd5d35bb1d169e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

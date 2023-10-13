@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "938affb8_f55724ed",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:42:50Z",
+      "side": 1,
+      "message": "This doesn\u0027t include Cronet\u0027s Java APIs and cronet_impl_common_base_java.\n\nAren\u0027t both should be required by HttpEngine to properly compile?",
+      "range": {
+        "startLine": 47,
+        "startChar": 33,
+        "endLine": 47,
+        "endChar": 61
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f25ee96_ccb8e12f",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:42:50Z",
+      "side": 1,
+      "message": "I\u0027m confused, how were these handled before? Through patches?",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 71
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed0ebc88_822b43a1",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:42:50Z",
+      "side": 1,
+      "message": "Isn\u0027t this stored in metadata already?",
+      "range": {
+        "startLine": 422,
+        "startChar": 13,
+        "endLine": 422,
+        "endChar": 29
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "210793ef_ee24c64c",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-13T12:42:50Z",
+      "side": 1,
+      "message": "Unrelated: could we make this if/else chain exhaustive?\n\nThis way if new stuff is added it will fail, forcing us to think whether we need that or not.",
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
