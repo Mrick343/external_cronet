@@ -22,6 +22,30 @@
       },
       "revId": "67e7c92af8d38c8d2575e7d21bd5d35bb1d169e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34578bba_7d03cc59",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 0,
+      "message": "Yeah, this can be deleted because we don\u0027t want the concept of java_group anymore. We used the java_group just to collect all the possible java files.",
+      "parentUuid": "14721047_b79587e1",
+      "range": {
+        "startLine": 412,
+        "startChar": 36,
+        "endLine": 412,
+        "endChar": 55
+      },
+      "revId": "67e7c92af8d38c8d2575e7d21bd5d35bb1d169e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

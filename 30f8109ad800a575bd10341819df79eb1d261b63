@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b1b20365_72cf0fb1",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5679,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "This is a bug that I did not fix yet. IIRC, I am not adding the data correctly for the aidl files. I can\u0027t remember why but I have noticed it during my implementation but forgot to fix it.",
+      "parentUuid": "322a5fd2_ceeaa00f",
+      "range": {
+        "startLine": 5677,
+        "startChar": 0,
+        "endLine": 5679,
+        "endChar": 1
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "23e746f6_016be8cb",
         "filename": "android/tools/gn2bp/Android.bp.swp",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-13T12:53:47Z",
       "side": 1,
       "message": "Given my other comment about Cronet\u0027s Java api not being bundled in the new default target. How are we getting to this?",
+      "range": {
+        "startLine": 8743,
+        "startChar": 11,
+        "endLine": 8743,
+        "endChar": 63
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b13e75e_4f7410a9",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 8743,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "It\u0027s a dependency of `cronet_native_impl`, see https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/BUILD.gn;l\u003d454",
+      "parentUuid": "23e746f6_016be8cb",
       "range": {
         "startLine": 8743,
         "startChar": 11,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f0dca37e_2c803ae8",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26299,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "This generates the `*Jni.java` files. So it is for the Java -\u003e C++ side.",
+      "parentUuid": "d7ade43a_70d9f943",
+      "range": {
+        "startLine": 26299,
+        "startChar": 9,
+        "endLine": 26299,
+        "endChar": 30
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "938affb8_f55724ed",
         "filename": "android/tools/gn2bp/gen_android_bp",
         "patchSetId": 2
@@ -83,6 +155,30 @@
       "writtenOn": "2023-10-13T12:42:50Z",
       "side": 1,
       "message": "This doesn\u0027t include Cronet\u0027s Java APIs and cronet_impl_common_base_java.\n\nAren\u0027t both should be required by HttpEngine to properly compile?",
+      "range": {
+        "startLine": 47,
+        "startChar": 33,
+        "endLine": 47,
+        "endChar": 61
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f027bab0_8cad3850",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "See https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/BUILD.gn;l\u003d454\n\nThe impl_native contains those as a dependency so it\u0027s fine.",
+      "parentUuid": "938affb8_f55724ed",
       "range": {
         "startLine": 47,
         "startChar": 33,
@@ -118,6 +214,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "120e741f_64c827cc",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "Manually added as seen https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/android/tools/gn2bp/gen_android_bp;l\u003d1542?q\u003dgen_android_bp\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain",
+      "parentUuid": "1f25ee96_ccb8e12f",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 71
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ed0ebc88_822b43a1",
         "filename": "android/tools/gn2bp/gn_utils.py",
         "patchSetId": 2
@@ -141,6 +261,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "beaafb8d_fc9534ff",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "What do you mean?",
+      "parentUuid": "ed0ebc88_822b43a1",
+      "range": {
+        "startLine": 422,
+        "startChar": 13,
+        "endLine": 422,
+        "endChar": 29
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "210793ef_ee24c64c",
         "filename": "android/tools/gn2bp/gn_utils.py",
         "patchSetId": 2
@@ -152,6 +296,24 @@
       "writtenOn": "2023-10-13T12:42:50Z",
       "side": 1,
       "message": "Unrelated: could we make this if/else chain exhaustive?\n\nThis way if new stuff is added it will fail, forcing us to think whether we need that or not.",
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76c4b17c_9bc9c31d",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-13T13:13:32Z",
+      "side": 1,
+      "message": "I think we can? I am not sure if we are skipping anything here.",
+      "parentUuid": "210793ef_ee24c64c",
       "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
