@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10dd510c_a7569202",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-16T10:36:33Z",
+      "side": 1,
+      "message": "http://crrev/c/4936671",
+      "range": {
+        "startLine": 9,
+        "startChar": 98,
+        "endLine": 9,
+        "endChar": 113
+      },
+      "revId": "5e39e1d6bdf181b8c6f6bb7b4ed3903b1d805569",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0038ded1_9f86dac3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-16T10:36:33Z",
+      "side": 1,
+      "message": "LGTM, but let\u0027s land only once http://crrev/c/4936671 lands.",
+      "revId": "5e39e1d6bdf181b8c6f6bb7b4ed3903b1d805569",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
