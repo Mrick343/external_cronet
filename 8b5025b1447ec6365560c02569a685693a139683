@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00020945_57e857ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-10-18T09:48:46Z",
+      "side": 1,
+      "message": "P.S. Now that I think about this some more, Patrick\u0027s approach to this might be better than mine: he\u0027s basically allowing usage of memory usage estimator for builds without tracing.\n\nThis might further simplify things upstream, as there would be no need to flagguard usage of memory usage estimator.\n\nSo, it might be a nice to try and upstream this. Though, it\u0027s not strictly required.",
+      "revId": "8b5025b1447ec6365560c02569a685693a139683",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
