@@ -16,6 +16,24 @@
       "message": "P.S. Now that I think about this some more, Patrick\u0027s approach to this might be better than mine: he\u0027s basically allowing usage of memory usage estimator for builds without tracing.\n\nThis might further simplify things upstream, as there would be no need to flagguard usage of memory usage estimator.\n\nSo, it might be a nice to try and upstream this. Though, it\u0027s not strictly required.",
       "revId": "8b5025b1447ec6365560c02569a685693a139683",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0c8f197_c9faa6e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-10-18T10:41:01Z",
+      "side": 1,
+      "message": "It would make things more simpler but more confusing, why would you include code whose methods are completely stubbed out. Imagine the cause where you disable base tracing and you\u0027re surprised to find that you can use `memory_usage_estimator` without it.\n\nI\u0027d prefer the other way around, if the code does nothing then it should not be compiled / included.",
+      "parentUuid": "00020945_57e857ba",
+      "revId": "8b5025b1447ec6365560c02569a685693a139683",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
