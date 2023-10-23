@@ -18,6 +18,7 @@ import re
 
 import gn_target
 import utils
+from android.tools.gn2bp.gn_target import GnTarget
 
 
 class GnParser:
@@ -44,97 +45,54 @@ class GnParser:
         self.aidl_local_include_dirs = set()
         self.java_actions = collections.defaultdict(set)
 
-    def _get_response_file_contents(self, action_desc):
-        # response_file_contents are formatted as:
-        # ['--flags', '--flag=true && false'] and need to be formatted as:
-        # '--flags --flag=\"true && false\"'
-        flags = action_desc.get('response_file_contents', [])
-        formatted_flags = []
-        for flag in flags:
-            if '=' in flag:
-                key, val = flag.split('=')
-                formatted_flags.append('%s=\\"%s\\"' % (key, val))
-            else:
-                formatted_flags.append(flag)
+    def get_target(self, gn_target_name: str) -> GnTarget | None:
+        """
+        Returns a GnTarget object from the fully qualified GN target name.
 
-        return ' '.join(formatted_flags)
+        :param gn_target_name: GN target label
+        :return: GnTarget if there exists a target with such name.
+        """
+        if gn_target_name in self.all_targets:
+            self.all_targets[gn_target_name].finalize()
+            return self.all_targets[gn_target_name]
+        return None
 
-    def _is_java_group(self, type_, target_name):
-        # Per https://chromium.googlesource.com/chromium/src/build/+/HEAD/android/docs/java_toolchain.md
-        # java target names must end in "_java".
-        # TODO: There are some other possible variations we might need to support.
-        return type_ == 'group' and target_name.endswith('_java')
+    def _is_target_already_visited(self, gn_target_name: str, variant: utils.Variant) -> bool:
+        return gn_target_name in self.all_targets and \
+            variant in self.all_targets[gn_target_name].get_variants()
 
-    def _get_arch(self, toolchain):
-        if toolchain == '//build/toolchain/android:android_clang_x86':
-            return 'android_x86'
-        elif toolchain == '//build/toolchain/android:android_clang_x64':
-            return 'android_x86_64'
-        elif toolchain == '//build/toolchain/android:android_clang_arm':
-            return 'android_arm'
-        elif toolchain == '//build/toolchain/android:android_clang_arm64':
-            return 'android_arm64'
-        else:
-            return 'host'
+    def parse_gn_desc(self, gn_desc: Dict[str,], gn_target_name: str,
+                      java_group_name: str | None = None,
+                      is_test_target: bool = False) -> GnTarget | None:
+        """
+        Parses a gn desc tree and resolves all target dependencies.
 
-    def get_target(self, gn_target_name):
-        """Returns a Target object from the fully qualified GN target name.
-
-          get_target() requires that parse_gn_desc() has already been called.
-          """
-        # Run this every time as parse_gn_desc can be called at any time.
-        for target in self.all_targets.values():
-            target.finalize()
-
-        return self.all_targets[utils.label_without_toolchain(gn_target_name)]
-
-    def parse_gn_desc(self, gn_desc, gn_target_name, java_group_name=None, is_test_target=False):
-        """Parses a gn desc tree and resolves all target dependencies.
-
-            It bubbles up variables from source_set dependencies as described in the
-            class-level comments.
-            """
-        # Use name without toolchain for targets to support targets built for
-        # multiple archs.
+        It bubbles up variables from source_set dependencies as described in the
+        class-level comments.
+        """
         target_name = utils.label_without_toolchain(gn_target_name)
         desc = gn_desc[gn_target_name]
         type_ = desc['type']
-        arch = self._get_arch(desc['toolchain'])
+        variant = utils.get_variant(desc['toolchain'])
 
-        if self._is_java_group(type_, target_name):
+        # This check must happen before doing any changes to the target_name as the
+        # builtin_deps dictionary is not aware of the presence of __TESTING modules.
+        if target_name in self.builtin_deps:
+            # return early, no need to parse any further as the module is a builtin.
+            return None
+
+        if utils.is_java_group(type_, target_name):
             java_group_name = target_name
 
         if is_test_target:
             target_name += utils.TESTING_SUFFIX
 
-        target = self.all_targets.get(target_name)
-        if target is None:
-            target = gn_target.Target(target_name, type_)
-            self.all_targets[target_name] = target
+        if self._is_target_already_visited(target_name, variant):
+            return self.all_targets[target_name]
 
-        if arch not in target.arch:
-            target.arch[arch] = gn_target.Target.Arch()
-        else:
-            return target  # Target already processed.
-
-        if target.name in self.builtin_deps:
-            # return early, no need to parse any further as the module is a builtin.
-            return target
-
-        target.testonly = desc.get('testonly', False)
-
-        proto_target_type, proto_desc = self.get_proto_target_type(gn_desc, gn_target_name)
-        if proto_target_type is not None:
-            target.type = 'proto_library'
-            target.proto_plugin = proto_target_type
-            target.proto_paths.update(self.get_proto_paths(proto_desc))
-            target.proto_exports.update(self.get_proto_exports(proto_desc))
-            target.proto_in_dir = self.get_proto_in_dir(proto_desc)
-            for gn_proto_deps_name in proto_desc.get('deps', []):
-                dep = self.parse_gn_desc(gn_desc, gn_proto_deps_name)
-                target.deps.add(dep.name)
-            target.arch[arch].sources.update(proto_desc.get('sources', []))
-            assert (all(x.endswith('.proto') for x in target.arch[arch].sources))
+        target = None
+        if utils.is_proto_target(type_, gn_desc.get("script", "")):
+            target = gn_target.ProtoGnTarget(target_name)
         elif target.type == 'source_set':
             target.arch[arch].sources.update(desc.get('sources', []))
         elif target.is_linker_unit_type():
@@ -242,60 +200,3 @@ class GnParser:
                         # Don't collect java actions for test targets.
                         self.java_actions[java_group_name].add(dep.name)
         return target
-
-    def get_proto_exports(self, proto_desc):
-        # exports in metadata will be available for source_set targets.
-        metadata = proto_desc.get('metadata', {})
-        return metadata.get('exports', [])
-
-    def get_proto_paths(self, proto_desc):
-        # import_dirs in metadata will be available for source_set targets.
-        metadata = proto_desc.get('metadata', {})
-        return metadata.get('import_dirs', [])
-
-    def get_proto_in_dir(self, proto_desc):
-        args = proto_desc.get('args')
-        return re.sub('^\.\./\.\./', '', args[args.index('--proto-in-dir') + 1])
-
-    def get_proto_target_type(self, gn_desc, gn_target_name):
-        """ Checks if the target is a proto library and return the plugin.
-
-            Returns:
-                (None, None): if the target is not a proto library.
-                (plugin, proto_desc) where |plugin| is 'proto' in the default (lite)
-                case or 'protozero' or 'ipc' or 'descriptor'; |proto_desc| is the GN
-                json desc of the target with the .proto sources (_gen target for
-                non-descriptor types or the target itself for descriptor type).
-            """
-        parts = gn_target_name.split('(', 1)
-        name = parts[0]
-        toolchain = '(' + parts[1] if len(parts) > 1 else ''
-
-        # Descriptor targets don't have a _gen target; instead we look for the
-        # characteristic flag in the args of the target itself.
-        desc = gn_desc.get(gn_target_name)
-        if '--descriptor_set_out' in desc.get('args', []):
-            return 'descriptor', desc
-
-        # Source set proto targets have a non-empty proto_library_sources in the
-        # metadata of the description.
-        metadata = desc.get('metadata', {})
-        if 'proto_library_sources' in metadata:
-            return 'source_set', desc
-
-        # In all other cases, we want to look at the _gen target as that has the
-        # important information.
-        gen_desc = gn_desc.get('%s_gen%s' % (name, toolchain))
-        if gen_desc is None or gen_desc['type'] != 'action':
-            return None, None
-        if gen_desc['script'] != '//tools/protoc_wrapper/protoc_wrapper.py':
-            return None, None
-        plugin = 'proto'
-        args = gen_desc.get('args', [])
-        for arg in (arg for arg in args if arg.startswith('--plugin=')):
-            # |arg| at this point looks like:
-            #  --plugin=protoc-gen-plugin=gcc_like_host/protozero_plugin
-            # or
-            #  --plugin=protoc-gen-plugin=protozero_plugin
-            plugin = arg.split('=')[-1].split('/')[-1].replace('_plugin', '')
-        return plugin, gen_desc

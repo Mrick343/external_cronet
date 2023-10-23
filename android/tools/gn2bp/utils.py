@@ -14,6 +14,7 @@
 
 import os
 import re
+from enum import Enum
 
 LINKER_UNIT_TYPES = ('executable', 'shared_library', 'static_library', 'source_set')
 JAVA_BANNED_SCRIPTS = [
@@ -33,6 +34,29 @@ JAVA_BANNED_SCRIPTS = [
 RESPONSE_FILE = '{{response_file_name}}'
 TESTING_SUFFIX = "__testing"
 AIDL_INCLUDE_DIRS_REGEX = r'--includes=\[(.*)\]'
+VARIANT_PREFIX = "_variant"
+
+
+class Variant(Enum):
+    COMMON = "common"
+    X86 = "android_x86"
+    X86_64 = "android_x86_64"
+    ARM = "android_arm"
+    ARM_64 = "android_arm64"
+    HOST = "host"
+
+
+def get_variant(toolchain: str) -> Variant:
+    if toolchain == '//build/toolchain/android:android_clang_x86':
+        return Variant.X86
+    elif toolchain == '//build/toolchain/android:android_clang_x64':
+        return Variant.X86_64
+    elif toolchain == '//build/toolchain/android:android_clang_arm':
+        return Variant.ARM
+    elif toolchain == '//build/toolchain/android:android_clang_arm64':
+        return Variant.ARM_64
+    else:
+        return Variant.HOST
 
 
 def repo_root():
@@ -114,3 +138,43 @@ def is_java_source(src):
     :return: True if the file is a java source file and is not automatically generated.
     """
     return os.path.splitext(src)[1] == '.java' and not src.startswith("//out/")
+
+
+def get_proto_in_dir(args: List[str]) -> str:
+    """
+    Extracts the value of the parameter --proto-in-dir
+
+    Example:
+    get_proto_in_dir(["--protoc", "./clang_x64/protoc",
+    "--proto-in-dir", "../../components/cronet/android/proto"])
+        -> "components/cronet/android/proto"
+
+    :param args: List of strings, usually those strings are parameters to a script.
+    :return: The value of the --proto-in-dir parameter.
+    """
+    return clean_string(args[args.index('--proto-in-dir') + 1])
+
+
+def is_proto_target(gn_target_type: str, gn_target_script: str) -> bool:
+    """
+    Determines if the given target is a GN proto target. This is a heuristic way to figure out
+    if the target provided is a proto target or not.
+
+    :param gn_target_type: GN target type
+    :param gn_target_script: The script path which will be used to execute the GN Target
+    :return: True if the target matches the proto target description.
+    """
+    return gn_target_type == 'action' and \
+        gn_target_script == "//tools/protoc_wrapper/protoc_wrapper.py"
+
+
+def is_variant_attribute(key: str) -> bool:
+    """
+    Variant Attributes are attributes for which the finalize method of the GnTarget will try
+    to move the common elements for all variants to the parent
+    and deduplicate them from each variant.
+
+    :param key: The field name that exists within __dict__
+    :return: True if the key can be a variant.
+    """
+    return key.startswith(VARIANT_PREFIX)
