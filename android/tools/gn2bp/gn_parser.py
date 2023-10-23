@@ -15,6 +15,7 @@
 import collections
 import logging as log
 import re
+from typing import Dict, Set, Callable
 
 import gn_target
 import utils
@@ -39,11 +40,11 @@ class GnParser:
       """
 
     def __init__(self, builtin_deps):
-        self.builtin_deps = builtin_deps
-        self.all_targets = {}
-        self.java_sources = collections.defaultdict(set)
-        self.aidl_local_include_dirs = set()
-        self.java_actions = collections.defaultdict(set)
+        self.builtin_deps: Dict[str, Callable] = builtin_deps
+        self.all_targets: Dict[str, gn_target.GnTarget] = {}
+        self.java_sources: Dict[str, Set[str]] = collections.defaultdict(set)
+        self.aidl_local_include_dirs: Set[str] = set()
+        self.java_actions: Dict[str, Set[str]] = collections.defaultdict(set)
 
     def get_target(self, gn_target_name: str) -> GnTarget | None:
         """
@@ -64,8 +65,7 @@ class GnParser:
     def parse_gn_desc(self, gn_desc: Dict[str,], gn_target_name: str,
                       java_group_name: str | None = None,
                       is_test_target: bool = False) -> GnTarget | None:
-        """
-        Parses a gn desc tree and resolves all target dependencies.
+        """Parses a gn desc tree and resolves all target dependencies.
 
         It bubbles up variables from source_set dependencies as described in the
         class-level comments.

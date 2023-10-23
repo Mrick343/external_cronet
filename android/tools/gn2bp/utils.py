@@ -15,6 +15,7 @@
 import os
 import re
 from enum import Enum
+from typing import List
 
 LINKER_UNIT_TYPES = ('executable', 'shared_library', 'static_library', 'source_set')
 JAVA_BANNED_SCRIPTS = [
@@ -59,13 +60,52 @@ def get_variant(toolchain: str) -> Variant:
         return Variant.HOST
 
 
-def repo_root():
+def is_java_group(type: str, target_name: str) -> bool:
+    """
+    Determines whether the provided target is a group for java targets. Java targets are compiled
+    in GN by having a target of type `group` as a source depending on multiple automatically generated
+    targets that does the actual compilation.
+
+    Per https://chromium.googlesource.com/chromium/src/build/+/HEAD/android/docs/java_toolchain.md
+    java target names must end in "_java".
+
+    :param type: GN target type
+    :param target_name: GN target label
+    :return: True if the group is a group for java targets
+    """
+    return type == 'group' and target_name.endswith('_java')
+
+
+def escape_response_file_contents(response_file_contents: List[str]) -> str:
+    """
+    Formats and escapes the response_file_contents list provided and return an escaped-string.
+
+    Example:
+    escape_response_file_contents(['--flags', '--flag=true && false']) ->
+         '--flags --flag=\"true && false\"'
+
+    :param response_file_contents: A list of strings
+    :return: The escaped-string representation of the response_file_contents
+    """
+
+    formatted_flags = []
+    for flag in response_file_contents:
+        if '=' in flag:
+            key, val = flag.split('=')
+            formatted_flags.append('%s=\\"%s\\"' % (key, val))
+        else:
+            formatted_flags.append(flag)
+
+    return ' '.join(formatted_flags)
+
+
+def repo_root() -> str:
     """Returns an absolute path to the repository root."""
     return os.path.join(
         os.path.realpath(os.path.dirname(__file__)), os.path.pardir)
 
 
-def clean_string(str):
+def clean_string(val: str) -> str:
     """
     Does the following operations in the same order listed:
     * Remove all escape character '\'
@@ -73,13 +113,13 @@ def clean_string(str):
       chromium repository where the output directory is two-levels nested.
     * Remove all '"'
 
-    :param str: Original String
+    :param val: Original String
     :return: New string after performing the operations listed above.
     """
-    return str.replace('\\', '').replace('../../', '').replace('"', '').strip()
+    return val.replace('\\', '').replace('../../', '').replace('"', '').strip()
 
 
-def extract_includes_from_aidl_args(args):
+def extract_includes_from_aidl_args(args: List[str]) -> List[str]:
     """
     Extracts the aidl dependency from args provided.
 
@@ -103,7 +143,7 @@ def extract_includes_from_aidl_args(args):
     return []
 
 
-def label_to_path(label):
+def label_to_path(label: str) -> str:
     """
     Turn a GN output label (e.g., //some_dir/file.cc) into a path.
 
@@ -119,7 +159,7 @@ def label_to_path(label):
     return label[2:] or "./"
 
 
-def label_without_toolchain(label):
+def label_without_toolchain(label: str) -> str:
     """
     Strips the toolchain from a GN label if it exists otherwise it returns the same string.
 
@@ -130,7 +170,7 @@ def label_without_toolchain(label):
     return label.split('(')[0]
 
 
-def is_java_source(src):
+def is_java_source(src: str) -> bool:
     """
     Determine whether the provided src is pointing to a java file or not.
 
