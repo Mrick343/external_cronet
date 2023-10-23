@@ -36,6 +36,7 @@ import copy
 from pathlib import Path
 
 import gn_utils
+import utils
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -472,8 +473,8 @@ class Module(object):
       self.shared_libs.add(lib)
 
   def is_test(self):
-    if gn_utils.TESTING_SUFFIX in self.name:
-      name_without_prefix = self.name[:self.name.find(gn_utils.TESTING_SUFFIX)]
+    if utils.TESTING_SUFFIX in self.name:
+      name_without_prefix = self.name[:self.name.find(utils.TESTING_SUFFIX)]
       return any([name_without_prefix == label_to_module_name(target) for target in DEFAULT_TESTS])
     return False
 
@@ -593,11 +594,11 @@ def create_proto_modules(blueprint, gn, target):
     # Recursively extract the .proto files of all the dependencies and
     # add them to srcs.
     descriptor_module.srcs.update(
-        gn_utils.label_to_path(src) for src in target.sources)
+      utils.label_to_path(src) for src in target.sources)
     for dep in target.transitive_proto_deps:
       current_target = gn.get_target(dep)
       descriptor_module.srcs.update(
-          gn_utils.label_to_path(src) for src in current_target.sources)
+        utils.label_to_path(src) for src in current_target.sources)
 
     return descriptor_module
 
@@ -610,7 +611,7 @@ def create_proto_modules(blueprint, gn, target):
   source_module = Module('cc_genrule', source_module_name, target.name)
   blueprint.add_module(source_module)
   source_module.srcs.update(
-      gn_utils.label_to_path(src) for src in target.sources)
+    utils.label_to_path(src) for src in target.sources)
 
   header_module = Module('cc_genrule', source_module_name + '_headers',
                          target.name)
@@ -671,7 +672,7 @@ def create_gcc_preprocess_modules(blueprint, target):
 
   # Rename .template to .cc since cc_object does not accept .template file as srcs
   rename_module = Module('genrule', bp_module_name + '_rename', target.name)
-  rename_module.srcs.add(gn_utils.label_to_path(source))
+  rename_module.srcs.add(utils.label_to_path(source))
   rename_module.out.add(stem + '.cc')
   rename_module.cmd = 'cp $(in) $(out)'
   blueprint.add_module(rename_module)
@@ -834,7 +835,7 @@ class BaseActionSanitizer():
   def get_cmd(self):
     arg_string = NEWLINE.join(self.target.args)
     cmd = '$(location %s) %s' % (
-    gn_utils.label_to_path(self.target.script), arg_string)
+      utils.label_to_path(self.target.script), arg_string)
 
     if self.use_response_file:
       # Pipe response file contents into script
@@ -849,7 +850,7 @@ class BaseActionSanitizer():
     # soong only supports source files inside srcs, non-source files are added as
     # tool_files dependency.
     files = self.target.sources.union(self.target.inputs)
-    return {gn_utils.label_to_path(file) for file in files if is_supported_source_file(file)}
+    return {utils.label_to_path(file) for file in files if is_supported_source_file(file)}
 
   def get_tools(self):
     return set()
@@ -859,19 +860,19 @@ class BaseActionSanitizer():
     # soong only supports source files inside srcs, non-source files are added as
     # tool_files dependency.
     files = self.target.sources.union(self.target.inputs)
-    tool_files = {gn_utils.label_to_path(file)
+    tool_files = {utils.label_to_path(file)
                   for file in files if not is_supported_source_file(file)}
-    tool_files.add(gn_utils.label_to_path(self.target.script))
+    tool_files.add(utils.label_to_path(self.target.script))
     return tool_files
 
   def _sanitize_args(self):
     # Handle passing parameters via response file by piping them into the script
     # and reading them from /dev/stdin.
 
-    self.use_response_file = gn_utils.RESPONSE_FILE in self.target.args
+    self.use_response_file = utils.RESPONSE_FILE in self.target.args
     if self.use_response_file:
       # Replace {{response_file_contents}} with /dev/stdin
-      self.target.args = ['/dev/stdin' if it == gn_utils.RESPONSE_FILE else it
+      self.target.args = ['/dev/stdin' if it == utils.RESPONSE_FILE else it
                           for it in self.target.args]
 
   def _sanitize_outputs(self):
@@ -1025,7 +1026,7 @@ class JavaJniRegistrationGeneratorSanitizer(JniRegistrationGeneratorSanitizer):
   def get_name(self):
     name = super().get_name() + "__java"
     if self.is_test_target:
-      name += gn_utils.TESTING_SUFFIX
+      name += utils.TESTING_SUFFIX
     return name
 
   def _sanitize_outputs(self):
@@ -1147,10 +1148,10 @@ def create_action_foreach_modules(blueprint, gn, target, is_test_target):
     if i != 0:
       new_args.append('&&')
       new_args.append('python3 $(location %s)' %
-                   gn_utils.label_to_path(target.script))
+                      utils.label_to_path(target.script))
     for arg in target.args:
       if '{{source}}' in arg:
-        new_args.append('$(location %s)' % (gn_utils.label_to_path(src)))
+        new_args.append('$(location %s)' % (utils.label_to_path(src)))
       elif '{{source_name_part}}' in arg:
         source_name_part = src.split("/")[-1] # Get the file name only
         source_name_part = source_name_part.split(".")[0] # Remove the extension (Ex: .cc)
@@ -1163,7 +1164,7 @@ def create_action_foreach_modules(blueprint, gn, target, is_test_target):
 
         for file in (target.sources | target.inputs):
           if file.endswith(file_name):
-            new_args.append('$(location %s)' % gn_utils.label_to_path(file))
+            new_args.append('$(location %s)' % utils.label_to_path(file))
       else:
         new_args.append(arg)
 
@@ -1277,7 +1278,7 @@ def _get_cflags(cflags, defines):
 def _set_linker_script(module, libs):
   for lib in libs:
     if lib.endswith(".lds"):
-      module.ldflags.add(get_linker_script_ldflag(gn_utils.label_to_path(lib)))
+      module.ldflags.add(get_linker_script_ldflag(utils.label_to_path(lib)))
 
 def set_module_flags(module, module_type, cflags, defines, ldflags, libs):
   module.cflags.update(_get_cflags(cflags, defines))
@@ -1301,7 +1302,7 @@ def set_module_include_dirs(module, cflags, include_dirs):
   # Filter any directory inside //out as a) this directory does not exist for
   # aosp / soong builds and b) the include directory should already be
   # configured via library dependency.
-  module.local_include_dirs.update([gn_utils.label_to_path(d)
+  module.local_include_dirs.update([utils.label_to_path(d)
                                  for d in include_dirs if not d.startswith('//out')])
   # Remove prohibited include directories
   module.local_include_dirs = [d for d in module.local_include_dirs
@@ -1361,17 +1362,17 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_test_target):
     raise Exception('Unknown target %s (%s)' % (target.name, target.type))
 
   blueprint.add_module(module)
-  module.srcs.update(gn_utils.label_to_path(src)
+  module.srcs.update(utils.label_to_path(src)
                      for src in target.sources if is_supported_source_file(src))
 
   # Add arch-specific properties
   for arch_name, arch in target.get_archs().items():
-    module.target[arch_name].srcs.update(gn_utils.label_to_path(src)
+    module.target[arch_name].srcs.update(utils.label_to_path(src)
                                          for src in arch.sources if is_supported_source_file(src))
 
   module.rtti = target.rtti
 
-  if target.type in gn_utils.LINKER_UNIT_TYPES:
+  if target.type in utils.LINKER_UNIT_TYPES:
     set_module_flags(module, module.type, target.cflags, target.defines, target.ldflags, target.libs)
     set_module_include_dirs(module, target.cflags, target.include_dirs)
     # TODO: set_module_xxx is confusing, apply similar function to module and target in better way.
@@ -1421,7 +1422,7 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_test_target):
   if module.is_test():
     # Tests output should be a shared library in the format of 'lib[module_name]'
     module.stem = 'lib' + target.get_target_name()[
-                          :target.get_target_name().find(gn_utils.TESTING_SUFFIX)]
+                          :target.get_target_name().find(utils.TESTING_SUFFIX)]
 
   # dep_name is an unmangled GN target name (e.g. //foo:bar(toolchain)).
   all_deps = [(dep_name, 'common') for dep_name in target.transitive_proto_deps]
@@ -1536,9 +1537,9 @@ def get_api_java_actions(gn):
 def create_java_module(blueprint, gn, is_test_target):
   bp_module_name = module_prefix + 'java'
   if is_test_target:
-    bp_module_name += gn_utils.TESTING_SUFFIX
+    bp_module_name += utils.TESTING_SUFFIX
   module = Module('java_library', bp_module_name, '//gn:java')
-  module.srcs.update([gn_utils.label_to_path(source) for source in get_non_api_java_sources(gn)])
+  module.srcs.update([utils.label_to_path(source) for source in get_non_api_java_sources(gn)])
   module.libs = {
     "androidx.annotation_annotation",
     "androidx.annotation_annotation-experimental-nodeps",
@@ -1584,7 +1585,7 @@ def create_java_module(blueprint, gn, is_test_target):
 def create_java_api_module(blueprint, gn):
   source_module = Module('filegroup', module_prefix + 'api_sources', java_api_target_name)
   # TODO add the API helpers separately after the main API is checked in and thoroughly reviewed
-  source_module.srcs.update([gn_utils.label_to_path(source)
+  source_module.srcs.update([utils.label_to_path(source)
                              for source in get_api_java_sources(gn)
                              if "apihelpers" not in source])
   source_module.comment += "\n// TODO(danstahr): add the API helpers separately after the main" \
@@ -1598,7 +1599,7 @@ def create_java_api_module(blueprint, gn):
 
 def update_jni_registration_module(module, gn):
   # TODO: java_sources might not contain all the required java files
-  module.srcs.update([gn_utils.label_to_path(source)
+  module.srcs.update([utils.label_to_path(source)
                       for source in get_non_api_java_sources(gn)
                       if source.endswith('.java')])
 
@@ -1613,7 +1614,7 @@ def turn_off_allocator_shim_for_musl(module):
   for arch in module.target.values():
     arch.srcs -= allocator_shim_files
   module.target['android'].srcs.add(allocation_shim)
-  if gn_utils.TESTING_SUFFIX in module.name:
+  if utils.TESTING_SUFFIX in module.name:
     # allocator_shim_default_dispatch_to_glibc is only added to the __testing version of base
     # since base_base__testing is compiled for host. When compiling for host. Soong compiles
     # using glibc or musl(experimental). We currently only support compiling for glibc.
@@ -1675,7 +1676,7 @@ def create_blueprint_for_targets(gn, targets, test_targets):
       module.visibility.append(connectivity_visibility)
 
   for test_target in test_targets:
-    module = create_modules_from_target(blueprint, gn, test_target + gn_utils.TESTING_SUFFIX, is_test_target=True)
+    module = create_modules_from_target(blueprint, gn, test_target + utils.TESTING_SUFFIX, is_test_target=True)
     if module:
       module.visibility.append(connectivity_visibility)
 
@@ -1687,7 +1688,7 @@ def create_blueprint_for_targets(gn, targets, test_targets):
   for module in blueprint.modules.values():
     if 'cronet_jni_registration' in module.name:
       update_jni_registration_module(module, gn)
-    if module.name in ['cronet_aml_base_base', 'cronet_aml_base_base' + gn_utils.TESTING_SUFFIX]:
+    if module.name in ['cronet_aml_base_base', 'cronet_aml_base_base' + utils.TESTING_SUFFIX]:
       turn_off_allocator_shim_for_musl(module)
 
   # Merge in additional hardcoded arguments.
@@ -1729,12 +1730,12 @@ def main():
   parser.add_argument(
       '--extras',
       help='Extra targets to include at the end of the Blueprint file',
-      default=os.path.join(gn_utils.repo_root(), 'Android.bp.extras'),
+      default=os.path.join(utils.repo_root(), 'Android.bp.extras'),
   )
   parser.add_argument(
       '--output',
       help='Blueprint file to create',
-      default=os.path.join(gn_utils.repo_root(), 'Android.bp'),
+      default=os.path.join(utils.repo_root(), 'Android.bp'),
   )
   parser.add_argument(
       '-v',
