@@ -35,8 +35,8 @@ import sys
 import copy
 from pathlib import Path
 
-import gn_utils
 import utils
+import gn_parser
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -1754,7 +1754,7 @@ def main():
     log.basicConfig(format='%(levelname)s:%(funcName)s:%(message)s', level=log.DEBUG)
 
   targets = args.targets or DEFAULT_TARGETS
-  gn = gn_utils.GnParser(builtin_deps)
+  gn = gn_parser.GnParser(builtin_deps)
   for desc_file in args.desc:
     with open(desc_file) as f:
       desc = json.load(f)
