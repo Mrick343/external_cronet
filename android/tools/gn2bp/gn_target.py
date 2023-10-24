@@ -26,19 +26,24 @@ class GnTarget:
     def __init__(self, name: str):
         super().__init__()
         self.name: str = name
-        self.host_supported: bool = False
-        self.device_supported: bool = False
         self.is_finalized = False
         self._variant_deps: Set[GnTarget] = set()
         # This field name is intentionally not named as `variant` to make sure that it is not
         # a variant attribute.
         self._all_variants: Dict[utils.Variant, GnTarget] = {}
 
+    def populate_variant(self, desc: Dict[str,]):
+        variant = utils.get_variant(desc['toolchain'])
+        self.create_variant(variant)
+
     def get_deps(self, variant: utils.Variant):
         return self._all_variants[variant]._variant_deps
 
     def device_supported(self):
-        return any([name.value.startswith('android') for name in self._variant.keys()])
+        return any([name.value.startswith('android') for name in self._all_variants.keys()])
+
+    def host_supported(self):
+        return utils.Variant.HOST in self._all_variants.keys()
 
     def __repr__(self):
         return json.dumps({
@@ -128,7 +133,24 @@ class GnTarget:
         return {variant: val for variant, val in self._all_variants.items()}
 
 
-class GNAction(GnTarget):
+class _SourcesGnTarget(GnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+        self._variant_sources: Set[str] = set()
+
+    def get_sources(self, variant: utils.Variant) -> Set[str]:
+        return self._all_variants[variant]._variant_sources
+
+    def set_sources(self, variant: utils.Variant, sources: Set[str]):
+        self._all_variants[variant]._variant_sources = sources
+
+    def populate_variant(self, desc: Dict[str,]):
+        super().populate_variant(desc)
+        variant = utils.get_variant(desc["toolchain"])
+        self.set_sources(variant, desc.get("sources", set()))
+
+
+class GnActionTarget(GnTarget, _SourcesGnTarget):
     def __init__(self, name: str):
         super().__init__(name)
         self.script: str = ""
@@ -136,6 +158,17 @@ class GNAction(GnTarget):
         self._variant_outputs: Set[str] = set()
         self._variant_args: List[str] = []
         self._variant_response_file_contents: str = ""
+
+    def populate_variant(self, desc: Dict[str,]):
+        super().populate_variant(desc)
+        variant = utils.get_variant(desc["toolchain"])
+        self.script = desc["script"]
+        self.set_inputs(variant, desc.get("inputs", set()))
+        self.set_outputs(variant, set([utils.remove_gen_path(output) for output in
+                                       desc.get("outputs", set())]))
+        self.set_args(variant, desc.get("args"))
+        self.set_response_file_contents(variant, utils.escape_response_file_contents(
+            desc.get("response_file_contents", [])))
 
     def get_inputs(self, variant: utils.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_inputs
@@ -162,23 +195,21 @@ class GNAction(GnTarget):
         self._all_variants[variant]._variant_response_file_contents = value
 
 
-class _SourcesGnTarget(GnTarget):
-    def __init__(self, name: str):
-        super().__init__(name)
-        self._variant_sources: Set[str] = set()
-
-    def get_sources(self, variant: utils.Variant) -> Set[str]:
-        return self._all_variants[variant]._variant_sources
-
-    def set_sources(self, variant: utils.Variant, sources: Set[str]):
-        self._all_variants[variant]._variant_sources = sources
-
-
 class ProtoGnTarget(GnTarget, _SourcesGnTarget):
     def __init__(self, name: str):
         super().__init__(name)
         self.proto_plugin: str = ""
         self.proto_in_dir: str = ""
+
+    def populate_variant(self, desc: Dict[str,]):
+        super().populate_variant(desc)
+        self.proto_plugin = "proto"
+        self.proto_in_dir = utils.get_proto_in_dir(desc["args"])
+
+
+class JavaGnTarget(GnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
 
 
 class SourceSetGnTarget(ProtoGnTarget, GnTarget):
@@ -205,6 +236,17 @@ class CppGnTarget(GnTarget, _SourcesGnTarget):
         self._variant_libs: Set[str] = set()
         self._variant_rtti: bool = False
 
+    def populate_variant(self, desc: Dict[str,]):
+        super().populate_variant(desc)
+        variant = utils.get_variant(desc["toolchain"])
+        self.set_cflags(variant, set(desc.get("cflags", set()) | desc.get('cflags_cc', set())))
+        self.set_libs(variant, desc.get("libs", set()))
+        self.set_ldflags(variant, desc.get("ldflags", set()))
+        self.set_defines(variant, desc.get("defines", set()))
+        self.set_include_dirs(variant, desc.get("include_dirs", set()))
+        self.output_name = desc.get("output_name", "")
+        self.set_rtti(variant, utils.CFLAG_RTTI in self.get_cflags(variant))
+
     def get_cflags(self, variant: utils.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_cflags
 
@@ -226,5 +268,14 @@ class CppGnTarget(GnTarget, _SourcesGnTarget):
     def get_ldflags(self, variant: utils.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_ldflags
 
+    def set_ldflags(self, variant: utils.Variant, ld_flags: Set[str]):
+        self._all_variants[variant]._variant_ldflags = ld_flags
+
     def get_source_set_deps(self, variant: utils.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_source_set_deps
+
+    def set_rtti(self, variant: utils.Variant, rtti: bool):
+        self._all_variants[variant]._variant_rtti = rtti
+
+    def set_libs(self, variant: utils.Variant, libs: Set[str]):
+        self._all_variants[variant]._variant_libs = libs

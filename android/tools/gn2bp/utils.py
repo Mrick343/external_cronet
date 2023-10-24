@@ -15,7 +15,9 @@
 import os
 import re
 from enum import Enum
-from typing import List
+from typing import List, Dict
+
+import gn_target
 
 LINKER_UNIT_TYPES = ('executable', 'shared_library', 'static_library', 'source_set')
 JAVA_BANNED_SCRIPTS = [
@@ -36,6 +38,7 @@ RESPONSE_FILE = '{{response_file_name}}'
 TESTING_SUFFIX = "__testing"
 AIDL_INCLUDE_DIRS_REGEX = r'--includes=\[(.*)\]'
 VARIANT_PREFIX = "_variant"
+CFLAG_RTTI = "-frtti"
 
 
 class Variant(Enum):
@@ -218,3 +221,42 @@ def is_variant_attribute(key: str) -> bool:
     :return: True if the key can be a variant.
     """
     return key.startswith(VARIANT_PREFIX)
+
+
+def create_appropriate_gn_target(desc: Dict[str,]) -> gn_target.GnTarget:
+    """
+    Creates the appropriate GnTarget class for the given dictionary `desc`.
+
+    :param desc: A dictionary that describes a Gn-target, See data/desc_*.json files for an example
+    :return: A target that inherits from GnTarget or throws an exception if it can't identify
+    any possible class.
+    """
+    type = desc['type']
+    name = label_without_toolchain(desc["name"])
+    if is_proto_target(type, desc.get("script", "")):
+        return gn_target.ProtoGnTarget(name)
+    elif type == 'source_set':
+        return gn_target.SourceSetGnTarget(name)
+    elif type in ["shared_library", "static_library"]:
+        return gn_target.CppGnTarget(name)
+    elif (desc.get("script", "") in JAVA_BANNED_SCRIPTS
+          or is_java_group(type, name)):
+        return gn_target.JavaGnTarget(name)
+    elif type in ['action', 'action_foreach']:
+        return gn_target.GnActionTarget(name)
+    else:
+        raise Exception(
+            "%s GN target does not translate to any of the known GN classes" % name)
+
+
+def remove_gen_path(path: str) -> str:
+    """
+    Remove the prefix for the output path
+
+    Example:
+    remove_gen_path("//out/cronet/gen/A/B/C") -> "A/B/C"
+
+    :param path: The path to the generated output.
+    :return The path of the file relative to the repository root instead of the output root
+    """
+    return re.sub("^//out/.+?/gen/", "", path)
