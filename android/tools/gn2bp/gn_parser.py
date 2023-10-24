@@ -62,7 +62,7 @@ class GnParser:
     def _is_target_visited(self, gn_target_name: str) -> bool:
         return gn_target_name in self.all_targets
 
-    def parse_gn_desc(self, gn_desc: Dict[str, str | List[str]], gn_target_name: str,
+    def parse_gn_desc(self, gn_desc: Dict[str, Dict[str, str | List[str]]], gn_target_name: str,
                       java_group_name: str | None = None,
                       is_test_target: bool = False) -> gn_target.GnTarget | None:
         """Parses a gn desc tree and resolves all target dependencies.
@@ -77,7 +77,7 @@ class GnParser:
 
         if target_name in self.builtin_deps:
             # return early, no need to parse any further as the module is a builtin.
-            return None
+            return gn_target.BuiltInGnTarget(target_name)
 
         if utils.is_java_group(type_, target_name):
             java_group_name = target_name

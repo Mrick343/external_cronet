@@ -211,11 +211,16 @@ def create_appropriate_gn_target(name: str, desc: Dict[str, str | List[str]]) ->
         return gn_target.CppStaticLibraryGnTarget(name)
     elif type == "executable":
         return gn_target.ExecutableGnTarget(name)
+    elif type == "group":
+        return gn_target.GroupGnTarget(name)
     elif (desc.get("script", "") in constants.JAVA_BANNED_SCRIPTS
           or is_java_group(type, name)):
         return gn_target.JavaGnTarget(name)
     elif type in ['action', 'action_foreach']:
         return gn_target.ActionGnTarget(name)
+    elif type == "copy":
+        # We don't support copy targets.
+        return gn_target.IgnoredGnTarget(name)
     else:
         raise Exception(
             "%s GN target does not translate to any of the known GN classes" % name)

@@ -41,14 +41,19 @@ class GnTarget:
             self._add_action_target_dependency(variant, target)
         elif isinstance(target, GroupGnTarget):
             self._add_group_target_dependency(variant, target)
-        elif isinstance(target, _CppGnTarget):
-            self._add_cpp_target_dependency(variant, target)
         elif isinstance(target, SourceSetGnTarget):
             self._add_source_set_target_dependency(variant, target)
+        elif isinstance(target, _CppGnTarget):
+            self._add_cpp_target_dependency(variant, target)
         elif isinstance(target, JavaGnTarget):
             self._add_java_target_dependency(variant, target)
         elif isinstance(target, ProtoGnTarget):
             self._add_proto_target_dependency(variant, target)
+        elif isinstance(target, BuiltInGnTarget):
+            self._add_builtin_target_dependency(variant, target)
+        elif isinstance(target, IgnoredGnTarget):
+            # IgnoredGnTargets are usually copy targets which we don't want to support for now.
+            pass
         else:
             raise Exception("Unable to identify the type"
                             " of the target dependency, target name: %s, target type: %s" % (
@@ -90,6 +95,9 @@ class GnTarget:
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
+
+    def _add_builtin_target_dependency(self, variant: constants.Variant, target: 'BuiltInGnTarget'):
+        self.get_deps(variant).add(target)
 
     def get_deps(self, variant: constants.Variant):
         return self._all_variants[variant]._variant_deps
@@ -208,6 +216,14 @@ class ActionGnTarget(GnTarget):
         self.set_response_file_contents(variant, utils.escape_response_file_contents(
             desc.get("response_file_contents", [])))
 
+    def _add_source_set_target_dependency(self, variant: constants.Variant,
+                                          target: 'SourceSetGnTarget'):
+        # Some GnAction can depend on sourceSet(eg: //base:anchor_functions_buildflags)
+        self.get_deps(variant).add(target)
+
+    def _add_action_target_dependency(self, variant: constants.Variant, target: 'ActionGnTarget'):
+        self.get_deps(variant).add(target)
+
     def get_inputs(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_inputs
 
@@ -252,7 +268,7 @@ class ProtoGnTarget(GnTarget):
 
     def set_sources(self, variant: constants.Variant, sources: Set[str]):
         self._all_variants[variant]._variant_sources = sources
-
+    
 
 class JavaGnTarget(GnTarget):
     def __init__(self, name: str):
@@ -305,6 +321,10 @@ class _CppGnTarget(GnTarget):
         self.get_transitive_static_libs_deps(variant).update(
             target.get_transitive_static_libs_deps(variant))
 
+    def _add_source_set_target_dependency(self, variant: constants.Variant,
+                                          target: 'SourceSetGnTarget'):
+        self._add_cpp_target_dependency(variant, target)
+
     def _add_group_target_dependency(self, variant: constants.Variant, target: 'GroupGnTarget'):
         for variant_key in ("_variant_cflags", "_variant_defines", "_variant_include_dirs",
                             "_variant_transitive_static_libs_deps",
@@ -316,37 +336,37 @@ class _CppGnTarget(GnTarget):
         return self._all_variants[variant]._variant_cflags
 
     def set_cflags(self, variant: constants.Variant, cflags: Set[str]):
-        self._all_variants[variant]._variant_cflags = cflags
+        self._all_variants[variant]._variant_cflags = set(cflags)
 
     def get_defines(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_defines
 
     def set_defines(self, variant: constants.Variant, defines: Set[str]):
-        self._all_variants[variant]._variant_defines = defines
+        self._all_variants[variant]._variant_defines = set(defines)
 
     def get_include_dirs(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_include_dirs
 
     def set_include_dirs(self, variant: constants.Variant, include_dirs: Set[str]):
-        self._all_variants[variant]._variant_include_dirs = include_dirs
+        self._all_variants[variant]._variant_include_dirs = set(include_dirs)
 
     def get_ldflags(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_ldflags
 
     def set_ldflags(self, variant: constants.Variant, ld_flags: Set[str]):
-        self._all_variants[variant]._variant_ldflags = ld_flags
+        self._all_variants[variant]._variant_ldflags = set(ld_flags)
 
     def set_rtti(self, variant: constants.Variant, rtti: bool):
         self._all_variants[variant]._variant_rtti = rtti
 
     def set_libs(self, variant: constants.Variant, libs: Set[str]):
-        self._all_variants[variant]._variant_libs = libs
+        self._all_variants[variant]._variant_libs = set(libs)
 
     def get_sources(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_sources
 
     def set_sources(self, variant: constants.Variant, sources: Set[str]):
-        self._all_variants[variant]._variant_sources = sources
+        self._all_variants[variant]._variant_sources = set(sources)
 
     def get_proto_deps(self, variant: constants.Variant) -> Set[GnTarget]:
         return self._all_variants[variant]._variant_proto_deps
@@ -379,5 +399,15 @@ class ExecutableGnTarget(_CppGnTarget):
 
 
 class GroupGnTarget(_CppGnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+
+
+class BuiltInGnTarget(GnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+
+
+class IgnoredGnTarget(GnTarget):
     def __init__(self, name: str):
         super().__init__(name)
