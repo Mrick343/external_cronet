@@ -98,63 +98,6 @@ class GnParser:
 
         # Recurse in dependencies.
         for gn_dep_name in desc.get('deps', []):
-            dep = self.parse_gn_desc(gn_desc, gn_dep_name, java_group_name, is_test_target)
-            if dep.type == 'proto_library':
-                target.proto_deps.add(dep.name)
-                target.transitive_proto_deps.add(dep.name)
-                target.proto_paths.update(dep.proto_paths)
-                target.transitive_proto_deps.update(dep.transitive_proto_deps)
-            elif dep.type == 'group':
-                target.update(dep, arch)  # Bubble up groups's cflags/ldflags etc.
-            elif dep.type in ['action', 'action_foreach', 'copy']:
-                if proto_target_type is None:
-                    target.arch[arch].deps.add(dep.name)
-            elif dep.is_linker_unit_type():
-                target.arch[arch].deps.add(dep.name)
-            elif dep.type == 'java_group':
-                # Explicitly break dependency chain when a java_group is added.
-                # Java sources are collected and eventually compiled as one large
-                # java_library.
-                pass
-
-            if dep.type in ['static_library', 'source_set']:
-                # Bubble up static_libs and source_set. Necessary, since soong does not propagate
-                # static_libs up the build tree.
-                # Source sets are later translated to static_libraries, so it makes sense
-                # to reuse transitive_static_libs_deps.
-                target.arch[arch].transitive_static_libs_deps.add(dep.name)
-
-            if arch in dep.arch:
-                target.arch[arch].transitive_static_libs_deps.update(
-                    dep.arch[arch].transitive_static_libs_deps)
-                target.arch[arch].deps.update(target.arch[arch].transitive_static_libs_deps)
-
-            # Collect java sources. Java sources are kept inside the __compile_java target.
-            # This target can be used for both host and target compilation; only add
-            # the sources if they are destined for the target (i.e. they are a
-            # dependency of the __dex target)
-            # Note: this skips prebuilt java dependencies. These will have to be
-            # added manually when building the jar.
-            if target.name.endswith('__dex'):
-                if dep.name.endswith('__compile_java'):
-                    log.debug('Adding java sources for %s', dep.name)
-                    java_srcs = [src for src in dep.inputs if utils.is_java_source(src)]
-                    if not is_test_target:
-                        # TODO(aymanm): Fix collecting sources for testing modules for java.
-                        # Don't collect java source files for test targets.
-                        # We only need a specific set of java sources which are hardcoded in gen_android_bp
-                        self.java_sources[java_group_name].update(java_srcs)
-            if dep.type in ["action"] and target.type == "java_group":
-                # GN uses an action to compile aidl files. However, this is not needed in soong
-                # as soong can directly have .aidl files in srcs. So adding .aidl files to the java_sources.
-                # TODO: Find a better way/place to do this.
-                if not is_test_target:
-                    if '_aidl' in dep.name:
-                        self.java_sources[java_group_name].update(dep.arch[arch].sources)
-                        self.aidl_local_include_dirs.update(
-                            utils.extract_includes_from_aidl_args(dep.arch[arch].args))
-                    else:
-                        # TODO(aymanm): Fix collecting actions for testing modules for java.
-                        # Don't collect java actions for test targets.
-                        self.java_actions[java_group_name].add(dep.name)
+            dep_target = self.parse_gn_desc(gn_desc, gn_dep_name, java_group_name, is_test_target)
+            target.add_dependency(variant, dep_target)
         return target

@@ -237,13 +237,17 @@ def create_appropriate_gn_target(desc: Dict[str,]) -> gn_target.GnTarget:
         return gn_target.ProtoGnTarget(name)
     elif type == 'source_set':
         return gn_target.SourceSetGnTarget(name)
-    elif type in ["shared_library", "static_library"]:
-        return gn_target.CppGnTarget(name)
+    elif type == "shared_library":
+        return gn_target.CppSharedLibraryGnTarget(name)
+    elif type == "static_library":
+        return gn_target.CppStaticLibraryGnTarget(name)
+    elif type == "executable":
+        return gn_target.ExecutableGnTarget(name)
     elif (desc.get("script", "") in JAVA_BANNED_SCRIPTS
           or is_java_group(type, name)):
         return gn_target.JavaGnTarget(name)
     elif type in ['action', 'action_foreach']:
-        return gn_target.GnActionTarget(name)
+        return gn_target.ActionGnTarget(name)
     else:
         raise Exception(
             "%s GN target does not translate to any of the known GN classes" % name)

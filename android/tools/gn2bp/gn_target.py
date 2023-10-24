@@ -32,9 +32,64 @@ class GnTarget:
         # a variant attribute.
         self._all_variants: Dict[utils.Variant, GnTarget] = {}
 
-    def populate_variant(self, desc: Dict[str,]):
+    def populate_variant(self, desc: Dict[str, str | List[str]]):
         variant = utils.get_variant(desc['toolchain'])
         self.create_variant(variant)
+
+    def add_dependency(self, variant: utils.Variant, target: GnTarget):
+        if isinstance(target, ActionGnTarget):
+            self._add_action_target_dependency(variant, target)
+        elif isinstance(target, GroupGnTarget):
+            self._add_group_target_dependency(variant, target)
+        elif isinstance(target, _CppGnTarget):
+            self._add_cpp_target_dependency(variant, target)
+        elif isinstance(target, SourceSetGnTarget):
+            self._add_source_set_target_dependency(variant, target)
+        elif isinstance(target, JavaGnTarget):
+            self._add_java_target_dependency(variant, target)
+        elif isinstance(target, ProtoGnTarget):
+            self._add_proto_target_dependency(variant, target)
+        else:
+            raise Exception("Unable to identify the type"
+                            " of the target dependency, target name: %s, target type: %s" % (
+                                target.name, type(target)))
+
+    def _add_action_target_dependency(self, variant: utils.Variant, target: 'ActionGnTarget'):
+        raise Exception(
+            """Unable to add a dependency on target (%s) of type 
+            (%s) for a dependee of name (%s) and type (%s)""" % (
+                target.name, type(target), self.name, type(self)))
+
+    def _add_cpp_target_dependency(self, variant: utils.Variant, target: '_CppGnTarget'):
+        raise Exception(
+            """Unable to add a dependency on target (%s) of type 
+            (%s) for a dependee of name (%s) and type (%s)""" % (
+                target.name, type(target), self.name, type(self)))
+
+    def _add_source_set_target_dependency(self, variant: utils.Variant,
+                                          target: 'SourceSetGnTarget'):
+        raise Exception(
+            """Unable to add a dependency on target (%s) of type 
+            (%s) for a dependee of name (%s) and type (%s)""" % (
+                target.name, type(target), self.name, type(self)))
+
+    def _add_java_target_dependency(self, variant: utils.Variant, target: 'JavaGnTarget'):
+        raise Exception(
+            """Unable to add a dependency on target (%s) of type 
+            (%s) for a dependee of name (%s) and type (%s)""" % (
+                target.name, type(target), self.name, type(self)))
+
+    def _add_proto_target_dependency(self, variant: utils.Variant, target: 'ProtoGnTarget'):
+        raise Exception(
+            """Unable to add a dependency on target (%s) of type 
+            (%s) for a dependee of name (%s) and type (%s)""" % (
+                target.name, type(target), self.name, type(self)))
+
+    def _add_group_target_dependency(self, variant: utils.Variant, target: 'GroupGnTarget'):
+        raise Exception(
+            """Unable to add a dependency on target (%s) of type 
+            (%s) for a dependee of name (%s) and type (%s)""" % (
+                target.name, type(target), self.name, type(self)))
 
     def get_deps(self, variant: utils.Variant):
         return self._all_variants[variant]._variant_deps
@@ -133,24 +188,7 @@ class GnTarget:
         return {variant: val for variant, val in self._all_variants.items()}
 
 
-class _SourcesGnTarget(GnTarget):
-    def __init__(self, name: str):
-        super().__init__(name)
-        self._variant_sources: Set[str] = set()
-
-    def get_sources(self, variant: utils.Variant) -> Set[str]:
-        return self._all_variants[variant]._variant_sources
-
-    def set_sources(self, variant: utils.Variant, sources: Set[str]):
-        self._all_variants[variant]._variant_sources = sources
-
-    def populate_variant(self, desc: Dict[str,]):
-        super().populate_variant(desc)
-        variant = utils.get_variant(desc["toolchain"])
-        self.set_sources(variant, desc.get("sources", set()))
-
-
-class GnActionTarget(GnTarget, _SourcesGnTarget):
+class ActionGnTarget(GnTarget):
     def __init__(self, name: str):
         super().__init__(name)
         self.script: str = ""
@@ -195,16 +233,25 @@ class GnActionTarget(GnTarget, _SourcesGnTarget):
         self._all_variants[variant]._variant_response_file_contents = value
 
 
-class ProtoGnTarget(GnTarget, _SourcesGnTarget):
+class ProtoGnTarget(GnTarget):
     def __init__(self, name: str):
         super().__init__(name)
         self.proto_plugin: str = ""
         self.proto_in_dir: str = ""
+        self._variant_sources: Set[str] = set()
 
     def populate_variant(self, desc: Dict[str,]):
         super().populate_variant(desc)
+        variant = utils.get_variant(desc["toolchain"])
         self.proto_plugin = "proto"
         self.proto_in_dir = utils.get_proto_in_dir(desc["args"])
+        self.set_sources(variant, desc.get("sources", set()))
+
+    def get_sources(self, variant: utils.Variant) -> Set[str]:
+        return self._all_variants[variant]._variant_sources
+
+    def set_sources(self, variant: utils.Variant, sources: Set[str]):
+        self._all_variants[variant]._variant_sources = sources
 
 
 class JavaGnTarget(GnTarget):
@@ -212,14 +259,7 @@ class JavaGnTarget(GnTarget):
         super().__init__(name)
 
 
-class SourceSetGnTarget(ProtoGnTarget, GnTarget):
-    def __init__(self, name: str):
-        super().__init__(name)
-        self.proto_deps: Set[str] = set()
-        self.transitive_proto_deps = set()
-
-
-class CppGnTarget(GnTarget, _SourcesGnTarget):
+class _CppGnTarget(GnTarget):
     """
     Represents a CPP GN Target. This class defines the blueprint for
     """
@@ -227,18 +267,20 @@ class CppGnTarget(GnTarget, _SourcesGnTarget):
     def __init__(self, name: str):
         super().__init__(name)
         self.output_name: str = ""
+        self._variant_sources: Set[str] = set()
         self._variant_cflags: Set[str] = set()
         self._variant_defines: Set[str] = set()
         self._variant_include_dirs: Set[str] = set()
-        self._variant_transitive_static_libs_deps: Set[str] = set()
-        self._variant_source_set_deps: Set[str] = set()
+        self._variant_transitive_static_libs_deps: Set[GnTarget] = set()
         self._variant_ldflags: Set[str] = set()
         self._variant_libs: Set[str] = set()
         self._variant_rtti: bool = False
+        self._variant_transitive_proto_deps: Set[GnTarget] = set()
 
     def populate_variant(self, desc: Dict[str,]):
         super().populate_variant(desc)
         variant = utils.get_variant(desc["toolchain"])
+        self.set_sources(variant, desc.get("sources", set()))
         self.set_cflags(variant, set(desc.get("cflags", set()) | desc.get('cflags_cc', set())))
         self.set_libs(variant, desc.get("libs", set()))
         self.set_ldflags(variant, desc.get("ldflags", set()))
@@ -246,6 +288,25 @@ class CppGnTarget(GnTarget, _SourcesGnTarget):
         self.set_include_dirs(variant, desc.get("include_dirs", set()))
         self.output_name = desc.get("output_name", "")
         self.set_rtti(variant, utils.CFLAG_RTTI in self.get_cflags(variant))
+
+    def _add_action_target_dependency(self, variant: utils.Variant, target: ActionGnTarget):
+        self.get_deps(variant).add(target)
+
+    def _add_proto_target_dependency(self, variant: utils.Variant, target: ProtoGnTarget):
+        self.get_transitive_proto_deps(variant).add(target)
+        self.get_transitive_proto_deps(variant).update(self.get_transitive_proto_deps(variant))
+
+    def _add_cpp_target_dependency(self, variant: utils.Variant, target: '_CppGnTarget'):
+        self.get_transitive_static_libs_deps(variant).add(target)
+        self.get_transitive_static_libs_deps(variant).update(
+            target.get_transitive_static_libs_deps(variant))
+
+    def _add_group_target_dependency(self, variant: utils.Variant, target: 'GroupGnTarget'):
+        for variant_key in ("_variant_cflags", "_variant_defines", "_variant_include_dirs",
+                            "_variant_transitive_static_libs_deps",
+                            "_variant_ldflags", "_variant_libs", "_variant_transitive_proto_deps"):
+            getattr(self._all_variants[variant], variant_key).update(
+                getattr(target._all_variants[variant], variant_key, set()))
 
     def get_cflags(self, variant: utils.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_cflags
@@ -271,11 +332,48 @@ class CppGnTarget(GnTarget, _SourcesGnTarget):
     def set_ldflags(self, variant: utils.Variant, ld_flags: Set[str]):
         self._all_variants[variant]._variant_ldflags = ld_flags
 
-    def get_source_set_deps(self, variant: utils.Variant) -> Set[str]:
-        return self._all_variants[variant]._variant_source_set_deps
-
     def set_rtti(self, variant: utils.Variant, rtti: bool):
         self._all_variants[variant]._variant_rtti = rtti
 
     def set_libs(self, variant: utils.Variant, libs: Set[str]):
         self._all_variants[variant]._variant_libs = libs
+
+    def get_sources(self, variant: utils.Variant) -> Set[str]:
+        return self._all_variants[variant]._variant_sources
+
+    def set_sources(self, variant: utils.Variant, sources: Set[str]):
+        self._all_variants[variant]._variant_sources = sources
+
+    def get_proto_deps(self, variant: utils.Variant) -> Set[GnTarget]:
+        return self._all_variants[variant]._variant_proto_deps
+
+    def get_transitive_proto_deps(self, variant: utils.Variant) -> Set[GnTarget]:
+        return self._all_variants[variant]._variant_transitive_proto_deps
+
+    def get_transitive_static_libs_deps(self, variant: utils.Variant) -> Set[GnTarget]:
+        return self._all_variants[variant]._variant_transitive_static_libs_deps
+
+
+class SourceSetGnTarget(_CppGnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+
+
+class CppStaticLibraryGnTarget(_CppGnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+
+
+class CppSharedLibraryGnTarget(_CppGnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+
+
+class ExecutableGnTarget(_CppGnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
+
+
+class GroupGnTarget(_CppGnTarget):
+    def __init__(self, name: str):
+        super().__init__(name)
