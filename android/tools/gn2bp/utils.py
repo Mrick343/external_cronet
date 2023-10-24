@@ -14,53 +14,22 @@
 
 import os
 import re
-from enum import Enum
 from typing import List, Dict
 
-import gn_target
-
-LINKER_UNIT_TYPES = ('executable', 'shared_library', 'static_library', 'source_set')
-JAVA_BANNED_SCRIPTS = [
-    "//build/android/gyp/turbine.py",
-    "//build/android/gyp/compile_java.py",
-    "//build/android/gyp/filter_zip.py",
-    "//build/android/gyp/dex.py",
-    "//build/android/gyp/write_build_config.py",
-    "//build/android/gyp/create_r_java.py",
-    "//build/android/gyp/ijar.py",
-    "//build/android/gyp/create_r_java.py",
-    "//build/android/gyp/bytecode_processor.py",
-    "//build/android/gyp/prepare_resources.py",
-    "//build/android/gyp/aar.py",
-    "//build/android/gyp/zip.py",
-]
-RESPONSE_FILE = '{{response_file_name}}'
-TESTING_SUFFIX = "__testing"
-AIDL_INCLUDE_DIRS_REGEX = r'--includes=\[(.*)\]'
-VARIANT_PREFIX = "_variant"
-CFLAG_RTTI = "-frtti"
+import gn_target, constants
 
 
-class Variant(Enum):
-    COMMON = "common"
-    X86 = "android_x86"
-    X86_64 = "android_x86_64"
-    ARM = "android_arm"
-    ARM_64 = "android_arm64"
-    HOST = "host"
-
-
-def get_variant(toolchain: str) -> Variant:
+def get_variant(toolchain: str) -> constants.Variant:
     if toolchain == '//build/toolchain/android:android_clang_x86':
-        return Variant.X86
+        return constants.Variant.X86
     elif toolchain == '//build/toolchain/android:android_clang_x64':
-        return Variant.X86_64
+        return constants.Variant.X86_64
     elif toolchain == '//build/toolchain/android:android_clang_arm':
-        return Variant.ARM
+        return constants.Variant.ARM
     elif toolchain == '//build/toolchain/android:android_clang_arm64':
-        return Variant.ARM_64
+        return constants.Variant.ARM_64
     else:
-        return Variant.HOST
+        return constants.Variant.HOST
 
 
 def is_java_group(type: str, target_name: str) -> bool:
@@ -220,10 +189,10 @@ def is_variant_attribute(key: str) -> bool:
     :param key: The field name that exists within __dict__
     :return: True if the key can be a variant.
     """
-    return key.startswith(VARIANT_PREFIX)
+    return key.startswith(constants.VARIANT_PREFIX)
 
 
-def create_appropriate_gn_target(desc: Dict[str,]) -> gn_target.GnTarget:
+def create_appropriate_gn_target(name: str, desc: Dict[str, str | List[str]]) -> gn_target.GnTarget:
     """
     Creates the appropriate GnTarget class for the given dictionary `desc`.
 
@@ -232,7 +201,6 @@ def create_appropriate_gn_target(desc: Dict[str,]) -> gn_target.GnTarget:
     any possible class.
     """
     type = desc['type']
-    name = label_without_toolchain(desc["name"])
     if is_proto_target(type, desc.get("script", "")):
         return gn_target.ProtoGnTarget(name)
     elif type == 'source_set':
@@ -243,7 +211,7 @@ def create_appropriate_gn_target(desc: Dict[str,]) -> gn_target.GnTarget:
         return gn_target.CppStaticLibraryGnTarget(name)
     elif type == "executable":
         return gn_target.ExecutableGnTarget(name)
-    elif (desc.get("script", "") in JAVA_BANNED_SCRIPTS
+    elif (desc.get("script", "") in constants.JAVA_BANNED_SCRIPTS
           or is_java_group(type, name)):
         return gn_target.JavaGnTarget(name)
     elif type in ['action', 'action_foreach']:

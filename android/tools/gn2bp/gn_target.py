@@ -19,7 +19,7 @@ import copy
 import json
 from typing import Set, Dict, List
 
-import utils
+import utils, constants
 
 
 class GnTarget:
@@ -30,13 +30,13 @@ class GnTarget:
         self._variant_deps: Set[GnTarget] = set()
         # This field name is intentionally not named as `variant` to make sure that it is not
         # a variant attribute.
-        self._all_variants: Dict[utils.Variant, GnTarget] = {}
+        self._all_variants: Dict[constants.Variant, GnTarget] = {}
 
     def populate_variant(self, desc: Dict[str, str | List[str]]):
         variant = utils.get_variant(desc['toolchain'])
         self.create_variant(variant)
 
-    def add_dependency(self, variant: utils.Variant, target: GnTarget):
+    def add_dependency(self, variant: constants.Variant, target: 'GnTarget'):
         if isinstance(target, ActionGnTarget):
             self._add_action_target_dependency(variant, target)
         elif isinstance(target, GroupGnTarget):
@@ -54,51 +54,51 @@ class GnTarget:
                             " of the target dependency, target name: %s, target type: %s" % (
                                 target.name, type(target)))
 
-    def _add_action_target_dependency(self, variant: utils.Variant, target: 'ActionGnTarget'):
+    def _add_action_target_dependency(self, variant: constants.Variant, target: 'ActionGnTarget'):
         raise Exception(
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
 
-    def _add_cpp_target_dependency(self, variant: utils.Variant, target: '_CppGnTarget'):
+    def _add_cpp_target_dependency(self, variant: constants.Variant, target: '_CppGnTarget'):
         raise Exception(
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
 
-    def _add_source_set_target_dependency(self, variant: utils.Variant,
+    def _add_source_set_target_dependency(self, variant: constants.Variant,
                                           target: 'SourceSetGnTarget'):
         raise Exception(
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
 
-    def _add_java_target_dependency(self, variant: utils.Variant, target: 'JavaGnTarget'):
+    def _add_java_target_dependency(self, variant: constants.Variant, target: 'JavaGnTarget'):
         raise Exception(
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
 
-    def _add_proto_target_dependency(self, variant: utils.Variant, target: 'ProtoGnTarget'):
+    def _add_proto_target_dependency(self, variant: constants.Variant, target: 'ProtoGnTarget'):
         raise Exception(
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
 
-    def _add_group_target_dependency(self, variant: utils.Variant, target: 'GroupGnTarget'):
+    def _add_group_target_dependency(self, variant: constants.Variant, target: 'GroupGnTarget'):
         raise Exception(
             """Unable to add a dependency on target (%s) of type 
             (%s) for a dependee of name (%s) and type (%s)""" % (
                 target.name, type(target), self.name, type(self)))
 
-    def get_deps(self, variant: utils.Variant):
+    def get_deps(self, variant: constants.Variant):
         return self._all_variants[variant]._variant_deps
 
     def device_supported(self):
         return any([name.value.startswith('android') for name in self._all_variants.keys()])
 
     def host_supported(self):
-        return utils.Variant.HOST in self._all_variants.keys()
+        return constants.Variant.HOST in self._all_variants.keys()
 
     def __repr__(self):
         return json.dumps({
@@ -151,7 +151,7 @@ class GnTarget:
     def get_target_name(self) -> str:
         return self.name[self.name.find(":") + 1:]
 
-    def create_variant(self, variant: utils.Variant) -> None:
+    def create_variant(self, variant: constants.Variant) -> None:
         """
         This method will create another instance of the same class for which it is executed on
         and added it to the dictionary of `_all_variant`. Say you have the
@@ -179,11 +179,11 @@ class GnTarget:
           }
         }
 
-        :param variant: Type of the new variant according to utils.Variant
+        :param variant: Type of the new variant according to constants.Variant
         """
         self._all_variants[variant] = type(self)(self.name)
 
-    def get_variants(self) -> Dict[utils.Variant, GnTarget]:
+    def get_variants(self) -> Dict[constants.Variant, 'GnTarget']:
         """ Returns a dict of variants """
         return {variant: val for variant, val in self._all_variants.items()}
 
@@ -197,7 +197,7 @@ class ActionGnTarget(GnTarget):
         self._variant_args: List[str] = []
         self._variant_response_file_contents: str = ""
 
-    def populate_variant(self, desc: Dict[str,]):
+    def populate_variant(self, desc: Dict[str, str | List[str]]):
         super().populate_variant(desc)
         variant = utils.get_variant(desc["toolchain"])
         self.script = desc["script"]
@@ -208,28 +208,28 @@ class ActionGnTarget(GnTarget):
         self.set_response_file_contents(variant, utils.escape_response_file_contents(
             desc.get("response_file_contents", [])))
 
-    def get_inputs(self, variant: utils.Variant) -> Set[str]:
+    def get_inputs(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_inputs
 
-    def set_inputs(self, variant: utils.Variant, inputs: Set[str]):
+    def set_inputs(self, variant: constants.Variant, inputs: Set[str]):
         self._all_variants[variant]._variant_inputs = inputs
 
-    def get_outputs(self, variant: utils.Variant) -> Set[str]:
+    def get_outputs(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_outputs
 
-    def set_outputs(self, variant: utils.Variant, outputs: Set[str]):
+    def set_outputs(self, variant: constants.Variant, outputs: Set[str]):
         self._all_variants[variant]._variant_outputs = outputs
 
-    def get_args(self, variant: utils.Variant) -> List[str]:
+    def get_args(self, variant: constants.Variant) -> List[str]:
         return self._all_variants[variant]._variant_args
 
-    def set_args(self, variant: utils.Variant, args: List[str]):
+    def set_args(self, variant: constants.Variant, args: List[str]):
         self._all_variants[variant]._variant_args = args
 
-    def get_response_file_contents(self, variant: utils.Variant) -> str:
+    def get_response_file_contents(self, variant: constants.Variant) -> str:
         return self._all_variants[variant]._variant_response_file_contents
 
-    def set_response_file_contents(self, variant: utils.Variant, value: str):
+    def set_response_file_contents(self, variant: constants.Variant, value: str):
         self._all_variants[variant]._variant_response_file_contents = value
 
 
@@ -240,17 +240,17 @@ class ProtoGnTarget(GnTarget):
         self.proto_in_dir: str = ""
         self._variant_sources: Set[str] = set()
 
-    def populate_variant(self, desc: Dict[str,]):
+    def populate_variant(self, desc: Dict[str, str | List[str]]):
         super().populate_variant(desc)
         variant = utils.get_variant(desc["toolchain"])
         self.proto_plugin = "proto"
         self.proto_in_dir = utils.get_proto_in_dir(desc["args"])
         self.set_sources(variant, desc.get("sources", set()))
 
-    def get_sources(self, variant: utils.Variant) -> Set[str]:
+    def get_sources(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_sources
 
-    def set_sources(self, variant: utils.Variant, sources: Set[str]):
+    def set_sources(self, variant: constants.Variant, sources: Set[str]):
         self._all_variants[variant]._variant_sources = sources
 
 
@@ -277,80 +277,84 @@ class _CppGnTarget(GnTarget):
         self._variant_rtti: bool = False
         self._variant_transitive_proto_deps: Set[GnTarget] = set()
 
-    def populate_variant(self, desc: Dict[str,]):
+    def populate_variant(self, desc: Dict[str, str | List[str]]):
         super().populate_variant(desc)
         variant = utils.get_variant(desc["toolchain"])
         self.set_sources(variant, desc.get("sources", set()))
-        self.set_cflags(variant, set(desc.get("cflags", set()) | desc.get('cflags_cc', set())))
+        self.set_cflags(variant,
+                        set(
+                            set(desc.get("cflags", set())) |
+                            set(desc.get('cflags_cc', set()))
+                        ))
         self.set_libs(variant, desc.get("libs", set()))
         self.set_ldflags(variant, desc.get("ldflags", set()))
         self.set_defines(variant, desc.get("defines", set()))
         self.set_include_dirs(variant, desc.get("include_dirs", set()))
         self.output_name = desc.get("output_name", "")
-        self.set_rtti(variant, utils.CFLAG_RTTI in self.get_cflags(variant))
+        self.set_rtti(variant, constants.CFLAG_RTTI in self.get_cflags(variant))
 
-    def _add_action_target_dependency(self, variant: utils.Variant, target: ActionGnTarget):
+    def _add_action_target_dependency(self, variant: constants.Variant, target: ActionGnTarget):
         self.get_deps(variant).add(target)
 
-    def _add_proto_target_dependency(self, variant: utils.Variant, target: ProtoGnTarget):
+    def _add_proto_target_dependency(self, variant: constants.Variant, target: ProtoGnTarget):
         self.get_transitive_proto_deps(variant).add(target)
         self.get_transitive_proto_deps(variant).update(self.get_transitive_proto_deps(variant))
 
-    def _add_cpp_target_dependency(self, variant: utils.Variant, target: '_CppGnTarget'):
+    def _add_cpp_target_dependency(self, variant: constants.Variant, target: '_CppGnTarget'):
         self.get_transitive_static_libs_deps(variant).add(target)
         self.get_transitive_static_libs_deps(variant).update(
             target.get_transitive_static_libs_deps(variant))
 
-    def _add_group_target_dependency(self, variant: utils.Variant, target: 'GroupGnTarget'):
+    def _add_group_target_dependency(self, variant: constants.Variant, target: 'GroupGnTarget'):
         for variant_key in ("_variant_cflags", "_variant_defines", "_variant_include_dirs",
                             "_variant_transitive_static_libs_deps",
                             "_variant_ldflags", "_variant_libs", "_variant_transitive_proto_deps"):
             getattr(self._all_variants[variant], variant_key).update(
                 getattr(target._all_variants[variant], variant_key, set()))
 
-    def get_cflags(self, variant: utils.Variant) -> Set[str]:
+    def get_cflags(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_cflags
 
-    def set_cflags(self, variant: utils.Variant, cflags: Set[str]):
+    def set_cflags(self, variant: constants.Variant, cflags: Set[str]):
         self._all_variants[variant]._variant_cflags = cflags
 
-    def get_defines(self, variant: utils.Variant) -> Set[str]:
+    def get_defines(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_defines
 
-    def set_defines(self, variant: utils.Variant, defines: Set[str]):
+    def set_defines(self, variant: constants.Variant, defines: Set[str]):
         self._all_variants[variant]._variant_defines = defines
 
-    def get_include_dirs(self, variant: utils.Variant) -> Set[str]:
+    def get_include_dirs(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_include_dirs
 
-    def set_include_dirs(self, variant: utils.Variant, include_dirs: Set[str]):
+    def set_include_dirs(self, variant: constants.Variant, include_dirs: Set[str]):
         self._all_variants[variant]._variant_include_dirs = include_dirs
 
-    def get_ldflags(self, variant: utils.Variant) -> Set[str]:
+    def get_ldflags(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_ldflags
 
-    def set_ldflags(self, variant: utils.Variant, ld_flags: Set[str]):
+    def set_ldflags(self, variant: constants.Variant, ld_flags: Set[str]):
         self._all_variants[variant]._variant_ldflags = ld_flags
 
-    def set_rtti(self, variant: utils.Variant, rtti: bool):
+    def set_rtti(self, variant: constants.Variant, rtti: bool):
         self._all_variants[variant]._variant_rtti = rtti
 
-    def set_libs(self, variant: utils.Variant, libs: Set[str]):
+    def set_libs(self, variant: constants.Variant, libs: Set[str]):
         self._all_variants[variant]._variant_libs = libs
 
-    def get_sources(self, variant: utils.Variant) -> Set[str]:
+    def get_sources(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_sources
 
-    def set_sources(self, variant: utils.Variant, sources: Set[str]):
+    def set_sources(self, variant: constants.Variant, sources: Set[str]):
         self._all_variants[variant]._variant_sources = sources
 
-    def get_proto_deps(self, variant: utils.Variant) -> Set[GnTarget]:
+    def get_proto_deps(self, variant: constants.Variant) -> Set[GnTarget]:
         return self._all_variants[variant]._variant_proto_deps
 
-    def get_transitive_proto_deps(self, variant: utils.Variant) -> Set[GnTarget]:
+    def get_transitive_proto_deps(self, variant: constants.Variant) -> Set[GnTarget]:
         return self._all_variants[variant]._variant_transitive_proto_deps
 
-    def get_transitive_static_libs_deps(self, variant: utils.Variant) -> Set[GnTarget]:
+    def get_transitive_static_libs_deps(self, variant: constants.Variant) -> Set[GnTarget]:
         return self._all_variants[variant]._variant_transitive_static_libs_deps
 
 

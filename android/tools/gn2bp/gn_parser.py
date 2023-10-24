@@ -13,13 +13,9 @@
 #  limitations under the License.
 
 import collections
-import logging as log
-import re
-from typing import Dict, Set, Callable
+from typing import Dict, Set, Callable, List
 
-import gn_target
-import utils
-from android.tools.gn2bp.gn_target import GnTarget
+import gn_target, utils, constants
 
 
 class GnParser:
@@ -46,7 +42,7 @@ class GnParser:
         self.aidl_local_include_dirs: Set[str] = set()
         self.java_actions: Dict[str, Set[str]] = collections.defaultdict(set)
 
-    def get_target(self, gn_target_name: str) -> GnTarget | None:
+    def get_target(self, gn_target_name: str) -> gn_target.GnTarget | None:
         """
         Returns a GnTarget object from the fully qualified GN target name.
 
@@ -58,16 +54,17 @@ class GnParser:
             return self.all_targets[gn_target_name]
         return None
 
-    def _is_target_and_variant_visited(self, gn_target_name: str, variant: utils.Variant) -> bool:
+    def _is_target_and_variant_visited(self, gn_target_name: str,
+                                       variant: constants.Variant) -> bool:
         return gn_target_name in self.all_targets and \
             variant in self.all_targets[gn_target_name].get_variants()
 
     def _is_target_visited(self, gn_target_name: str) -> bool:
         return gn_target_name in self.all_targets
 
-    def parse_gn_desc(self, gn_desc: Dict[str,], gn_target_name: str,
+    def parse_gn_desc(self, gn_desc: Dict[str, str | List[str]], gn_target_name: str,
                       java_group_name: str | None = None,
-                      is_test_target: bool = False) -> GnTarget | None:
+                      is_test_target: bool = False) -> gn_target.GnTarget | None:
         """Parses a gn desc tree and resolves all target dependencies.
 
         It bubbles up variables from source_set dependencies as described in the
@@ -91,10 +88,10 @@ class GnParser:
         elif self._is_target_visited(target_name):
             target = self.all_targets[target_name]
         else:
-            target = utils.create_appropriate_gn_target(desc)
+            target = utils.create_appropriate_gn_target(target_name, desc)
             self.all_targets[target_name] = target
 
-        target.populateVariant(desc)
+        target.populate_variant(desc)
 
         # Recurse in dependencies.
         for gn_dep_name in desc.get('deps', []):
