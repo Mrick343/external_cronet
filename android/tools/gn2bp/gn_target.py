@@ -19,7 +19,8 @@ import copy
 import json
 from typing import Set, Dict, List
 
-import utils, constants
+import constants
+import utils
 
 
 class GnTarget:
@@ -135,13 +136,13 @@ class GnTarget:
         val = getattr(self, key)
         if isinstance(val, set):
             self._finalize_set_attribute(key)
-        elif isinstance(val, (list, str)):
+        elif isinstance(val, (list, str, bool)):
             self._finalize_non_set_attribute(key)
         elif isinstance(val, GnTarget):
             # Explicitly Ignore GnTarget attributes are those are just Variant targets.
             pass
         else:
-            raise TypeError(f'Unsupported type: {type(val)}')
+            raise TypeError(f'Unsupported type: {type(val)}, key: {key}')
 
     def finalize(self):
         """
@@ -224,6 +225,15 @@ class ActionGnTarget(GnTarget):
     def _add_action_target_dependency(self, variant: constants.Variant, target: 'ActionGnTarget'):
         self.get_deps(variant).add(target)
 
+    def _add_java_target_dependency(self, variant: constants.Variant, target: 'JavaGnTarget'):
+        pass
+
+    def _add_group_target_dependency(self, variant: constants.Variant, target: 'GroupGnTarget'):
+        self.get_deps(variant).add(target)
+
+    def _add_cpp_target_dependency(self, variant: constants.Variant, target: '_CppGnTarget'):
+        self.get_deps(variant).add(target)
+
     def get_inputs(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_inputs
 
@@ -268,11 +278,21 @@ class ProtoGnTarget(GnTarget):
 
     def set_sources(self, variant: constants.Variant, sources: Set[str]):
         self._all_variants[variant]._variant_sources = sources
-    
+
+    def _add_cpp_target_dependency(self, variant: constants.Variant, target: '_CppGnTarget'):
+        self.get_deps(variant).add(target)
+
+    def _add_source_set_target_dependency(self, variant: constants.Variant,
+                                          target: 'SourceSetGnTarget'):
+        self.get_deps(variant).add(target)
+
 
 class JavaGnTarget(GnTarget):
     def __init__(self, name: str):
         super().__init__(name)
+
+    def add_dependency(self, variant: constants.Variant, target: 'JavaGnTarget'):
+        pass
 
 
 class _CppGnTarget(GnTarget):
@@ -331,6 +351,9 @@ class _CppGnTarget(GnTarget):
                             "_variant_ldflags", "_variant_libs", "_variant_transitive_proto_deps"):
             getattr(self._all_variants[variant], variant_key).update(
                 getattr(target._all_variants[variant], variant_key, set()))
+
+    def _add_java_target_dependency(self, variant: constants.Variant, target: 'JavaGnTarget'):
+        pass
 
     def get_cflags(self, variant: constants.Variant) -> Set[str]:
         return self._all_variants[variant]._variant_cflags
@@ -411,3 +434,6 @@ class BuiltInGnTarget(GnTarget):
 class IgnoredGnTarget(GnTarget):
     def __init__(self, name: str):
         super().__init__(name)
+
+    def add_dependency(self, variant: constants.Variant, target: 'GnTarget'):
+        pass
