@@ -430,6 +430,9 @@ class BuiltInGnTarget(GnTarget):
     def __init__(self, name: str):
         super().__init__(name)
 
+    def add_dependency(self, variant: constants.Variant, target: 'GnTarget'):
+        raise Exception("Builtin GnTargets must not add any dependencies at all.")
+
 
 class IgnoredGnTarget(GnTarget):
     def __init__(self, name: str):
