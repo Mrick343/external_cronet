@@ -53,7 +53,8 @@ DEFAULT_TESTS = [
   '//components/cronet/android:cronet_unittests_android__library',
   '//net:net_unittests__library',
   '//components/cronet/android:cronet_tests',
-  '//components/cronet/android:cronet'
+  '//components/cronet/android:cronet',
+  '//components/cronet/android:cronet_javatests',
 ]
 
 EXTRAS_ANDROID_BP_FILE = "Android.extras.bp"
@@ -63,6 +64,7 @@ CRONET_API_MODULE_NAME = "cronet_aml_api_java"
 # All module names are prefixed with this string to avoid collisions.
 module_prefix = 'cronet_aml_'
 
+REMOVE_GEN_JNI_JARJAR_RULES_FILE = "android/tools/remove-gen-jni-jarjar-rules.txt"
 # Shared libraries which are directly translated to Android system equivalents.
 shared_library_allowlist = [
     'android',
@@ -435,6 +437,7 @@ class Module(object):
     self.visibility = []
     self.gn_type = None
     self.jars = set()
+    self.jarjar_rules = ""
 
   def to_string(self, output):
     if self.comment:
@@ -490,6 +493,7 @@ class Module(object):
     self._output_field(output, 'default_visibility')
     self._output_field(output, 'visibility')
     self._output_field(output, 'jars')
+    self._output_field(output, 'jarjar_rules')
     if self.rtti:
       self._output_field(output, 'rtti')
 
@@ -1445,6 +1449,7 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
     return None
   elif target.type == 'java_library':
     module = Module('java_library', bp_module_name, gn_target_name)
+    module.jarjar_rules = REMOVE_GEN_JNI_JARJAR_RULES_FILE
   elif target.type == 'java_import':
     module = Module('java_import', bp_module_name, gn_target_name)
   else:
