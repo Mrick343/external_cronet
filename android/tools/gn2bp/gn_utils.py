@@ -368,8 +368,8 @@ class GnParser(object):
   def __init__(self, builtin_deps):
     self.builtin_deps = builtin_deps
     self.all_targets = {}
-    self.java_sources = collections.defaultdict(set)
-    self.java_actions = collections.defaultdict(set)
+    self.java_sources = set()
+    self.java_sources_testing = set()
 
   def _get_response_file_contents(self, action_desc):
     # response_file_contents are formatted as:
@@ -472,6 +472,9 @@ class GnParser(object):
       target.sources.update(java_source for java_source in metadata.get("source_files", []) if not java_source.startswith("//out")
                             and java_source not in JAVA_FILES_TO_IGNORE)
       target.transitive_java_sources.update(target.sources)
+      self.java_sources_testing.update(target.sources)
+      if not is_test_target:
+        self.java_sources.update(target.sources)
       deps = desc["metadata"].get("all_deps", {})
       log.info('Found Java Target %s', target.name)
     elif desc.get("script", "") == "//build/android/gyp/aidl.py":
