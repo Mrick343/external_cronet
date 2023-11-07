@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d81a714_ae332666",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1330,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T13:34:59Z",
+      "side": 1,
+      "message": "This will match also stuff which is not `//build/android:native_libraries_gen__testing` or `//build/android:native_libraries_gen`. Is this on purpose?",
+      "range": {
+        "startLine": 1330,
+        "startChar": 2,
+        "endLine": 1330,
+        "endChar": 68
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cc6d566_5c4f9bc9",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T13:34:59Z",
+      "side": 1,
+      "message": "This is a bit confusing. Could you instead say: \"the check following this one\" or something along these lines?\n\nOr maybe better, can you make the if below and elif (since you\u0027re saying that code will never execute when we enter this if)? That way this is made explicit in the code.",
+      "range": {
+        "startLine": 1400,
+        "startChar": 72,
+        "endLine": 1401,
+        "endChar": 48
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfcdfa50_ff1c5cb7",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1404,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T13:34:59Z",
+      "side": 1,
+      "message": "Any reason to swap this? I think the before is the \"more pythonic\" way of checking this.",
+      "range": {
+        "startLine": 1404,
+        "startChar": 5,
+        "endLine": 1404,
+        "endChar": 30
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b561b8a_4e740707",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T13:34:59Z",
+      "side": 1,
+      "message": "Also, I\u0027m a bit confused. Is `module.type` a string or an array?\n\nIf the former (which is what I think it is), can\u0027t why just check for equality?",
+      "range": {
+        "startLine": 1565,
+        "startChar": 9,
+        "endLine": 1565,
+        "endChar": 20
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ccb95b3_d5b98f4a",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T13:34:59Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 1565,
+        "startChar": 9,
+        "endLine": 1565,
+        "endChar": 49
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

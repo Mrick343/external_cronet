@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7606e2d1_1098acbb",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T13:34:59Z",
+      "side": 0,
+      "message": "This deletion seems unrelated to what this CL is trying to accomplish?",
+      "range": {
+        "startLine": 1036,
+        "startChar": 2,
+        "endLine": 1043,
+        "endChar": 33
+      },
+      "revId": "43ca615cda554056c60563abe1d2ce89e1a15724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
