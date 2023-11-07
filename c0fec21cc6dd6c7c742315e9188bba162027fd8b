@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5f1c4fd_ced017c2",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:59:20Z",
+      "side": 1,
+      "message": "I feel that the `has_input_files` API is being \"misused\".\n\nIs it being used to decide whether we \"print/append\" targets? If so, it should be called, `is_empty` and should also check for dependencies.",
+      "range": {
+        "startLine": 635,
+        "startChar": 15,
+        "endLine": 635,
+        "endChar": 19
+      },
+      "revId": "c0fec21cc6dd6c7c742315e9188bba162027fd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96bac9b2_f02a4056",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:59:20Z",
+      "side": 1,
+      "message": "I.e. this should just be `not m.is_empty()`",
+      "range": {
+        "startLine": 663,
+        "startChar": 9,
+        "endLine": 663,
+        "endChar": 62
+      },
+      "revId": "c0fec21cc6dd6c7c742315e9188bba162027fd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3eefbd17_49f0ff96",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1674,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:59:20Z",
+      "side": 1,
+      "message": "same here: should be `dep_module.is_empty()`",
+      "range": {
+        "startLine": 1674,
+        "startChar": 36,
+        "endLine": 1674,
+        "endChar": 66
+      },
+      "revId": "c0fec21cc6dd6c7c742315e9188bba162027fd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
