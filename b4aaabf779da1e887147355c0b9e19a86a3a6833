@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b05de6a9_47a7e190",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:38:57Z",
+      "side": 1,
+      "message": "nit: Split this from the jarjar GEN_JNI change",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 49
+      },
+      "revId": "b4aaabf779da1e887147355c0b9e19a86a3a6833",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
