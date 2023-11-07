@@ -22,6 +22,30 @@
       },
       "revId": "b329335997b38b58c30404a1b8d7b988ce3cf8aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "786af9c2_e363a413",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-07T15:45:27Z",
+      "side": 1,
+      "message": "We can reiterate over that once Etienne has landed his changes.",
+      "parentUuid": "2b8590dd_b8750851",
+      "range": {
+        "startLine": 9,
+        "startChar": 65,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "b329335997b38b58c30404a1b8d7b988ce3cf8aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
