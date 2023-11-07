@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96c16dc3_2853fce7",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:21:35Z",
+      "side": 1,
+      "message": "nit: `ValueError`",
+      "range": {
+        "startLine": 86,
+        "startChar": 10,
+        "endLine": 86,
+        "endChar": 19
+      },
+      "revId": "1cc1bcd2a79c98c87e5ef1002d4bf36c48bf1068",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "612b3c75_d1bc1b02",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:21:35Z",
+      "side": 1,
+      "message": "nit: `local_import.endswith(\"framework.aidl\")` or even better match exactly `third_party/android_sdk/public/platforms/android-34/framework.aidl`?",
+      "range": {
+        "startLine": 103,
+        "startChar": 17,
+        "endLine": 103,
+        "endChar": 53
+      },
+      "revId": "1cc1bcd2a79c98c87e5ef1002d4bf36c48bf1068",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
