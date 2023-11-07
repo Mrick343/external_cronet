@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80df9739_fed856c0",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:53:42Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 1088,
+        "startChar": 16,
+        "endLine": 1088,
+        "endChar": 78
+      },
+      "revId": "7d8593cf6bdd174c9017eb811bef1c1f11cf0772",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd81726d_4b51dd30",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1155,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:53:42Z",
+      "side": 1,
+      "message": "You can drop the intermediate list and just have a generator expression as the body of set: `set(src for src in super().get_srcs() if src.endswith(\".java\"))`",
+      "range": {
+        "startLine": 1155,
+        "startChar": 17,
+        "endLine": 1155,
+        "endChar": 77
+      },
+      "revId": "7d8593cf6bdd174c9017eb811bef1c1f11cf0772",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
