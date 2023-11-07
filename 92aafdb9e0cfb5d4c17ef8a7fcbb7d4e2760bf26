@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "309ec95c_684539c1",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1636,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:35:31Z",
+      "side": 1,
+      "message": "nit: given the metrics discussion, it might be best to call this `libhttpengine` or `libhttpenginenative`",
+      "range": {
+        "startLine": 1636,
+        "startChar": 22,
+        "endLine": 1636,
+        "endChar": 30
+      },
+      "revId": "92aafdb9e0cfb5d4c17ef8a7fcbb7d4e2760bf26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
