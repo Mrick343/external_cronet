@@ -70,6 +70,53 @@
       },
       "revId": "e3af4bc0fae190a769b85a20a35dd82f1ba42d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16ede152_465c6b51",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44270,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:21:30Z",
+      "side": 1,
+      "message": "Yep. Fixed in https://android-review.git.corp.google.com/c/platform/external/cronet/+/2817495/1.",
+      "parentUuid": "a8df5245_bdb48294",
+      "range": {
+        "startLine": 44270,
+        "startChar": 11,
+        "endLine": 44270,
+        "endChar": 70
+      },
+      "revId": "e3af4bc0fae190a769b85a20a35dd82f1ba42d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2242c1ba_47428c3e",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:21:30Z",
+      "side": 1,
+      "message": "Can you move this to the child CL instead?",
+      "range": {
+        "startLine": 57,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 49
+      },
+      "revId": "e3af4bc0fae190a769b85a20a35dd82f1ba42d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
