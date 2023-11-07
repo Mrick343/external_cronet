@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd15fae4_2addd107",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:06:03Z",
+      "side": 1,
+      "message": "Can you split this into multiple comprehensions/for loops. It\u0027s too complex to be a single comprehension: go/pystyle#comprehensions",
+      "range": {
+        "startLine": 455,
+        "startChar": 28,
+        "endLine": 456,
+        "endChar": 71
+      },
+      "revId": "b639184000d14a364251085b31547ed0176c95e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
