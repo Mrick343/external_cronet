@@ -22,6 +22,30 @@
       },
       "revId": "e3af4bc0fae190a769b85a20a35dd82f1ba42d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "687a7de2_bc652b6b",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44270,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-07T15:18:58Z",
+      "side": 1,
+      "message": "Those are builtin dependencies that I probably forgot to add in this CL, they are added to the builtin deps in the upcoming CLs.",
+      "parentUuid": "ce11f473_3da9d483",
+      "range": {
+        "startLine": 44270,
+        "startChar": 11,
+        "endLine": 44270,
+        "endChar": 70
+      },
+      "revId": "e3af4bc0fae190a769b85a20a35dd82f1ba42d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
