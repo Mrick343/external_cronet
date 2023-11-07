@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f846451d_1f79b3fc",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:49:59Z",
+      "side": 0,
+      "message": "Can you branch this from Android.bp.swap instead? This will make it obvious if it\u0027s equal or there are diffs.",
+      "revId": "56e22dc4e8edd8fb15de2761599b5946373f079f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

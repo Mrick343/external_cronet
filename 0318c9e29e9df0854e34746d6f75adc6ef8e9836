@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c23e139b_f8f5d7a1",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T16:49:59Z",
+      "side": 1,
+      "message": "nit: this should go away entirely and stuff should depend on `cronet_aml_components_cronet_android_cronet_api_java`.\n\n(We can do that in a follow-up)",
+      "range": {
+        "startLine": 47,
+        "startChar": 11,
+        "endLine": 47,
+        "endChar": 30
+      },
+      "revId": "0318c9e29e9df0854e34746d6f75adc6ef8e9836",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
