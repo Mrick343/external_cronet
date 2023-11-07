@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e4b82bc_847628a9",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1570,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:35:22Z",
+      "side": 1,
+      "message": "nit: it would be nice to document why this is needed (not obvious to me)",
+      "range": {
+        "startLine": 1570,
+        "startChar": 4,
+        "endLine": 1570,
+        "endChar": 64
+      },
+      "revId": "3da691f850cf8853e7f56676ef0cf0e1cbb12cfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71d7299d_f2be1b6f",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:35:22Z",
+      "side": 1,
+      "message": "nit: `bool([src for src in sources if src.endswith(\".aidl\")])` might be more pythonic.\n\nBut an explicit for loop is probably more readable (and also wouldn\u0027t require you to loop everything).",
+      "range": {
+        "startLine": 62,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 67
+      },
+      "revId": "3da691f850cf8853e7f56676ef0cf0e1cbb12cfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
