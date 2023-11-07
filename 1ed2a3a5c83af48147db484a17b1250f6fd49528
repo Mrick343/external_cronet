@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "920a1203_bc49834b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-07T15:47:46Z",
+      "side": 1,
+      "message": "I\u0027m guessing this gets reflected onto the changes to the .json files?\n\nIn other words, these json files have been generated with upstream patches which have not yet landed?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "1ed2a3a5c83af48147db484a17b1250f6fd49528",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
