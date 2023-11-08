@@ -22,6 +22,30 @@
       },
       "revId": "1ed2a3a5c83af48147db484a17b1250f6fd49528",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fbe56a1_88f2defc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-08T17:59:44Z",
+      "side": 1,
+      "message": "Yep! I am not sure if I did embed `deps` for `java_group` but I will send a CL upstream if that is not the case.",
+      "parentUuid": "920a1203_bc49834b",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "1ed2a3a5c83af48147db484a17b1250f6fd49528",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
