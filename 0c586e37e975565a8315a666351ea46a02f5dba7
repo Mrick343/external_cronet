@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d6c811b_da71d615",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-08T13:17:21Z",
+      "side": 1,
+      "message": "@stefanoduo@google.com I just realized that I forgot to delete one of the comments `//0 maps to UNKNOWN` which doesn\u0027t make much sense. I will remove it in a subsequent CL to avoid merge conflicts downstream.",
+      "revId": "0c586e37e975565a8315a666351ea46a02f5dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
