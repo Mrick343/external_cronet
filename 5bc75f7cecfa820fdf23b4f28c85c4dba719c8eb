@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "48525050_b7ad8d11",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1330,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d81a714_ae332666",
+      "range": {
+        "startLine": 1330,
+        "startChar": 2,
+        "endLine": 1330,
+        "endChar": 68
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5cc6d566_5c4f9bc9",
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67fce2dd_b722aa72",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:38Z",
+      "side": 1,
+      "message": "\u003e Or maybe better, can you make the if below and elif (since you\u0027re saying that code will never execute when we enter this if)? That way this is made explicit in the code.\n\nThis will result in an infinite recursion because it will keep appending `__java`.\n\nI cleared up the comment a little bit. If it\u0027s not okay then please tell me.",
+      "parentUuid": "5cc6d566_5c4f9bc9",
+      "range": {
+        "startLine": 1400,
+        "startChar": 72,
+        "endLine": 1401,
+        "endChar": 48
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dfcdfa50_ff1c5cb7",
         "filename": "android/tools/gn2bp/gen_android_bp",
         "patchSetId": 2
@@ -60,6 +108,30 @@
       "writtenOn": "2023-11-07T13:34:59Z",
       "side": 1,
       "message": "Any reason to swap this? I think the before is the \"more pythonic\" way of checking this.",
+      "range": {
+        "startLine": 1404,
+        "startChar": 5,
+        "endLine": 1404,
+        "endChar": 30
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5da3e7d2_3b62a68d",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1404,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfcdfa50_ff1c5cb7",
       "range": {
         "startLine": 1404,
         "startChar": 5,
@@ -106,6 +178,54 @@
       "writtenOn": "2023-11-07T13:34:59Z",
       "side": 1,
       "message": "same as above",
+      "range": {
+        "startLine": 1565,
+        "startChar": 9,
+        "endLine": 1565,
+        "endChar": 49
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c88210ad_09dbef9f",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:38Z",
+      "side": 1,
+      "message": "module.type is a string. I will make changes to that in a later CL.",
+      "parentUuid": "1b561b8a_4e740707",
+      "range": {
+        "startLine": 1565,
+        "startChar": 9,
+        "endLine": 1565,
+        "endChar": 20
+      },
+      "revId": "5bc75f7cecfa820fdf23b4f28c85c4dba719c8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f016f20_8c7072b5",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:38Z",
+      "side": 1,
+      "message": "I will make changes to that in a different CL.",
+      "parentUuid": "1ccb95b3_d5b98f4a",
       "range": {
         "startLine": 1565,
         "startChar": 9,
