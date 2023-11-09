@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "983215fc_eed0407c",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5679,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "Fixed in aosp/2817496",
+      "parentUuid": "b1b20365_72cf0fb1",
+      "range": {
+        "startLine": 5677,
+        "startChar": 0,
+        "endLine": 5679,
+        "endChar": 1
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23e746f6_016be8cb",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "It\u0027s a dependency of `cronet_native_impl`, see https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/BUILD.gn;l\u003d454",
       "parentUuid": "23e746f6_016be8cb",
+      "range": {
+        "startLine": 8743,
+        "startChar": 11,
+        "endLine": 8743,
+        "endChar": 63
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cd75583_eb117874",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 8743,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b13e75e_4f7410a9",
       "range": {
         "startLine": 8743,
         "startChar": 11,
@@ -142,6 +190,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c0a458b_644175e6",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26299,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0dca37e_2c803ae8",
+      "range": {
+        "startLine": 26299,
+        "startChar": 9,
+        "endLine": 26299,
+        "endChar": 30
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "938affb8_f55724ed",
@@ -179,6 +251,30 @@
       "side": 1,
       "message": "See https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/BUILD.gn;l\u003d454\n\nThe impl_native contains those as a dependency so it\u0027s fine.",
       "parentUuid": "938affb8_f55724ed",
+      "range": {
+        "startLine": 47,
+        "startChar": 33,
+        "endLine": 47,
+        "endChar": 61
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ed0e2ad_7ebd55c8",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "More targets are added to `DEFAULT_TARGETS` in later CLs.",
+      "parentUuid": "f027bab0_8cad3850",
       "range": {
         "startLine": 47,
         "startChar": 33,
@@ -260,6 +356,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0af94286_5b844a08",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "Deleted in later CLs",
+      "parentUuid": "6e9dad54_39868f08",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 71
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed0ebc88_822b43a1",
@@ -331,6 +451,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7a6316f_e94fa0b4",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28b65e56_92cd3a76",
+      "range": {
+        "startLine": 422,
+        "startChar": 13,
+        "endLine": 422,
+        "endChar": 29
+      },
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "210793ef_ee24c64c",
@@ -362,6 +506,24 @@
       "side": 1,
       "message": "I think we can? I am not sure if we are skipping anything here.",
       "parentUuid": "210793ef_ee24c64c",
+      "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4ca3a93_89388d4e",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:22:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76c4b17c_9bc9c31d",
       "revId": "30f8109ad800a575bd10341819df79eb1d261b63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
