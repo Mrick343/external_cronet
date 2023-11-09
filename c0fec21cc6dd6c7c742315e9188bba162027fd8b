@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ead56e1c_b2f03baa",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:24:16Z",
+      "side": 1,
+      "message": "has_input_files is mostly used to check for targets that don\u0027t provide any benefit to the Android.bp.swp because they don\u0027t have any dependencies/srcs.\n\nI am not going to touch `has_input_files` because a simple change can result in atleast +10k lines and it would pollute the Android.bp.swp, I will refactor it in a different CL.",
+      "parentUuid": "f5f1c4fd_ced017c2",
+      "range": {
+        "startLine": 635,
+        "startChar": 15,
+        "endLine": 635,
+        "endChar": 19
+      },
+      "revId": "c0fec21cc6dd6c7c742315e9188bba162027fd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "96bac9b2_f02a4056",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b90dd63_5adc7bd3",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:24:16Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "96bac9b2_f02a4056",
+      "range": {
+        "startLine": 663,
+        "startChar": 9,
+        "endLine": 663,
+        "endChar": 62
+      },
+      "revId": "c0fec21cc6dd6c7c742315e9188bba162027fd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3eefbd17_49f0ff96",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-11-07T15:59:20Z",
       "side": 1,
       "message": "same here: should be `dep_module.is_empty()`",
+      "range": {
+        "startLine": 1674,
+        "startChar": 36,
+        "endLine": 1674,
+        "endChar": 66
+      },
+      "revId": "c0fec21cc6dd6c7c742315e9188bba162027fd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcc67299_68bf0e4d",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1674,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:24:16Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "3eefbd17_49f0ff96",
       "range": {
         "startLine": 1674,
         "startChar": 36,
