@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3da42b75_68824700",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:25:37Z",
+      "side": 1,
+      "message": "t",
+      "revId": "0318c9e29e9df0854e34746d6f75adc6ef8e9836",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c23e139b_f8f5d7a1",
@@ -14,6 +31,30 @@
       "writtenOn": "2023-11-07T16:49:59Z",
       "side": 1,
       "message": "nit: this should go away entirely and stuff should depend on `cronet_aml_components_cronet_android_cronet_api_java`.\n\n(We can do that in a follow-up)",
+      "range": {
+        "startLine": 47,
+        "startChar": 11,
+        "endLine": 47,
+        "endChar": 30
+      },
+      "revId": "0318c9e29e9df0854e34746d6f75adc6ef8e9836",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a6e3964_4ffa0c84",
+        "filename": "Android.extras.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:25:37Z",
+      "side": 1,
+      "message": "I\u0027m keeping this here because there are other targets outside of external/cronet that depends on `cronet_aml_api_java`. So I didn\u0027t want to go to each of those targets and change it so I just created this.",
+      "parentUuid": "c23e139b_f8f5d7a1",
       "range": {
         "startLine": 47,
         "startChar": 11,
