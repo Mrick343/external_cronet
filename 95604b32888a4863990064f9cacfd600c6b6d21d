@@ -16,6 +16,24 @@
       "message": "no android.bp.swp changes?",
       "revId": "95604b32888a4863990064f9cacfd600c6b6d21d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab524d11_bd7c570f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-09T11:24:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27f8849d_42f641a6",
+      "revId": "95604b32888a4863990064f9cacfd600c6b6d21d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
