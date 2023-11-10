@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8162eb3a_07a3b6e7",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-10T17:03:09Z",
+      "side": 1,
+      "message": "nit: fit in 80-char line\n\nCan fix in a follow-up",
+      "range": {
+        "startLine": 1712,
+        "startChar": 100,
+        "endLine": 1712,
+        "endChar": 102
+      },
+      "revId": "2db51d31897971b7a62da2ea4963ff6bdc1a4a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
