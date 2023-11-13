@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "433f74bd_348c4827",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2023-11-13T20:16:43Z",
+      "side": 1,
+      "message": "This fixes custom OUT and OUT_DIR_COMMON_BASE, both supported use cases. - I have also picked this to main on the same change-id.",
+      "revId": "b212047b4511021234b85e362c54e354015f27a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
