@@ -34,6 +34,23 @@
       "parentUuid": "6d6c811b_da71d615",
       "revId": "0c586e37e975565a8315a666351ea46a02f5dba7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd925b72_d93e848a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-14T12:11:45Z",
+      "side": 1,
+      "message": "Unrelated failures. git_udc-qpr-dev-plus-aosp is practically closed.",
+      "revId": "0c586e37e975565a8315a666351ea46a02f5dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
