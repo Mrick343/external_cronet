@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56b5019d_5b6164cf",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1304,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-14T16:30:30Z",
+      "side": 1,
+      "message": "nit: fix this in a follow-up CL",
+      "range": {
+        "startLine": 1304,
+        "startChar": 100,
+        "endLine": 1304,
+        "endChar": 101
+      },
+      "revId": "8b646cacbddaec3be7d7daf883e0a6b25ca7f6c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
