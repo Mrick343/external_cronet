@@ -22,6 +22,30 @@
       },
       "revId": "b8736b16f8e88be9fff9d005ee5c313f9b021517",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19224dbd_79fd4154",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-14T16:25:11Z",
+      "side": 0,
+      "message": "I suppose we should have a cleanup for Cronet BUILD.gn entirely. This is one of the stuff that can be removed completely.",
+      "parentUuid": "4715f14c_1b6287fa",
+      "range": {
+        "startLine": 47,
+        "startChar": 33,
+        "endLine": 47,
+        "endChar": 56
+      },
+      "revId": "b8736b16f8e88be9fff9d005ee5c313f9b021517",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
