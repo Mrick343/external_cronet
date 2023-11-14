@@ -51,6 +51,75 @@
       "message": "and to clarify, I picked this change to Android 14-dev on the same change ID",
       "revId": "2d418269180aac0997c297a07317e838940ffc59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf20cb55_9c781fd7",
+        "filename": "build/action_helpers.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-14T15:52:52Z",
+      "side": 1,
+      "message": "This is also not used anywhere.",
+      "range": {
+        "startLine": 84,
+        "startChar": 2,
+        "endLine": 84,
+        "endChar": 87
+      },
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f33a609_935e1e70",
+        "filename": "build/action_helpers.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-14T15:52:52Z",
+      "side": 1,
+      "message": "Why are we excluding java.sources?",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 93
+      },
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5471cef9_2f24e89f",
+        "filename": "build/action_helpers.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-14T15:52:52Z",
+      "side": 1,
+      "message": "This is not used anywhere",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 61
+      },
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
