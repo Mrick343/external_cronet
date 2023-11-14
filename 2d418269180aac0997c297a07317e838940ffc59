@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0226bee7_8ce6bb98",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-14T11:38:30Z",
+      "side": 1,
+      "message": "Depfiles are not used when compiling Cronet in AOSP. They are remnants that we had to copy over from Chromium due to how Chromium build system works, If we merge this change then the next import will certainly overwrite it and we don\u0027t want that to happen. We should probably stop using depfiles completely by setting them to some empty path.\n\nIf this is urgent then we can merge it. However, this is a short-term solution.",
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
