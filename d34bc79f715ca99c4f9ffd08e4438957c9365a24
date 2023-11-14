@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7c0493d_69a80ff3",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-14T16:22:09Z",
+      "side": 1,
+      "message": "Are these leftovers from printf debugging?\n\nFeel free to cleanup in a follow-up",
+      "range": {
+        "startLine": 1528,
+        "startChar": 4,
+        "endLine": 1529,
+        "endChar": 35
+      },
+      "revId": "d34bc79f715ca99c4f9ffd08e4438957c9365a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9108f20_08114c2b",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-14T16:22:09Z",
+      "side": 1,
+      "message": "nit: too long\n\nFeel free to fix later.",
+      "range": {
+        "startLine": 407,
+        "startChar": 28,
+        "endLine": 407,
+        "endChar": 130
+      },
+      "revId": "d34bc79f715ca99c4f9ffd08e4438957c9365a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1ccda31_e3f1c2ab",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-14T16:22:09Z",
+      "side": 1,
+      "message": "Soong?\n\nFeel free to fix later.",
+      "range": {
+        "startLine": 428,
+        "startChar": 65,
+        "endLine": 428,
+        "endChar": 67
+      },
+      "revId": "d34bc79f715ca99c4f9ffd08e4438957c9365a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
