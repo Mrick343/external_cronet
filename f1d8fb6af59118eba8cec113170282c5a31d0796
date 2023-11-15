@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d312f2c5_d28bd60b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-15T14:28:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d5fab17_31c7a8d5",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "f1d8fb6af59118eba8cec113170282c5a31d0796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84ed95a1_351363ae",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-11-15T14:18:38Z",
       "side": 1,
       "message": "you might want to add a CTS test for this?",
+      "revId": "f1d8fb6af59118eba8cec113170282c5a31d0796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aa5838d_6b996ec6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-15T14:28:44Z",
+      "side": 1,
+      "message": "Replied on b/311163531, it\u0027s not entirely clear to me if this should be tested by CTS or MTS.",
+      "parentUuid": "84ed95a1_351363ae",
       "revId": "f1d8fb6af59118eba8cec113170282c5a31d0796",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
