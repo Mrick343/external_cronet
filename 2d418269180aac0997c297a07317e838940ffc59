@@ -147,6 +147,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bd66f84_66248540",
+        "filename": "build/action_helpers.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2023-11-15T22:38:06Z",
+      "side": 1,
+      "message": "tried it locally, if we removed this:\n\nssertionError: Found abs path in depfile: /mnt/out/out/lineage-21/soong/.temp/sbox/5bccfcc00b5157e46d70a548da1566d61a4a83d3/out/java.sources\nexit status 1\n[ 35% 60844/172580] //external/cronet:cronet_aml_components_cronet_android_cronet_jni_reg\nFAILED: /mnt/out/out/lineage-21/soong/.intermediates/external/cronet/cronet_aml_components_cronet_android_cronet_jni_registration__java/android_common/gen/components/cronet/android/cronet_jni_registration.srcjar\n/mnt/out/out/lineage-21/host/linux-x86/bin/sbox --sandbox-path /mnt/out/out/lineage-21/soong/.temp --output-dir /mnt/out/out/lineage-21/soong/.intermediates/external/cronet/cronet_aml_components_cronet_android_cronet_jni_registration__java/android_common/gen --manifest /mnt/out/out/lineage-21/soong/.intermediates/external/cronet/cronet_aml_components_cronet_android_cronet_jni_registration__java/android_common/genrule.sbox.textproto\nThe failing command was run inside an sbox sandbox in temporary directory\n/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc\nThe failing command line can be found in\n/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/sbox_command.0.bash\nTraceback (most recent call last):\n  File \"/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/tools/src/external/cronet/base/android/jni_generator/jni_registration_generator.py\", line 921, in \u003cmodule\u003e\n    sys.exit(main(sys.argv))\n  File \"/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/tools/src/external/cronet/base/android/jni_generator/jni_registration_generator.py\", line 916, in main\n    action_helpers.write_depfile(args.depfile, args.srcjar_path,\n  File \"/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/tools/src/external/cronet/base/android/jni_generator/../../../build/android/gyp/util/../../../action_helpers.py\", line 91, in write_depfile\n    relative_inputs \u003d [_process_path(p) for p in set(inputs)]\n  File \"/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/tools/src/external/cronet/base/android/jni_generator/../../../build/android/gyp/util/../../../action_helpers.py\", line 91, in \u003clistcomp\u003e\n    relative_inputs \u003d [_process_path(p) for p in set(inputs)]\n  File \"/mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/tools/src/external/cronet/base/android/jni_generator/../../../build/android/gyp/util/../../../action_helpers.py\", line 78, in _process_path\n    assert not os.path.isabs(path), f\u0027Found abs path in depfile: {path}\u0027\nAssertionError: Found abs path in depfile: /mnt/out/out/lineage-21/soong/.temp/sbox/0a7ebcec3a9ebe954bdfd7984dfd096ece5d46cc/out/java.sources\nexit status 1\n[ 35% 60861/172580] //packages/modules/Bluetooth/system/gd:BluetoothGeneratedPackets_rust\nout dir: \"/mnt/out/out/lineage-21/soong/.temp/sbox/2bf7d889d55cfcf13342d2325205585a6299e9aa/out\"\nparsing: \"/home/nolenjohnson/lineage-21/packages/modules/Bluetooth/system/gd/hci/hci_packets.pdl\"\ngenerating rust\ngenerating \"/mnt/out/out/lineage-21/soong/.temp/sbox/2bf7d889d55cfcf13342d2325205585a6299e9aa/out/hci/hci_packets.rs\"\n[ 35% 60866/172580] APK certs list: /mnt/out/out/lineage-21/target/product/nash/obj/PACKA\n    0:50 Building bootanimation.zip",
+      "parentUuid": "f526f759_2e7af1b2",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 93
+      },
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5471cef9_2f24e89f",
