@@ -195,6 +195,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "392a9ed6_52cf3442",
+        "filename": "build/action_helpers.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2023-11-16T17:16:00Z",
+      "side": 1,
+      "message": "I am testing this largely on android14-dev.\n\nTo replicate there, just set OUT_DIR_COMMON_BASE to any absolute path. You will see cronet fail during build.\n\nOn main, the issue also exists, but is predicated by the need for https://android-review.googlesource.com/c/platform/system/sepolicy/+/2834710 (e.g. if you don\u0027t pick this, it fails much earlier, and you can\u0027t get to this error).",
+      "parentUuid": "3dad47a4_58067686",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 93
+      },
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5471cef9_2f24e89f",
