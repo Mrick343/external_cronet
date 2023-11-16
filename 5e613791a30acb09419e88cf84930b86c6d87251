@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98df6363_ec18379e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-11-16T11:56:20Z",
+      "side": 1,
+      "message": "If it fails again then just go for bypass-presubmit, the same test has been failing for a ~1month, it seems that the framework core people has abandoned that branch and just letting it fail.",
+      "revId": "5e613791a30acb09419e88cf84930b86c6d87251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
