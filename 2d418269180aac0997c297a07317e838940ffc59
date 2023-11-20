@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1be6b8b6_b0243e86",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2023-11-20T11:52:32Z",
+      "side": 1,
+      "message": "\u003e Depfiles are not used when compiling Cronet in AOSP\n\nIf this is really the case, can we just drop the offending assert instead of \"making it happy\"?\n\nTo expand: AFAIU, @aymanm@google.com is saying that this code doesn\u0027t really do anything in AOSP, because its purpose is to generate intermediate depfiles, which gn2bp/Soong don\u0027t end up using. It just so happens that an assert within this code fails in certain scenarios which are possible in AOSP.\n\nGiven the above, instead of trying to get this code right, we should really just remove the assert at line 78. This would also minimize the diff from upstream.",
+      "parentUuid": "74f0d783_f0676d3f",
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf20cb55_9c781fd7",
         "filename": "build/action_helpers.py",
         "patchSetId": 3
