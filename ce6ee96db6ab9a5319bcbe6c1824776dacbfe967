@@ -16,6 +16,24 @@
       "message": "Is there any difference between javap in the soong and javap in out/.path/?",
       "revId": "ce6ee96db6ab9a5319bcbe6c1824776dacbfe967",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a6bda8a_f76e3b42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2023-11-28T17:57:29Z",
+      "side": 1,
+      "message": "no, the one in `out/.path/` points to `prebuilts/jdk/jdk17/linux-x86/bin/javap`, which is the same as the soong module one.",
+      "parentUuid": "ff0998d4_44fc02c9",
+      "revId": "ce6ee96db6ab9a5319bcbe6c1824776dacbfe967",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
