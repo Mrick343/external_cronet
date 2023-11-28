@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff0998d4_44fc02c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-11-28T09:40:59Z",
+      "side": 1,
+      "message": "Is there any difference between javap in the soong and javap in out/.path/?",
+      "revId": "ce6ee96db6ab9a5319bcbe6c1824776dacbfe967",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
