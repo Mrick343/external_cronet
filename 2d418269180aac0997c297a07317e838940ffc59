@@ -145,6 +145,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "60c60c0d_b853758b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-12-04T03:40:29Z",
+      "side": 1,
+      "message": "I see, so generated depfiles are not used but this code path is used to build Cronet in AOSP.",
+      "parentUuid": "6cd5d621_fbc42f3b",
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf20cb55_9c781fd7",
         "filename": "build/action_helpers.py",
         "patchSetId": 3
