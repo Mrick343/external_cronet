@@ -127,6 +127,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6cd5d621_fbc42f3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2023-12-04T02:54:40Z",
+      "side": 1,
+      "message": "I hate to say this, but the commit message details it.\n\nIt /is/ used, try building current Android 14 with a custom OUT dir, or OUT_DIR_COMMON_BASE",
+      "parentUuid": "4abeb1d8_6da6daee",
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf20cb55_9c781fd7",
         "filename": "build/action_helpers.py",
         "patchSetId": 3
