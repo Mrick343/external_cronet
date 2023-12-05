@@ -178,6 +178,24 @@
       "parentUuid": "7c72ce2d_a5d313bb",
       "revId": "481c63c844a39df4ade2a69872ecc1d1a1bf231f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc268e1c_55878458",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2023-12-05T18:01:26Z",
+      "side": 1,
+      "message": "Not sure where the disconnect is happening here - but yes, if QPR3 is cut from main, I don\u0027t need this here.",
+      "parentUuid": "2b88a195_70a27bd7",
+      "revId": "481c63c844a39df4ade2a69872ecc1d1a1bf231f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
