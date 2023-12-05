@@ -163,6 +163,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "72e9ca38_37994695",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-12-05T03:12:37Z",
+      "side": 1,
+      "message": "As @aymanm@google.com mentions, `build/action_helpers.py` will be overwritten by the next import and we have the import regularly.  \nSo, I think this change will be overwritten soon.\nI\u0027m not sure if this is ok for you.\n\nPossible solutions to avoid being overwritten would be\n1) Updates `external/cronet/android/tools/gn2bp/gen_android_bp` to support custom out directory.\n`gen_android.bp` is a script to generate `external/cronet/Android.bp`.\nAnd this script will not be overwritten by the import.\n\n2) Upstream the fix to chromium.\nWe will import chromium code to aosp regularly.\nSo if the upstream have the fix, aosp will have the fix by the next import.\n\n@aymanm@google.com, If I\u0027m wrong, please correct me.",
+      "parentUuid": "60c60c0d_b853758b",
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf20cb55_9c781fd7",
         "filename": "build/action_helpers.py",
         "patchSetId": 3
