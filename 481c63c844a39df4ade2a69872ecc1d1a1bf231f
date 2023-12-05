@@ -142,6 +142,24 @@
       "parentUuid": "d339f89c_a1d9e4ba",
       "revId": "481c63c844a39df4ade2a69872ecc1d1a1bf231f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c72ce2d_a5d313bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2023-12-05T03:10:20Z",
+      "side": 1,
+      "message": "maybe let\u0027s take a step back, I feel like there\u0027s some serious miscommunication here.\n\nI don\u0027t work for Google and don\u0027t have a deep understanding of exactly what branch will be pulled to create QPR3.\n\nI picked this change to both Main and the current development branch of Android 14, if that is not the correct process to follow to get a patch included in QPR3, please let me know and I\u0027ll be happy to pick it wherever it needs to go.\n\ncurrently we are tracking the latest tag of Android 14, in which this is still broken, my goal is that I am able to fix this broken feature for anyone utilizing Android 14.",
+      "parentUuid": "d2d3df82_c58ec730",
+      "revId": "481c63c844a39df4ade2a69872ecc1d1a1bf231f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
