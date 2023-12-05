@@ -259,7 +259,7 @@ def add_mockito_java_deps(module, arch):
   module.static_libs.add("mockito")
 
 def add_guava_java_deps(module, arch):
-  module.static_libs.add("guava")
+  module.libs.add("guava")
 
 def add_androidx_junit_java_deps(module, arch):
   module.static_libs.add("androidx.test.ext.junit")
