@@ -199,6 +199,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5751becb_66b458b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2023-12-05T12:22:32Z",
+      "side": 1,
+      "message": "What Motomu said is correct, There are two possible long-term solutions here:\n\n1) We change how gn2bp handles JNI Registration targets, See [here](https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/android/tools/gn2bp/gen_android_bp;l\u003d1021) where we add the absolute path of the files to the `java.sources` file, this should be changed to the relative path which will fix the problem and make everyone happy.\n\n2) Stop Chromium from asserting for absolute paths when writing to depfile. This solution might be a little bit more complicated because you will have to deal with Chromium and import Cronet into AOSP which is something you really want to avoid.\n\nI will try to implement solution (1) today and upload a CL for it.",
+      "parentUuid": "391167f0_32b18e03",
+      "revId": "2d418269180aac0997c297a07317e838940ffc59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf20cb55_9c781fd7",
         "filename": "build/action_helpers.py",
         "patchSetId": 3
