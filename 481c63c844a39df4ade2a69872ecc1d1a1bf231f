@@ -88,6 +88,24 @@
       "parentUuid": "e145ba3b_2b5df3b0",
       "revId": "481c63c844a39df4ade2a69872ecc1d1a1bf231f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "330ea717_32fe6507",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2023-12-05T02:36:35Z",
+      "side": 1,
+      "message": "U-QPR3 will be cut from the main.\nBut why you need in QPR3?",
+      "parentUuid": "06a1e4f0_27ffa459",
+      "revId": "481c63c844a39df4ade2a69872ecc1d1a1bf231f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
