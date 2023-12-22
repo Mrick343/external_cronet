@@ -186,7 +186,11 @@ size_t mbsnrtowcs(wchar_t *__restrict __dst, const char **__restrict __src,
                   size_t __nmc, size_t __len, mbstate_t *__restrict __ps);
 size_t wcsnrtombs(char *__restrict __dst, const wchar_t **__restrict __src,
                   size_t __nwc, size_t __len, mbstate_t *__restrict __ps);
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif  // __cplusplus && (_LIBCPP_MSVCRT || __MVS__)
 
 #endif // _LIBCPP_WCHAR_H

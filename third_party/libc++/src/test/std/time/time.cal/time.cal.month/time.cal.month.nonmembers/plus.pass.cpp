@@ -23,6 +23,7 @@
 //   holding a value in the range [1, 12] even if !x.ok(). -end note]
 //   [Example: February + months{11} == January. -end example]
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 
 #include <chrono>
@@ -70,4 +71,47 @@ int main(int, char**)
     }
 
     return 0;
+=======
+#include <chrono>
+#include <type_traits>
+#include <cassert>
+
+#include "test_macros.h"
+
+constexpr bool test() {
+  using month  = std::chrono::month;
+  using months = std::chrono::months;
+
+  month my{2};
+  for (unsigned i = 0; i <= 15; ++i) {
+    month m1 = my + months{i};
+    month m2 = months{i} + my;
+    assert(m1.ok());
+    assert(m2.ok());
+    assert(m1 == m2);
+    unsigned exp = i + 2;
+    while (exp > 12)
+      exp -= 12;
+    assert(static_cast<unsigned>(m1) == exp);
+    assert(static_cast<unsigned>(m2) == exp);
+  }
+
+  return true;
+}
+
+int main(int, char**) {
+  using month  = std::chrono::month;
+  using months = std::chrono::months;
+
+  ASSERT_NOEXCEPT(std::declval<month>() + std::declval<months>());
+  ASSERT_NOEXCEPT(std::declval<months>() + std::declval<month>());
+
+  ASSERT_SAME_TYPE(month, decltype(std::declval<month>() + std::declval<months>()));
+  ASSERT_SAME_TYPE(month, decltype(std::declval<months>() + std::declval<month>()));
+
+  test();
+  static_assert(test());
+
+  return 0;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 }

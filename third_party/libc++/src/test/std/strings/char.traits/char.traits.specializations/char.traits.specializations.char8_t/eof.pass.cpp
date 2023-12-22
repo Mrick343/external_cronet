@@ -18,11 +18,18 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
 #ifndef TEST_HAS_NO_CHAR8_T
     std::char_traits<char8_t>::int_type i = std::char_traits<char8_t>::eof();
     ((void)i); // Prevent unused warning
+=======
+int main(int, char**) {
+#ifndef TEST_HAS_NO_CHAR8_T
+  std::char_traits<char8_t>::int_type i = std::char_traits<char8_t>::eof();
+  ((void)i); // Prevent unused warning
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

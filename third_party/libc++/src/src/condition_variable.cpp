@@ -61,7 +61,11 @@ condition_variable::__do_timed_wait(unique_lock<mutex>& lk,
     __libcpp_timespec_t ts;
     seconds s = duration_cast<seconds>(d);
     typedef decltype(ts.tv_sec) ts_sec;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     _LIBCPP_CONSTEXPR ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
+=======
+    constexpr ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     if (s.count() < ts_sec_max)
     {
         ts.tv_sec = static_cast<ts_sec>(s.count());

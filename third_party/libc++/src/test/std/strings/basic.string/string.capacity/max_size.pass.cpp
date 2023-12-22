@@ -26,6 +26,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 void
 test1(const S& s)
 {
@@ -89,6 +90,75 @@ int main(int, char**)
 #if TEST_STD_VER > 17
   test_constexpr();
   static_assert(test_constexpr());
+=======
+TEST_CONSTEXPR_CXX20 void test_resize_max_size_minus_1(const S& s) {
+  S s2(s);
+  const std::size_t sz = s2.max_size() - 1;
+  try {
+    s2.resize(sz, 'x');
+  } catch (const std::bad_alloc&) {
+    return;
+  }
+  assert(s2.size() == sz);
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_resize_max_size(const S& s) {
+  S s2(s);
+  const std::size_t sz = s2.max_size();
+  try {
+    s2.resize(sz, 'x');
+  } catch (const std::bad_alloc&) {
+    return;
+  }
+  assert(s.size() == sz);
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  {
+    S s;
+    assert(s.max_size() >= s.size());
+    assert(s.max_size() > 0);
+    if (!TEST_IS_CONSTANT_EVALUATED) {
+      test_resize_max_size_minus_1(s);
+      test_resize_max_size(s);
+    }
+  }
+  {
+    S s("123");
+    assert(s.max_size() >= s.size());
+    assert(s.max_size() > 0);
+    if (!TEST_IS_CONSTANT_EVALUATED) {
+      test_resize_max_size_minus_1(s);
+      test_resize_max_size(s);
+    }
+  }
+  {
+    S s("12345678901234567890123456789012345678901234567890");
+    assert(s.max_size() >= s.size());
+    assert(s.max_size() > 0);
+    if (!TEST_IS_CONSTANT_EVALUATED) {
+      test_resize_max_size_minus_1(s);
+      test_resize_max_size(s);
+    }
+  }
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+  test();
+#if TEST_STD_VER >= 20
+  static_assert(test());
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

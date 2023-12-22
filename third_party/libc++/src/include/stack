@@ -304,6 +304,7 @@ public:
 
     _LIBCPP_NODISCARD _LIBCPP_HIDE_FROM_ABI const _Container& __get_container() const { return c; }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     template <class T1, class _C1>
     friend
     bool
@@ -417,6 +418,121 @@ operator<=>(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y
 template <class _Tp, class _Container>
 inline _LIBCPP_INLINE_VISIBILITY
 __enable_if_t<__is_swappable<_Container>::value, void>
+=======
+    template <class _T1, class _OtherContainer>
+    friend
+    bool
+    operator==(const stack<_T1, _OtherContainer>& __x, const stack<_T1, _OtherContainer>& __y);
+
+    template <class _T1, class _OtherContainer>
+    friend
+    bool
+    operator< (const stack<_T1, _OtherContainer>& __x, const stack<_T1, _OtherContainer>& __y);
+};
+
+#if _LIBCPP_STD_VER >= 17
+template<class _Container,
+         class = enable_if_t<!__is_allocator<_Container>::value>
+>
+stack(_Container)
+    -> stack<typename _Container::value_type, _Container>;
+
+template<class _Container,
+         class _Alloc,
+         class = enable_if_t<!__is_allocator<_Container>::value>,
+         class = enable_if_t<uses_allocator<_Container, _Alloc>::value>
+         >
+stack(_Container, _Alloc)
+    -> stack<typename _Container::value_type, _Container>;
+#endif
+
+#if _LIBCPP_STD_VER >= 23
+template<class _InputIterator,
+         class = __enable_if_t<__has_input_iterator_category<_InputIterator>::value>>
+stack(_InputIterator, _InputIterator)
+    -> stack<__iter_value_type<_InputIterator>>;
+
+template <ranges::input_range _Range>
+stack(from_range_t, _Range&&) -> stack<ranges::range_value_t<_Range>>;
+
+template<class _InputIterator,
+         class _Alloc,
+         class = __enable_if_t<__has_input_iterator_category<_InputIterator>::value>,
+         class = __enable_if_t<__is_allocator<_Alloc>::value>>
+stack(_InputIterator, _InputIterator, _Alloc)
+    -> stack<__iter_value_type<_InputIterator>, deque<__iter_value_type<_InputIterator>, _Alloc>>;
+
+template <ranges::input_range _Range,
+          class _Alloc,
+          class = __enable_if_t<__is_allocator<_Alloc>::value>>
+stack(from_range_t, _Range&&, _Alloc)
+  -> stack<ranges::range_value_t<_Range>, deque<ranges::range_value_t<_Range>, _Alloc>>;
+
+#endif
+
+template <class _Tp, class _Container>
+inline _LIBCPP_INLINE_VISIBILITY
+bool
+operator==(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y)
+{
+    return __x.c == __y.c;
+}
+
+template <class _Tp, class _Container>
+inline _LIBCPP_INLINE_VISIBILITY
+bool
+operator< (const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y)
+{
+    return __x.c < __y.c;
+}
+
+template <class _Tp, class _Container>
+inline _LIBCPP_INLINE_VISIBILITY
+bool
+operator!=(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y)
+{
+    return !(__x == __y);
+}
+
+template <class _Tp, class _Container>
+inline _LIBCPP_INLINE_VISIBILITY
+bool
+operator> (const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y)
+{
+    return __y < __x;
+}
+
+template <class _Tp, class _Container>
+inline _LIBCPP_INLINE_VISIBILITY
+bool
+operator>=(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y)
+{
+    return !(__x < __y);
+}
+
+template <class _Tp, class _Container>
+inline _LIBCPP_INLINE_VISIBILITY
+bool
+operator<=(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y)
+{
+    return !(__y < __x);
+}
+
+#if _LIBCPP_STD_VER >= 20
+
+template <class _Tp, three_way_comparable _Container>
+_LIBCPP_HIDE_FROM_ABI compare_three_way_result_t<_Container>
+operator<=>(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y) {
+    // clang 16 bug: declaring `friend operator<=>` causes "use of overloaded operator '*' is ambiguous" errors
+    return __x.__get_container() <=> __y.__get_container();
+}
+
+#endif
+
+template <class _Tp, class _Container, __enable_if_t<__is_swappable<_Container>::value, int> = 0>
+inline _LIBCPP_INLINE_VISIBILITY
+void
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 swap(stack<_Tp, _Container>& __x, stack<_Tp, _Container>& __y)
     _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
 {

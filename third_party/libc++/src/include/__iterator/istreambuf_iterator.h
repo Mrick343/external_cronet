@@ -11,10 +11,18 @@
 #define _LIBCPP___ITERATOR_ISTREAMBUF_ITERATOR_H
 
 #include <__config>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <__iterator/default_sentinel.h>
 #include <__iterator/iterator.h>
 #include <__iterator/iterator_traits.h>
 #include <iosfwd> // for forward declaration of basic_streambuf
+=======
+#include <__fwd/istream.h>
+#include <__fwd/streambuf.h>
+#include <__iterator/default_sentinel.h>
+#include <__iterator/iterator.h>
+#include <__iterator/iterator_traits.h>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header

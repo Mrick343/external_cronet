@@ -26,8 +26,13 @@ namespace chrono
 {
 
 struct local_t {};
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template<class Duration>
 using local_time  = time_point<local_t, Duration>;
+=======
+template<class _Duration>
+using local_time  = time_point<local_t, _Duration>;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 using local_seconds = local_time<seconds>;
 using local_days    = local_time<days>;
 

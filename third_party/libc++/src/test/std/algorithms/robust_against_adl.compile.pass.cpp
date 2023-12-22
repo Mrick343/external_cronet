@@ -11,7 +11,11 @@
 // https://buildkite.com/llvm-project/libcxx-ci/builds/15823#0184fc0b-d56b-4774-9e1d-35fe24e09e37
 // It seems like the CI gcc version is buggy. I can't reproduce the failure on my system or on
 // godbolt (https://godbolt.org/z/rsPv8e8fn).
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: gcc-12
+=======
+// UNSUPPORTED: gcc-13
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <algorithm>
 #include <cstddef>

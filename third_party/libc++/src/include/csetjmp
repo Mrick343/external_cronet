@@ -35,6 +35,7 @@ void longjmp(jmp_buf env, int val);
 
 #include <setjmp.h>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #ifndef _LIBCPP_SETJMP_H
 #   error <csetjmp> tried including <setjmp.h> but didn't find libc++'s <setjmp.h> header. \
           This usually means that your header search paths are not configured properly. \
@@ -43,6 +44,8 @@ void longjmp(jmp_buf env, int val);
           not be the case.
 #endif
 
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header
 #endif

@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // When the debug mode is enabled, we don't unwrap iterators in `std::copy` and similar algorithms so we don't get this
 // optimization.
 // UNSUPPORTED: libcpp-has-debug-mode
@@ -178,6 +179,156 @@ void test_one(Func func) {
     assert(memmove_called);
     memmove_called = false;
     assert(output[0] == make<To>(2));
+=======
+// In the modules build, adding another overload of `memmove` doesn't work.
+// UNSUPPORTED: clang-modules-build
+// GCC complains about "ambiguating" `__builtin_memmove`.
+// UNSUPPORTED: gcc
+
+// <algorithm>
+
+// These tests check that `std::copy` and `std::move` (including their variations like `copy_n`) forward to
+// `memmove` when possible.
+
+#include <cstddef>
+
+struct Foo {
+  int i = 0;
+
+  Foo() = default;
+  Foo(int set_i) : i(set_i) {}
+
+  friend bool operator==(const Foo&, const Foo&) = default;
+};
+
+static bool memmove_called = false;
+
+// This template is a better match than the actual `builtin_memmove` (it can match the pointer type exactly, without an
+// implicit conversion to `void*`), so it should hijack the call inside `std::copy` and similar algorithms if it's made.
+template <class Dst, class Src>
+constexpr void* __builtin_memmove(Dst* dst, Src* src, std::size_t count) {
+  memmove_called = true;
+  return __builtin_memmove(static_cast<void*>(dst), static_cast<const void*>(src), count);
+}
+
+#include <algorithm>
+#include <cassert>
+#include <cstdint>
+#include <iterator>
+#include <limits>
+#include <ranges>
+#include <type_traits>
+
+#include "test_iterators.h"
+
+static_assert(std::is_trivially_copyable_v<Foo>);
+
+// To test pointers to functions.
+void Func() {}
+using FuncPtr = decltype(&Func);
+
+// To test pointers to members.
+struct S {
+  int mem_obj = 0;
+  void MemFunc() {}
+};
+using MemObjPtr = decltype(&S::mem_obj);
+using MemFuncPtr = decltype(&S::MemFunc);
+
+// To test bitfields.
+struct BitfieldS {
+  unsigned char b1 : 3;
+  unsigned char : 2;
+  unsigned char b2 : 5;
+  friend bool operator==(const BitfieldS&, const BitfieldS&) = default;
+};
+
+// To test non-default alignment.
+struct AlignedS {
+  alignas(64) int x;
+  alignas(8) int y;
+  friend bool operator==(const AlignedS&, const AlignedS&) = default;
+};
+
+template <class T>
+T make(int from) {
+  return T(from);
+}
+
+template <class T>
+requires (std::is_pointer_v<T> && !std::is_function_v<std::remove_pointer_t<T>>)
+T make(int i) {
+  static std::remove_pointer_t<T> arr[8];
+  return arr + i;
+}
+
+template <class T>
+requires std::same_as<T, FuncPtr>
+FuncPtr make(int) {
+  return &Func;
+}
+
+template <class T>
+requires std::same_as<T, MemObjPtr>
+MemObjPtr make(int) {
+  return &S::mem_obj;
+}
+
+template <class T>
+requires std::same_as<T, MemFuncPtr>
+MemFuncPtr make(int) {
+  return &S::MemFunc;
+}
+
+template <class T>
+requires std::same_as<T, BitfieldS>
+BitfieldS make(int x) {
+  BitfieldS result = {};
+  result.b1 = x;
+  result.b2 = x;
+  return result;
+}
+
+template <class T>
+requires std::same_as<T, AlignedS>
+AlignedS make(int x) {
+  AlignedS result;
+  result.x = x;
+  result.y = x;
+  return result;
+}
+
+template <class InIter, template <class> class SentWrapper, class OutIter, class Func>
+void test_one(Func func) {
+  using From = std::iter_value_t<InIter>;
+  using To = std::iter_value_t<OutIter>;
+
+  // Normal case.
+  {
+    const std::size_t N = 4;
+
+    From input[N] = {make<From>(1), make<From>(2), make<From>(3), make<From>(4)};
+    To output[N];
+
+    auto in     = InIter(input);
+    auto in_end = InIter(input + N);
+    auto sent   = SentWrapper<decltype(in_end)>(in_end);
+    auto out    = OutIter(output);
+
+    assert(!memmove_called);
+    func(in, sent, out, N);
+    assert(memmove_called);
+    memmove_called = false;
+
+    assert(std::equal(input, input + N, output, [](const From& lhs, const To& rhs) {
+        // Prevents warnings/errors due to mismatched signed-ness.
+        if constexpr (std::convertible_to<From, To>) {
+          return static_cast<To>(lhs) == rhs;
+        } else if constexpr (std::convertible_to<To, From>) {
+          return lhs == static_cast<From>(rhs);
+        }
+    }));
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   }
 }
 

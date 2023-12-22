@@ -18,6 +18,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
     // char
@@ -153,6 +154,142 @@ int main(int, char**)
         }
 #endif // TEST_HAS_NO_EXCEPTIONS
     }
+=======
+int main(int, char**) {
+  // char
+  {
+    assert(std::stod("0") == 0);
+    assert(std::stod("-0") == 0);
+    assert(std::stod("-10") == -10);
+    assert(std::stod(" 10") == 10);
+    {
+      std::size_t idx = 0;
+      assert(std::stod("10g", &idx) == 10);
+      assert(idx == 2);
+    }
+    {
+      std::size_t idx = 0;
+      assert(std::stod("1.e60", &idx) == 1.e60);
+      assert(idx == 5);
+    }
+    {
+      std::size_t idx = 0;
+      assert(std::stod("INF", &idx) == INFINITY);
+      assert(idx == 3);
+    }
+    {
+      std::size_t idx = 0;
+      assert(std::isnan(std::stod("NAN", &idx)));
+      assert(idx == 3);
+    }
+
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    {
+      std::size_t idx = 0;
+      try {
+        assert(std::stod("1.e360", &idx) == INFINITY);
+        assert(false);
+      } catch (const std::out_of_range&) {
+        assert(idx == 0);
+      }
+    }
+    {
+      std::size_t idx = 0;
+      try {
+        (void)std::stod("", &idx);
+        assert(false);
+      } catch (const std::invalid_argument&) {
+        assert(idx == 0);
+      }
+    }
+    {
+      std::size_t idx = 0;
+      try {
+        (void)std::stod("  - 8", &idx);
+        assert(false);
+      } catch (const std::invalid_argument&) {
+        assert(idx == 0);
+      }
+    }
+    {
+      std::size_t idx = 0;
+      try {
+        (void)std::stod("a1", &idx);
+        assert(false);
+      } catch (const std::invalid_argument&) {
+        assert(idx == 0);
+      }
+    }
+#endif // TEST_HAS_NO_EXCEPTIONS
+  }
+
+  // wchar_t
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  {
+    assert(std::stod(L"0") == 0);
+    assert(std::stod(L"-0") == 0);
+    assert(std::stod(L"-10.5") == -10.5);
+    assert(std::stod(L" 10") == 10);
+    {
+      std::size_t idx = 0;
+      assert(std::stod(L"10g", &idx) == 10);
+      assert(idx == 2);
+    }
+    {
+      std::size_t idx = 0;
+      assert(std::stod(L"1.e60", &idx) == 1.e60);
+      assert(idx == 5);
+    }
+    {
+      std::size_t idx = 0;
+      assert(std::stod(L"INF", &idx) == INFINITY);
+      assert(idx == 3);
+    }
+    {
+      std::size_t idx = 0;
+      assert(std::isnan(std::stod(L"NAN", &idx)));
+      assert(idx == 3);
+    }
+#  ifndef TEST_HAS_NO_EXCEPTIONS
+    {
+      std::size_t idx = 0;
+      try {
+        assert(std::stod(L"1.e360", &idx) == INFINITY);
+        assert(false);
+      } catch (const std::out_of_range&) {
+        assert(idx == 0);
+      }
+    }
+    {
+      std::size_t idx = 0;
+      try {
+        (void)std::stod(L"", &idx);
+        assert(false);
+      } catch (const std::invalid_argument&) {
+        assert(idx == 0);
+      }
+    }
+    {
+      std::size_t idx = 0;
+      try {
+        (void)std::stod(L"  - 8", &idx);
+        assert(false);
+      } catch (const std::invalid_argument&) {
+        assert(idx == 0);
+      }
+    }
+    {
+      std::size_t idx = 0;
+      try {
+        (void)std::stod(L"a1", &idx);
+        assert(false);
+      } catch (const std::invalid_argument&) {
+        assert(idx == 0);
+      }
+    }
+#  endif // TEST_HAS_NO_EXCEPTIONS
+  }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif // TEST_HAS_NO_WIDE_CHARACTERS
 
   return 0;

@@ -24,5 +24,9 @@ class FooAllocator {
 };
 
 void func() {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   std::vector<int, FooAllocator> v; //expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}This allocator has to implement rebind}}
+=======
+  std::vector<int, FooAllocator> v; //expected-error-re@*:* {{static assertion failed {{.*}}This allocator has to implement rebind}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 }

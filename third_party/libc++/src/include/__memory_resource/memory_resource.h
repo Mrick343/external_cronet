@@ -11,6 +11,10 @@
 
 #include <__availability>
 #include <__config>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+#include <__fwd/memory_resource.h>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <cstddef>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)

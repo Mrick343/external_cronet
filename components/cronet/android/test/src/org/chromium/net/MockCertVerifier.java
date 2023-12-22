@@ -4,9 +4,15 @@
 
 package org.chromium.net;
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 import org.chromium.base.ContextUtils;
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
+=======
+import org.jni_zero.JNINamespace;
+import org.jni_zero.NativeMethods;
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 import org.chromium.base.test.util.UrlUtils;
 
 /**

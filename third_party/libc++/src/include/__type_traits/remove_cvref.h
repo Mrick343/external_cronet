@@ -20,7 +20,11 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #if __has_builtin(__remove_cvref)
+=======
+#if __has_builtin(__remove_cvref) && !defined(_LIBCPP_COMPILER_GCC)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 template <class _Tp>
 using __remove_cvref_t _LIBCPP_NODEBUG = __remove_cvref(_Tp);
 #else

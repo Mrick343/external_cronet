@@ -54,6 +54,7 @@ constexpr bool test_all() {
   auto proj1 = [](int x) { return x * -1; };
   auto proj2 = [](A a) { return a.x * -1; };
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   test(std::ranges::equal, in, in2, eq, proj1, proj2);
   test(std::ranges::lexicographical_compare, in, in2, eq, proj1, proj2);
   test(std::ranges::is_permutation, in, in2, eq, proj1, proj2);
@@ -78,6 +79,34 @@ constexpr bool test_all() {
 #if TEST_STD_VER > 20
   test(std::ranges::starts_with, in, in2, eq, proj1, proj2);
   // test(std::ranges::ends_with, in, in2, eq, proj1, proj2);
+=======
+#if TEST_STD_VER >= 23
+  test(std::ranges::ends_with, in, in2, eq, proj1, proj2);
+#endif
+  test(std::ranges::equal, in, in2, eq, proj1, proj2);
+  test(std::ranges::lexicographical_compare, in, in2, eq, proj1, proj2);
+  test(std::ranges::is_permutation, in, in2, eq, proj1, proj2);
+  test(std::ranges::includes, in, in2, less, proj1, proj2);
+  test(std::ranges::find_first_of, in, in2, eq, proj1, proj2);
+  test(std::ranges::mismatch, in, in2, eq, proj1, proj2);
+  test(std::ranges::search, in, in2, eq, proj1, proj2);
+  test(std::ranges::find_end, in, in2, eq, proj1, proj2);
+  test(std::ranges::transform, in, in2, out, sum, proj1, proj2);
+  test(std::ranges::transform, in, in2, out2, sum, proj1, proj2);
+  test(std::ranges::partial_sort_copy, in, in2, less, proj1, proj2);
+  test(std::ranges::merge, in, in2, out, less, proj1, proj2);
+  test(std::ranges::merge, in, in2, out2, less, proj1, proj2);
+  test(std::ranges::set_intersection, in, in2, out, less, proj1, proj2);
+  test(std::ranges::set_intersection, in, in2, out2, less, proj1, proj2);
+  test(std::ranges::set_difference, in, in2, out, less, proj1, proj2);
+  test(std::ranges::set_difference, in, in2, out2, less, proj1, proj2);
+  test(std::ranges::set_symmetric_difference, in, in2, out, less, proj1, proj2);
+  test(std::ranges::set_symmetric_difference, in, in2, out2, less, proj1, proj2);
+  test(std::ranges::set_union, in, in2, out, less, proj1, proj2);
+  test(std::ranges::set_union, in, in2, out2, less, proj1, proj2);
+#if TEST_STD_VER > 20
+  test(std::ranges::starts_with, in, in2, eq, proj1, proj2);
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return true;

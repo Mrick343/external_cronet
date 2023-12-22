@@ -8,6 +8,7 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // istream wcerr;
 
 // UNSUPPORTED: no-wide-characters
@@ -17,6 +18,17 @@
 // FILE_DEPENDENCIES: check-stderr.sh, test.dat
 // RUN: %{build}
 // RUN: %{exec} bash check-stderr.sh "%t.exe" "test.dat"
+=======
+// wostream wcerr;
+
+// UNSUPPORTED: no-wide-characters
+// REQUIRES: target={{.+}}-windows-{{.+}}
+
+// FILE_DEPENDENCIES: test.dat
+// RUN: %{build}
+// RUN: %{exec} %t.exe 2> %t.actual
+// RUN: diff test.dat %t.actual
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // Check that wcerr works, preserving the unicode characters, after switching
 // stderr to wide mode.

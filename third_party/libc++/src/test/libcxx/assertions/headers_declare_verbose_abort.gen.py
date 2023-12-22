@@ -14,7 +14,11 @@
 
 import sys
 sys.path.append(sys.argv[1])
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 from libcxx.test.header_information import lit_header_restrictions, public_headers
+=======
+from libcxx.header_information import lit_header_restrictions, public_headers
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 for header in public_headers:
     # Skip C compatibility headers.

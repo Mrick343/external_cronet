@@ -96,6 +96,7 @@ int main(int, char**)
     }
 
 #if TEST_STD_VER > 17 && defined(_LIBCPP_VERSION)
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     // This won't pass when LWG-2996 is implemented.
     {
       std::shared_ptr<A> pA(new A);
@@ -113,6 +114,25 @@ int main(int, char**)
       assert(pA.use_count() == 1);
       assert(A::count == 1);
       assert(B::count == 0);
+=======
+    {
+      std::shared_ptr<A> pA(new A);
+      assert(pA.use_count() == 1);
+
+#  if TEST_STD_VER >= 20
+      // LWG-2996 is only implemented in c++20 and beyond.
+      // We don't backport because it is an evolutionary change.
+      {
+        B b;
+        std::shared_ptr<B> pB(std::move(pA), &b);
+        assert(A::count == 1);
+        assert(B::count == 1);
+        assert(pA.use_count() == 0);
+        assert(pB.use_count() == 1);
+        assert(pB.get() == &b);
+      }
+#  endif // TEST_STD_VER > 20
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     }
     assert(A::count == 0);
     assert(B::count == 0);

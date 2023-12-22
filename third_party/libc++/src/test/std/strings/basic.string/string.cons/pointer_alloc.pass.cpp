@@ -20,6 +20,7 @@
 #include "test_allocator.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <class charT>
 TEST_CONSTEXPR_CXX20 void
 test(const charT* s)
@@ -90,6 +91,61 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+template <class Alloc, class charT>
+TEST_CONSTEXPR_CXX20 void test(const charT* s) {
+  typedef std::basic_string<charT, std::char_traits<charT>, Alloc> S;
+  typedef typename S::traits_type T;
+  std::size_t n = T::length(s);
+  S s2(s);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2.size() == n);
+  assert(T::compare(s2.data(), s, n) == 0);
+  assert(s2.get_allocator() == Alloc());
+  assert(s2.capacity() >= s2.size());
+}
+
+template <class Alloc, class charT>
+TEST_CONSTEXPR_CXX20 void test(const charT* s, const Alloc& a) {
+  typedef std::basic_string<charT, std::char_traits<charT>, Alloc> S;
+  typedef typename S::traits_type T;
+  std::size_t n = T::length(s);
+  S s2(s, a);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2.size() == n);
+  assert(T::compare(s2.data(), s, n) == 0);
+  assert(s2.get_allocator() == a);
+  assert(s2.capacity() >= s2.size());
+}
+
+template <class Alloc>
+TEST_CONSTEXPR_CXX20 void test(const Alloc& a) {
+  test<Alloc>("");
+  test<Alloc>("", Alloc(a));
+
+  test<Alloc>("1");
+  test<Alloc>("1", Alloc(a));
+
+  test<Alloc>("1234567980");
+  test<Alloc>("1234567980", Alloc(a));
+
+  test<Alloc>("123456798012345679801234567980123456798012345679801234567980");
+  test<Alloc>("123456798012345679801234567980123456798012345679801234567980", Alloc(a));
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test(std::allocator<char>());
+  test(test_allocator<char>());
+  test(test_allocator<char>(2));
+#if TEST_STD_VER >= 11
+  test(min_allocator<char>());
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

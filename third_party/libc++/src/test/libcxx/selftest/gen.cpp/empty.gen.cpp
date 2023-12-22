@@ -8,4 +8,8 @@
 
 // Make sure we can generate no tests at all
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // RUN: true
+=======
+// RUN: :
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

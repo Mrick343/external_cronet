@@ -79,7 +79,11 @@ test_one(unsigned N, unsigned M)
         assert(ia[0] == static_cast<int>(N)-1);
         assert(ia[N-1] == 0);
         assert(std::is_sorted(ia, ia+N, std::greater<value_type>()));
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #ifndef _LIBCPP_ENABLE_DEBUG_MODE
+=======
+#if !_LIBCPP_ENABLE_DEBUG_MODE
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
         assert(pred.count() <= (N-1));
 #endif
     }

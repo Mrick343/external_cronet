@@ -11,7 +11,11 @@
 // Make sure that we still support _LIBCPP_AVAILABILITY_CUSTOM_VERBOSE_ABORT_PROVIDED for folks
 // who customize the verbose termination function at link-time in back-deployment environments.
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1 -D_LIBCPP_AVAILABILITY_CUSTOM_VERBOSE_ABORT_PROVIDED
+=======
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_AVAILABILITY_CUSTOM_VERBOSE_ABORT_PROVIDED
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // We emit a #warning about the deprecation of this setting, so make sure we don't turn that into an error.
 // ADDITIONAL_COMPILE_FLAGS: -Wno-error

@@ -13,6 +13,12 @@
 // iter_type get(iter_type b, iter_type e, bool intl, ios_base& iob,
 //               ios_base::iostate& err, long double& v) const;
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // REQUIRES: locale.en_US.UTF-8
 
 #include <locale>

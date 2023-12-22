@@ -81,6 +81,17 @@ constexpr bool test() {
     assert(e.value().i == 10);
   }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+  // TailClobberer
+  {
+    std::expected<TailClobberer<0>, bool> e(std::unexpect);
+    auto list = {4, 5, 6};
+    e.emplace(list);
+    assert(e.has_value());
+  }
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   return true;
 }
 

@@ -27,6 +27,11 @@ class A
     int data_;
 public:
     A() : data_(1) {}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+    A(const A&) = default;
+    A& operator=(const A&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     ~A() {data_ = -1;}
 
     friend bool operator==(const A& x, const A& y)

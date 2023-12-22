@@ -7,11 +7,16 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // When the debug mode is enabled, we don't unwrap iterators in `std::copy` and similar algorithms so we never get the
 // optimization.
 // UNSUPPORTED: libcpp-has-debug-mode
 // In the modules build, adding another overload of `memmove` doesn't work.
 // UNSUPPORTED: modules-build
+=======
+// In the modules build, adding another overload of `memmove` doesn't work.
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // GCC complains about "ambiguating" `__builtin_memmove`.
 // UNSUPPORTED: gcc
 

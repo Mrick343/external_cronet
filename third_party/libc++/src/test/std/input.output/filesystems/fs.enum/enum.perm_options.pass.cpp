@@ -15,7 +15,10 @@
 #include "filesystem_include.h"
 #include <type_traits>
 #include <cassert>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <sys/stat.h>
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 #include "check_bitmask_types.h"

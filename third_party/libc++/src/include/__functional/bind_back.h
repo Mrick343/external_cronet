@@ -43,6 +43,7 @@ struct __bind_back_t : __perfect_forward<__bind_back_op<tuple_size_v<_BoundArgs>
     using __perfect_forward<__bind_back_op<tuple_size_v<_BoundArgs>>, _Fn, _BoundArgs>::__perfect_forward;
 };
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <class _Fn, class ..._Args, class = enable_if_t<
     _And<
         is_constructible<decay_t<_Fn>, _Fn>,
@@ -51,6 +52,11 @@ template <class _Fn, class ..._Args, class = enable_if_t<
         is_move_constructible<decay_t<_Args>>...
     >::value
 >>
+=======
+template <class _Fn, class... _Args>
+  requires is_constructible_v<decay_t<_Fn>, _Fn> && is_move_constructible_v<decay_t<_Fn>> &&
+           (is_constructible_v<decay_t<_Args>, _Args> && ...) && (is_move_constructible_v<decay_t<_Args>> && ...)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 _LIBCPP_HIDE_FROM_ABI
 constexpr auto __bind_back(_Fn&& __f, _Args&&... __args)
     noexcept(noexcept(__bind_back_t<decay_t<_Fn>, tuple<decay_t<_Args>...>>(_VSTD::forward<_Fn>(__f), _VSTD::forward_as_tuple(_VSTD::forward<_Args>(__args)...))))

@@ -52,4 +52,8 @@ def configure(parameters, features, config, lit_config):
         note("Using {} substitution: '{}'".format(sub, _getSubstitution(sub, config)))
 
     # Print all available features
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     note("All available features: {}".format(", ".join(config.available_features)))
+=======
+    note("All available features: {}".format(", ".join(sorted(config.available_features))))
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

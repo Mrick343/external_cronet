@@ -65,6 +65,7 @@ test_use_move()
 }
 #endif // TEST_STD_VER > 17
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // C++20 can use string in constexpr evaluation, but both libc++ and MSVC
 // don't have the support yet. In these cases omit the constexpr test.
 // FIXME Remove constexpr string workaround introduced in D90569
@@ -140,6 +141,67 @@ test()
     (!defined(__cpp_lib_constexpr_string) || __cpp_lib_constexpr_string < 201907L)
     if (!std::is_constant_evaluated())
 #endif
+=======
+TEST_CONSTEXPR_CXX20 void test_string() {
+    std::string sa[] = {"a", "b", "c"};
+    std::string sr[] = {"a", "ba", "cb"};
+    std::string output[3];
+    std::adjacent_difference(sa, sa + 3, output, std::plus<std::string>());
+    for (unsigned i = 0; i < 3; ++i) assert(output[i] == sr[i]);
+}
+
+template <class InIter, class OutIter>
+TEST_CONSTEXPR_CXX20 void
+test()
+{
+    int ia[] = {1, 2, 3, 4, 5};
+    int ir[] = {1, -1, -4, -8, -13};
+    const unsigned s = sizeof(ia) / sizeof(ia[0]);
+    int ib[s] = {0};
+    OutIter r = std::partial_sum(InIter(ia), InIter(ia+s), OutIter(ib), std::minus<int>());
+    assert(base(r) == ib + s);
+    for (unsigned i = 0; i < s; ++i)
+        assert(ib[i] == ir[i]);
+}
+
+TEST_CONSTEXPR_CXX20 bool
+test()
+{
+    test<cpp17_input_iterator<const int*>, cpp17_output_iterator<int*> >();
+    test<cpp17_input_iterator<const int*>, forward_iterator<int*> >();
+    test<cpp17_input_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<cpp17_input_iterator<const int*>, random_access_iterator<int*> >();
+    test<cpp17_input_iterator<const int*>, int*>();
+
+    test<forward_iterator<const int*>, cpp17_output_iterator<int*> >();
+    test<forward_iterator<const int*>, forward_iterator<int*> >();
+    test<forward_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<forward_iterator<const int*>, random_access_iterator<int*> >();
+    test<forward_iterator<const int*>, int*>();
+
+    test<bidirectional_iterator<const int*>, cpp17_output_iterator<int*> >();
+    test<bidirectional_iterator<const int*>, forward_iterator<int*> >();
+    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<bidirectional_iterator<const int*>, random_access_iterator<int*> >();
+    test<bidirectional_iterator<const int*>, int*>();
+
+    test<random_access_iterator<const int*>, cpp17_output_iterator<int*> >();
+    test<random_access_iterator<const int*>, forward_iterator<int*> >();
+    test<random_access_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<random_access_iterator<const int*>, random_access_iterator<int*> >();
+    test<random_access_iterator<const int*>, int*>();
+
+    test<const int*, cpp17_output_iterator<int*> >();
+    test<const int*, forward_iterator<int*> >();
+    test<const int*, bidirectional_iterator<int*> >();
+    test<const int*, random_access_iterator<int*> >();
+    test<const int*, int*>();
+
+#if TEST_STD_VER > 17
+    test_use_move();
+#endif // TEST_STD_VER > 17
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     test_string();
 
     return true;

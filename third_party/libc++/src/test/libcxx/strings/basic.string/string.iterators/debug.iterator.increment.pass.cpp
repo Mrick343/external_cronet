@@ -11,6 +11,7 @@
 // Increment iterator past end.
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03
 
 #include <string>
@@ -37,6 +38,28 @@ int main(int, char**) {
     assert(i == c.end());
     TEST_LIBCPP_ASSERT_FAILURE(++i, "Attempted to increment a non-incrementable iterator");
   }
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+
+#include <string>
+#include <cassert>
+
+#include "check_assertion.h"
+#include "min_allocator.h"
+
+template <class C>
+void test() {
+  C c(1, '\0');
+  typename C::iterator i = c.begin();
+  ++i;
+  assert(i == c.end());
+  TEST_LIBCPP_ASSERT_FAILURE(++i, "Attempted to increment a non-incrementable iterator");
+}
+
+int main(int, char**) {
+  test<std::string>();
+  test<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

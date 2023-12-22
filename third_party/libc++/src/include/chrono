@@ -677,6 +677,7 @@ constexpr bool is_pm(hours const& h) noexcept;
 constexpr hours make12(const hours& h) noexcept;
 constexpr hours make24(const hours& h, bool is_pm) noexcept;
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // 25.10.5, class time_zone    // C++20
 enum class choose {earliest, latest};
 class time_zone;
@@ -808,6 +809,179 @@ constexpr chrono::year                                  operator ""y(unsigned lo
 #  include <bit>
 #  include <concepts>
 #  include <cstring>
+=======
+// [time.zone.db], time zone database
+struct tzdb {                                                                    // C++20
+  string                 version;
+};
+
+class tzdb_list {                                                                // C++20
+public:
+  tzdb_list(const tzdb_list&) = delete;
+  tzdb_list& operator=(const tzdb_list&) = delete;
+
+  // unspecified additional constructors
+
+  class const_iterator;
+
+  const tzdb& front() const noexcept;
+
+  const_iterator erase_after(const_iterator p);
+
+  const_iterator begin() const noexcept;
+  const_iterator end()   const noexcept;
+
+  const_iterator cbegin() const noexcept;
+  const_iterator cend()   const noexcept;
+};
+
+// [time.zone.db.access], time zone database access
+const tzdb& get_tzdb();                                                          // C++20
+tzdb_list& get_tzdb_list();                                                      // C++20
+
+// [time.zone.db.remote], remote time zone database support
+const tzdb& reload_tzdb();                                                       // C++20
+string remote_version();                                                         // C++20
+
+// 25.10.5, class time_zone    // C++20
+enum class choose {earliest, latest};
+class time_zone;
+bool operator==(const time_zone& x, const time_zone& y) noexcept;
+bool operator!=(const time_zone& x, const time_zone& y) noexcept;
+bool operator<(const time_zone& x, const time_zone& y) noexcept;
+bool operator>(const time_zone& x, const time_zone& y) noexcept;
+bool operator<=(const time_zone& x, const time_zone& y) noexcept;
+bool operator>=(const time_zone& x, const time_zone& y) noexcept;
+}  // chrono
+
+namespace std {
+  template<class Duration, class charT>
+    struct formatter<chrono::sys_time<Duration>, charT>;                          // C++20
+  template<class Duration, class charT>
+    struct formatter<chrono::filetime<Duration>, charT>;                          // C++20
+  template<class Duration, class charT>
+    struct formatter<chrono::local_time<Duration>, charT>;                        // C++20
+  template<class Rep, class Period, class charT>
+    struct formatter<chrono::duration<Rep, Period>, charT>;                       // C++20
+  template<class charT> struct formatter<chrono::day, charT>;                     // C++20
+  template<class charT> struct formatter<chrono::month, charT>;                   // C++20
+  template<class charT> struct formatter<chrono::year, charT>;                    // C++20
+  template<class charT> struct formatter<chrono::weekday, charT>;                 // C++20
+  template<class charT> struct formatter<chrono::weekday_indexed, charT>;         // C++20
+  template<class charT> struct formatter<chrono::weekday_last, charT>;            // C++20
+  template<class charT> struct formatter<chrono::month_day, charT>;               // C++20
+  template<class charT> struct formatter<chrono::month_day_last, charT>;          // C++20
+  template<class charT> struct formatter<chrono::month_weekday, charT>;           // C++20
+  template<class charT> struct formatter<chrono::month_weekday_last, charT>;      // C++20
+  template<class charT> struct formatter<chrono::year_month, charT>;              // C++20
+  template<class charT> struct formatter<chrono::year_month_day, charT>;          // C++20
+  template<class charT> struct formatter<chrono::year_month_day_last, charT>;     // C++20
+  template<class charT> struct formatter<chrono::year_month_weekday, charT>;      // C++20
+  template<class charT> struct formatter<chrono::year_month_weekday_last, charT>; // C++20
+  template<class Rep, class Period, class charT>
+    struct formatter<chrono::hh_mm_ss<duration<Rep, Period>>, charT>;             // C++20
+} // namespace std
+
+namespace chrono {
+// calendrical constants
+inline constexpr last_spec                              last{};       // C++20
+inline constexpr chrono::weekday                        Sunday{0};    // C++20
+inline constexpr chrono::weekday                        Monday{1};    // C++20
+inline constexpr chrono::weekday                        Tuesday{2};   // C++20
+inline constexpr chrono::weekday                        Wednesday{3}; // C++20
+inline constexpr chrono::weekday                        Thursday{4};  // C++20
+inline constexpr chrono::weekday                        Friday{5};    // C++20
+inline constexpr chrono::weekday                        Saturday{6};  // C++20
+
+inline constexpr chrono::month                          January{1};   // C++20
+inline constexpr chrono::month                          February{2};  // C++20
+inline constexpr chrono::month                          March{3};     // C++20
+inline constexpr chrono::month                          April{4};     // C++20
+inline constexpr chrono::month                          May{5};       // C++20
+inline constexpr chrono::month                          June{6};      // C++20
+inline constexpr chrono::month                          July{7};      // C++20
+inline constexpr chrono::month                          August{8};    // C++20
+inline constexpr chrono::month                          September{9}; // C++20
+inline constexpr chrono::month                          October{10};  // C++20
+inline constexpr chrono::month                          November{11}; // C++20
+inline constexpr chrono::month                          December{12}; // C++20
+}  // chrono
+
+inline namespace literals {
+  inline namespace chrono_literals {
+constexpr chrono::hours                                 operator ""h(unsigned long long); // C++14
+constexpr chrono::duration<unspecified , ratio<3600,1>> operator ""h(long double); // C++14
+constexpr chrono::minutes                               operator ""min(unsigned long long); // C++14
+constexpr chrono::duration<unspecified , ratio<60,1>>   operator ""min(long double); // C++14
+constexpr chrono::seconds                               operator ""s(unsigned long long); // C++14
+constexpr chrono::duration<unspecified >                operator ""s(long double); // C++14
+constexpr chrono::milliseconds                          operator ""ms(unsigned long long); // C++14
+constexpr chrono::duration<unspecified , milli>         operator ""ms(long double); // C++14
+constexpr chrono::microseconds                          operator ""us(unsigned long long); // C++14
+constexpr chrono::duration<unspecified , micro>         operator ""us(long double); // C++14
+constexpr chrono::nanoseconds                           operator ""ns(unsigned long long); // C++14
+constexpr chrono::duration<unspecified , nano>          operator ""ns(long double); // C++14
+constexpr chrono::day                                   operator ""d(unsigned long long d) noexcept; // C++20
+constexpr chrono::year                                  operator ""y(unsigned long long y) noexcept; // C++20
+}  // chrono_literals
+}  // literals
+
+}  // std
+*/
+
+#include <__assert> // all public C++ headers provide the assertion handler
+#include <__chrono/calendar.h>
+#include <__chrono/convert_to_timespec.h>
+#include <__chrono/convert_to_tm.h>
+#include <__chrono/day.h>
+#include <__chrono/duration.h>
+#include <__chrono/file_clock.h>
+#include <__chrono/hh_mm_ss.h>
+#include <__chrono/high_resolution_clock.h>
+#include <__chrono/literals.h>
+#include <__chrono/month.h>
+#include <__chrono/month_weekday.h>
+#include <__chrono/monthday.h>
+#include <__chrono/steady_clock.h>
+#include <__chrono/system_clock.h>
+#include <__chrono/time_point.h>
+#include <__chrono/weekday.h>
+#include <__chrono/year.h>
+#include <__chrono/year_month.h>
+#include <__chrono/year_month_day.h>
+#include <__chrono/year_month_weekday.h>
+#include <__config>
+#include <version>
+
+// standard-mandated includes
+
+// [time.syn]
+#include <compare>
+
+#if !defined(_LIBCPP_HAS_NO_LOCALIZATION) && _LIBCPP_STD_VER >= 20
+#  include <__chrono/formatter.h>
+#  include <__chrono/ostream.h>
+#  include <__chrono/parser_std_format_spec.h>
+#  include <__chrono/statically_widen.h>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_TIME_ZONE_DATABASE) && !defined(_LIBCPP_HAS_NO_FILESYSTEM) &&                              \
+    !defined(_LIBCPP_HAS_NO_LOCALIZATION)
+#  include <__chrono/tzdb.h>
+#  include <__chrono/tzdb_list.h>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+#if !defined(_LIBCPP_REMOVE_TRANSITIVE_INCLUDES) && _LIBCPP_STD_VER <= 20
+#  include <bit>
+#  include <concepts>
+#  include <cstring>
+#  include <forward_list>
+#  include <string>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
 #if !defined(_LIBCPP_REMOVE_TRANSITIVE_INCLUDES) && _LIBCPP_STD_VER == 20

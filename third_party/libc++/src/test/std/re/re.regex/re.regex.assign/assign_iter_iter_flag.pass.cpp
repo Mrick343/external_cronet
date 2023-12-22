@@ -15,8 +15,14 @@
 //    assign(InputIterator first, InputIterator last,
 //           flag_type f = regex_constants::ECMAScript);
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <regex>
 #include <cassert>
+=======
+#include <cassert>
+#include <regex>
+#include <string>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 #include "test_iterators.h"

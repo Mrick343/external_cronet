@@ -19,9 +19,14 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
     assert(std::char_traits<wchar_t>::eof() == WEOF);
+=======
+int main(int, char**) {
+  assert(std::char_traits<wchar_t>::eof() == WEOF);
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

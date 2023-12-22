@@ -24,6 +24,12 @@ struct A
   static std::function<void()> global;
   static bool cancel;
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+  A() = default;
+  A(const A&) = default;
+  A& operator=(const A&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   ~A() {
     DoNotOptimize(cancel);
     if (cancel)

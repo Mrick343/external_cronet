@@ -10,6 +10,14 @@
 
 // basic_filebuf<charT,traits>* close();
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// This test closes an fd that belongs to a std::filebuf, and Bionic's fdsan
+// detects this and aborts the process, starting in Android R (API 30).
+// See D137129.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{2[1-9]}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <fstream>
 #include <cassert>
 #if defined(__unix__)

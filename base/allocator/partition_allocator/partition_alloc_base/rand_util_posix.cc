@@ -1,3 +1,4 @@
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // Copyright 2012 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -120,3 +121,5 @@ void RandBytes(void* output, size_t output_length) {
 }
 
 }  // namespace partition_alloc::internal::base
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

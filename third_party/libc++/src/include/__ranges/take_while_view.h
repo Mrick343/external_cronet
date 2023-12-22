@@ -41,6 +41,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 namespace ranges {
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // The spec uses the unnamed requirement inside the `begin` and `end` member functions:
 //     constexpr auto begin() const
 //       requires range<const V> && indirect_unary_predicate<const Pred, iterator_t<const V>>
@@ -100,6 +101,55 @@ public:
 
   _LIBCPP_HIDE_FROM_ABI constexpr auto end() const
     requires __take_while_const_is_range<_View, _Pred>
+=======
+template <view _View, class _Pred>
+  requires input_range<_View> && is_object_v<_Pred> && indirect_unary_predicate<const _Pred, iterator_t<_View>>
+class take_while_view : public view_interface<take_while_view<_View, _Pred>> {
+  template <bool>
+  class __sentinel;
+
+  _LIBCPP_NO_UNIQUE_ADDRESS _View __base_ = _View();
+  _LIBCPP_NO_UNIQUE_ADDRESS __movable_box<_Pred> __pred_;
+
+public:
+  _LIBCPP_HIDE_FROM_ABI take_while_view()
+    requires default_initializable<_View> && default_initializable<_Pred>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr _LIBCPP_EXPLICIT_SINCE_CXX23 take_while_view(_View __base, _Pred __pred)
+      : __base_(std::move(__base)), __pred_(std::in_place, std::move(__pred)) {}
+
+  _LIBCPP_HIDE_FROM_ABI constexpr _View base() const&
+    requires copy_constructible<_View>
+  {
+    return __base_;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr _View base() && { return std::move(__base_); }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr const _Pred& pred() const { return *__pred_; }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr auto begin()
+    requires(!__simple_view<_View>)
+  {
+    return ranges::begin(__base_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr auto begin() const
+    requires range<const _View> && indirect_unary_predicate<const _Pred, iterator_t<const _View>>
+  {
+    return ranges::begin(__base_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr auto end()
+    requires(!__simple_view<_View>)
+  {
+    return __sentinel</*_Const=*/false>(ranges::end(__base_), std::addressof(*__pred_));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr auto end() const
+    requires range<const _View> && indirect_unary_predicate<const _Pred, iterator_t<const _View>>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   {
     return __sentinel</*_Const=*/true>(ranges::end(__base_), std::addressof(*__pred_));
   }

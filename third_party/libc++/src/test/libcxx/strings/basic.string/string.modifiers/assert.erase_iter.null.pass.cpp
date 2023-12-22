@@ -12,6 +12,7 @@
 
 // REQUIRES: has-unix-headers
 // UNSUPPORTED: c++03
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
 
@@ -33,6 +34,26 @@ int main(int, char**) {
     std::string::const_iterator i = l1.end();
     TEST_LIBCPP_ASSERT_FAILURE(l1.erase(i), "string::erase(iterator) called with a non-dereferenceable iterator");
   }
+=======
+// UNSUPPORTED: libcpp-hardening-mode=unchecked
+// XFAIL: availability-verbose_abort-missing
+
+#include <string>
+
+#include "check_assertion.h"
+#include "min_allocator.h"
+
+template <class S>
+void test() {
+  S l1("123");
+  typename S::const_iterator i = l1.end();
+  TEST_LIBCPP_ASSERT_FAILURE(l1.erase(i), "string::erase(iterator) called with a non-dereferenceable iterator");
+}
+
+int main(int, char**) {
+  test<std::string>();
+  test<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

@@ -11,6 +11,7 @@
 #define _LIBCPP___FORMAT_FORMATTER_BOOL_H
 
 #include <__algorithm/copy.h>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <__availability>
 #include <__config>
 #include <__debug>
@@ -42,6 +43,37 @@ public:
   _LIBCPP_HIDE_FROM_ABI constexpr typename _ParseContext::iterator parse(_ParseContext& __ctx) {
     typename _ParseContext::iterator __result = __parser_.__parse(__ctx, __format_spec::__fields_integral);
     __format_spec::__process_parsed_bool(__parser_);
+=======
+#include <__assert>
+#include <__availability>
+#include <__config>
+#include <__format/concepts.h>
+#include <__format/format_parse_context.h>
+#include <__format/formatter.h>
+#include <__format/formatter_integral.h>
+#include <__format/parser_std_format_spec.h>
+#include <__utility/unreachable.h>
+
+#ifndef _LIBCPP_HAS_NO_LOCALIZATION
+#  include <locale>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 20
+
+template <__fmt_char_type _CharT>
+struct _LIBCPP_TEMPLATE_VIS formatter<bool, _CharT> {
+public:
+  template <class _ParseContext>
+  _LIBCPP_HIDE_FROM_ABI constexpr typename _ParseContext::iterator parse(_ParseContext& __ctx) {
+    typename _ParseContext::iterator __result = __parser_.__parse(__ctx, __format_spec::__fields_integral);
+    __format_spec::__process_parsed_bool(__parser_, "a bool");
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     return __result;
   }
 

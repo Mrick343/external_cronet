@@ -59,6 +59,7 @@ test_use_move()
 }
 #endif // TEST_STD_VER > 17
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // C++20 can use string in constexpr evaluation, but both libc++ and MSVC
 // don't have the support yet. In these cases omit the constexpr test.
 // FIXME Remove constexpr string workaround introduced in D90569
@@ -117,6 +118,50 @@ test()
     (!defined(__cpp_lib_constexpr_string) || __cpp_lib_constexpr_string < 201907L)
     if (!std::is_constant_evaluated())
 #endif
+=======
+TEST_CONSTEXPR_CXX20 void test_string() {
+    std::string sa[] = {"a", "b", "c"};
+    assert(std::accumulate(sa, sa + 3, std::string()) == "abc");
+    assert(std::accumulate(sa, sa + 3, std::string(), std::plus<std::string>()) == "abc");
+}
+
+template <class Iter, class T>
+TEST_CONSTEXPR_CXX20 void
+test(Iter first, Iter last, T init, T x)
+{
+    assert(std::accumulate(first, last, init, std::multiplies<T>()) == x);
+}
+
+template <class Iter>
+TEST_CONSTEXPR_CXX20 void
+test()
+{
+    int ia[] = {1, 2, 3, 4, 5, 6};
+    unsigned sa = sizeof(ia) / sizeof(ia[0]);
+    test(Iter(ia), Iter(ia), 1, 1);
+    test(Iter(ia), Iter(ia), 10, 10);
+    test(Iter(ia), Iter(ia+1), 1, 1);
+    test(Iter(ia), Iter(ia+1), 10, 10);
+    test(Iter(ia), Iter(ia+2), 1, 2);
+    test(Iter(ia), Iter(ia+2), 10, 20);
+    test(Iter(ia), Iter(ia+sa), 1, 720);
+    test(Iter(ia), Iter(ia+sa), 10, 7200);
+}
+
+TEST_CONSTEXPR_CXX20 bool
+test()
+{
+    test<cpp17_input_iterator<const int*> >();
+    test<forward_iterator<const int*> >();
+    test<bidirectional_iterator<const int*> >();
+    test<random_access_iterator<const int*> >();
+    test<const int*>();
+
+#if TEST_STD_VER > 17
+    test_use_move();
+#endif // TEST_STD_VER > 17
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     test_string();
 
     return true;

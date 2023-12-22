@@ -15,8 +15,11 @@
 #include <concepts>
 #include <ranges>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 static_assert(std::same_as<std::ranges::iterator_t<std::string>, std::string::iterator>);
 static_assert(std::ranges::common_range<std::string>);
 static_assert(std::ranges::random_access_range<std::string>);

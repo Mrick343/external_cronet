@@ -74,7 +74,11 @@ int __countl_zero(_Tp __t) _NOEXCEPT
         int __iter = 0;
         const unsigned int __ulldigits = numeric_limits<unsigned long long>::digits;
         while (true) {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
             __t = std::__rotr(__t, __ulldigits);
+=======
+            __t = std::__rotl(__t, __ulldigits);
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
             if ((__iter = std::__countl_zero(static_cast<unsigned long long>(__t))) != __ulldigits)
                 break;
             __ret += __iter;

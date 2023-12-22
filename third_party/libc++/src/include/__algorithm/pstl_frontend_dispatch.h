@@ -21,11 +21,18 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #  define _LIBCPP_PSTL_CUSTOMIZATION_POINT(name)                                                                       \
     [](auto&&... __args) -> decltype(std::name<_RawPolicy>(typename __select_backend<_RawPolicy>::type{},              \
                                                            std::forward<decltype(__args)>(__args)...)) {               \
       return std::name<_RawPolicy>(                                                                                    \
           typename __select_backend<_RawPolicy>::type{}, std::forward<decltype(__args)>(__args)...);                   \
+=======
+#  define _LIBCPP_PSTL_CUSTOMIZATION_POINT(name, policy)                                                               \
+    [](auto&&... __args) -> decltype(std::name<policy>(                                                                \
+                             typename __select_backend<policy>::type{}, std::forward<decltype(__args)>(__args)...)) {  \
+      return std::name<policy>(typename __select_backend<policy>::type{}, std::forward<decltype(__args)>(__args)...);  \
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     }
 
 template <class _SpecializedImpl, class _GenericImpl, class... _Args>

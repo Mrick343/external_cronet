@@ -295,6 +295,17 @@ concept indirectly_copyable_storable =
 
 #endif // _LIBCPP_STD_VER >= 20
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+template <class _Tp>
+using __has_random_access_iterator_category_or_concept
+#if _LIBCPP_STD_VER >= 20
+  = integral_constant<bool, random_access_iterator<_Tp>>;
+#else   // _LIBCPP_STD_VER < 20
+  = __has_random_access_iterator_category<_Tp>;
+#endif  // _LIBCPP_STD_VER
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 _LIBCPP_END_NAMESPACE_STD
 
 #endif // _LIBCPP___ITERATOR_CONCEPTS_H

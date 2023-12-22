@@ -19,6 +19,7 @@
 #include "test_macros.h"
 
 template <class S>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 void
 test(S s, test_allocator_statistics& alloc_stats)
 {
@@ -68,6 +69,72 @@ int main(int, char**)
 {
   test();
 #if TEST_STD_VER > 17
+=======
+TEST_CONSTEXPR_CXX20 void test_invariant(S s, test_allocator_statistics& alloc_stats) {
+  alloc_stats.throw_after = 0;
+#ifndef TEST_HAS_NO_EXCEPTIONS
+  try
+#endif
+  {
+    while (s.size() < s.capacity())
+      s.push_back(typename S::value_type());
+    assert(s.size() == s.capacity());
+  }
+#ifndef TEST_HAS_NO_EXCEPTIONS
+  catch (...) {
+    assert(false);
+  }
+#endif
+  alloc_stats.throw_after = INT_MAX;
+}
+
+template <class Alloc>
+TEST_CONSTEXPR_CXX20 void test_string(const Alloc& a) {
+  using S = std::basic_string<char, std::char_traits<char>, Alloc>;
+  {
+    S const s((Alloc(a)));
+    assert(s.capacity() >= 0);
+  }
+  {
+    S const s(3, 'x', Alloc(a));
+    assert(s.capacity() >= 3);
+  }
+#if TEST_STD_VER >= 11
+  // Check that we perform SSO
+  {
+    S const s;
+    assert(s.capacity() > 0);
+    ASSERT_NOEXCEPT(s.capacity());
+  }
+#endif
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string(std::allocator<char>());
+  test_string(test_allocator<char>());
+  test_string(test_allocator<char>(3));
+  test_string(min_allocator<char>());
+
+  {
+    test_allocator_statistics alloc_stats;
+    typedef std::basic_string<char, std::char_traits<char>, test_allocator<char> > S;
+    S s((test_allocator<char>(&alloc_stats)));
+    test_invariant(s, alloc_stats);
+    s.assign(10, 'a');
+    s.erase(5);
+    test_invariant(s, alloc_stats);
+    s.assign(100, 'a');
+    s.erase(50);
+    test_invariant(s, alloc_stats);
+  }
+
+  return true;
+}
+
+int main(int, char**) {
+  test();
+#if TEST_STD_VER >= 20
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   static_assert(test());
 #endif
 

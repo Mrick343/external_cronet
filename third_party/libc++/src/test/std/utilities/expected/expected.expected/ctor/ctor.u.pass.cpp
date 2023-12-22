@@ -29,6 +29,7 @@
 
 #include "MoveOnly.h"
 #include "test_macros.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 // Test Constraints:
 static_assert(std::is_constructible_v<std::expected<int, int>, int>);
@@ -131,6 +132,136 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+// Test Constraints:
+static_assert(std::is_constructible_v<std::expected<int, int>, int>);
+
+// is_same_v<remove_cvref_t<U>, in_place_t>
+struct FromJustInplace {
+  FromJustInplace(std::in_place_t);
+};
+static_assert(!std::is_constructible_v<std::expected<FromJustInplace, int>, std::in_place_t>);
+static_assert(!std::is_constructible_v<std::expected<FromJustInplace, int>, std::in_place_t const&>);
+
+// is_same_v<expected, remove_cvref_t<U>>
+// Note that result is true because it is covered by the constructors that take expected
+static_assert(std::is_constructible_v<std::expected<int, int>, std::expected<int, int>&>);
+
+// remove_cvref_t<U> is a specialization of unexpected
+// Note that result is true because it is covered by the constructors that take unexpected
+static_assert(std::is_constructible_v<std::expected<int, int>, std::unexpected<int>&>);
+
+// !is_constructible_v<T, U>
+struct foo {};
+static_assert(!std::is_constructible_v<std::expected<int, int>, foo>);
+
+// test explicit(!is_convertible_v<U, T>)
+struct NotConvertible {
+  explicit NotConvertible(int);
+};
+static_assert(std::is_convertible_v<int, std::expected<int, int>>);
+static_assert(!std::is_convertible_v<int, std::expected<NotConvertible, int>>);
+
+struct CopyOnly {
+  int i;
+  constexpr CopyOnly(int ii) : i(ii) {}
+  CopyOnly(const CopyOnly&) = default;
+  CopyOnly(CopyOnly&&)      = delete;
+  friend constexpr bool operator==(const CopyOnly& mi, int ii) { return mi.i == ii; }
+};
+
+struct BaseError {};
+struct DerivedError : BaseError {};
+
+template <class T, class E = int>
+constexpr void testInt() {
+  std::expected<T, E> e(5);
+  assert(e.has_value());
+  assert(e.value() == 5);
+}
+
+template <class T, class E = int>
+constexpr void testLValue() {
+  T t(5);
+  std::expected<T, E> e(t);
+  assert(e.has_value());
+  assert(e.value() == 5);
+}
+
+template <class T, class E = int>
+constexpr void testRValue() {
+  std::expected<T, E> e(T(5));
+  assert(e.has_value());
+  assert(e.value() == 5);
+}
+
+constexpr bool test() {
+  testInt<int>();
+  testInt<CopyOnly>();
+  testInt<MoveOnly>();
+  testInt<TailClobberer<0>, bool>();
+  testLValue<int>();
+  testLValue<CopyOnly>();
+  testLValue<TailClobberer<0>, bool>();
+  testRValue<int>();
+  testRValue<MoveOnly>();
+  testRValue<TailClobberer<0>, bool>();
+
+  // Test default template argument.
+  // Without it, the template parameter cannot be deduced from an initializer list
+  {
+    struct Bar {
+      int i;
+      int j;
+      constexpr Bar(int ii, int jj) : i(ii), j(jj) {}
+    };
+
+    std::expected<Bar, int> e({5, 6});
+    assert(e.value().i == 5);
+    assert(e.value().j == 6);
+  }
+
+  // https://cplusplus.github.io/LWG/issue3836
+
+  // Test &
+  {
+    std::expected<bool, DerivedError> e1(false);
+    std::expected<bool, BaseError> e2(e1);
+    assert(e2.has_value());
+    assert(!e2.value()); // yes, e2 holds "false" since LWG3836
+  }
+
+  // Test &&
+  {
+    std::expected<bool, DerivedError> e1(false);
+    std::expected<bool, BaseError> e2(std::move(e1));
+    assert(e2.has_value());
+    assert(!e2.value()); // yes, e2 holds "false" since LWG3836
+  }
+
+  // Test const&
+  {
+    const std::expected<bool, DerivedError> e1(false);
+    std::expected<bool, BaseError> e2(e1);
+    assert(e2.has_value());
+    assert(!e2.value()); // yes, e2 holds "false" since LWG3836
+  }
+
+  // Test const&&
+  {
+    const std::expected<bool, DerivedError> e1(false);
+    std::expected<bool, BaseError> e2(std::move(e1));
+    assert(e2.has_value());
+    assert(!e2.value()); // yes, e2 holds "false" since LWG3836
+  }
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing(int) { throw Except{}; };
   };

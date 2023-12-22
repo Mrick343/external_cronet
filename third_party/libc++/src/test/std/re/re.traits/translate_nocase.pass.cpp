@@ -15,6 +15,13 @@
 // REQUIRES: locale.en_US.UTF-8
 // XFAIL: win32-broken-utf8-wchar-ctype
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// Prior to Android O (API 26), in the "en_US.UTF-8" locale, towlower(L'\xDA')
+// returned 0xDA instead of 0xFA.
+// XFAIL: LIBCXX-ANDROID-FIXME && android-device-api={{21|22|23|24|25}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <regex>
 #include <cassert>
 

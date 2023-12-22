@@ -15,7 +15,11 @@
 
 // GCC supports noexcept function types but this test still fails.
 // This is likely a bug in their implementation. Investigation needed.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // XFAIL: gcc-11, gcc-12
+=======
+// XFAIL: gcc-13
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <cassert>
 

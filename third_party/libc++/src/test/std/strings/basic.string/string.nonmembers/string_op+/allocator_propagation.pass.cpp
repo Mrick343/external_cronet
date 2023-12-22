@@ -196,9 +196,15 @@ int main(int, char**) {
 #endif
 #if TEST_STD_VER > 17
   static_assert(test<char>());
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #ifndef TEST_HAS_NO_WIDE_CHARACTERS
   static_assert(test<wchar_t>());
 #endif
+=======
+#  ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  static_assert(test<wchar_t>());
+#  endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

@@ -26,6 +26,11 @@
 struct B {
     int id_;
     explicit B(int i = 0) : id_(i) {}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+    B(const B&) = default;
+    B& operator=(const B&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     virtual ~B() {}
 };
 

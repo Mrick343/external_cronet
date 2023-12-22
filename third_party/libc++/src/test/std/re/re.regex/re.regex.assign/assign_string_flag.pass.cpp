@@ -14,8 +14,15 @@
 //   basic_regex& assign(const basic_string<charT, string_traits, A>& s,
 //                       flag_type f = regex_constants::ECMAScript);
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <regex>
 #include <cassert>
+=======
+#include <cassert>
+#include <regex>
+#include <string>
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include "test_macros.h"
 
 int main(int, char**)

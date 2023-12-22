@@ -6,7 +6,14 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
  // test limits.h
+=======
+// test <limits.h>
+//
+// Even though <limits.h> is not provided by libc++, we still test that
+// using it with libc++ on the search path will work.
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <limits.h>
 

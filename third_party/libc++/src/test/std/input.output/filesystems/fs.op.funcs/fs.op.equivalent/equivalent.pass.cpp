@@ -10,6 +10,13 @@
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// Starting in Android N (API 24), SELinux policy prevents the shell user from
+// creating a hard link.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{21|22|23}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // bool equivalent(path const& lhs, path const& rhs);

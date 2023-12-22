@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: c++03
 
 // REQUIRES: has-unix-headers
@@ -13,6 +14,13 @@
 // ADDITIONAL_COMPILE_FLAGS: -fno-exceptions -D_LIBCPP_ENABLE_ASSERTIONS=1
 
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
+=======
+// REQUIRES: has-unix-headers
+// UNSUPPORTED: c++03
+// REQUIRES: libcpp-hardening-mode={{safe|debug}}
+// XFAIL: availability-verbose_abort-missing
+// ADDITIONAL_COMPILE_FLAGS: -fno-exceptions
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <__utility/exception_guard.h>
 

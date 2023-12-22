@@ -32,7 +32,10 @@ config.substitutions.append(('%{include}', '@LIBCXXABI_SOURCE_DIR@/include'))
 config.substitutions.append(('%{cxx-include}', '@LIBCXXABI_HEADER_DIR@/include/c++/v1'))
 config.substitutions.append(('%{cxx-target-include}', '@LIBCXXABI_HEADER_DIR@/include/%{triple}/c++/v1'))
 config.substitutions.append(('%{lib}', '@LIBCXXABI_LIBRARY_DIR@'))
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 config.substitutions.append(('%{executor}', '@LIBCXXABI_EXECUTOR@'))
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 if @LIBCXXABI_USE_LLVM_UNWINDER@:
     config.substitutions.append(('%{maybe-include-libunwind}', '-I "@LIBCXXABI_LIBUNWIND_INCLUDES_INTERNAL@"'))

@@ -156,7 +156,11 @@ We have not yet shipped an implementation of the Parallelism TS.
 The Coroutines TS was accepted for C++20.
 An implementation of the Coroutines TS was shipped in LLVM 5.0 in namespace ``std::experimental``,
 and C++20 Coroutines shipped in LLVM 14.0. The implementation of the Coroutines TS in ``std::experimental``
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 will be removed in LLVM 16.0.
+=======
+has been removed in LLVM 17.0.
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 `Networking TS <https://wg21.link/N4656>`__
 -------------------------------------------

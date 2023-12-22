@@ -8,6 +8,7 @@
 
 // The test suite needs to define the ABI macros on the command line when
 // modules are enabled.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: modules-build
 
 // <utility>
@@ -18,6 +19,18 @@
 // is specified.
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
 // ADDITIONAL_COMPILE_FLAGS: -Wno-macro-redefined
+=======
+// UNSUPPORTED: clang-modules-build
+
+// <utility>
+
+// template <class T1, class T2> struct pair
+
+// Test that we provide the non-trivial copy operations when _LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
+// is specified.
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
+// ADDITIONAL_COMPILE_FLAGS: -Wno-macro-redefined -Wno-invalid-offsetof
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <utility>
 #include <type_traits>

@@ -32,6 +32,7 @@ struct TestType2 {};
 void f() {
     std::any a;
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     // expected-error-re@any:* {{{{(static_assert|static assertion)}} failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
     std::any_cast<TestType &>(static_cast<std::any const&>(a)); // expected-note {{requested here}}
 
@@ -42,5 +43,17 @@ void f() {
     std::any_cast<TestType2 &>(static_cast<std::any const&&>(a)); // expected-note {{requested here}}
 
     // expected-error-re@any:* {{{{(static_assert|static assertion)}} failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
+=======
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
+    std::any_cast<TestType &>(static_cast<std::any const&>(a)); // expected-note {{requested here}}
+
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
+    std::any_cast<TestType &&>(static_cast<std::any const&>(a)); // expected-note {{requested here}}
+
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
+    std::any_cast<TestType2 &>(static_cast<std::any const&&>(a)); // expected-note {{requested here}}
+
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     std::any_cast<TestType2 &&>(static_cast<std::any const&&>(a)); // expected-note {{requested here}}
 }

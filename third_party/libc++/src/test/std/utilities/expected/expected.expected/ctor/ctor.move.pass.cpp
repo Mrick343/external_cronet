@@ -32,6 +32,7 @@
 #include <utility>
 
 #include "test_macros.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 struct NonMovable {
   NonMovable(NonMovable&&) = delete;
@@ -119,6 +120,111 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+struct NonMovable {
+  NonMovable(NonMovable&&) = delete;
+};
+
+struct MovableNonTrivial {
+  int i;
+  constexpr MovableNonTrivial(int ii) : i(ii) {}
+  constexpr MovableNonTrivial(MovableNonTrivial&& o) : i(o.i) { o.i = 0; }
+  friend constexpr bool operator==(const MovableNonTrivial&, const MovableNonTrivial&) = default;
+};
+
+struct MoveMayThrow {
+  MoveMayThrow(MoveMayThrow&&) {}
+};
+
+// Test Constraints:
+// - is_move_constructible_v<T> is true and
+// - is_move_constructible_v<E> is true.
+static_assert(std::is_move_constructible_v<std::expected<int, int>>);
+static_assert(std::is_move_constructible_v<std::expected<MovableNonTrivial, int>>);
+static_assert(std::is_move_constructible_v<std::expected<int, MovableNonTrivial>>);
+static_assert(std::is_move_constructible_v<std::expected<MovableNonTrivial, MovableNonTrivial>>);
+static_assert(!std::is_move_constructible_v<std::expected<NonMovable, int>>);
+static_assert(!std::is_move_constructible_v<std::expected<int, NonMovable>>);
+static_assert(!std::is_move_constructible_v<std::expected<NonMovable, NonMovable>>);
+
+// Test: This constructor is trivial if
+// - is_trivially_move_constructible_v<T> is true and
+// - is_trivially_move_constructible_v<E> is true.
+static_assert(std::is_trivially_move_constructible_v<std::expected<int, int>>);
+static_assert(!std::is_trivially_move_constructible_v<std::expected<MovableNonTrivial, int>>);
+static_assert(!std::is_trivially_move_constructible_v<std::expected<int, MovableNonTrivial>>);
+static_assert(!std::is_trivially_move_constructible_v<std::expected<MovableNonTrivial, MovableNonTrivial>>);
+
+// Test: The exception specification is equivalent to
+// is_nothrow_move_constructible_v<T> && is_nothrow_move_constructible_v<E>.
+static_assert(std::is_nothrow_move_constructible_v<std::expected<int, int>>);
+static_assert(!std::is_nothrow_move_constructible_v<std::expected<MoveMayThrow, int>>);
+static_assert(!std::is_nothrow_move_constructible_v<std::expected<int, MoveMayThrow>>);
+static_assert(!std::is_nothrow_move_constructible_v<std::expected<MoveMayThrow, MoveMayThrow>>);
+
+constexpr bool test() {
+  // move the value non-trivial
+  {
+    std::expected<MovableNonTrivial, int> e1(5);
+    auto e2 = std::move(e1);
+    assert(e2.has_value());
+    assert(e2.value().i == 5);
+    assert(e1.has_value());
+    assert(e1.value().i == 0);
+  }
+
+  // move the error non-trivial
+  {
+    std::expected<int, MovableNonTrivial> e1(std::unexpect, 5);
+    auto e2 = std::move(e1);
+    assert(!e2.has_value());
+    assert(e2.error().i == 5);
+    assert(!e1.has_value());
+    assert(e1.error().i == 0);
+  }
+
+  // move the value trivial
+  {
+    std::expected<int, int> e1(5);
+    auto e2 = std::move(e1);
+    assert(e2.has_value());
+    assert(e2.value() == 5);
+    assert(e1.has_value());
+  }
+
+  // move the error trivial
+  {
+    std::expected<int, int> e1(std::unexpect, 5);
+    auto e2 = std::move(e1);
+    assert(!e2.has_value());
+    assert(e2.error() == 5);
+    assert(!e1.has_value());
+  }
+
+  // move TailClobbererNonTrivialMove as value
+  {
+    std::expected<TailClobbererNonTrivialMove<0>, bool> e1;
+    auto e2 = std::move(e1);
+    assert(e2.has_value());
+    assert(e1.has_value());
+  }
+
+  // move TailClobbererNonTrivialMove as error
+  {
+    std::expected<bool, TailClobbererNonTrivialMove<1>> e1(std::unexpect);
+    auto e2 = std::move(e1);
+    assert(!e2.has_value());
+    assert(!e1.has_value());
+  }
+
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing() = default;
     Throwing(Throwing&&) { throw Except{}; }

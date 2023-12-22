@@ -8,7 +8,11 @@
 
 // FIXME: In MSVC mode, even "std::function<int(int)> f(aref);" causes
 // allocations.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // XFAIL: target=x86_64-pc-windows-msvc && stdlib=libc++
+=======
+// XFAIL: target=x86_64-pc-windows-msvc && stdlib=libc++ && libcpp-abi-version=1
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // UNSUPPORTED: c++03
 

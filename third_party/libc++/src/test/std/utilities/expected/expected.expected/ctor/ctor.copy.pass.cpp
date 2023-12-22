@@ -30,6 +30,7 @@
 #include <utility>
 
 #include "test_macros.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 struct NonCopyable {
   NonCopyable(const NonCopyable&) = delete;
@@ -100,6 +101,92 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+struct NonCopyable {
+  NonCopyable(const NonCopyable&) = delete;
+};
+
+struct CopyableNonTrivial {
+  int i;
+  constexpr CopyableNonTrivial(int ii) : i(ii) {}
+  constexpr CopyableNonTrivial(const CopyableNonTrivial& o) { i = o.i; }
+  friend constexpr bool operator==(const CopyableNonTrivial&, const CopyableNonTrivial&) = default;
+};
+
+// Test: This constructor is defined as deleted unless
+// - is_copy_constructible_v<T> is true and
+// - is_copy_constructible_v<E> is true.
+static_assert(std::is_copy_constructible_v<std::expected<int, int>>);
+static_assert(std::is_copy_constructible_v<std::expected<CopyableNonTrivial, int>>);
+static_assert(std::is_copy_constructible_v<std::expected<int, CopyableNonTrivial>>);
+static_assert(std::is_copy_constructible_v<std::expected<CopyableNonTrivial, CopyableNonTrivial>>);
+static_assert(!std::is_copy_constructible_v<std::expected<NonCopyable, int>>);
+static_assert(!std::is_copy_constructible_v<std::expected<int, NonCopyable>>);
+static_assert(!std::is_copy_constructible_v<std::expected<NonCopyable, NonCopyable>>);
+
+// Test: This constructor is trivial if
+// - is_trivially_copy_constructible_v<T> is true and
+// - is_trivially_copy_constructible_v<E> is true.
+static_assert(std::is_trivially_copy_constructible_v<std::expected<int, int>>);
+static_assert(!std::is_trivially_copy_constructible_v<std::expected<CopyableNonTrivial, int>>);
+static_assert(!std::is_trivially_copy_constructible_v<std::expected<int, CopyableNonTrivial>>);
+static_assert(!std::is_trivially_copy_constructible_v<std::expected<CopyableNonTrivial, CopyableNonTrivial>>);
+
+constexpr bool test() {
+  // copy the value non-trivial
+  {
+    const std::expected<CopyableNonTrivial, int> e1(5);
+    auto e2 = e1;
+    assert(e2.has_value());
+    assert(e2.value().i == 5);
+  }
+
+  // copy the error non-trivial
+  {
+    const std::expected<int, CopyableNonTrivial> e1(std::unexpect, 5);
+    auto e2 = e1;
+    assert(!e2.has_value());
+    assert(e2.error().i == 5);
+  }
+
+  // copy the value trivial
+  {
+    const std::expected<int, int> e1(5);
+    auto e2 = e1;
+    assert(e2.has_value());
+    assert(e2.value() == 5);
+  }
+
+  // copy the error trivial
+  {
+    const std::expected<int, int> e1(std::unexpect, 5);
+    auto e2 = e1;
+    assert(!e2.has_value());
+    assert(e2.error() == 5);
+  }
+
+  // copy TailClobberer as value
+  {
+    const std::expected<TailClobberer<0>, bool> e1;
+    auto e2 = e1;
+    assert(e2.has_value());
+  }
+
+  // copy TailClobberer as error
+  {
+    const std::expected<bool, TailClobberer<1>> e1(std::unexpect);
+    auto e2 = e1;
+    assert(!e2.has_value());
+  }
+
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing() = default;
     Throwing(const Throwing&) { throw Except{}; }

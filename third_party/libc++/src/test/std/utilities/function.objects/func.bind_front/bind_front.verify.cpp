@@ -37,7 +37,11 @@ void f() {
     const int c = 1;
 
     auto p = std::bind_front(pass, c);
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     static_assert(p() == 1); // expected-error-re {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
+=======
+    static_assert(p() == 1); // expected-error {{static assertion expression is not an integral constant expression}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
     auto d = std::bind_front(do_nothing, n); // expected-error {{no matching function for call to 'bind_front'}}
 

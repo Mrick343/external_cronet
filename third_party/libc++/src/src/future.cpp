@@ -59,6 +59,7 @@ _LIBCPP_DIAGNOSTIC_POP
 const error_category&
 future_category() noexcept
 {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     static __future_error_category __f;
     return __f;
 }
@@ -202,6 +203,154 @@ promise<void>::~promise()
             __state_->set_exception(make_exception_ptr(
                       future_error(make_error_code(future_errc::broken_promise))
                                                       ));
+=======
+    union AvoidDestroyingFutureCategory {
+        __future_error_category future_error_category;
+        constexpr explicit AvoidDestroyingFutureCategory() : future_error_category() {}
+        ~AvoidDestroyingFutureCategory() {}
+    };
+    constinit static AvoidDestroyingFutureCategory helper;
+    return helper.future_error_category;
+}
+
+future_error::future_error(error_code __ec)
+    : logic_error(__ec.message()),
+      __ec_(__ec)
+{
+}
+
+future_error::~future_error() noexcept
+{
+}
+
+void
+__assoc_sub_state::__on_zero_shared() noexcept
+{
+    delete this;
+}
+
+void
+__assoc_sub_state::set_value()
+{
+    unique_lock<mutex> __lk(__mut_);
+    if (__has_value())
+        __throw_future_error(future_errc::promise_already_satisfied);
+    __state_ |= __constructed | ready;
+    __cv_.notify_all();
+}
+
+void
+__assoc_sub_state::set_value_at_thread_exit()
+{
+    unique_lock<mutex> __lk(__mut_);
+    if (__has_value())
+        __throw_future_error(future_errc::promise_already_satisfied);
+    __state_ |= __constructed;
+    __thread_local_data()->__make_ready_at_thread_exit(this);
+}
+
+void
+__assoc_sub_state::set_exception(exception_ptr __p)
+{
+    unique_lock<mutex> __lk(__mut_);
+    if (__has_value())
+        __throw_future_error(future_errc::promise_already_satisfied);
+    __exception_ = __p;
+    __state_ |= ready;
+    __cv_.notify_all();
+}
+
+void
+__assoc_sub_state::set_exception_at_thread_exit(exception_ptr __p)
+{
+    unique_lock<mutex> __lk(__mut_);
+    if (__has_value())
+        __throw_future_error(future_errc::promise_already_satisfied);
+    __exception_ = __p;
+    __thread_local_data()->__make_ready_at_thread_exit(this);
+}
+
+void
+__assoc_sub_state::__make_ready()
+{
+    unique_lock<mutex> __lk(__mut_);
+    __state_ |= ready;
+    __cv_.notify_all();
+}
+
+void
+__assoc_sub_state::copy()
+{
+    unique_lock<mutex> __lk(__mut_);
+    __sub_wait(__lk);
+    if (__exception_ != nullptr)
+        rethrow_exception(__exception_);
+}
+
+void
+__assoc_sub_state::wait()
+{
+    unique_lock<mutex> __lk(__mut_);
+    __sub_wait(__lk);
+}
+
+void
+__assoc_sub_state::__sub_wait(unique_lock<mutex>& __lk)
+{
+    if (!__is_ready())
+    {
+        if (__state_ & static_cast<unsigned>(deferred))
+        {
+            __state_ &= ~static_cast<unsigned>(deferred);
+            __lk.unlock();
+            __execute();
+        }
+        else
+            while (!__is_ready())
+                __cv_.wait(__lk);
+    }
+}
+
+void
+__assoc_sub_state::__execute()
+{
+    __throw_future_error(future_errc::no_state);
+}
+
+future<void>::future(__assoc_sub_state* __state)
+    : __state_(__state)
+{
+    __state_->__attach_future();
+}
+
+future<void>::~future()
+{
+    if (__state_)
+        __state_->__release_shared();
+}
+
+void
+future<void>::get()
+{
+    unique_ptr<__shared_count, __release_shared_count> __(__state_);
+    __assoc_sub_state* __s = __state_;
+    __state_ = nullptr;
+    __s->copy();
+}
+
+promise<void>::promise()
+    : __state_(new __assoc_sub_state)
+{
+}
+
+promise<void>::~promise()
+{
+    if (__state_)
+    {
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+        if (!__state_->__has_value() && __state_->use_count() > 1)
+            __state_->set_exception(make_exception_ptr(future_error(future_errc::broken_promise)));
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif // _LIBCPP_HAS_NO_EXCEPTIONS
         __state_->__release_shared();
     }

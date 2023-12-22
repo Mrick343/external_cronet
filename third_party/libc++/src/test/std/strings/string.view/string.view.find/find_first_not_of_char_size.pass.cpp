@@ -19,6 +19,7 @@
 #include "constexpr_char_traits.h"
 
 template <class S>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 void
 test(const S& s, typename S::value_type c, typename S::size_type pos,
      typename S::size_type x)
@@ -84,6 +85,67 @@ int main(int, char**)
     static_assert (sv2.find_first_not_of( 'q', 1 ) == 1, "" );
     static_assert (sv2.find_first_not_of( 'q', 5 ) == SV::npos, "" );
     }
+=======
+void test(const S& s, typename S::value_type c, typename S::size_type pos, typename S::size_type x) {
+  LIBCPP_ASSERT_NOEXCEPT(s.find_first_not_of(c, pos));
+  assert(s.find_first_not_of(c, pos) == x);
+  if (x != S::npos)
+    assert(pos <= x && x < s.size());
+}
+
+template <class S>
+void test(const S& s, typename S::value_type c, typename S::size_type x) {
+  LIBCPP_ASSERT_NOEXCEPT(s.find_first_not_of(c));
+  assert(s.find_first_not_of(c) == x);
+  if (x != S::npos)
+    assert(x < s.size());
+}
+
+int main(int, char**) {
+  {
+    typedef std::string_view S;
+    test(S(""), 'q', 0, S::npos);
+    test(S(""), 'q', 1, S::npos);
+    test(S("kitcj"), 'q', 0, 0);
+    test(S("qkamf"), 'q', 1, 1);
+    test(S("nhmko"), 'q', 2, 2);
+    test(S("tpsaf"), 'q', 4, 4);
+    test(S("lahfb"), 'q', 5, S::npos);
+    test(S("irkhs"), 'q', 6, S::npos);
+    test(S("gmfhdaipsr"), 'q', 0, 0);
+    test(S("kantesmpgj"), 'q', 1, 1);
+    test(S("odaftiegpm"), 'q', 5, 5);
+    test(S("oknlrstdpi"), 'q', 9, 9);
+    test(S("eolhfgpjqk"), 'q', 10, S::npos);
+    test(S("pcdrofikas"), 'q', 11, S::npos);
+    test(S("nbatdlmekrgcfqsophij"), 'q', 0, 0);
+    test(S("bnrpehidofmqtcksjgla"), 'q', 1, 1);
+    test(S("jdmciepkaqgotsrfnhlb"), 'q', 10, 10);
+    test(S("jtdaefblsokrmhpgcnqi"), 'q', 19, 19);
+    test(S("hkbgspofltajcnedqmri"), 'q', 20, S::npos);
+    test(S("oselktgbcapndfjihrmq"), 'q', 21, S::npos);
+
+    test(S(""), 'q', S::npos);
+    test(S("q"), 'q', S::npos);
+    test(S("qqq"), 'q', S::npos);
+    test(S("csope"), 'q', 0);
+    test(S("gfsmthlkon"), 'q', 0);
+    test(S("laenfsbridchgotmkqpj"), 'q', 0);
+  }
+
+#if TEST_STD_VER > 11
+  {
+    typedef std::basic_string_view<char, constexpr_char_traits<char>> SV;
+    constexpr SV sv1;
+    constexpr SV sv2{"abcde", 5};
+
+    static_assert(sv1.find_first_not_of('q', 0) == SV::npos, "");
+    static_assert(sv1.find_first_not_of('q', 1) == SV::npos, "");
+    static_assert(sv2.find_first_not_of('q', 0) == 0, "");
+    static_assert(sv2.find_first_not_of('q', 1) == 1, "");
+    static_assert(sv2.find_first_not_of('q', 5) == SV::npos, "");
+  }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

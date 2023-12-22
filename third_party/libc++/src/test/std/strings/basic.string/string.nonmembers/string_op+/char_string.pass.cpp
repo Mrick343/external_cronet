@@ -35,6 +35,7 @@ TEST_CONSTEXPR_CXX20 void test1(typename S::value_type lhs, S&& rhs, const S& x)
 }
 #endif
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 bool test() {
   {
     typedef std::string S;
@@ -65,6 +66,26 @@ TEST_CONSTEXPR_CXX20 bool test() {
     test1('a', S("1234567890"), S("a1234567890"));
     test1('a', S("12345678901234567890"), S("a12345678901234567890"));
   }
+=======
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test0('a', S(""), S("a"));
+  test0('a', S("12345"), S("a12345"));
+  test0('a', S("1234567890"), S("a1234567890"));
+  test0('a', S("12345678901234567890"), S("a12345678901234567890"));
+#if TEST_STD_VER >= 11
+  test1('a', S(""), S("a"));
+  test1('a', S("12345"), S("a12345"));
+  test1('a', S("1234567890"), S("a1234567890"));
+  test1('a', S("12345678901234567890"), S("a12345678901234567890"));
+#endif
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return true;

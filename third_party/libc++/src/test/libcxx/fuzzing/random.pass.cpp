@@ -6,6 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// This test fails because Clang no longer enables -fdelayed-template-parsing
+// by default on Windows with C++20 (#69431).
+// XFAIL: msvc && clang-18
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: c++03, c++11
 
 #include <cassert>

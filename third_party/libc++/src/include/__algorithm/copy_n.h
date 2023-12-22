@@ -21,6 +21,7 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template<class _InputIterator, class _Size, class _OutputIterator>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
 typename enable_if
@@ -54,6 +55,35 @@ typename enable_if
     __has_random_access_iterator_category<_InputIterator>::value,
     _OutputIterator
 >::type
+=======
+template<class _InputIterator, class _Size, class _OutputIterator,
+         __enable_if_t<__has_input_iterator_category<_InputIterator>::value &&
+                       !__has_random_access_iterator_category<_InputIterator>::value, int> = 0>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_OutputIterator
+copy_n(_InputIterator __first, _Size __orig_n, _OutputIterator __result)
+{
+    typedef decltype(_VSTD::__convert_to_integral(__orig_n)) _IntegralSize;
+    _IntegralSize __n = __orig_n;
+    if (__n > 0)
+    {
+        *__result = *__first;
+        ++__result;
+        for (--__n; __n > 0; --__n)
+        {
+            ++__first;
+            *__result = *__first;
+            ++__result;
+        }
+    }
+    return __result;
+}
+
+template<class _InputIterator, class _Size, class _OutputIterator,
+         __enable_if_t<__has_random_access_iterator_category<_InputIterator>::value, int> = 0>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_OutputIterator
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 copy_n(_InputIterator __first, _Size __orig_n, _OutputIterator __result)
 {
     typedef typename iterator_traits<_InputIterator>::difference_type difference_type;

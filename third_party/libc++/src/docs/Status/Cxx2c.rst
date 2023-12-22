@@ -37,6 +37,13 @@ Paper Status
    :header-rows: 1
    :widths: auto
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+.. note::
+
+   .. [#note-P2510R3] This paper is applied as DR against C++20. (MSVC STL and libstdc++ will do the same.)
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 .. _issues-status-cxx2c:
 
 Library Working Group Issues Status

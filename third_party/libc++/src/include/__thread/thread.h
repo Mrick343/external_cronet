@@ -18,6 +18,7 @@
 #include <__memory/unique_ptr.h>
 #include <__mutex/mutex.h>
 #include <__system_error/system_error.h>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <__threading_support>
 #include <__utility/forward.h>
 #include <tuple>
@@ -129,6 +130,146 @@ _LIBCPP_INLINE_VISIBILITY
 basic_ostream<_CharT, _Traits>&
 operator<<(basic_ostream<_CharT, _Traits>& __os, __thread_id __id)
 {return __os << __id.__id_;}
+=======
+#include <__thread/id.h>
+#include <__threading_support>
+#include <__utility/forward.h>
+#include <tuple>
+
+#ifndef _LIBCPP_HAS_NO_LOCALIZATION
+#  include <locale>
+#  include <sstream>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _Tp> class __thread_specific_ptr;
+class _LIBCPP_EXPORTED_FROM_ABI __thread_struct;
+class _LIBCPP_HIDDEN __thread_struct_imp;
+class __assoc_sub_state;
+
+_LIBCPP_EXPORTED_FROM_ABI __thread_specific_ptr<__thread_struct>& __thread_local_data();
+
+class _LIBCPP_EXPORTED_FROM_ABI __thread_struct
+{
+    __thread_struct_imp* __p_;
+
+    __thread_struct(const __thread_struct&);
+    __thread_struct& operator=(const __thread_struct&);
+public:
+    __thread_struct();
+    ~__thread_struct();
+
+    void notify_all_at_thread_exit(condition_variable*, mutex*);
+    void __make_ready_at_thread_exit(__assoc_sub_state*);
+};
+
+template <class _Tp>
+class __thread_specific_ptr
+{
+    __libcpp_tls_key __key_;
+
+     // Only __thread_local_data() may construct a __thread_specific_ptr
+     // and only with _Tp == __thread_struct.
+    static_assert((is_same<_Tp, __thread_struct>::value), "");
+    __thread_specific_ptr();
+    friend _LIBCPP_EXPORTED_FROM_ABI __thread_specific_ptr<__thread_struct>& __thread_local_data();
+
+    __thread_specific_ptr(const __thread_specific_ptr&);
+    __thread_specific_ptr& operator=(const __thread_specific_ptr&);
+
+    _LIBCPP_HIDDEN static void _LIBCPP_TLS_DESTRUCTOR_CC __at_thread_exit(void*);
+
+public:
+    typedef _Tp* pointer;
+
+    ~__thread_specific_ptr();
+
+    _LIBCPP_INLINE_VISIBILITY
+    pointer get() const {return static_cast<_Tp*>(__libcpp_tls_get(__key_));}
+    _LIBCPP_INLINE_VISIBILITY
+    pointer operator*() const {return *get();}
+    _LIBCPP_INLINE_VISIBILITY
+    pointer operator->() const {return get();}
+    void set_pointer(pointer __p);
+};
+
+template <class _Tp>
+void _LIBCPP_TLS_DESTRUCTOR_CC
+__thread_specific_ptr<_Tp>::__at_thread_exit(void* __p)
+{
+    delete static_cast<pointer>(__p);
+}
+
+template <class _Tp>
+__thread_specific_ptr<_Tp>::__thread_specific_ptr()
+{
+  int __ec =
+      __libcpp_tls_create(&__key_, &__thread_specific_ptr::__at_thread_exit);
+  if (__ec)
+    __throw_system_error(__ec, "__thread_specific_ptr construction failed");
+}
+
+template <class _Tp>
+__thread_specific_ptr<_Tp>::~__thread_specific_ptr()
+{
+    // __thread_specific_ptr is only created with a static storage duration
+    // so this destructor is only invoked during program termination. Invoking
+    // pthread_key_delete(__key_) may prevent other threads from deleting their
+    // thread local data. For this reason we leak the key.
+}
+
+template <class _Tp>
+void
+__thread_specific_ptr<_Tp>::set_pointer(pointer __p)
+{
+    _LIBCPP_ASSERT_UNCATEGORIZED(get() == nullptr,
+                   "Attempting to overwrite thread local data");
+    std::__libcpp_tls_set(__key_, __p);
+}
+
+template<>
+struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>
+    : public __unary_function<__thread_id, size_t>
+{
+    _LIBCPP_INLINE_VISIBILITY
+    size_t operator()(__thread_id __v) const _NOEXCEPT
+    {
+        return hash<__libcpp_thread_id>()(__v.__id_);
+    }
+};
+
+#ifndef _LIBCPP_HAS_NO_LOCALIZATION
+template <class _CharT, class _Traits>
+_LIBCPP_INLINE_VISIBILITY basic_ostream<_CharT, _Traits>&
+operator<<(basic_ostream<_CharT, _Traits>& __os, __thread_id __id) {
+    // [thread.thread.id]/9
+    //   Effects: Inserts the text representation for charT of id into out.
+    //
+    // [thread.thread.id]/2
+    //   The text representation for the character type charT of an
+    //   object of type thread::id is an unspecified sequence of charT
+    //   such that, for two objects of type thread::id x and y, if
+    //   x == y is true, the thread::id objects have the same text
+    //   representation, and if x != y is true, the thread::id objects
+    //   have distinct text representations.
+    //
+    // Since various flags in the output stream can affect how the
+    // thread id is represented (e.g. numpunct or showbase), we
+    // use a temporary stream instead and just output the thread
+    // id representation as a string.
+
+    basic_ostringstream<_CharT, _Traits> __sstr;
+    __sstr.imbue(locale::classic());
+    __sstr << __id.__id_;
+    return __os << __sstr.str();
+}
+#endif // _LIBCPP_HAS_NO_LOCALIZATION
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 class _LIBCPP_EXPORTED_FROM_ABI thread
 {

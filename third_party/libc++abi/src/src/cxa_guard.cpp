@@ -48,6 +48,10 @@ _LIBCXXABI_FUNC_VIS void __cxa_guard_abort(guard_type *raw_guard_object) {
   SelectedImplementation imp(raw_guard_object);
   imp.cxa_guard_abort();
 }
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 }  // __cxxabiv1

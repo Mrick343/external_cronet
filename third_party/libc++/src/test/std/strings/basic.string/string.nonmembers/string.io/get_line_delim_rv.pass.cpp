@@ -20,6 +20,7 @@
 #include "test_macros.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
     {
@@ -47,6 +48,30 @@ int main(int, char**)
         std::getline(std::wistringstream(L" abc*  def*   ghij"), s, L'*');
         assert(s == L" abc");
     }
+=======
+template <template <class> class Alloc>
+void test() {
+  {
+    using S = std::basic_string<char, std::char_traits<char>, Alloc<char> >;
+    S s("initial text");
+    std::getline(std::istringstream(" abc*  def*   ghij"), s, '*');
+    assert(s == " abc");
+  }
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  {
+    using WS = std::basic_string<wchar_t, std::char_traits<wchar_t>, Alloc<wchar_t> >;
+    WS s(L"initial text");
+    std::getline(std::wistringstream(L" abc*  def*   ghij"), s, L'*');
+    assert(s == L" abc");
+  }
+#endif
+}
+
+int main(int, char**) {
+  test<std::allocator>();
+#if TEST_STD_VER >= 11
+  test<min_allocator>();
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

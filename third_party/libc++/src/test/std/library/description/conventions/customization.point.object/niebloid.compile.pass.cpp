@@ -71,7 +71,13 @@ static_assert(test(std::ranges::copy_if, a, a, odd));
 static_assert(test(std::ranges::copy_n, a, 10, a));
 static_assert(test(std::ranges::count, a, 42));
 static_assert(test(std::ranges::count_if, a, odd));
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 //static_assert(test(std::ranges::ends_with, a, a));
+=======
+#if TEST_STD_VER >= 23
+static_assert(test(std::ranges::ends_with, a, a));
+#endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 static_assert(test(std::ranges::equal, a, a));
 static_assert(test(std::ranges::equal_range, a, 42));
 static_assert(test(std::ranges::fill, a, 42));

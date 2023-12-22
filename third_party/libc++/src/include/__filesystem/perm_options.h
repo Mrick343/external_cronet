@@ -21,7 +21,11 @@
 
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 enum class _LIBCPP_ENUM_VIS perm_options : unsigned char {
+=======
+enum class perm_options : unsigned char {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   replace = 1,
   add = 2,
   remove = 4,

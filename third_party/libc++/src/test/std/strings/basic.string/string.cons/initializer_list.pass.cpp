@@ -19,6 +19,7 @@
 #include "test_allocator.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 bool test() {
   {
     std::string s = {'a', 'b', 'c'};
@@ -50,6 +51,32 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+// clang-format off
+template <template <class> class Alloc>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  {
+    std::basic_string<char, std::char_traits<char>, Alloc<char> > s = {'a', 'b', 'c'};
+    assert(s == "abc");
+  }
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  {
+    std::basic_string<wchar_t, std::char_traits<wchar_t>, Alloc<wchar_t> > s = {L'a', L'b', L'c'};
+    assert(s == L"abc");
+  }
+#endif
+}
+// clang-format on
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::allocator>();
+  test_string<min_allocator>();
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

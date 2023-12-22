@@ -282,6 +282,7 @@ test()
     assert(array[9] == P(0, 2));
   }
 #if TEST_STD_VER >= 11 && !defined(TEST_HAS_NO_EXCEPTIONS)
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   { // check that the algorithm still works when no memory is available
     std::vector<int> vec(150, 3);
     vec[5]                             = 6;
@@ -297,6 +298,27 @@ test()
     assert(std::is_partitioned(vec.begin(), vec.end(), [](int i) { return i < 5; }));
     getGlobalMemCounter()->reset();
   }
+=======
+  // TODO: Re-enable this test once we're no longer using get_temporary_buffer().
+  // For now it trips up GCC due to the use of always_inline.
+#if 0
+  { // check that the algorithm still works when no memory is available
+    std::vector<int> vec(150, 3);
+    vec[5]                             = 6;
+    getGlobalMemCounter()->throw_after = 0;
+    std::stable_partition(vec.begin(), vec.end(), [](int i) { return i < 5; });
+    assert(std::is_partitioned(vec.begin(), vec.end(), [](int i) { return i < 5; }));
+    vec[5]                             = 6;
+    getGlobalMemCounter()->throw_after = 0;
+    std::stable_partition(
+        forward_iterator<int*>(vec.data()), forward_iterator<int*>(vec.data() + vec.size()), [](int i) {
+          return i < 5;
+        });
+    assert(std::is_partitioned(vec.begin(), vec.end(), [](int i) { return i < 5; }));
+    getGlobalMemCounter()->reset();
+  }
+#endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif // TEST_STD_VER >= 11 && !defined(TEST_HAS_NO_EXCEPTIONS)
 }
 

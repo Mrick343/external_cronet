@@ -17,6 +17,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 bool test()
 {
     char32_t s1[] = {1, 2, 3};
@@ -37,6 +38,26 @@ int main(int, char**)
 
 #if TEST_STD_VER > 17
     static_assert(test());
+=======
+TEST_CONSTEXPR_CXX20 bool test() {
+  char32_t s1[]  = {1, 2, 3};
+  char32_t s2[3] = {0};
+  assert(std::char_traits<char32_t>::copy(s2, s1, 3) == s2);
+  assert(s2[0] == char32_t(1));
+  assert(s2[1] == char32_t(2));
+  assert(s2[2] == char32_t(3));
+  assert(std::char_traits<char32_t>::copy(NULL, s1, 0) == NULL);
+  assert(std::char_traits<char32_t>::copy(s1, NULL, 0) == s1);
+
+  return true;
+}
+
+int main(int, char**) {
+  test();
+
+#if TEST_STD_VER > 17
+  static_assert(test());
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

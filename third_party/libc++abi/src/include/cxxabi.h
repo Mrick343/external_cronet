@@ -47,7 +47,16 @@ __cxa_free_exception(void *thrown_exception) throw();
 // 2.4.3 Throwing the Exception Object
 extern _LIBCXXABI_FUNC_VIS _LIBCXXABI_NORETURN void
 __cxa_throw(void *thrown_exception, std::type_info *tinfo,
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
             void (_LIBCXXABI_DTOR_FUNC *dest)(void *));
+=======
+#ifdef __USING_WASM_EXCEPTIONS__
+            // In Wasm, a destructor returns its argument
+            void *(_LIBCXXABI_DTOR_FUNC *dest)(void *));
+#else
+            void (_LIBCXXABI_DTOR_FUNC *dest)(void *));
+#endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // 2.5.3 Exception Handlers
 extern _LIBCXXABI_FUNC_VIS void *

@@ -17,6 +17,7 @@
 // path lexically_proximate(const path& p) const;
 
 #include "filesystem_include.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <cstdio>
 #include <string>
 
@@ -89,4 +90,84 @@ int main(int, char**) {
       ReportErr("path::lexically_proximate", proximate_output, proximate_expect);
   }
   return Failed;
+=======
+#include <string>
+
+#include "../../path_helper.h"
+#include "assert_macros.h"
+#include "concat_macros.h"
+#include "count_new.h"
+#include "test_macros.h"
+
+int main(int, char**) {
+  // clang-format off
+  struct {
+    std::string input;
+    std::string base;
+    std::string expect;
+  } TestCases[] = {
+      {"", "", "."},
+      {"/", "a", ""},
+      {"a", "/", ""},
+      {"//net", "a", ""},
+      {"a", "//net", ""},
+#ifdef _WIN32
+      {"//net/", "//net", ""},
+      {"//net", "//net/", ""},
+#else
+      {"//net/", "//net", "."},
+      {"//net", "//net/", "."},
+#endif
+      {"//base", "a", ""},
+      {"a", "a", "."},
+      {"a/b", "a/b", "."},
+      {"a/b/c/", "a/b/c/", "."},
+      {"//net", "//net", "."},
+      {"//net/", "//net/", "."},
+      {"//net/a/b", "//net/a/b", "."},
+      {"/a/d", "/a/b/c", "../../d"},
+      {"/a/b/c", "/a/d", "../b/c"},
+      {"a/b/c", "a", "b/c"},
+      {"a/b/c", "a/b/c/x/y", "../.."},
+      {"a/b/c", "a/b/c", "."},
+      {"a/b", "c/d", "../../a/b"}
+  };
+  // clang-format on
+  for (auto& TC : TestCases) {
+    const fs::path p(TC.input);
+    const fs::path output = p.lexically_relative(TC.base);
+    fs::path expect(TC.expect);
+    expect.make_preferred();
+
+    // clang-format off
+    TEST_REQUIRE(
+        PathEq(output, expect),
+        TEST_WRITE_CONCATENATED(
+            "path::lexically_relative test case failed",
+            "\nInput: ", TC.input,
+            "\nBase: ", TC.base,
+            "\nExpected: ", expect,
+            "\nOutput: ", output));
+    // clang-format on
+
+    const fs::path proximate_output = p.lexically_proximate(TC.base);
+    // [path.gen] lexically_proximate
+    // Returns: If the value of lexically_relative(base) is not an empty path,
+    // return it. Otherwise return *this.
+    const fs::path proximate_expect = expect.empty() ? p : expect;
+
+    // clang-format off
+    TEST_REQUIRE(
+        PathEq(proximate_output, proximate_expect),
+        TEST_WRITE_CONCATENATED(
+            "path::lexically_proximate test case failed",
+            "\nInput: ", TC.input,
+            "\nBase: ", TC.base,
+            "\nExpected: ", proximate_expect,
+            "\nOutput: ", proximate_output));
+    // clang-format on
+  }
+
+  return 0;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 }

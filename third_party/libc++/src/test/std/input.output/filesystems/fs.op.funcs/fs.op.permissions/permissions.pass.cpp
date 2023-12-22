@@ -10,6 +10,14 @@
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// Android's fchmodat seems broken on various OS versions -- see D140183. This
+// test probably passes on new-enough phones (not the emulator).
+// XFAIL: LIBCXX-ANDROID-FIXME && target={{i686|x86_64}}-{{.+}}-android{{.*}}
+// XFAIL: LIBCXX-ANDROID-FIXME && android-device-api={{21|22}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // void permissions(const path& p, perms prms,

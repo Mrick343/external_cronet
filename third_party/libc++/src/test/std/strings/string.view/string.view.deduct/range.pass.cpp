@@ -19,6 +19,7 @@
 #include "test_iterators.h"
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template<class CharT>
 void test() {
   auto val = MAKE_STRING(CharT, "test");
@@ -53,3 +54,38 @@ int main(int, char**) {
   return 0;
 }
 
+=======
+template <class CharT>
+void test() {
+  auto val = MAKE_STRING(CharT, "test");
+  auto sv  = std::basic_string_view(val);
+  ASSERT_SAME_TYPE(decltype(sv), std::basic_string_view<CharT>);
+  assert(sv.size() == val.size());
+  assert(sv.data() == val.data());
+}
+
+void test() {
+  test<char>();
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  test<wchar_t>();
+#endif
+  test<char8_t>();
+  test<char16_t>();
+  test<char32_t>();
+  test<char>();
+
+  struct Widget {
+    const char16_t* data_ = u"foo";
+    contiguous_iterator<const char16_t*> begin() const { return contiguous_iterator<const char16_t*>(data_); }
+    contiguous_iterator<const char16_t*> end() const { return contiguous_iterator<const char16_t*>(data_ + 3); }
+  };
+  std::basic_string_view bsv = std::basic_string_view(Widget());
+  ASSERT_SAME_TYPE(decltype(bsv), std::basic_string_view<char16_t>);
+}
+
+int main(int, char**) {
+  test();
+
+  return 0;
+}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

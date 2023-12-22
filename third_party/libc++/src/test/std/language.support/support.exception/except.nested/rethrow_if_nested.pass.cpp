@@ -28,6 +28,11 @@ class A
     int data_;
 public:
     explicit A(int data) : data_(data) {}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+    A(const A&) = default;
+    A& operator=(const A&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     virtual ~A() TEST_NOEXCEPT {}
 
     friend bool operator==(const A& x, const A& y) {return x.data_ == y.data_;}

@@ -39,9 +39,15 @@ long long __convert_to_integral(long long __val) { return __val; }
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
 unsigned long long __convert_to_integral(unsigned long long __val) {return __val; }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template<typename _Fp>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
 typename enable_if<is_floating_point<_Fp>::value, long long>::type
+=======
+template<typename _Fp, __enable_if_t<is_floating_point<_Fp>::value, int> = 0>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+long long
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
  __convert_to_integral(_Fp __val) { return __val; }
 
 #ifndef _LIBCPP_HAS_NO_INT128

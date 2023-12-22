@@ -170,5 +170,17 @@ int main(int, char**)
         static_assert( *o2 == 4, "" );
     }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+    // LWG3836 https://wg21.link/LWG3836
+    // std::optional<bool> conversion constructor optional(const optional<U>&)
+    // should take precedence over optional(U&&) with operator bool
+    {
+        std::optional<bool> o1(false);
+        std::optional<bool> o2(o1);
+        assert(!o2.value());
+    }
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   return 0;
 }

@@ -673,7 +673,11 @@ using __enable_hash_helper_imp _LIBCPP_NODEBUG = _Type;
 
 template <class _Type, class ..._Keys>
 using __enable_hash_helper _LIBCPP_NODEBUG = __enable_hash_helper_imp<_Type,
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   typename enable_if<__all<__has_enabled_hash<_Keys>::value...>::value>::type
+=======
+  __enable_if_t<__all<__has_enabled_hash<_Keys>::value...>::value>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 >;
 #else
 template <class _Type, class ...>

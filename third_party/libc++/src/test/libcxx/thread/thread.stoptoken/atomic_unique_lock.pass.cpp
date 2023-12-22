@@ -11,7 +11,10 @@
 // XFAIL: availability-synchronization_library-missing
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <__stop_token/atomic_unique_lock.h>
 #include <atomic>

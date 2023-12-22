@@ -46,4 +46,11 @@ namespace std {
 #  error "<stop_token> is not supported since libc++ has been configured without support for threads."
 #endif
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+#if !defined(_LIBCPP_REMOVE_TRANSITIVE_INCLUDES) && _LIBCPP_STD_VER <= 20
+#  include <iosfwd>
+#endif
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif // _LIBCPP_STOP_TOKEN

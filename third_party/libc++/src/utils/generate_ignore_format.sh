@@ -12,7 +12,11 @@ rm libcxx/utils/data/ignore_format.txt
 # Since it's hard to match empty extensions the following
 # method is used, remove all files with an extension, then
 # add the list of extensions that should be formatted.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 for file in $(find libcxx/{benchmarks,include,src} -type f -not -name '*.*' -or \( \
+=======
+for file in $(find libcxx -type f -not -name '*.*' -or \( \
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 	 -name "*.h" -or -name "*.hpp" -or \
 	 -name "*.c" -or -name "*.cpp" -or \
 	 -name "*.inc" -or -name "*.ipp" \

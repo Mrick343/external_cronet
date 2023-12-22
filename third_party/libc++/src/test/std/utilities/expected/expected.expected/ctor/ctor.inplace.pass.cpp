@@ -26,6 +26,7 @@
 
 #include "MoveOnly.h"
 #include "test_macros.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 // Test Constraints:
 static_assert(std::is_constructible_v<std::expected<int, int>, std::in_place_t>);
@@ -113,6 +114,97 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+// Test Constraints:
+static_assert(std::is_constructible_v<std::expected<int, int>, std::in_place_t>);
+static_assert(std::is_constructible_v<std::expected<int, int>, std::in_place_t, int>);
+
+// !is_constructible_v<T, Args...>
+struct foo {};
+static_assert(!std::is_constructible_v<std::expected<foo, int>, std::in_place_t, int>);
+
+// test explicit
+template <class T>
+void conversion_test(T);
+
+template <class T, class... Args>
+concept ImplicitlyConstructible = requires(Args&&... args) { conversion_test<T>({std::forward<Args>(args)...}); };
+static_assert(ImplicitlyConstructible<int, int>);
+
+static_assert(!ImplicitlyConstructible<std::expected<int, int>, std::in_place_t>);
+static_assert(!ImplicitlyConstructible<std::expected<int, int>, std::in_place_t, int>);
+
+struct CopyOnly {
+  int i;
+  constexpr CopyOnly(int ii) : i(ii) {}
+  CopyOnly(const CopyOnly&) = default;
+  CopyOnly(CopyOnly&&)      = delete;
+  friend constexpr bool operator==(const CopyOnly& mi, int ii) { return mi.i == ii; }
+};
+
+template <class T, class E = int>
+constexpr void testInt() {
+  std::expected<T, E> e(std::in_place, 5);
+  assert(e.has_value());
+  assert(e.value() == 5);
+}
+
+template <class T, class E = int>
+constexpr void testLValue() {
+  T t(5);
+  std::expected<T, E> e(std::in_place, t);
+  assert(e.has_value());
+  assert(e.value() == 5);
+}
+
+template <class T, class E = int>
+constexpr void testRValue() {
+  std::expected<T, E> e(std::in_place, T(5));
+  assert(e.has_value());
+  assert(e.value() == 5);
+}
+
+constexpr bool test() {
+  testInt<int>();
+  testInt<CopyOnly>();
+  testInt<MoveOnly>();
+  testInt<TailClobberer<0>, bool>();
+  testLValue<int>();
+  testLValue<CopyOnly>();
+  testLValue<TailClobberer<0>, bool>();
+  testRValue<int>();
+  testRValue<MoveOnly>();
+  testRValue<TailClobberer<0>, bool>();
+
+  // no arg
+  {
+    std::expected<int, int> e(std::in_place);
+    assert(e.has_value());
+    assert(e.value() == 0);
+  }
+
+  // one arg
+  {
+    std::expected<int, int> e(std::in_place, 5);
+    assert(e.has_value());
+    assert(e.value() == 5);
+  }
+
+  // multi args
+  {
+    std::expected<std::tuple<int, short, MoveOnly>, int> e(std::in_place, 1, short{2}, MoveOnly(3));
+    assert(e.has_value());
+    assert((e.value() == std::tuple<int, short, MoveOnly>(1, short{2}, MoveOnly(3))));
+  }
+
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing(int) { throw Except{}; };
   };

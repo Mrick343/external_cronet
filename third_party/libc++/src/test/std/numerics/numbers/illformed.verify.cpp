@@ -11,7 +11,11 @@
 #include <numbers>
 
 // Initializing the primary template is ill-formed.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int log2e{std::numbers::log2e_v<int>}; // expected-error-re@numbers:* {{{{(static_assert|static assertion)}} failed{{.*}}A program that instantiates a primary template of a mathematical constant variable template is ill-formed.}}
+=======
+int log2e{std::numbers::log2e_v<int>}; // expected-error-re@numbers:* {{static assertion failed{{.*}}A program that instantiates a primary template of a mathematical constant variable template is ill-formed.}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 int log10e{std::numbers::log10e_v<int>};
 int pi{std::numbers::pi_v<int>};
 int inv_pi{std::numbers::inv_pi_v<int>};

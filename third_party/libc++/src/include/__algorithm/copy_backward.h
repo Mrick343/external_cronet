@@ -80,7 +80,11 @@ struct __copy_backward_loop {
                               !__is_segmented_iterator<_InIter>::value && __is_segmented_iterator<_OutIter>::value,
                           int> = 0>
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   operator()(_InIter __first, _InIter __last, _OutIter __result) {
+=======
+  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     using _Traits           = __segmented_iterator_traits<_OutIter>;
     auto __orig_last        = __last;
     auto __segment_iterator = _Traits::__segment(__result);

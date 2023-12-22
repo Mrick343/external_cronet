@@ -16,9 +16,15 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 using iterator = std::string_view::iterator;
 using const_iterator = std::string_view::const_iterator;
 using reverse_iterator = std::string_view::reverse_iterator;
+=======
+using iterator               = std::string_view::iterator;
+using const_iterator         = std::string_view::const_iterator;
+using reverse_iterator       = std::string_view::reverse_iterator;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 using const_reverse_iterator = std::string_view::const_reverse_iterator;
 
 static_assert(std::contiguous_iterator<iterator>);

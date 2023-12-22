@@ -18,6 +18,11 @@
 
 struct exception {
     exception() : x(0) { }
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+    exception(const exception&) = default;
+    exception& operator=(const exception&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     virtual ~exception() { }
     int x;
 };

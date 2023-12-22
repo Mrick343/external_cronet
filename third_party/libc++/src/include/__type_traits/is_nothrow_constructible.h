@@ -22,7 +22,12 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #if __has_builtin(__is_nothrow_constructible)
+=======
+// GCC is disabled due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106611
+#if __has_builtin(__is_nothrow_constructible) && !defined(_LIBCPP_COMPILER_GCC)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 template < class _Tp, class... _Args>
 struct _LIBCPP_TEMPLATE_VIS is_nothrow_constructible

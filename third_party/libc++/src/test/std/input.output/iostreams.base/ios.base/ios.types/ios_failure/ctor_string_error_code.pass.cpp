@@ -12,10 +12,18 @@
 
 // explicit failure(const string& msg, const error_code& ec = io_errc::stream);
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <ios>
 #include <string>
 #include <system_error>
 #include <cassert>
+=======
+#include <cassert>
+#include <ios>
+#include <string>
+#include <system_error>
+#include <type_traits>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 

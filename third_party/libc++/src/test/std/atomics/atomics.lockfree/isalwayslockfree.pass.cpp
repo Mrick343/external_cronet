@@ -21,6 +21,7 @@
 template <typename T>
 void checkAlwaysLockFree() {
   if (std::atomic<T>::is_always_lock_free) {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     LIBCPP_ASSERT(sizeof(std::atomic<T>) == sizeof(T)); // technically not required, but libc++ does it that way
     assert(std::atomic<T>().is_lock_free());
   }
@@ -79,6 +80,66 @@ void run()
     CHECK_ALWAYS_LOCK_FREE(struct Empty {});
     CHECK_ALWAYS_LOCK_FREE(struct OneInt { int i; });
     CHECK_ALWAYS_LOCK_FREE(struct IntArr2 { int i[2]; });
+=======
+    assert(std::atomic<T>().is_lock_free());
+  }
+}
+
+void run()
+{
+// structs and unions can't be defined in the template invocation.
+// Work around this with a typedef.
+#define CHECK_ALWAYS_LOCK_FREE(T)                                              \
+  do {                                                                         \
+    typedef T type;                                                            \
+    checkAlwaysLockFree<type>();                                               \
+  } while (0)
+
+    CHECK_ALWAYS_LOCK_FREE(bool);
+    CHECK_ALWAYS_LOCK_FREE(char);
+    CHECK_ALWAYS_LOCK_FREE(signed char);
+    CHECK_ALWAYS_LOCK_FREE(unsigned char);
+#if TEST_STD_VER > 17 && defined(__cpp_char8_t)
+    CHECK_ALWAYS_LOCK_FREE(char8_t);
+#endif
+    CHECK_ALWAYS_LOCK_FREE(char16_t);
+    CHECK_ALWAYS_LOCK_FREE(char32_t);
+    CHECK_ALWAYS_LOCK_FREE(wchar_t);
+    CHECK_ALWAYS_LOCK_FREE(short);
+    CHECK_ALWAYS_LOCK_FREE(unsigned short);
+    CHECK_ALWAYS_LOCK_FREE(int);
+    CHECK_ALWAYS_LOCK_FREE(unsigned int);
+    CHECK_ALWAYS_LOCK_FREE(long);
+    CHECK_ALWAYS_LOCK_FREE(unsigned long);
+    CHECK_ALWAYS_LOCK_FREE(long long);
+    CHECK_ALWAYS_LOCK_FREE(unsigned long long);
+    CHECK_ALWAYS_LOCK_FREE(std::nullptr_t);
+    CHECK_ALWAYS_LOCK_FREE(void*);
+    CHECK_ALWAYS_LOCK_FREE(float);
+    CHECK_ALWAYS_LOCK_FREE(double);
+    CHECK_ALWAYS_LOCK_FREE(long double);
+#if __has_attribute(vector_size) && defined(_LIBCPP_VERSION)
+    CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(1 * sizeof(int)))));
+    CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(2 * sizeof(int)))));
+    CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(4 * sizeof(int)))));
+    CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(16 * sizeof(int)))));
+    CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(32 * sizeof(int)))));
+    CHECK_ALWAYS_LOCK_FREE(float __attribute__((vector_size(1 * sizeof(float)))));
+    CHECK_ALWAYS_LOCK_FREE(float __attribute__((vector_size(2 * sizeof(float)))));
+    CHECK_ALWAYS_LOCK_FREE(float __attribute__((vector_size(4 * sizeof(float)))));
+    CHECK_ALWAYS_LOCK_FREE(float __attribute__((vector_size(16 * sizeof(float)))));
+    CHECK_ALWAYS_LOCK_FREE(float __attribute__((vector_size(32 * sizeof(float)))));
+    CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(1 * sizeof(double)))));
+    CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(2 * sizeof(double)))));
+    CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(4 * sizeof(double)))));
+    CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(16 * sizeof(double)))));
+    CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(32 * sizeof(double)))));
+#endif // __has_attribute(vector_size) && defined(_LIBCPP_VERSION)
+    CHECK_ALWAYS_LOCK_FREE(struct Empty {});
+    CHECK_ALWAYS_LOCK_FREE(struct OneInt { int i; });
+    CHECK_ALWAYS_LOCK_FREE(struct IntArr2 { int i[2]; });
+    CHECK_ALWAYS_LOCK_FREE(struct FloatArr3 { float i[3]; });
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     CHECK_ALWAYS_LOCK_FREE(struct LLIArr2 { long long int i[2]; });
     CHECK_ALWAYS_LOCK_FREE(struct LLIArr4 { long long int i[4]; });
     CHECK_ALWAYS_LOCK_FREE(struct LLIArr8 { long long int i[8]; });

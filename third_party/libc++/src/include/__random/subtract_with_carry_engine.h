@@ -101,6 +101,7 @@ public:
       seed(__sd);
     }
 #endif
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     template<class _Sseq>
         _LIBCPP_INLINE_VISIBILITY
         explicit subtract_with_carry_engine(_Sseq& __q,
@@ -116,6 +117,18 @@ public:
             __is_seed_sequence<_Sseq, subtract_with_carry_engine>::value,
             void
         >::type
+=======
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, subtract_with_carry_engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        explicit subtract_with_carry_engine(_Sseq& __q)
+        {seed(__q);}
+    _LIBCPP_INLINE_VISIBILITY
+    void seed(result_type __sd = default_seed)
+        {seed(__sd, integral_constant<unsigned, 1 + (__w - 1) / 32>());}
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, subtract_with_carry_engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        void
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
         seed(_Sseq& __q)
             {__seed(__q, integral_constant<unsigned, 1 + (__w - 1) / 32>());}
 

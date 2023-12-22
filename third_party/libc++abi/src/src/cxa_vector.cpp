@@ -416,6 +416,10 @@ __cxa_vec_delete3(void *array_address, size_t element_size, size_t padding_size,
 }
 
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 }  // abi

@@ -25,9 +25,15 @@
 // (2)  basic_string_view(const basic_string_view&)
 // (3)  basic_string_view(const CharT*, size_type)
 // (4)  basic_string_view(const CharT*)
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
   { // Testing (1)
+=======
+int main(int, char**) {
+  {
+    // Testing (1)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     // Nothing to do. Cannot deduce without any arguments.
   }
   { // Testing (2)

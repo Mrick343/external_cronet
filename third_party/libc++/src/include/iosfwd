@@ -121,7 +121,13 @@ template <class _CharT, class _Traits = char_traits<_CharT> >
 
 template <class _State>             class _LIBCPP_TEMPLATE_VIS fpos;
 typedef fpos<mbstate_t>    streampos;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 typedef fpos<mbstate_t>    wstreampos;
+=======
+#ifndef _LIBCPP_HAS_NO_WIDE_CHARACTERS
+typedef fpos<mbstate_t>    wstreampos;
+#endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
 typedef fpos<mbstate_t>    u8streampos;
 #endif

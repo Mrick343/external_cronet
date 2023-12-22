@@ -10,7 +10,11 @@
 // Make sure that std::span's iterators check for OOB accesses when the debug mode is enabled.
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: !libcpp-has-debug-mode
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <span>
 

@@ -45,7 +45,11 @@ Paper Status
       clang doesn't issue a diagnostic for deprecated using template declarations.
    .. [#note-P2520R0] P2520R0: Libc++ implemented this paper as a DR in C++20 as well.
    .. [#note-P2711R1] P2711R1: ``join_with_view`` hasn't been done yet since this type isn't implemented yet.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
    .. [#note-P2693R1] P1413R3: The formatter for ``std::thread::id`` is implemented.
+=======
+   .. [#note-P2693R1] P2693R1: The formatter for ``std::thread::id`` is implemented.
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
       The formatter for ``stacktrace`` is not implemented, since ``stacktrace`` is
       not implemented yet.
 

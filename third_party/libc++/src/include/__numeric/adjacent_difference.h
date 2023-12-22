@@ -18,6 +18,7 @@
 #  pragma GCC system_header
 #endif
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _InputIterator, class _OutputIterator>
@@ -68,5 +69,62 @@ adjacent_difference(_InputIterator __first, _InputIterator __last, _OutputIterat
 }
 
 _LIBCPP_END_NAMESPACE_STD
+=======
+_LIBCPP_PUSH_MACROS
+#include <__undef_macros>
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _InputIterator, class _OutputIterator>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_OutputIterator
+adjacent_difference(_InputIterator __first, _InputIterator __last, _OutputIterator __result)
+{
+    if (__first != __last)
+    {
+        typename iterator_traits<_InputIterator>::value_type __acc(*__first);
+        *__result = __acc;
+        for (++__first, (void) ++__result; __first != __last; ++__first, (void) ++__result)
+        {
+            typename iterator_traits<_InputIterator>::value_type __val(*__first);
+#if _LIBCPP_STD_VER >= 20
+            *__result = __val - _VSTD::move(__acc);
+#else
+            *__result = __val - __acc;
+#endif
+            __acc = _VSTD::move(__val);
+        }
+    }
+    return __result;
+}
+
+template <class _InputIterator, class _OutputIterator, class _BinaryOperation>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_OutputIterator
+adjacent_difference(_InputIterator __first, _InputIterator __last, _OutputIterator __result,
+                      _BinaryOperation __binary_op)
+{
+    if (__first != __last)
+    {
+        typename iterator_traits<_InputIterator>::value_type __acc(*__first);
+        *__result = __acc;
+        for (++__first, (void) ++__result; __first != __last; ++__first, (void) ++__result)
+        {
+            typename iterator_traits<_InputIterator>::value_type __val(*__first);
+#if _LIBCPP_STD_VER >= 20
+            *__result = __binary_op(__val, _VSTD::move(__acc));
+#else
+            *__result = __binary_op(__val, __acc);
+#endif
+            __acc = _VSTD::move(__val);
+        }
+    }
+    return __result;
+}
+
+_LIBCPP_END_NAMESPACE_STD
+
+_LIBCPP_POP_MACROS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #endif // _LIBCPP___NUMERIC_ADJACENT_DIFFERENCE_H

@@ -61,7 +61,11 @@ static_assert( test_convertible<std::ranges::split_view<View, Pattern>, View, Pa
 constexpr bool test() {
   {
     std::string_view input = "abc def";
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     std::ranges::lazy_split_view<std::string_view, std::string_view> v(input, " ");
+=======
+    std::ranges::split_view<std::string_view, std::string_view> v(input, " ");
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     assert(v.base() == input);
     assert(std::ranges::equal(*v.begin(), std::string_view{"abc"}));
   }

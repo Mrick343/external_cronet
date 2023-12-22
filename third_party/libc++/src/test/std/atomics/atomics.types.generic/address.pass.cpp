@@ -80,8 +80,19 @@ do_test()
     typedef typename std::remove_pointer<T>::type X;
     A obj(T(0));
     assert(obj == T(0));
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     bool b0 = obj.is_lock_free();
     ((void)b0); // mark as unused
+=======
+    {
+        bool lockfree = obj.is_lock_free();
+        (void)lockfree;
+#if TEST_STD_VER >= 17
+        if (A::is_always_lock_free)
+            assert(lockfree);
+#endif
+    }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     obj.store(T(0));
     assert(obj == T(0));
     obj.store(T(1), std::memory_order_release);

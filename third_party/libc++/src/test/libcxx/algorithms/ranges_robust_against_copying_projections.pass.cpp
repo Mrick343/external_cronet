@@ -86,8 +86,14 @@ constexpr bool all_the_algorithms()
     (void)std::ranges::count_if(a, UnaryTrue(), Proj(&copies)); assert(copies == 0);
     (void)std::ranges::copy_if(first, last, first2, UnaryTrue(), Proj(&copies)); assert(copies == 0);
     (void)std::ranges::copy_if(a, first2, UnaryTrue(), Proj(&copies)); assert(copies == 0);
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #if TEST_STD_VER > 20
     //(void)std::ranges::ends_with(first, last, first2, last2, Equal(), Proj(&copies), Proj(&copies)); assert(copies == 0);
+=======
+#if TEST_STD_VER >= 23
+    (void)std::ranges::ends_with(first, last, first2, last2, Equal(), Proj(&copies), Proj(&copies)); assert(copies == 0);
+    (void)std::ranges::ends_with(a, b, Equal(), Proj(&copies), Proj(&copies)); assert(copies == 0);
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
     (void)std::ranges::equal(first, last, first2, last2, Equal(), Proj(&copies), Proj(&copies)); assert(copies == 0);
     (void)std::ranges::equal(a, b, Equal(), Proj(&copies), Proj(&copies)); assert(copies == 0);

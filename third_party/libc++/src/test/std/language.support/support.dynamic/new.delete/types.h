@@ -22,6 +22,7 @@ struct TrackLifetime {
     TrackLifetime(LifetimeInformation& info) : info_(&info) {
         info_->address_constructed = this;
     }
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     ~TrackLifetime() {
         info_->address_destroyed = this;
     }
@@ -43,6 +44,31 @@ struct alignas(std::max_align_t) TrackLifetimeMaxAligned {
     TrackLifetimeMaxAligned(LifetimeInformation& info) : info_(&info) {
         info_->address_constructed = this;
     }
+=======
+    TrackLifetime(TrackLifetime const&) = default;
+    ~TrackLifetime() {
+        info_->address_destroyed = this;
+    }
+    LifetimeInformation* info_;
+};
+
+#if TEST_STD_VER >= 17
+struct alignas(__STDCPP_DEFAULT_NEW_ALIGNMENT__ * 2) TrackLifetimeOverAligned {
+    TrackLifetimeOverAligned(LifetimeInformation& info) : info_(&info) {
+        info_->address_constructed = this;
+    }
+    ~TrackLifetimeOverAligned() {
+        info_->address_destroyed = this;
+    }
+    LifetimeInformation* info_;
+};
+
+struct alignas(std::max_align_t) TrackLifetimeMaxAligned {
+    TrackLifetimeMaxAligned(LifetimeInformation& info) : info_(&info) {
+        info_->address_constructed = this;
+    }
+    TrackLifetimeMaxAligned(TrackLifetimeMaxAligned const&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     ~TrackLifetimeMaxAligned() {
         info_->address_destroyed = this;
     }

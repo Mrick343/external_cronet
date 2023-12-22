@@ -42,9 +42,14 @@ def main():
     # Do any necessary codesigning of test-executables found in the command line.
     if args.codesign_identity:
         for exe in filter(isTestExe, commandLine):
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
             subprocess.check_call(
                 ["xcrun", "codesign", "-f", "-s", args.codesign_identity, exe], env={}
             )
+=======
+            codesign = ["codesign", "-f", "-s", args.codesign_identity, exe]
+            subprocess.check_call(codesign, env={})
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
     # Extract environment variables into a dictionary
     env = {k: v for (k, v) in map(lambda s: s.split("=", 1), args.env)}

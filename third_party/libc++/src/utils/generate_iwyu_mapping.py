@@ -53,6 +53,7 @@ def generate_map(include):
             continue
         elif i == "__config":
             continue
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
         elif i == "__debug":
             continue
         elif i == "__errc":
@@ -79,6 +80,34 @@ def generate_map(include):
             continue
         elif i == "__split_buffer":
             public = ["deque", "vector"]
+=======
+        elif i == "__errc":
+            continue
+        elif i == "__hash_table":
+            public = ["unordered_map", "unordered_set"]
+        elif i == "__locale":
+            public = ["locale"]
+        elif i == "__mbstate_t.h":
+            continue
+        elif i == "__mutex_base":
+            continue
+        elif i == "__node_handle":
+            public = ["map", "set", "unordered_map", "unordered_set"]
+        elif i == "__pstl_algorithm":
+            continue
+        elif i == "__pstl_config_site.in":
+            continue
+        elif i == "__pstl_execution":
+            continue
+        elif i == "__pstl_memory":
+            continue
+        elif i == "__pstl_numeric":
+            continue
+        elif i == "__split_buffer":
+            public = ["deque", "vector"]
+        elif i == "__std_clang_module":
+            continue
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
         elif i == "__std_mbstate_t.h":
             continue
         elif i == "__threading_support":

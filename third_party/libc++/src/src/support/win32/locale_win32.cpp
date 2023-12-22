@@ -17,8 +17,13 @@ int __libcpp_vasprintf(char **sptr, const char *__restrict fmt, va_list ap);
 
 using std::__libcpp_locale_guard;
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // FIXME: base currently unused. Needs manual work to construct the new locale
 locale_t newlocale( int mask, const char * locale, locale_t /*base*/ )
+=======
+// FIXME: base and mask currently unused. Needs manual work to construct the new locale
+locale_t newlocale(int /*mask*/, const char * locale, locale_t /*base*/)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 {
     return {_create_locale( LC_ALL, locale ), locale};
 }

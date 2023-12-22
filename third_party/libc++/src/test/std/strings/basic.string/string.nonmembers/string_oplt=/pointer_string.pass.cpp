@@ -18,6 +18,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 void
 test(const typename S::value_type* lhs, const S& rhs, bool x)
 {
@@ -71,6 +72,42 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 void test(const typename S::value_type* lhs, const S& rhs, bool x) {
+  assert((lhs <= rhs) == x);
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test("", S(""), true);
+  test("", S("abcde"), true);
+  test("", S("abcdefghij"), true);
+  test("", S("abcdefghijklmnopqrst"), true);
+  test("abcde", S(""), false);
+  test("abcde", S("abcde"), true);
+  test("abcde", S("abcdefghij"), true);
+  test("abcde", S("abcdefghijklmnopqrst"), true);
+  test("abcdefghij", S(""), false);
+  test("abcdefghij", S("abcde"), false);
+  test("abcdefghij", S("abcdefghij"), true);
+  test("abcdefghij", S("abcdefghijklmnopqrst"), true);
+  test("abcdefghijklmnopqrst", S(""), false);
+  test("abcdefghijklmnopqrst", S("abcde"), false);
+  test("abcdefghijklmnopqrst", S("abcdefghij"), false);
+  test("abcdefghijklmnopqrst", S("abcdefghijklmnopqrst"), true);
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

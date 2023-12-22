@@ -20,6 +20,7 @@
 #  pragma GCC system_header
 #endif
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _Tp>
@@ -40,5 +41,32 @@ move_if_noexcept(_LIBCPP_LIFETIMEBOUND _Tp& __x) _NOEXCEPT {
 }
 
 _LIBCPP_END_NAMESPACE_STD
+=======
+_LIBCPP_PUSH_MACROS
+#include <__undef_macros>
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _Tp>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR __libcpp_remove_reference_t<_Tp>&&
+move(_LIBCPP_LIFETIMEBOUND _Tp&& __t) _NOEXCEPT {
+  typedef _LIBCPP_NODEBUG __libcpp_remove_reference_t<_Tp> _Up;
+  return static_cast<_Up&&>(__t);
+}
+
+template <class _Tp>
+using __move_if_noexcept_result_t =
+    __conditional_t<!is_nothrow_move_constructible<_Tp>::value && is_copy_constructible<_Tp>::value, const _Tp&, _Tp&&>;
+
+template <class _Tp>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 __move_if_noexcept_result_t<_Tp>
+move_if_noexcept(_LIBCPP_LIFETIMEBOUND _Tp& __x) _NOEXCEPT {
+  return std::move(__x);
+}
+
+_LIBCPP_END_NAMESPACE_STD
+
+_LIBCPP_POP_MACROS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #endif // _LIBCPP___UTILITY_MOVE_H

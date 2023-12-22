@@ -19,6 +19,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <typename M, typename Ms>
 constexpr bool testConstexpr()
 {
@@ -63,6 +64,45 @@ int main(int, char**)
         assert(static_cast<unsigned>(m -= months{ 9}) == static_cast<unsigned>(exp));
         assert(static_cast<unsigned>(m)               == static_cast<unsigned>(exp));
     }
+=======
+constexpr bool test() {
+  using month  = std::chrono::month;
+  using months = std::chrono::months;
+
+  for (unsigned i = 1; i <= 10; ++i) {
+    month m(i);
+    int exp = i + 10;
+    while (exp > 12)
+      exp -= 12;
+    assert(static_cast<unsigned>(m += months{10}) == static_cast<unsigned>(exp));
+    assert(static_cast<unsigned>(m) == static_cast<unsigned>(exp));
+    assert(m.ok());
+  }
+
+  for (unsigned i = 1; i <= 10; ++i) {
+    month m(i);
+    int exp = i - 9;
+    while (exp < 1)
+      exp += 12;
+    assert(static_cast<unsigned>(m -= months{9}) == static_cast<unsigned>(exp));
+    assert(static_cast<unsigned>(m) == static_cast<unsigned>(exp));
+    assert(m.ok());
+  }
+  return true;
+}
+
+int main(int, char**) {
+  using month  = std::chrono::month;
+  using months = std::chrono::months;
+
+  ASSERT_NOEXCEPT(std::declval<month&>() += std::declval<months&>());
+  ASSERT_NOEXCEPT(std::declval<month&>() -= std::declval<months&>());
+  ASSERT_SAME_TYPE(month&, decltype(std::declval<month&>() += std::declval<months&>()));
+  ASSERT_SAME_TYPE(month&, decltype(std::declval<month&>() -= std::declval<months&>()));
+
+  test();
+  static_assert(test());
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

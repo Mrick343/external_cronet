@@ -8,6 +8,7 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // istream wcout;
 
 // UNSUPPORTED: no-wide-characters
@@ -17,6 +18,17 @@
 // FILE_DEPENDENCIES: check-stdout.sh, test.dat
 // RUN: %{build}
 // RUN: %{exec} bash check-stdout.sh "%t.exe" "test.dat"
+=======
+// wostream wcout;
+
+// UNSUPPORTED: no-wide-characters
+// REQUIRES: target={{.+}}-windows-{{.+}}
+
+// FILE_DEPENDENCIES: test.dat
+// RUN: %{build}
+// RUN: %{exec} %t.exe > %t.actual
+// RUN: diff test.dat %t.actual
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // Check that wcout works, preserving the unicode characters, after switching
 // stdout to wide mode.

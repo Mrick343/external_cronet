@@ -10,6 +10,13 @@
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// On Android L, ~scoped_test_env() is unable to delete the temp dir using
+// chmod+rm because chmod is too broken.
+// XFAIL: LIBCXX-ANDROID-FIXME && android-device-api={{21|22}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // class recursive_directory_iterator

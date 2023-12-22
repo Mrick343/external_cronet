@@ -82,6 +82,7 @@ struct Test {
   }
 };
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 struct ThrowOnCompare {};
 
 #ifndef TEST_HAS_NO_EXCEPTIONS
@@ -101,6 +102,10 @@ int main(int, char**) {
     assert(false);
   }
 #endif
+=======
+int main(int, char**) {
+  types::for_each(types::forward_iterator_list<int*>{}, TestIteratorWithPolicies<Test>{});
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

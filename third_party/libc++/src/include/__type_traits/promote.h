@@ -50,7 +50,11 @@ struct __numeric_type<void> {
 template <class _A1,
           class _A2 = void,
           class _A3 = void,
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
           bool      = __numeric_type<_A1>::value&& __numeric_type<_A2>::value&& __numeric_type<_A3>::value>
+=======
+          bool      = __numeric_type<_A1>::value && __numeric_type<_A2>::value && __numeric_type<_A3>::value>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 class __promote_imp {
 public:
   static const bool value = false;

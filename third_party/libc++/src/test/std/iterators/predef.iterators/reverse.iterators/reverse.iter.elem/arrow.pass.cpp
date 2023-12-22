@@ -29,6 +29,7 @@ class A
     int data_;
 public:
     A() : data_(1) {}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     ~A() {data_ = -1;}
 
     int get() const {return data_;}
@@ -50,6 +51,33 @@ class B
     int data_;
 public:
     B(int d=1) : data_(d) {}
+=======
+    A(const A&) = default;
+    A& operator=(const A&) = default;
+    ~A() {data_ = -1;}
+
+    int get() const {return data_;}
+
+    friend bool operator==(const A& x, const A& y)
+        {return x.data_ == y.data_;}
+};
+
+template <class It>
+void
+test(It i, typename std::iterator_traits<It>::value_type x)
+{
+    std::reverse_iterator<It> r(i);
+    assert(r->get() == x.get());
+}
+
+class B
+{
+    int data_;
+public:
+    B(int d=1) : data_(d) {}
+    B(const B&) = default;
+    B& operator=(const B&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     ~B() {data_ = -1;}
 
     int get() const {return data_;}

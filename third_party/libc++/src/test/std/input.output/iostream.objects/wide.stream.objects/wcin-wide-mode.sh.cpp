@@ -8,6 +8,7 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // istream wcin;
 
 // UNSUPPORTED: no-wide-characters
@@ -17,6 +18,16 @@
 // FILE_DEPENDENCIES: send-stdin.sh, test.dat
 // RUN: %{build}
 // RUN: %{exec} bash send-stdin.sh "%t.exe" "test.dat"
+=======
+// wistream wcin;
+
+// UNSUPPORTED: no-wide-characters
+// REQUIRES: target={{.+}}-windows-{{.+}}
+
+// FILE_DEPENDENCIES: test.dat
+// RUN: %{build}
+// RUN: cat test.dat | %{exec} %t.exe
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // Check that wcin works, preserving the unicode characters, after switching
 // stdin to wide mode.

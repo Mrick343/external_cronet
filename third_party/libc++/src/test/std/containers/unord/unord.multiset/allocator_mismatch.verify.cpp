@@ -12,4 +12,8 @@
 #include <unordered_set>
 
 std::unordered_multiset<int, std::hash<int>, std::less<int>, std::allocator<long> > v;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed{{.*}}Allocator::value_type must be same type as value_type}}
+=======
+  // expected-error-re@*:* {{static assertion failed{{.*}}Allocator::value_type must be same type as value_type}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

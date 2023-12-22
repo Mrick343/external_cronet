@@ -25,7 +25,11 @@ _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 // file, and the executable bit is always returned as set. When setting
 // permissions, as long as the write bit is set for either owner, group or
 // others, the readonly flag is cleared.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 enum class _LIBCPP_ENUM_VIS perms : unsigned {
+=======
+enum class perms : unsigned {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   none = 0,
 
   owner_read = 0400,

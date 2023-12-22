@@ -25,9 +25,15 @@ int main(int, char**) {
   {
     std::map<int, int, std::less<int>, std::allocator<int>> s1;
     std::map<int, int, std::less<int>, test_allocator<int>> s2;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
     s1 <=> s2;
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
+=======
+    // expected-error-re@*:* {{static assertion failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
+    s1 <=> s2;
+    // expected-error-re@*:* {{static assertion failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     s2 <=> s1;
   }
   // Mismatching comparision functions

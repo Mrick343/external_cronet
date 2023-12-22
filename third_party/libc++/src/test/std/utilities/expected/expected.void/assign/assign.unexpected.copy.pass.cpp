@@ -6,8 +6,11 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // Older Clangs do not support the C++20 feature to constrain destructors
 // XFAIL: apple-clang-14
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // template<class G>
 //   constexpr expected& operator=(const unexpected<G>& e);

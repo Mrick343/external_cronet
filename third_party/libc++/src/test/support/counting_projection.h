@@ -26,7 +26,11 @@ public:
   constexpr counting_projection(Proj proj, int& count) : proj_(std::move(proj)), count_(&count) {}
 
   template <class T>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   constexpr decltype(auto) operator()(T&& value) const {
+=======
+  constexpr decltype(auto) operator()(T && value) const {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     ++(*count_);
     return std::invoke(proj_, std::forward<T>(value));
   }

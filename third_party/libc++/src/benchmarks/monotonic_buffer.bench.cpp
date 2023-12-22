@@ -16,7 +16,11 @@ static void bm_list(benchmark::State& state) {
   std::pmr::monotonic_buffer_resource resource(buffer, sizeof(buffer));
   for (auto _ : state) {
     std::pmr::list<int> l(&resource);
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     for (size_t i = 0; i != state.range(); ++i) {
+=======
+    for (int64_t i = 0; i != state.range(); ++i) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
       l.push_back(1);
       benchmark::DoNotOptimize(l);
     }

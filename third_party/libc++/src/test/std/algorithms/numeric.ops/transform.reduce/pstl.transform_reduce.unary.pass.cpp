@@ -20,6 +20,7 @@
 //                      T init, BinaryOperation binary_op, UnaryOperation unary_op);
 
 #include <numeric>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <vector>
 
 #include "MoveOnly.h"
@@ -44,6 +45,39 @@ struct Test {
           ValueT(34),
           [](ValueT i, ValueT j) { return i + j; },
           [](ValueT i) { return i + 1; });
+=======
+#include <string>
+#include <vector>
+
+#include "MoveOnly.h"
+#include "test_execution_policies.h"
+#include "test_iterators.h"
+#include "test_macros.h"
+
+template <class Iter1, class ValueT>
+struct Test {
+  template <class Policy>
+  void operator()(Policy&& policy) {
+    for (const auto& pair : {std::pair{0, 34}, {1, 35}, {2, 37}, {100, 5084}, {350, 61459}}) {
+      auto [size, expected] = pair;
+      std::vector<int> a(size);
+      for (int i = 0; i != size; ++i)
+        a[i] = i;
+
+      decltype(auto) ret = std::transform_reduce(
+          policy,
+          Iter1(std::data(a)),
+          Iter1(std::data(a) + std::size(a)),
+          ValueT(34),
+          [check = std::string("Banane")](ValueT i, ValueT j) {
+            assert(check == "Banane"); // ensure that no double-moves happen
+            return i + j;
+          },
+          [check = std::string("Banane")](ValueT i) {
+            assert(check == "Banane"); // ensure that no double-moves happen
+            return i + 1;
+          });
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
       static_assert(std::is_same_v<decltype(ret), ValueT>);
       assert(ret == expected);
     }

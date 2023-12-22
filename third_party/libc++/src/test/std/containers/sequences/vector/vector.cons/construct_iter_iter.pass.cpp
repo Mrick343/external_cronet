@@ -88,6 +88,15 @@ TEST_CONSTEXPR_CXX20 void basic_test_cases() {
       bidirectional_iterator<const int*>(a), bidirectional_iterator<const int*>(an));
   test<std::vector<int, safe_allocator<int> > >(
       random_access_iterator<const int*>(a), random_access_iterator<const int*>(an));
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+
+  // Regression test for https://github.com/llvm/llvm-project/issues/46841
+  {
+    std::vector<int> v1({}, forward_iterator<const int*>{});
+    std::vector<int> v2(forward_iterator<const int*>{}, {});
+  }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 }
 

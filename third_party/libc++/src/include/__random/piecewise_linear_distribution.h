@@ -13,8 +13,13 @@
 #include <__config>
 #include <__random/is_valid.h>
 #include <__random/uniform_real_distribution.h>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <iosfwd>
 #include <numeric>
+=======
+#include <cmath>
+#include <iosfwd>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <vector>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)

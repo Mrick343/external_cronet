@@ -43,7 +43,16 @@ struct _LIBCXXABI_HIDDEN __cxa_exception {
 
     //  Manage the exception object itself.
     std::type_info *exceptionType;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     void (_LIBCXXABI_DTOR_FUNC *exceptionDestructor)(void *);
+=======
+#ifdef __USING_WASM_EXCEPTIONS__
+    // In Wasm, a destructor returns its argument
+    void *(_LIBCXXABI_DTOR_FUNC *exceptionDestructor)(void *);
+#else
+    void (_LIBCXXABI_DTOR_FUNC *exceptionDestructor)(void *);
+#endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     std::unexpected_handler unexpectedHandler;
     std::terminate_handler  terminateHandler;
 

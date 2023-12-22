@@ -10,6 +10,10 @@
 #define _LIBCPP___LOCALE_LOCALE_BASE_API_LOCALE_GUARD_H
 
 #include <__config>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+#include <__locale> // for locale_t
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <clocale>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)

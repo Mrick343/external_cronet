@@ -7,6 +7,7 @@ Modules in libc++
 .. warning:: Modules are an experimental feature. It has additional build
              requirements and not all libc++ configurations are supported yet.
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
              The work is still in an early developement state and not
              considered stable nor complete
 
@@ -90,6 +91,104 @@ Users need to be able to build their own BMI files.
 
 .. note:: The requirements for users to build their own BMI files will remain
    true for the forseeable future. For now this needs to be done manually.
+=======
+             The work is still in an early development state and not
+             considered stable nor complete
+
+This page contains information regarding C++23 module support in libc++.
+There are two kinds of modules available in Clang
+
+ * `Clang specific modules <https://clang.llvm.org/docs/Modules.html>`_
+ * `C++ modules <https://clang.llvm.org/docs/StandardCPlusPlusModules.html>`_
+
+This page mainly discusses the C++ modules. In C++20 there are also header units,
+these are not part of this document.
+
+Overview
+========
+
+The module sources are stored in ``.cppm`` files. Modules need to be available
+as BMIs, which are ``.pcm`` files for Clang. BMIs are not portable, they depend
+on the compiler used and its compilation flags. Therefore there needs to be a
+way to distribute the ``.cppm`` files to the user and offer a way for them to
+build and use the ``.pcm`` files. It is expected this will be done by build
+systems in the future. To aid early adaptor and build system vendors libc++
+currently ships a CMake project to aid building modules.
+
+.. note:: This CMake file is intended to be a temporary solution and will
+          be removed in the future. The timeline for the removal depends
+          on the availability of build systems with proper module support.
+
+What works
+~~~~~~~~~~
+
+ * Building BMIs
+ * Running tests using the ``std`` module
+ * Using the ``std`` module in external projects
+ * The following "parts disabled" configuration options are supported
+
+   * ``LIBCXX_ENABLE_LOCALIZATION``
+   * ``LIBCXX_ENABLE_WIDE_CHARACTERS``
+   * ``LIBCXX_ENABLE_THREADS``
+   * ``LIBCXX_ENABLE_FILESYSTEM``
+   * ``LIBCXX_ENABLE_RANDOM_DEVICE``
+   * ``LIBCXX_ENABLE_UNICODE``
+   * ``LIBCXX_ENABLE_EXCEPTIONS`` [#note-no-windows]_
+
+ * A C++20 based extension
+
+.. note::
+
+   .. [#note-no-windows] This configuration will probably not work on Windows
+                         due to hard-coded compilation flags.
+
+Some of the current limitations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * There is no official build system support, libc++ has experimental CMake support
+ * Requires CMake 3.26 for C++20 support
+ * Requires CMake 3.26 for C++23 support
+ * Requires CMake 3.27 for C++26 support
+ * Requires Ninja 1.11
+ * Requires a recent Clang 17
+ * The path to the compiler may not be a symlink, ``clang-scan-deps`` does
+   not handle that case properly
+ * Only C++23 and C++26 are tested
+ * Libc++ is not tested with modules instead of headers
+ * The module ``.cppm`` files are not installed
+ * Clang supports modules using GNU extensions, but libc++ does not work using
+   GNU extensions.
+ * Clang:
+    * Including headers after importing the ``std`` module may fail. This is
+      hard to solve and there is a work-around by first including all headers
+      `bug report <https://github.com/llvm/llvm-project/issues/61465>`__.
+
+Blockers
+~~~~~~~~
+
+  * libc++
+
+    * Currently the tests only test with modules enabled, but do not import
+      modules instead of headers. When converting tests to using modules there
+      are still failures. These are under investigation.
+
+    * It has not been determined how to fully test libc++ with modules instead
+      of headers.
+
+  * Clang
+
+    * Some concepts do not work properly
+      `bug report <https://github.com/llvm/llvm-project/issues/62943>`__.
+
+
+Using in external projects
+==========================
+
+Users need to be able to build their own BMI files.
+
+.. note:: The requirements for users to build their own BMI files will remain
+   true for the foreseeable future. For now this needs to be done manually.
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
    Once libc++'s implementation is more mature we will reach out to build
    system vendors, with the goal that building the BMI files is done by
    the build system.

@@ -17,11 +17,21 @@
 
 // explicit basic_ofstream(const filesystem::path& s, ios_base::openmode mode = ios_base::out);
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <fstream>
 #include <filesystem>
 #include <cassert>
 #include "test_macros.h"
 #include "platform_support.h"
+=======
+#include <cassert>
+#include <filesystem>
+#include <fstream>
+#include <type_traits>
+
+#include "platform_support.h"
+#include "test_macros.h"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 namespace fs = std::filesystem;
 

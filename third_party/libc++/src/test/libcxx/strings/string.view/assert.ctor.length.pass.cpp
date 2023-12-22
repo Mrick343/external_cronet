@@ -7,10 +7,16 @@
 //===----------------------------------------------------------------------===//
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 // UNSUPPORTED: c++03, c++11
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
+=======
+// UNSUPPORTED: c++03, c++11
+// REQUIRES: libcpp-hardening-mode={{safe|debug}}
+// XFAIL: availability-verbose_abort-missing
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // Construct a string_view from an invalid length
 // constexpr basic_string_view( const _CharT* s, size_type len )

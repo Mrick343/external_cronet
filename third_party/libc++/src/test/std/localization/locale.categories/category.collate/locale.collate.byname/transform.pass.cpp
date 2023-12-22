@@ -9,6 +9,12 @@
 // NetBSD does not support LC_COLLATE at the moment
 // XFAIL: netbsd
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // <locale>
 
 // template <class charT> class collate_byname

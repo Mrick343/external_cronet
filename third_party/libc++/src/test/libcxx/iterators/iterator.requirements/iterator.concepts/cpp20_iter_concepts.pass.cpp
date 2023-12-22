@@ -19,8 +19,11 @@
 // random_access_iterator_tag.
 // (1.4) -- Otherwise, ITER_CONCEPT(I) does not denote a type.
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
 
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include "test_macros.h"
 
 #include <__type_traits/is_valid_expansion.h>

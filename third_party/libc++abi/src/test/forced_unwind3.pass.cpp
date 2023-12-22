@@ -13,6 +13,12 @@
 // UNSUPPORTED: no-threads
 // UNSUPPORTED: no-exceptions
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// VE only supports SjLj and doesn't provide _Unwind_ForcedUnwind.
+// UNSUPPORTED: target={{ve-.*}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <assert.h>
 #include <exception>
 #include <stdlib.h>

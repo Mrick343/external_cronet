@@ -6,9 +6,16 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // This test fails because diagnose_if doesn't emit all of the diagnostics
 // when -fdelayed-template-parsing is enabled, like it is in MSVC mode.
 // XFAIL: msvc
+=======
+// This test fails with Clang <18 because diagnose_if doesn't emit all of the
+// diagnostics when -fdelayed-template-parsing is enabled, like it is in MSVC
+// mode.
+// XFAIL: msvc && (clang-16 || clang-17)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // REQUIRES: diagnose-if-support
 

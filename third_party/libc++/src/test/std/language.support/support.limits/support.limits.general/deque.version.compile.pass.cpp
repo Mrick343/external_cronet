@@ -135,6 +135,7 @@
 #   error "__cpp_lib_nonmember_container_access should have the value 201411L in c++23"
 # endif
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 # if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_ranges_to_container
 #     error "__cpp_lib_ranges_to_container should be defined in c++23"
@@ -182,6 +183,43 @@
 #   ifdef __cpp_lib_ranges_to_container
 #     error "__cpp_lib_ranges_to_container should not be defined because it is unimplemented in libc++!"
 #   endif
+=======
+# ifndef __cpp_lib_ranges_to_container
+#   error "__cpp_lib_ranges_to_container should be defined in c++23"
+# endif
+# if __cpp_lib_ranges_to_container != 202202L
+#   error "__cpp_lib_ranges_to_container should have the value 202202L in c++23"
+# endif
+
+#elif TEST_STD_VER > 23
+
+# ifndef __cpp_lib_allocator_traits_is_always_equal
+#   error "__cpp_lib_allocator_traits_is_always_equal should be defined in c++26"
+# endif
+# if __cpp_lib_allocator_traits_is_always_equal != 201411L
+#   error "__cpp_lib_allocator_traits_is_always_equal should have the value 201411L in c++26"
+# endif
+
+# ifndef __cpp_lib_erase_if
+#   error "__cpp_lib_erase_if should be defined in c++26"
+# endif
+# if __cpp_lib_erase_if != 202002L
+#   error "__cpp_lib_erase_if should have the value 202002L in c++26"
+# endif
+
+# ifndef __cpp_lib_nonmember_container_access
+#   error "__cpp_lib_nonmember_container_access should be defined in c++26"
+# endif
+# if __cpp_lib_nonmember_container_access != 201411L
+#   error "__cpp_lib_nonmember_container_access should have the value 201411L in c++26"
+# endif
+
+# ifndef __cpp_lib_ranges_to_container
+#   error "__cpp_lib_ranges_to_container should be defined in c++26"
+# endif
+# if __cpp_lib_ranges_to_container != 202202L
+#   error "__cpp_lib_ranges_to_container should have the value 202202L in c++26"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 # endif
 
 #endif // TEST_STD_VER > 23

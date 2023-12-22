@@ -3,5 +3,12 @@
 include_rules = [
   # This project has always depended on //base, but we are trying to break this
   # dependency. See crbug.com/1377351.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   '+base'
+=======
+  '+base',
+  # This project is a Chromium build project and may always require //build for
+  # its GN rules.
+  '+build',
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 ]

@@ -363,6 +363,7 @@ namespace ranges {
               (integral<_Start> && integral<_BoundSentinel>) || sized_sentinel_for<_BoundSentinel, _Start>
     {
       if constexpr (__integer_like<_Start> && __integer_like<_BoundSentinel>) {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
         if (__value_ < 0) {
           if (__bound_sentinel_ < 0) {
             return std::__to_unsigned_like(-__value_) - std::__to_unsigned_like(-__bound_sentinel_);
@@ -372,6 +373,16 @@ namespace ranges {
         return std::__to_unsigned_like(__bound_sentinel_) - std::__to_unsigned_like(__value_);
       }
       return std::__to_unsigned_like(__bound_sentinel_ - __value_);
+=======
+        return (__value_ < 0)
+                 ? ((__bound_sentinel_ < 0)
+                        ? std::__to_unsigned_like(-__value_) - std::__to_unsigned_like(-__bound_sentinel_)
+                        : std::__to_unsigned_like(__bound_sentinel_) + std::__to_unsigned_like(-__value_))
+                 : std::__to_unsigned_like(__bound_sentinel_) - std::__to_unsigned_like(__value_);
+      } else {
+        return std::__to_unsigned_like(__bound_sentinel_ - __value_);
+      }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     }
   };
 

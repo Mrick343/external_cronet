@@ -27,7 +27,15 @@ _Tp __declval(long);
 _LIBCPP_SUPPRESS_DEPRECATED_POP
 
 template <class _Tp>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 decltype(std::__declval<_Tp>(0)) declval() _NOEXCEPT;
+=======
+_LIBCPP_HIDE_FROM_ABI decltype(std::__declval<_Tp>(0)) declval() _NOEXCEPT {
+  static_assert(!__is_same(_Tp, _Tp),
+                "std::declval can only be used in an unevaluated context. "
+                "It's likely that your current usage is trying to extract a value from the function.");
+}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 _LIBCPP_END_NAMESPACE_STD
 

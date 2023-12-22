@@ -17,5 +17,9 @@
 void f() {
   typedef std::pair<int, double> P;
   std::tuple_element<2, P>::type foo; // expected-note {{requested here}}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed{{( due to requirement '2U[L]{0,2} < 2')?}}{{.*}}Index out of bounds in std::tuple_element<std::pair<T1, T2>>}}
+=======
+    // expected-error-re@*:* {{static assertion failed{{( due to requirement '2U[L]{0,2} < 2')?}}{{.*}}Index out of bounds in std::tuple_element<std::pair<T1, T2>>}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 }

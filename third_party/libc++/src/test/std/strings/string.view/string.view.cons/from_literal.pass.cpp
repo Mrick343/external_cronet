@@ -20,6 +20,7 @@
 #include "test_macros.h"
 #include "constexpr_char_traits.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template<typename CharT>
 size_t StrLen ( const CharT *s ) {
     std::size_t retVal = 0;
@@ -66,6 +67,55 @@ int main(int, char**) {
     constexpr std::basic_string_view<char, constexpr_char_traits<char>> sv1 ( "ABCDE" );
     static_assert ( sv1.size() == 5, "");
     }
+=======
+template <typename CharT>
+size_t StrLen(const CharT* s) {
+  std::size_t retVal = 0;
+  while (*s != 0) {
+    ++retVal;
+    ++s;
+  }
+  return retVal;
+}
+
+template <typename CharT>
+void test(const CharT* s) {
+  typedef std::basic_string_view<CharT> SV;
+  //  I'd love to do this, but it would require traits::length() to be noexcept
+  //  LIBCPP_ASSERT_NOEXCEPT(SV(s));
+
+  SV sv1(s);
+  assert(sv1.size() == StrLen(s));
+  assert(sv1.data() == s);
+}
+
+int main(int, char**) {
+  test("QBCDE");
+  test("A");
+  test("");
+
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  test(L"QBCDE");
+  test(L"A");
+  test(L"");
+#endif
+
+#if TEST_STD_VER >= 11
+  test(u"QBCDE");
+  test(u"A");
+  test(u"");
+
+  test(U"QBCDE");
+  test(U"A");
+  test(U"");
+#endif
+
+#if TEST_STD_VER > 11
+  {
+    constexpr std::basic_string_view<char, constexpr_char_traits<char>> sv1("ABCDE");
+    static_assert(sv1.size() == 5, "");
+  }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

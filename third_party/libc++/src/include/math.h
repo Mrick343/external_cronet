@@ -307,6 +307,7 @@ long double    truncl(long double x);
 // back to C++ linkage before including these C++ headers.
 extern "C++" {
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <__type_traits/enable_if.h>
 #include <__type_traits/is_floating_point.h>
 #include <__type_traits/is_integral.h>
@@ -1644,6 +1645,200 @@ trunc(_A1 __x) _NOEXCEPT
 {
     return __builtin_trunc((double)__x);
 }
+=======
+#    ifdef fpclassify
+#      undef fpclassify
+#    endif
+
+#    ifdef signbit
+#      undef signbit
+#    endif
+
+#    ifdef isfinite
+#      undef isfinite
+#    endif
+
+#    ifdef isinf
+#      undef isinf
+#    endif
+
+#    ifdef isnan
+#      undef isnan
+#    endif
+
+#    ifdef isnormal
+#      undef isnormal
+#    endif
+
+#    ifdef isgreater
+#      undef isgreater
+#    endif
+
+#    ifdef isgreaterequal
+#      undef isgreaterequal
+#    endif
+
+#    ifdef isless
+#      undef isless
+#    endif
+
+#    ifdef islessequal
+#      undef islessequal
+#    endif
+
+#    ifdef islessgreater
+#      undef islessgreater
+#    endif
+
+#    ifdef isunordered
+#      undef isunordered
+#    endif
+
+#include <__math/abs.h>
+#include <__math/copysign.h>
+#include <__math/error_functions.h>
+#include <__math/exponential_functions.h>
+#include <__math/fdim.h>
+#include <__math/fma.h>
+#include <__math/gamma.h>
+#include <__math/hyperbolic_functions.h>
+#include <__math/hypot.h>
+#include <__math/inverse_hyperbolic_functions.h>
+#include <__math/inverse_trigonometric_functions.h>
+#include <__math/logarithms.h>
+#include <__math/min_max.h>
+#include <__math/modulo.h>
+#include <__math/remainder.h>
+#include <__math/roots.h>
+#include <__math/rounding_functions.h>
+#include <__math/traits.h>
+#include <__math/trigonometric_functions.h>
+#include <__type_traits/enable_if.h>
+#include <__type_traits/is_floating_point.h>
+#include <__type_traits/is_integral.h>
+#include <stdlib.h>
+
+
+// fpclassify relies on implementation-defined constants, so we can't move it to a detail header
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+namespace __math {
+
+// fpclassify
+
+// template on non-double overloads to make them weaker than same overloads from MSVC runtime
+template <class = int>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(float __x) _NOEXCEPT {
+  return __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL, FP_SUBNORMAL, FP_ZERO, __x);
+}
+
+template <class = int>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(double __x) _NOEXCEPT {
+  return __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL, FP_SUBNORMAL, FP_ZERO, __x);
+}
+
+template <class = int>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(long double __x) _NOEXCEPT {
+  return __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL, FP_SUBNORMAL, FP_ZERO, __x);
+}
+
+template <class _A1, std::__enable_if_t<std::is_integral<_A1>::value, int> = 0>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(_A1 __x) _NOEXCEPT {
+  return __x == 0 ? FP_ZERO : FP_NORMAL;
+}
+
+} // namespace __math
+
+_LIBCPP_END_NAMESPACE_STD
+
+using std::__math::fpclassify;
+using std::__math::signbit;
+
+// The MSVC runtime already provides these functions as templates
+#ifndef _LIBCPP_MSVCRT
+using std::__math::isfinite;
+using std::__math::isgreater;
+using std::__math::isgreaterequal;
+using std::__math::isinf;
+using std::__math::isless;
+using std::__math::islessequal;
+using std::__math::islessgreater;
+using std::__math::isnan;
+using std::__math::isnormal;
+using std::__math::isunordered;
+#endif // _LIBCPP_MSVCRT
+
+// abs
+//
+// handled in stdlib.h
+
+// div
+//
+// handled in stdlib.h
+
+// We have to provide double overloads for <math.h> to work on platforms that don't provide the full set of math
+// functions. To make the overload set work with multiple functions that take the same arguments, we make our overloads
+// templates. Functions are preferred over function templates during overload resolution, which means that our overload
+// will only be selected when the C library doesn't provide one.
+
+using std::__math::acosh;
+using std::__math::acos;
+using std::__math::asinh;
+using std::__math::asin;
+using std::__math::atanh;
+using std::__math::atan;
+using std::__math::atan2;
+using std::__math::cbrt;
+using std::__math::ceil;
+using std::__math::copysign;
+using std::__math::cos;
+using std::__math::cosh;
+using std::__math::erf;
+using std::__math::erfc;
+using std::__math::exp;
+using std::__math::exp2;
+using std::__math::expm1;
+using std::__math::fabs;
+using std::__math::fdim;
+using std::__math::floor;
+using std::__math::fma;
+using std::__math::fmax;
+using std::__math::fmin;
+using std::__math::fmod;
+using std::__math::frexp;
+using std::__math::hypot;
+using std::__math::ilogb;
+using std::__math::ldexp;
+using std::__math::lgamma;
+using std::__math::llrint;
+using std::__math::llround;
+using std::__math::lrint;
+using std::__math::lround;
+using std::__math::log;
+using std::__math::log10;
+using std::__math::log1p;
+using std::__math::log2;
+using std::__math::logb;
+using std::__math::modf;
+using std::__math::nearbyint;
+using std::__math::nextafter;
+using std::__math::nexttoward;
+using std::__math::pow;
+using std::__math::remainder;
+using std::__math::remquo;
+using std::__math::rint;
+using std::__math::round;
+using std::__math::scalbln;
+using std::__math::scalbn;
+using std::__math::signbit;
+using std::__math::sin;
+using std::__math::sinh;
+using std::__math::sqrt;
+using std::__math::tan;
+using std::__math::tanh;
+using std::__math::tgamma;
+using std::__math::trunc;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 } // extern "C++"
 

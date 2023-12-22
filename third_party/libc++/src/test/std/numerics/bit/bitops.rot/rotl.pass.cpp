@@ -31,6 +31,7 @@ constexpr bool test()
     ASSERT_SAME_TYPE(decltype(std::rotl(T(), 0)), T);
     ASSERT_NOEXCEPT(std::rotl(T(), 0));
     T max = std::numeric_limits<T>::max();
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
     assert(std::rotl(T(max - 1), 0) == T(max - 1));
     assert(std::rotl(T(max - 1), 1) == T(max - 2));
@@ -59,6 +60,59 @@ constexpr bool test()
         assert(std::rotl(val, 1) == val << 1);
         assert(std::rotl(val, 127) == val >> 1);
         assert(std::rotl(T(3), 127) == ((T(1) << 127) | T(1)));
+=======
+    T highbit = std::rotr(T(1), 1);
+
+    assert(std::rotl(T(max - 1), 0) == T(max - 1));
+    assert(std::rotl(T(max - 1), 1) == T(max - 2));
+    assert(std::rotl(T(max - 1), 2) == T(max - 4));
+    assert(std::rotl(T(max - 1), 3) == T(max - 8));
+    assert(std::rotl(T(max - 1), 4) == T(max - 16));
+    assert(std::rotl(T(max - 1), 5) == T(max - 32));
+    assert(std::rotl(T(max - 1), 6) == T(max - 64));
+    assert(std::rotl(T(max - 1), 7) == T(max - 128));
+
+    assert(std::rotl(T(max - 1), -1) == T(max - highbit));
+    assert(std::rotl(T(max - 1), -2) == T(max - (highbit >> 1)));
+    assert(std::rotl(T(max - 1), -3) == T(max - (highbit >> 2)));
+    assert(std::rotl(T(max - 1), -4) == T(max - (highbit >> 3)));
+    assert(std::rotl(T(max - 1), -5) == T(max - (highbit >> 4)));
+    assert(std::rotl(T(max - 1), -6) == T(max - (highbit >> 5)));
+    assert(std::rotl(T(max - 1), -7) == T(max - (highbit >> 6)));
+
+    assert(std::rotl(T(1), 0) == T(1));
+    assert(std::rotl(T(1), 1) == T(2));
+    assert(std::rotl(T(1), 2) == T(4));
+    assert(std::rotl(T(1), 3) == T(8));
+    assert(std::rotl(T(1), 4) == T(16));
+    assert(std::rotl(T(1), 5) == T(32));
+    assert(std::rotl(T(1), 6) == T(64));
+    assert(std::rotl(T(1), 7) == T(128));
+
+    assert(std::rotl(T(128), -1) == T(64));
+    assert(std::rotl(T(128), -2) == T(32));
+    assert(std::rotl(T(128), -3) == T(16));
+    assert(std::rotl(T(128), -4) == T(8));
+    assert(std::rotl(T(128), -5) == T(4));
+    assert(std::rotl(T(128), -6) == T(2));
+    assert(std::rotl(T(128), -7) == T(1));
+
+#ifndef TEST_HAS_NO_INT128
+    if constexpr (std::is_same_v<T, __uint128_t>) {
+        T val = (T(1) << 63) | (T(1) << 64);
+        assert(std::rotl(val, 0) == val);
+        assert(std::rotl(val, 128) == val);
+        assert(std::rotl(val, 256) == val);
+        assert(std::rotl(val, 1) == val << 1);
+        assert(std::rotl(val, 127) == val >> 1);
+        assert(std::rotl(T(3), 127) == ((T(1) << 127) | T(1)));
+
+        assert(std::rotl(val, -128) == val);
+        assert(std::rotl(val, -256) == val);
+        assert(std::rotl(val, -1) == val >> 1);
+        assert(std::rotl(val, -127) == val << 1);
+        assert(std::rotl(T(3), -1) == ((T(1) << 127) | T(1)));
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     }
 #endif
 

@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // test <setjmp.h>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 #include <setjmp.h>
 
@@ -18,3 +19,17 @@
 
 jmp_buf jb;
 ASSERT_SAME_TYPE(void, decltype(longjmp(jb, 0)));
+=======
+//
+// Even though <setjmp.h> is not provided by libc++, we still test that
+// using it with libc++ on the search path will work.
+
+#include <setjmp.h>
+
+#include "test_macros.h"
+
+jmp_buf jb;
+ASSERT_SAME_TYPE(void, decltype(longjmp(jb, 0)));
+
+void f() { setjmp(jb); }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

@@ -58,9 +58,21 @@ int main(int, char**) {
 
   ASSERT_NOT_CONSTEXPR_CXX23(std::frexp(0.0f, &DummyInt) == 0.0f);
   ASSERT_NOT_CONSTEXPR_CXX23(std::frexp(0.0, &DummyInt) == 0.0);
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   ASSERT_NOT_CONSTEXPR_CXX23(std::frexp(0.0L, &DummyInt) == 0.0L);
   ASSERT_NOT_CONSTEXPR_CXX23(std::frexpf(0.0f, &DummyInt) == 0.0f);
   ASSERT_NOT_CONSTEXPR_CXX23(std::frexpl(0.0L, &DummyInt) == 0.0L);
+=======
+//FIXME: currently linux powerpc does not support this expansion
+// since 0.0L lowers to ppcf128 and special handling is required.
+#if !defined(__LONG_DOUBLE_IBM128__)
+  ASSERT_NOT_CONSTEXPR_CXX23(std::frexp(0.0L, &DummyInt) == 0.0L);
+#endif
+  ASSERT_NOT_CONSTEXPR_CXX23(std::frexpf(0.0f, &DummyInt) == 0.0f);
+#if !defined(__LONG_DOUBLE_IBM128__)
+  ASSERT_NOT_CONSTEXPR_CXX23(std::frexpl(0.0L, &DummyInt) == 0.0L);
+#endif
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   ASSERT_NOT_CONSTEXPR_CXX23(std::ilogb(1.0f) == 0);
   ASSERT_NOT_CONSTEXPR_CXX23(std::ilogb(1.0) == 0);

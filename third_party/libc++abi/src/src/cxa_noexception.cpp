@@ -49,7 +49,11 @@ __cxa_uncaught_exception() throw() { return false; }
 unsigned int
 __cxa_uncaught_exceptions() throw() { return 0; }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // provide dummy implementations for the 'no exceptions' case.
 uint64_t __getExceptionClass  (const _Unwind_Exception*)           { return 0; }

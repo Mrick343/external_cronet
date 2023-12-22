@@ -14,6 +14,7 @@
 
 
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template class std::unexpected<int[2]>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
 
 template class std::unexpected<const int>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
@@ -23,3 +24,14 @@ template class std::unexpected<int&>; // expected-error-re@*:* {{{{(static_asser
 template class std::unexpected<std::unexpected<int>>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
 
 template class std::unexpected<volatile int>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
+=======
+template class std::unexpected<int[2]>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<const int>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<int&>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<std::unexpected<int>>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<volatile int>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

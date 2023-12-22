@@ -57,6 +57,7 @@
 // including the <format> header.
 
 #include <concepts>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <format>
 
 #include "test_macros.h"
@@ -126,6 +127,82 @@ static_assert(std::semiregular<std::formatter<double, wchar_t>>);
 static_assert(std::semiregular<std::formatter<long double, wchar_t>>);
 
 static_assert(std::semiregular<std::formatter<nullptr_t, wchar_t>>);
+=======
+#include <cstddef>
+#include <format>
+#include <string_view>
+#include <string>
+#include <tuple>
+#include <utility>
+
+#include "test_macros.h"
+
+static_assert(std::semiregular<std::formatter<char, char>>);
+
+static_assert(std::semiregular<std::formatter<char*, char>>);
+static_assert(std::semiregular<std::formatter<const char*, char>>);
+static_assert(std::semiregular<std::formatter<char[1], char>>);
+static_assert(std::semiregular<std::formatter<std::string, char>>);
+static_assert(std::semiregular<std::formatter<std::string_view, char>>);
+
+static_assert(std::semiregular<std::formatter<bool, char>>);
+
+static_assert(std::semiregular<std::formatter<signed char, char>>);
+static_assert(std::semiregular<std::formatter<signed short, char>>);
+static_assert(std::semiregular<std::formatter<signed int, char>>);
+static_assert(std::semiregular<std::formatter<signed long, char>>);
+static_assert(std::semiregular<std::formatter<signed long long, char>>);
+
+static_assert(std::semiregular<std::formatter<unsigned char, char>>);
+static_assert(std::semiregular<std::formatter<unsigned short, char>>);
+static_assert(std::semiregular<std::formatter<unsigned int, char>>);
+static_assert(std::semiregular<std::formatter<unsigned long, char>>);
+static_assert(std::semiregular<std::formatter<unsigned long long, char>>);
+
+static_assert(std::semiregular<std::formatter<float, char>>);
+static_assert(std::semiregular<std::formatter<double, char>>);
+static_assert(std::semiregular<std::formatter<long double, char>>);
+
+static_assert(std::semiregular<std::formatter<std::nullptr_t, char>>);
+static_assert(std::semiregular<std::formatter<void*, char>>);
+static_assert(std::semiregular<std::formatter<const void*, char>>);
+
+#if TEST_STD_VER > 20
+static_assert(std::semiregular<std::range_formatter<int, char>>);
+static_assert(std::semiregular<std::formatter<std::tuple<int>, char>>);
+static_assert(std::semiregular<std::range_formatter<std::pair<int, int>, char>>);
+#endif
+
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+static_assert(std::semiregular<std::formatter<char, wchar_t>>);
+static_assert(std::semiregular<std::formatter<wchar_t, wchar_t>>);
+
+static_assert(std::semiregular<std::formatter<wchar_t*, wchar_t>>);
+static_assert(std::semiregular<std::formatter<const wchar_t*, wchar_t>>);
+static_assert(std::semiregular<std::formatter<wchar_t[1], wchar_t>>);
+static_assert(std::semiregular<std::formatter<std::wstring, wchar_t>>);
+static_assert(std::semiregular<std::formatter<std::wstring_view, wchar_t>>);
+
+static_assert(std::semiregular<std::formatter<bool, wchar_t>>);
+
+static_assert(std::semiregular<std::formatter<signed char, wchar_t>>);
+static_assert(std::semiregular<std::formatter<signed short, wchar_t>>);
+static_assert(std::semiregular<std::formatter<signed int, wchar_t>>);
+static_assert(std::semiregular<std::formatter<signed long, wchar_t>>);
+static_assert(std::semiregular<std::formatter<signed long long, wchar_t>>);
+
+static_assert(std::semiregular<std::formatter<unsigned char, wchar_t>>);
+static_assert(std::semiregular<std::formatter<unsigned short, wchar_t>>);
+static_assert(std::semiregular<std::formatter<unsigned int, wchar_t>>);
+static_assert(std::semiregular<std::formatter<unsigned long, wchar_t>>);
+static_assert(std::semiregular<std::formatter<unsigned long long, wchar_t>>);
+
+static_assert(std::semiregular<std::formatter<float, wchar_t>>);
+static_assert(std::semiregular<std::formatter<double, wchar_t>>);
+static_assert(std::semiregular<std::formatter<long double, wchar_t>>);
+
+static_assert(std::semiregular<std::formatter<std::nullptr_t, wchar_t>>);
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 static_assert(std::semiregular<std::formatter<void*, wchar_t>>);
 static_assert(std::semiregular<std::formatter<const void*, wchar_t>>);
 

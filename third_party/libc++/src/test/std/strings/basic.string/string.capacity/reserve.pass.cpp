@@ -20,6 +20,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 void
 test(typename S::size_type min_cap, typename S::size_type erased_index)
 {
@@ -55,6 +56,40 @@ bool test() {
 
 int main(int, char**)
 {
+=======
+void test(typename S::size_type min_cap, typename S::size_type erased_index) {
+  S s(min_cap, 'a');
+  s.erase(erased_index);
+  assert(s.size() == erased_index);
+  assert(s.capacity() >= min_cap); // Check that we really have at least this capacity.
+
+  typename S::size_type old_cap = s.capacity();
+  S s0                          = s;
+  s.reserve();
+  LIBCPP_ASSERT(s.__invariants());
+  assert(s == s0);
+  assert(s.capacity() <= old_cap);
+  assert(s.capacity() >= s.size());
+}
+
+template <class S>
+void test_string() {
+  test<S>(0, 0);
+  test<S>(10, 5);
+  test<S>(100, 50);
+}
+
+bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char>>>();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 
   return 0;

@@ -16,6 +16,11 @@
 #  include <__algorithm/pstl_backends/cpu_backends/serial.h>
 #elif defined(_LIBCPP_PSTL_CPU_BACKEND_THREAD)
 #  include <__algorithm/pstl_backends/cpu_backends/thread.h>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+#elif defined(_LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH)
+#  include <__algorithm/pstl_backends/cpu_backends/libdispatch.h>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #else
 #  error "Invalid CPU backend choice"
 #endif

@@ -12,8 +12,11 @@
 // disable them for now until their behavior can be designed better later.
 // See https://reviews.llvm.org/D84049 for details.
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: apple-clang-14
 
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: c++03
 
 #include <atomic>

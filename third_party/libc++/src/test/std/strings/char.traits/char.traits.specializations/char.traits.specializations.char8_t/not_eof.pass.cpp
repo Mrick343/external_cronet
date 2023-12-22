@@ -18,6 +18,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
 #ifndef TEST_HAS_NO_CHAR8_T
@@ -26,6 +27,14 @@ int main(int, char**)
     assert(std::char_traits<char8_t>::not_eof(0) == 0);
     assert(std::char_traits<char8_t>::not_eof(std::char_traits<char8_t>::eof()) !=
            std::char_traits<char8_t>::eof());
+=======
+int main(int, char**) {
+#ifndef TEST_HAS_NO_CHAR8_T
+  assert(std::char_traits<char8_t>::not_eof(u8'a') == u8'a');
+  assert(std::char_traits<char8_t>::not_eof(u8'A') == u8'A');
+  assert(std::char_traits<char8_t>::not_eof(0) == 0);
+  assert(std::char_traits<char8_t>::not_eof(std::char_traits<char8_t>::eof()) != std::char_traits<char8_t>::eof());
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

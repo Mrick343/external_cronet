@@ -36,6 +36,7 @@
 #include "min_allocator.h"
 
 template <class StringView, class Size, class Allocator, class = void>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 struct CanDeduce : std::false_type { };
 
 template <class StringView, class Size, class Allocator>
@@ -119,6 +120,94 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+struct CanDeduce : std::false_type {};
+
+template <class StringView, class Size, class Allocator>
+struct CanDeduce<
+    StringView,
+    Size,
+    Allocator,
+    decltype((void)std::basic_string{
+        std::declval<StringView>(), std::declval<Size>(), std::declval<Size>(), std::declval<Allocator>()})>
+    : std::true_type {};
+
+struct NotAnAllocator {};
+static_assert(CanDeduce<std::string_view, std::size_t, std::allocator<char>>::value);
+static_assert(!CanDeduce<std::string_view, std::size_t, NotAnAllocator>::value);
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  {
+    std::string_view sv = "12345678901234";
+    std::basic_string s1{sv, 0, 4};
+    using S = decltype(s1); // what type did we get?
+    static_assert(std::is_same_v<S::value_type, char>, "");
+    static_assert(std::is_same_v<S::traits_type, std::char_traits<char>>, "");
+    static_assert(std::is_same_v<S::allocator_type, std::allocator<char>>, "");
+    assert(s1.size() == 4);
+    assert(s1.compare(0, s1.size(), sv.data(), s1.size()) == 0);
+  }
+
+  {
+    std::string_view sv = "12345678901234";
+    std::basic_string s1{sv, 0, 4, std::allocator<char>{}};
+    using S = decltype(s1); // what type did we get?
+    static_assert(std::is_same_v<S::value_type, char>, "");
+    static_assert(std::is_same_v<S::traits_type, std::char_traits<char>>, "");
+    static_assert(std::is_same_v<S::allocator_type, std::allocator<char>>, "");
+    assert(s1.size() == 4);
+    assert(s1.compare(0, s1.size(), sv.data(), s1.size()) == 0);
+  }
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  {
+    std::wstring_view sv = L"12345678901234";
+    std::basic_string s1{sv, 0, 4, test_allocator<wchar_t>{}};
+    using S = decltype(s1); // what type did we get?
+    static_assert(std::is_same_v<S::value_type, wchar_t>, "");
+    static_assert(std::is_same_v<S::traits_type, std::char_traits<wchar_t>>, "");
+    static_assert(std::is_same_v<S::allocator_type, test_allocator<wchar_t>>, "");
+    assert(s1.size() == 4);
+    assert(s1.compare(0, s1.size(), sv.data(), s1.size()) == 0);
+  }
+#endif
+#ifndef TEST_HAS_NO_CHAR8_T
+  {
+    std::u8string_view sv = u8"12345678901234";
+    std::basic_string s1{sv, 0, 4, min_allocator<char8_t>{}};
+    using S = decltype(s1); // what type did we get?
+    static_assert(std::is_same_v<S::value_type, char8_t>, "");
+    static_assert(std::is_same_v<S::traits_type, std::char_traits<char8_t>>, "");
+    static_assert(std::is_same_v<S::allocator_type, min_allocator<char8_t>>, "");
+    assert(s1.size() == 4);
+    assert(s1.compare(0, s1.size(), sv.data(), s1.size()) == 0);
+  }
+#endif
+  {
+    std::u16string_view sv = u"12345678901234";
+    std::basic_string s1{sv, 0, 4, min_allocator<char16_t>{}};
+    using S = decltype(s1); // what type did we get?
+    static_assert(std::is_same_v<S::value_type, char16_t>, "");
+    static_assert(std::is_same_v<S::traits_type, std::char_traits<char16_t>>, "");
+    static_assert(std::is_same_v<S::allocator_type, min_allocator<char16_t>>, "");
+    assert(s1.size() == 4);
+    assert(s1.compare(0, s1.size(), sv.data(), s1.size()) == 0);
+  }
+  {
+    std::u32string_view sv = U"12345678901234";
+    std::basic_string s1{sv, 0, 4, explicit_allocator<char32_t>{}};
+    using S = decltype(s1); // what type did we get?
+    static_assert(std::is_same_v<S::value_type, char32_t>, "");
+    static_assert(std::is_same_v<S::traits_type, std::char_traits<char32_t>>, "");
+    static_assert(std::is_same_v<S::allocator_type, explicit_allocator<char32_t>>, "");
+    assert(s1.size() == 4);
+    assert(s1.compare(0, s1.size(), sv.data(), s1.size()) == 0);
+  }
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

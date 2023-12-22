@@ -16,6 +16,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 constexpr bool test()
 {
     using S = std::string;
@@ -67,6 +68,60 @@ constexpr bool test()
 
 int main(int, char**)
 {
+=======
+template <class S>
+constexpr void test_string() {
+  const char* s = "abcde";
+  S s0;
+  S s1{s + 4, 1};
+  S s3{s + 2, 3};
+  S sNot{"xyz", 3};
+
+  assert(s0.contains(""));
+  assert(!s0.contains("e"));
+
+  assert(s1.contains(""));
+  assert(!s1.contains("d"));
+  assert(s1.contains("e"));
+  assert(!s1.contains("de"));
+  assert(!s1.contains("cd"));
+  assert(!s1.contains("cde"));
+  assert(!s1.contains("bcde"));
+  assert(!s1.contains("abcde"));
+  assert(!s1.contains("xyz"));
+
+  assert(s3.contains(""));
+  assert(s3.contains("d"));
+  assert(s3.contains("e"));
+  assert(s3.contains("de"));
+  assert(s3.contains("cd"));
+  assert(!s3.contains("ce"));
+  assert(s3.contains("cde"));
+  assert(!s3.contains("edc"));
+  assert(!s3.contains("bcde"));
+  assert(!s3.contains("abcde"));
+  assert(!s3.contains("xyz"));
+
+  assert(sNot.contains(""));
+  assert(!sNot.contains("d"));
+  assert(!sNot.contains("e"));
+  assert(!sNot.contains("de"));
+  assert(!sNot.contains("cd"));
+  assert(!sNot.contains("cde"));
+  assert(!sNot.contains("bcde"));
+  assert(!sNot.contains("abcde"));
+  assert(sNot.contains("xyz"));
+  assert(!sNot.contains("zyx"));
+}
+
+constexpr bool test() {
+  test_string<std::string>();
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
   static_assert(test());
 

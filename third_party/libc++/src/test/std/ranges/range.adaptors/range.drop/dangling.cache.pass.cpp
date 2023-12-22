@@ -29,6 +29,12 @@ struct ZeroOnDestroy : std::ranges::view_base {
   constexpr ForwardIter end() { return ForwardIter(buff + 8); }
   constexpr ForwardIter end() const { return ForwardIter(); }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+  ZeroOnDestroy() = default;
+  ZeroOnDestroy(const ZeroOnDestroy&) = default;
+  ZeroOnDestroy& operator=(const ZeroOnDestroy&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   ~ZeroOnDestroy() {
     std::memset(buff, 0, sizeof(buff));
   }

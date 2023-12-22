@@ -21,6 +21,11 @@ __attribute__((noinline)) void call_something() { asm volatile(""); }
 
 struct Node {
   explicit Node() {}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+  Node(const Node&) = default;
+  Node& operator=(const Node&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   ~Node() {}
 };
 

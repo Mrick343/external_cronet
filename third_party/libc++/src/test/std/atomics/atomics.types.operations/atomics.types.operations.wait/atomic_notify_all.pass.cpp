@@ -56,6 +56,7 @@ struct TestFn {
     {
       volatile A a(T(2));
       static_assert(noexcept(std::atomic_notify_all(&a)), "");
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
       auto f = [&]() {
         assert(std::atomic_load(&a) == T(2));
         std::atomic_wait(&a, T(2));
@@ -65,6 +66,23 @@ struct TestFn {
       std::thread t2 = support::make_test_thread(f);
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
+=======
+
+      std::atomic<bool> is_ready[2] = {false, false};
+      auto f                        = [&](int index) {
+        assert(std::atomic_load(&a) == T(2));
+        is_ready[index].store(true);
+
+        std::atomic_wait(&a, T(2));
+        assert(std::atomic_load(&a) == T(4));
+      };
+      std::thread t1 = support::make_test_thread(f, /*index=*/0);
+      std::thread t2 = support::make_test_thread(f, /*index=*/1);
+
+      while (!is_ready[0] || !is_ready[1]) {
+        // Spin
+      }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
       std::atomic_store(&a, T(4));
       std::atomic_notify_all(&a);
       t1.join();

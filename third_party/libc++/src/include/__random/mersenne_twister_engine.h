@@ -135,6 +135,7 @@ public:
       seed(__sd);
     }
 #endif
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     template<class _Sseq>
         _LIBCPP_INLINE_VISIBILITY
         explicit mersenne_twister_engine(_Sseq& __q,
@@ -240,6 +241,92 @@ private:
             (__count >= _Dt),
             result_type
         >::type
+=======
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, mersenne_twister_engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        explicit mersenne_twister_engine(_Sseq& __q)
+        {seed(__q);}
+    _LIBCPP_HIDE_FROM_ABI void seed(result_type __sd = default_seed);
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, mersenne_twister_engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        void
+        seed(_Sseq& __q)
+            {__seed(__q, integral_constant<unsigned, 1 + (__w - 1) / 32>());}
+
+    // generating functions
+    _LIBCPP_HIDE_FROM_ABI result_type operator()();
+    _LIBCPP_INLINE_VISIBILITY
+    void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
+
+    template <class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
+              _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
+              _UInt _Bp, size_t _Tp, _UInt _Cp, size_t _Lp, _UInt _Fp>
+    friend
+    bool
+    operator==(const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
+                                             _Bp, _Tp, _Cp, _Lp, _Fp>& __x,
+               const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
+                                             _Bp, _Tp, _Cp, _Lp, _Fp>& __y);
+
+    template <class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
+              _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
+              _UInt _Bp, size_t _Tp, _UInt _Cp, size_t _Lp, _UInt _Fp>
+    friend
+    bool
+    operator!=(const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
+                                             _Bp, _Tp, _Cp, _Lp, _Fp>& __x,
+               const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
+                                             _Bp, _Tp, _Cp, _Lp, _Fp>& __y);
+
+    template <class _CharT, class _Traits,
+              class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
+              _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
+              _UInt _Bp, size_t _Tp, _UInt _Cp, size_t _Lp, _UInt _Fp>
+    friend
+    basic_ostream<_CharT, _Traits>&
+    operator<<(basic_ostream<_CharT, _Traits>& __os,
+               const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
+                                             _Bp, _Tp, _Cp, _Lp, _Fp>& __x);
+
+    template <class _CharT, class _Traits,
+              class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
+              _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
+              _UInt _Bp, size_t _Tp, _UInt _Cp, size_t _Lp, _UInt _Fp>
+    friend
+    basic_istream<_CharT, _Traits>&
+    operator>>(basic_istream<_CharT, _Traits>& __is,
+               mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
+                                       _Bp, _Tp, _Cp, _Lp, _Fp>& __x);
+private:
+
+    template<class _Sseq>
+    _LIBCPP_HIDE_FROM_ABI void __seed(_Sseq& __q, integral_constant<unsigned, 1>);
+    template<class _Sseq>
+    _LIBCPP_HIDE_FROM_ABI void __seed(_Sseq& __q, integral_constant<unsigned, 2>);
+
+    template <size_t __count, __enable_if_t<__count < __w, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        static
+        result_type
+        __lshift(result_type __x) {return (__x << __count) & _Max;}
+
+    template <size_t __count, __enable_if_t<(__count >= __w), int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        static
+        result_type
+        __lshift(result_type) {return result_type(0);}
+
+    template <size_t __count, __enable_if_t<__count < _Dt, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        static
+        result_type
+        __rshift(result_type __x) {return __x >> __count;}
+
+    template <size_t __count, __enable_if_t<(__count >= _Dt), int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        static
+        result_type
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
         __rshift(result_type) {return result_type(0);}
 };
 

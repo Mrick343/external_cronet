@@ -45,6 +45,7 @@
 #include <utility>
 
 #include "test_macros.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 // Test Constraints:
 template <class T1, class Err1, class T2, class Err2>
@@ -168,6 +169,138 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+// Test Constraints:
+template <class T1, class Err1, class T2, class Err2>
+concept canCstrFromExpected = std::is_constructible_v<std::expected<T1, Err1>, const std::expected<T2, Err2>&>;
+
+struct CtorFromInt {
+  CtorFromInt(int);
+};
+
+static_assert(canCstrFromExpected<CtorFromInt, int, int, int>);
+
+struct NoCtorFromInt {};
+
+// !is_constructible_v<T, UF>
+static_assert(!canCstrFromExpected<NoCtorFromInt, int, int, int>);
+
+// !is_constructible_v<E, GF>
+static_assert(!canCstrFromExpected<int, NoCtorFromInt, int, int>);
+
+template <class T>
+struct CtorFrom {
+  explicit CtorFrom(int)
+    requires(!std::same_as<T, int>);
+  explicit CtorFrom(T);
+  explicit CtorFrom(auto&&) = delete;
+};
+
+// is_constructible_v<T, expected<U, G>&>
+static_assert(!canCstrFromExpected<CtorFrom<std::expected<int, int>&>, int, int, int>);
+
+// is_constructible_v<T, expected<U, G>>
+static_assert(!canCstrFromExpected<CtorFrom<std::expected<int, int>&&>, int, int, int>);
+
+// is_constructible_v<T, expected<U, G>&>
+// note that this is true because it is covered by the other overload
+//   template<class U = T> constexpr explicit(see below) expected(U&& v);
+// The fact that it is not ambiguous proves that the overload under testing is removed
+static_assert(canCstrFromExpected<CtorFrom<std::expected<int, int> const&>, int, int, int>);
+
+// is_constructible_v<T, expected<U, G>>
+static_assert(!canCstrFromExpected<CtorFrom<std::expected<int, int> const&&>, int, int, int>);
+
+template <class T>
+struct ConvertFrom {
+  ConvertFrom(int)
+    requires(!std::same_as<T, int>);
+  ConvertFrom(T);
+  ConvertFrom(auto&&) = delete;
+};
+
+// is_convertible_v<expected<U, G>&, T>
+static_assert(!canCstrFromExpected<ConvertFrom<std::expected<int, int>&>, int, int, int>);
+
+// is_convertible_v<expected<U, G>&&, T>
+static_assert(!canCstrFromExpected<ConvertFrom<std::expected<int, int>&&>, int, int, int>);
+
+// is_convertible_v<const expected<U, G>&, T>
+// note that this is true because it is covered by the other overload
+//   template<class U = T> constexpr explicit(see below) expected(U&& v);
+// The fact that it is not ambiguous proves that the overload under testing is removed
+static_assert(canCstrFromExpected<ConvertFrom<std::expected<int, int> const&>, int, int, int>);
+
+// is_convertible_v<const expected<U, G>&&, T>
+static_assert(!canCstrFromExpected<ConvertFrom<std::expected<int, int> const&&>, int, int, int>);
+
+// Note for below 4 tests, because their E is constructible from cvref of std::expected<int, int>,
+// unexpected<E> will be constructible from cvref of std::expected<int, int>
+// is_constructible_v<unexpected<E>, expected<U, G>&>
+static_assert(!canCstrFromExpected<int, CtorFrom<std::expected<int, int>&>, int, int>);
+
+// is_constructible_v<unexpected<E>, expected<U, G>>
+static_assert(!canCstrFromExpected<int, CtorFrom<std::expected<int, int>&&>, int, int>);
+
+// is_constructible_v<unexpected<E>, const expected<U, G>&> is false
+static_assert(!canCstrFromExpected<int, CtorFrom<std::expected<int, int> const&>, int, int>);
+
+// is_constructible_v<unexpected<E>, const expected<U, G>>
+static_assert(!canCstrFromExpected<int, CtorFrom<std::expected<int, int> const&&>, int, int>);
+
+// test explicit
+static_assert(std::is_convertible_v<const std::expected<int, int>&, std::expected<short, long>>);
+
+// !is_convertible_v<UF, T>
+static_assert(std::is_constructible_v<std::expected<CtorFrom<int>, int>, const std::expected<int, int>&>);
+static_assert(!std::is_convertible_v<const std::expected<int, int>&, std::expected<CtorFrom<int>, int>>);
+
+// !is_convertible_v<GF, E>.
+static_assert(std::is_constructible_v<std::expected<int, CtorFrom<int>>, const std::expected<int, int>&>);
+static_assert(!std::is_convertible_v<const std::expected<int, int>&, std::expected<int, CtorFrom<int>>>);
+
+struct Data {
+  int i;
+  constexpr Data(int ii) : i(ii) {}
+};
+
+constexpr bool test() {
+  // convert the value
+  {
+    const std::expected<int, int> e1(5);
+    std::expected<Data, int> e2 = e1;
+    assert(e2.has_value());
+    assert(e2.value().i == 5);
+    assert(e1.has_value());
+    assert(e1.value() == 5);
+  }
+
+  // convert the error
+  {
+    const std::expected<int, int> e1(std::unexpect, 5);
+    std::expected<int, Data> e2 = e1;
+    assert(!e2.has_value());
+    assert(e2.error().i == 5);
+    assert(!e1.has_value());
+    assert(e1.error() == 5);
+  }
+
+  // convert TailClobberer
+  {
+    const std::expected<TailClobbererNonTrivialMove<0>, char> e1;
+    std::expected<TailClobberer<0>, char> e2 = e1;
+    assert(e2.has_value());
+    assert(e1.has_value());
+  }
+
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   struct ThrowingInt {
     ThrowingInt(int) { throw Except{}; }
   };

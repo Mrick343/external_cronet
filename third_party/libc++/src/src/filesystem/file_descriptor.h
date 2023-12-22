@@ -18,6 +18,7 @@
 
 #include "error.h"
 #include "posix_compat.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 #if defined(_LIBCPP_WIN32API)
 # define WIN32_LEAN_AND_MEAN
@@ -149,6 +150,164 @@ struct FileDescriptor {
   void close() noexcept {
     if (fd != -1)
       detail::close(fd);
+=======
+#include "time_utils.h"
+
+#if defined(_LIBCPP_WIN32API)
+# define WIN32_LEAN_AND_MEAN
+# define NOMINMAX
+# include <windows.h>
+#else
+# include <dirent.h>   // for DIR & friends
+# include <fcntl.h>    // values for fchmodat
+# include <sys/stat.h>
+# include <sys/statvfs.h>
+# include <unistd.h>
+#endif // defined(_LIBCPP_WIN32API)
+
+_LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
+
+namespace detail {
+
+#if !defined(_LIBCPP_WIN32API)
+
+#if defined(DT_BLK)
+template <class DirEntT, class = decltype(DirEntT::d_type)>
+file_type get_file_type(DirEntT* ent, int) {
+  switch (ent->d_type) {
+  case DT_BLK:
+    return file_type::block;
+  case DT_CHR:
+    return file_type::character;
+  case DT_DIR:
+    return file_type::directory;
+  case DT_FIFO:
+    return file_type::fifo;
+  case DT_LNK:
+    return file_type::symlink;
+  case DT_REG:
+    return file_type::regular;
+  case DT_SOCK:
+    return file_type::socket;
+  // Unlike in lstat, hitting "unknown" here simply means that the underlying
+  // filesystem doesn't support d_type. Report is as 'none' so we correctly
+  // set the cache to empty.
+  case DT_UNKNOWN:
+    break;
+  }
+  return file_type::none;
+}
+#endif // defined(DT_BLK)
+
+template <class DirEntT>
+file_type get_file_type(DirEntT*, long) {
+  return file_type::none;
+}
+
+inline pair<string_view, file_type> posix_readdir(DIR* dir_stream,
+                                                  error_code& ec) {
+  struct dirent* dir_entry_ptr = nullptr;
+  errno = 0; // zero errno in order to detect errors
+  ec.clear();
+  if ((dir_entry_ptr = ::readdir(dir_stream)) == nullptr) {
+    if (errno)
+      ec = capture_errno();
+    return {};
+  } else {
+    return {dir_entry_ptr->d_name, get_file_type(dir_entry_ptr, 0)};
+  }
+}
+
+#else // _LIBCPP_WIN32API
+
+inline file_type get_file_type(const WIN32_FIND_DATAW& data) {
+  if (data.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT &&
+      data.dwReserved0 == IO_REPARSE_TAG_SYMLINK)
+    return file_type::symlink;
+  if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+    return file_type::directory;
+  return file_type::regular;
+}
+inline uintmax_t get_file_size(const WIN32_FIND_DATAW& data) {
+  return (static_cast<uint64_t>(data.nFileSizeHigh) << 32) + data.nFileSizeLow;
+}
+inline file_time_type get_write_time(const WIN32_FIND_DATAW& data) {
+  ULARGE_INTEGER tmp;
+  const FILETIME& time = data.ftLastWriteTime;
+  tmp.u.LowPart = time.dwLowDateTime;
+  tmp.u.HighPart = time.dwHighDateTime;
+  return file_time_type(file_time_type::duration(tmp.QuadPart));
+}
+
+#endif // !_LIBCPP_WIN32API
+
+//                       POSIX HELPERS
+
+using value_type = path::value_type;
+using string_type = path::string_type;
+
+struct FileDescriptor {
+  const path& name;
+  int fd = -1;
+  StatT m_stat;
+  file_status m_status;
+
+  template <class... Args>
+  static FileDescriptor create(const path* p, error_code& ec, Args... args) {
+    ec.clear();
+    int fd;
+#ifdef _LIBCPP_WIN32API
+    // TODO: most of the filesystem implementation uses native Win32 calls
+    // (mostly via posix_compat.h). However, here we use the C-runtime APIs to
+    // open a file, because we subsequently pass the C-runtime fd to
+    // `std::[io]fstream::__open(int fd)` in order to implement copy_file.
+    //
+    // Because we're calling the windows C-runtime, win32 error codes are
+    // translated into C error numbers by the C runtime, and returned in errno,
+    // rather than being accessible directly via GetLastError.
+    //
+    // Ideally copy_file should be calling the Win32 CopyFile2 function, which
+    // works on paths, not open files -- at which point this FileDescriptor type
+    // will no longer be needed on windows at all.
+    fd = ::_wopen(p->c_str(), args...);
+#else
+    fd = open(p->c_str(), args...);
+#endif
+
+    if (fd == -1) {
+      ec = capture_errno();
+      return FileDescriptor{p};
+    }
+    return FileDescriptor(p, fd);
+  }
+
+  template <class... Args>
+  static FileDescriptor create_with_status(const path* p, error_code& ec,
+                                           Args... args) {
+    FileDescriptor fd = create(p, ec, args...);
+    if (!ec)
+      fd.refresh_status(ec);
+
+    return fd;
+  }
+
+  file_status get_status() const { return m_status; }
+  StatT const& get_stat() const { return m_stat; }
+
+  bool status_known() const { return _VSTD_FS::status_known(m_status); }
+
+  file_status refresh_status(error_code& ec);
+
+  void close() noexcept {
+    if (fd != -1) {
+#ifdef _LIBCPP_WIN32API
+      ::_close(fd);
+#else
+      ::close(fd);
+#endif
+      // FIXME: shouldn't this return an error_code?
+    }
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     fd = -1;
   }
 

@@ -27,6 +27,7 @@
 
 #include "MoveOnly.h"
 #include "test_macros.h"
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 
 // Test Constraints
 static_assert(std::is_constructible_v<std::expected<int, int>, const std::unexpected<int>&>);
@@ -67,6 +68,48 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+// Test Constraints
+static_assert(std::is_constructible_v<std::expected<int, int>, const std::unexpected<int>&>);
+
+// !is_constructible_v<E, GF>
+struct foo {};
+static_assert(!std::is_constructible_v<std::expected<int, int>, const std::unexpected<foo>&>);
+static_assert(!std::is_constructible_v<std::expected<int, MoveOnly>, const std::unexpected<MoveOnly>&>);
+
+// explicit(!is_convertible_v<const G&, E>)
+struct NotConvertible {
+  explicit NotConvertible(int);
+};
+static_assert(std::is_convertible_v<const std::unexpected<int>&, std::expected<int, int>>);
+static_assert(!std::is_convertible_v<const std::unexpected<int>&, std::expected<int, NotConvertible>>);
+
+struct MyInt {
+  int i;
+  constexpr MyInt(int ii) : i(ii) {}
+  friend constexpr bool operator==(const MyInt&, const MyInt&) = default;
+};
+
+template <class T, class V = int>
+constexpr void testUnexpected() {
+  const std::unexpected<int> u(5);
+  std::expected<V, T> e(u);
+  assert(!e.has_value());
+  assert(e.error() == 5);
+}
+
+constexpr bool test() {
+  testUnexpected<int>();
+  testUnexpected<MyInt>();
+  testUnexpected<TailClobberer<1>, bool>();
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing(int) { throw Except{}; }
   };

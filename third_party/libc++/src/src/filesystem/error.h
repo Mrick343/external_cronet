@@ -112,6 +112,7 @@ inline error_code make_windows_error(int err) {
 template <class T>
 T error_value();
 template <>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 inline _LIBCPP_CONSTEXPR_SINCE_CXX14 void error_value<void>() {}
 template <>
 inline bool error_value<bool>() {
@@ -129,6 +130,25 @@ inline uintmax_t error_value<uintmax_t>() {
 }
 template <>
 inline _LIBCPP_CONSTEXPR_SINCE_CXX14 file_time_type error_value<file_time_type>() {
+=======
+inline constexpr void error_value<void>() {}
+template <>
+inline bool error_value<bool>() {
+  return false;
+}
+#if __SIZEOF_SIZE_T__ != __SIZEOF_LONG_LONG__
+template <>
+inline size_t error_value<size_t>() {
+  return size_t(-1);
+}
+#endif
+template <>
+inline uintmax_t error_value<uintmax_t>() {
+  return uintmax_t(-1);
+}
+template <>
+inline constexpr file_time_type error_value<file_time_type>() {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   return file_time_type::min();
 }
 template <>

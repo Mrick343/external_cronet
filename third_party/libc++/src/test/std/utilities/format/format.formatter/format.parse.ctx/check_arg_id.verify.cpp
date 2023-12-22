@@ -22,6 +22,10 @@ constexpr bool test() {
 }
 
 void f() {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   // expected-error-re@+1 {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
+=======
+  // expected-error@+1 {{static assertion expression is not an integral constant expression}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   static_assert(test());
 }

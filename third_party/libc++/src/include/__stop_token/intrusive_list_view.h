@@ -67,7 +67,11 @@ struct __intrusive_list_view {
         __node->__next_->__prev_ = __node->__prev_;
       }
     } else {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
       _LIBCPP_ASSERT_UNCATEGORIZED(__node == __head_, "Node to be removed has no prev node, so it has to be the head");
+=======
+      _LIBCPP_ASSERT_INTERNAL(__node == __head_, "Node to be removed has no prev node, so it has to be the head");
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
       __pop_front();
     }
   }

@@ -6,10 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // When the debug mode is enabled, we don't unwrap iterators in std::copy
 // so we don't get this optimization.
 // UNSUPPORTED: libcpp-has-debug-mode
 
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // check that std::__unwrap_iter() returns the correct type
 
 #include <algorithm>

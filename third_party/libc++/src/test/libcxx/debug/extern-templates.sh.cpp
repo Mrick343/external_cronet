@@ -10,7 +10,11 @@
 // for members of <locale> even when the debug mode is enabled, which is
 // necessary for correctness. See https://llvm.org/D94718 for details.
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: !libcpp-has-debug-mode
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: no-localization
 // UNSUPPORTED: cant-build-shared-library
 

@@ -153,7 +153,11 @@ We should also consider the opposite problem of having a ``file_time_type``
 that is able to represent a larger range than ``timespec``. At least in
 this case ``last_write_time`` can be used to get and set all possible values
 supported by the underlying filesystem; meaning ``last_write_time(p)`` will
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 never throw a overflow error when retrieving a value.
+=======
+never throw an overflow error when retrieving a value.
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 However, this introduces a new problem, where users are allowed to attempt to
 create a time point beyond what the filesystem can represent. Two particular

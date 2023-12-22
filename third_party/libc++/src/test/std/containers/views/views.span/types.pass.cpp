@@ -19,7 +19,11 @@
 //  using difference_type        = ptrdiff_t;
 //  using pointer                = element_type *;
 //  using reference              = element_type &;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 //  using const_pointe           = const element_type *;
+=======
+//  using const_pointer          = const element_type *;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 //  using const_reference        = const element_type &;
 //  using iterator               = implementation-defined;
 //  using const_iterator         = implementation-defined;

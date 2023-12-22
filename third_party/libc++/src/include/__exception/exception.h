@@ -72,6 +72,7 @@ public:
 class _LIBCPP_EXPORTED_FROM_ABI exception {
 public:
   _LIBCPP_HIDE_FROM_ABI exception() _NOEXCEPT {}
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   _LIBCPP_HIDE_FROM_ABI exception(const exception&) _NOEXCEPT = default;
 
   virtual ~exception() _NOEXCEPT;
@@ -81,6 +82,20 @@ public:
 class _LIBCPP_EXPORTED_FROM_ABI bad_exception : public exception {
 public:
   _LIBCPP_HIDE_FROM_ABI bad_exception() _NOEXCEPT {}
+=======
+  _LIBCPP_HIDE_FROM_ABI exception(const exception&) _NOEXCEPT            = default;
+  _LIBCPP_HIDE_FROM_ABI exception& operator=(const exception&) _NOEXCEPT = default;
+
+  virtual ~exception() _NOEXCEPT;
+  virtual const char* what() const _NOEXCEPT;
+};
+
+class _LIBCPP_EXPORTED_FROM_ABI bad_exception : public exception {
+public:
+  _LIBCPP_HIDE_FROM_ABI bad_exception() _NOEXCEPT {}
+  _LIBCPP_HIDE_FROM_ABI bad_exception(const bad_exception&) _NOEXCEPT            = default;
+  _LIBCPP_HIDE_FROM_ABI bad_exception& operator=(const bad_exception&) _NOEXCEPT = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   ~bad_exception() _NOEXCEPT override;
   const char* what() const _NOEXCEPT override;
 };

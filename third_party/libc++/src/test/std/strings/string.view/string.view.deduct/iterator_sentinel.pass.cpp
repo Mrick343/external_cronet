@@ -19,6 +19,7 @@
 #include "test_macros.h"
 #include "test_iterators.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template<class It, class Sentinel, class CharT>
 constexpr void test_ctad(std::basic_string_view<CharT> val) {
   auto sv = std::basic_string_view(It(val.data()), Sentinel(It(val.data() + val.size())));
@@ -28,6 +29,17 @@ constexpr void test_ctad(std::basic_string_view<CharT> val) {
 }
 
 template<class CharT>
+=======
+template <class It, class Sentinel, class CharT>
+constexpr void test_ctad(std::basic_string_view<CharT> val) {
+  auto sv = std::basic_string_view(It(val.data()), Sentinel(It(val.data() + val.size())));
+  ASSERT_SAME_TYPE(decltype(sv), std::basic_string_view<CharT>);
+  assert(sv.data() == val.data());
+  assert(sv.size() == val.size());
+}
+
+template <class CharT>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 constexpr void test_with_char() {
   const auto val = MAKE_STRING_VIEW(CharT, "test");
   test_ctad<CharT*, CharT*>(val);

@@ -74,7 +74,11 @@ union ResourceInitHelper {
     __null_memory_resource_imp       null_res;
   } resources;
   char dummy;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   _LIBCPP_CONSTEXPR_SINCE_CXX14 ResourceInitHelper() : resources() {}
+=======
+  constexpr ResourceInitHelper() : resources() {}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   ~ResourceInitHelper() {}
 };
 

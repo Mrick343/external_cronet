@@ -21,6 +21,10 @@
 #include <unordered_set>
 #include <vector>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+#include "exception_safety_helpers.h"
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include "from_range_helpers.h"
 #include "min_allocator.h"
 #include "test_allocator.h"

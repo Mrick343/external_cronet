@@ -76,8 +76,13 @@ static void BM_DeallocateOnly(benchmark::State& st) {
     p = AllocWrapper::Allocate(alloc_size);
   }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   void** Data      = Pointers.data();
   void** const End = Pointers.data() + Pointers.size();
+=======
+  void** Data                       = Pointers.data();
+  [[maybe_unused]] void** const End = Pointers.data() + Pointers.size();
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   while (st.KeepRunning()) {
     AllocWrapper::Deallocate(*Data, alloc_size);
     Data += 1;

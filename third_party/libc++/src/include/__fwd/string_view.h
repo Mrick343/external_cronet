@@ -11,7 +11,11 @@
 #define _LIBCPP___FWD_STRING_VIEW_H
 
 #include <__config>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 #include <iosfwd> // char_traits
+=======
+#include <__fwd/string.h>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header

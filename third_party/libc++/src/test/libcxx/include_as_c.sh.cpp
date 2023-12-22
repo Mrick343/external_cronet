@@ -7,7 +7,11 @@
 //===----------------------------------------------------------------------===//
 
 // We're building as C, so this test doesn't work when building with modules.
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // GCC complains about unrecognized arguments because we're compiling the
 // file as C, but we're passing C++ flags on the command-line.

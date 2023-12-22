@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // XFAIL: LIBCXX-FREEBSD-FIXME
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
@@ -175,6 +176,175 @@ static void test() {
                  std::chrono::year{1970}, std::chrono::month_day_last{std::chrono::month{4}}}),
              SV("1970/avril/last"));
 #  endif // defined(_WIN32) || defined(_AIX)
+=======
+// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: no-localization
+// UNSUPPORTED: GCC-ALWAYS_INLINE-FIXME
+
+// TODO FMT This test should not require std::to_chars(floating-point)
+// XFAIL: availability-fp_to_chars-missing
+
+// REQUIRES: locale.fr_FR.UTF-8
+// REQUIRES: locale.ja_JP.UTF-8
+
+// <chrono>
+
+// class year_month_day_last;
+
+// template<class charT, class traits>
+//   basic_ostream<charT, traits>&
+//     operator<<(basic_ostream<charT, traits>& os, const year_month_day_last& ymdl);
+
+#include <chrono>
+#include <cassert>
+#include <sstream>
+
+#include "make_string.h"
+#include "platform_support.h" // locale name macros
+#include "test_macros.h"
+#include "assert_macros.h"
+#include "concat_macros.h"
+
+#define SV(S) MAKE_STRING_VIEW(CharT, S)
+
+#define TEST_EQUAL(OUT, EXPECTED)                                                                                      \
+  TEST_REQUIRE(OUT == EXPECTED,                                                                                        \
+               TEST_WRITE_CONCATENATED(                                                                                \
+                   "\nExpression      ", #OUT, "\nExpected output ", EXPECTED, "\nActual output   ", OUT, '\n'));
+
+template <class CharT>
+static std::basic_string<CharT> stream_c_locale(std::chrono::year_month_day_last ymdl) {
+  std::basic_stringstream<CharT> sstr;
+  sstr << ymdl;
+  return sstr.str();
+}
+
+template <class CharT>
+static std::basic_string<CharT> stream_fr_FR_locale(std::chrono::year_month_day_last ymdl) {
+  std::basic_stringstream<CharT> sstr;
+  const std::locale locale(LOCALE_fr_FR_UTF_8);
+  sstr.imbue(locale);
+  sstr << ymdl;
+  return sstr.str();
+}
+
+template <class CharT>
+static std::basic_string<CharT> stream_ja_JP_locale(std::chrono::year_month_day_last ymdl) {
+  std::basic_stringstream<CharT> sstr;
+  const std::locale locale(LOCALE_ja_JP_UTF_8);
+  sstr.imbue(locale);
+  sstr << ymdl;
+  return sstr.str();
+}
+
+template <class CharT>
+static void test() {
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{0}}}),
+             SV("0000/0 is not a valid month/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'768}, std::chrono::month_day_last{std::chrono::month{1}}}),
+             SV("-32768 is not a valid year/Jan/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'767}, std::chrono::month_day_last{std::chrono::month{2}}}),
+             SV("-32767/Feb/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{3}}}),
+             SV("0000/Mar/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{1970}, std::chrono::month_day_last{std::chrono::month{4}}}),
+             SV("1970/Apr/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{32'767}, std::chrono::month_day_last{std::chrono::month{5}}}),
+             SV("32767/May/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{6}}}),
+             SV("0000/Jun/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{7}}}),
+             SV("0000/Jul/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{8}}}),
+             SV("0000/Aug/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{9}}}),
+             SV("0000/Sep/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{10}}}),
+             SV("0000/Oct/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{11}}}),
+             SV("0000/Nov/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{12}}}),
+             SV("0000/Dec/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{13}}}),
+             SV("0000/13 is not a valid month/last"));
+  TEST_EQUAL(stream_c_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'768}, std::chrono::month_day_last{std::chrono::month{255}}}),
+             SV("-32768 is not a valid year/255 is not a valid month/last"));
+
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{0}}}),
+             SV("0000/0 is not a valid month/last"));
+#if defined(__APPLE__)
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'768}, std::chrono::month_day_last{std::chrono::month{1}}}),
+             SV("-32768 is not a valid year/jan/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'767}, std::chrono::month_day_last{std::chrono::month{2}}}),
+             SV("-32767/fév/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{3}}}),
+             SV("0000/mar/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{1970}, std::chrono::month_day_last{std::chrono::month{4}}}),
+             SV("1970/avr/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{32'767}, std::chrono::month_day_last{std::chrono::month{5}}}),
+             SV("32767/mai/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{6}}}),
+             SV("0000/jui/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{7}}}),
+             SV("0000/jul/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{8}}}),
+             SV("0000/aoû/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{9}}}),
+             SV("0000/sep/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{10}}}),
+             SV("0000/oct/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{11}}}),
+             SV("0000/nov/last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{12}}}),
+             SV("0000/déc/last"));
+#else //  defined(__APPLE__)
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'768}, std::chrono::month_day_last{std::chrono::month{1}}}),
+             SV("-32768 is not a valid year/janv./last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{-32'767}, std::chrono::month_day_last{std::chrono::month{2}}}),
+             SV("-32767/févr./last"));
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{3}}}),
+             SV("0000/mars/last"));
+#  if defined(_WIN32) || defined(_AIX) || defined(__FreeBSD__)
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{1970}, std::chrono::month_day_last{std::chrono::month{4}}}),
+             SV("1970/avr./last"));
+#  else  // defined(_WIN32) || defined(_AIX) || defined(__FreeBSD__)
+  TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
+                 std::chrono::year{1970}, std::chrono::month_day_last{std::chrono::month{4}}}),
+             SV("1970/avril/last"));
+#  endif // defined(_WIN32) || defined(_AIX) || defined(__FreeBSD__)
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   TEST_EQUAL(stream_fr_FR_locale<CharT>(std::chrono::year_month_day_last{
                  std::chrono::year{32'767}, std::chrono::month_day_last{std::chrono::month{5}}}),
              SV("32767/mai/last"));

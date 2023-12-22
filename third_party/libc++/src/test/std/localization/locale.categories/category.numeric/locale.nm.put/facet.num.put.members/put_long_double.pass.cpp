@@ -14,6 +14,13 @@
 
 // XFAIL: win32-broken-printf-g-precision
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// Needs more investigation, but this is probably failing on Android M (API 23)
+// and up because the printf formatting of NAN changed.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{21|22}}
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #include <locale>
 #include <ios>
 #include <cassert>

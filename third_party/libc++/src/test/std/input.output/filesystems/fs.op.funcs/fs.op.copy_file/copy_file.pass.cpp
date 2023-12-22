@@ -14,6 +14,7 @@
 // against already-released libc++'s.
 // XFAIL: stdlib=apple-libc++ && target={{.+}}-apple-macosx{{10.15|11.0}}
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // <filesystem>
 
 // bool copy_file(const path& from, const path& to);
@@ -21,6 +22,18 @@
 // bool copy_file(const path& from, const path& to, copy_options options);
 // bool copy_file(const path& from, const path& to, copy_options options,
 //           error_code& ec) noexcept;
+=======
+// Starting in Android N (API 24), SELinux policy prevents the shell user from
+// creating a FIFO file.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{21|22|23}}
+
+// <filesystem>
+
+// bool copy_file(const path& from, const path& to);
+// bool copy_file(const path& from, const path& to, error_code& ec) noexcept;
+// bool copy_file(const path& from, const path& to, copy_options options);
+// bool copy_file(const path& from, const path& to, copy_options options, error_code& ec) noexcept;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include "filesystem_include.h"
 #include <type_traits>

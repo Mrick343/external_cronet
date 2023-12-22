@@ -11,7 +11,10 @@
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
 // Check that different_from.h is self-contained
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <__concepts/different_from.h>
 

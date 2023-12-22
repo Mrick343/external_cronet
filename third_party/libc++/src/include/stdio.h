@@ -115,6 +115,11 @@ void perror(const char* s);
 #undef clearerr
 #undef feof
 #undef ferror
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+#undef putchar
+#undef getchar
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #endif
 

@@ -57,6 +57,7 @@ struct std::hash<KeyValue> {
 };
 
 #if !defined(TEST_HAS_NO_EXCEPTIONS)
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <int N>
 struct ThrowingCopy {
   static bool throwing_enabled;
@@ -103,6 +104,8 @@ template <int N>
 int ThrowingCopy<N>::created_by_copying = 0;
 template <int N>
 int ThrowingCopy<N>::destroyed = 0;
+=======
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 template <class T>
 struct ThrowingAllocator {

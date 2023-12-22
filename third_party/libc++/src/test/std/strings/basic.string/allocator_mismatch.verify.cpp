@@ -11,4 +11,9 @@
 
 #include <string>
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 std::basic_string<char, std::char_traits<char>, std::allocator<int> > s; // expected-error@*:* {{Allocator::value_type must be same type as value_type}}
+=======
+std::basic_string<char, std::char_traits<char>, std::allocator<int> >
+    s; // expected-error@*:* {{Allocator::value_type must be same type as value_type}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)

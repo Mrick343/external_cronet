@@ -21,7 +21,11 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER >= 17
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 enum class _LIBCPP_ENUM_VIS chars_format { scientific = 0x1, fixed = 0x2, hex = 0x4, general = fixed | scientific };
+=======
+enum class chars_format { scientific = 0x1, fixed = 0x2, hex = 0x4, general = fixed | scientific };
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 inline _LIBCPP_HIDE_FROM_ABI constexpr chars_format operator~(chars_format __x) {
   return chars_format(~std::__to_underlying(__x));

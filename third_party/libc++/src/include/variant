@@ -1274,7 +1274,11 @@ struct __all_overloads : _Bases... {
   using _Bases::operator()...;
 };
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <class IdxSeq>
+=======
+template <class _IdxSeq>
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 struct __make_overloads_imp;
 
 template <size_t ..._Idx>

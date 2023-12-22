@@ -18,7 +18,11 @@
 #include <fstream>
 
 std::basic_filebuf<char, std::char_traits<wchar_t> > f;
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // expected-error-re@streambuf:* {{{{(static_assert|static assertion)}} failed{{.*}}traits_type::char_type must be the same type as CharT}}
+=======
+// expected-error-re@streambuf:* {{static assertion failed{{.*}}traits_type::char_type must be the same type as CharT}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // expected-error@fstream:* {{only virtual member functions can be marked 'override'}}
 // expected-error@fstream:* {{only virtual member functions can be marked 'override'}}
 // expected-error@fstream:* {{only virtual member functions can be marked 'override'}}

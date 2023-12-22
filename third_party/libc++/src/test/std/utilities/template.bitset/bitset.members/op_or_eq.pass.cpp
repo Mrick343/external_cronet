@@ -6,6 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=15000000
+
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // bitset<N>& operator|=(const bitset<N>& rhs); // constexpr since C++23
 
 #include <bitset>

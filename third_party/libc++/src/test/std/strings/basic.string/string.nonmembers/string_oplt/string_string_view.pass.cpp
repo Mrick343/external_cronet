@@ -17,6 +17,7 @@
 #include "min_allocator.h"
 
 template <class S, class SV>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 void
 test(const S& lhs, SV rhs, bool x)
 {
@@ -72,6 +73,44 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 void test(const S& lhs, SV rhs, bool x) {
+  assert((lhs < rhs) == x);
+}
+
+template <class CharT, template <class> class Alloc>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  using S  = std::basic_string<CharT, std::char_traits<CharT>, Alloc<CharT> >;
+  using SV = std::basic_string_view<CharT, std::char_traits<CharT> >;
+  test(S(""), SV(""), false);
+  test(S(""), SV("abcde"), true);
+  test(S(""), SV("abcdefghij"), true);
+  test(S(""), SV("abcdefghijklmnopqrst"), true);
+  test(S("abcde"), SV(""), false);
+  test(S("abcde"), SV("abcde"), false);
+  test(S("abcde"), SV("abcdefghij"), true);
+  test(S("abcde"), SV("abcdefghijklmnopqrst"), true);
+  test(S("abcdefghij"), SV(""), false);
+  test(S("abcdefghij"), SV("abcde"), false);
+  test(S("abcdefghij"), SV("abcdefghij"), false);
+  test(S("abcdefghij"), SV("abcdefghijklmnopqrst"), true);
+  test(S("abcdefghijklmnopqrst"), SV(""), false);
+  test(S("abcdefghijklmnopqrst"), SV("abcde"), false);
+  test(S("abcdefghijklmnopqrst"), SV("abcdefghij"), false);
+  test(S("abcdefghijklmnopqrst"), SV("abcdefghijklmnopqrst"), false);
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<char, std::allocator>();
+#if TEST_STD_VER >= 11
+  test_string<char, min_allocator>();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

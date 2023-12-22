@@ -20,6 +20,7 @@
 #include "test_allocator.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <class charT>
 TEST_CONSTEXPR_CXX20 void
 test(unsigned n, charT c)
@@ -125,6 +126,88 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+template <class Alloc, class charT>
+TEST_CONSTEXPR_CXX20 void test(unsigned n, charT c) {
+  typedef std::basic_string<charT, std::char_traits<charT>, Alloc> S;
+  S s2(n, c);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2.size() == n);
+  for (unsigned i = 0; i < n; ++i)
+    assert(s2[i] == c);
+  assert(s2.get_allocator() == Alloc());
+  assert(s2.capacity() >= s2.size());
+}
+
+template <class Alloc, class charT>
+TEST_CONSTEXPR_CXX20 void test(unsigned n, charT c, const Alloc& a) {
+  typedef std::basic_string<charT, std::char_traits<charT>, Alloc> S;
+  S s2(n, c, a);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2.size() == n);
+  for (unsigned i = 0; i < n; ++i)
+    assert(s2[i] == c);
+  assert(s2.get_allocator() == a);
+  assert(s2.capacity() >= s2.size());
+}
+
+template <class Alloc, class Tp>
+TEST_CONSTEXPR_CXX20 void test(Tp n, Tp c) {
+  typedef char charT;
+  typedef std::basic_string<charT, std::char_traits<charT>, Alloc> S;
+  S s2(n, c);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2.size() == static_cast<std::size_t>(n));
+  for (int i = 0; i < n; ++i)
+    assert(s2[i] == c);
+  assert(s2.get_allocator() == Alloc());
+  assert(s2.capacity() >= s2.size());
+}
+
+template <class Alloc, class Tp>
+TEST_CONSTEXPR_CXX20 void test(Tp n, Tp c, const Alloc& a) {
+  typedef char charT;
+  typedef std::basic_string<charT, std::char_traits<charT>, Alloc> S;
+  S s2(n, c, a);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2.size() == static_cast<std::size_t>(n));
+  for (int i = 0; i < n; ++i)
+    assert(s2[i] == c);
+  assert(s2.get_allocator() == a);
+  assert(s2.capacity() >= s2.size());
+}
+
+template <class Alloc>
+TEST_CONSTEXPR_CXX20 void test_string(const Alloc& a) {
+  test<Alloc>(0, 'a');
+  test<Alloc>(0, 'a', Alloc(a));
+
+  test<Alloc>(1, 'a');
+  test<Alloc>(1, 'a', Alloc(a));
+
+  test<Alloc>(10, 'a');
+  test<Alloc>(10, 'a', Alloc(a));
+
+  test<Alloc>(100, 'a');
+  test<Alloc>(100, 'a', Alloc(a));
+
+  test<Alloc>(static_cast<char>(100), static_cast<char>(65));
+  test<Alloc>(static_cast<char>(100), static_cast<char>(65), a);
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string(std::allocator<char>());
+  test_string(test_allocator<char>());
+  test_string(test_allocator<char>(2));
+#if TEST_STD_VER >= 11
+  test_string(min_allocator<char>());
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

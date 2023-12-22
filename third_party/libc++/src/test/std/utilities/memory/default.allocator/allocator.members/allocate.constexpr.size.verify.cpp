@@ -33,6 +33,11 @@ constexpr bool test()
 }
 
 void f() {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
     static_assert(test<double>()); // expected-error-re {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
     LIBCPP_STATIC_ASSERT(test<const double>()); // expected-error-re {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
+=======
+    static_assert(test<double>()); // expected-error {{static assertion expression is not an integral constant expression}}
+    LIBCPP_STATIC_ASSERT(test<const double>()); // expected-error {{static assertion expression is not an integral constant expression}}
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 }

@@ -19,6 +19,7 @@
 #include "test_macros.h"
 
 #if TEST_STD_VER > 14
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 constexpr bool test_constexpr()
 {
     char16_t c = u'1';
@@ -37,6 +38,24 @@ int main(int, char**)
 
 #if TEST_STD_VER > 14
     static_assert(test_constexpr(), "" );
+=======
+constexpr bool test_constexpr() {
+  char16_t c = u'1';
+  std::char_traits<char16_t>::assign(c, u'a');
+  return c == u'a';
+}
+#endif
+
+int main(int, char**) {
+#if TEST_STD_VER >= 11
+  char16_t c = u'\0';
+  std::char_traits<char16_t>::assign(c, u'a');
+  assert(c == u'a');
+#endif
+
+#if TEST_STD_VER > 14
+  static_assert(test_constexpr(), "");
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

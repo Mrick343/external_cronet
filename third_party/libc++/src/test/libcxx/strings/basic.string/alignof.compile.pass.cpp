@@ -24,9 +24,15 @@ class small_pointer {
 template <class T>
 class small_iter_allocator {
 public:
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   using value_type = T;
   using pointer = small_pointer<T>;
   using size_type = std::int16_t;
+=======
+  using value_type      = T;
+  using pointer         = small_pointer<T>;
+  using size_type       = std::int16_t;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   using difference_type = std::int16_t;
 
   small_iter_allocator() TEST_NOEXCEPT {}

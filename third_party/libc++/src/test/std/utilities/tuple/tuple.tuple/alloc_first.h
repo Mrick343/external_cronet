@@ -44,6 +44,11 @@ struct alloc_first
         allocator_constructed = true;
     }
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+    alloc_first(const alloc_first&) = default;
+    alloc_first& operator=(const alloc_first&) = default;
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
     ~alloc_first() {data_ = -1;}
 
     friend bool operator==(const alloc_first& x, const alloc_first& y)

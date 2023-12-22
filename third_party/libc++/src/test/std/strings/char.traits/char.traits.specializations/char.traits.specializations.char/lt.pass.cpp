@@ -17,8 +17,12 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 int main(int, char**)
 {
+=======
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   assert(std::char_traits<char>::lt('\0', 'A') == ('\0' < 'A'));
   assert(std::char_traits<char>::lt('A', '\0') == ('A' < '\0'));
 

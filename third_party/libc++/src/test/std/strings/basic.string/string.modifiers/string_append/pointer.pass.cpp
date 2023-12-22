@@ -18,6 +18,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 TEST_CONSTEXPR_CXX20 void
 test(S s, const typename S::value_type* str, S expected)
 {
@@ -68,6 +69,54 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 void test(S s, const typename S::value_type* str, S expected) {
+  s.append(str);
+  LIBCPP_ASSERT(s.__invariants());
+  assert(s == expected);
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test(S(), "", S());
+  test(S(), "12345", S("12345"));
+  test(S(), "12345678901234567890", S("12345678901234567890"));
+
+  test(S("12345"), "", S("12345"));
+  test(S("12345"), "12345", S("1234512345"));
+  test(S("12345"), "1234567890", S("123451234567890"));
+
+  test(S("12345678901234567890"), "", S("12345678901234567890"));
+  test(S("12345678901234567890"), "12345", S("1234567890123456789012345"));
+  test(S("12345678901234567890"), "12345678901234567890", S("1234567890123456789012345678901234567890"));
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char>>>();
+#endif
+
+  { // test appending to self
+    typedef std::string S;
+    S s_short = "123/";
+    S s_long  = "Lorem ipsum dolor sit amet, consectetur/";
+
+    s_short.append(s_short.c_str());
+    assert(s_short == "123/123/");
+    s_short.append(s_short.c_str());
+    assert(s_short == "123/123/123/123/");
+    s_short.append(s_short.c_str());
+    assert(s_short == "123/123/123/123/123/123/123/123/");
+
+    s_long.append(s_long.c_str());
+    assert(s_long == "Lorem ipsum dolor sit amet, consectetur/Lorem ipsum dolor sit amet, consectetur/");
+  }
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

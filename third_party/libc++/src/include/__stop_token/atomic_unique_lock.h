@@ -28,7 +28,12 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 // and LockedBit is the value of State when the lock bit is set, e.g  1 << 2
 template <class _State, _State _LockedBit>
 class _LIBCPP_AVAILABILITY_SYNC __atomic_unique_lock {
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
   static_assert(std::popcount(_LockedBit) == 1, "LockedBit must be an integer where only one bit is set");
+=======
+  static_assert(std::__libcpp_popcount(static_cast<unsigned long long>(_LockedBit)) == 1,
+                "LockedBit must be an integer where only one bit is set");
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
   std::atomic<_State>& __state_;
   bool __is_locked_;

@@ -6,7 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: c++03
+=======
+// UNSUPPORTED: c++03, c++11
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: availability-filesystem-missing
 // UNSUPPORTED: no-filesystem
 // ADDITIONAL_COMPILE_FLAGS: -I %S/../../../../../../src

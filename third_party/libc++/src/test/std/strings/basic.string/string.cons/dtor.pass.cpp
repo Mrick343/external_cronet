@@ -19,6 +19,7 @@
 #include "test_allocator.h"
 
 template <class T>
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 struct throwing_alloc
 {
     typedef T value_type;
@@ -55,6 +56,42 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+struct throwing_alloc {
+  typedef T value_type;
+  throwing_alloc(const throwing_alloc&);
+  T* allocate(std::size_t);
+  ~throwing_alloc() noexcept(false);
+};
+
+// Test that it's possible to take the address of basic_string's destructors
+// by creating globals which will register their destructors with cxa_atexit.
+std::string unused_string;
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+std::wstring unused_wide_string;
+#endif
+
+static_assert(std::is_nothrow_destructible<std::string>::value, "");
+static_assert(
+    std::is_nothrow_destructible< std::basic_string<char, std::char_traits<char>, test_allocator<char>>>::value, "");
+LIBCPP_STATIC_ASSERT(
+    !std::is_nothrow_destructible< std::basic_string<char, std::char_traits<char>, throwing_alloc<char>>>::value, "");
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_allocator_statistics alloc_stats;
+  {
+    std::basic_string<char, std::char_traits<char>, test_allocator<char>> str2((test_allocator<char>(&alloc_stats)));
+    str2 = "long long string so no SSO";
+    assert(alloc_stats.alloc_count > 0);
+    LIBCPP_ASSERT(alloc_stats.alloc_count == 1);
+  }
+  assert(alloc_stats.alloc_count == 0);
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

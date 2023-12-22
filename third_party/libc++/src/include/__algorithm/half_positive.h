@@ -22,6 +22,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 // Perform division by two quickly for positive integers (llvm.org/PR39129)
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 template <typename _Integral>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
 typename enable_if
@@ -41,6 +42,19 @@ typename enable_if
     !is_integral<_Tp>::value,
     _Tp
 >::type
+=======
+template <typename _Integral, __enable_if_t<is_integral<_Integral>::value, int> = 0>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_Integral
+__half_positive(_Integral __value)
+{
+    return static_cast<_Integral>(static_cast<__make_unsigned_t<_Integral> >(__value) / 2);
+}
+
+template <typename _Tp, __enable_if_t<!is_integral<_Tp>::value, int> = 0>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_Tp
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 __half_positive(_Tp __value)
 {
     return __value / 2;

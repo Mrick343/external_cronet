@@ -6,7 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 // Poison the std:: names we might use inside __gnu_cxx to ensure they're
 // properly qualified.

@@ -11,7 +11,11 @@
 // TODO FMT This test should not require std::to_chars(floating-point)
 // XFAIL: availability-fp_to_chars-missing
 
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
 // UNSUPPORTED: c++03, c++11, c++14 ,c++17
+=======
+// UNSUPPORTED: c++03, c++11, c++14, c++17
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 #include <format>
 

@@ -50,6 +50,17 @@ CheckOptions:
     value: lower_case
   - key:   readability-identifier-naming.LocalVariablePrefix
     value: __
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
+=======
+  - key:   readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+  - key:   readability-identifier-naming.TemplateParameterPrefix
+    value: _
+  - key:   readability-identifier-naming.TemplateParameterIgnoredRegexp
+    value: (.*\:auto|expr-type) # This is https://llvm.org/PR56464
+  - key:   readability-identifier-naming.ValueTemplateParameterIgnoredRegexp # TODO: enforce naming of variable parameters
+    value: .*
+>>>>>>> BRANCH (1552c4 Import Cronet version 121.0.6103.2)
 
 # TODO: investigate these checks
 # bugprone-branch-clone,
