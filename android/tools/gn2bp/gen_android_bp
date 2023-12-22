@@ -1124,6 +1124,7 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
     return arg
 
   def _sanitize_args(self):
+<<<<<<< HEAD   (0c60e1 Merge branch 'upstream-import' into upstream-staging4)
     self._set_value_arg('--jar-file', '$(location :current_android_jar)', False)
     if self._has_arg('--jar-file'):
       self._set_value_arg('--javap', '$$(find $${OUT_DIR:-out}/.path -name javap)')
@@ -1136,6 +1137,17 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
       # Don't jarjar classes that already exists within the java SDK. The headers generated
       # from those genrule can simply call into the original class as it exists outside
       # of cronet's jar.
+=======
+    self._set_value_arg('--jar_file', '$(location :current_android_jar)', False)
+    if self._has_arg('--jar_file'):
+      self._append_arg('--javap', '$(location :javap)')
+    self._update_value_arg('--output_dir', self._sanitize_filepath)
+    self._update_value_arg('--includes', self._sanitize_filepath, False)
+    self._delete_value_arg('--prev_output_dir', False)
+    self._update_list_arg('--input_file', self._sanitize_filepath)
+    self._update_list_arg('--input_file', self._add_location_tag_to_filepath)
+    if not self.is_test_target:
+>>>>>>> BRANCH (25a22e Sandbox cronet genrules am: ce6ee96db6)
       # Only jarjar platform code
       self._append_arg('--package-prefix', 'android.net.connectivity')
     super()._sanitize_args()
@@ -1155,6 +1167,7 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
     tool_files = {file for file in tool_files if not file.endswith('bin/javap') }
     return tool_files
 
+<<<<<<< HEAD   (0c60e1 Merge branch 'upstream-import' into upstream-staging4)
 class JavaJniGeneratorSanitizer(JniGeneratorSanitizer):
   def __init__(self, target, arch, is_test_target):
     self.is_test_target = is_test_target
@@ -1174,6 +1187,13 @@ class JavaJniGeneratorSanitizer(JniGeneratorSanitizer):
     name = super().get_name() + "__java"
     return name
 
+=======
+  def get_tools(self):
+    tools = super().get_tools()
+    if self._has_arg('--jar_file'):
+      tools.add(":javap")
+    return tools
+>>>>>>> BRANCH (25a22e Sandbox cronet genrules am: ce6ee96db6)
 
 class JniRegistrationGeneratorSanitizer(BaseActionSanitizer):
   def __init__(self, target, arch, is_test_target):

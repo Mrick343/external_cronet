@@ -1571,13 +1571,22 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (0c60e1 Merge branch 'upstream-import' into upstream-staging4)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--output-name " +
          "Runtime_jni.h " +
          "--input-file " +
          "java/lang/Runtime.class",
+=======
+         "$(location :javap) " +
+         "--package_prefix " +
+         "android.net.connectivity",
+>>>>>>> BRANCH (25a22e Sandbox cronet genrules am: ce6ee96db6)
     out: [
         "base/android_runtime_jni_headers/Runtime_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -1613,13 +1622,20 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (0c60e1 Merge branch 'upstream-import' into upstream-staging4)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--output-name " +
          "Runtime_jni.h " +
          "--input-file " +
          "java/lang/Runtime.class",
+=======
+         "$(location :javap)",
+>>>>>>> BRANCH (25a22e Sandbox cronet genrules am: ce6ee96db6)
     out: [
         "base/android_runtime_jni_headers/Runtime_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -1655,14 +1671,23 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (0c60e1 Merge branch 'upstream-import' into upstream-staging4)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--unchecked-exceptions " +
          "--output-name " +
          "Runnable_jni.h " +
          "--input-file " +
          "java/lang/Runnable.class",
+=======
+         "$(location :javap) " +
+         "--package_prefix " +
+         "android.net.connectivity",
+>>>>>>> BRANCH (25a22e Sandbox cronet genrules am: ce6ee96db6)
     out: [
         "base/android_runtime_unchecked_jni_headers/Runnable_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -1698,14 +1723,21 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (0c60e1 Merge branch 'upstream-import' into upstream-staging4)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--unchecked-exceptions " +
          "--output-name " +
          "Runnable_jni.h " +
          "--input-file " +
          "java/lang/Runnable.class",
+=======
+         "$(location :javap)",
+>>>>>>> BRANCH (25a22e Sandbox cronet genrules am: ce6ee96db6)
     out: [
         "base/android_runtime_unchecked_jni_headers/Runnable_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
