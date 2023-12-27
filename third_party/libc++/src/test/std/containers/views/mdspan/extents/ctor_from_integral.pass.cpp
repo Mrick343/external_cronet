@@ -34,7 +34,11 @@
 #include <cassert>
 #include <type_traits>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include "ConvertibleToIntegral.h"
+=======
+#include "../ConvertibleToIntegral.h"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include "CtorTestCombinations.h"
 #include "test_macros.h"
 

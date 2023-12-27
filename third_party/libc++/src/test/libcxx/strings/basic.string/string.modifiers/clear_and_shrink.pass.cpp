@@ -35,8 +35,12 @@ TEST_CONSTEXPR_CXX20 bool test() {
   return true;
 }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
+=======
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

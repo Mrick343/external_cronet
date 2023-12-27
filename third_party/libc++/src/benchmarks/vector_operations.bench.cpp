@@ -30,4 +30,18 @@ BENCHMARK_CAPTURE(BM_ConstructIterIter, vector_size_t, std::vector<size_t>{}, ge
 BENCHMARK_CAPTURE(BM_ConstructIterIter, vector_string, std::vector<std::string>{}, getRandomStringInputs)
     ->Arg(TestNumInputs);
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+BENCHMARK_CAPTURE(BM_ConstructFromRange, vector_char, std::vector<char>{}, getRandomIntegerInputs<char>)
+    ->Arg(TestNumInputs);
+
+BENCHMARK_CAPTURE(BM_ConstructFromRange, vector_size_t, std::vector<size_t>{}, getRandomIntegerInputs<size_t>)
+    ->Arg(TestNumInputs);
+
+BENCHMARK_CAPTURE(BM_ConstructFromRange, vector_string, std::vector<std::string>{}, getRandomStringInputs)
+    ->Arg(TestNumInputs);
+
+BENCHMARK_CAPTURE(BM_Pushback, vector_int, std::vector<int>{})->Arg(TestNumInputs);
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 BENCHMARK_MAIN();

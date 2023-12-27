@@ -11,10 +11,18 @@
 #define _LIBCPP___ITERATOR_ISTREAMBUF_ITERATOR_H
 
 #include <__config>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__iterator/default_sentinel.h>
 #include <__iterator/iterator.h>
 #include <__iterator/iterator_traits.h>
 #include <iosfwd> // for forward declaration of basic_streambuf
+=======
+#include <__fwd/istream.h>
+#include <__fwd/streambuf.h>
+#include <__iterator/default_sentinel.h>
+#include <__iterator/iterator.h>
+#include <__iterator/iterator_traits.h>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header

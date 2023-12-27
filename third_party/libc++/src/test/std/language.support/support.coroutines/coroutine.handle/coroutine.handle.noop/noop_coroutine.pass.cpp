@@ -8,7 +8,10 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 // UNSUPPORTED: ubsan
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: libcpp-no-coroutines
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // <coroutine>
 // struct noop_coroutine_promise;

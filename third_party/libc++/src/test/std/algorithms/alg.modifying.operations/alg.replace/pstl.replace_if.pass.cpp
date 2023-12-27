@@ -78,6 +78,7 @@ struct Test {
   }
 };
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 struct ThrowOnCompare {};
 
 #ifndef TEST_HAS_NO_EXCEPTIONS
@@ -97,6 +98,10 @@ int main(int, char**) {
     assert(false);
   }
 #endif
+=======
+int main(int, char**) {
+  types::for_each(types::forward_iterator_list<int*>{}, TestIteratorWithPolicies<Test>{});
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

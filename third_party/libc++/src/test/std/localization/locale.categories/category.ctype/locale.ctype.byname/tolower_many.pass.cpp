@@ -9,6 +9,12 @@
 // REQUIRES: locale.en_US.UTF-8
 // XFAIL: win32-broken-utf8-wchar-ctype
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // <locale>
 
 // template <class charT> class ctype_byname;

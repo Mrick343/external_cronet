@@ -6,7 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // Poison the std:: names we might use inside __gnu_cxx to ensure they're
 // properly qualified.

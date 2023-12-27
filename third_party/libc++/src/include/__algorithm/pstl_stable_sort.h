@@ -12,6 +12,7 @@
 #include <__algorithm/pstl_backend.h>
 #include <__config>
 #include <__functional/operations.h>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__type_traits/is_execution_policy.h>
 #include <__type_traits/remove_cvref.h>
 
@@ -32,6 +33,43 @@ _LIBCPP_HIDE_FROM_ABI void
 stable_sort(_ExecutionPolicy&&, _RandomAccessIterator __first, _RandomAccessIterator __last, _Comp __comp = {}) {
   using _Backend = typename __select_backend<_RawPolicy>::type;
   std::__pstl_stable_sort<_RawPolicy>(_Backend{}, std::move(__first), std::move(__last), std::move(__comp));
+=======
+#include <__type_traits/enable_if.h>
+#include <__type_traits/is_execution_policy.h>
+#include <__type_traits/remove_cvref.h>
+#include <__utility/empty.h>
+#include <__utility/move.h>
+#include <optional>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_INCOMPLETE_PSTL) && _LIBCPP_STD_VER >= 17
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _ExecutionPolicy,
+          class _RandomAccessIterator,
+          class _Comp                                         = less<>,
+          class _RawPolicy                                    = __remove_cvref_t<_ExecutionPolicy>,
+          enable_if_t<is_execution_policy_v<_RawPolicy>, int> = 0>
+[[nodiscard]] _LIBCPP_HIDE_FROM_ABI optional<__empty> __stable_sort(
+    _ExecutionPolicy&&, _RandomAccessIterator&& __first, _RandomAccessIterator&& __last, _Comp&& __comp = {}) noexcept {
+  using _Backend = typename __select_backend<_RawPolicy>::type;
+  return std::__pstl_stable_sort<_RawPolicy>(_Backend{}, std::move(__first), std::move(__last), std::move(__comp));
+}
+
+template <class _ExecutionPolicy,
+          class _RandomAccessIterator,
+          class _Comp                                         = less<>,
+          class _RawPolicy                                    = __remove_cvref_t<_ExecutionPolicy>,
+          enable_if_t<is_execution_policy_v<_RawPolicy>, int> = 0>
+_LIBCPP_HIDE_FROM_ABI void stable_sort(
+    _ExecutionPolicy&& __policy, _RandomAccessIterator __first, _RandomAccessIterator __last, _Comp __comp = {}) {
+  if (!std::__stable_sort(__policy, std::move(__first), std::move(__last), std::move(__comp)))
+    std::__throw_bad_alloc();
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }
 
 _LIBCPP_END_NAMESPACE_STD

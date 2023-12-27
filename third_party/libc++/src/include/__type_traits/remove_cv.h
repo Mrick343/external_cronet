@@ -19,7 +19,11 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #if __has_builtin(__remove_cv)
+=======
+#if __has_builtin(__remove_cv) && !defined(_LIBCPP_COMPILER_GCC)
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 template <class _Tp>
 struct remove_cv {
   using type _LIBCPP_NODEBUG = __remove_cv(_Tp);

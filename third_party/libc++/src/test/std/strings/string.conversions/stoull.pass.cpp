@@ -17,6 +17,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     assert(std::stoull("0") == 0);
@@ -116,6 +117,106 @@ int main(int, char**)
     }
 #endif // TEST_HAS_NO_EXCEPTIONS
 #endif // TEST_HAS_NO_WIDE_CHARACTERS
+=======
+int main(int, char**) {
+  assert(std::stoull("0") == 0);
+  assert(std::stoull("-0") == 0);
+  assert(std::stoull(" 10") == 10);
+  {
+    std::size_t idx = 0;
+    assert(std::stoull("10g", &idx, 16) == 16);
+    assert(idx == 2);
+  }
+#ifndef TEST_HAS_NO_EXCEPTIONS
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoull("", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoull("  - 8", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoull("a1", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      // LWG#2009 and PR14919
+      (void)std::stoull("9999999999999999999999999999999999999999999999999", &idx);
+      assert(false);
+    } catch (const std::out_of_range&) {
+      assert(idx == 0);
+    }
+  }
+#endif // TEST_HAS_NO_EXCEPTIONS
+
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  assert(std::stoull(L"0") == 0);
+  assert(std::stoull(L"-0") == 0);
+  assert(std::stoull(L" 10") == 10);
+  {
+    std::size_t idx = 0;
+    assert(std::stoull(L"10g", &idx, 16) == 16);
+    assert(idx == 2);
+  }
+#  ifndef TEST_HAS_NO_EXCEPTIONS
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoull(L"", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoull(L"  - 8", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoull(L"a1", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      // LWG#2009 and PR14919
+      (void)std::stoull(L"9999999999999999999999999999999999999999999999999", &idx);
+      assert(false);
+    } catch (const std::out_of_range&) {
+      assert(idx == 0);
+    }
+  }
+#  endif // TEST_HAS_NO_EXCEPTIONS
+#endif   // TEST_HAS_NO_WIDE_CHARACTERS
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

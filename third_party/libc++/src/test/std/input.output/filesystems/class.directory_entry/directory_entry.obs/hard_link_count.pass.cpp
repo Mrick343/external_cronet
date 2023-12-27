@@ -12,6 +12,13 @@
 // against already-released libc++'s.
 // XFAIL: stdlib=apple-libc++ && target={{.+}}-apple-macosx{{10.15|11.0}}
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Starting in Android N (API 24), SELinux policy prevents the shell user from
+// creating a hard link.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{21|22|23}}
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // class directory_entry

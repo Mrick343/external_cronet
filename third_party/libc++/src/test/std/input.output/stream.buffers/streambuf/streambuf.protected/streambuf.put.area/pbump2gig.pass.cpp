@@ -22,9 +22,14 @@
 // UNSUPPORTED: no-exceptions
 
 // Android devices frequently don't have enough memory to run this test. Rather
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // than throw std::bad_alloc, exhausting memory tends to trigger the OOM Killer
 // and/or crash the device (killing adb, rebooting it, etc).
 // UNSUPPORTED: android
+=======
+// than throw std::bad_alloc, exhausting memory triggers the OOM Killer.
+// UNSUPPORTED: LIBCXX-ANDROID-FIXME
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <sstream>
 #include <cassert>

@@ -12,7 +12,11 @@
 
 // Make sure __debug_three_way_comp asserts when the comparator is not consistent.
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03, c++11, c++14, c++17
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03, c++11, c++14, c++17
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <algorithm>
 #include <iterator>

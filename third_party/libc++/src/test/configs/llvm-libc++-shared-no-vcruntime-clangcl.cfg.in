@@ -1,5 +1,6 @@
 # This testing configuration handles running the test suite against LLVM's libc++
 # using a DLL, with Clang-cl on Windows. This variant sets _HAS_EXCEPTIONS = 0
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 # which removes exception class definitions  from the vcruntime.
 
 lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
@@ -10,6 +11,18 @@ config.substitutions.append(('%{compile_flags}',
 ))
 config.substitutions.append(('%{link_flags}',
     '-nostdlib -L %{lib} -lc++ -lmsvcrt -lmsvcprt -loldnames'
+=======
+# which removes exception class definitions from the vcruntime.
+
+lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
+
+config.substitutions.append(('%{flags}', '--driver-mode=g++'))
+config.substitutions.append(('%{compile_flags}',
+    '-fms-runtime-lib=' + config.fms_runtime_lib + ' -nostdinc++ -I %{include} -I %{target-include} -I %{libcxx}/test/support -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_STDIO_ISO_WIDE_SPECIFIERS -DNOMINMAX -D_HAS_EXCEPTIONS=0' + config.dbg_include
+))
+config.substitutions.append(('%{link_flags}',
+    '-nostdlib -L %{lib} -lc++ -l' + config.cxx_lib
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 ))
 config.substitutions.append(('%{exec}',
     '%{executor} --execdir %T --prepend_env PATH=%{lib} -- '

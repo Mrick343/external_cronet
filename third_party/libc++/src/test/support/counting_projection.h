@@ -26,7 +26,11 @@ public:
   constexpr counting_projection(Proj proj, int& count) : proj_(std::move(proj)), count_(&count) {}
 
   template <class T>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   constexpr decltype(auto) operator()(T&& value) const {
+=======
+  constexpr decltype(auto) operator()(T && value) const {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     ++(*count_);
     return std::invoke(proj_, std::forward<T>(value));
   }

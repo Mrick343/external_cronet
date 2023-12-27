@@ -9,7 +9,11 @@
 // Check that ranges algorithms aren't marked [[nodiscard]] when
 // _LIBCPP_DISBALE_NODISCARD_EXT is defined
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: c++03, c++11, c++14 ,c++17
+=======
+// UNSUPPORTED: c++03, c++11, c++14, c++17
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_NODISCARD_EXT
 

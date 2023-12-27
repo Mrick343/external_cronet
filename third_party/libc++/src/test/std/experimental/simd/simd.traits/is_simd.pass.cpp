@@ -15,6 +15,7 @@
 // template <class T> inline constexpr bool ex::is_simd_v =
 // ex::is_simd<T>::value;
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <cstdint>
 #include <experimental/simd>
 #include "test_macros.h"
@@ -126,5 +127,29 @@ static_assert(!ex::is_simd_v<ex::simd_mask<float>>, "");
 static_assert(!ex::is_simd_v<UserType>, "");
 
 int main(int, char**) {
+=======
+#include "../test_utils.h"
+
+namespace ex = std::experimental::parallelism_v2;
+
+template <class T, std::size_t>
+struct CheckIsSimd {
+  template <class SimdAbi>
+  void operator()() {
+    static_assert(ex::is_simd<ex::simd<T, SimdAbi>>::value);
+
+    static_assert(!ex::is_simd<T>::value);
+    static_assert(!ex::is_simd<ex::simd_mask<T, SimdAbi>>::value);
+
+    static_assert(ex::is_simd_v<ex::simd<T, SimdAbi>>);
+
+    static_assert(!ex::is_simd_v<T>);
+    static_assert(!ex::is_simd_v<ex::simd_mask<T, SimdAbi>>);
+  }
+};
+
+int main(int, char**) {
+  test_all_simd_abi<CheckIsSimd>();
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   return 0;
 }

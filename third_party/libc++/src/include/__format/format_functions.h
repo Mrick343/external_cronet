@@ -11,6 +11,7 @@
 #define _LIBCPP___FORMAT_FORMAT_FUNCTIONS
 
 #include <__algorithm/clamp.h>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__availability>
 #include <__concepts/convertible_to.h>
 #include <__concepts/same_as.h>
@@ -274,6 +275,272 @@ __handle_replacement_field(_Iterator __begin, _Iterator __end,
         [&](auto __arg) {
           if constexpr (same_as<decltype(__arg), monostate>)
             std::__throw_format_error("Argument index out of bounds");
+=======
+#include <__concepts/convertible_to.h>
+#include <__concepts/same_as.h>
+#include <__config>
+#include <__format/buffer.h>
+#include <__format/format_arg.h>
+#include <__format/format_arg_store.h>
+#include <__format/format_args.h>
+#include <__format/format_context.h>
+#include <__format/format_error.h>
+#include <__format/format_parse_context.h>
+#include <__format/format_string.h>
+#include <__format/format_to_n_result.h>
+#include <__format/formatter.h>
+#include <__format/formatter_bool.h>
+#include <__format/formatter_char.h>
+#include <__format/formatter_floating_point.h>
+#include <__format/formatter_integer.h>
+#include <__format/formatter_pointer.h>
+#include <__format/formatter_string.h>
+#include <__format/parser_std_format_spec.h>
+#include <__iterator/back_insert_iterator.h>
+#include <__iterator/concepts.h>
+#include <__iterator/incrementable_traits.h>
+#include <__iterator/iterator_traits.h> // iter_value_t
+#include <__variant/monostate.h>
+#include <array>
+#include <string>
+#include <string_view>
+
+#ifndef _LIBCPP_HAS_NO_LOCALIZATION
+#include <locale>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 20
+
+// TODO FMT Evaluate which templates should be external templates. This
+// improves the efficiency of the header. However since the header is still
+// under heavy development and not all classes are stable it makes no sense
+// to do this optimization now.
+
+using format_args = basic_format_args<format_context>;
+#ifndef _LIBCPP_HAS_NO_WIDE_CHARACTERS
+using wformat_args = basic_format_args<wformat_context>;
+#endif
+
+template <class _Context = format_context, class... _Args>
+_LIBCPP_NODISCARD_EXT _LIBCPP_HIDE_FROM_ABI __format_arg_store<_Context, _Args...> make_format_args(_Args&&... __args) {
+  return _VSTD::__format_arg_store<_Context, _Args...>(__args...);
+}
+
+#  ifndef _LIBCPP_HAS_NO_WIDE_CHARACTERS
+template <class... _Args>
+_LIBCPP_NODISCARD_EXT _LIBCPP_HIDE_FROM_ABI __format_arg_store<wformat_context, _Args...>
+make_wformat_args(_Args&&... __args) {
+  return _VSTD::__format_arg_store<wformat_context, _Args...>(__args...);
+}
+#  endif
+
+namespace __format {
+
+/// Helper class parse and handle argument.
+///
+/// When parsing a handle which is not enabled the code is ill-formed.
+/// This helper uses the parser of the appropriate formatter for the stored type.
+template <class _CharT>
+class _LIBCPP_TEMPLATE_VIS __compile_time_handle {
+public:
+  template <class _ParseContext>
+  _LIBCPP_HIDE_FROM_ABI constexpr void __parse(_ParseContext& __ctx) const {
+    __parse_(__ctx);
+  }
+
+  template <class _Tp>
+  _LIBCPP_HIDE_FROM_ABI constexpr void __enable() {
+    __parse_ = [](basic_format_parse_context<_CharT>& __ctx) {
+      formatter<_Tp, _CharT> __f;
+      __ctx.advance_to(__f.parse(__ctx));
+    };
+  }
+
+  // Before calling __parse the proper handler needs to be set with __enable.
+  // The default handler isn't a core constant expression.
+  _LIBCPP_HIDE_FROM_ABI constexpr __compile_time_handle()
+      : __parse_([](basic_format_parse_context<_CharT>&) { std::__throw_format_error("Not a handle"); }) {}
+
+private:
+  void (*__parse_)(basic_format_parse_context<_CharT>&);
+};
+
+// Dummy format_context only providing the parts used during constant
+// validation of the basic_format_string.
+template <class _CharT>
+struct _LIBCPP_TEMPLATE_VIS __compile_time_basic_format_context {
+public:
+  using char_type = _CharT;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit __compile_time_basic_format_context(
+      const __arg_t* __args, const __compile_time_handle<_CharT>* __handles, size_t __size)
+      : __args_(__args), __handles_(__handles), __size_(__size) {}
+
+  // During the compile-time validation nothing needs to be written.
+  // Therefore all operations of this iterator are a NOP.
+  struct iterator {
+    _LIBCPP_HIDE_FROM_ABI constexpr iterator& operator=(_CharT) { return *this; }
+    _LIBCPP_HIDE_FROM_ABI constexpr iterator& operator*() { return *this; }
+    _LIBCPP_HIDE_FROM_ABI constexpr iterator operator++(int) { return *this; }
+  };
+
+  _LIBCPP_HIDE_FROM_ABI constexpr __arg_t arg(size_t __id) const {
+    if (__id >= __size_)
+      std::__throw_format_error("The argument index value is too large for the number of arguments supplied");
+    return __args_[__id];
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr const __compile_time_handle<_CharT>& __handle(size_t __id) const {
+    if (__id >= __size_)
+      std::__throw_format_error("The argument index value is too large for the number of arguments supplied");
+    return __handles_[__id];
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator out() { return {}; }
+  _LIBCPP_HIDE_FROM_ABI constexpr void advance_to(iterator) {}
+
+private:
+  const __arg_t* __args_;
+  const __compile_time_handle<_CharT>* __handles_;
+  size_t __size_;
+};
+
+// [format.string.std]/8
+// If { arg-idopt } is used in a width or precision, the value of the
+// corresponding formatting argument is used in its place. If the
+// corresponding formatting argument is not of standard signed or unsigned
+// integer type, or its value is negative for precision or non-positive for
+// width, an exception of type format_error is thrown.
+//
+// _HasPrecision does the formatter have a precision?
+template <class _CharT, class _Tp, bool _HasPrecision = false>
+_LIBCPP_HIDE_FROM_ABI constexpr void __compile_time_validate_argument(
+    basic_format_parse_context<_CharT>& __parse_ctx, __compile_time_basic_format_context<_CharT>& __ctx) {
+  auto __validate_type = [](__arg_t __type) {
+    // LWG3720 originally allowed "signed or unsigned integer types", however
+    // the final version explicitly changed it to "*standard* signed or unsigned
+    // integer types". It's trivial to use 128-bit integrals in libc++'s
+    // implementation, but other implementations may not implement it.
+    // (Using a width or precision, that does not fit in 64-bits, sounds very
+    // unlikely in real world code.)
+    switch (__type) {
+    case __arg_t::__int:
+    case __arg_t::__long_long:
+    case __arg_t::__unsigned:
+    case __arg_t::__unsigned_long_long:
+      return;
+
+    default:
+      std::__throw_format_error("Replacement argument isn't a standard signed or unsigned integer type");
+    }
+  };
+
+  formatter<_Tp, _CharT> __formatter;
+  __parse_ctx.advance_to(__formatter.parse(__parse_ctx));
+  if (__formatter.__parser_.__width_as_arg_)
+    __validate_type(__ctx.arg(__formatter.__parser_.__width_));
+
+  if constexpr (_HasPrecision)
+    if (__formatter.__parser_.__precision_as_arg_)
+      __validate_type(__ctx.arg(__formatter.__parser_.__precision_));
+}
+
+// This function is not user facing, so it can directly use the non-standard types of the "variant".
+template <class _CharT>
+_LIBCPP_HIDE_FROM_ABI constexpr void __compile_time_visit_format_arg(basic_format_parse_context<_CharT>& __parse_ctx,
+                                                                     __compile_time_basic_format_context<_CharT>& __ctx,
+                                                                     __arg_t __type) {
+  switch (__type) {
+  case __arg_t::__none:
+    std::__throw_format_error("Invalid argument");
+  case __arg_t::__boolean:
+    return __format::__compile_time_validate_argument<_CharT, bool>(__parse_ctx, __ctx);
+  case __arg_t::__char_type:
+    return __format::__compile_time_validate_argument<_CharT, _CharT>(__parse_ctx, __ctx);
+  case __arg_t::__int:
+    return __format::__compile_time_validate_argument<_CharT, int>(__parse_ctx, __ctx);
+  case __arg_t::__long_long:
+    return __format::__compile_time_validate_argument<_CharT, long long>(__parse_ctx, __ctx);
+  case __arg_t::__i128:
+#      ifndef _LIBCPP_HAS_NO_INT128
+    return __format::__compile_time_validate_argument<_CharT, __int128_t>(__parse_ctx, __ctx);
+#      else
+    std::__throw_format_error("Invalid argument");
+#      endif
+    return;
+  case __arg_t::__unsigned:
+    return __format::__compile_time_validate_argument<_CharT, unsigned>(__parse_ctx, __ctx);
+  case __arg_t::__unsigned_long_long:
+    return __format::__compile_time_validate_argument<_CharT, unsigned long long>(__parse_ctx, __ctx);
+  case __arg_t::__u128:
+#      ifndef _LIBCPP_HAS_NO_INT128
+    return __format::__compile_time_validate_argument<_CharT, __uint128_t>(__parse_ctx, __ctx);
+#      else
+    std::__throw_format_error("Invalid argument");
+#      endif
+    return;
+  case __arg_t::__float:
+    return __format::__compile_time_validate_argument<_CharT, float, true>(__parse_ctx, __ctx);
+  case __arg_t::__double:
+    return __format::__compile_time_validate_argument<_CharT, double, true>(__parse_ctx, __ctx);
+  case __arg_t::__long_double:
+    return __format::__compile_time_validate_argument<_CharT, long double, true>(__parse_ctx, __ctx);
+  case __arg_t::__const_char_type_ptr:
+    return __format::__compile_time_validate_argument<_CharT, const _CharT*, true>(__parse_ctx, __ctx);
+  case __arg_t::__string_view:
+    return __format::__compile_time_validate_argument<_CharT, basic_string_view<_CharT>, true>(__parse_ctx, __ctx);
+  case __arg_t::__ptr:
+    return __format::__compile_time_validate_argument<_CharT, const void*>(__parse_ctx, __ctx);
+  case __arg_t::__handle:
+    std::__throw_format_error("Handle should use __compile_time_validate_handle_argument");
+  }
+  std::__throw_format_error("Invalid argument");
+}
+
+template <contiguous_iterator _Iterator, class _ParseCtx, class _Ctx>
+_LIBCPP_HIDE_FROM_ABI constexpr _Iterator
+__handle_replacement_field(_Iterator __begin, _Iterator __end,
+                           _ParseCtx& __parse_ctx, _Ctx& __ctx) {
+  using _CharT = iter_value_t<_Iterator>;
+  __format::__parse_number_result __r = __format::__parse_arg_id(__begin, __end, __parse_ctx);
+
+  if (__r.__last == __end)
+    std::__throw_format_error("The argument index should end with a ':' or a '}'");
+
+  bool __parse = *__r.__last == _CharT(':');
+  switch (*__r.__last) {
+  case _CharT(':'):
+    // The arg-id has a format-specifier, advance the input to the format-spec.
+    __parse_ctx.advance_to(__r.__last + 1);
+    break;
+  case _CharT('}'):
+    // The arg-id has no format-specifier.
+    __parse_ctx.advance_to(__r.__last);
+    break;
+  default:
+    std::__throw_format_error("The argument index should end with a ':' or a '}'");
+  }
+
+  if constexpr (same_as<_Ctx, __compile_time_basic_format_context<_CharT>>) {
+    __arg_t __type = __ctx.arg(__r.__value);
+    if (__type == __arg_t::__none)
+      std::__throw_format_error("The argument index value is too large for the number of arguments supplied");
+    else if (__type == __arg_t::__handle)
+      __ctx.__handle(__r.__value).__parse(__parse_ctx);
+    else if (__parse)
+      __format::__compile_time_visit_format_arg(__parse_ctx, __ctx, __type);
+  } else
+    _VSTD::__visit_format_arg(
+        [&](auto __arg) {
+          if constexpr (same_as<decltype(__arg), monostate>)
+            std::__throw_format_error("The argument index value is too large for the number of arguments supplied");
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
           else if constexpr (same_as<decltype(__arg), typename basic_format_arg<_Ctx>::handle>)
             __arg.format(__parse_ctx, __ctx);
           else {

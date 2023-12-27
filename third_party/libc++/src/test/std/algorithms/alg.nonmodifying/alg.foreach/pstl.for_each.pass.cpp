@@ -51,6 +51,7 @@ struct Test {
 int main(int, char**) {
   types::for_each(types::forward_iterator_list<int*>{}, TestIteratorWithPolicies<Test>{});
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef TEST_HAS_NO_EXCEPTIONS
   std::set_terminate(terminate_successful);
   int a[] = {1, 2};
@@ -61,5 +62,7 @@ int main(int, char**) {
   }
 #endif
 
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   return 0;
 }

@@ -44,6 +44,11 @@ struct alloc_first
         allocator_constructed = true;
     }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    alloc_first(const alloc_first&) = default;
+    alloc_first& operator=(const alloc_first&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     ~alloc_first() {data_ = -1;}
 
     friend bool operator==(const alloc_first& x, const alloc_first& y)

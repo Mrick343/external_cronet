@@ -6,6 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=15000000
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // bitset<N>& operator|=(const bitset<N>& rhs); // constexpr since C++23
 
 #include <bitset>

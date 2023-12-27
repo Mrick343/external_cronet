@@ -49,6 +49,7 @@ public:
 
   _LIBCPP_HIDE_FROM_ABI error_code(int __val, const error_category& __cat) _NOEXCEPT : __val_(__val), __cat_(&__cat) {}
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   template <class _Ep>
   _LIBCPP_HIDE_FROM_ABI
   error_code(_Ep __e, typename enable_if<is_error_code_enum<_Ep>::value>::type* = nullptr) _NOEXCEPT {
@@ -64,6 +65,21 @@ public:
   template <class _Ep>
   _LIBCPP_HIDE_FROM_ABI typename enable_if< is_error_code_enum<_Ep>::value, error_code& >::type
   operator=(_Ep __e) _NOEXCEPT {
+=======
+  template <class _Ep, __enable_if_t<is_error_code_enum<_Ep>::value, int> = 0>
+  _LIBCPP_HIDE_FROM_ABI error_code(_Ep __e) _NOEXCEPT {
+    using __adl_only::make_error_code;
+    *this = make_error_code(__e);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI void assign(int __val, const error_category& __cat) _NOEXCEPT {
+    __val_ = __val;
+    __cat_ = &__cat;
+  }
+
+  template <class _Ep, __enable_if_t<is_error_code_enum<_Ep>::value, int> = 0>
+  _LIBCPP_HIDE_FROM_ABI error_code& operator=(_Ep __e) _NOEXCEPT {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     using __adl_only::make_error_code;
     *this = make_error_code(__e);
     return *this;

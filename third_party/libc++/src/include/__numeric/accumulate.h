@@ -17,6 +17,7 @@
 #  pragma GCC system_header
 #endif
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _InputIterator, class _Tp>
@@ -48,5 +49,43 @@ accumulate(_InputIterator __first, _InputIterator __last, _Tp __init, _BinaryOpe
 }
 
 _LIBCPP_END_NAMESPACE_STD
+=======
+_LIBCPP_PUSH_MACROS
+#include <__undef_macros>
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _InputIterator, class _Tp>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_Tp
+accumulate(_InputIterator __first, _InputIterator __last, _Tp __init)
+{
+    for (; __first != __last; ++__first)
+#if _LIBCPP_STD_VER >= 20
+        __init = _VSTD::move(__init) + *__first;
+#else
+        __init = __init + *__first;
+#endif
+    return __init;
+}
+
+template <class _InputIterator, class _Tp, class _BinaryOperation>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_Tp
+accumulate(_InputIterator __first, _InputIterator __last, _Tp __init, _BinaryOperation __binary_op)
+{
+    for (; __first != __last; ++__first)
+#if _LIBCPP_STD_VER >= 20
+        __init = __binary_op(_VSTD::move(__init), *__first);
+#else
+        __init = __binary_op(__init, *__first);
+#endif
+    return __init;
+}
+
+_LIBCPP_END_NAMESPACE_STD
+
+_LIBCPP_POP_MACROS
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #endif // _LIBCPP___NUMERIC_ACCUMULATE_H

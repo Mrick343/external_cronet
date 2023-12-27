@@ -6,9 +6,16 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // This test fails because diagnose_if doesn't emit all of the diagnostics
 // when -fdelayed-template-parsing is enabled, like it is in MSVC mode.
 // XFAIL: msvc
+=======
+// This test fails with Clang <18 because diagnose_if doesn't emit all of the
+// diagnostics when -fdelayed-template-parsing is enabled, like it is in MSVC
+// mode.
+// XFAIL: msvc && (clang-16 || clang-17)
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // REQUIRES: diagnose-if-support
 

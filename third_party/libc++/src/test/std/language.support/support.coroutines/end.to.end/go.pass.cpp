@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: libcpp-no-coroutines
 
 #include <cassert>
@@ -30,6 +31,33 @@ struct goroutine
     rh = nullptr;
   }
 
+=======
+
+#include <cassert>
+#include <coroutine>
+#include <memory>
+
+#include "test_macros.h"
+
+bool cancel = false;
+
+struct goroutine
+{
+  static int const N = 10;
+  static int count;
+  static std::coroutine_handle<> stack[N];
+
+  static void schedule(std::coroutine_handle<>& rh)
+  {
+    assert(count < N);
+    stack[count++] = rh;
+    rh = nullptr;
+  }
+
+  goroutine() = default;
+  goroutine(const goroutine&) = default;
+  goroutine& operator=(const goroutine&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   ~goroutine() {}
 
   static void run_one()

@@ -22,6 +22,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #if _LIBCPP_STD_VER >= 20
 
 // exposition only
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 enum class _LIBCPP_ENUM_VIS _OrdResult : signed char {
   __less = -1,
   __equiv = 0,
@@ -29,6 +30,15 @@ enum class _LIBCPP_ENUM_VIS _OrdResult : signed char {
 };
 
 enum class _LIBCPP_ENUM_VIS _NCmpResult : signed char {
+=======
+enum class _OrdResult : signed char {
+  __less = -1,
+  __equiv = 0,
+  __greater = 1
+};
+
+enum class _NCmpResult : signed char {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   __unordered = -127
 };
 

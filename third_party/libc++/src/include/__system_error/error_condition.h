@@ -12,6 +12,7 @@
 
 #include <__compare/ordering.h>
 #include <__config>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__functional/unary_function.h>
 #include <__system_error/errc.h>
 #include <__system_error/error_category.h>
@@ -72,6 +73,67 @@ public:
   template <class _Ep>
   _LIBCPP_HIDE_FROM_ABI typename enable_if< is_error_condition_enum<_Ep>::value, error_condition& >::type
   operator=(_Ep __e) _NOEXCEPT {
+=======
+#include <__functional/hash.h>
+#include <__functional/unary_function.h>
+#include <__system_error/errc.h>
+#include <__system_error/error_category.h>
+#include <cstddef>
+#include <string>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _Tp>
+struct _LIBCPP_TEMPLATE_VIS is_error_condition_enum : public false_type {};
+
+#if _LIBCPP_STD_VER >= 17
+template <class _Tp>
+inline constexpr bool is_error_condition_enum_v = is_error_condition_enum<_Tp>::value;
+#endif
+
+template <>
+struct _LIBCPP_TEMPLATE_VIS is_error_condition_enum<errc> : true_type {};
+
+#ifdef _LIBCPP_CXX03_LANG
+template <>
+struct _LIBCPP_TEMPLATE_VIS is_error_condition_enum<errc::__lx> : true_type {};
+#endif
+
+namespace __adl_only {
+// Those cause ADL to trigger but they are not viable candidates,
+// so they are never actually selected.
+void make_error_condition() = delete;
+} // namespace __adl_only
+
+class _LIBCPP_EXPORTED_FROM_ABI error_condition {
+  int __val_;
+  const error_category* __cat_;
+
+public:
+  _LIBCPP_HIDE_FROM_ABI error_condition() _NOEXCEPT : __val_(0), __cat_(&generic_category()) {}
+
+  _LIBCPP_HIDE_FROM_ABI error_condition(int __val, const error_category& __cat) _NOEXCEPT
+      : __val_(__val),
+        __cat_(&__cat) {}
+
+  template <class _Ep, __enable_if_t<is_error_condition_enum<_Ep>::value, int> = 0>
+  _LIBCPP_HIDE_FROM_ABI error_condition(_Ep __e) _NOEXCEPT {
+    using __adl_only::make_error_condition;
+    *this = make_error_condition(__e);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI void assign(int __val, const error_category& __cat) _NOEXCEPT {
+    __val_ = __val;
+    __cat_ = &__cat;
+  }
+
+  template <class _Ep, __enable_if_t<is_error_condition_enum<_Ep>::value, int> = 0>
+  _LIBCPP_HIDE_FROM_ABI error_condition& operator=(_Ep __e) _NOEXCEPT {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     using __adl_only::make_error_condition;
     *this = make_error_condition(__e);
     return *this;

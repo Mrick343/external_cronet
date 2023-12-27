@@ -33,6 +33,7 @@ template <class _ExecutionPolicy,
           class _BinaryOperation                              = plus<>,
           class _RawPolicy                                    = __remove_cvref_t<_ExecutionPolicy>,
           enable_if_t<is_execution_policy_v<_RawPolicy>, int> = 0>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 _LIBCPP_HIDE_FROM_ABI _Tp
 reduce(_ExecutionPolicy&& __policy,
        _ForwardIterator __first,
@@ -64,6 +65,70 @@ reduce(_ExecutionPolicy&& __policy, _ForwardIterator __first, _ForwardIterator _
       },
       std::move(__first),
       std::move(__last));
+=======
+[[nodiscard]] _LIBCPP_HIDE_FROM_ABI optional<_Tp>
+__reduce(_ExecutionPolicy&& __policy,
+         _ForwardIterator&& __first,
+         _ForwardIterator&& __last,
+         _Tp&& __init,
+         _BinaryOperation&& __op = {}) noexcept {
+  return std::__pstl_frontend_dispatch(
+      _LIBCPP_PSTL_CUSTOMIZATION_POINT(__pstl_reduce, _RawPolicy),
+      [&__policy](_ForwardIterator __g_first, _ForwardIterator __g_last, _Tp __g_init, _BinaryOperation __g_op) {
+        return std::__transform_reduce(
+            __policy, std::move(__g_first), std::move(__g_last), std::move(__g_init), std::move(__g_op), __identity{});
+      },
+      std::move(__first),
+      std::move(__last),
+      std::move(__init),
+      std::move(__op));
+}
+
+template <class _ExecutionPolicy,
+          class _ForwardIterator,
+          class _Tp,
+          class _BinaryOperation                              = plus<>,
+          class _RawPolicy                                    = __remove_cvref_t<_ExecutionPolicy>,
+          enable_if_t<is_execution_policy_v<_RawPolicy>, int> = 0>
+_LIBCPP_HIDE_FROM_ABI _Tp
+reduce(_ExecutionPolicy&& __policy,
+       _ForwardIterator __first,
+       _ForwardIterator __last,
+       _Tp __init,
+       _BinaryOperation __op = {}) {
+  auto __res = std::__reduce(__policy, std::move(__first), std::move(__last), std::move(__init), std::move(__op));
+  if (!__res)
+    std::__throw_bad_alloc();
+  return *std::move(__res);
+}
+
+template <class _ExecutionPolicy,
+          class _ForwardIterator,
+          class _RawPolicy                                    = __remove_cvref_t<_ExecutionPolicy>,
+          enable_if_t<is_execution_policy_v<_RawPolicy>, int> = 0>
+[[nodiscard]] _LIBCPP_HIDE_FROM_ABI optional<__iter_value_type<_ForwardIterator>>
+__reduce(_ExecutionPolicy&& __policy, _ForwardIterator&& __first, _ForwardIterator&& __last) noexcept {
+  return std::__pstl_frontend_dispatch(
+      _LIBCPP_PSTL_CUSTOMIZATION_POINT(__pstl_reduce, _RawPolicy),
+      [&__policy](_ForwardIterator __g_first, _ForwardIterator __g_last) {
+        return std::__reduce(
+            __policy, std::move(__g_first), std::move(__g_last), __iter_value_type<_ForwardIterator>());
+      },
+      std::move(__first),
+      std::move(__last));
+}
+
+template <class _ExecutionPolicy,
+          class _ForwardIterator,
+          class _RawPolicy                                    = __remove_cvref_t<_ExecutionPolicy>,
+          enable_if_t<is_execution_policy_v<_RawPolicy>, int> = 0>
+_LIBCPP_HIDE_FROM_ABI __iter_value_type<_ForwardIterator>
+reduce(_ExecutionPolicy&& __policy, _ForwardIterator __first, _ForwardIterator __last) {
+  auto __res = std::__reduce(__policy, std::move(__first), std::move(__last));
+  if (!__res)
+    std::__throw_bad_alloc();
+  return *std::move(__res);
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }
 
 _LIBCPP_END_NAMESPACE_STD

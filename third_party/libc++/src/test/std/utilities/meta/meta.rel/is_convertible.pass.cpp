@@ -117,9 +117,18 @@ int main(int, char**)
 
     // Non-referencable function type
     static_assert((!std::is_convertible<ConstFunction, Function>::value), "");
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     static_assert((!std::is_convertible<ConstFunction, Function*>::value), "");
     static_assert((!std::is_convertible<ConstFunction, Function&>::value), "");
     static_assert((!std::is_convertible<ConstFunction, Function&&>::value), "");
+=======
+// TODO(LLVM-19): Re-enable this once we switch to GCC 14. This is https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109680
+#ifndef TEST_COMPILER_GCC
+    static_assert((!std::is_convertible<ConstFunction, Function*>::value), "");
+    static_assert((!std::is_convertible<ConstFunction, Function&>::value), "");
+    static_assert((!std::is_convertible<ConstFunction, Function&&>::value), "");
+#endif
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     static_assert((!std::is_convertible<Function*, ConstFunction>::value), "");
     static_assert((!std::is_convertible<Function&, ConstFunction>::value), "");
     static_assert((!std::is_convertible<ConstFunction, ConstFunction>::value), "");

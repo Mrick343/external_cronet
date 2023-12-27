@@ -17,10 +17,18 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     std::char_traits<char32_t>::int_type i = std::char_traits<char32_t>::eof();
     ((void)i); // Prevent unused warning
 
     return 0;
+=======
+int main(int, char**) {
+  std::char_traits<char32_t>::int_type i = std::char_traits<char32_t>::eof();
+  ((void)i); // Prevent unused warning
+
+  return 0;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }

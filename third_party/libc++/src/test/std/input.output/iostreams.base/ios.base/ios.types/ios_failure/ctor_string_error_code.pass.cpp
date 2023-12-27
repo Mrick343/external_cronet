@@ -12,10 +12,18 @@
 
 // explicit failure(const string& msg, const error_code& ec = io_errc::stream);
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <ios>
 #include <string>
 #include <system_error>
 #include <cassert>
+=======
+#include <cassert>
+#include <ios>
+#include <string>
+#include <system_error>
+#include <type_traits>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 

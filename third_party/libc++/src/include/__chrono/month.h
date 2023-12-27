@@ -31,9 +31,15 @@ private:
 public:
     month() = default;
     _LIBCPP_HIDE_FROM_ABI explicit inline constexpr month(unsigned __val) noexcept : __m_(static_cast<unsigned char>(__val)) {}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     _LIBCPP_HIDE_FROM_ABI inline constexpr month& operator++()    noexcept { ++__m_; return *this; }
     _LIBCPP_HIDE_FROM_ABI inline constexpr month  operator++(int) noexcept { month __tmp = *this; ++(*this); return __tmp; }
     _LIBCPP_HIDE_FROM_ABI inline constexpr month& operator--()    noexcept { --__m_; return *this; }
+=======
+    _LIBCPP_HIDE_FROM_ABI inline constexpr month& operator++()    noexcept { *this += months{1}; return *this; }
+    _LIBCPP_HIDE_FROM_ABI inline constexpr month  operator++(int) noexcept { month __tmp = *this; ++(*this); return __tmp; }
+    _LIBCPP_HIDE_FROM_ABI inline constexpr month& operator--()    noexcept { *this -= months{1}; return *this; }
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     _LIBCPP_HIDE_FROM_ABI inline constexpr month  operator--(int) noexcept { month __tmp = *this; --(*this); return __tmp; }
     _LIBCPP_HIDE_FROM_ABI        constexpr month& operator+=(const months& __m1) noexcept;
     _LIBCPP_HIDE_FROM_ABI        constexpr month& operator-=(const months& __m1) noexcept;

@@ -220,6 +220,30 @@ constexpr bool test() {
     test_small_range(std::views::iota(1, 8));
   }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#if TEST_STD_VER >= 23
+  // `views::drop(repeat_view, n)` returns a `repeat_view` when `repeat_view` models `sized_range`.
+  {
+    auto repeat                                = std::ranges::repeat_view<int, int>(1, 8);
+    using Result                               = std::ranges::repeat_view<int, int>;
+    std::same_as<Result> decltype(auto) result = repeat | std::views::drop(3);
+    static_assert(std::ranges::sized_range<Result>);
+    assert(result.size() == 5);
+    assert(*result.begin() == 1);
+  }
+
+  // `views::drop(repeat_view, n)` returns a `repeat_view` when `repeat_view` doesn't model `sized_range`.
+  {
+    auto repeat                                = std::ranges::repeat_view<int>(1);
+    using Result                               = std::ranges::repeat_view<int, std::unreachable_sentinel_t>;
+    std::same_as<Result> decltype(auto) result = repeat | std::views::drop(3);
+    static_assert(!std::ranges::sized_range<Result>);
+    static_assert(std::same_as<std::unreachable_sentinel_t, decltype(result.end())>);
+  }
+#endif
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   // Test that it's possible to call `std::views::drop` with any single argument as long as the resulting closure is
   // never invoked. There is no good use case for it, but it's valid.
   {

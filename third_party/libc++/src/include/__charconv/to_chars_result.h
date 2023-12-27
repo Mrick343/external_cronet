@@ -27,6 +27,12 @@ struct _LIBCPP_EXPORTED_FROM_ABI to_chars_result {
 #  if _LIBCPP_STD_VER >= 20
   _LIBCPP_HIDE_FROM_ABI friend bool operator==(const to_chars_result&, const to_chars_result&) = default;
 #  endif
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#  if _LIBCPP_STD_VER >= 26
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit operator bool() const noexcept { return ec == errc{}; }
+#  endif
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 };
 
 #endif // _LIBCPP_STD_VER >= 17

@@ -11,7 +11,11 @@
 #define _LIBCPP___FWD_STRING_VIEW_H
 
 #include <__config>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <iosfwd> // char_traits
+=======
+#include <__fwd/string.h>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header

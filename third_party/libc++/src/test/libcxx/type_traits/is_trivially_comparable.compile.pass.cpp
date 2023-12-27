@@ -6,8 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
 
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include <__type_traits/is_equality_comparable.h>
 
 enum Enum : int {};

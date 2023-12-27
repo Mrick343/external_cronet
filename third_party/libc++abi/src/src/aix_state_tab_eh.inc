@@ -740,6 +740,10 @@ __catchThrownException(void (*cdfunc)(void),   // function which may fail
   return 0;
 }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 }  // __cxxabiv1

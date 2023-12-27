@@ -20,9 +20,16 @@
 // explicit basic_ifstream(const filesystem::path& s,
 //     ios_base::openmode mode = ios_base::in);
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <fstream>
 #include <filesystem>
 #include <cassert>
+=======
+#include <cassert>
+#include <filesystem>
+#include <fstream>
+#include <type_traits>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 

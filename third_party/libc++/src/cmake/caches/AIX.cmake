@@ -6,7 +6,10 @@ set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-G -Wl,-bcdtors:all:-2147483548:s" CACHE STRI
 set(CMAKE_AR "/usr/bin/ar" CACHE FILEPATH "")
 
 set(LIBCXX_USE_COMPILER_RT ON CACHE BOOL "")
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 set(LIBCXX_ENABLE_ASSERTIONS OFF CACHE BOOL "")
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 set(LIBCXX_ABI_VERSION "1" CACHE STRING "")
 set(LIBCXX_ENABLE_ABI_LINKER_SCRIPT OFF CACHE BOOL "")
 set(LIBCXX_ENABLE_SHARED ON CACHE BOOL "")

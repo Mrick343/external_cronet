@@ -165,6 +165,7 @@ class CDeleter {
 public:
   TEST_CONSTEXPR_CXX23 CDeleter() : state_(0) {}
   TEST_CONSTEXPR_CXX23 explicit CDeleter(int s) : state_(s) {}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   TEST_CONSTEXPR_CXX23 ~CDeleter() {
     assert(state_ >= 0);
     state_ = -1;
@@ -189,6 +190,35 @@ public:
   template <class U>
   TEST_CONSTEXPR_CXX23 CDeleter(const CDeleter<U>& d) : state_(d.state()) {}
 
+=======
+  TEST_CONSTEXPR_CXX23 CDeleter(const CDeleter&) = default;
+  TEST_CONSTEXPR_CXX23 CDeleter& operator=(const CDeleter&) = default;
+  TEST_CONSTEXPR_CXX23 ~CDeleter() {
+    assert(state_ >= 0);
+    state_ = -1;
+  }
+
+  template <class U>
+  TEST_CONSTEXPR_CXX23 CDeleter(const CDeleter<U>& d) : state_(d.state()) {}
+
+  TEST_CONSTEXPR_CXX23 int state() const { return state_; }
+  TEST_CONSTEXPR_CXX23 void set_state(int i) { state_ = i; }
+
+  TEST_CONSTEXPR_CXX23 void operator()(T* p) { delete p; }
+};
+
+template <class T>
+class CDeleter<T[]> {
+  int state_;
+
+public:
+  TEST_CONSTEXPR_CXX23 CDeleter() : state_(0) {}
+  TEST_CONSTEXPR_CXX23 explicit CDeleter(int s) : state_(s) {}
+  template <class U>
+  TEST_CONSTEXPR_CXX23 CDeleter(const CDeleter<U>& d) : state_(d.state()) {}
+  TEST_CONSTEXPR_CXX23 CDeleter(const CDeleter&) = default;
+  TEST_CONSTEXPR_CXX23 CDeleter& operator=(const CDeleter&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   TEST_CONSTEXPR_CXX23 ~CDeleter() {
     assert(state_ >= 0);
     state_ = -1;

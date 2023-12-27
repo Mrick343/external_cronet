@@ -39,6 +39,7 @@
 #include "test_macros.h"
 
 template <class Traits>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 void
 test()
 {
@@ -80,6 +81,43 @@ int main(int, char**)
 #endif
     static_assert((std::is_same<std::basic_string_view<char>::traits_type,
                                 std::char_traits<char> >::value), "");
+=======
+void test() {
+  typedef std::basic_string_view<typename Traits::char_type, Traits> S;
+
+  static_assert((std::is_same<typename S::traits_type, Traits>::value), "");
+  static_assert((std::is_same<typename S::value_type, typename Traits::char_type>::value), "");
+  static_assert((std::is_same<typename S::size_type, std::size_t>::value), "");
+  static_assert((std::is_same<typename S::difference_type, std::ptrdiff_t>::value), "");
+  static_assert((std::is_same<typename S::reference, typename S::value_type&>::value), "");
+  static_assert((std::is_same<typename S::const_reference, const typename S::value_type&>::value), "");
+  static_assert((std::is_same<typename S::pointer, typename S::value_type*>::value), "");
+  static_assert((std::is_same<typename S::const_pointer, const typename S::value_type*>::value), "");
+  static_assert((std::is_same< typename std::iterator_traits<typename S::iterator>::iterator_category,
+                               std::random_access_iterator_tag>::value),
+                "");
+  static_assert((std::is_same< typename std::iterator_traits<typename S::const_iterator>::iterator_category,
+                               std::random_access_iterator_tag>::value),
+                "");
+  static_assert((std::is_same< typename S::reverse_iterator, std::reverse_iterator<typename S::iterator> >::value), "");
+  static_assert(
+      (std::is_same< typename S::const_reverse_iterator, std::reverse_iterator<typename S::const_iterator> >::value),
+      "");
+  static_assert(S::npos == -1, "");
+  static_assert((std::is_same<typename S::iterator, typename S::const_iterator>::value), "");
+  static_assert((std::is_same<typename S::reverse_iterator, typename S::const_reverse_iterator>::value), "");
+}
+
+int main(int, char**) {
+  test<std::char_traits<char> >();
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  test<std::char_traits<wchar_t> >();
+#endif
+#ifndef TEST_HAS_NO_CHAR8_T
+  test<std::char_traits<char8_t> >();
+#endif
+  static_assert((std::is_same<std::basic_string_view<char>::traits_type, std::char_traits<char> >::value), "");
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

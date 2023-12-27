@@ -90,6 +90,7 @@ struct Three
 
 int Three::count = 0;
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template<class T>
 struct AllocNoConstruct : std::allocator<T>
 {
@@ -188,6 +189,83 @@ int main(int, char**)
     (void)std::allocate_shared<int>(AllocNoConstruct<int>());
     }
 #endif // TEST_STD_VER < 20
+=======
+template <class Alloc>
+void test()
+{
+    int const bad = -1;
+    {
+    std::shared_ptr<Zero> p = std::allocate_shared<Zero>(Alloc());
+    assert(Zero::count == 1);
+    }
+    assert(Zero::count == 0);
+    {
+    int const i = 42;
+    std::shared_ptr<One> p = std::allocate_shared<One>(Alloc(), i);
+    assert(One::count == 1);
+    assert(p->value == i);
+    }
+    assert(One::count == 0);
+    {
+    int const i = 42;
+    std::shared_ptr<Two> p = std::allocate_shared<Two>(Alloc(), i, bad);
+    assert(Two::count == 1);
+    assert(p->value == i);
+    }
+    assert(Two::count == 0);
+    {
+    int const i = 42;
+    std::shared_ptr<Three> p = std::allocate_shared<Three>(Alloc(), i, bad, bad);
+    assert(Three::count == 1);
+    assert(p->value == i);
+    }
+    assert(Three::count == 0);
+}
+
+int main(int, char**)
+{
+    test<bare_allocator<void> >();
+    test<test_allocator<void> >();
+
+    test_allocator_statistics alloc_stats;
+    {
+    int i = 67;
+    char c = 'e';
+    std::shared_ptr<A> p = std::allocate_shared<A>(test_allocator<A>(54, &alloc_stats), i, c);
+    assert(alloc_stats.alloc_count == 1);
+    assert(A::count == 1);
+    assert(p->get_int() == 67);
+    assert(p->get_char() == 'e');
+    }
+    assert(A::count == 0);
+    assert(alloc_stats.alloc_count == 0);
+    {
+    int i = 67;
+    char c = 'e';
+    std::shared_ptr<A> p = std::allocate_shared<A>(min_allocator<void>(), i, c);
+    assert(A::count == 1);
+    assert(p->get_int() == 67);
+    assert(p->get_char() == 'e');
+    }
+    assert(A::count == 0);
+    {
+    int i = 68;
+    char c = 'f';
+    std::shared_ptr<A> p = std::allocate_shared<A>(bare_allocator<void>(), i, c);
+    assert(A::count == 1);
+    assert(p->get_int() == 68);
+    assert(p->get_char() == 'f');
+    }
+    assert(A::count == 0);
+
+    // Make sure std::allocate_shared handles badly-behaved types properly
+    {
+        std::shared_ptr<operator_hijacker> p1 = std::allocate_shared<operator_hijacker>(min_allocator<operator_hijacker>());
+        std::shared_ptr<operator_hijacker> p2 = std::allocate_shared<operator_hijacker>(min_allocator<operator_hijacker>(), operator_hijacker());
+        assert(p1 != nullptr);
+        assert(p2 != nullptr);
+    }
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

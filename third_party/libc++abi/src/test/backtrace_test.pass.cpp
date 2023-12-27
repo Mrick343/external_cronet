@@ -8,6 +8,12 @@
 
 // UNSUPPORTED: no-exceptions
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// VE only supports SjLj and doesn't provide _Unwind_Backtrace.
+// UNSUPPORTED: target={{ve-.*}}
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include <assert.h>
 #include <stddef.h>
 #include <unwind.h>

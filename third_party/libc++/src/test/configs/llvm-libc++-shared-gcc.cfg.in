@@ -1,5 +1,6 @@
 # This testing configuration handles running the test suite against LLVM's libc++
 # using a shared library, with GCC. This is done differently from Clang because
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 # GCC does not support the -nostdlib++ command-line flag.
 
 lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
@@ -10,6 +11,18 @@ config.substitutions.append(('%{compile_flags}',
 ))
 config.substitutions.append(('%{link_flags}',
     '-L %{lib} -Wl,-rpath,%{lib} -nodefaultlibs -lc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc -latomic'
+=======
+# we need to explicitly link against libm for some tests with GCC.
+
+lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
+
+config.substitutions.append(('%{flags}', '-pthread'))
+config.substitutions.append(('%{compile_flags}',
+    '-nostdinc++ -I %{include} -I %{target-include} -I %{libcxx}/test/support'
+))
+config.substitutions.append(('%{link_flags}',
+    '-nostdlib++ -L %{lib} -Wl,-rpath,%{lib} -lc++ -lm'
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 ))
 config.substitutions.append(('%{exec}',
     '%{executor} --execdir %T -- '

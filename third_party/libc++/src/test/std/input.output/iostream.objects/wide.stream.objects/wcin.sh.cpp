@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // <iostream>
 
 // istream wcin;
@@ -16,6 +17,23 @@
 // FILE_DEPENDENCIES: ../send-stdin.sh
 // RUN: %{build}
 // RUN: %{exec} bash send-stdin.sh "%t.exe" "1234"
+=======
+// TODO: Investigate
+// UNSUPPORTED: LIBCXX-AIX-FIXME
+
+// This test hangs on Android devices that lack shell_v2, which was added in
+// Android N (API 24).
+// UNSUPPORTED: LIBCXX-ANDROID-FIXME && android-device-api={{2[1-3]}}
+
+// <iostream>
+
+// wistream wcin;
+
+// UNSUPPORTED: no-wide-characters
+
+// RUN: %{build}
+// RUN: echo -n 1234 | %{exec} %t.exe
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <iostream>
 #include <cassert>

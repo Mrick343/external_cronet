@@ -21,6 +21,7 @@
 #include "test_macros.h"
 
 #if TEST_STD_VER > 14
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 constexpr bool test_constexpr()
 {
     wchar_t c = L'1';
@@ -37,6 +38,22 @@ int main(int, char**)
 
 #if TEST_STD_VER > 14
     static_assert(test_constexpr(), "" );
+=======
+constexpr bool test_constexpr() {
+  wchar_t c = L'1';
+  std::char_traits<wchar_t>::assign(c, L'a');
+  return c == L'a';
+}
+#endif
+
+int main(int, char**) {
+  wchar_t c = L'\0';
+  std::char_traits<wchar_t>::assign(c, L'a');
+  assert(c == L'a');
+
+#if TEST_STD_VER > 14
+  static_assert(test_constexpr(), "");
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

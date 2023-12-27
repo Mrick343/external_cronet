@@ -24,6 +24,10 @@
 
 #include <cassert>
 #include <concepts>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <iterator>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include <thread>
 
 #include "test_format_context.h"

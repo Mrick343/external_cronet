@@ -10,7 +10,11 @@
 // Make sure that std::span's iterators check for OOB accesses when the debug mode is enabled.
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <span>
 

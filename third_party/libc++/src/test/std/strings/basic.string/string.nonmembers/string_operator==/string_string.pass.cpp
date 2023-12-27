@@ -19,6 +19,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 void
 test(const S& lhs, const S& rhs, bool x)
 {
@@ -72,6 +73,42 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 void test(const S& lhs, const S& rhs, bool x) {
+  assert((lhs == rhs) == x);
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test(S(""), S(""), true);
+  test(S(""), S("abcde"), false);
+  test(S(""), S("abcdefghij"), false);
+  test(S(""), S("abcdefghijklmnopqrst"), false);
+  test(S("abcde"), S(""), false);
+  test(S("abcde"), S("abcde"), true);
+  test(S("abcde"), S("abcdefghij"), false);
+  test(S("abcde"), S("abcdefghijklmnopqrst"), false);
+  test(S("abcdefghij"), S(""), false);
+  test(S("abcdefghij"), S("abcde"), false);
+  test(S("abcdefghij"), S("abcdefghij"), true);
+  test(S("abcdefghij"), S("abcdefghijklmnopqrst"), false);
+  test(S("abcdefghijklmnopqrst"), S(""), false);
+  test(S("abcdefghijklmnopqrst"), S("abcde"), false);
+  test(S("abcdefghijklmnopqrst"), S("abcdefghij"), false);
+  test(S("abcdefghijklmnopqrst"), S("abcdefghijklmnopqrst"), true);
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

@@ -35,6 +35,7 @@ TEST_CONSTEXPR_CXX20 void test1(S&& lhs, typename S::value_type rhs, const S& x)
 }
 #endif
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 bool test() {
   {
     typedef std::string S;
@@ -65,6 +66,28 @@ TEST_CONSTEXPR_CXX20 bool test() {
     test1(S("abcdefghij"), '1', S("abcdefghij1"));
     test1(S("abcdefghijklmnopqrst"), '1', S("abcdefghijklmnopqrst1"));
   }
+=======
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test0(S(""), '1', S("1"));
+  test0(S(""), '1', S("1"));
+  test0(S("abcde"), '1', S("abcde1"));
+  test0(S("abcdefghij"), '1', S("abcdefghij1"));
+  test0(S("abcdefghijklmnopqrst"), '1', S("abcdefghijklmnopqrst1"));
+
+#if TEST_STD_VER >= 11
+  test1(S(""), '1', S("1"));
+  test1(S("abcde"), '1', S("abcde1"));
+  test1(S("abcdefghij"), '1', S("abcdefghij1"));
+  test1(S("abcdefghijklmnopqrst"), '1', S("abcdefghijklmnopqrst1"));
+#endif
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif
 
   return true;

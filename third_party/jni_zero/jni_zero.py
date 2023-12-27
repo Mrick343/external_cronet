@@ -110,9 +110,12 @@ def _add_codegen_args(parser, *, is_final=False, is_javap=False):
                        action='append',
                        dest='extra_includes',
                        help='Header file to #include in the generated header.')
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     group.add_argument('--enable-profiling',
                        action='store_true',
                        help='Add additional profiling instrumentation.')
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     group.add_argument(
         '--split-name',
         help='Split name that the Java classes should be loaded from.')

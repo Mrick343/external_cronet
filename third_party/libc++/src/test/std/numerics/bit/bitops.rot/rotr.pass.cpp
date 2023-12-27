@@ -42,6 +42,7 @@ constexpr bool test()
     assert(std::rotr(T(max - 1), 6) == T(max - (highbit >> 5)));
     assert(std::rotr(T(max - 1), 7) == T(max - (highbit >> 6)));
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     assert(std::rotr(T(128), 0) == T(128));
     assert(std::rotr(T(128), 1) == T(64));
     assert(std::rotr(T(128), 2) == T(32));
@@ -60,6 +61,48 @@ constexpr bool test()
         assert(std::rotr(val, 1) == val >> 1);
         assert(std::rotr(val, 127) == val << 1);
         assert(std::rotr(T(3), 1) == ((T(1) << 127) | T(1)));
+=======
+    assert(std::rotr(T(max - 1), -1) == T(max - 2));
+    assert(std::rotr(T(max - 1), -2) == T(max - 4));
+    assert(std::rotr(T(max - 1), -3) == T(max - 8));
+    assert(std::rotr(T(max - 1), -4) == T(max - 16));
+    assert(std::rotr(T(max - 1), -5) == T(max - 32));
+    assert(std::rotr(T(max - 1), -6) == T(max - 64));
+    assert(std::rotr(T(max - 1), -7) == T(max - 128));
+
+    assert(std::rotr(T(128), 0) == T(128));
+    assert(std::rotr(T(128), 1) == T(64));
+    assert(std::rotr(T(128), 2) == T(32));
+    assert(std::rotr(T(128), 3) == T(16));
+    assert(std::rotr(T(128), 4) == T(8));
+    assert(std::rotr(T(128), 5) == T(4));
+    assert(std::rotr(T(128), 6) == T(2));
+    assert(std::rotr(T(128), 7) == T(1));
+
+    assert(std::rotr(T(1), -1) == T(2));
+    assert(std::rotr(T(1), -2) == T(4));
+    assert(std::rotr(T(1), -3) == T(8));
+    assert(std::rotr(T(1), -4) == T(16));
+    assert(std::rotr(T(1), -5) == T(32));
+    assert(std::rotr(T(1), -6) == T(64));
+    assert(std::rotr(T(1), -7) == T(128));
+
+#ifndef TEST_HAS_NO_INT128
+    if constexpr (std::is_same_v<T, __uint128_t>) {
+        T val = (T(1) << 63) | (T(1) << 64);
+        assert(std::rotr(val, 0) == val);
+        assert(std::rotr(val, 128) == val);
+        assert(std::rotr(val, 256) == val);
+        assert(std::rotr(val, 1) == val >> 1);
+        assert(std::rotr(val, 127) == val << 1);
+        assert(std::rotr(T(3), 1) == ((T(1) << 127) | T(1)));
+
+        assert(std::rotr(val, -128) == val);
+        assert(std::rotr(val, -256) == val);
+        assert(std::rotr(val, -1) == val << 1);
+        assert(std::rotr(val, -127) == val >> 1);
+        assert(std::rotr(T(3), -127) == ((T(1) << 127) | T(1)));
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     }
 #endif
 

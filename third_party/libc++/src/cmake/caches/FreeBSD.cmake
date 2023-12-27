@@ -1,7 +1,10 @@
 set(CMAKE_BUILD_TYPE Release CACHE STRING "")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "")
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 set(LIBCXX_ENABLE_ASSERTIONS OFF CACHE BOOL "")
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 set(LIBCXX_ABI_VERSION "1" CACHE STRING "")
 set(LIBCXX_ENABLE_STATIC ON CACHE BOOL "")
 set(LIBCXX_ENABLE_SHARED ON CACHE BOOL "")

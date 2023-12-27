@@ -21,6 +21,10 @@
 #include <unordered_set>
 #include <vector>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include "exception_safety_helpers.h"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include "from_range_helpers.h"
 #include "min_allocator.h"
 #include "test_allocator.h"

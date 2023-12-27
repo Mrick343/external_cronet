@@ -6,6 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // test numeric_limits
 
 // The default numeric_limits<T> template shall have all members, but with

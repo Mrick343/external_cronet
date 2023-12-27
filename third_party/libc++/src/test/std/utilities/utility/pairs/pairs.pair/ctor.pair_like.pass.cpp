@@ -23,6 +23,7 @@
 #include <type_traits>
 #include <utility>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 constexpr bool test() {
   // Make sure construction works from array, tuple, and ranges::subrange
   {
@@ -67,6 +68,73 @@ constexpr bool test() {
         assert(p.first == data + 0);
         assert(p.second == data + 5);
       }
+=======
+namespace my_ns{
+
+struct MyPairLike {
+
+template <std::size_t N>
+friend int get(MyPairLike const&)
+{
+  return 0;
+}
+
+};
+
+} // namespace my_ns
+
+namespace std {
+
+template <>
+struct tuple_size<my_ns::MyPairLike> : std::integral_constant<std::size_t, 2> {};
+
+template <std::size_t N>
+struct tuple_element<N, my_ns::MyPairLike> {
+  using type = int;
+};
+
+} // namespace std
+
+// https://github.com/llvm/llvm-project/issues/65620
+// This used to be a hard error
+static_assert(!std::is_constructible_v<std::pair<int,int>, my_ns::MyPairLike const&>);
+
+
+constexpr bool test() {
+  // Make sure construction works from array, tuple, and ranges::subrange
+  {
+    // Check from std::array
+    {
+      std::array<int, 2> a = {1, 2};
+      std::pair<int, int> p(a);
+      assert(p.first == 1);
+      assert(p.second == 2);
+      static_assert(!std::is_constructible_v<std::pair<int, int>, std::array<int, 1>>); // too small
+      static_assert( std::is_constructible_v<std::pair<int, int>, std::array<int, 2>>); // works (test the test)
+      static_assert(!std::is_constructible_v<std::pair<int, int>, std::array<int, 3>>); // too large
+    }
+
+    // Check from std::tuple
+    {
+      std::tuple<int, int> a = {1, 2};
+      std::pair<int, int> p(a);
+      assert(p.first == 1);
+      assert(p.second == 2);
+      static_assert(!std::is_constructible_v<std::pair<int, int>, std::tuple<int>>); // too small
+      static_assert( std::is_constructible_v<std::pair<int, int>, std::tuple<int, int>>); // works (test the test)
+      static_assert(!std::is_constructible_v<std::pair<int, int>, std::tuple<int, int, int>>); // too large
+    }
+
+    // Check that the constructor excludes ranges::subrange
+    {
+      int data[] = {1, 2, 3, 4, 5};
+      const std::ranges::subrange a(data);
+      // Note the expression below would be ambiguous if pair's
+      // constructor does not exclude subrange
+      std::pair<int*, int*> p = a;
+      assert(p.first == data + 0);
+      assert(p.second == data + 5);
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     }
   }
 

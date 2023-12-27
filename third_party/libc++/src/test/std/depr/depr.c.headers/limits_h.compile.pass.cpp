@@ -6,7 +6,14 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
  // test limits.h
+=======
+// test <limits.h>
+//
+// Even though <limits.h> is not provided by libc++, we still test that
+// using it with libc++ on the search path will work.
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <limits.h>
 

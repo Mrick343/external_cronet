@@ -20,6 +20,7 @@
 // Test the noexcept specification, which is a conforming extension
 LIBCPP_STATIC_ASSERT(std::is_nothrow_default_constructible<std::string>::value, "");
 LIBCPP_STATIC_ASSERT(std::is_nothrow_default_constructible<
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
                      std::basic_string<char, std::char_traits<char>, test_allocator<char>>>::value, "");
 LIBCPP_STATIC_ASSERT(!std::is_nothrow_default_constructible<
                      std::basic_string<char, std::char_traits<char>, limited_allocator<char, 10>>>::value, "");
@@ -34,6 +35,23 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+                         std::basic_string<char, std::char_traits<char>, test_allocator<char>>>::value,
+                     "");
+LIBCPP_STATIC_ASSERT(!std::is_nothrow_default_constructible<
+                         std::basic_string<char, std::char_traits<char>, limited_allocator<char, 10>>>::value,
+                     "");
+#endif
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  std::string str;
+  assert(str.empty());
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

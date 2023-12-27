@@ -12,6 +12,7 @@
 //
 // [simd.traits]
 // template <class T> struct is_abi_tag;
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // template <class T> inline constexpr bool ex::is_abi_tag_v =
 // ex::is_abi_tag<T>::value;
 
@@ -112,3 +113,33 @@ static_assert(!ex::is_abi_tag_v<ex::simd_mask<float>>, "");
 int main(int, char**) {
   return 0;
 }
+=======
+// template <class T> inline constexpr bool ex::is_abi_tag_v = ex::is_abi_tag<T>::value;
+
+#include "../test_utils.h"
+
+namespace ex = std::experimental::parallelism_v2;
+
+template <class T, std::size_t N>
+struct CheckIsAbiTag {
+  template <class SimdAbi>
+  void operator()() {
+    static_assert(ex::is_abi_tag<SimdAbi>::value);
+
+    static_assert(!ex::is_abi_tag<T>::value);
+    static_assert(!ex::is_abi_tag<ex::simd<T, SimdAbi>>::value);
+    static_assert(!ex::is_abi_tag<ex::simd_mask<T, SimdAbi>>::value);
+
+    static_assert(ex::is_abi_tag_v<SimdAbi>);
+
+    static_assert(!ex::is_abi_tag_v<T>);
+    static_assert(!ex::is_abi_tag_v<ex::simd<T, SimdAbi>>);
+    static_assert(!ex::is_abi_tag_v<ex::simd_mask<T, SimdAbi>>);
+  }
+};
+
+int main(int, char**) {
+  test_all_simd_abi<CheckIsAbiTag>();
+  return 0;
+}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)

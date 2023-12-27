@@ -26,8 +26,13 @@ namespace chrono
 {
 
 struct local_t {};
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template<class Duration>
 using local_time  = time_point<local_t, Duration>;
+=======
+template<class _Duration>
+using local_time  = time_point<local_t, _Duration>;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 using local_seconds = local_time<seconds>;
 using local_days    = local_time<days>;
 

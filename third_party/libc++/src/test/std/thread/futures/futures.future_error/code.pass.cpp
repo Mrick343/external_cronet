@@ -9,6 +9,7 @@
 // UNSUPPORTED: no-threads
 
 // <future>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 // class future_error
 //     future_error(error_code __ec);  // exposition only
@@ -52,6 +53,45 @@ int main(int, char**)
         std::future_error f(std::future_errc::no_state);
         assert(f.code() == std::make_error_code(std::future_errc::no_state));
     }
+=======
+//
+// class future_error
+//
+// const error_code& code() const noexcept;
+
+#include <cassert>
+#include <future>
+#include <utility>
+
+#include "test_macros.h"
+
+int main(int, char**) {
+  ASSERT_NOEXCEPT(std::declval<std::future_error const&>().code());
+  ASSERT_SAME_TYPE(decltype(std::declval<std::future_error const&>().code()), std::error_code const&);
+
+  // Before C++17, we can't construct std::future_error directly in a standards-conforming way
+#if TEST_STD_VER >= 17
+  {
+    std::future_error const f(std::future_errc::broken_promise);
+    std::error_code const& code = f.code();
+    assert(code == std::make_error_code(std::future_errc::broken_promise));
+  }
+  {
+    std::future_error const f(std::future_errc::future_already_retrieved);
+    std::error_code const& code = f.code();
+    assert(code == std::make_error_code(std::future_errc::future_already_retrieved));
+  }
+  {
+    std::future_error const f(std::future_errc::promise_already_satisfied);
+    std::error_code const& code = f.code();
+    assert(code == std::make_error_code(std::future_errc::promise_already_satisfied));
+  }
+  {
+    std::future_error const f(std::future_errc::no_state);
+    std::error_code const& code = f.code();
+    assert(code == std::make_error_code(std::future_errc::no_state));
+  }
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

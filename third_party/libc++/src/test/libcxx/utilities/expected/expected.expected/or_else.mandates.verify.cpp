@@ -52,6 +52,7 @@ void test() {
     {
       std::expected<int, int> f1(std::unexpected<int>(1));
       f1.or_else(lval_return_not_std_expected); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<int (&)(int &)>' requested here}}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
       // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}The result of f(error()) must be a specialization of std::expected}}
       // expected-error-re@*:* {{{{.*}}cannot be used prior to '::' because it has no members}}
       // expected-error-re@*:* {{no matching constructor for initialization of{{.*}}}}
@@ -119,6 +120,75 @@ void test() {
       const std::expected<int, int> f1(std::unexpected<int>(1));
       std::move(f1).or_else(crval_error_type_not_same_as_int); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<std::expected<NotSameAsInt, int> (&)(const int &&)>' requested here}}
       // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}The result of f(std::move(error())) must have the same value_type as this expected}}
+=======
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(error()) must be a specialization of std::expected}}
+      // expected-error-re@*:* {{{{.*}}cannot be used prior to '::' because it has no members}}
+      // expected-error-re@*:* {{no matching constructor for initialization of{{.*}}}}
+    }
+
+    // !std::is_same_v<G:value_type, T>
+    {
+      std::expected<int, int> f1(std::unexpected<int>(1));
+      f1.or_else(lval_error_type_not_same_as_int);  // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<std::expected<NotSameAsInt, int> (&)(int &)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(error()) must have the same value_type as this expected}}
+    }
+  }
+
+  // Test const& overload
+  {
+    // G is not a specialization of std::expected
+    {
+      const std::expected<int, int> f1(std::unexpected<int>(1));
+      f1.or_else(clval_return_not_std_expected); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<int (&)(const int &)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(error()) must be a specialization of std::expected}}
+      // expected-error-re@*:* {{{{.*}}cannot be used prior to '::' because it has no members}}
+      // expected-error-re@*:* {{no matching constructor for initialization of{{.*}}}}
+    }
+
+    // !std::is_same_v<G:value_type, T>
+    {
+      const std::expected<int, int> f1(std::unexpected<int>(1));
+      f1.or_else(clval_error_type_not_same_as_int);  // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<std::expected<NotSameAsInt, int> (&)(const int &)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(error()) must have the same value_type as this expected}}
+    }
+  }
+
+  // Test && overload
+  {
+    // G is not a specialization of std::expected
+    {
+      std::expected<int, int> f1(std::unexpected<int>(1));
+      std::move(f1).or_else(rval_return_not_std_expected); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<int (&)(int &&)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(std::move(error())) must be a specialization of std::expected}}
+      // expected-error-re@*:* {{{{.*}}cannot be used prior to '::' because it has no members}}
+      // expected-error-re@*:* {{no matching constructor for initialization of{{.*}}}}
+    }
+
+    // !std::is_same_v<G:value_type, T>
+    {
+      std::expected<int, int> f1(std::unexpected<int>(1));
+      std::move(f1).or_else(rval_error_type_not_same_as_int); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<std::expected<NotSameAsInt, int> (&)(int &&)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(std::move(error())) must have the same value_type as this expected}}
+    }
+  }
+
+  // Test const&& overload
+  {
+    // G is not a specialization of std::expected
+    {
+      const std::expected<int, int> f1(std::unexpected<int>(1));
+      std::move(f1).or_else(crval_return_not_std_expected); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<int (&)(const int &&)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(std::move(error())) must be a specialization of std::expected}}
+      // expected-error-re@*:* {{{{.*}}cannot be used prior to '::' because it has no members}}
+      // expected-error-re@*:* {{no matching constructor for initialization of{{.*}}}}
+    }
+
+    // !std::is_same_v<G:value_type, T>
+    {
+      const std::expected<int, int> f1(std::unexpected<int>(1));
+      std::move(f1).or_else(crval_error_type_not_same_as_int); // expected-note{{in instantiation of function template specialization 'std::expected<int, int>::or_else<std::expected<NotSameAsInt, int> (&)(const int &&)>' requested here}}
+      // expected-error-re@*:* {{static assertion failed {{.*}}The result of f(std::move(error())) must have the same value_type as this expected}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     }
   }
 }

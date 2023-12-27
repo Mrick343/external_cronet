@@ -18,6 +18,11 @@
 
 struct exception {
     exception() : x(0) { }
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    exception(const exception&) = default;
+    exception& operator=(const exception&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     virtual ~exception() { }
     int x;
 };

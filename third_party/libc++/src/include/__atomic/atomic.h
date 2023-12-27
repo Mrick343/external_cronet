@@ -505,6 +505,7 @@ _Tp atomic_fetch_sub_explicit(atomic<_Tp>* __o, typename atomic<_Tp>::difference
 
 // atomic_fetch_and
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <class _Tp>
 _LIBCPP_HIDE_FROM_ABI
 typename enable_if
@@ -654,6 +655,109 @@ typename enable_if
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
+=======
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_and(volatile atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op) _NOEXCEPT
+{
+    return __o->fetch_and(__op);
+}
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_and(atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op) _NOEXCEPT
+{
+    return __o->fetch_and(__op);
+}
+
+// atomic_fetch_and_explicit
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_and_explicit(volatile atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op, memory_order __m) _NOEXCEPT
+{
+    return __o->fetch_and(__op, __m);
+}
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_and_explicit(atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op, memory_order __m) _NOEXCEPT
+{
+    return __o->fetch_and(__op, __m);
+}
+
+// atomic_fetch_or
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_or(volatile atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op) _NOEXCEPT
+{
+    return __o->fetch_or(__op);
+}
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_or(atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op) _NOEXCEPT
+{
+    return __o->fetch_or(__op);
+}
+
+// atomic_fetch_or_explicit
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_or_explicit(volatile atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op, memory_order __m) _NOEXCEPT
+{
+    return __o->fetch_or(__op, __m);
+}
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_or_explicit(atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op, memory_order __m) _NOEXCEPT
+{
+    return __o->fetch_or(__op, __m);
+}
+
+// atomic_fetch_xor
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_xor(volatile atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op) _NOEXCEPT
+{
+    return __o->fetch_xor(__op);
+}
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_xor(atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op) _NOEXCEPT
+{
+    return __o->fetch_xor(__op);
+}
+
+// atomic_fetch_xor_explicit
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+atomic_fetch_xor_explicit(volatile atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op, memory_order __m) _NOEXCEPT
+{
+    return __o->fetch_xor(__op, __m);
+}
+
+template <class _Tp, __enable_if_t<is_integral<_Tp>::value && !is_same<_Tp, bool>::value, int> = 0>
+_LIBCPP_HIDE_FROM_ABI
+_Tp
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 atomic_fetch_xor_explicit(atomic<_Tp>* __o, typename atomic<_Tp>::value_type __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_xor(__op, __m);

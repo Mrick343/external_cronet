@@ -18,6 +18,7 @@
 #include "test_macros.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 bool test() {
   {
     std::string s("123");
@@ -36,6 +37,22 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  S s("123");
+  s += {'a', 'b', 'c'};
+  assert(s == "123abc");
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

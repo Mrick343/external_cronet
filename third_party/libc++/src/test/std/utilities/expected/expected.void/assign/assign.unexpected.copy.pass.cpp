@@ -6,8 +6,11 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // Older Clangs do not support the C++20 feature to constrain destructors
 // XFAIL: apple-clang-14
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // template<class G>
 //   constexpr expected& operator=(const unexpected<G>& e);

@@ -37,7 +37,12 @@ inline _LIBCPP_HIDE_FROM_ABI_C long long wcstoll_l(const wchar_t* __nptr, wchar_
   return ::wcstoll(__nptr, __endptr, __base);
 }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 inline _LIBCPP_HIDE_FROM_ABI_C long long wcstoull_l(const wchar_t* __nptr, wchar_t** __endptr, int __base, locale_t) {
+=======
+inline _LIBCPP_HIDE_FROM_ABI_C unsigned long long
+wcstoull_l(const wchar_t* __nptr, wchar_t** __endptr, int __base, locale_t) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   return ::wcstoull(__nptr, __endptr, __base);
 }
 

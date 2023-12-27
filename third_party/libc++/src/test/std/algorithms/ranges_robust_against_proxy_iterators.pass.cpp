@@ -25,6 +25,7 @@
 
 #include "MoveOnly.h"
 #include "test_iterators.h"
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 // (in, ...)
 template <class Func, std::ranges::range Input, class ...Args>
@@ -129,6 +130,119 @@ constexpr void run_tests() {
     test(std::ranges::replace_copy, in, out, x, x);
     test(std::ranges::replace_copy_if, in, out, unary_pred, x);
   }
+=======
+#include "test_macros.h"
+
+// (in, ...)
+template <class Func, std::ranges::range Input, class ...Args>
+constexpr void test(Func&& func, Input& in, Args&& ...args) {
+  (void)func(in.begin(), in.end(), std::forward<Args>(args)...);
+  (void)func(in, std::forward<Args>(args)...);
+}
+
+// (in1, in2, ...)
+template <class Func, std::ranges::range Range1, std::ranges::range Range2, class ...Args>
+constexpr void test(Func&& func, Range1& r1, Range2& r2, Args&& ...args) {
+  (void)func(r1.begin(), r1.end(), r2.begin(), r2.end(), std::forward<Args>(args)...);
+  (void)func(r1, r2, std::forward<Args>(args)...);
+}
+
+// (in, mid, ...)
+template <class Func, std::ranges::range Input, class ...Args>
+constexpr void test_mid(Func&& func, Input& in, std::ranges::iterator_t<Input> mid, Args&& ...args) {
+  (void)func(in.begin(), mid, in.end(), std::forward<Args>(args)...);
+  (void)func(in, mid, std::forward<Args>(args)...);
+}
+
+std::mt19937 rand_gen() { return std::mt19937(); }
+
+template <class T>
+constexpr void run_tests() {
+  std::array input = {T{1}, T{2}, T{3}};
+  ProxyRange in{input};
+  std::array input2 = {T{4}, T{5}, T{6}};
+  ProxyRange in2{input2};
+
+  auto mid = in.begin() + 1;
+
+  std::array output = {T{4}, T{5}, T{6}, T{7}, T{8}, T{9}};
+  ProxyIterator out{output.begin()};
+  ProxyIterator out2{output.begin() + 1};
+  ProxyIterator out_end{output.end()};
+
+  T num{2};
+  Proxy<T&> x{num};
+  int count = 1;
+
+  auto unary_pred = [](const Proxy<T&>&) { return true; };
+  auto binary_func = [](const Proxy<T>&, const Proxy<T>&) -> Proxy<T> { return Proxy<T>(T()); };
+  auto gen = [] { return Proxy<T>(T{42}); };
+
+  test(std::ranges::any_of, in, unary_pred);
+  test(std::ranges::all_of, in, unary_pred);
+#if TEST_STD_VER >= 23
+  test(std::ranges::ends_with, in, in2);
+#endif
+  test(std::ranges::none_of, in, unary_pred);
+  test(std::ranges::find, in, x);
+  test(std::ranges::find_if, in, unary_pred);
+  test(std::ranges::find_if_not, in, unary_pred);
+  test(std::ranges::find_first_of, in, in2);
+  test(std::ranges::adjacent_find, in);
+  test(std::ranges::mismatch, in, in2);
+  test(std::ranges::equal, in, in2);
+  test(std::ranges::lexicographical_compare, in, in2);
+  test(std::ranges::partition_point, in, unary_pred);
+  test(std::ranges::lower_bound, in, x);
+  test(std::ranges::upper_bound, in, x);
+  test(std::ranges::equal_range, in, x);
+  test(std::ranges::binary_search, in, x);
+
+  test(std::ranges::min_element, in);
+  test(std::ranges::max_element, in);
+  test(std::ranges::minmax_element, in);
+  test(std::ranges::count, in, x);
+  test(std::ranges::count_if, in, unary_pred);
+  test(std::ranges::search, in, in2);
+  test(std::ranges::search_n, in, count, x);
+  test(std::ranges::find_end, in, in2);
+  test(std::ranges::is_partitioned, in, unary_pred);
+  test(std::ranges::is_sorted, in);
+  test(std::ranges::is_sorted_until, in);
+  test(std::ranges::includes, in, in2);
+  test(std::ranges::is_heap, in);
+  test(std::ranges::is_heap_until, in);
+  test(std::ranges::is_permutation, in, in2);
+  test(std::ranges::for_each, in, std::identity{});
+  std::ranges::for_each_n(in.begin(), count, std::identity{});
+  if constexpr (std::copyable<T>) {
+    test(std::ranges::copy, in, out);
+    std::ranges::copy_n(in.begin(), count, out);
+    test(std::ranges::copy_if, in, out, unary_pred);
+    test(std::ranges::copy_backward, in, out_end);
+  }
+  test(std::ranges::move, in, out);
+  test(std::ranges::move_backward, in, out_end);
+  if constexpr (std::copyable<T>) {
+    test(std::ranges::fill, in, x);
+    std::ranges::fill_n(in.begin(), count, x);
+    test(std::ranges::transform, in, out, std::identity{});
+    test(std::ranges::transform, in, in2, out, binary_func);
+  }
+  test(std::ranges::generate, in, gen);
+  std::ranges::generate_n(in.begin(), count, gen);
+  if constexpr (std::copyable<T>) {
+    test(std::ranges::remove_copy, in, out, x);
+    test(std::ranges::remove_copy_if, in, out, unary_pred);
+    test(std::ranges::replace, in, x, x);
+    test(std::ranges::replace_if, in, unary_pred, x);
+    test(std::ranges::replace_copy, in, out, x, x);
+    test(std::ranges::replace_copy_if, in, out, unary_pred, x);
+  }
+#if TEST_STD_VER > 20
+  test(std::ranges::starts_with, in, in2);
+#endif
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test(std::ranges::swap_ranges, in, in2);
   if constexpr (std::copyable<T>) {
     test(std::ranges::reverse_copy, in, out);

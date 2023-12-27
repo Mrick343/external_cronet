@@ -1,3 +1,4 @@
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // Copyright 2012 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -120,3 +121,5 @@ void RandBytes(void* output, size_t output_length) {
 }
 
 }  // namespace partition_alloc::internal::base
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)

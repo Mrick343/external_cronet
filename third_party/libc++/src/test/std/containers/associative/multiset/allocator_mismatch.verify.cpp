@@ -12,4 +12,8 @@
 #include <set>
 
 std::multiset<int, std::less<int>, std::allocator<long> > m;
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed{{.*}}Allocator::value_type must be same type as value_type}}
+=======
+  // expected-error-re@*:* {{static assertion failed{{.*}}Allocator::value_type must be same type as value_type}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)

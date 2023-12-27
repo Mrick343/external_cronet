@@ -8,6 +8,7 @@
 
 // The test suite needs to define the ABI macros on the command line when
 // modules are enabled.
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
 
 // <utility>
@@ -18,6 +19,18 @@
 // is specified.
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
 // ADDITIONAL_COMPILE_FLAGS: -Wno-macro-redefined
+=======
+// UNSUPPORTED: clang-modules-build
+
+// <utility>
+
+// template <class T1, class T2> struct pair
+
+// Test that we provide the non-trivial copy operations when _LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
+// is specified.
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
+// ADDITIONAL_COMPILE_FLAGS: -Wno-macro-redefined -Wno-invalid-offsetof
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <utility>
 #include <type_traits>

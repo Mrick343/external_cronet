@@ -14,6 +14,10 @@
 
 // FreeBSD still provides the old ABI for std::pair.
 // XFAIL: freebsd
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// ADDITIONAL_COMPILE_FLAGS: -Wno-invalid-offsetof
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <utility>
 #include <type_traits>

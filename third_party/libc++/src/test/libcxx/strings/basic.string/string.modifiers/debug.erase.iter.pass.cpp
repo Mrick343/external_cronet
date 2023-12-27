@@ -11,6 +11,7 @@
 // Call erase(const_iterator position) with an iterator from another container
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03
 
 #include <string>
@@ -35,4 +36,27 @@ int main(int, char**) {
     }
 
     return 0;
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+
+#include <string>
+
+#include "check_assertion.h"
+#include "min_allocator.h"
+
+template <class S>
+void test() {
+  S l1("123");
+  S l2("123");
+  typename S::const_iterator i = l2.begin();
+  TEST_LIBCPP_ASSERT_FAILURE(
+      l1.erase(i), "string::erase(iterator) called with an iterator not referring to this string");
+}
+
+int main(int, char**) {
+  test<std::string>();
+  test<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+
+  return 0;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }

@@ -20,6 +20,7 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template<class _Tp>
 _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
 _Tp __rotr(_Tp __t, unsigned int __cnt) _NOEXCEPT
@@ -43,6 +44,37 @@ template <__libcpp_unsigned_integer _Tp>
 
 template <__libcpp_unsigned_integer _Tp>
 [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr _Tp rotr(_Tp __t, unsigned int __cnt) noexcept {
+=======
+template <class _Tp>
+_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 _Tp __rotr(_Tp __t, int __cnt) _NOEXCEPT {
+  static_assert(__libcpp_is_unsigned_integer<_Tp>::value, "__rotr requires an unsigned integer type");
+  const unsigned int __dig = numeric_limits<_Tp>::digits;
+  if ((__cnt % __dig) == 0)
+    return __t;
+
+  if (__cnt < 0) {
+    __cnt *= -1;
+    return (__t << (__cnt % __dig)) | (__t >> (__dig - (__cnt % __dig))); // rotr with negative __cnt is similar to rotl
+  }
+
+  return (__t >> (__cnt % __dig)) | (__t << (__dig - (__cnt % __dig)));
+}
+
+template <class _Tp>
+_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 _Tp __rotl(_Tp __t, int __cnt) _NOEXCEPT {
+  return std::__rotr(__t, -__cnt);
+}
+
+#if _LIBCPP_STD_VER >= 20
+
+template <__libcpp_unsigned_integer _Tp>
+[[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr _Tp rotl(_Tp __t, int __cnt) noexcept {
+  return std::__rotl(__t, __cnt);
+}
+
+template <__libcpp_unsigned_integer _Tp>
+[[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr _Tp rotr(_Tp __t, int __cnt) noexcept {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   return std::__rotr(__t, __cnt);
 }
 

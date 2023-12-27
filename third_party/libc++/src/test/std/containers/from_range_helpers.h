@@ -57,6 +57,7 @@ struct std::hash<KeyValue> {
 };
 
 #if !defined(TEST_HAS_NO_EXCEPTIONS)
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <int N>
 struct ThrowingCopy {
   static bool throwing_enabled;
@@ -103,6 +104,8 @@ template <int N>
 int ThrowingCopy<N>::created_by_copying = 0;
 template <int N>
 int ThrowingCopy<N>::destroyed = 0;
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 template <class T>
 struct ThrowingAllocator {

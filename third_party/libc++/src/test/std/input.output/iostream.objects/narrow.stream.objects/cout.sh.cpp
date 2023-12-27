@@ -8,12 +8,21 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // istream cout;
 
 // UNSUPPORTED: executor-has-no-bash
 // FILE_DEPENDENCIES: ../check-stdout.sh
 // RUN: %{build}
 // RUN: %{exec} bash check-stdout.sh "%t.exe" "1234"
+=======
+// ostream cout;
+
+// RUN: %{build}
+// RUN: %{exec} %t.exe > %t.actual
+// RUN: echo -n 1234 > %t.expected
+// RUN: diff %t.expected %t.actual
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <iostream>
 

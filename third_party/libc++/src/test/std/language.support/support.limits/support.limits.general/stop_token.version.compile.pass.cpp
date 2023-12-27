@@ -44,6 +44,7 @@
 
 #elif TEST_STD_VER == 20
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 # if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_jthread
 #     error "__cpp_lib_jthread should be defined in c++20"
@@ -84,6 +85,48 @@
 # else // _LIBCPP_VERSION
 #   ifdef __cpp_lib_jthread
 #     error "__cpp_lib_jthread should not be defined because it is unimplemented in libc++!"
+=======
+# if !defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)
+#   ifndef __cpp_lib_jthread
+#     error "__cpp_lib_jthread should be defined in c++20"
+#   endif
+#   if __cpp_lib_jthread != 201911L
+#     error "__cpp_lib_jthread should have the value 201911L in c++20"
+#   endif
+# else
+#   ifdef __cpp_lib_jthread
+#     error "__cpp_lib_jthread should not be defined when the requirement '!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)' is not met!"
+#   endif
+# endif
+
+#elif TEST_STD_VER == 23
+
+# if !defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)
+#   ifndef __cpp_lib_jthread
+#     error "__cpp_lib_jthread should be defined in c++23"
+#   endif
+#   if __cpp_lib_jthread != 201911L
+#     error "__cpp_lib_jthread should have the value 201911L in c++23"
+#   endif
+# else
+#   ifdef __cpp_lib_jthread
+#     error "__cpp_lib_jthread should not be defined when the requirement '!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)' is not met!"
+#   endif
+# endif
+
+#elif TEST_STD_VER > 23
+
+# if !defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)
+#   ifndef __cpp_lib_jthread
+#     error "__cpp_lib_jthread should be defined in c++26"
+#   endif
+#   if __cpp_lib_jthread != 201911L
+#     error "__cpp_lib_jthread should have the value 201911L in c++26"
+#   endif
+# else
+#   ifdef __cpp_lib_jthread
+#     error "__cpp_lib_jthread should not be defined when the requirement '!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)' is not met!"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #   endif
 # endif
 

@@ -37,6 +37,13 @@ Paper Status
    :header-rows: 1
    :widths: auto
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+.. note::
+
+   .. [#note-P2510R3] This paper is applied as DR against C++20. (MSVC STL and libstdc++ will do the same.)
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 .. _issues-status-cxx2c:
 
 Library Working Group Issues Status

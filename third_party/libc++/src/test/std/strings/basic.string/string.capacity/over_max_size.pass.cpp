@@ -26,6 +26,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 void
 test(const S& s)
 {
@@ -55,6 +56,37 @@ bool test() {
 
 int main(int, char**)
 {
+=======
+void test(const S& s) {
+  assert(s.max_size() >= s.size());
+  S s2(s);
+  const std::size_t sz = s2.max_size() + 1;
+  try {
+    s2.resize(sz, 'x');
+  } catch (const std::length_error&) {
+    return;
+  }
+  assert(false);
+}
+
+template <class S>
+void test_string() {
+  test(S());
+  test(S("123"));
+  test(S("12345678901234567890123456789012345678901234567890"));
+}
+
+bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char>>>();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 
   return 0;

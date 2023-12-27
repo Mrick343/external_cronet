@@ -18,6 +18,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
 #ifndef TEST_HAS_NO_CHAR8_T
@@ -26,6 +27,14 @@ int main(int, char**)
     assert(!std::char_traits<char8_t>::eq_int_type(std::char_traits<char8_t>::eof(), u8'A'));
     assert( std::char_traits<char8_t>::eq_int_type(std::char_traits<char8_t>::eof(),
                                                     std::char_traits<char8_t>::eof()));
+=======
+int main(int, char**) {
+#ifndef TEST_HAS_NO_CHAR8_T
+  assert(std::char_traits<char8_t>::eq_int_type(u8'a', u8'a'));
+  assert(!std::char_traits<char8_t>::eq_int_type(u8'a', u8'A'));
+  assert(!std::char_traits<char8_t>::eq_int_type(std::char_traits<char8_t>::eof(), u8'A'));
+  assert(std::char_traits<char8_t>::eq_int_type(std::char_traits<char8_t>::eof(), std::char_traits<char8_t>::eof()));
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

@@ -14,6 +14,7 @@
 //     typedef unspecified catalog;
 // };
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <locale>
 #include <type_traits>
 
@@ -22,6 +23,24 @@
 int main(int, char**)
 {
     std::messages_base mb;
+=======
+#include <cstdint>
+#include <locale>
+#include <type_traits>
+
+#include "assert_macros.h"
+
+#ifdef _LIBCPP_VERSION
+ASSERT_SAME_TYPE(std::messages_base::catalog, std::intptr_t);
+#endif
+
+// Check that we implement LWG2028
+static_assert(std::is_signed<std::messages_base::catalog>::value, "");
+static_assert(std::is_integral<std::messages_base::catalog>::value, "");
+
+int main(int, char**) {
+  std::messages_base mb;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

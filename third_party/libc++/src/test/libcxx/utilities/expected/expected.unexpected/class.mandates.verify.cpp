@@ -14,6 +14,7 @@
 
 
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template class std::unexpected<int[2]>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
 
 template class std::unexpected<const int>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
@@ -23,3 +24,14 @@ template class std::unexpected<int&>; // expected-error-re@*:* {{{{(static_asser
 template class std::unexpected<std::unexpected<int>>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
 
 template class std::unexpected<volatile int>; // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}[expected.un.general]}}
+=======
+template class std::unexpected<int[2]>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<const int>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<int&>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<std::unexpected<int>>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+
+template class std::unexpected<volatile int>; // expected-error-re@*:* {{static assertion failed {{.*}}[expected.un.general]}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)

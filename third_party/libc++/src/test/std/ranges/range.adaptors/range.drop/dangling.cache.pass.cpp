@@ -29,6 +29,12 @@ struct ZeroOnDestroy : std::ranges::view_base {
   constexpr ForwardIter end() { return ForwardIter(buff + 8); }
   constexpr ForwardIter end() const { return ForwardIter(); }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  ZeroOnDestroy() = default;
+  ZeroOnDestroy(const ZeroOnDestroy&) = default;
+  ZeroOnDestroy& operator=(const ZeroOnDestroy&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   ~ZeroOnDestroy() {
     std::memset(buff, 0, sizeof(buff));
   }

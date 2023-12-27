@@ -62,6 +62,7 @@ struct Test {
     // check that a large number of elements works
     std::vector<int> vec(100);
     std::fill(vec.begin(), vec.end(), 3);
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     assert(std::all_of(Iter(vec.data()), Iter(vec.data() + vec.size()), [](int i) { return i == 3; }));
   }
 };
@@ -78,6 +79,14 @@ int main(int, char**) {
     assert(false);
   }
 #endif
+=======
+    assert(std::all_of(policy, Iter(vec.data()), Iter(vec.data() + vec.size()), [](int i) { return i == 3; }));
+  }
+};
+
+int main(int, char**) {
+  types::for_each(types::forward_iterator_list<int*>{}, TestIteratorWithPolicies<Test>{});
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

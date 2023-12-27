@@ -196,9 +196,15 @@ int main(int, char**) {
 #endif
 #if TEST_STD_VER > 17
   static_assert(test<char>());
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef TEST_HAS_NO_WIDE_CHARACTERS
   static_assert(test<wchar_t>());
 #endif
+=======
+#  ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  static_assert(test<wchar_t>());
+#  endif
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

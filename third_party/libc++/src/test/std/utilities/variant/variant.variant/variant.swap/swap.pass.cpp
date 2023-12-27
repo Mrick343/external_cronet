@@ -17,6 +17,10 @@
 // void swap(variant& rhs) noexcept(see below)
 
 #include <cassert>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <cstdlib>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include <string>
 #include <type_traits>
 #include <variant>

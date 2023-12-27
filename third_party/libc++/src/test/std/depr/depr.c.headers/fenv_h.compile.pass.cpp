@@ -57,7 +57,11 @@
 #endif
 
 fenv_t fenv = {};
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 fexcept_t fex = 0;
+=======
+fexcept_t fex = fexcept_t();
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 ASSERT_SAME_TYPE(int, decltype(::feclearexcept(0)));
 ASSERT_SAME_TYPE(int, decltype(::fegetexceptflag(&fex, 0)));
 ASSERT_SAME_TYPE(int, decltype(::feraiseexcept(0)));

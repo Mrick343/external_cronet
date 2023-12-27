@@ -20,6 +20,11 @@ public:
     typedef bool result_type;
 
     unary_counting_predicate(Predicate p) : p_(p), count_(0) {}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    unary_counting_predicate(const unary_counting_predicate&) = default;
+    unary_counting_predicate& operator=(const unary_counting_predicate&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     ~unary_counting_predicate() {}
 
     bool operator () (const Arg &a) const { ++count_; return p_(a); }

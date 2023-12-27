@@ -416,6 +416,10 @@ __cxa_vec_delete3(void *array_address, size_t element_size, size_t padding_size,
 }
 
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 }  // abi

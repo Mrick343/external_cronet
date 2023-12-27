@@ -11,6 +11,7 @@
 #define _LIBCPP___FORMAT_FORMATTER_TUPLE_H
 
 #include <__algorithm/ranges_copy.h>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__availability>
 #include <__chrono/statically_widen.h>
 #include <__config>
@@ -70,6 +71,62 @@ struct _LIBCPP_TEMPLATE_VIS __formatter_tuple {
 
     if (__begin != __end && *__begin != _CharT('}'))
       std::__throw_format_error("The format-spec should consume the input or end with a '}'");
+=======
+#include <__chrono/statically_widen.h>
+#include <__config>
+#include <__format/buffer.h>
+#include <__format/concepts.h>
+#include <__format/format_context.h>
+#include <__format/format_error.h>
+#include <__format/format_parse_context.h>
+#include <__format/formatter.h>
+#include <__format/formatter_output.h>
+#include <__format/parser_std_format_spec.h>
+#include <__type_traits/remove_cvref.h>
+#include <__utility/integer_sequence.h>
+#include <__utility/pair.h>
+#include <string_view>
+#include <tuple>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 23
+
+template <__fmt_char_type _CharT, class _Tuple, formattable<_CharT>... _Args>
+struct _LIBCPP_TEMPLATE_VIS __formatter_tuple {
+  _LIBCPP_HIDE_FROM_ABI constexpr void set_separator(basic_string_view<_CharT> __separator) noexcept {
+    __separator_ = __separator;
+  }
+  _LIBCPP_HIDE_FROM_ABI constexpr void
+  set_brackets(basic_string_view<_CharT> __opening_bracket, basic_string_view<_CharT> __closing_bracket) noexcept {
+    __opening_bracket_ = __opening_bracket;
+    __closing_bracket_ = __closing_bracket;
+  }
+
+  template <class _ParseContext>
+  _LIBCPP_HIDE_FROM_ABI constexpr typename _ParseContext::iterator parse(_ParseContext& __ctx) {
+    auto __begin = __parser_.__parse(__ctx, __format_spec::__fields_tuple);
+
+    auto __end = __ctx.end();
+    // Note 'n' is part of the type here
+    if (__parser_.__clear_brackets_)
+      set_brackets({}, {});
+    else if (__begin != __end && *__begin == _CharT('m')) {
+      if constexpr (sizeof...(_Args) == 2) {
+        set_separator(_LIBCPP_STATICALLY_WIDEN(_CharT, ": "));
+        set_brackets({}, {});
+        ++__begin;
+      } else
+        std::__throw_format_error("Type m requires a pair or a tuple with two elements");
+    }
+
+    if (__begin != __end && *__begin != _CharT('}'))
+      std::__throw_format_error("The format specifier should consume the input or end with a '}'");
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
     __ctx.advance_to(__begin);
 

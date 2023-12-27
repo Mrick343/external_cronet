@@ -21,6 +21,7 @@
 #include "test_macros.h"
 #include "test_allocator.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     {
@@ -39,6 +40,25 @@ int main(int, char**)
         static_assert( std::is_nothrow_move_constructible<C>::value, "");
 #endif
     }
+=======
+int main(int, char**) {
+  {
+    typedef std::string C;
+    static_assert(std::is_nothrow_move_constructible<C>::value, "");
+  }
+  {
+    typedef std::basic_string<char, std::char_traits<char>, test_allocator<char>> C;
+    static_assert(std::is_nothrow_move_constructible<C>::value, "");
+  }
+  {
+    typedef std::basic_string<char, std::char_traits<char>, limited_allocator<char, 10>> C;
+#if TEST_STD_VER <= 14
+    static_assert(!std::is_nothrow_move_constructible<C>::value, "");
+#else
+    static_assert(std::is_nothrow_move_constructible<C>::value, "");
+#endif
+  }
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

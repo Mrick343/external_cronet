@@ -12,8 +12,11 @@
 // disable them for now until their behavior can be designed better later.
 // See https://reviews.llvm.org/D84049 for details.
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: apple-clang-14
 
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: c++03
 
 #include <atomic>

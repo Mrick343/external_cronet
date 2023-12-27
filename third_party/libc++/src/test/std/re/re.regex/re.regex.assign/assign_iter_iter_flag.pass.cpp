@@ -15,8 +15,14 @@
 //    assign(InputIterator first, InputIterator last,
 //           flag_type f = regex_constants::ECMAScript);
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <regex>
 #include <cassert>
+=======
+#include <cassert>
+#include <regex>
+#include <string>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 #include "test_iterators.h"

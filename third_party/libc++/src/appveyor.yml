@@ -46,7 +46,11 @@ build_script:
   - cmake -G "%GENERATOR%" %CMAKE_OPTIONS%
     "-DCMAKE_BUILD_TYPE=%configuration%"
     "-DLLVM_PATH=C:\projects\deps\llvm"
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     -DLLVM_LIT_ARGS="-sv --show-xfail --show-unsupported"
+=======
+    -DLLVM_LIT_ARGS="-v --show-xfail --show-unsupported"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     %APPVEYOR_BUILD_FOLDER%
 
   #############################################################################

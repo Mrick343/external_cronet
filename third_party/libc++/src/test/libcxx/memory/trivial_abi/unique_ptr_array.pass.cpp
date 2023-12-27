@@ -24,6 +24,11 @@ struct Node {
   int* shared_val;
 
   explicit Node(int* ptr) : shared_val(ptr) {}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  Node(const Node&) = default;
+  Node& operator=(const Node&) = default;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   ~Node() { ++(*shared_val); }
 };
 

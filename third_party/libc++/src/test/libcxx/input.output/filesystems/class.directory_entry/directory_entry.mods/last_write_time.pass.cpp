@@ -6,7 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: c++03
+=======
+// UNSUPPORTED: c++03, c++11
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: availability-filesystem-missing
 // UNSUPPORTED: no-filesystem
 // ADDITIONAL_COMPILE_FLAGS: -I %S/../../../../../../src

@@ -78,6 +78,7 @@ CMake invocation at ``<monorepo>/llvm``:
   This type of build is also commonly called a "Runtimes build", but we would like to move
   away from that terminology, which is too confusing.
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 Support for Windows
 ===================
 
@@ -263,6 +264,188 @@ libc++ specific options
    allows the library to work on top of a C Standard Library that does not provide
    support for ``wchar_t``. This is especially useful in embedded settings where
    C Standard Libraries don't always provide all the usual bells and whistles.
+=======
+.. warning::
+  Adding the `--fresh` flag to the top-level cmake invocation in a bootstrapping build *will not*
+  freshen the cmake cache of any of the enabled runtimes.
+
+Support for Windows
+===================
+
+libcxx supports being built with clang-cl, but not with MSVC's cl.exe, as
+cl doesn't support the ``#include_next`` extension. Furthermore, VS 2017 or
+newer (19.14) is required.
+
+libcxx also supports being built with clang targeting MinGW environments.
+
+CMake + Visual Studio
+---------------------
+
+Building with Visual Studio currently does not permit running tests. However,
+it is the simplest way to build.
+
+.. code-block:: batch
+
+  > cmake -G "Visual Studio 16 2019" -S runtimes -B build ^
+          -T "ClangCL"                                    ^
+          -DLLVM_ENABLE_RUNTIMES=libcxx                   ^
+          -DLIBCXX_ENABLE_SHARED=YES                      ^
+          -DLIBCXX_ENABLE_STATIC=NO
+  > cmake --build build
+
+CMake + ninja (MSVC)
+--------------------
+
+Building with ninja is required for development to enable tests.
+A couple of tests require Bash to be available, and a couple dozens
+of tests require other posix tools (cp, grep and similar - LLVM's tests
+require the same). Without those tools the vast majority of tests
+can still be ran successfully.
+
+If Git for Windows is available, that can be used to provide the bash
+shell by adding the right bin directory to the path, e.g.
+``set PATH=%PATH%;C:\Program Files\Git\usr\bin``.
+
+Alternatively, one can also choose to run the whole build in a MSYS2
+shell. That can be set up e.g. by starting a Visual Studio Tools Command
+Prompt (for getting the environment variables pointing to the headers and
+import libraries), and making sure that clang-cl is available in the
+path. From there, launch an MSYS2 shell via e.g.
+``C:\msys64\msys2_shell.cmd -full-path -mingw64`` (preserving the earlier
+environment, allowing the MSVC headers/libraries and clang-cl to be found).
+
+In either case, then run:
+
+.. code-block:: batch
+
+  > cmake -G Ninja -S runtimes -B build                                               ^
+          -DCMAKE_C_COMPILER=clang-cl                                                 ^
+          -DCMAKE_CXX_COMPILER=clang-cl                                               ^
+          -DLLVM_ENABLE_RUNTIMES=libcxx
+  > ninja -C build cxx
+  > ninja -C build check-cxx
+
+If you are running in an MSYS2 shell and you have installed the
+MSYS2-provided clang package (which defaults to a non-MSVC target), you
+should add e.g. ``-DCMAKE_CXX_COMPILER_TARGET=x86_64-windows-msvc`` (replacing
+``x86_64`` with the architecture you're targeting) to the ``cmake`` command
+line above. This will instruct ``check-cxx`` to use the right target triple
+when invoking ``clang++``.
+
+CMake + ninja (MinGW)
+---------------------
+
+libcxx can also be built in MinGW environments, e.g. with the MinGW
+compilers in MSYS2. This requires clang to be available (installed with
+e.g. the ``mingw-w64-x86_64-clang`` package), together with CMake and ninja.
+
+.. code-block:: bash
+
+  > cmake -G Ninja -S runtimes -B build                                               \
+          -DCMAKE_C_COMPILER=clang                                                    \
+          -DCMAKE_CXX_COMPILER=clang++                                                \
+          -DLLVM_ENABLE_LLD=ON                                                        \
+          -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi"                                   \
+          -DLIBCXXABI_ENABLE_SHARED=OFF                                               \
+          -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON
+  > ninja -C build cxx
+  > ninja -C build check-cxx
+
+.. _`libc++abi`: http://libcxxabi.llvm.org/
+
+
+.. _CMake Options:
+
+CMake Options
+=============
+
+Here are some of the CMake variables that are used often, along with a
+brief explanation and LLVM-specific notes. For full documentation, check the
+CMake docs or execute ``cmake --help-variable VARIABLE_NAME``.
+
+**CMAKE_BUILD_TYPE**:STRING
+  Sets the build type for ``make`` based generators. Possible values are
+  Release, Debug, RelWithDebInfo and MinSizeRel. On systems like Visual Studio
+  the user sets the build type with the IDE settings.
+
+**CMAKE_INSTALL_PREFIX**:PATH
+  Path where LLVM will be installed if "make install" is invoked or the
+  "INSTALL" target is built.
+
+**CMAKE_CXX_COMPILER**:STRING
+  The C++ compiler to use when building and testing libc++.
+
+
+.. _libcxx-specific options:
+
+libc++ specific options
+-----------------------
+
+.. option:: LIBCXX_INSTALL_LIBRARY:BOOL
+
+  **Default**: ``ON``
+
+  Toggle the installation of the library portion of libc++.
+
+.. option:: LIBCXX_INSTALL_HEADERS:BOOL
+
+  **Default**: ``ON``
+
+  Toggle the installation of the libc++ headers.
+
+.. option:: LIBCXX_ENABLE_SHARED:BOOL
+
+  **Default**: ``ON``
+
+  Build libc++ as a shared library. Either `LIBCXX_ENABLE_SHARED` or
+  `LIBCXX_ENABLE_STATIC` has to be enabled.
+
+.. option:: LIBCXX_ENABLE_STATIC:BOOL
+
+  **Default**: ``ON``
+
+  Build libc++ as a static library. Either `LIBCXX_ENABLE_SHARED` or
+  `LIBCXX_ENABLE_STATIC` has to be enabled.
+
+.. option:: LIBCXX_LIBDIR_SUFFIX:STRING
+
+  Extra suffix to append to the directory where libraries are to be installed.
+  This option overrides `LLVM_LIBDIR_SUFFIX`.
+
+.. option:: LIBCXX_HERMETIC_STATIC_LIBRARY:BOOL
+
+  **Default**: ``OFF``
+
+  Do not export any symbols from the static libc++ library.
+  This is useful when the static libc++ library is being linked into shared
+  libraries that may be used in with other shared libraries that use different
+  C++ library. We want to avoid exporting any libc++ symbols in that case.
+
+.. option:: LIBCXX_ENABLE_FILESYSTEM:BOOL
+
+   **Default**: ``ON`` except on Windows when using MSVC.
+
+   This option can be used to enable or disable the filesystem components on
+   platforms that may not support them. For example on Windows when using MSVC.
+
+.. option:: LIBCXX_ENABLE_WIDE_CHARACTERS:BOOL
+
+   **Default**: ``ON``
+
+   This option can be used to disable support for ``wchar_t`` in the library. It also
+   allows the library to work on top of a C Standard Library that does not provide
+   support for ``wchar_t``. This is especially useful in embedded settings where
+   C Standard Libraries don't always provide all the usual bells and whistles.
+
+.. option:: LIBCXX_ENABLE_TIME_ZONE_DATABASE:BOOL
+
+   **Default**: ``ON``
+
+   Whether to include support for time zones in the library. Disabling
+   time zone support can be useful when porting to platforms that don't
+   ship the IANA time zone database. When time zones are not supported,
+   time zone support in <chrono> will be disabled.
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 .. option:: LIBCXX_INSTALL_LIBRARY_DIR:PATH
 

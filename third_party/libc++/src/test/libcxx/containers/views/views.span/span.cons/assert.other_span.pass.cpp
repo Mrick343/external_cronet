@@ -14,8 +14,13 @@
 // Check that we ensure `other.size() == Extent`.
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
+=======
+// UNSUPPORTED: libcpp-hardening-mode=unchecked
+// XFAIL: availability-verbose_abort-missing
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <array>
 #include <span>

@@ -4,9 +4,15 @@
 
 package org.chromium.net;
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 import org.chromium.base.ContextUtils;
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
+=======
+import org.jni_zero.JNINamespace;
+import org.jni_zero.NativeMethods;
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 import org.chromium.base.test.util.UrlUtils;
 
 /**

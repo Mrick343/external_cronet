@@ -62,6 +62,7 @@ void test() {
   // These diagnostics are issued for
   // - Every invalid ordering
   // - Every type
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   // expected-error-re@string_view:* 15 {{{{(static_assert|static assertion)}} failed{{.*}}return type is not a comparison category type}}
 
   // This diagnostic is not issued for Ordering == void.
@@ -69,6 +70,15 @@ void test() {
 #else
   // One less test run when wchar_t is unavailable.
   // expected-error-re@string_view:* 12 {{{{(static_assert|static assertion)}} failed{{.*}}return type is not a comparison category type}}
+=======
+  // expected-error-re@string_view:* 15 {{static assertion failed{{.*}}return type is not a comparison category type}}
+
+  // This diagnostic is not issued for Ordering == void.
+  // expected-error@string_view:* 10 {{no matching conversion for static_cast from}}
+#else
+  // One less test run when wchar_t is unavailable.
+  // expected-error-re@string_view:* 12 {{static assertion failed{{.*}}return type is not a comparison category type}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   // expected-error@string_view:* 8 {{no matching conversion for static_cast from}}
 #endif
     type{} <=> type{};

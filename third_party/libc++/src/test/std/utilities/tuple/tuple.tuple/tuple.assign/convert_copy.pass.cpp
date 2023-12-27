@@ -6,9 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // Triggers a Clang assertion: llvm.org/PR45879
 // UNSUPPORTED: clang-15
 
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // <tuple>
 
 // template <class... Types> class tuple;

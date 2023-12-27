@@ -12,8 +12,13 @@
 // Make sure that we don't get ODR violations with __exception_guard when
 // linking together TUs compiled with different values of -f[no-]exceptions.
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // RUN: %{cxx} %s %{flags} %{compile_flags} -c -o %t.except.o   -O1 -Wno-private-header -fexceptions
 // RUN: %{cxx} %s %{flags} %{compile_flags} -c -o %t.noexcept.o -O1 -Wno-private-header -fno-exceptions
+=======
+// RUN: %{cxx} %s %{flags} %{compile_flags} -c -o %t.except.o   -O1 -fexceptions
+// RUN: %{cxx} %s %{flags} %{compile_flags} -c -o %t.noexcept.o -O1 -fno-exceptions
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // RUN: %{cxx} %{flags} %{link_flags} -o %t.exe %t.except.o %t.noexcept.o
 // RUN: %{run}
 

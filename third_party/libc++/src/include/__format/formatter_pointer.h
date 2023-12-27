@@ -35,6 +35,7 @@ public:
   template <class _ParseContext>
   _LIBCPP_HIDE_FROM_ABI constexpr typename _ParseContext::iterator parse(_ParseContext& __ctx) {
     typename _ParseContext::iterator __result = __parser_.__parse(__ctx, __format_spec::__fields_pointer);
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     __format_spec::__process_display_type_pointer(__parser_.__type_);
     return __result;
   }
@@ -48,6 +49,25 @@ public:
   }
 
   __format_spec::__parser<_CharT> __parser_{.__alignment_ = __format_spec::__alignment::__right};
+=======
+    __format_spec::__process_display_type_pointer(__parser_.__type_, "a pointer");
+    return __result;
+  }
+
+  template <class _FormatContext>
+  _LIBCPP_HIDE_FROM_ABI typename _FormatContext::iterator format(const void* __ptr, _FormatContext& __ctx) const {
+    __format_spec::__parsed_specifications<_CharT> __specs = __parser_.__get_parsed_std_specifications(__ctx);
+    __specs.__std_.__alternate_form_                       = true;
+    __specs.__std_.__type_ =
+        __specs.__std_.__type_ == __format_spec::__type::__pointer_upper_case
+            ? __format_spec::__type::__hexadecimal_upper_case
+            : __format_spec::__type::__hexadecimal_lower_case;
+
+    return __formatter::__format_integer(reinterpret_cast<uintptr_t>(__ptr), __ctx, __specs);
+  }
+
+  __format_spec::__parser<_CharT> __parser_;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 };
 
 // [format.formatter.spec]/2.4

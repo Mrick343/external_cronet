@@ -19,8 +19,13 @@
 #include <sstream>
 
 std::basic_stringbuf<char, std::char_traits<wchar_t> > sb;
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // expected-error-re@streambuf:* {{{{(static_assert|static assertion)}} failed{{.*}}traits_type::char_type must be the same type as CharT}}
 // expected-error-re@string:* {{{{(static_assert|static assertion)}} failed{{.*}}traits_type::char_type must be the same type as CharT}}
+=======
+// expected-error-re@streambuf:* {{static assertion failed{{.*}}traits_type::char_type must be the same type as CharT}}
+// expected-error-re@string:* {{static assertion failed{{.*}}traits_type::char_type must be the same type as CharT}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // expected-error@sstream:* {{only virtual member functions can be marked 'override'}}
 // expected-error@sstream:* {{only virtual member functions can be marked 'override'}}

@@ -19,6 +19,7 @@
 #include "test_macros.h"
 
 #ifndef TEST_HAS_NO_CHAR8_T
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 constexpr bool test_constexpr()
 {
     return std::char_traits<char8_t>::compare(u8"123", u8"223", 3) < 0
@@ -57,4 +58,39 @@ int main(int, char**)
 int main(int, char**) {
   return 0;
 }
+=======
+constexpr bool test_constexpr() {
+  return std::char_traits<char8_t>::compare(u8"123", u8"223", 3) < 0 &&
+         std::char_traits<char8_t>::compare(u8"223", u8"123", 3) > 0 &&
+         std::char_traits<char8_t>::compare(u8"123", u8"123", 3) == 0;
+}
+
+int main(int, char**) {
+  assert(std::char_traits<char8_t>::compare(u8"", u8"", 0) == 0);
+  assert(std::char_traits<char8_t>::compare(NULL, NULL, 0) == 0);
+
+  assert(std::char_traits<char8_t>::compare(u8"1", u8"1", 1) == 0);
+  assert(std::char_traits<char8_t>::compare(u8"1", u8"2", 1) < 0);
+  assert(std::char_traits<char8_t>::compare(u8"2", u8"1", 1) > 0);
+
+  assert(std::char_traits<char8_t>::compare(u8"12", u8"12", 2) == 0);
+  assert(std::char_traits<char8_t>::compare(u8"12", u8"13", 2) < 0);
+  assert(std::char_traits<char8_t>::compare(u8"12", u8"22", 2) < 0);
+  assert(std::char_traits<char8_t>::compare(u8"13", u8"12", 2) > 0);
+  assert(std::char_traits<char8_t>::compare(u8"22", u8"12", 2) > 0);
+
+  assert(std::char_traits<char8_t>::compare(u8"123", u8"123", 3) == 0);
+  assert(std::char_traits<char8_t>::compare(u8"123", u8"223", 3) < 0);
+  assert(std::char_traits<char8_t>::compare(u8"123", u8"133", 3) < 0);
+  assert(std::char_traits<char8_t>::compare(u8"123", u8"124", 3) < 0);
+  assert(std::char_traits<char8_t>::compare(u8"223", u8"123", 3) > 0);
+  assert(std::char_traits<char8_t>::compare(u8"133", u8"123", 3) > 0);
+  assert(std::char_traits<char8_t>::compare(u8"124", u8"123", 3) > 0);
+
+  static_assert(test_constexpr(), "");
+  return 0;
+}
+#else
+int main(int, char**) { return 0; }
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif

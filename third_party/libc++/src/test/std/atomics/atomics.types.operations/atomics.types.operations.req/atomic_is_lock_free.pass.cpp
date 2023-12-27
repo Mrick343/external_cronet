@@ -27,8 +27,17 @@ struct TestFn {
   void operator()() const {
     typedef std::atomic<T> A;
     T t = T();
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     A a(t);
     bool b1 = std::atomic_is_lock_free(static_cast<const A*>(&a));
+=======
+
+    A a(t);
+    bool b1 = std::atomic_is_lock_free(static_cast<const A*>(&a));
+    if (A::is_always_lock_free)
+      assert(b1);
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     volatile A va(t);
     bool b2 = std::atomic_is_lock_free(static_cast<const volatile A*>(&va));
     assert(b1 == b2);

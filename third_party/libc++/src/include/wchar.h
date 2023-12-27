@@ -186,7 +186,11 @@ size_t mbsnrtowcs(wchar_t *__restrict __dst, const char **__restrict __src,
                   size_t __nmc, size_t __len, mbstate_t *__restrict __ps);
 size_t wcsnrtombs(char *__restrict __dst, const wchar_t **__restrict __src,
                   size_t __nwc, size_t __len, mbstate_t *__restrict __ps);
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif  // __cplusplus && (_LIBCPP_MSVCRT || __MVS__)
 
 #endif // _LIBCPP_WCHAR_H

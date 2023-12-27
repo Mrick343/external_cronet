@@ -10,7 +10,11 @@
 // for members of <locale> even when the debug mode is enabled, which is
 // necessary for correctness. See https://llvm.org/D94718 for details.
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: no-localization
 // UNSUPPORTED: cant-build-shared-library
 

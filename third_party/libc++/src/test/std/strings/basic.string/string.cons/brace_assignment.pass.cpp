@@ -23,6 +23,7 @@ TEST_CONSTEXPR_CXX20 bool test() {
   // ambiguous.
   {
     std::string s = "hello world";
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     s = {};
     assert(s.empty());
   }
@@ -37,6 +38,21 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+    s             = {};
+    assert(s.empty());
+  }
+  {
+    std::string s = "hello world";
+    s             = {"abc", 2};
+    assert(s == "ab");
+  }
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

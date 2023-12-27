@@ -18,6 +18,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 void
 test(S s1)
 {
@@ -51,6 +52,36 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 void test(S s1) {
+  S s2 = s1;
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2 == s1);
+  assert(s2.capacity() >= s2.size());
+  assert(s2.get_allocator() == s1.get_allocator());
+}
+
+template <class Alloc>
+TEST_CONSTEXPR_CXX20 void test_string(const Alloc& a) {
+  typedef std::basic_string<char, std::char_traits<char>, Alloc> S;
+  test(S(Alloc(a)));
+  test(S("1", Alloc(a)));
+  test(S("1234567890123456789012345678901234567890123456789012345678901234567890", Alloc(a)));
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string(std::allocator<char>());
+  test_string(test_allocator<char>());
+  test_string(test_allocator<char>(3));
+#if TEST_STD_VER >= 11
+  test_string(min_allocator<char>());
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

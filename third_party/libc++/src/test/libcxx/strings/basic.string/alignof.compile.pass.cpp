@@ -24,9 +24,15 @@ class small_pointer {
 template <class T>
 class small_iter_allocator {
 public:
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   using value_type = T;
   using pointer = small_pointer<T>;
   using size_type = std::int16_t;
+=======
+  using value_type      = T;
+  using pointer         = small_pointer<T>;
+  using size_type       = std::int16_t;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   using difference_type = std::int16_t;
 
   small_iter_allocator() TEST_NOEXCEPT {}

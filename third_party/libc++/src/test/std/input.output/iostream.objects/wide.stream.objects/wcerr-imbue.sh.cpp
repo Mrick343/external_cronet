@@ -8,6 +8,7 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // istream wcerr;
 
 // UNSUPPORTED: no-wide-characters
@@ -16,6 +17,16 @@
 // FILE_DEPENDENCIES: ../check-stderr.sh
 // RUN: %{build}
 // RUN: %{exec} bash check-stderr.sh "%t.exe" "zzzz"
+=======
+// wostream wcerr;
+
+// UNSUPPORTED: no-wide-characters
+
+// RUN: %{build}
+// RUN: %{exec} %t.exe 2> %t.actual
+// RUN: echo -n zzzz > %t.expected
+// RUN: diff %t.expected %t.actual
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <iostream>
 

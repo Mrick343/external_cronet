@@ -24,6 +24,7 @@
 #include <array>
 #include <cassert>
 #include <deque>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <ranges>
 #include <vector>
 
@@ -200,6 +201,204 @@ constexpr bool test() {
     {
       MoveOnly a[] = {1, 2, 3};
       MoveOnly b[3];
+=======
+#include <iterator>
+#include <ranges>
+#include <vector>
+
+#include "almost_satisfies_types.h"
+#include "MoveOnly.h"
+#include "test_iterators.h"
+
+template <class In, class Out = In, class Sent = sentinel_wrapper<In>>
+concept HasMoveBackwardIt = requires(In in, Sent sent, Out out) { std::ranges::move_backward(in, sent, out); };
+
+static_assert(HasMoveBackwardIt<int*>);
+static_assert(!HasMoveBackwardIt<InputIteratorNotDerivedFrom>);
+static_assert(!HasMoveBackwardIt<InputIteratorNotIndirectlyReadable>);
+static_assert(!HasMoveBackwardIt<InputIteratorNotInputOrOutputIterator>);
+static_assert(!HasMoveBackwardIt<int*, WeaklyIncrementableNotMovable>);
+struct NotIndirectlyCopyable {};
+static_assert(!HasMoveBackwardIt<int*, NotIndirectlyCopyable*>);
+static_assert(!HasMoveBackwardIt<int*, int*, SentinelForNotSemiregular>);
+static_assert(!HasMoveBackwardIt<int*, int*, SentinelForNotWeaklyEqualityComparableWith>);
+
+template <class Range, class Out>
+concept HasMoveBackwardR = requires(Range range, Out out) { std::ranges::move_backward(range, out); };
+
+static_assert(HasMoveBackwardR<std::array<int, 10>, int*>);
+static_assert(!HasMoveBackwardR<InputRangeNotDerivedFrom, int*>);
+static_assert(!HasMoveBackwardR<InputRangeNotIndirectlyReadable, int*>);
+static_assert(!HasMoveBackwardR<InputRangeNotInputOrOutputIterator, int*>);
+static_assert(!HasMoveBackwardR<WeaklyIncrementableNotMovable, int*>);
+static_assert(!HasMoveBackwardR<UncheckedRange<NotIndirectlyCopyable*>, int*>);
+static_assert(!HasMoveBackwardR<InputRangeNotSentinelSemiregular, int*>);
+static_assert(!HasMoveBackwardR<InputRangeNotSentinelEqualityComparableWith, int*>);
+static_assert(!HasMoveBackwardR<UncheckedRange<int*>, WeaklyIncrementableNotMovable>);
+
+static_assert(std::is_same_v<std::ranges::copy_result<int, long>, std::ranges::in_out_result<int, long>>);
+
+template <class In, class Out, class Sent, int N>
+constexpr void test(std::array<int, N> in) {
+  {
+    std::array<int, N> out;
+    std::same_as<std::ranges::in_out_result<In, Out>> decltype(auto) ret =
+      std::ranges::move_backward(In(in.data()), Sent(In(in.data() + in.size())), Out(out.data() + out.size()));
+    assert(in == out);
+    assert(base(ret.in) == in.data() + in.size());
+    assert(base(ret.out) == out.data());
+  }
+  {
+    std::array<int, N> out;
+    auto range = std::ranges::subrange(In(in.data()), Sent(In(in.data() + in.size())));
+    std::same_as<std::ranges::in_out_result<In, Out>> decltype(auto) ret =
+        std::ranges::move_backward(range, Out(out.data() + out.size()));
+    assert(in == out);
+    assert(base(ret.in) == in.data() + in.size());
+    assert(base(ret.out) == out.data());
+  }
+}
+
+template <class In, class Out, class Sent = In>
+constexpr void test_iterators() {
+  // simple test
+  test<In, Out, Sent, 4>({1, 2, 3, 4});
+  // check that an empty range works
+  test<In, Out, Sent, 0>({});
+}
+
+template <class InContainer, class OutContainer, class In, class Out, class Sent = In>
+constexpr void test_containers() {
+  {
+    InContainer in {1, 2, 3, 4};
+    OutContainer out(4);
+    std::same_as<std::ranges::in_out_result<In, Out>> auto ret =
+      std::ranges::move_backward(In(in.begin()), Sent(In(in.end())), Out(out.end()));
+    assert(std::ranges::equal(in, out));
+    assert(base(ret.in) == in.end());
+    assert(base(ret.out) == out.begin());
+  }
+  {
+    InContainer in {1, 2, 3, 4};
+    OutContainer out(4);
+    auto range = std::ranges::subrange(In(in.begin()), Sent(In(in.end())));
+    std::same_as<std::ranges::in_out_result<In, Out>> auto ret = std::ranges::move_backward(range, Out(out.end()));
+    assert(std::ranges::equal(in, out));
+    assert(base(ret.in) == in.end());
+    assert(base(ret.out) == out.begin());
+  }
+}
+
+template <template <class> class InIter, template <class> class OutIter>
+constexpr void test_sentinels() {
+  test_iterators<InIter<int*>, OutIter<int*>, InIter<int*>>();
+  test_iterators<InIter<int*>, OutIter<int*>, sentinel_wrapper<InIter<int*>>>();
+  test_iterators<InIter<int*>, OutIter<int*>, sized_sentinel<InIter<int*>>>();
+
+  if (!std::is_constant_evaluated()) {
+    if constexpr (!std::is_same_v<InIter<int*>, contiguous_iterator<int*>> &&
+                  !std::is_same_v<OutIter<int*>, contiguous_iterator<int*>> &&
+                  !std::is_same_v<InIter<int*>, ContiguousProxyIterator<int*>> &&
+                  !std::is_same_v<OutIter<int*>, ContiguousProxyIterator<int*>>) {
+      test_containers<std::deque<int>,
+                      std::deque<int>,
+                      InIter<std::deque<int>::iterator>,
+                      OutIter<std::deque<int>::iterator>>();
+      test_containers<std::deque<int>,
+                      std::vector<int>,
+                      InIter<std::deque<int>::iterator>,
+                      OutIter<std::vector<int>::iterator>>();
+      test_containers<std::vector<int>,
+                      std::deque<int>,
+                      InIter<std::vector<int>::iterator>,
+                      OutIter<std::deque<int>::iterator>>();
+      test_containers<std::vector<int>,
+                      std::vector<int>,
+                      InIter<std::vector<int>::iterator>,
+                      OutIter<std::vector<int>::iterator>>();
+    }
+  }
+}
+
+template <template <class> class Out>
+constexpr void test_in_iterators() {
+  test_sentinels<bidirectional_iterator, Out>();
+  test_sentinels<random_access_iterator, Out>();
+  test_sentinels<contiguous_iterator, Out>();
+  test_sentinels<std::type_identity_t, Out>();
+}
+
+template <template <class> class Out>
+constexpr void test_proxy_in_iterators() {
+  test_sentinels<BidirectionalProxyIterator, Out>();
+  test_sentinels<RandomAccessProxyIterator, Out>();
+  test_sentinels<ContiguousProxyIterator, Out>();
+  test_sentinels<ProxyIterator, Out>();
+}
+
+struct IteratorWithMoveIter {
+  using value_type = int;
+  using difference_type = int;
+  explicit IteratorWithMoveIter() = default;
+  int* ptr;
+  constexpr IteratorWithMoveIter(int* ptr_) : ptr(ptr_) {}
+
+  constexpr int& operator*() const; // iterator with iter_move should not be dereferenced
+
+  constexpr IteratorWithMoveIter& operator++() { ++ptr; return *this; }
+  constexpr IteratorWithMoveIter operator++(int) { auto ret = *this; ++*this; return ret; }
+
+  constexpr IteratorWithMoveIter& operator--() { --ptr; return *this; }
+  constexpr IteratorWithMoveIter operator--(int) { auto ret = *this; --*this; return ret; }
+
+  friend constexpr int iter_move(const IteratorWithMoveIter&) { return 42; }
+
+  constexpr bool operator==(const IteratorWithMoveIter& other) const = default;
+};
+
+constexpr bool test() {
+  test_in_iterators<bidirectional_iterator>();
+  test_in_iterators<random_access_iterator>();
+  test_in_iterators<contiguous_iterator>();
+  test_in_iterators<std::type_identity_t>();
+
+  test_proxy_in_iterators<BidirectionalProxyIterator>();
+  test_proxy_in_iterators<RandomAccessProxyIterator>();
+  test_proxy_in_iterators<ContiguousProxyIterator>();
+  test_proxy_in_iterators<ProxyIterator>();
+
+  { // check that a move-only type works
+    // When non-trivial
+    {
+      MoveOnly a[] = {1, 2, 3};
+      MoveOnly b[3];
+      std::ranges::move_backward(a, std::end(b));
+      assert(b[0].get() == 1);
+      assert(b[1].get() == 2);
+      assert(b[2].get() == 3);
+    }
+    {
+      MoveOnly a[] = {1, 2, 3};
+      MoveOnly b[3];
+      std::ranges::move_backward(std::begin(a), std::end(a), std::end(b));
+      assert(b[0].get() == 1);
+      assert(b[1].get() == 2);
+      assert(b[2].get() == 3);
+    }
+
+    // When trivial
+    {
+      TrivialMoveOnly a[] = {1, 2, 3};
+      TrivialMoveOnly b[3];
+      std::ranges::move_backward(a, std::end(b));
+      assert(b[0].get() == 1);
+      assert(b[1].get() == 2);
+      assert(b[2].get() == 3);
+    }
+    {
+      TrivialMoveOnly a[] = {1, 2, 3};
+      TrivialMoveOnly b[3];
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
       std::ranges::move_backward(std::begin(a), std::end(a), std::end(b));
       assert(b[0].get() == 1);
       assert(b[1].get() == 2);

@@ -25,6 +25,7 @@
 #include <utility>
 
 #include "test_macros.h"
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 struct NonMovable {
   NonMovable(NonMovable&&) = delete;
@@ -83,6 +84,74 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+struct NonMovable {
+  NonMovable(NonMovable&&) = delete;
+};
+
+struct MovableNonTrivial {
+  int i;
+  constexpr MovableNonTrivial(int ii) : i(ii) {}
+  constexpr MovableNonTrivial(MovableNonTrivial&& o) : i(o.i) { o.i = 0; }
+  friend constexpr bool operator==(const MovableNonTrivial&, const MovableNonTrivial&) = default;
+};
+
+struct MoveMayThrow {
+  MoveMayThrow(MoveMayThrow&&) {}
+};
+
+// Test Constraints:
+// - is_move_constructible_v<E> is true.
+static_assert(std::is_move_constructible_v<std::expected<void, int>>);
+static_assert(std::is_move_constructible_v<std::expected<void, MovableNonTrivial>>);
+static_assert(!std::is_move_constructible_v<std::expected<void, NonMovable>>);
+
+// Test: This constructor is trivial if is_trivially_move_constructible_v<E> is true.
+static_assert(std::is_trivially_move_constructible_v<std::expected<void, int>>);
+static_assert(!std::is_trivially_move_constructible_v<std::expected<void, MovableNonTrivial>>);
+
+// Test: noexcept(is_nothrow_move_constructible_v<E>)
+static_assert(std::is_nothrow_move_constructible_v<std::expected<int, int>>);
+static_assert(!std::is_nothrow_move_constructible_v<std::expected<MoveMayThrow, int>>);
+static_assert(!std::is_nothrow_move_constructible_v<std::expected<int, MoveMayThrow>>);
+static_assert(!std::is_nothrow_move_constructible_v<std::expected<MoveMayThrow, MoveMayThrow>>);
+
+constexpr bool test() {
+  // move the error non-trivial
+  {
+    std::expected<void, MovableNonTrivial> e1(std::unexpect, 5);
+    auto e2 = std::move(e1);
+    assert(!e2.has_value());
+    assert(e2.error().i == 5);
+    assert(!e1.has_value());
+    assert(e1.error().i == 0);
+  }
+
+  // move the error trivial
+  {
+    std::expected<void, int> e1(std::unexpect, 5);
+    auto e2 = std::move(e1);
+    assert(!e2.has_value());
+    assert(e2.error() == 5);
+    assert(!e1.has_value());
+  }
+
+  // move TailClobbererNonTrivialMove as error
+  {
+    std::expected<void, TailClobbererNonTrivialMove<1>> e1(std::unexpect);
+    auto e2 = std::move(e1);
+    assert(!e2.has_value());
+    assert(!e1.has_value());
+  }
+
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing() = default;
     Throwing(Throwing&&) { throw Except{}; }

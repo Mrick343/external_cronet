@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // This compile-time customization requires cross-file macros, which doesn't work with modules.
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
 
 // Make sure that we can customize the verbose termination function at compile-time by
@@ -14,6 +15,15 @@
 // deployment target requirements.
 
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1 -D_LIBCPP_VERBOSE_ABORT(...)=my_abort(__VA_ARGS__)
+=======
+// UNSUPPORTED: clang-modules-build
+
+// Make sure that we can customize the verbose termination function at compile-time by
+// defining _LIBCPP_VERBOSE_ABORT ourselves. Note that this does not have any
+// deployment target requirements.
+
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_VERBOSE_ABORT(...)=my_abort(__VA_ARGS__)
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <cstdlib>
 

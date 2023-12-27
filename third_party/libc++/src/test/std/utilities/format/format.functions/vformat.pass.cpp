@@ -50,6 +50,20 @@ auto test_exception =
     };
 
 int main(int, char**) {
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#if !defined(TEST_HAS_NO_EXCEPTIONS)
+  // reproducer of https://llvm.org/PR65011
+  try {
+    const char fmt[] = {'{', '0'};
+    char buf[4096];
+    [[maybe_unused]] auto ignored =
+        std::vformat_to(buf, std::string_view{fmt, fmt + sizeof(fmt)}, std::make_format_args());
+  } catch (...) {
+  }
+#endif // !defined(TEST_HAS_NO_EXCEPTIONS)
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   format_tests<char, execution_modus::full>(test, test_exception);
 
 #ifndef TEST_HAS_NO_WIDE_CHARACTERS

@@ -17,6 +17,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     assert(std::stoi("0") == 0);
@@ -116,6 +117,104 @@ int main(int, char**)
     }
 #endif // TEST_HAS_NO_EXCEPTIONS
 #endif // TEST_HAS_NO_WIDE_CHARACTERS
+=======
+int main(int, char**) {
+  assert(std::stoi("0") == 0);
+  assert(std::stoi("-0") == 0);
+  assert(std::stoi("-10") == -10);
+  assert(std::stoi(" 10") == 10);
+  {
+    std::size_t idx = 0;
+    assert(std::stoi("10g", &idx, 16) == 16);
+    assert(idx == 2);
+  }
+#ifndef TEST_HAS_NO_EXCEPTIONS
+  if (std::numeric_limits<long>::max() > std::numeric_limits<int>::max()) {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi("0x100000000", &idx, 16);
+      assert(false);
+    } catch (const std::out_of_range&) {
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi("", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi("  - 8", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi("a1", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+#endif // TEST_HAS_NO_EXCEPTIONS
+
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  assert(std::stoi(L"0") == 0);
+  assert(std::stoi(L"-0") == 0);
+  assert(std::stoi(L"-10") == -10);
+  assert(std::stoi(L" 10") == 10);
+  {
+    std::size_t idx = 0;
+    assert(std::stoi(L"10g", &idx, 16) == 16);
+    assert(idx == 2);
+  }
+#  ifndef TEST_HAS_NO_EXCEPTIONS
+  if (std::numeric_limits<long>::max() > std::numeric_limits<int>::max()) {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi(L"0x100000000", &idx, 16);
+      assert(false);
+    } catch (const std::out_of_range&) {
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi(L"", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi(L"  - 8", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+  {
+    std::size_t idx = 0;
+    try {
+      (void)std::stoi(L"a1", &idx);
+      assert(false);
+    } catch (const std::invalid_argument&) {
+      assert(idx == 0);
+    }
+  }
+#  endif // TEST_HAS_NO_EXCEPTIONS
+#endif   // TEST_HAS_NO_WIDE_CHARACTERS
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

@@ -31,7 +31,11 @@ template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ostream<wchar_t>;
 #endif
 
 // Additional instantiations added later. Whether programs rely on these being
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // available is protected by _LIBCPP_ABI_ENABLE_ADDITIONAL_IOSTREAM_EXPLICIT_INSTANTIATIONS_1.
+=======
+// available is protected by _LIBCPP_AVAILABILITY_HAS_NO_ADDITIONAL_IOSTREAM_EXPLICIT_INSTANTIATIONS_1.
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_stringbuf<char>;
 template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_stringstream<char>;
 template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ostringstream<char>;

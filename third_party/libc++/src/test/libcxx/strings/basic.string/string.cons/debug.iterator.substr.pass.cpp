@@ -12,7 +12,11 @@
 // basic_string(basic_string&&, size_type, size_type, Allocator) inserts the container into the debug database
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <cassert>
 #include <string>

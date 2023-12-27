@@ -6,6 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// The CI "Apple back-deployment with assertions enabled" needs a higher value
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=12712420
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // bitset<N> operator<<(size_t pos) const; // constexpr since C++23
 
 #include <bitset>

@@ -61,7 +61,11 @@ condition_variable::__do_timed_wait(unique_lock<mutex>& lk,
     __libcpp_timespec_t ts;
     seconds s = duration_cast<seconds>(d);
     typedef decltype(ts.tv_sec) ts_sec;
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     _LIBCPP_CONSTEXPR ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
+=======
+    constexpr ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
     if (s.count() < ts_sec_max)
     {
         ts.tv_sec = static_cast<ts_sec>(s.count());

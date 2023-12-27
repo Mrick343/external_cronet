@@ -19,6 +19,10 @@
 #include <__ranges/concepts.h>
 #include <__type_traits/is_reference.h>
 #include <__type_traits/remove_cvref.h>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <__type_traits/remove_reference.h> // TODO(modules): This should not be required
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header

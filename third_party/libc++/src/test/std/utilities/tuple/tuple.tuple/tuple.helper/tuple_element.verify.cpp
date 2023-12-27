@@ -23,4 +23,8 @@
 using T =  std::tuple<int, long, void*>;
 using E1 = typename std::tuple_element<1, T &>::type; // expected-error{{undefined template}}
 using E2 = typename std::tuple_element<3, T>::type;
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 using E3 = typename std::tuple_element<4, T const>::type; // expected-error-re@*:* 2 {{{{(static_assert|static assertion)}} failed}}
+=======
+using E3 = typename std::tuple_element<4, T const>::type; // expected-error@*:* 2 {{static assertion failed}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)

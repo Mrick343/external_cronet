@@ -14,11 +14,18 @@
 #error This header may only be used for libc++ tests
 #endif
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef _LIBCPP_ENABLE_DEBUG_MODE
 #error The library must be built with the debug mode enabled in order to use this header
 #endif
 
 #include <__debug>
+=======
+#if !_LIBCPP_ENABLE_DEBUG_MODE
+#error The library must be built with the debug mode enabled in order to use this header
+#endif
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include <utility>
 #include <cstddef>
 #include <cstdlib>

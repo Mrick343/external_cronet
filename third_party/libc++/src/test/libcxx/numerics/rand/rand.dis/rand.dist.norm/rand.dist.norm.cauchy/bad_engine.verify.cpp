@@ -25,6 +25,10 @@ void test(std::cauchy_distribution<double> dist)
   G<int> badg;
   G<unsigned> okg;
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   dist(badg); //expected-error-re@*:* 2 {{{{(static_assert|static assertion)}} failed}} //expected-note {{in instantiation}}
+=======
+  dist(badg); //expected-error@*:* 2 {{static assertion failed}} //expected-note {{in instantiation}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   dist(okg);
 }

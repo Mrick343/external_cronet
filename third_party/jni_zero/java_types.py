@@ -61,6 +61,7 @@ class JavaClass:
   """Represents a reference type."""
   _fqn: str
   # This is only meaningful if make_prefix have been called on the original class.
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   _ofqn: str = None
 
   def __post_init__(self):
@@ -199,6 +200,142 @@ class JavaType:
     if self.is_primitive():
       return _DEFAULT_VALUE_BY_PRIMITIVE_TYPE[self.primitive_name]
     return 'NULL'
+=======
+  _class_without_prefix: 'JavaClass' = None
+
+  def __post_init__(self):
+    assert '.' not in self._fqn, f'{self._fqn} should have / and $, but not .'
+
+  def __str__(self):
+    return self.full_name_with_slashes
+
+  @property
+  def name(self):
+    return self._fqn.rsplit('/', 1)[-1]
+
+  @property
+  def name_with_dots(self):
+    return self.name.replace('$', '.')
+
+  @property
+  def nested_name(self):
+    return self.name.rsplit('$', 1)[-1]
+
+  @property
+  def package_with_slashes(self):
+    return self._fqn.rsplit('/', 1)[0]
+
+  @property
+  def package_with_dots(self):
+    return self.package_with_slashes.replace('/', '.')
+
+  @property
+  def full_name_with_slashes(self):
+    return self._fqn
+
+  @property
+  def full_name_with_dots(self):
+    return self._fqn.replace('/', '.').replace('$', '.')
+
+  @property
+  def class_without_prefix(self):
+    return self._class_without_prefix if self._class_without_prefix else self
+
+  def to_java(self, type_resolver=None):
+    # Empty resolver used to shorted java.lang classes.
+    type_resolver = type_resolver or _EMPTY_TYPE_RESOLVER
+    return type_resolver.contextualize(self)
+
+  def as_type(self):
+    return JavaType(java_class=self)
+
+  def make_prefixed(self, prefix=None):
+    if not prefix:
+      return self
+    prefix = prefix.replace('.', '/')
+    return JavaClass(f'{prefix}/{self._fqn}', self)
+
+  def make_nested(self, name):
+    return JavaClass(f'{self._fqn}${name}')
+
+
+@dataclasses.dataclass(frozen=True)
+class JavaType:
+  """Represents a parameter or return type."""
+  array_dimensions: int = 0
+  primitive_name: Optional[str] = None
+  java_class: Optional[JavaClass] = None
+  annotations: Dict[str, Optional[str]] = \
+      dataclasses.field(default_factory=dict, compare=False)
+
+  @staticmethod
+  def from_descriptor(descriptor):
+    # E.g.: [Ljava/lang/Class;
+    without_arrays = descriptor.lstrip('[')
+    array_dimensions = len(descriptor) - len(without_arrays)
+    descriptor = without_arrays
+
+    if descriptor[0] == 'L':
+      assert descriptor[-1] == ';', 'invalid descriptor: ' + descriptor
+      return JavaType(array_dimensions=array_dimensions,
+                      java_class=JavaClass(descriptor[1:-1]))
+    primitive_name = _PRIMITIVE_TYPE_BY_DESCRIPTOR_CHAR[descriptor[0]]
+    return JavaType(array_dimensions=array_dimensions,
+                    primitive_name=primitive_name)
+
+  @property
+  def non_array_full_name_with_slashes(self):
+    return self.primitive_name or self.java_class.full_name_with_slashes
+
+  # Cannot use dataclass(order=True) because some fields are None.
+  def __lt__(self, other):
+    if self.primitive_name and not other.primitive_name:
+      return -1
+    if other.primitive_name and not self.primitive_name:
+      return 1
+    lhs = (self.array_dimensions, self.primitive_name or self.java_class)
+    rhs = (other.array_dimensions, other.primitive_name or other.java_class)
+    return lhs < rhs
+
+  def is_primitive(self):
+    return self.primitive_name is not None and self.array_dimensions == 0
+
+  def is_void(self):
+    return self.primitive_name == 'void'
+
+  def to_descriptor(self):
+    """Converts a Java type into a JNI signature type."""
+    if self.primitive_name:
+      name = _DESCRIPTOR_CHAR_BY_PRIMITIVE_TYPE[self.primitive_name]
+    else:
+      name = f'L{self.java_class.full_name_with_slashes};'
+    return ('[' * self.array_dimensions) + name
+
+  def to_java(self, type_resolver=None):
+    if self.primitive_name:
+      ret = self.primitive_name
+    else:
+      ret = self.java_class.to_java(type_resolver)
+    return ret + '[]' * self.array_dimensions
+
+  def to_cpp(self):
+    """Returns a C datatype for the given java type."""
+    if self.array_dimensions > 1:
+      return 'jobjectArray'
+    if self.array_dimensions > 0 and self.primitive_name is None:
+      # There is no jstringArray.
+      return 'jobjectArray'
+
+    base = _CPP_TYPE_BY_JAVA_TYPE.get(self.non_array_full_name_with_slashes,
+                                      'jobject')
+    return base + ('Array' * self.array_dimensions)
+
+  def to_cpp_default_value(self):
+    """Returns a valid C return value for the given java type."""
+    if self.is_primitive():
+      return _DEFAULT_VALUE_BY_PRIMITIVE_TYPE[self.primitive_name]
+    return 'nullptr'
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   def to_proxy(self):
     """Converts to types used over JNI boundary."""

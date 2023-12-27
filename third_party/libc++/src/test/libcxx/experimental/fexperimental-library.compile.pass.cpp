@@ -12,6 +12,7 @@
 // GCC does not support the -fexperimental-library flag
 // UNSUPPORTED: gcc
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // AppleClang does not support the -fexperimental-library flag yet
 // UNSUPPORTED: apple-clang-14.0
 
@@ -25,4 +26,20 @@
 
 #ifdef _LIBCPP_HAS_NO_INCOMPLETE_PSTL
 #  error "-fexperimental-library should enable the PSTL"
+=======
+// ADDITIONAL_COMPILE_FLAGS: -fexperimental-library
+
+#include <version>
+
+#ifdef _LIBCPP_HAS_NO_INCOMPLETE_PSTL
+#  error "-fexperimental-library should enable the PSTL"
+#endif
+
+#ifdef _LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN
+#  error "-fexperimental-library should enable the stop_token"
+#endif
+
+#ifdef _LIBCPP_HAS_NO_INCOMPLETE_TZDB
+#  error "-fexperimental-library should enable the chrono TZDB"
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #endif

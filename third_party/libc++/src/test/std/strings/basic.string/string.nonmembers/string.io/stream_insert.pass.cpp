@@ -20,6 +20,7 @@
 #include "test_macros.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     {
@@ -92,6 +93,54 @@ int main(int, char**)
     }
 #endif // TEST_HAS_NO_WIDE_CHARACTERS
 #endif // TEST_STD_VER >= 11
+=======
+template <template <class> class Alloc>
+void test() {
+  using S  = std::basic_string<char, std::char_traits<char>, Alloc<char> >;
+  using OS = std::basic_ostringstream<char, std::char_traits<char>, Alloc<char> >;
+  {
+    OS out;
+    S s("some text");
+    out << s;
+    assert(out.good());
+    assert(s == out.str());
+  }
+  {
+    OS out;
+    S s("some text");
+    out.width(12);
+    out << s;
+    assert(out.good());
+    assert("   " + s == out.str());
+  }
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  using WS  = std::basic_string<wchar_t, std::char_traits<wchar_t>, Alloc<wchar_t> >;
+  using WOS = std::basic_ostringstream<wchar_t, std::char_traits<wchar_t>, Alloc<wchar_t> >;
+  {
+    WOS out;
+    WS s(L"some text");
+    out << s;
+    assert(out.good());
+    assert(s == out.str());
+  }
+  {
+    WOS out;
+    WS s(L"some text");
+    out.width(12);
+    out << s;
+    assert(out.good());
+    assert(L"   " + s == out.str());
+  }
+#endif
+}
+
+int main(int, char**) {
+  test<std::allocator>();
+
+#if TEST_STD_VER >= 11
+  test<min_allocator>();
+#endif
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

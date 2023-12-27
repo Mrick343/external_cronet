@@ -17,6 +17,10 @@
 #include <cassert>
 #include <ranges>
 #include <sstream>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <type_traits>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 #include "../utils.h"

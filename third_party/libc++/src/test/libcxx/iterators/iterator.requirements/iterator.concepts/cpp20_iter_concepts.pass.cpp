@@ -19,8 +19,11 @@
 // random_access_iterator_tag.
 // (1.4) -- Otherwise, ITER_CONCEPT(I) does not denote a type.
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
 
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include "test_macros.h"
 
 #include <__type_traits/is_valid_expansion.h>

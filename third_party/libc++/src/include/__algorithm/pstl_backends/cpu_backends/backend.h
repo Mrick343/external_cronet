@@ -16,6 +16,11 @@
 #  include <__algorithm/pstl_backends/cpu_backends/serial.h>
 #elif defined(_LIBCPP_PSTL_CPU_BACKEND_THREAD)
 #  include <__algorithm/pstl_backends/cpu_backends/thread.h>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#elif defined(_LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH)
+#  include <__algorithm/pstl_backends/cpu_backends/libdispatch.h>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #else
 #  error "Invalid CPU backend choice"
 #endif

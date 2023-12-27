@@ -42,6 +42,7 @@ Macros:
 
 #include <limits.h>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef _LIBCPP_LIMITS_H
 #   error <climits> tried including <limits.h> but didn't find libc++'s <limits.h> header. \
           This usually means that your header search paths are not configured properly. \
@@ -50,6 +51,8 @@ Macros:
           not be the case.
 #endif
 
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header
 #endif

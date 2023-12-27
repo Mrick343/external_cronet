@@ -111,6 +111,19 @@ inline std::vector<std::string> getRandomStringInputs(size_t N) {
   return inputs;
 }
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+inline std::vector<std::string> getPrefixedRandomStringInputs(size_t N) {
+  std::vector<std::string> inputs;
+  constexpr int kSuffixLength = 32;
+  const std::string prefix    = getRandomString(1024 - kSuffixLength);
+  for (size_t i = 0; i < N; ++i) {
+    inputs.push_back(prefix + getRandomString(kSuffixLength));
+  }
+  return inputs;
+}
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 inline std::vector<std::string> getSortedStringInputs(size_t N) {
   std::vector<std::string> inputs = getRandomStringInputs(N);
   std::sort(inputs.begin(), inputs.end());

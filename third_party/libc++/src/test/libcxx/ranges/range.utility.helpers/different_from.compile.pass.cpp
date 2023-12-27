@@ -11,7 +11,10 @@
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
 // Check that different_from.h is self-contained
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
+=======
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <__concepts/different_from.h>
 

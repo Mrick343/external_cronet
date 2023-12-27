@@ -17,9 +17,16 @@
 #include <string>
 #include <cassert>
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     assert(!std::char_traits<char32_t>::lt(U'a', U'a'));
     assert( std::char_traits<char32_t>::lt(U'A', U'a'));
     return 0;
+=======
+int main(int, char**) {
+  assert(!std::char_traits<char32_t>::lt(U'a', U'a'));
+  assert(std::char_traits<char32_t>::lt(U'A', U'a'));
+  return 0;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }

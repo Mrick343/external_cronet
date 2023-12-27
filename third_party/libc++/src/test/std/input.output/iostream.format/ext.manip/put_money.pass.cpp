@@ -10,6 +10,12 @@
 
 // template <class charT, class moneyT> T8 put_money(const moneyT& mon, bool intl = false);
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 // REQUIRES: locale.en_US.UTF-8
 
 #include <iomanip>

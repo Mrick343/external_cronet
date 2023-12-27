@@ -52,8 +52,18 @@ __iostream_category::message(int ev) const
 const error_category&
 iostream_category() noexcept
 {
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     static __iostream_category s;
     return s;
+=======
+    union AvoidDestroyingIostreamCategory {
+        __iostream_category iostream_error_category;
+        constexpr explicit AvoidDestroyingIostreamCategory() : iostream_error_category() {}
+        ~AvoidDestroyingIostreamCategory() {}
+    };
+    constinit static AvoidDestroyingIostreamCategory helper;
+    return helper.iostream_error_category;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }
 
 // ios_base::failure

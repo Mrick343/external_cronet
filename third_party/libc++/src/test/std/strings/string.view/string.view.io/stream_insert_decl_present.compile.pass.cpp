@@ -22,6 +22,11 @@
 template <class SV, class = void>
 struct HasDecl : std::false_type {};
 template <class SV>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 struct HasDecl<SV, decltype(static_cast<void>(std::declval<std::ostream&>() << std::declval<SV&>()))> : std::true_type {};
+=======
+struct HasDecl<SV, decltype(static_cast<void>(std::declval<std::ostream&>() << std::declval<SV&>()))> : std::true_type {
+};
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 static_assert(HasDecl<std::string_view>::value, "streaming operator declaration not present");

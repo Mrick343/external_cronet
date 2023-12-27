@@ -72,6 +72,7 @@ public:
 #endif // _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     explicit discard_block_engine(result_type __sd) : __e_(__sd), __n_(0) {}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     template<class _Sseq>
         _LIBCPP_INLINE_VISIBILITY
         explicit discard_block_engine(_Sseq& __q,
@@ -89,6 +90,20 @@ public:
             __is_seed_sequence<_Sseq, discard_block_engine>::value,
             void
         >::type
+=======
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, discard_block_engine>::value &&
+                                        !is_convertible<_Sseq, _Engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        explicit discard_block_engine(_Sseq& __q)
+        : __e_(__q), __n_(0) {}
+    _LIBCPP_INLINE_VISIBILITY
+    void seed() {__e_.seed(); __n_ = 0;}
+    _LIBCPP_INLINE_VISIBILITY
+    void seed(result_type __sd) {__e_.seed(__sd); __n_ = 0;}
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, discard_block_engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        void
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
         seed(_Sseq& __q) {__e_.seed(__q); __n_ = 0;}
 
     // generating functions

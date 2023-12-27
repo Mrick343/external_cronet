@@ -16,7 +16,11 @@ static void bm_list(benchmark::State& state) {
   std::pmr::monotonic_buffer_resource resource(buffer, sizeof(buffer));
   for (auto _ : state) {
     std::pmr::list<int> l(&resource);
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     for (size_t i = 0; i != state.range(); ++i) {
+=======
+    for (int64_t i = 0; i != state.range(); ++i) {
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
       l.push_back(1);
       benchmark::DoNotOptimize(l);
     }

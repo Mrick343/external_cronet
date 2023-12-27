@@ -24,5 +24,9 @@ class FooAllocator {
 };
 
 void func() {
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   std::vector<int, FooAllocator> v; //expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}This allocator has to implement rebind}}
+=======
+  std::vector<int, FooAllocator> v; //expected-error-re@*:* {{static assertion failed {{.*}}This allocator has to implement rebind}}
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }

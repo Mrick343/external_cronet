@@ -6,7 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // Prevent <ext/hash_set> from generating deprecated warnings for this test.
 // ADDITIONAL_COMPILE_FLAGS: -Wno-deprecated

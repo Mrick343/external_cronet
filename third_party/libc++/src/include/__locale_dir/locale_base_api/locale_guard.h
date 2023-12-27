@@ -10,6 +10,10 @@
 #define _LIBCPP___LOCALE_LOCALE_BASE_API_LOCALE_GUARD_H
 
 #include <__config>
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <__locale> // for locale_t
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 #include <clocale>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)

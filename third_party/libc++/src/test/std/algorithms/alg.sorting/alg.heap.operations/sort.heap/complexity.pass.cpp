@@ -68,11 +68,21 @@ int main(int, char**) {
     std::sort_heap(first, last);
     LIBCPP_ASSERT(stats.copied == 0);
     LIBCPP_ASSERT(stats.moved <= 2 * n + n * logn);
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef _LIBCPP_ENABLE_DEBUG_MODE
     LIBCPP_ASSERT(stats.compared <= n * logn);
 #endif
     LIBCPP_ASSERT(std::is_sorted(first, last));
     LIBCPP_ASSERT(stats.compared <= 2 * n * logn + debug_comparisons);
+=======
+#if !_LIBCPP_ENABLE_DEBUG_MODE
+    LIBCPP_ASSERT(stats.compared <= n * logn);
+    (void)debug_comparisons;
+#else
+    LIBCPP_ASSERT(stats.compared <= 2 * n * logn + debug_comparisons);
+#endif
+    LIBCPP_ASSERT(std::is_sorted(first, last));
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   }
   return 0;
 }

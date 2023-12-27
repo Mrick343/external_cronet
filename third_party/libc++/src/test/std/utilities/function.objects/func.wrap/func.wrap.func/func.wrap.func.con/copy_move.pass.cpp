@@ -8,7 +8,11 @@
 
 // FIXME: In MSVC mode, even "std::function<int(int)> f(aref);" causes
 // allocations.
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // XFAIL: target=x86_64-pc-windows-msvc && stdlib=libc++
+=======
+// XFAIL: target=x86_64-pc-windows-msvc && stdlib=libc++ && libcpp-abi-version=1
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 // UNSUPPORTED: c++03
 

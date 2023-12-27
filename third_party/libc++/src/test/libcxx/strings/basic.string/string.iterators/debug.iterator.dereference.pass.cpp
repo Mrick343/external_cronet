@@ -11,6 +11,7 @@
 // Dereference non-dereferenceable iterator.
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03
 
 #include <string>
@@ -32,6 +33,25 @@ int main(int, char**) {
     C::iterator i = c.end();
     TEST_LIBCPP_ASSERT_FAILURE(*i, "Attempted to dereference a non-dereferenceable iterator");
   }
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+
+#include <string>
+
+#include "check_assertion.h"
+#include "min_allocator.h"
+
+template <class C>
+void test() {
+  C c(1, '\0');
+  typename C::iterator i = c.end();
+  TEST_LIBCPP_ASSERT_FAILURE(*i, "Attempted to dereference a non-dereferenceable iterator");
+}
+
+int main(int, char**) {
+  test<std::string>();
+  test<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
   return 0;
 }

@@ -16,9 +16,16 @@
 
 // ADDITIONAL_COMPILE_FLAGS: -fblocks
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <functional>
 #include <cstdlib>
 #include <cassert>
+=======
+#include <cassert>
+#include <cstdlib>
+#include <functional>
+#include <typeinfo>
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 
 #include <Block.h>
 

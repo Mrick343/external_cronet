@@ -19,7 +19,11 @@
 //  using difference_type        = ptrdiff_t;
 //  using pointer                = element_type *;
 //  using reference              = element_type &;
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 //  using const_pointe           = const element_type *;
+=======
+//  using const_pointer          = const element_type *;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 //  using const_reference        = const element_type &;
 //  using iterator               = implementation-defined;
 //  using const_iterator         = implementation-defined;

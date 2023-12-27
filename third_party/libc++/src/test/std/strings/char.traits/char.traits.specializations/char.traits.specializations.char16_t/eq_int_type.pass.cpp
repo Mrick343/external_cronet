@@ -17,6 +17,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
 #if TEST_STD_VER >= 11
@@ -28,4 +29,15 @@ int main(int, char**)
                                                     std::char_traits<char16_t>::eof()));
 
     return 0;
+=======
+int main(int, char**) {
+#if TEST_STD_VER >= 11
+  assert(std::char_traits<char16_t>::eq_int_type(u'a', u'a'));
+  assert(!std::char_traits<char16_t>::eq_int_type(u'a', u'A'));
+  assert(!std::char_traits<char16_t>::eq_int_type(std::char_traits<char16_t>::eof(), u'A'));
+#endif
+  assert(std::char_traits<char16_t>::eq_int_type(std::char_traits<char16_t>::eof(), std::char_traits<char16_t>::eof()));
+
+  return 0;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
 }

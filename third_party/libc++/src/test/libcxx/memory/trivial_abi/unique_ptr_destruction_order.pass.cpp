@@ -26,6 +26,11 @@ struct Base {
 
   explicit Base(char* buf, int* idx, char ch)
       : shared_buff(buf), cur_idx(idx), id(ch) {}
+<<<<<<< HEAD   (d5875e Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  Base(const Base& other) = default;
+  Base& operator=(const Base&) = delete;
+>>>>>>> BRANCH (424e1f Import Cronet version 121.0.6103.2)
   ~Base() { shared_buff[(*cur_idx)++] = id; }
 };
 
