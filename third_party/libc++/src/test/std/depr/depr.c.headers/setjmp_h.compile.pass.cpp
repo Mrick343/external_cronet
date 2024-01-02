@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // test <setjmp.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 #include <setjmp.h>
 
@@ -18,3 +19,17 @@
 
 jmp_buf jb;
 ASSERT_SAME_TYPE(void, decltype(longjmp(jb, 0)));
+=======
+//
+// Even though <setjmp.h> is not provided by libc++, we still test that
+// using it with libc++ on the search path will work.
+
+#include <setjmp.h>
+
+#include "test_macros.h"
+
+jmp_buf jb;
+ASSERT_SAME_TYPE(void, decltype(longjmp(jb, 0)));
+
+void f() { setjmp(jb); }
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

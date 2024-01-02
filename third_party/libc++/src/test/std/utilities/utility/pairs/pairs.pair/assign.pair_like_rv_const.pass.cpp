@@ -8,9 +8,12 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // GCC 12 chokes on using a mutable variable inside a constexpr context
 // XFAIL: gcc-12
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // <utility>
 
 // template <class T1, class T2> struct pair

@@ -65,6 +65,7 @@
 
 #elif TEST_STD_VER == 23
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 # if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_mdspan
 #     error "__cpp_lib_mdspan should be defined in c++23"
@@ -95,6 +96,26 @@
 #   ifdef __cpp_lib_mdspan
 #     error "__cpp_lib_mdspan should not be defined because it is unimplemented in libc++!"
 #   endif
+=======
+# ifndef __cpp_lib_mdspan
+#   error "__cpp_lib_mdspan should be defined in c++23"
+# endif
+# if __cpp_lib_mdspan != 202207L
+#   error "__cpp_lib_mdspan should have the value 202207L in c++23"
+# endif
+
+# ifdef __cpp_lib_submdspan
+#   error "__cpp_lib_submdspan should not be defined before c++26"
+# endif
+
+#elif TEST_STD_VER > 23
+
+# ifndef __cpp_lib_mdspan
+#   error "__cpp_lib_mdspan should be defined in c++26"
+# endif
+# if __cpp_lib_mdspan != 202207L
+#   error "__cpp_lib_mdspan should have the value 202207L in c++26"
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 # endif
 
 # if !defined(_LIBCPP_VERSION)

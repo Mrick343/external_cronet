@@ -19,6 +19,7 @@
 #include <__format/formatter_integral.h>
 #include <__format/formatter_output.h>
 #include <__format/parser_std_format_spec.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__type_traits/conditional.h>
 #include <__type_traits/is_signed.h>
 
@@ -37,6 +38,27 @@ public:
   _LIBCPP_HIDE_FROM_ABI constexpr typename _ParseContext::iterator parse(_ParseContext& __ctx) {
     typename _ParseContext::iterator __result = __parser_.__parse(__ctx, __format_spec::__fields_integral);
     __format_spec::__process_parsed_char(__parser_);
+=======
+#include <__format/write_escaped.h>
+#include <__type_traits/conditional.h>
+#include <__type_traits/is_signed.h>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 20
+
+template <__fmt_char_type _CharT>
+struct _LIBCPP_TEMPLATE_VIS __formatter_char {
+public:
+  template <class _ParseContext>
+  _LIBCPP_HIDE_FROM_ABI constexpr typename _ParseContext::iterator parse(_ParseContext& __ctx) {
+    typename _ParseContext::iterator __result = __parser_.__parse(__ctx, __format_spec::__fields_integral);
+    __format_spec::__process_parsed_char(__parser_, "a character");
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     return __result;
   }
 

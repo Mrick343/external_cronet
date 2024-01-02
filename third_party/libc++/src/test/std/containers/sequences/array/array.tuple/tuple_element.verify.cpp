@@ -16,4 +16,8 @@
 typedef double T;
 typedef std::array<T, 3> C;
 std::tuple_element<3, C> foo; // expected-note {{requested here}}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // expected-error-re@array:* {{{{(static_assert|static assertion)}} failed{{( due to requirement '3U[L]{0,2} < 3U[L]{0,2}')?}}{{.*}}Index out of bounds in std::tuple_element<> (std::array)}}
+=======
+// expected-error-re@array:* {{static assertion failed{{( due to requirement '3U[L]{0,2} < 3U[L]{0,2}')?}}{{.*}}Index out of bounds in std::tuple_element<> (std::array)}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

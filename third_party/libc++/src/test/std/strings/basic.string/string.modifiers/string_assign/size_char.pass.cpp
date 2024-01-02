@@ -18,6 +18,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 void
 test(S s, typename S::size_type n, typename S::value_type c, S expected)
 {
@@ -53,6 +54,40 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 void test(S s, typename S::size_type n, typename S::value_type c, S expected) {
+  s.assign(n, c);
+  LIBCPP_ASSERT(s.__invariants());
+  assert(s == expected);
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test(S(), 0, 'a', S());
+  test(S(), 1, 'a', S(1, 'a'));
+  test(S(), 10, 'a', S(10, 'a'));
+  test(S(), 100, 'a', S(100, 'a'));
+
+  test(S("12345"), 0, 'a', S());
+  test(S("12345"), 1, 'a', S(1, 'a'));
+  test(S("12345"), 10, 'a', S(10, 'a'));
+
+  test(S("12345678901234567890"), 0, 'a', S());
+  test(S("12345678901234567890"), 1, 'a', S(1, 'a'));
+  test(S("12345678901234567890"), 10, 'a', S(10, 'a'));
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char>>>();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

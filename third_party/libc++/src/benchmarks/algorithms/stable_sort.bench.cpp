@@ -16,7 +16,11 @@ struct StableSort {
   size_t Quantity;
 
   void run(benchmark::State& state) const {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     runOpOnCopies<ValueType>(state, Quantity, Order(), BatchSize::CountElements, [](auto& Copy) {
+=======
+    runOpOnCopies<ValueType>(state, Quantity, Order(), BatchSize::CountBatch, [](auto& Copy) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
       std::stable_sort(Copy.begin(), Copy.end());
     });
   }

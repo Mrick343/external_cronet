@@ -7,6 +7,14 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: 32-bit-pointer
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// REQUIRES: large_tests
+
+// Android devices frequently don't have enough memory to run this test. Rather
+// than throw std::bad_alloc, exhausting memory triggers the OOM Killer.
+// UNSUPPORTED: LIBCXX-ANDROID-FIXME
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // Test that tellp() does not break the stringstream after INT_MAX, due to use
 // of pbump() that accept int.

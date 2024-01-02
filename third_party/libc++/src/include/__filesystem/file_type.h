@@ -23,7 +23,11 @@ _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 // On Windows, the library never identifies files as block, character, fifo
 // or socket.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 enum class _LIBCPP_ENUM_VIS file_type : signed char {
+=======
+enum class file_type : signed char {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   none = 0,
   not_found = -1,
   regular = 1,

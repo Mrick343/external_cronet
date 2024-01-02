@@ -29,12 +29,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.textclassifier.TextClassifier;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
 import androidx.annotation.RequiresApi;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -293,6 +294,7 @@ public class ApiCompatibilityUtils {
     public static void setActivityOptionsBackgroundActivityStartMode(
             @NonNull ActivityOptions options) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
         // options.setPendingIntentBackgroundActivityStartMode(
         //     ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED);
@@ -307,6 +309,10 @@ public class ApiCompatibilityUtils {
             Log.e(TAG, "Reflection failure: " + e);
             assert false : "PendingIntent from background activity may fail to run.";
         }
+=======
+        options.setPendingIntentBackgroundActivityStartMode(
+                ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     }
 
     /**

@@ -16,6 +16,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 constexpr bool test() {
   {
     typedef std::string S;
@@ -35,6 +36,28 @@ constexpr bool test() {
 
 int main(int, char**)
 {
+=======
+template <class S>
+constexpr void test_string() {
+  S s1{};
+  S s2{"abcde", 5};
+
+  ASSERT_NOEXCEPT(s1.ends_with('e'));
+
+  assert(!s1.ends_with('e'));
+  assert(!s1.ends_with('x'));
+  assert(s2.ends_with('e'));
+  assert(!s2.ends_with('x'));
+}
+
+constexpr bool test() {
+  test_string<std::string>();
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   test();
   static_assert(test());
 

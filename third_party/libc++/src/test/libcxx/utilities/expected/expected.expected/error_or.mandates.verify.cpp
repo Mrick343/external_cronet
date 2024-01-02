@@ -37,6 +37,7 @@ void test() {
   {
     const std::expected<int, NonCopyable> f1(std::unexpect, 0);
     f1.error_or(5); // expected-note{{in instantiation of function template specialization 'std::expected<int, NonCopyable>::error_or<int>' requested here}}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}error_type has to be copy constructible}}
     // expected-error-re@*:* {{call to deleted constructor of{{.*}}}}
   }
@@ -66,6 +67,37 @@ void test() {
     std::expected<int, NotConvertibleFromInt> f1(std::unexpect, NotConvertibleFromInt{});
     std::move(f1).error_or(5); // expected-note{{in instantiation of function template specialization 'std::expected<int, NotConvertibleFromInt>::error_or<int>' requested here}}
     //expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}argument has to be convertible to error_type}}
+=======
+    // expected-error-re@*:* {{static assertion failed {{.*}}error_type has to be copy constructible}}
+    // expected-error-re@*:* {{call to deleted constructor of{{.*}}}}
+  }
+
+  // const & overload
+  // !is_convertible_v<U, T>
+  {
+    const std::expected<int, NotConvertibleFromInt> f1(std::unexpect, NotConvertibleFromInt{});
+    f1.error_or(5); // expected-note{{in instantiation of function template specialization 'std::expected<int, NotConvertibleFromInt>::error_or<int>' requested here}}
+    // expected-error-re@*:* {{static assertion failed {{.*}}argument has to be convertible to error_type}}
+    // expected-error-re@*:* {{no viable conversion from returned value of type{{.*}}}}
+
+  }
+
+  // && overload
+  // !is_move_constructible_v<T>,
+  {
+    std::expected<int, NonMovable> f1(std::unexpect, 0);
+    std::move(f1).error_or(5); // expected-note{{in instantiation of function template specialization 'std::expected<int, NonMovable>::error_or<int>' requested here}}
+    // expected-error-re@*:* {{static assertion failed {{.*}}error_type has to be move constructible}}
+    // expected-error-re@*:* {{call to deleted constructor of{{.*}}}}
+  }
+
+  // && overload
+  // !is_convertible_v<U, T>
+  {
+    std::expected<int, NotConvertibleFromInt> f1(std::unexpect, NotConvertibleFromInt{});
+    std::move(f1).error_or(5); // expected-note{{in instantiation of function template specialization 'std::expected<int, NotConvertibleFromInt>::error_or<int>' requested here}}
+    //expected-error-re@*:* {{static assertion failed {{.*}}argument has to be convertible to error_type}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     // expected-error-re@*:* {{no viable conversion from returned value of type{{.*}}}}
   }
 }

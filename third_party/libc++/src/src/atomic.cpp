@@ -15,6 +15,7 @@
 #include <functional>
 #include <thread>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifdef __linux__
 
 #include <unistd.h>
@@ -146,6 +147,141 @@ static void __libcpp_contention_notify(__cxx_atomic_contention_t volatile* __con
         __libcpp_platform_wake_by_address(__platform_state, __notify_one);
 }
 static __cxx_contention_t __libcpp_contention_monitor_for_wait(__cxx_atomic_contention_t volatile* __contention_state,
+=======
+#include "include/apple_availability.h"
+
+#ifdef __linux__
+
+#include <unistd.h>
+#include <linux/futex.h>
+#include <sys/syscall.h>
+
+// libc++ uses SYS_futex as a universal syscall name. However, on 32 bit architectures
+// with a 64 bit time_t, we need to specify SYS_futex_time64.
+#if !defined(SYS_futex) && defined(SYS_futex_time64)
+# define SYS_futex SYS_futex_time64
+#endif
+
+#elif defined(__FreeBSD__)
+
+#include <sys/types.h>
+#include <sys/umtx.h>
+
+#else // <- Add other operating systems here
+
+// Baseline needs no new headers
+
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#ifdef __linux__
+
+static void __libcpp_platform_wait_on_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              __cxx_contention_t __val)
+{
+    static constexpr timespec __timeout = { 2, 0 };
+    syscall(SYS_futex, __ptr, FUTEX_WAIT_PRIVATE, __val, &__timeout, 0, 0);
+}
+
+static void __libcpp_platform_wake_by_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              bool __notify_one)
+{
+    syscall(SYS_futex, __ptr, FUTEX_WAKE_PRIVATE, __notify_one ? 1 : INT_MAX, 0, 0, 0);
+}
+
+#elif defined(__APPLE__) && defined(_LIBCPP_USE_ULOCK)
+
+extern "C" int __ulock_wait(uint32_t operation, void *addr, uint64_t value,
+                            uint32_t timeout); /* timeout is specified in microseconds */
+extern "C" int __ulock_wake(uint32_t operation, void *addr, uint64_t wake_value);
+
+#define UL_COMPARE_AND_WAIT 1
+#define ULF_WAKE_ALL        0x00000100
+
+static void __libcpp_platform_wait_on_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              __cxx_contention_t __val)
+{
+    __ulock_wait(UL_COMPARE_AND_WAIT,
+                 const_cast<__cxx_atomic_contention_t*>(__ptr), __val, 0);
+}
+
+static void __libcpp_platform_wake_by_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              bool __notify_one)
+{
+    __ulock_wake(UL_COMPARE_AND_WAIT | (__notify_one ? 0 : ULF_WAKE_ALL),
+                 const_cast<__cxx_atomic_contention_t*>(__ptr), 0);
+}
+
+#elif defined(__FreeBSD__) && __SIZEOF_LONG__ == 8
+/*
+ * Since __cxx_contention_t is int64_t even on 32bit FreeBSD
+ * platforms, we have to use umtx ops that work on the long type, and
+ * limit its use to architectures where long and int64_t are synonyms.
+ */
+
+static void __libcpp_platform_wait_on_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              __cxx_contention_t __val)
+{
+    _umtx_op(const_cast<__cxx_atomic_contention_t*>(__ptr),
+             UMTX_OP_WAIT, __val, NULL, NULL);
+}
+
+static void __libcpp_platform_wake_by_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              bool __notify_one)
+{
+    _umtx_op(const_cast<__cxx_atomic_contention_t*>(__ptr),
+             UMTX_OP_WAKE, __notify_one ? 1 : INT_MAX, NULL, NULL);
+}
+
+#else // <- Add other operating systems here
+
+// Baseline is just a timed backoff
+
+static void __libcpp_platform_wait_on_address(__cxx_atomic_contention_t const volatile* __ptr,
+                                              __cxx_contention_t __val)
+{
+    __libcpp_thread_poll_with_backoff([=]() -> bool {
+        return !__cxx_nonatomic_compare_equal(__cxx_atomic_load(__ptr, memory_order_relaxed), __val);
+    }, __libcpp_timed_backoff_policy());
+}
+
+static void __libcpp_platform_wake_by_address(__cxx_atomic_contention_t const volatile*, bool) { }
+
+#endif // __linux__
+
+static constexpr size_t __libcpp_contention_table_size = (1 << 8);  /* < there's no magic in this number */
+
+struct alignas(64) /*  aim to avoid false sharing */ __libcpp_contention_table_entry
+{
+    __cxx_atomic_contention_t __contention_state;
+    __cxx_atomic_contention_t __platform_state;
+    inline constexpr __libcpp_contention_table_entry() :
+        __contention_state(0), __platform_state(0) { }
+};
+
+static __libcpp_contention_table_entry __libcpp_contention_table[ __libcpp_contention_table_size ];
+
+static hash<void const volatile*> __libcpp_contention_hasher;
+
+static __libcpp_contention_table_entry* __libcpp_contention_state(void const volatile * p)
+{
+    return &__libcpp_contention_table[__libcpp_contention_hasher(p) & (__libcpp_contention_table_size - 1)];
+}
+
+/* Given an atomic to track contention and an atomic to actually wait on, which may be
+   the same atomic, we try to detect contention to avoid spuriously calling the platform. */
+
+static void __libcpp_contention_notify(__cxx_atomic_contention_t volatile* __contention_state,
+                                       __cxx_atomic_contention_t const volatile* __platform_state,
+                                       bool __notify_one)
+{
+    if(0 != __cxx_atomic_load(__contention_state, memory_order_seq_cst))
+        // We only call 'wake' if we consumed a contention bit here.
+        __libcpp_platform_wake_by_address(__platform_state, __notify_one);
+}
+static __cxx_contention_t __libcpp_contention_monitor_for_wait(__cxx_atomic_contention_t volatile* /*__contention_state*/,
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
                                                                __cxx_atomic_contention_t const volatile* __platform_state)
 {
     // We will monitor this value.

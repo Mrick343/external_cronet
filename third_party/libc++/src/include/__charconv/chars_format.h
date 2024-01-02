@@ -21,7 +21,11 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER >= 17
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 enum class _LIBCPP_ENUM_VIS chars_format { scientific = 0x1, fixed = 0x2, hex = 0x4, general = fixed | scientific };
+=======
+enum class chars_format { scientific = 0x1, fixed = 0x2, hex = 0x4, general = fixed | scientific };
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 inline _LIBCPP_HIDE_FROM_ABI constexpr chars_format operator~(chars_format __x) {
   return chars_format(~std::__to_underlying(__x));

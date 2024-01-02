@@ -90,6 +90,10 @@ void sleep_for(const chrono::duration<Rep, Period>& rel_time);
 #include <__availability>
 #include <__config>
 #include <__thread/formatter.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <__thread/jthread.h>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <__thread/this_thread.h>
 #include <__thread/thread.h>
 #include <__threading_support>

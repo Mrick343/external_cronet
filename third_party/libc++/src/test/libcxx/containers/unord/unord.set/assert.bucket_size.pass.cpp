@@ -16,8 +16,13 @@
 
 // REQUIRES: has-unix-headers
 // UNSUPPORTED: c++03
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
+=======
+// REQUIRES: libcpp-hardening-mode={{safe|debug}}
+// XFAIL: availability-verbose_abort-missing
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include <unordered_set>
 

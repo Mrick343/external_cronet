@@ -49,6 +49,7 @@ constexpr void test_truncating(std::size_t o, size_t N) {
     LIBCPP_ASSERT(s.begin().base() == p);
     assert(std::all_of(p, p + n, [](auto ch) { return ch == 'a'; }));
     p[n - 1] = 'b';
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     p[n] = 'c'; // will be overwritten
     return n;
   });
@@ -98,6 +99,56 @@ int main(int, char**) {
 #ifndef TEST_HAS_NO_WIDE_CHARACTERS
   test<wchar_t>();
   static_assert(test<wchar_t>());
+=======
+    p[n]     = 'c'; // will be overwritten
+    return n;
+  });
+  const S expected = S(N - 1, 'a') + S(1, 'b');
+  assert(s == expected);
+  assert(s.c_str()[N] == '\0');
+}
+
+template <class String>
+constexpr bool test() {
+  test_appending<String>(10, 15, 15);
+  test_appending<String>(10, 15, 20);
+  test_appending<String>(10, 40, 40);
+  test_appending<String>(10, 40, 50);
+  test_appending<String>(30, 35, 35);
+  test_appending<String>(30, 35, 45);
+  test_appending<String>(10, 15, 30);
+  test_truncating<String>(15, 10);
+  test_truncating<String>(40, 35);
+  test_truncating<String>(40, 10);
+
+  return true;
+}
+
+void test_value_categories() {
+  std::string s;
+  s.resize_and_overwrite(10, [](char*&&, std::size_t&&) { return 0; });
+  s.resize_and_overwrite(10, [](char* const&, const std::size_t&) { return 0; });
+  struct RefQualified {
+    int operator()(char*, std::size_t) && { return 0; }
+  };
+  s.resize_and_overwrite(10, RefQualified{});
+}
+
+int main(int, char**) {
+  test<std::basic_string<char, std::char_traits<char>, std::allocator<char>>>();
+  test<std::basic_string<char8_t, std::char_traits<char8_t>, std::allocator<char8_t>>>();
+  test<std::basic_string<char16_t, std::char_traits<char16_t>, std::allocator<char16_t>>>();
+  test<std::basic_string<char32_t, std::char_traits<char32_t>, std::allocator<char32_t>>>();
+
+  static_assert(test<std::basic_string<char, std::char_traits<char>, std::allocator<char>>>());
+  static_assert(test<std::basic_string<char8_t, std::char_traits<char8_t>, std::allocator<char8_t>>>());
+  static_assert(test<std::basic_string<char16_t, std::char_traits<char16_t>, std::allocator<char16_t>>>());
+  static_assert(test<std::basic_string<char32_t, std::char_traits<char32_t>, std::allocator<char32_t>>>());
+
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  test<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t>>>();
+  static_assert(test<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t>>>());
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif
   return 0;
 }

@@ -48,6 +48,10 @@ _LIBCXXABI_FUNC_VIS void __cxa_guard_abort(guard_type *raw_guard_object) {
   SelectedImplementation imp(raw_guard_object);
   imp.cxa_guard_abort();
 }
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 }  // extern "C"
+=======
+} // extern "C"
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 }  // __cxxabiv1

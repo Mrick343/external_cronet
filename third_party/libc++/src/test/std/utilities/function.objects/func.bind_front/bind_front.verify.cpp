@@ -37,7 +37,11 @@ void f() {
     const int c = 1;
 
     auto p = std::bind_front(pass, c);
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     static_assert(p() == 1); // expected-error-re {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
+=======
+    static_assert(p() == 1); // expected-error {{static assertion expression is not an integral constant expression}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
     auto d = std::bind_front(do_nothing, n); // expected-error {{no matching function for call to 'bind_front'}}
 

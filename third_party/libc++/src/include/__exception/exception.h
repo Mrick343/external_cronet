@@ -72,6 +72,7 @@ public:
 class _LIBCPP_EXPORTED_FROM_ABI exception {
 public:
   _LIBCPP_HIDE_FROM_ABI exception() _NOEXCEPT {}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   _LIBCPP_HIDE_FROM_ABI exception(const exception&) _NOEXCEPT = default;
 
   virtual ~exception() _NOEXCEPT;
@@ -81,6 +82,20 @@ public:
 class _LIBCPP_EXPORTED_FROM_ABI bad_exception : public exception {
 public:
   _LIBCPP_HIDE_FROM_ABI bad_exception() _NOEXCEPT {}
+=======
+  _LIBCPP_HIDE_FROM_ABI exception(const exception&) _NOEXCEPT            = default;
+  _LIBCPP_HIDE_FROM_ABI exception& operator=(const exception&) _NOEXCEPT = default;
+
+  virtual ~exception() _NOEXCEPT;
+  virtual const char* what() const _NOEXCEPT;
+};
+
+class _LIBCPP_EXPORTED_FROM_ABI bad_exception : public exception {
+public:
+  _LIBCPP_HIDE_FROM_ABI bad_exception() _NOEXCEPT {}
+  _LIBCPP_HIDE_FROM_ABI bad_exception(const bad_exception&) _NOEXCEPT            = default;
+  _LIBCPP_HIDE_FROM_ABI bad_exception& operator=(const bad_exception&) _NOEXCEPT = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   ~bad_exception() _NOEXCEPT override;
   const char* what() const _NOEXCEPT override;
 };

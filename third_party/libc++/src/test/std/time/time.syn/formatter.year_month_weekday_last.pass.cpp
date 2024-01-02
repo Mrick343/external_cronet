@@ -71,6 +71,7 @@ static void test_invalid_values() {
 
   // Weekday name conversion
   check_exception(
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
       "formatting a weekday name needs a valid weekday",
       SV("{:%a}"),
       std::chrono::year_month_weekday_last{
@@ -210,6 +211,147 @@ static void test_invalid_values() {
   // Day of year field
   check_exception(
       "formatting a day of year needs a valid date",
+=======
+      "Formatting a weekday name needs a valid weekday",
+      SV("{:%a}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+  check_exception(
+      "Formatting a weekday name needs a valid weekday",
+      SV("{:%A}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+
+  // Weekday conversion
+  check_exception(
+      "Formatting a weekday needs a valid weekday",
+      SV("{:%u}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+  check_exception(
+      "Formatting a weekday needs a valid weekday",
+      SV("{:%w}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+  check_exception(
+      "Formatting a weekday needs a valid weekday",
+      SV("{:%Ou}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+  check_exception(
+      "Formatting a weekday needs a valid weekday",
+      SV("{:%Ow}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+
+  // Day of year field
+  check_exception(
+      "Formatting a day of year needs a valid date",
+      SV("{:%j}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+
+  // Month name conversion
+  check(SV("Jan"),
+        SV("{:%b}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+  check(SV("Jan"),
+        SV("{:%h}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+  check(SV("January"),
+        SV("{:%B}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{8}}});
+
+  // *** Invalid month ***
+
+  // Weekday name conversion
+  check(SV("Mon"),
+        SV("{:%a}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("Monday"),
+        SV("{:%A}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  // Weekday conversion
+  check(SV("1"),
+        SV("{:%u}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("1"),
+        SV("{:%w}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("1"),
+        SV("{:%Ou}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("1"),
+        SV("{:%Ow}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+
+  // Day of year field
+  check_exception(
+      "Formatting a day of year needs a valid date",
+      SV("{:%j}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+
+  // Month name conversion
+  check_exception(
+      "Formatting a month name from an invalid month number",
+      SV("{:%b}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check_exception(
+      "Formatting a month name from an invalid month number",
+      SV("{:%h}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check_exception(
+      "Formatting a month name from an invalid month number",
+      SV("{:%B}"),
+      std::chrono::year_month_weekday_last{
+          std::chrono::year{1970}, std::chrono::month{0}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+
+  // *** Invalid year ***
+
+  // Weekday name conversion
+  check(SV("Mon"),
+        SV("{:%a}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("Monday"),
+        SV("{:%A}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+
+  // Weekday conversion
+  check(SV("1"),
+        SV("{:%u}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("1"),
+        SV("{:%w}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("1"),
+        SV("{:%Ou}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+  check(SV("1"),
+        SV("{:%Ow}"),
+        std::chrono::year_month_weekday_last{
+            std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});
+
+  // Day of year field
+  check_exception(
+      "Formatting a day of year needs a valid date",
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
       SV("{:%j}"),
       std::chrono::year_month_weekday_last{
           std::chrono::year{-32768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{1}}});

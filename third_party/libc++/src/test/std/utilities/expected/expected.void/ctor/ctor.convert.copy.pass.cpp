@@ -33,6 +33,7 @@
 #include <utility>
 
 #include "test_macros.h"
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 // Test Constraints:
 template <class T1, class Err1, class T2, class Err2>
@@ -104,6 +105,86 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+// Test Constraints:
+template <class T1, class Err1, class T2, class Err2>
+concept canCstrFromExpected = std::is_constructible_v<std::expected<T1, Err1>, const std::expected<T2, Err2>&>;
+
+struct CtorFromInt {
+  CtorFromInt(int);
+};
+
+static_assert(canCstrFromExpected<void, CtorFromInt, void, int>);
+
+struct NoCtorFromInt {};
+
+// !is_void_v<E>
+static_assert(!canCstrFromExpected<void, int, int, int>);
+
+// !is_constructible_v<E, GF>
+static_assert(!canCstrFromExpected<void, NoCtorFromInt, void, int>);
+
+template <class T>
+struct CtorFrom {
+  explicit CtorFrom(int)
+    requires(!std::same_as<T, int>);
+  explicit CtorFrom(T);
+  explicit CtorFrom(auto&&) = delete;
+};
+
+// Note for below 4 tests, because their E is constructible from cvref of std::expected<void, int>,
+// unexpected<E> will be constructible from cvref of std::expected<void, int>
+// is_constructible_v<unexpected<E>, expected<U, G>&>
+static_assert(!canCstrFromExpected<void, CtorFrom<std::expected<void, int>&>, void, int>);
+
+// is_constructible_v<unexpected<E>, expected<U, G>>
+static_assert(!canCstrFromExpected<void, CtorFrom<std::expected<void, int>&&>, void, int>);
+
+// is_constructible_v<unexpected<E>, const expected<U, G>&> is false
+static_assert(!canCstrFromExpected<void, CtorFrom<std::expected<void, int> const&>, void, int>);
+
+// is_constructible_v<unexpected<E>, const expected<U, G>>
+static_assert(!canCstrFromExpected<void, CtorFrom<std::expected<void, int> const&&>, void, int>);
+
+// test explicit
+static_assert(std::is_convertible_v<const std::expected<void, int>&, std::expected<void, long>>);
+
+// !is_convertible_v<GF, E>.
+static_assert(std::is_constructible_v<std::expected<void, CtorFrom<int>>, const std::expected<void, int>&>);
+static_assert(!std::is_convertible_v<const std::expected<void, int>&, std::expected<void, CtorFrom<int>>>);
+
+struct Data {
+  int i;
+  constexpr Data(int ii) : i(ii) {}
+};
+
+constexpr bool test() {
+  // convert the error
+  {
+    const std::expected<void, int> e1(std::unexpect, 5);
+    std::expected<void, Data> e2 = e1;
+    assert(!e2.has_value());
+    assert(e2.error().i == 5);
+    assert(!e1.has_value());
+    assert(e1.error() == 5);
+  }
+
+  // convert TailClobberer
+  {
+    const std::expected<void, TailClobbererNonTrivialMove<1>> e1(std::unexpect);
+    std::expected<void, TailClobberer<1>> e2 = e1;
+    assert(!e2.has_value());
+    assert(!e1.has_value());
+  }
+
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   struct ThrowingInt {
     ThrowingInt(int) { throw Except{}; }
   };

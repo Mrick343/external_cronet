@@ -13,6 +13,12 @@
 // iter_type put(iter_type s, bool intl, ios_base& f, char_type fill,
 //               long double units) const;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // REQUIRES: locale.en_US.UTF-8
 
 #include <locale>

@@ -23,6 +23,7 @@
 
 template <class S>
 TEST_CONSTEXPR_CXX20 void
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 test(typename S::size_type min_cap, typename S::size_type erased_index, typename S::size_type res_arg)
 {
     S s(min_cap, 'a');
@@ -90,6 +91,68 @@ TEST_CONSTEXPR_CXX20 bool test() {
 
 int main(int, char**)
 {
+=======
+test(typename S::size_type min_cap, typename S::size_type erased_index, typename S::size_type res_arg) {
+  S s(min_cap, 'a');
+  s.erase(erased_index);
+  assert(s.size() == erased_index);
+  assert(s.capacity() >= min_cap); // Check that we really have at least this capacity.
+
+#if TEST_STD_VER > 17
+  typename S::size_type old_cap = s.capacity();
+#endif
+  S s0 = s;
+  if (res_arg <= s.max_size()) {
+    s.reserve(res_arg);
+    LIBCPP_ASSERT(s.__invariants());
+    assert(s == s0);
+    assert(s.capacity() >= res_arg);
+    assert(s.capacity() >= s.size());
+#if TEST_STD_VER > 17
+    assert(s.capacity() >= old_cap); // reserve never shrinks as of P0966 (C++20)
+#endif
+  }
+#ifndef TEST_HAS_NO_EXCEPTIONS
+  else if (!TEST_IS_CONSTANT_EVALUATED) {
+    try {
+      s.reserve(res_arg);
+      LIBCPP_ASSERT(s.__invariants());
+      assert(false);
+    } catch (std::length_error&) {
+      assert(res_arg > s.max_size());
+    }
+  }
+#endif
+}
+
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  {
+    test<S>(0, 0, 5);
+    test<S>(0, 0, 10);
+    test<S>(0, 0, 50);
+  }
+  {
+    test<S>(100, 50, 5);
+    test<S>(100, 50, 10);
+    test<S>(100, 50, 50);
+    test<S>(100, 50, 100);
+    test<S>(100, 50, 1000);
+    test<S>(100, 50, S::npos);
+  }
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char>>>();
+#endif
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   test();
 #if TEST_STD_VER > 17
   static_assert(test());

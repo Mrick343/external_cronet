@@ -19,6 +19,7 @@
 
 // XFAIL: sanitizer-new-delete && !hwasan
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // It fails with clang-14 or clang-16, but passes with clang-15.
 // UNSUPPORTED: ubsan
 
@@ -38,6 +39,26 @@
 #include <typeinfo>
 #include <string>
 #include <cassert>
+=======
+// TODO: Investigate this failure
+// UNSUPPORTED: ubsan
+
+// GCC doesn't support the aligned-allocation flags.
+// XFAIL: gcc
+
+// RUN: %{build} -faligned-allocation -fsized-deallocation
+// RUN: %{run}
+// RUN: %{build} -faligned-allocation -fno-sized-deallocation -DNO_SIZE
+// RUN: %{run}
+// RUN: %{build} -fno-aligned-allocation -fsized-deallocation -DNO_ALIGN
+// RUN: %{run}
+// RUN: %{build} -fno-aligned-allocation -fno-sized-deallocation -DNO_ALIGN -DNO_SIZE
+// RUN: %{run}
+
+#include <cassert>
+#include <cstdlib>
+#include <new>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 

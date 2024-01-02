@@ -80,6 +80,7 @@ option(LIBCXXABI_INSTALL_LIBRARY "Install the libc++abi library." ON)
 set(LIBCXXABI_SHARED_OUTPUT_NAME "c++abi" CACHE STRING "Output name for the shared libc++abi runtime library.")
 set(LIBCXXABI_STATIC_OUTPUT_NAME "c++abi" CACHE STRING "Output name for the static libc++abi runtime library.")
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 set(LIBCXXABI_INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/c++/v1" CACHE PATH "Path to install the libc++abi headers at.")
 
 if(LLVM_LIBRARY_OUTPUT_INTDIR)
@@ -203,6 +204,129 @@ else()
     set(LIBCXXABI_LIBRARY_DIR ${CMAKE_BINARY_DIR}/lib${LIBCXXABI_LIBDIR_SUFFIX})
   endif()
   set(LIBCXXABI_INSTALL_LIBRARY_DIR lib${LIBCXXABI_LIBDIR_SUFFIX} CACHE PATH
+=======
+set(LIBCXXABI_INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/c++/v1" CACHE STRING "Path to install the libc++abi headers at.")
+
+if(LLVM_LIBRARY_OUTPUT_INTDIR)
+  set(LIBCXXABI_GENERATED_INCLUDE_DIR "${LLVM_BINARY_DIR}/include/c++/v1")
+else()
+  set(LIBCXXABI_GENERATED_INCLUDE_DIR "${CMAKE_BINARY_DIR}/include/c++/v1")
+endif()
+
+# TODO: Remove this after branching for LLVM 15
+if(LIBCXXABI_SYSROOT OR LIBCXXABI_TARGET_TRIPLE OR LIBCXXABI_GCC_TOOLCHAIN)
+  message(WARNING "LIBCXXABI_SYSROOT, LIBCXXABI_TARGET_TRIPLE and LIBCXXABI_GCC_TOOLCHAIN are not supported anymore, please use the native CMake equivalents instead")
+endif()
+
+set(LIBCXXABI_LIBCXX_LIBRARY_PATH "" CACHE PATH "The path to libc++ library.")
+set(LIBCXXABI_LIBRARY_VERSION "1.0" CACHE STRING
+"Version of libc++abi. This will be reflected in the name of the shared \
+library produced. For example, -DLIBCXXABI_LIBRARY_VERSION=x.y will \
+result in the library being named libc++abi.x.y.dylib, along with the \
+usual symlinks pointing to that.")
+
+# Default to building a shared library so that the default options still test
+# the libc++abi that is being built. The problem with testing a static libc++abi
+# is that libc++ will prefer a dynamic libc++abi from the system over a static
+# libc++abi from the output directory.
+option(LIBCXXABI_ENABLE_SHARED "Build libc++abi as a shared library." ON)
+option(LIBCXXABI_ENABLE_STATIC "Build libc++abi as a static library." ON)
+
+cmake_dependent_option(LIBCXXABI_INSTALL_STATIC_LIBRARY
+  "Install the static libc++abi library." ON
+  "LIBCXXABI_ENABLE_STATIC;LIBCXXABI_INSTALL_LIBRARY" OFF)
+cmake_dependent_option(LIBCXXABI_INSTALL_SHARED_LIBRARY
+  "Install the shared libc++abi library." ON
+  "LIBCXXABI_ENABLE_SHARED;LIBCXXABI_INSTALL_LIBRARY" OFF)
+
+cmake_dependent_option(LIBCXXABI_STATICALLY_LINK_UNWINDER_IN_STATIC_LIBRARY
+  "Statically link the LLVM unwinder to static library" ON
+  "LIBCXXABI_ENABLE_STATIC_UNWINDER" OFF)
+cmake_dependent_option(LIBCXXABI_STATICALLY_LINK_UNWINDER_IN_SHARED_LIBRARY
+  "Statically link the LLVM unwinder to shared library" ON
+  "LIBCXXABI_ENABLE_STATIC_UNWINDER" OFF)
+
+option(LIBCXXABI_BAREMETAL "Build libc++abi for baremetal targets." OFF)
+# The default terminate handler attempts to demangle uncaught exceptions, which
+# causes extra I/O and demangling code to be pulled in.
+option(LIBCXXABI_SILENT_TERMINATE "Set this to make the terminate handler default to a silent alternative" OFF)
+option(LIBCXXABI_NON_DEMANGLING_TERMINATE "Set this to make the terminate handler
+avoid demangling" OFF)
+
+if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
+  message(FATAL_ERROR "libc++abi must be built as either a shared or static library.")
+endif()
+
+# TODO: Remove this, which shouldn't be necessary since we know we're being built
+#       side-by-side with libc++.
+set(LIBCXXABI_LIBCXX_INCLUDES "" CACHE PATH
+    "Specify path to libc++ includes.")
+
+set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
+if (WIN32)
+  set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
+endif()
+option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
+  "Do not export any symbols from the static library." ${LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT})
+
+if(MINGW)
+  set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-mingw.cfg.in")
+elseif(WIN32) # clang-cl
+  if (LIBCXXABI_ENABLE_SHARED)
+    set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-shared-clangcl.cfg.in")
+  else()
+    set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-static-clangcl.cfg.in")
+  endif()
+else()
+  if (LIBCXXABI_ENABLE_SHARED)
+    set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-shared.cfg.in")
+  else()
+    set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-static.cfg.in")
+  endif()
+endif()
+set(LIBCXXABI_TEST_CONFIG "${LIBCXXABI_DEFAULT_TEST_CONFIG}" CACHE STRING
+  "The path to the Lit testing configuration to use when running the tests.
+   If a relative path is provided, it is assumed to be relative to '<monorepo>/libcxxabi/test/configs'.")
+if (NOT IS_ABSOLUTE "${LIBCXXABI_TEST_CONFIG}")
+  set(LIBCXXABI_TEST_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/test/configs/${LIBCXXABI_TEST_CONFIG}")
+endif()
+message(STATUS "Using libc++abi testing configuration: ${LIBCXXABI_TEST_CONFIG}")
+set(LIBCXXABI_TEST_PARAMS "" CACHE STRING
+    "A list of parameters to run the Lit test suite with.")
+
+#===============================================================================
+# Configure System
+#===============================================================================
+
+# Add path for custom modules
+set(CMAKE_MODULE_PATH
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules"
+  ${CMAKE_MODULE_PATH}
+  )
+
+set(LIBCXXABI_INSTALL_RUNTIME_DIR "${CMAKE_INSTALL_BINDIR}" CACHE STRING
+    "Path where built libc++abi runtime libraries should be installed.")
+
+if(LLVM_ENABLE_PER_TARGET_RUNTIME_DIR AND NOT APPLE)
+  set(LIBCXXABI_HEADER_DIR ${LLVM_BINARY_DIR})
+  set(LIBCXXABI_LIBRARY_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR}/${LLVM_DEFAULT_TARGET_TRIPLE})
+  set(LIBCXXABI_INSTALL_LIBRARY_DIR lib${LLVM_LIBDIR_SUFFIX}/${LLVM_DEFAULT_TARGET_TRIPLE} CACHE STRING
+      "Path where built libc++abi libraries should be installed.")
+  if(LIBCXX_LIBDIR_SUBDIR)
+    string(APPEND LIBCXXABI_LIBRARY_DIR /${LIBCXXABI_LIBDIR_SUBDIR})
+    string(APPEND LIBCXXABI_INSTALL_LIBRARY_DIR /${LIBCXXABI_LIBDIR_SUBDIR})
+  endif()
+else()
+  if(LLVM_LIBRARY_OUTPUT_INTDIR)
+    set(LIBCXXABI_HEADER_DIR ${LLVM_BINARY_DIR})
+    set(LIBCXXABI_LIBRARY_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR})
+  else()
+    set(LIBCXXABI_HEADER_DIR ${CMAKE_BINARY_DIR})
+    set(LIBCXXABI_LIBRARY_DIR ${CMAKE_BINARY_DIR}/lib${LIBCXXABI_LIBDIR_SUFFIX})
+  endif()
+  set(LIBCXXABI_INSTALL_LIBRARY_DIR lib${LIBCXXABI_LIBDIR_SUFFIX} CACHE STRING
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
       "Path where built libc++abi libraries should be installed.")
 endif()
 

@@ -12,6 +12,7 @@
 
 #include <__availability>
 #include <__config>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__type_traits/make_unsigned.h>
 #include <cctype>
 #include <clocale>
@@ -164,6 +165,159 @@ public:
 
 private:
     void __init();
+=======
+#include <__memory/shared_ptr.h> // __shared_count
+#include <__mutex/once_flag.h>
+#include <__type_traits/make_unsigned.h>
+#include <cctype>
+#include <clocale>
+#include <cstdint>
+#include <cstdlib>
+#include <string>
+
+// Some platforms require more includes than others. Keep the includes on all plaforms for now.
+#include <cstddef>
+#include <cstring>
+
+#ifndef _LIBCPP_HAS_NO_WIDE_CHARACTERS
+#  include <cwchar>
+#else
+#  include <__std_mbstate_t.h>
+#endif
+
+#if defined(_LIBCPP_MSVCRT_LIKE)
+# include <__support/win32/locale_win32.h>
+#elif defined(_AIX) || defined(__MVS__)
+# include <__support/ibm/xlocale.h>
+#elif defined(__ANDROID__)
+# include <__support/android/locale_bionic.h>
+#elif defined(_NEWLIB_VERSION)
+# include <__support/newlib/xlocale.h>
+#elif defined(__OpenBSD__)
+# include <__support/openbsd/xlocale.h>
+#elif (defined(__APPLE__) || defined(__FreeBSD__))
+# include <xlocale.h>
+#elif defined(__Fuchsia__)
+# include <__support/fuchsia/xlocale.h>
+#elif defined(__wasi__)
+// WASI libc uses musl's locales support.
+# include <__support/musl/xlocale.h>
+#elif defined(_LIBCPP_HAS_MUSL_LIBC)
+# include <__support/musl/xlocale.h>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+class _LIBCPP_EXPORTED_FROM_ABI locale;
+
+template <class _Facet>
+_LIBCPP_INLINE_VISIBILITY
+bool
+has_facet(const locale&) _NOEXCEPT;
+
+template <class _Facet>
+_LIBCPP_INLINE_VISIBILITY
+const _Facet&
+use_facet(const locale&);
+
+class _LIBCPP_EXPORTED_FROM_ABI locale
+{
+public:
+    // types:
+    class _LIBCPP_EXPORTED_FROM_ABI facet;
+    class _LIBCPP_EXPORTED_FROM_ABI id;
+
+    typedef int category;
+    _LIBCPP_AVAILABILITY_LOCALE_CATEGORY
+    static const category // values assigned here are for exposition only
+        none     = 0,
+        collate  = LC_COLLATE_MASK,
+        ctype    = LC_CTYPE_MASK,
+        monetary = LC_MONETARY_MASK,
+        numeric  = LC_NUMERIC_MASK,
+        time     = LC_TIME_MASK,
+        messages = LC_MESSAGES_MASK,
+        all = collate | ctype | monetary | numeric | time | messages;
+
+    // construct/copy/destroy:
+    locale()  _NOEXCEPT;
+    locale(const locale&)  _NOEXCEPT;
+    explicit locale(const char*);
+    explicit locale(const string&);
+    locale(const locale&, const char*, category);
+    locale(const locale&, const string&, category);
+    template <class _Facet>
+        _LIBCPP_INLINE_VISIBILITY locale(const locale&, _Facet*);
+    locale(const locale&, const locale&, category);
+
+    ~locale();
+
+    const locale& operator=(const locale&)  _NOEXCEPT;
+
+    template <class _Facet>
+      _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
+      locale combine(const locale&) const;
+
+    // locale operations:
+    string name() const;
+    bool operator==(const locale&) const;
+#if _LIBCPP_STD_VER <= 17
+    _LIBCPP_HIDE_FROM_ABI bool operator!=(const locale& __y) const {return !(*this == __y);}
+#endif
+    template <class _CharT, class _Traits, class _Allocator>
+      _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
+      bool operator()(const basic_string<_CharT, _Traits, _Allocator>&,
+                      const basic_string<_CharT, _Traits, _Allocator>&) const;
+
+    // global locale objects:
+    static locale global(const locale&);
+    static const locale& classic();
+
+private:
+    class __imp;
+    __imp* __locale_;
+
+    void __install_ctor(const locale&, facet*, long);
+    static locale& __global();
+    bool has_facet(id&) const;
+    const facet* use_facet(id&) const;
+
+    template <class _Facet> friend bool has_facet(const locale&)  _NOEXCEPT;
+    template <class _Facet> friend const _Facet& use_facet(const locale&);
+};
+
+class _LIBCPP_EXPORTED_FROM_ABI locale::facet
+    : public __shared_count
+{
+protected:
+    _LIBCPP_INLINE_VISIBILITY
+    explicit facet(size_t __refs = 0)
+        : __shared_count(static_cast<long>(__refs)-1) {}
+
+    ~facet() override;
+
+//    facet(const facet&) = delete;     // effectively done in __shared_count
+//    void operator=(const facet&) = delete;
+private:
+    void __on_zero_shared() _NOEXCEPT override;
+};
+
+class _LIBCPP_EXPORTED_FROM_ABI locale::id
+{
+    once_flag      __flag_;
+    int32_t        __id_;
+
+    static int32_t __next_id;
+public:
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR id() :__id_(0) {}
+    void operator=(const id&) = delete;
+    id(const id&) = delete;
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 public:  // only needed for tests
     long __get();
 

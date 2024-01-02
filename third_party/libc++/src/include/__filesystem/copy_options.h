@@ -21,7 +21,11 @@
 
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 enum class _LIBCPP_ENUM_VIS copy_options : unsigned short {
+=======
+enum class copy_options : unsigned short {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   none = 0,
   skip_existing = 1,
   overwrite_existing = 2,

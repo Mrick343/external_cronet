@@ -61,6 +61,7 @@ int main(int, char**)
     {
         volatile std::atomic<bool> obj(true);
         assert(obj == true);
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
         obj.store(false);
@@ -165,6 +166,130 @@ int main(int, char**)
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
+=======
+        {
+            bool lockfree = obj.is_lock_free();
+            (void)lockfree;
+#if TEST_STD_VER >= 17
+            if (std::atomic<bool>::is_always_lock_free)
+                assert(lockfree);
+#endif
+        }
+        obj.store(false);
+        assert(obj == false);
+        obj.store(true, std::memory_order_release);
+        assert(obj == true);
+        assert(obj.load() == true);
+        assert(obj.load(std::memory_order_acquire) == true);
+        assert(obj.exchange(false) == true);
+        assert(obj == false);
+        assert(obj.exchange(true, std::memory_order_relaxed) == false);
+        assert(obj == true);
+        bool x = obj;
+        assert(cmpxchg_weak_loop(obj, x, false) == true);
+        assert(obj == false);
+        assert(x == true);
+        assert(obj.compare_exchange_weak(x, true,
+                                         std::memory_order_seq_cst) == false);
+        assert(obj == false);
+        assert(x == false);
+        obj.store(true);
+        x = true;
+        assert(cmpxchg_weak_loop(obj, x, false,
+                                 std::memory_order_seq_cst,
+                                 std::memory_order_seq_cst) == true);
+        assert(obj == false);
+        assert(x == true);
+        x = true;
+        obj.store(true);
+        assert(obj.compare_exchange_strong(x, false) == true);
+        assert(obj == false);
+        assert(x == true);
+        assert(obj.compare_exchange_strong(x, true,
+                                         std::memory_order_seq_cst) == false);
+        assert(obj == false);
+        assert(x == false);
+        x = true;
+        obj.store(true);
+        assert(obj.compare_exchange_strong(x, false,
+                                           std::memory_order_seq_cst,
+                                           std::memory_order_seq_cst) == true);
+        assert(obj == false);
+        assert(x == true);
+        assert((obj = false) == false);
+        assert(obj == false);
+        assert((obj = true) == true);
+        assert(obj == true);
+    }
+    {
+        std::atomic<bool> obj(true);
+        assert(obj == true);
+        {
+            bool lockfree = obj.is_lock_free();
+            (void)lockfree;
+#if TEST_STD_VER >= 17
+            if (std::atomic<bool>::is_always_lock_free)
+                assert(lockfree);
+#endif
+        }
+        obj.store(false);
+        assert(obj == false);
+        obj.store(true, std::memory_order_release);
+        assert(obj == true);
+        assert(obj.load() == true);
+        assert(obj.load(std::memory_order_acquire) == true);
+        assert(obj.exchange(false) == true);
+        assert(obj == false);
+        assert(obj.exchange(true, std::memory_order_relaxed) == false);
+        assert(obj == true);
+        bool x = obj;
+        assert(cmpxchg_weak_loop(obj, x, false) == true);
+        assert(obj == false);
+        assert(x == true);
+        assert(obj.compare_exchange_weak(x, true,
+                                         std::memory_order_seq_cst) == false);
+        assert(obj == false);
+        assert(x == false);
+        obj.store(true);
+        x = true;
+        assert(cmpxchg_weak_loop(obj, x, false,
+                                 std::memory_order_seq_cst,
+                                 std::memory_order_seq_cst) == true);
+        assert(obj == false);
+        assert(x == true);
+        x = true;
+        obj.store(true);
+        assert(obj.compare_exchange_strong(x, false) == true);
+        assert(obj == false);
+        assert(x == true);
+        assert(obj.compare_exchange_strong(x, true,
+                                         std::memory_order_seq_cst) == false);
+        assert(obj == false);
+        assert(x == false);
+        x = true;
+        obj.store(true);
+        assert(obj.compare_exchange_strong(x, false,
+                                           std::memory_order_seq_cst,
+                                           std::memory_order_seq_cst) == true);
+        assert(obj == false);
+        assert(x == true);
+        assert((obj = false) == false);
+        assert(obj == false);
+        assert((obj = true) == true);
+        assert(obj == true);
+    }
+    {
+        std::atomic_bool obj(true);
+        assert(obj == true);
+        {
+            bool lockfree = obj.is_lock_free();
+            (void)lockfree;
+#if TEST_STD_VER >= 17
+            if (std::atomic_bool::is_always_lock_free)
+                assert(lockfree);
+#endif
+        }
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
         obj.store(false);
         assert(obj == false);
         obj.store(true, std::memory_order_release);

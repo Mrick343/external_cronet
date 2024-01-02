@@ -16,9 +16,15 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 using iterator = std::string_view::iterator;
 using const_iterator = std::string_view::const_iterator;
 using reverse_iterator = std::string_view::reverse_iterator;
+=======
+using iterator               = std::string_view::iterator;
+using const_iterator         = std::string_view::const_iterator;
+using reverse_iterator       = std::string_view::reverse_iterator;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 using const_reverse_iterator = std::string_view::const_reverse_iterator;
 
 static_assert(std::contiguous_iterator<iterator>);

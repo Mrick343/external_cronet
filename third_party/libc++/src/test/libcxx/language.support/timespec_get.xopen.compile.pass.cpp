@@ -7,7 +7,11 @@
 //===----------------------------------------------------------------------===//
 
 // This test breaks when enabling LSV.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // UNSUPPORTED: c++03, c++11, c++14
 

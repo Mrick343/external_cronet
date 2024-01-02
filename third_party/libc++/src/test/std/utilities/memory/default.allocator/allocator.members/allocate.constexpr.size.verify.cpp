@@ -33,6 +33,11 @@ constexpr bool test()
 }
 
 void f() {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     static_assert(test<double>()); // expected-error-re {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
     LIBCPP_STATIC_ASSERT(test<const double>()); // expected-error-re {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
+=======
+    static_assert(test<double>()); // expected-error {{static assertion expression is not an integral constant expression}}
+    LIBCPP_STATIC_ASSERT(test<const double>()); // expected-error {{static assertion expression is not an integral constant expression}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

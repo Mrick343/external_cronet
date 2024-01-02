@@ -42,6 +42,7 @@ On a production setting, this would be achieved through a custom
 ``<__external_threading>`` header, which declares the libc++ internal threading
 API but leaves out the implementation.
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 The ``-DLIBCXX_BUILD_EXTERNAL_THREAD_LIBRARY`` option allows building libc++ in
 such a configuration while allowing it to be tested on a platform that supports
 any of the threading systems (e.g. pthread) supported in ``__threading_support``
@@ -81,3 +82,24 @@ Threading Configuration Macros
   ``<__threading_support>``. Specifically it exposes the threading API
   definitions in ``<__threading_support>`` as non-inline definitions meant to
   be compiled into a library.
+=======
+Threading Configuration Macros
+==============================
+
+**_LIBCPP_HAS_NO_THREADS**
+  This macro is defined when libc++ is built without threading support. It
+  should not be manually defined by the user.
+
+**_LIBCPP_HAS_THREAD_API_EXTERNAL**
+  This macro is defined when libc++ should use the ``<__external_threading>``
+  header to provide the internal threading API. This macro overrides
+  ``_LIBCPP_HAS_THREAD_API_PTHREAD``.
+
+**_LIBCPP_HAS_THREAD_API_PTHREAD**
+  This macro is defined when libc++ should use POSIX threads to implement the
+  internal threading API.
+
+**_LIBCPP_HAS_THREAD_API_WIN32**
+  This macro is defined when libc++ should use Win32 threads to implement the
+  internal threading API.
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

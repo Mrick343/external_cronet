@@ -14,6 +14,7 @@
 #include <__concepts/arithmetic.h>
 #include <__config>
 #include <__format/concepts.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <__format/format_error.h>
 #include <__format/format_fwd.h>
 #include <__format/format_parse_context.h>
@@ -56,6 +57,48 @@ namespace __format {
 /// __visit_format_arg doesn't do this wrapping. So in the format functions
 /// this function is used to avoid unneeded overhead.
 enum class _LIBCPP_ENUM_VIS __arg_t : uint8_t {
+=======
+#include <__format/format_fwd.h>
+#include <__format/format_parse_context.h>
+#include <__functional/invoke.h>
+#include <__memory/addressof.h>
+#include <__type_traits/conditional.h>
+#include <__utility/forward.h>
+#include <__utility/move.h>
+#include <__utility/unreachable.h>
+#include <__variant/monostate.h>
+#include <cstdint>
+#include <string_view>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 20
+
+namespace __format {
+/// The type stored in @ref basic_format_arg.
+///
+/// @note The 128-bit types are unconditionally in the list to avoid the values
+/// of the enums to depend on the availability of 128-bit integers.
+///
+/// @note The value is stored as a 5-bit value in the __packed_arg_t_bits. This
+/// limits the maximum number of elements to 32.
+/// When modifying update the test
+/// test/libcxx/utilities/format/format.arguments/format.arg/arg_t.compile.pass.cpp
+/// It could be packed in 4-bits but that means a new type directly becomes an
+/// ABI break. The packed type is 64-bit so this reduces the maximum number of
+/// packed elements from 16 to 12.
+///
+/// @note Some members of this enum are an extension. These extensions need
+/// special behaviour in visit_format_arg. There they need to be wrapped in a
+/// handle to satisfy the user observable behaviour. The internal function
+/// __visit_format_arg doesn't do this wrapping. So in the format functions
+/// this function is used to avoid unneeded overhead.
+enum class __arg_t : uint8_t {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   __none,
   __boolean,
   __char_type,

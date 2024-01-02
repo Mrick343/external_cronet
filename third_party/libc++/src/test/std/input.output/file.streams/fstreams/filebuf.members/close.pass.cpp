@@ -10,6 +10,14 @@
 
 // basic_filebuf<charT,traits>* close();
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// This test closes an fd that belongs to a std::filebuf, and Bionic's fdsan
+// detects this and aborts the process, starting in Android R (API 30).
+// See D137129.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{2[1-9]}}
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <fstream>
 #include <cassert>
 #if defined(__unix__)

@@ -17,5 +17,9 @@
 void f() {
   typedef std::pair<int, double> P;
   std::tuple_element<2, P>::type foo; // expected-note {{requested here}}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed{{( due to requirement '2U[L]{0,2} < 2')?}}{{.*}}Index out of bounds in std::tuple_element<std::pair<T1, T2>>}}
+=======
+    // expected-error-re@*:* {{static assertion failed{{( due to requirement '2U[L]{0,2} < 2')?}}{{.*}}Index out of bounds in std::tuple_element<std::pair<T1, T2>>}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

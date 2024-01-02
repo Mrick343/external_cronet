@@ -7,9 +7,12 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // Older Clangs do not support the C++20 feature to constrain destructors
 // XFAIL: apple-clang-14
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // constexpr ~expected();
 //
 // Effects: If has_value() is true, destroys val, otherwise destroys unex.

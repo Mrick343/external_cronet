@@ -1274,7 +1274,11 @@ struct __all_overloads : _Bases... {
   using _Bases::operator()...;
 };
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <class IdxSeq>
+=======
+template <class _IdxSeq>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 struct __make_overloads_imp;
 
 template <size_t ..._Idx>

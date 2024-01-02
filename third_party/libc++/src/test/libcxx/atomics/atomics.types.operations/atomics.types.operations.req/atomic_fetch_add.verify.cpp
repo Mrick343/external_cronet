@@ -46,12 +46,21 @@ void pointer_to_incomplete_type() {
 void function_pointer() {
   {
     volatile std::atomic<void (*)(int)> fun;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed due to requirement '!is_function<void (int)>::value'{{.*}}Pointer to function isn't allowed}}
     std::atomic_fetch_add(&fun, 0);
   }
   {
     std::atomic<void (*)(int)> fun;
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed due to requirement '!is_function<void (int)>::value'{{.*}}Pointer to function isn't allowed}}
+=======
+    // expected-error-re@*:* {{static assertion failed due to requirement '!is_function<void (int)>::value'{{.*}}Pointer to function isn't allowed}}
+    std::atomic_fetch_add(&fun, 0);
+  }
+  {
+    std::atomic<void (*)(int)> fun;
+    // expected-error-re@*:* {{static assertion failed due to requirement '!is_function<void (int)>::value'{{.*}}Pointer to function isn't allowed}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     std::atomic_fetch_add(&fun, 0);
   }
 }

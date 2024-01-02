@@ -11,6 +11,11 @@
 #define _LIBCPP___RANGES_ALL_H
 
 #include <__config>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <__functional/compose.h>         // TODO(modules): Those should not be required
+#include <__functional/perfect_forward.h> //
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <__iterator/concepts.h>
 #include <__iterator/iterator_traits.h>
 #include <__ranges/access.h>

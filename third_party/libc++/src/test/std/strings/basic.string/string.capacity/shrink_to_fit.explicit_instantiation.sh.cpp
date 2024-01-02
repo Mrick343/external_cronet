@@ -31,6 +31,7 @@ struct string16_char_traits {
   typedef std::mbstate_t state_type;
   typedef std::fpos<state_type> pos_type;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   static void assign(char_type&, const char_type&) { }
   static bool eq(const char_type&, const char_type&) { return false; }
   static bool lt(const char_type&, const char_type&) { return false; }
@@ -55,5 +56,31 @@ extern template class std::basic_string<char16, string16_char_traits>;
 int main(int, char**) {
     std::basic_string<char16, string16_char_traits> s;
     s.shrink_to_fit();
+=======
+  static void assign(char_type&, const char_type&) {}
+  static bool eq(const char_type&, const char_type&) { return false; }
+  static bool lt(const char_type&, const char_type&) { return false; }
+  static int compare(const char_type*, const char_type*, std::size_t) { return 0; }
+  static std::size_t length(const char_type*) { return 0; }
+  static const char_type* find(const char_type*, std::size_t, const char_type&) { return nullptr; }
+  static char_type* move(char_type*, const char_type*, std::size_t) { return nullptr; }
+  static char_type* copy(char_type*, const char_type*, std::size_t) { return nullptr; }
+  static char_type* assign(char_type*, std::size_t, char_type) { return nullptr; }
+  static int_type not_eof(const int_type&) { return 0; }
+  static char_type to_char_type(const int_type&) { return char_type(); }
+  static int_type to_int_type(const char_type&) { return int_type(); }
+  static bool eq_int_type(const int_type&, const int_type&) { return false; }
+  static int_type eof() { return int_type(); }
+};
+
+#if defined(TU1)
+template class std::basic_string<char16, string16_char_traits>;
+#else
+extern template class std::basic_string<char16, string16_char_traits>;
+
+int main(int, char**) {
+  std::basic_string<char16, string16_char_traits> s;
+  s.shrink_to_fit();
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }
 #endif

@@ -100,6 +100,10 @@ int main(int, char**) {
   CHECK_ALIGNMENT(struct Empty {});
   CHECK_ALIGNMENT(struct OneInt { int i; });
   CHECK_ALIGNMENT(struct IntArr2 { int i[2]; });
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  CHECK_ALIGNMENT(struct FloatArr3 { float i[3]; });
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   CHECK_ALIGNMENT(struct LLIArr2 { long long int i[2]; });
   CHECK_ALIGNMENT(struct LLIArr4 { long long int i[4]; });
   CHECK_ALIGNMENT(struct LLIArr8 { long long int i[8]; });

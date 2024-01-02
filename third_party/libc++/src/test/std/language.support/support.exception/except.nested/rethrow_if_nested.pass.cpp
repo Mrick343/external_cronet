@@ -28,6 +28,11 @@ class A
     int data_;
 public:
     explicit A(int data) : data_(data) {}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    A(const A&) = default;
+    A& operator=(const A&) = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     virtual ~A() TEST_NOEXCEPT {}
 
     friend bool operator==(const A& x, const A& y) {return x.data_ == y.data_;}

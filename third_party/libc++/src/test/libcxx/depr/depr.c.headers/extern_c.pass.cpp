@@ -8,7 +8,11 @@
 
 // When building with modules, including headers inside extern "C" is an anti-pattern
 // that we don't want to support and can't support with LSV enabled.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // Sometimes C++'s <foo.h> headers get included within extern "C" contexts. This
 // is ill-formed (no diagnostic required), per [using.headers]p3, but we permit

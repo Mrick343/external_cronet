@@ -24,6 +24,12 @@ struct A
   static std::function<void()> global;
   static bool cancel;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  A() = default;
+  A(const A&) = default;
+  A& operator=(const A&) = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   ~A() {
     DoNotOptimize(cancel);
     if (cancel)

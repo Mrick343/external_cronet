@@ -18,10 +18,35 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     const std::error_category& ec = std::future_category();
     assert(std::strcmp(ec.name(), "future") == 0);
 
   return 0;
+=======
+// See https://llvm.org/D65667
+struct StaticInit {
+    const std::error_category* ec;
+    ~StaticInit() {
+        assert(std::strcmp(ec->name(), "future") == 0);
+    }
+};
+static StaticInit foo;
+
+int main(int, char**)
+{
+    {
+        const std::error_category& ec = std::future_category();
+        assert(std::strcmp(ec.name(), "future") == 0);
+    }
+
+    {
+        foo.ec = &std::future_category();
+        assert(std::strcmp(foo.ec->name(), "future") == 0);
+    }
+
+    return 0;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

@@ -11,7 +11,11 @@
 // Make sure that we still support _LIBCPP_AVAILABILITY_CUSTOM_VERBOSE_ABORT_PROVIDED for folks
 // who customize the verbose termination function at link-time in back-deployment environments.
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1 -D_LIBCPP_AVAILABILITY_CUSTOM_VERBOSE_ABORT_PROVIDED
+=======
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_AVAILABILITY_CUSTOM_VERBOSE_ABORT_PROVIDED
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // We emit a #warning about the deprecation of this setting, so make sure we don't turn that into an error.
 // ADDITIONAL_COMPILE_FLAGS: -Wno-error

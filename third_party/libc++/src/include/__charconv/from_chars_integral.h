@@ -124,6 +124,7 @@ __subject_seq_combinator(_It __first, _It __last, _Tp& __value, _Fn __f, _Ts... 
   return __r;
 }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <typename _Tp, typename enable_if<is_unsigned<_Tp>::value, int>::type = 0>
 inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
 __from_chars_atoi(const char* __first, const char* __last, _Tp& __value) {
@@ -225,6 +226,109 @@ from_chars(const char* __first, const char* __last, _Tp& __value) {
 }
 
 template <typename _Tp, typename enable_if<is_integral<_Tp>::value, int>::type = 0>
+=======
+template <typename _Tp, __enable_if_t<is_unsigned<_Tp>::value, int> = 0>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
+__from_chars_atoi(const char* __first, const char* __last, _Tp& __value) {
+  using __tx          = __itoa::__traits<_Tp>;
+  using __output_type = typename __tx::type;
+
+  return std::__subject_seq_combinator(
+      __first, __last, __value, [](const char* __f, const char* __l, _Tp& __val) -> from_chars_result {
+        __output_type __a, __b;
+        auto __p = __tx::__read(__f, __l, __a, __b);
+        if (__p == __l || !std::__in_pattern(*__p)) {
+          __output_type __m = numeric_limits<_Tp>::max();
+          if (__m >= __a && __m - __a >= __b) {
+            __val = __a + __b;
+            return {__p, {}};
+          }
+        }
+        return {__p, errc::result_out_of_range};
+      });
+}
+
+template <typename _Tp, __enable_if_t<is_signed<_Tp>::value, int> = 0>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
+__from_chars_atoi(const char* __first, const char* __last, _Tp& __value) {
+  using __t = decltype(std::__to_unsigned_like(__value));
+  return std::__sign_combinator(__first, __last, __value, __from_chars_atoi<__t>);
+}
+
+/*
+// Code used to generate __from_chars_log2f_lut.
+#include <cmath>
+#include <format>
+#include <iostream>
+
+int main() {
+  for (int i = 2; i <= 36; ++i)
+    std::cout << std::format("{},\n", log2f(i));
+}
+*/
+/// log2f table for bases [2, 36].
+inline constexpr float __from_chars_log2f_lut[35] = {
+    1,         1.5849625, 2,         2.321928, 2.5849626, 2.807355, 3,        3.169925,  3.321928,
+    3.4594316, 3.5849626, 3.7004397, 3.807355, 3.9068906, 4,        4.087463, 4.169925,  4.2479277,
+    4.321928,  4.3923173, 4.4594316, 4.523562, 4.5849624, 4.643856, 4.70044,  4.7548876, 4.807355,
+    4.857981,  4.9068904, 4.9541965, 5,        5.044394,  5.087463, 5.129283, 5.169925};
+
+template <typename _Tp, __enable_if_t<is_unsigned<_Tp>::value, int> = 0>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
+__from_chars_integral(const char* __first, const char* __last, _Tp& __value, int __base) {
+  if (__base == 10)
+    return std::__from_chars_atoi(__first, __last, __value);
+
+  return std::__subject_seq_combinator(
+      __first,
+      __last,
+      __value,
+      [](const char* __p, const char* __lastp, _Tp& __val, int __b) -> from_chars_result {
+        using __tl = numeric_limits<_Tp>;
+        // __base is always between 2 and 36 inclusive.
+        auto __digits = __tl::digits / __from_chars_log2f_lut[__b - 2];
+        _Tp __x = __in_pattern(*__p++, __b).__val, __y = 0;
+
+        for (int __i = 1; __p != __lastp; ++__i, ++__p) {
+          if (auto __c = __in_pattern(*__p, __b)) {
+            if (__i < __digits - 1)
+              __x = __x * __b + __c.__val;
+            else {
+              if (!__itoa::__mul_overflowed(__x, __b, __x))
+                ++__p;
+              __y = __c.__val;
+              break;
+            }
+          } else
+            break;
+        }
+
+        if (__p == __lastp || !__in_pattern(*__p, __b)) {
+          if (__tl::max() - __x >= __y) {
+            __val = __x + __y;
+            return {__p, {}};
+          }
+        }
+        return {__p, errc::result_out_of_range};
+      },
+      __base);
+}
+
+template <typename _Tp, __enable_if_t<is_signed<_Tp>::value, int> = 0>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
+__from_chars_integral(const char* __first, const char* __last, _Tp& __value, int __base) {
+  using __t = decltype(std::__to_unsigned_like(__value));
+  return std::__sign_combinator(__first, __last, __value, __from_chars_integral<__t>, __base);
+}
+
+template <typename _Tp, __enable_if_t<is_integral<_Tp>::value, int> = 0>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
+from_chars(const char* __first, const char* __last, _Tp& __value) {
+  return std::__from_chars_atoi(__first, __last, __value);
+}
+
+template <typename _Tp, __enable_if_t<is_integral<_Tp>::value, int> = 0>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI from_chars_result
 from_chars(const char* __first, const char* __last, _Tp& __value, int __base) {
   _LIBCPP_ASSERT_UNCATEGORIZED(2 <= __base && __base <= 36, "base not in [2, 36]");

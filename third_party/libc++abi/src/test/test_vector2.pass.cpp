@@ -6,6 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Reports leaks after https://github.com/llvm/llvm-project/pull/66285
+// UNSUPPORTED: lsan
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: no-exceptions
 
 #include "cxxabi.h"

@@ -231,6 +231,7 @@ feature_test_macros = [
             "name": "__cpp_lib_bitset",
             "values": {"c++26": 202306}, # P2697R1 Interfacing bitset with string_view
             "headers": ["bitset"],
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
             "unimplemented": True,
         },
         {
@@ -1169,6 +1170,953 @@ lit_markup = {
     "locale": ["UNSUPPORTED: no-localization"],
     "mutex": ["UNSUPPORTED: no-threads"],
     "ostream": ["UNSUPPORTED: no-localization"],
+=======
+        },
+        {
+            "name": "__cpp_lib_bool_constant",
+            "values": {"c++17": 201505},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_bounded_array_traits",
+            "values": {"c++20": 201902},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_boyer_moore_searcher",
+            "values": {"c++17": 201603},
+            "headers": ["functional"],
+        },
+        {
+            "name": "__cpp_lib_byte",
+            "values": {"c++17": 201603},
+            "headers": ["cstddef"],
+        },
+        {
+            "name": "__cpp_lib_byteswap",
+            "values": {"c++23": 202110},
+            "headers": ["bit"],
+        },
+        {
+            "name": "__cpp_lib_char8_t",
+            "values": {"c++20": 201907},
+            "headers": [
+                "atomic",
+                "filesystem",
+                "istream",
+                "limits",
+                "locale",
+                "ostream",
+                "string",
+                "string_view",
+            ],
+            "test_suite_guard": "defined(__cpp_char8_t)",
+            "libcxx_guard": "!defined(_LIBCPP_HAS_NO_CHAR8_T)",
+        },
+        {
+            "name": "__cpp_lib_chrono",
+            "values": {
+                          "c++17": 201611,
+                          #"c++26": 202306, # P2592R3 Hashing support for std::chrono value classes
+                      },
+            "headers": ["chrono"],
+        },
+        {
+            "name": "__cpp_lib_chrono_udls",
+            "values": {"c++14": 201304},
+            "headers": ["chrono"],
+        },
+        {
+            "name": "__cpp_lib_clamp",
+            "values": {"c++17": 201603},
+            "headers": ["algorithm"],
+        },
+        {
+            "name": "__cpp_lib_complex_udls",
+            "values": {"c++14": 201309},
+            "headers": ["complex"],
+        },
+        {
+            "name": "__cpp_lib_concepts",
+            "values": {"c++20": 202002},
+            "headers": ["concepts"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_algorithms",
+            "values": {
+                          "c++20": 201806,
+                          #"c++26": 202306, # P2562R1 constexpr Stable Sorting
+                      },
+            "headers": ["algorithm", "utility"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_bitset",
+            "values": {"c++23": 202207},
+            "headers": ["bitset"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_charconv",
+            "values": {"c++23": 202207},
+            "headers": ["charconv"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_cmath",
+            "values": {"c++23": 202202},
+            "headers": ["cmath", "cstdlib"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_constexpr_complex",
+            "values": {"c++20": 201711},
+            "headers": ["complex"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_dynamic_alloc",
+            "values": {"c++20": 201907},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_functional",
+            "values": {"c++20": 201907},
+            "headers": ["functional"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_iterator",
+            "values": {"c++20": 201811},
+            "headers": ["iterator"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_memory",
+            "values": {"c++20": 201811, "c++23": 202202},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_numeric",
+            "values": {"c++20": 201911},
+            "headers": ["numeric"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_string",
+            "values": {"c++20": 201907},
+            "headers": ["string"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_string_view",
+            "values": {"c++20": 201811},
+            "headers": ["string_view"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_tuple",
+            "values": {"c++20": 201811},
+            "headers": ["tuple"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_typeinfo",
+            "values": {"c++23": 202106},
+            "headers": ["typeinfo"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_utility",
+            "values": {"c++20": 201811},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_constexpr_vector",
+            "values": {"c++20": 201907},
+            "headers": ["vector"],
+        },
+        {
+            "name": "__cpp_lib_copyable_function",
+            "values": {"c++26": 202306}, # P2548R6 copyable_function
+            "headers": ["functional"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_coroutine",
+            "values": {"c++20": 201902},
+            "headers": ["coroutine"],
+        },
+        {
+            "name": "__cpp_lib_destroying_delete",
+            "values": {"c++20": 201806},
+            "headers": ["new"],
+            "test_suite_guard": "TEST_STD_VER > 17 && defined(__cpp_impl_destroying_delete) && __cpp_impl_destroying_delete >= 201806L",
+            "libcxx_guard": "_LIBCPP_STD_VER >= 20 && defined(__cpp_impl_destroying_delete) && __cpp_impl_destroying_delete >= 201806L",
+        },
+        {
+            "name": "__cpp_lib_enable_shared_from_this",
+            "values": {"c++17": 201603},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_endian",
+            "values": {"c++20": 201907},
+            "headers": ["bit"],
+        },
+        {
+            "name": "__cpp_lib_erase_if",
+            "values": {"c++20": 202002},
+            "headers": [
+                "deque",
+                "forward_list",
+                "list",
+                "map",
+                "set",
+                "string",
+                "unordered_map",
+                "unordered_set",
+                "vector",
+            ],
+        },
+        {
+            "name": "__cpp_lib_exchange_function",
+            "values": {"c++14": 201304},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_execution",
+            "values": {"c++17": 201603, "c++20": 201902},
+            "headers": ["execution"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_expected",
+            "values": {"c++23": 202211},
+            "headers": ["expected"],
+        },
+        {
+            "name": "__cpp_lib_filesystem",
+            "values": {"c++17": 201703},
+            "headers": ["filesystem"],
+            "test_suite_guard": "!defined(_LIBCPP_AVAILABILITY_HAS_NO_FILESYSTEM_LIBRARY)",
+            "libcxx_guard": "!defined(_LIBCPP_AVAILABILITY_HAS_NO_FILESYSTEM_LIBRARY)",
+        },
+        {
+            "name": "__cpp_lib_format",
+            "values": {
+                # "c++20": 201907 Not implemented P1361R2 Integration of chrono with text formatting
+                # "c++20": 202106 Fully implemented
+                # "c++20": 202110 Not implemented P2372R3 Fixing locale handling in chrono formatters
+                "c++20": 202106,
+                # "c++23": 202207, Not implemented P2419R2 Clarify handling of encodings in localized formatting of chrono types
+            },
+            # Note these three papers are adopted at the June 2023 meeting and have sequential numbering
+            # 202304 P2510R3 Formatting pointers (Implemented)
+            # 202305 P2757R3 Type-checking format args
+            # 202306 P2637R3 Member Visit
+            "headers": ["format"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_format_ranges",
+            "values": {"c++23": 202207},
+            "headers": ["format"],
+        },
+        {
+            "name": "__cpp_lib_formatters",
+            "values": {"c++23": 202302},
+            "headers": ["stacktrace", "thread"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_forward_like",
+            "values": {"c++23": 202207},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_fstream_native_handle",
+            "values": {"c++26": 202306}, # P1759R6 Native handles and file streams
+            "headers": ["fstream"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_function_ref",
+            "values": {"c++26": 202306}, # P0792R14 function_ref: a type-erased callable reference
+            "headers": ["functional"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_gcd_lcm",
+            "values": {"c++17": 201606},
+            "headers": ["numeric"],
+        },
+        {
+            "name": "__cpp_lib_generic_associative_lookup",
+            "values": {"c++14": 201304},
+            "headers": ["map", "set"],
+        },
+        {
+            "name": "__cpp_lib_generic_unordered_lookup",
+            "values": {"c++20": 201811},
+            "headers": ["unordered_map", "unordered_set"],
+        },
+        {
+            "name": "__cpp_lib_hardware_interference_size",
+            "values": {"c++17": 201703},
+            "test_suite_guard": "defined(__GCC_DESTRUCTIVE_SIZE) && defined(__GCC_CONSTRUCTIVE_SIZE)",
+            "libcxx_guard": "defined(__GCC_DESTRUCTIVE_SIZE) && defined(__GCC_CONSTRUCTIVE_SIZE)",
+            "headers": ["new"],
+        },
+        {
+            "name": "__cpp_lib_has_unique_object_representations",
+            "values": {"c++17": 201606},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_hazard_pointer",
+            "values": {"c++26": 202306},  # P2530R3 Hazard Pointers for C++26
+            "headers": ["hazard_pointer"],# TODO verify this entry since the paper was underspecified.
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_hypot",
+            "values": {"c++17": 201603},
+            "headers": ["cmath"],
+        },
+        {
+            "name": "__cpp_lib_incomplete_container_elements",
+            "values": {"c++17": 201505},
+            "headers": ["forward_list", "list", "vector"],
+        },
+        {
+            "name": "__cpp_lib_int_pow2",
+            "values": {"c++20": 202002},
+            "headers": ["bit"],
+        },
+        {
+            "name": "__cpp_lib_integer_comparison_functions",
+            "values": {"c++20": 202002},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_integer_sequence",
+            "values": {"c++14": 201304},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_integral_constant_callable",
+            "values": {"c++14": 201304},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_interpolate",
+            "values": {"c++20": 201902},
+            "headers": ["cmath", "numeric"],
+        },
+        {
+            "name": "__cpp_lib_invoke",
+            "values": {"c++17": 201411},
+            "headers": ["functional"],
+        },
+        {
+            "name": "__cpp_lib_invoke_r",
+            "values": {"c++23": 202106},
+            "headers": ["functional"],
+        },
+        {
+            "name": "__cpp_lib_is_aggregate",
+            "values": {"c++17": 201703},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_constant_evaluated",
+            "values": {"c++20": 201811},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_final",
+            "values": {"c++14": 201402},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_invocable",
+            "values": {"c++17": 201703},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_layout_compatible",
+            "values": {"c++20": 201907},
+            "headers": ["type_traits"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_is_nothrow_convertible",
+            "values": {"c++20": 201806},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_null_pointer",
+            "values": {"c++14": 201309},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_pointer_interconvertible",
+            "values": {"c++20": 201907},
+            "headers": ["type_traits"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_is_scoped_enum",
+            "values": {"c++23": 202011},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_is_swappable",
+            "values": {"c++17": 201603},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_jthread",
+            "values": {"c++20": 201911},
+            "headers": ["stop_token", "thread"],
+            "test_suite_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)",
+            "libcxx_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_HAS_NO_EXPERIMENTAL_STOP_TOKEN) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)",
+        },
+        {
+            "name": "__cpp_lib_latch",
+            "values": {"c++20": 201907},
+            "headers": ["latch"],
+            "test_suite_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)",
+            "libcxx_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)",
+        },
+        {
+            "name": "__cpp_lib_launder",
+            "values": {"c++17": 201606},
+            "headers": ["new"],
+        },
+        {
+            "name": "__cpp_lib_list_remove_return_type",
+            "values": {"c++20": 201806},
+            "headers": ["forward_list", "list"],
+        },
+        {
+            "name": "__cpp_lib_logical_traits",
+            "values": {"c++17": 201510},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_make_from_tuple",
+            "values": {"c++17": 201606},
+            "headers": ["tuple"],
+        },
+        {
+            "name": "__cpp_lib_make_reverse_iterator",
+            "values": {"c++14": 201402},
+            "headers": ["iterator"],
+        },
+        {
+            "name": "__cpp_lib_make_unique",
+            "values": {"c++14": 201304},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_map_try_emplace",
+            "values": {"c++17": 201411},
+            "headers": ["map"],
+        },
+        {
+            "name": "__cpp_lib_math_constants",
+            "values": {"c++20": 201907},
+            "headers": ["numbers"],
+        },
+        {
+            "name": "__cpp_lib_math_special_functions",
+            "values": {"c++17": 201603},
+            "headers": ["cmath"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_mdspan",
+            "values": {"c++23": 202207},
+            "headers": ["mdspan"],
+        },
+        {
+            "name": "__cpp_lib_memory_resource",
+            "values": {"c++17": 201603},
+            "headers": ["memory_resource"],
+            "test_suite_guard": "!defined(_LIBCPP_AVAILABILITY_HAS_NO_PMR)",
+            "libcxx_guard": "!defined(_LIBCPP_AVAILABILITY_HAS_NO_PMR)",
+        },
+        {
+            "name": "__cpp_lib_move_iterator_concept",
+            "values": {"c++20": 202207},
+            "headers": ["iterator"],
+        },
+        {
+            "name": "__cpp_lib_move_only_function",
+            "values": {"c++23": 202110},
+            "headers": ["functional"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_node_extract",
+            "values": {"c++17": 201606},
+            "headers": ["map", "set", "unordered_map", "unordered_set"],
+        },
+        {
+            "name": "__cpp_lib_nonmember_container_access",
+            "values": {"c++17": 201411},
+            "headers": [
+                "array",
+                "deque",
+                "forward_list",
+                "iterator",
+                "list",
+                "map",
+                "regex",
+                "set",
+                "string",
+                "unordered_map",
+                "unordered_set",
+                "vector",
+            ],
+        },
+        {
+            "name": "__cpp_lib_not_fn",
+            "values": {
+                          "c++17": 201603,
+                          #"c++26": 202306, # P2714R1 Bind front and back to NTTP callables
+                      },
+            "headers": ["functional"],
+        },
+        {
+            "name": "__cpp_lib_null_iterators",
+            "values": {"c++14": 201304},
+            "headers": ["iterator"],
+        },
+        {
+            "name": "__cpp_lib_optional",
+            "values": {"c++17": 201606, "c++23": 202110},
+            "headers": ["optional"],
+        },
+        {
+            "name": "__cpp_lib_out_ptr",
+            "values": {"c++23": 202106},
+            "headers": ["memory"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_parallel_algorithm",
+            "values": {"c++17": 201603},
+            "headers": ["algorithm", "numeric"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_polymorphic_allocator",
+            "values": {"c++20": 201902},
+            "headers": ["memory_resource"],
+            "test_suite_guard": "!defined(_LIBCPP_AVAILABILITY_HAS_NO_PMR)",
+            "libcxx_guard": "!defined(_LIBCPP_AVAILABILITY_HAS_NO_PMR)",
+        },
+        {
+            "name": "__cpp_lib_print",
+            "values": {"c++23": 202207},
+            "headers": ["ostream", "print"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_quoted_string_io",
+            "values": {"c++14": 201304},
+            "headers": ["iomanip"],
+        },
+        {
+            "name": "__cpp_lib_ranges",
+            "values": {"c++20": 202207},
+            "headers": ["algorithm", "functional", "iterator", "memory", "ranges"],
+        },
+        {
+            "name": "__cpp_lib_ranges_as_rvalue",
+            "values": {"c++23": 202207},
+            "headers": ["ranges"],
+        },
+        {
+            "name": "__cpp_lib_ranges_chunk",
+            "values": {"c++23": 202202},
+            "headers": ["ranges"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ranges_chunk_by",
+            "values": {"c++23": 202202},
+            "headers": ["ranges"],
+        },
+        {
+            "name": "__cpp_lib_ranges_iota",
+            "values": {"c++23": 202202},
+            "headers": ["numeric"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ranges_join_with",
+            "values": {"c++23": 202202},
+            "headers": ["ranges"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ranges_repeat",
+            "values": { "c++23": 202207},
+            "headers": ["ranges"],
+        },
+        {
+            "name": "__cpp_lib_ranges_slide",
+            "values": {"c++23": 202202},
+            "headers": ["ranges"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ranges_starts_ends_with",
+            "values": {"c++23": 202106},
+            "headers": ["algorithm"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ranges_to_container",
+            "values": {"c++23": 202202},
+            "headers": [
+                "deque",
+                "forward_list",
+                "list",
+                "map",
+                "queue",
+                "ranges",
+                "set",
+                "stack",
+                "string",
+                "unordered_map",
+                "unordered_set",
+                "vector",
+            ],
+        },
+        {
+            "name": "__cpp_lib_ranges_zip",
+            "values": {"c++23": 202110},
+            "headers": ["ranges", "tuple", "utility"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ratio",
+            "values": {"c++26": 202306}, # P2734R0 Adding the new SI prefixes
+            "headers": ["ratio"],
+        },
+        {
+            "name": "__cpp_lib_raw_memory_algorithms",
+            "values": {"c++17": 201606},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_rcu",
+            "values": {"c++26": 202306}, # P2545R4 Read-Copy Update (RCU)
+            "headers": ["rcu"],          # TODO verify this entry since the paper was underspecified.
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_reference_from_temporary",
+            "values": {"c++23": 202202},
+            "headers": ["type_traits"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_remove_cvref",
+            "values": {"c++20": 201711},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_result_of_sfinae",
+            "values": {"c++14": 201210},
+            "headers": ["functional", "type_traits"],
+        },
+        {
+            "name": "__cpp_lib_robust_nonmodifying_seq_ops",
+            "values": {"c++14": 201304},
+            "headers": ["algorithm"],
+        },
+        {
+            "name": "__cpp_lib_sample",
+            "values": {"c++17": 201603},
+            "headers": ["algorithm"],
+        },
+        {
+            "name": "__cpp_lib_scoped_lock",
+            "values": {"c++17": 201703},
+            "headers": ["mutex"],
+        },
+        {
+            "name": "__cpp_lib_semaphore",
+            "values": {"c++20": 201907},
+            "headers": ["semaphore"],
+            "test_suite_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)",
+            "libcxx_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SYNC)",
+        },
+        {
+            "name": "__cpp_lib_shared_mutex",
+            "values": {"c++17": 201505},
+            "headers": ["shared_mutex"],
+            "test_suite_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SHARED_MUTEX)",
+            "libcxx_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SHARED_MUTEX)",
+        },
+        {
+            "name": "__cpp_lib_shared_ptr_arrays",
+            "values": {"c++17": 201611, "c++20": 201707},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_shared_ptr_weak_type",
+            "values": {"c++17": 201606},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_shared_timed_mutex",
+            "values": {"c++14": 201402},
+            "headers": ["shared_mutex"],
+            "test_suite_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SHARED_MUTEX)",
+            "libcxx_guard": "!defined(_LIBCPP_HAS_NO_THREADS) && !defined(_LIBCPP_AVAILABILITY_HAS_NO_SHARED_MUTEX)",
+        },
+        {
+            "name": "__cpp_lib_shift",
+            "values": {"c++20": 201806},
+            "headers": ["algorithm"],
+        },
+        {
+            "name": "__cpp_lib_smart_ptr_for_overwrite",
+            "values": {"c++20": 202002},
+            "headers": ["memory"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_smart_ptr_owner_equality",
+            "values": {"c++26": 202306}, # P1901R2 Enabling the Use of weak_ptr as Keys in Unordered Associative Containers
+            "headers": ["memory"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_source_location",
+            "values": {"c++20": 201907},
+            "headers": ["source_location"],
+            "test_suite_guard": "__has_builtin(__builtin_source_location) && !(defined(TEST_APPLE_CLANG_VER) && TEST_APPLE_CLANG_VER <= 1403)",
+            "libcxx_guard": "__has_builtin(__builtin_source_location) && !(defined(_LIBCPP_APPLE_CLANG_VER) && _LIBCPP_APPLE_CLANG_VER <= 1403)",
+        },
+        {
+            "name": "__cpp_lib_span",
+            "values": {"c++20": 202002},
+            "headers": ["span"],
+        },
+        {
+            "name": "__cpp_lib_spanstream",
+            "values": {"c++23": 202106},
+            "headers": ["spanstream"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_ssize",
+            "values": {"c++20": 201902},
+            "headers": ["iterator"],
+        },
+        {
+            "name": "__cpp_lib_sstream_from_string_view",
+            "values": {"c++26": 202306},  # P2495R3 Interfacing stringstreams with string_view
+            "headers": ["sstream"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_stacktrace",
+            "values": {"c++23": 202011},
+            "headers": ["stacktrace"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_starts_ends_with",
+            "values": {"c++20": 201711},
+            "headers": ["string", "string_view"],
+        },
+        {
+            "name": "__cpp_lib_stdatomic_h",
+            "values": {"c++23": 202011},
+            "headers": ["stdatomic.h"],
+        },
+        {
+            "name": "__cpp_lib_string_contains",
+            "values": {"c++23": 202011},
+            "headers": ["string", "string_view"],
+        },
+        {
+            "name": "__cpp_lib_string_resize_and_overwrite",
+            "values": {"c++23": 202110},
+            "headers": ["string"],
+        },
+        {
+            "name": "__cpp_lib_string_udls",
+            "values": {"c++14": 201304},
+            "headers": ["string"],
+        },
+        {
+            "name": "__cpp_lib_string_view",
+            "values": {"c++17": 201606, "c++20": 201803},
+            "headers": ["string", "string_view"],
+        },
+        {
+            "name": "__cpp_lib_submdspan",
+            "values": {"c++26": 202306}, # P2630R4 submdspan
+            "headers": ["mdspan"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_syncbuf",
+            "values": {"c++20": 201803},
+            "headers": ["syncstream"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_text_encoding",
+            "values": {"c++26": 202306}, # P1885R12 Naming Text Encodings to Demystify Them
+            "headers": ["text_encoding"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_three_way_comparison",
+            "values": {"c++20": 201907},
+            "headers": ["compare"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_to_address",
+            "values": {"c++20": 201711},
+            "headers": ["memory"],
+        },
+        {
+            "name": "__cpp_lib_to_array",
+            "values": {"c++20": 201907},
+            "headers": ["array"],
+        },
+        {
+            "name": "__cpp_lib_to_chars",
+            "values": {
+                         "c++17": 201611,
+                         "c++26": 202306, # P2497R0 Testing for success or failure of <charconv> functions
+                      },
+            "headers": ["charconv"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_to_string",
+            "values": {"c++23": 202306}, # P2587R3 to_string or not to_string
+            "headers": ["string"],
+            "unimplemented": True,
+        },
+        {
+            "name": "__cpp_lib_to_underlying",
+            "values": {"c++23": 202102},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_transformation_trait_aliases",
+            "values": {"c++14": 201304},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_transparent_operators",
+            "values": {"c++14": 201210, "c++17": 201510},
+            "headers": ["functional", "memory"],
+        },
+        {
+            "name": "__cpp_lib_tuple_element_t",
+            "values": {"c++14": 201402},
+            "headers": ["tuple"],
+        },
+        {
+            "name": "__cpp_lib_tuples_by_type",
+            "values": {"c++14": 201304},
+            "headers": ["tuple", "utility"],
+        },
+        {
+            "name": "__cpp_lib_type_identity",
+            "values": {"c++20": 201806},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_type_trait_variable_templates",
+            "values": {"c++17": 201510},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_uncaught_exceptions",
+            "values": {"c++17": 201411},
+            "headers": ["exception"],
+        },
+        {
+            "name": "__cpp_lib_unordered_map_try_emplace",
+            "values": {"c++17": 201411},
+            "headers": ["unordered_map"],
+        },
+        {
+            "name": "__cpp_lib_unreachable",
+            "values": {"c++23": 202202},
+            "headers": ["utility"],
+        },
+        {
+            "name": "__cpp_lib_unwrap_ref",
+            "values": {"c++20": 201811},
+            "headers": ["functional"],
+        },
+        {
+            "name": "__cpp_lib_variant",
+            "values": {"c++17": 202102},
+            "headers": ["variant"],
+        },
+        {
+            "name": "__cpp_lib_void_t",
+            "values": {"c++17": 201411},
+            "headers": ["type_traits"],
+        },
+        {
+            "name": "__cpp_lib_within_lifetime",
+            "values": {"c++26": 202306}, # P2641R4 Checking if a union alternative is active
+            "headers": ["type_traits"],
+            "unimplemented": True,
+        },
+    ]
+]
+
+assert feature_test_macros == sorted(feature_test_macros, key=lambda tc: tc["name"])
+assert all(tc["headers"] == sorted(tc["headers"]) for tc in feature_test_macros)
+assert all(
+    ("libcxx_guard" in tc) == ("test_suite_guard" in tc) for tc in feature_test_macros
+)
+assert all(
+    all(
+        key
+        in [
+            "name",
+            "values",
+            "headers",
+            "libcxx_guard",
+            "test_suite_guard",
+            "unimplemented",
+        ]
+        for key in tc.keys()
+    )
+    for tc in feature_test_macros
+)
+
+# Map from each header to the Lit annotations that should be used for
+# tests that include that header.
+#
+# For example, when threads are not supported, any test that includes
+# <thread> should be marked as UNSUPPORTED, because including <thread>
+# is a hard error in that case.
+lit_markup = {
+    "barrier": ["UNSUPPORTED: no-threads"],
+    "filesystem": ["UNSUPPORTED: no-filesystem"],
+    "fstream": ["UNSUPPORTED: no-localization"],
+    "iomanip": ["UNSUPPORTED: no-localization"],
+    "ios": ["UNSUPPORTED: no-localization"],
+    "iostream": ["UNSUPPORTED: no-localization"],
+    "istream": ["UNSUPPORTED: no-localization"],
+    "latch": ["UNSUPPORTED: no-threads"],
+    "locale": ["UNSUPPORTED: no-localization"],
+    "mutex": ["UNSUPPORTED: no-threads"],
+    "ostream": ["UNSUPPORTED: no-localization"],
+    "print": ["UNSUPPORTED: no-filesystem"],
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     "regex": ["UNSUPPORTED: no-localization"],
     "semaphore": ["UNSUPPORTED: no-threads"],
     "shared_mutex": ["UNSUPPORTED: no-threads"],

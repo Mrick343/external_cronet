@@ -8,6 +8,7 @@
 
 // UNSUPPORTED: c++03, c++11
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
 
 // Check that __constexpr_* cstring functions are actually constexpr
@@ -26,6 +27,23 @@ static_assert(std::__constexpr_memcmp(Banane, Bananf, std::__element_count(6)) =
 static_assert(!std::__constexpr_memcmp_equal(Banane, Banand, std::__element_count(6)), "");
 static_assert(std::__constexpr_memcmp_equal(Banane, Banane, std::__element_count(6)), "");
 
+=======
+// Check that __constexpr_* cstring functions are actually constexpr
+
+#include <__string/constexpr_c_functions.h>
+
+constexpr unsigned char Banand[] = "Banand";
+constexpr unsigned char Banane[] = "Banane";
+constexpr unsigned char Bananf[] = "Bananf";
+
+static_assert(std::__constexpr_strlen("Banane") == 6, "");
+static_assert(std::__constexpr_memcmp(Banane, Banand, std::__element_count(6)) == 1, "");
+static_assert(std::__constexpr_memcmp(Banane, Banane, std::__element_count(6)) == 0, "");
+static_assert(std::__constexpr_memcmp(Banane, Bananf, std::__element_count(6)) == -1, "");
+
+static_assert(!std::__constexpr_memcmp_equal(Banane, Banand, std::__element_count(6)), "");
+static_assert(std::__constexpr_memcmp_equal(Banane, Banane, std::__element_count(6)), "");
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 constexpr bool test_constexpr_wmemchr() {
   const char str[] = "Banane";

@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <exception>
 #include <limits>
 #include <string_view>
@@ -50,6 +51,34 @@ class OutputBuffer {
       Buffer = static_cast<char *>(std::realloc(Buffer, BufferCapacity));
       if (Buffer == nullptr)
         std::terminate();
+=======
+#include <limits>
+#include <string_view>
+
+DEMANGLE_NAMESPACE_BEGIN
+
+// Stream that AST nodes write their string representation into after the AST
+// has been parsed.
+class OutputBuffer {
+  char *Buffer = nullptr;
+  size_t CurrentPosition = 0;
+  size_t BufferCapacity = 0;
+
+  // Ensure there are at least N more positions in the buffer.
+  void grow(size_t N) {
+    size_t Need = N + CurrentPosition;
+    if (Need > BufferCapacity) {
+      // Reduce the number of reallocations, with a bit of hysteresis. The
+      // number here is chosen so the first allocation will more-than-likely not
+      // allocate more than 1K.
+      Need += 1024 - 32;
+      BufferCapacity *= 2;
+      if (BufferCapacity < Need)
+        BufferCapacity = Need;
+      Buffer = static_cast<char *>(std::realloc(Buffer, BufferCapacity));
+      if (Buffer == nullptr)
+        std::abort();
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     }
   }
 

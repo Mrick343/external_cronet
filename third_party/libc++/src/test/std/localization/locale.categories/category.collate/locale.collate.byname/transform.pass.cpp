@@ -9,6 +9,12 @@
 // NetBSD does not support LC_COLLATE at the moment
 // XFAIL: netbsd
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // <locale>
 
 // template <class charT> class collate_byname

@@ -74,7 +74,11 @@ union ResourceInitHelper {
     __null_memory_resource_imp       null_res;
   } resources;
   char dummy;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   _LIBCPP_CONSTEXPR_SINCE_CXX14 ResourceInitHelper() : resources() {}
+=======
+  constexpr ResourceInitHelper() : resources() {}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   ~ResourceInitHelper() {}
 };
 

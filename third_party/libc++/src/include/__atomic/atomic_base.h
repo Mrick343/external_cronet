@@ -39,7 +39,11 @@ struct __atomic_base  // false
 
     _LIBCPP_HIDE_FROM_ABI
     bool is_lock_free() const volatile _NOEXCEPT
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
         {return __cxx_atomic_is_lock_free(sizeof(_Tp));}
+=======
+        {return __cxx_atomic_is_lock_free(sizeof(__cxx_atomic_impl<_Tp>));}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     _LIBCPP_HIDE_FROM_ABI
     bool is_lock_free() const _NOEXCEPT
         {return static_cast<__atomic_base const volatile*>(this)->is_lock_free();}

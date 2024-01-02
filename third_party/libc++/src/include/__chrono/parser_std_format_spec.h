@@ -166,6 +166,7 @@ private:
         "undefined behavior by evaluating data not in the input");
 
     if (*__begin != _CharT('%') && *__begin != _CharT('}'))
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
       std::__throw_format_error("Expected '%' or '}' in the chrono format-string");
 
     do {
@@ -197,6 +198,39 @@ private:
     ++__begin;
     if (__begin == __end)
       std::__throw_format_error("End of input while parsing the modifier chrono conversion-spec");
+=======
+      std::__throw_format_error("The format specifier expects a '%' or a '}'");
+
+    do {
+      switch (*__begin) {
+      case _CharT('{'):
+        std::__throw_format_error("The chrono specifiers contain a '{'");
+
+      case _CharT('}'):
+        return __begin;
+
+      case _CharT('%'):
+        __parse_conversion_spec(__begin, __end, __flags);
+        [[fallthrough]];
+
+      default:
+        // All other literals
+        ++__begin;
+      }
+
+    } while (__begin != __end && *__begin != _CharT('}'));
+
+    return __begin;
+  }
+
+  /// \pre *__begin == '%'
+  /// \post __begin points at the end parsed conversion-spec
+  _LIBCPP_HIDE_FROM_ABI constexpr void
+  __parse_conversion_spec(_ConstIterator& __begin, _ConstIterator __end, __flags __flags) {
+    ++__begin;
+    if (__begin == __end)
+      std::__throw_format_error("End of input while parsing a conversion specifier");
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
     switch (*__begin) {
     case _CharT('n'):

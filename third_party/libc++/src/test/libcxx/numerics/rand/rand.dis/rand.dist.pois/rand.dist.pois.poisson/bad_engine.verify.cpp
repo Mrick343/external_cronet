@@ -26,6 +26,10 @@ void test(std::poisson_distribution<int> dist)
   G<int> badg;
   G<unsigned> okg;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   dist(badg); //expected-error-re@*:* 4 {{{{(static_assert|static assertion)}} failed}} //expected-note {{in instantiation}}
+=======
+  dist(badg); //expected-error@*:* 4 {{static assertion failed}} //expected-note {{in instantiation}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   dist(okg);
 }

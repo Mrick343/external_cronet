@@ -3,5 +3,12 @@
 include_rules = [
   # This project has always depended on //base, but we are trying to break this
   # dependency. See crbug.com/1377351.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   '+base'
+=======
+  '+base',
+  # This project is a Chromium build project and may always require //build for
+  # its GN rules.
+  '+build',
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 ]

@@ -19,6 +19,7 @@
 #include "test_macros.h"
 
 #ifndef TEST_HAS_NO_CHAR8_T
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 constexpr bool test_constexpr()
 {
     return std::char_traits<char8_t>::length(u8"") == 0
@@ -40,4 +41,22 @@ int main(int, char**)
 int main(int, char**) {
   return 0;
 }
+=======
+constexpr bool test_constexpr() {
+  return std::char_traits<char8_t>::length(u8"") == 0 && std::char_traits<char8_t>::length(u8"abcd") == 4;
+}
+
+int main(int, char**) {
+  assert(std::char_traits<char8_t>::length(u8"") == 0);
+  assert(std::char_traits<char8_t>::length(u8"a") == 1);
+  assert(std::char_traits<char8_t>::length(u8"aa") == 2);
+  assert(std::char_traits<char8_t>::length(u8"aaa") == 3);
+  assert(std::char_traits<char8_t>::length(u8"aaaa") == 4);
+
+  static_assert(test_constexpr(), "");
+  return 0;
+}
+#else
+int main(int, char**) { return 0; }
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif

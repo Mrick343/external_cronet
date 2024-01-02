@@ -17,6 +17,11 @@
 #include <string_view>
 
 void f() {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     std::string_view c;
     c.empty();  // expected-warning {{ignoring return value of function declared with 'nodiscard' attribute}}
+=======
+  std::string_view c;
+  c.empty(); // expected-warning {{ignoring return value of function declared with 'nodiscard' attribute}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

@@ -196,6 +196,7 @@ struct __fn {
   operator()(_InputIterator __ifirst, _Sentinel1 __ilast, _OutputIterator __ofirst, _Sentinel2 __olast) const {
     using _ValueType = remove_reference_t<iter_reference_t<_OutputIterator>>;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     auto __result = _VSTD::__uninitialized_copy<_ValueType>(_VSTD::move(__ifirst), _VSTD::move(__ilast),
                                                             _VSTD::move(__ofirst), _VSTD::move(__olast));
     return {_VSTD::move(__result.first), _VSTD::move(__result.second)};
@@ -300,6 +301,116 @@ struct __fn {
     auto __iter_move = [](auto&& __iter) -> decltype(auto) { return ranges::iter_move(__iter); };
     auto __result = _VSTD::__uninitialized_move_n<_ValueType>(_VSTD::move(__ifirst), __n,
                                                               _VSTD::move(__ofirst), _VSTD::move(__olast), __iter_move);
+=======
+    auto __stop_copying = [&__olast](auto&& __out_iter) { return __out_iter == __olast; };
+    auto __result       = std::__uninitialized_copy<_ValueType>(
+        std::move(__ifirst), std::move(__ilast), std::move(__ofirst), __stop_copying);
+    return {_VSTD::move(__result.first), _VSTD::move(__result.second)};
+  }
+
+  template <input_range _InputRange, __nothrow_forward_range _OutputRange>
+    requires constructible_from<range_value_t<_OutputRange>, range_reference_t<_InputRange>>
+  _LIBCPP_HIDE_FROM_ABI uninitialized_copy_result<borrowed_iterator_t<_InputRange>, borrowed_iterator_t<_OutputRange>>
+  operator()( _InputRange&& __in_range, _OutputRange&& __out_range) const {
+    return (*this)(ranges::begin(__in_range), ranges::end(__in_range),
+                   ranges::begin(__out_range), ranges::end(__out_range));
+  }
+};
+
+} // namespace __uninitialized_copy
+
+inline namespace __cpo {
+  inline constexpr auto uninitialized_copy = __uninitialized_copy::__fn{};
+} // namespace __cpo
+
+// uninitialized_copy_n
+
+template <class _InputIterator, class _OutputIterator>
+using uninitialized_copy_n_result = in_out_result<_InputIterator, _OutputIterator>;
+
+namespace __uninitialized_copy_n {
+
+struct __fn {
+  template <input_iterator _InputIterator,
+           __nothrow_forward_iterator _OutputIterator,
+           __nothrow_sentinel_for<_OutputIterator> _Sentinel>
+    requires constructible_from<iter_value_t<_OutputIterator>, iter_reference_t<_InputIterator>>
+  _LIBCPP_HIDE_FROM_ABI uninitialized_copy_n_result<_InputIterator, _OutputIterator>
+  operator()(_InputIterator __ifirst, iter_difference_t<_InputIterator> __n,
+             _OutputIterator __ofirst, _Sentinel __olast) const {
+    using _ValueType = remove_reference_t<iter_reference_t<_OutputIterator>>;
+    auto __stop_copying = [&__olast](auto&& __out_iter) { return __out_iter == __olast; };
+    auto __result =
+        std::__uninitialized_copy_n<_ValueType>(std::move(__ifirst), __n, std::move(__ofirst), __stop_copying);
+    return {_VSTD::move(__result.first), _VSTD::move(__result.second)};
+  }
+};
+
+} // namespace __uninitialized_copy_n
+
+inline namespace __cpo {
+  inline constexpr auto uninitialized_copy_n = __uninitialized_copy_n::__fn{};
+} // namespace __cpo
+
+// uninitialized_move
+
+template <class _InputIterator, class _OutputIterator>
+using uninitialized_move_result = in_out_result<_InputIterator, _OutputIterator>;
+
+namespace __uninitialized_move {
+
+struct __fn {
+  template <input_iterator _InputIterator,
+            sentinel_for<_InputIterator> _Sentinel1,
+            __nothrow_forward_iterator _OutputIterator,
+            __nothrow_sentinel_for<_OutputIterator> _Sentinel2>
+    requires constructible_from<iter_value_t<_OutputIterator>, iter_rvalue_reference_t<_InputIterator>>
+  _LIBCPP_HIDE_FROM_ABI uninitialized_move_result<_InputIterator, _OutputIterator>
+  operator()(_InputIterator __ifirst, _Sentinel1 __ilast, _OutputIterator __ofirst, _Sentinel2 __olast) const {
+    using _ValueType = remove_reference_t<iter_reference_t<_OutputIterator>>;
+    auto __iter_move = [](auto&& __iter) -> decltype(auto) { return ranges::iter_move(__iter); };
+    auto __stop_moving = [&__olast](auto&& __out_iter) { return __out_iter == __olast; };
+    auto __result      = std::__uninitialized_move<_ValueType>(
+        std::move(__ifirst), std::move(__ilast), std::move(__ofirst), __stop_moving, __iter_move);
+    return {_VSTD::move(__result.first), _VSTD::move(__result.second)};
+  }
+
+  template <input_range _InputRange, __nothrow_forward_range _OutputRange>
+    requires constructible_from<range_value_t<_OutputRange>, range_rvalue_reference_t<_InputRange>>
+  _LIBCPP_HIDE_FROM_ABI uninitialized_move_result<borrowed_iterator_t<_InputRange>, borrowed_iterator_t<_OutputRange>>
+  operator()(_InputRange&& __in_range, _OutputRange&& __out_range) const {
+    return (*this)(ranges::begin(__in_range), ranges::end(__in_range),
+                   ranges::begin(__out_range), ranges::end(__out_range));
+  }
+};
+
+} // namespace __uninitialized_move
+
+inline namespace __cpo {
+  inline constexpr auto uninitialized_move = __uninitialized_move::__fn{};
+} // namespace __cpo
+
+// uninitialized_move_n
+
+template <class _InputIterator, class _OutputIterator>
+using uninitialized_move_n_result = in_out_result<_InputIterator, _OutputIterator>;
+
+namespace __uninitialized_move_n {
+
+struct __fn {
+  template <input_iterator _InputIterator,
+           __nothrow_forward_iterator _OutputIterator,
+           __nothrow_sentinel_for<_OutputIterator> _Sentinel>
+    requires constructible_from<iter_value_t<_OutputIterator>, iter_rvalue_reference_t<_InputIterator>>
+  _LIBCPP_HIDE_FROM_ABI uninitialized_move_n_result<_InputIterator, _OutputIterator>
+  operator()(_InputIterator __ifirst, iter_difference_t<_InputIterator> __n,
+             _OutputIterator __ofirst, _Sentinel __olast) const {
+    using _ValueType = remove_reference_t<iter_reference_t<_OutputIterator>>;
+    auto __iter_move = [](auto&& __iter) -> decltype(auto) { return ranges::iter_move(__iter); };
+    auto __stop_moving = [&__olast](auto&& __out_iter) { return __out_iter == __olast; };
+    auto __result      = std::__uninitialized_move_n<_ValueType>(
+        std::move(__ifirst), __n, std::move(__ofirst), __stop_moving, __iter_move);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     return {_VSTD::move(__result.first), _VSTD::move(__result.second)};
   }
 };

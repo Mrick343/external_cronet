@@ -18,6 +18,7 @@
 #  pragma GCC system_header
 #endif
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _InputIterator, class _OutputIterator>
@@ -66,5 +67,60 @@ partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __res
 }
 
 _LIBCPP_END_NAMESPACE_STD
+=======
+_LIBCPP_PUSH_MACROS
+#include <__undef_macros>
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+template <class _InputIterator, class _OutputIterator>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_OutputIterator
+partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __result)
+{
+    if (__first != __last)
+    {
+        typename iterator_traits<_InputIterator>::value_type __t(*__first);
+        *__result = __t;
+        for (++__first, (void) ++__result; __first != __last; ++__first, (void) ++__result)
+        {
+#if _LIBCPP_STD_VER >= 20
+            __t = _VSTD::move(__t) + *__first;
+#else
+            __t = __t + *__first;
+#endif
+            *__result = __t;
+        }
+    }
+    return __result;
+}
+
+template <class _InputIterator, class _OutputIterator, class _BinaryOperation>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+_OutputIterator
+partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __result,
+              _BinaryOperation __binary_op)
+{
+    if (__first != __last)
+    {
+        typename iterator_traits<_InputIterator>::value_type __t(*__first);
+        *__result = __t;
+        for (++__first, (void) ++__result; __first != __last; ++__first, (void) ++__result)
+        {
+#if _LIBCPP_STD_VER >= 20
+            __t = __binary_op(_VSTD::move(__t), *__first);
+#else
+            __t = __binary_op(__t, *__first);
+#endif
+            *__result = __t;
+        }
+    }
+    return __result;
+}
+
+_LIBCPP_END_NAMESPACE_STD
+
+_LIBCPP_POP_MACROS
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #endif // _LIBCPP___NUMERIC_PARTIAL_SUM_H

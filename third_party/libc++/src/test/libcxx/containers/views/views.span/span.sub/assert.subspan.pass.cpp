@@ -22,8 +22,13 @@
 // Make sure that creating a sub-span with an incorrect number of elements triggers an assertion.
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
+=======
+// UNSUPPORTED: libcpp-hardening-mode=unchecked
+// XFAIL: availability-verbose_abort-missing
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include <array>
 #include <span>

@@ -76,8 +76,13 @@ static void BM_DeallocateOnly(benchmark::State& st) {
     p = AllocWrapper::Allocate(alloc_size);
   }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   void** Data      = Pointers.data();
   void** const End = Pointers.data() + Pointers.size();
+=======
+  void** Data                       = Pointers.data();
+  [[maybe_unused]] void** const End = Pointers.data() + Pointers.size();
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   while (st.KeepRunning()) {
     AllocWrapper::Deallocate(*Data, alloc_size);
     Data += 1;

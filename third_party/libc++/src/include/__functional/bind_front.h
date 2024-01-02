@@ -42,6 +42,7 @@ struct __bind_front_t : __perfect_forward<__bind_front_op, _Fn, _BoundArgs...> {
     using __perfect_forward<__bind_front_op, _Fn, _BoundArgs...>::__perfect_forward;
 };
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <class _Fn, class... _Args, class = enable_if_t<
     _And<
         is_constructible<decay_t<_Fn>, _Fn>,
@@ -50,6 +51,11 @@ template <class _Fn, class... _Args, class = enable_if_t<
         is_move_constructible<decay_t<_Args>>...
     >::value
 >>
+=======
+template <class _Fn, class... _Args>
+  requires is_constructible_v<decay_t<_Fn>, _Fn> && is_move_constructible_v<decay_t<_Fn>> &&
+           (is_constructible_v<decay_t<_Args>, _Args> && ...) && (is_move_constructible_v<decay_t<_Args>> && ...)
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 _LIBCPP_HIDE_FROM_ABI
 constexpr auto bind_front(_Fn&& __f, _Args&&... __args) {
     return __bind_front_t<decay_t<_Fn>, decay_t<_Args>...>(_VSTD::forward<_Fn>(__f), _VSTD::forward<_Args>(__args)...);

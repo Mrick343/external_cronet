@@ -44,6 +44,7 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // This is a simplified version of C++20 `unreachable_sentinel` that doesn't use concepts and thus can be used in any
 // language mode.
 struct __unreachable_sentinel {
@@ -363,6 +364,334 @@ uninitialized_move_n(_InputIterator __ifirst, _Size __n, _ForwardIterator __ofir
 
   return _VSTD::__uninitialized_move_n<_ValueType>(_VSTD::move(__ifirst), __n, _VSTD::move(__ofirst),
                                                    __unreachable_sentinel(), __iter_move);
+=======
+struct __always_false {
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR bool operator()(_Args&&...) const _NOEXCEPT {
+    return false;
+  }
+};
+
+// uninitialized_copy
+
+template <class _ValueType, class _InputIterator, class _Sentinel1, class _ForwardIterator, class _EndPredicate>
+inline _LIBCPP_HIDE_FROM_ABI pair<_InputIterator, _ForwardIterator> __uninitialized_copy(
+    _InputIterator __ifirst, _Sentinel1 __ilast, _ForwardIterator __ofirst, _EndPredicate __stop_copying) {
+  _ForwardIterator __idx = __ofirst;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  try {
+#endif
+    for (; __ifirst != __ilast && !__stop_copying(__idx); ++__ifirst, (void)++__idx)
+      ::new (_VSTD::__voidify(*__idx)) _ValueType(*__ifirst);
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  } catch (...) {
+    _VSTD::__destroy(__ofirst, __idx);
+    throw;
+  }
+#endif
+
+  return pair<_InputIterator, _ForwardIterator>(_VSTD::move(__ifirst), _VSTD::move(__idx));
+}
+
+template <class _InputIterator, class _ForwardIterator>
+_LIBCPP_HIDE_FROM_ABI
+_ForwardIterator uninitialized_copy(_InputIterator __ifirst, _InputIterator __ilast,
+                                    _ForwardIterator __ofirst) {
+  typedef typename iterator_traits<_ForwardIterator>::value_type _ValueType;
+  auto __result = std::__uninitialized_copy<_ValueType>(
+      std::move(__ifirst), std::move(__ilast), std::move(__ofirst), __always_false());
+  return _VSTD::move(__result.second);
+}
+
+// uninitialized_copy_n
+
+template <class _ValueType, class _InputIterator, class _Size, class _ForwardIterator, class _EndPredicate>
+inline _LIBCPP_HIDE_FROM_ABI pair<_InputIterator, _ForwardIterator> __uninitialized_copy_n(
+    _InputIterator __ifirst, _Size __n, _ForwardIterator __ofirst, _EndPredicate __stop_copying) {
+  _ForwardIterator __idx = __ofirst;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  try {
+#endif
+    for (; __n > 0 && !__stop_copying(__idx); ++__ifirst, (void)++__idx, (void)--__n)
+      ::new (_VSTD::__voidify(*__idx)) _ValueType(*__ifirst);
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  } catch (...) {
+    _VSTD::__destroy(__ofirst, __idx);
+    throw;
+  }
+#endif
+
+  return pair<_InputIterator, _ForwardIterator>(_VSTD::move(__ifirst), _VSTD::move(__idx));
+}
+
+template <class _InputIterator, class _Size, class _ForwardIterator>
+inline _LIBCPP_HIDE_FROM_ABI _ForwardIterator uninitialized_copy_n(_InputIterator __ifirst, _Size __n,
+                                                                   _ForwardIterator __ofirst) {
+  typedef typename iterator_traits<_ForwardIterator>::value_type _ValueType;
+  auto __result =
+      std::__uninitialized_copy_n<_ValueType>(std::move(__ifirst), __n, std::move(__ofirst), __always_false());
+  return _VSTD::move(__result.second);
+}
+
+// uninitialized_fill
+
+template <class _ValueType, class _ForwardIterator, class _Sentinel, class _Tp>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator __uninitialized_fill(_ForwardIterator __first, _Sentinel __last, const _Tp& __x)
+{
+    _ForwardIterator __idx = __first;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    try
+    {
+#endif
+        for (; __idx != __last; ++__idx)
+            ::new (_VSTD::__voidify(*__idx)) _ValueType(__x);
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    }
+    catch (...)
+    {
+        _VSTD::__destroy(__first, __idx);
+        throw;
+    }
+#endif
+
+    return __idx;
+}
+
+template <class _ForwardIterator, class _Tp>
+inline _LIBCPP_HIDE_FROM_ABI
+void uninitialized_fill(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __x)
+{
+    typedef typename iterator_traits<_ForwardIterator>::value_type _ValueType;
+    (void)_VSTD::__uninitialized_fill<_ValueType>(__first, __last, __x);
+}
+
+// uninitialized_fill_n
+
+template <class _ValueType, class _ForwardIterator, class _Size, class _Tp>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator __uninitialized_fill_n(_ForwardIterator __first, _Size __n, const _Tp& __x)
+{
+    _ForwardIterator __idx = __first;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    try
+    {
+#endif
+        for (; __n > 0; ++__idx, (void) --__n)
+            ::new (_VSTD::__voidify(*__idx)) _ValueType(__x);
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    }
+    catch (...)
+    {
+        _VSTD::__destroy(__first, __idx);
+        throw;
+    }
+#endif
+
+    return __idx;
+}
+
+template <class _ForwardIterator, class _Size, class _Tp>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator uninitialized_fill_n(_ForwardIterator __first, _Size __n, const _Tp& __x)
+{
+    typedef typename iterator_traits<_ForwardIterator>::value_type _ValueType;
+    return _VSTD::__uninitialized_fill_n<_ValueType>(__first, __n, __x);
+}
+
+#if _LIBCPP_STD_VER >= 17
+
+// uninitialized_default_construct
+
+template <class _ValueType, class _ForwardIterator, class _Sentinel>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator __uninitialized_default_construct(_ForwardIterator __first, _Sentinel __last) {
+    auto __idx = __first;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    try {
+#endif
+    for (; __idx != __last; ++__idx)
+        ::new (_VSTD::__voidify(*__idx)) _ValueType;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    } catch (...) {
+        _VSTD::__destroy(__first, __idx);
+        throw;
+    }
+#endif
+
+    return __idx;
+}
+
+template <class _ForwardIterator>
+inline _LIBCPP_HIDE_FROM_ABI
+void uninitialized_default_construct(_ForwardIterator __first, _ForwardIterator __last) {
+    using _ValueType = typename iterator_traits<_ForwardIterator>::value_type;
+    (void)_VSTD::__uninitialized_default_construct<_ValueType>(
+        _VSTD::move(__first), _VSTD::move(__last));
+}
+
+// uninitialized_default_construct_n
+
+template <class _ValueType, class _ForwardIterator, class _Size>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator __uninitialized_default_construct_n(_ForwardIterator __first, _Size __n) {
+    auto __idx = __first;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    try {
+#endif
+    for (; __n > 0; ++__idx, (void) --__n)
+        ::new (_VSTD::__voidify(*__idx)) _ValueType;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    } catch (...) {
+        _VSTD::__destroy(__first, __idx);
+        throw;
+    }
+#endif
+
+    return __idx;
+}
+
+template <class _ForwardIterator, class _Size>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator uninitialized_default_construct_n(_ForwardIterator __first, _Size __n) {
+    using _ValueType = typename iterator_traits<_ForwardIterator>::value_type;
+    return _VSTD::__uninitialized_default_construct_n<_ValueType>(_VSTD::move(__first), __n);
+}
+
+// uninitialized_value_construct
+
+template <class _ValueType, class _ForwardIterator, class _Sentinel>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator __uninitialized_value_construct(_ForwardIterator __first, _Sentinel __last) {
+    auto __idx = __first;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    try {
+#endif
+    for (; __idx != __last; ++__idx)
+        ::new (_VSTD::__voidify(*__idx)) _ValueType();
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    } catch (...) {
+        _VSTD::__destroy(__first, __idx);
+        throw;
+    }
+#endif
+
+    return __idx;
+}
+
+template <class _ForwardIterator>
+inline _LIBCPP_HIDE_FROM_ABI
+void uninitialized_value_construct(_ForwardIterator __first, _ForwardIterator __last) {
+    using _ValueType = typename iterator_traits<_ForwardIterator>::value_type;
+    (void)_VSTD::__uninitialized_value_construct<_ValueType>(
+        _VSTD::move(__first), _VSTD::move(__last));
+}
+
+// uninitialized_value_construct_n
+
+template <class _ValueType, class _ForwardIterator, class _Size>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator __uninitialized_value_construct_n(_ForwardIterator __first, _Size __n) {
+    auto __idx = __first;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    try {
+#endif
+    for (; __n > 0; ++__idx, (void) --__n)
+        ::new (_VSTD::__voidify(*__idx)) _ValueType();
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+    } catch (...) {
+        _VSTD::__destroy(__first, __idx);
+        throw;
+    }
+#endif
+
+    return __idx;
+}
+
+template <class _ForwardIterator, class _Size>
+inline _LIBCPP_HIDE_FROM_ABI
+_ForwardIterator uninitialized_value_construct_n(_ForwardIterator __first, _Size __n) {
+    using _ValueType = typename iterator_traits<_ForwardIterator>::value_type;
+    return std::__uninitialized_value_construct_n<_ValueType>(_VSTD::move(__first), __n);
+}
+
+// uninitialized_move
+
+template <class _ValueType,
+          class _InputIterator,
+          class _Sentinel1,
+          class _ForwardIterator,
+          class _EndPredicate,
+          class _IterMove>
+inline _LIBCPP_HIDE_FROM_ABI pair<_InputIterator, _ForwardIterator> __uninitialized_move(
+    _InputIterator __ifirst,
+    _Sentinel1 __ilast,
+    _ForwardIterator __ofirst,
+    _EndPredicate __stop_moving,
+    _IterMove __iter_move) {
+  auto __idx = __ofirst;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  try {
+#endif
+    for (; __ifirst != __ilast && !__stop_moving(__idx); ++__idx, (void)++__ifirst) {
+      ::new (_VSTD::__voidify(*__idx)) _ValueType(__iter_move(__ifirst));
+    }
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  } catch (...) {
+    _VSTD::__destroy(__ofirst, __idx);
+    throw;
+  }
+#endif
+
+  return {_VSTD::move(__ifirst), _VSTD::move(__idx)};
+}
+
+template <class _InputIterator, class _ForwardIterator>
+inline _LIBCPP_HIDE_FROM_ABI _ForwardIterator uninitialized_move(_InputIterator __ifirst, _InputIterator __ilast,
+                                                                 _ForwardIterator __ofirst) {
+  using _ValueType = typename iterator_traits<_ForwardIterator>::value_type;
+  auto __iter_move = [](auto&& __iter) -> decltype(auto) { return _VSTD::move(*__iter); };
+
+  auto __result = std::__uninitialized_move<_ValueType>(
+      std::move(__ifirst), std::move(__ilast), std::move(__ofirst), __always_false(), __iter_move);
+  return _VSTD::move(__result.second);
+}
+
+// uninitialized_move_n
+
+template <class _ValueType,
+          class _InputIterator,
+          class _Size,
+          class _ForwardIterator,
+          class _EndPredicate,
+          class _IterMove>
+inline _LIBCPP_HIDE_FROM_ABI pair<_InputIterator, _ForwardIterator> __uninitialized_move_n(
+    _InputIterator __ifirst, _Size __n, _ForwardIterator __ofirst, _EndPredicate __stop_moving, _IterMove __iter_move) {
+  auto __idx = __ofirst;
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  try {
+#endif
+    for (; __n > 0 && !__stop_moving(__idx); ++__idx, (void)++__ifirst, --__n)
+      ::new (_VSTD::__voidify(*__idx)) _ValueType(__iter_move(__ifirst));
+#ifndef _LIBCPP_HAS_NO_EXCEPTIONS
+  } catch (...) {
+    _VSTD::__destroy(__ofirst, __idx);
+    throw;
+  }
+#endif
+
+  return {_VSTD::move(__ifirst), _VSTD::move(__idx)};
+}
+
+template <class _InputIterator, class _Size, class _ForwardIterator>
+inline _LIBCPP_HIDE_FROM_ABI pair<_InputIterator, _ForwardIterator>
+uninitialized_move_n(_InputIterator __ifirst, _Size __n, _ForwardIterator __ofirst) {
+  using _ValueType = typename iterator_traits<_ForwardIterator>::value_type;
+  auto __iter_move = [](auto&& __iter) -> decltype(auto) { return _VSTD::move(*__iter); };
+
+  return std::__uninitialized_move_n<_ValueType>(
+      std::move(__ifirst), __n, std::move(__ofirst), __always_false(), __iter_move);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }
 
 // TODO: Rewrite this to iterate left to right and use reverse_iterators when calling

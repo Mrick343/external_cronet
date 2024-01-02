@@ -69,6 +69,7 @@ def _memoizeExpensiveOperation(extractCacheKey):
             if cacheKey not in cache:
                 cache[cacheKey] = function(config, *args, **kwargs)
                 # Update the persistent cache so it knows about the new key
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
                 with open(persistentCache, "wb") as cacheFile:
                     pickle.dump(cache, cacheFile)
             return cache[cacheKey]
@@ -549,6 +550,471 @@ class PrependLinkFlag(ConfigAction):
         assert hasCompileFlag(
             config, flag
         ), "Trying to enable link flag {}, which is not supported".format(flag)
+=======
+                # We write to a PID-suffixed file and rename the result to
+                # ensure that the cache is not corrupted when running the test
+                # suite with multiple shards. Since this file is in the same
+                # directory as the destination, os.replace() will be atomic.
+                unique_suffix = ".tmp." + str(os.getpid())
+                with open(persistentCache + unique_suffix, "wb") as cacheFile:
+                    pickle.dump(cache, cacheFile)
+                os.replace(persistentCache + unique_suffix, persistentCache)
+            return cache[cacheKey]
+
+        return f
+
+    return decorator
+
+
+def _executeWithFakeConfig(test, commands):
+    """
+    Returns (stdout, stderr, exitCode, timeoutInfo, parsedCommands)
+    """
+    litConfig = lit.LitConfig.LitConfig(
+        progname="lit",
+        path=[],
+        quiet=False,
+        useValgrind=False,
+        valgrindLeakCheck=False,
+        valgrindArgs=[],
+        noExecute=False,
+        debug=False,
+        isWindows=platform.system() == "Windows",
+        order="smart",
+        params={},
+    )
+    return libcxx.test.format._executeScriptInternal(test, litConfig, commands)
+
+
+def _makeConfigTest(config):
+    # Make sure the support directories exist, which is needed to create
+    # the temporary file %t below.
+    sourceRoot = os.path.join(config.test_exec_root, "__config_src__")
+    execRoot = os.path.join(config.test_exec_root, "__config_exec__")
+    for supportDir in (sourceRoot, execRoot):
+        if not os.path.exists(supportDir):
+            os.makedirs(supportDir)
+
+    # Create a dummy test suite and single dummy test inside it. As part of
+    # the Lit configuration, automatically do the equivalent of 'mkdir %T'
+    # and 'rm -r %T' to avoid cluttering the build directory.
+    suite = lit.Test.TestSuite("__config__", sourceRoot, execRoot, config)
+    tmp = tempfile.NamedTemporaryFile(dir=sourceRoot, delete=False, suffix=".cpp")
+    tmp.close()
+    pathInSuite = [os.path.relpath(tmp.name, sourceRoot)]
+
+    class TestWrapper(lit.Test.Test):
+        def __enter__(self):
+            testDir, _ = libcxx.test.format._getTempPaths(self)
+            os.makedirs(testDir)
+            return self
+
+        def __exit__(self, *args):
+            testDir, _ = libcxx.test.format._getTempPaths(self)
+            shutil.rmtree(testDir)
+            os.remove(tmp.name)
+
+    return TestWrapper(suite, pathInSuite, config)
+
+
+@_memoizeExpensiveOperation(lambda c, s, f=[]: (c.substitutions, c.environment, s, f))
+def sourceBuilds(config, source, additionalFlags=[]):
+    """
+    Return whether the program in the given string builds successfully.
+
+    This is done by compiling and linking a program that consists of the given
+    source with the %{cxx} substitution, and seeing whether that succeeds. If
+    any additional flags are passed, they are appended to the compiler invocation.
+    """
+    with _makeConfigTest(config) as test:
+        with open(test.getSourcePath(), "w") as sourceFile:
+            sourceFile.write(source)
+        _, _, exitCode, _, _ = _executeWithFakeConfig(
+            test, ["%{{build}} {}".format(" ".join(additionalFlags))]
+        )
+        return exitCode == 0
+
+
+@_memoizeExpensiveOperation(
+    lambda c, p, args=None: (c.substitutions, c.environment, p, args)
+)
+def programOutput(config, program, args=None):
+    """
+    Compiles a program for the test target, run it on the test target and return
+    the output.
+
+    Note that execution of the program is done through the %{exec} substitution,
+    which means that the program may be run on a remote host depending on what
+    %{exec} does.
+    """
+    if args is None:
+        args = []
+    with _makeConfigTest(config) as test:
+        with open(test.getSourcePath(), "w") as source:
+            source.write(program)
+        _, err, exitCode, _, buildcmd = _executeWithFakeConfig(test, ["%{build}"])
+        if exitCode != 0:
+            raise ConfigurationCompilationError(
+                "Failed to build program, cmd:\n{}\nstderr is:\n{}".format(
+                    buildcmd, err
+                )
+            )
+
+        out, err, exitCode, _, runcmd = _executeWithFakeConfig(
+            test, ["%{{run}} {}".format(" ".join(args))]
+        )
+        if exitCode != 0:
+            raise ConfigurationRuntimeError(
+                "Failed to run program, cmd:\n{}\nstderr is:\n{}".format(runcmd, err)
+            )
+
+        return out
+
+
+@_memoizeExpensiveOperation(
+    lambda c, p, args=None: (c.substitutions, c.environment, p, args)
+)
+def programSucceeds(config, program, args=None):
+    """
+    Compiles a program for the test target, run it on the test target and return
+    whether it completed successfully.
+
+    Note that execution of the program is done through the %{exec} substitution,
+    which means that the program may be run on a remote host depending on what
+    %{exec} does.
+    """
+    try:
+        programOutput(config, program, args)
+    except ConfigurationRuntimeError:
+        return False
+    return True
+
+
+@_memoizeExpensiveOperation(lambda c, f: (c.substitutions, c.environment, f))
+def tryCompileFlag(config, flag):
+    """
+    Try using the given compiler flag and return the exit code along with stdout and stderr.
+    """
+    # fmt: off
+    with _makeConfigTest(config) as test:
+        out, err, exitCode, timeoutInfo, _ = _executeWithFakeConfig(test, [
+            "%{{cxx}} -xc++ {} -Werror -fsyntax-only %{{flags}} %{{compile_flags}} {}".format(os.devnull, flag)
+        ])
+        return exitCode, out, err
+    # fmt: on
+
+
+def hasCompileFlag(config, flag):
+    """
+    Return whether the compiler in the configuration supports a given compiler flag.
+
+    This is done by executing the %{cxx} substitution with the given flag and
+    checking whether that succeeds.
+    """
+    (exitCode, _, _) = tryCompileFlag(config, flag)
+    return exitCode == 0
+
+
+@_memoizeExpensiveOperation(lambda c, s: (c.substitutions, c.environment, s))
+def runScriptExitCode(config, script):
+    """
+    Runs the given script as a Lit test, and returns the exit code of the execution.
+
+    The script must be a list of commands, each of which being something that
+    could appear on the right-hand-side of a `RUN:` keyword.
+    """
+    with _makeConfigTest(config) as test:
+        _, _, exitCode, _, _ = _executeWithFakeConfig(test, script)
+        return exitCode
+
+
+@_memoizeExpensiveOperation(lambda c, s: (c.substitutions, c.environment, s))
+def commandOutput(config, command):
+    """
+    Runs the given script as a Lit test, and returns the output.
+    If the exit code isn't 0 an exception is raised.
+
+    The script must be a list of commands, each of which being something that
+    could appear on the right-hand-side of a `RUN:` keyword.
+    """
+    with _makeConfigTest(config) as test:
+        out, err, exitCode, _, cmd = _executeWithFakeConfig(test, command)
+        if exitCode != 0:
+            raise ConfigurationRuntimeError(
+                "Failed to run command: {}\nstderr is:\n{}".format(cmd, err)
+            )
+        return out
+
+
+@_memoizeExpensiveOperation(lambda c, l: (c.substitutions, c.environment, l))
+def hasAnyLocale(config, locales):
+    """
+    Return whether the runtime execution environment supports a given locale.
+    Different systems may use different names for a locale, so this function checks
+    whether any of the passed locale names is supported by setlocale() and returns
+    true if one of them works.
+
+    This is done by executing a program that tries to set the given locale using
+    %{exec} -- this means that the command may be executed on a remote host
+    depending on the %{exec} substitution.
+    """
+    program = """
+    #include <stddef.h>
+    #if defined(_LIBCPP_HAS_NO_LOCALIZATION)
+      int main(int, char**) { return 1; }
+    #else
+      #include <locale.h>
+      int main(int argc, char** argv) {
+        for (int i = 1; i < argc; i++) {
+          if (::setlocale(LC_ALL, argv[i]) != NULL) {
+            return 0;
+          }
+        }
+        return 1;
+      }
+    #endif
+  """
+    return programSucceeds(config, program, args=[pipes.quote(l) for l in locales])
+
+
+@_memoizeExpensiveOperation(lambda c, flags="": (c.substitutions, c.environment, flags))
+def compilerMacros(config, flags=""):
+    """
+    Return a dictionary of predefined compiler macros.
+
+    The keys are strings representing macros, and the values are strings
+    representing what each macro is defined to.
+
+    If the optional `flags` argument (a string) is provided, these flags will
+    be added to the compiler invocation when generating the macros.
+    """
+    with _makeConfigTest(config) as test:
+        with open(test.getSourcePath(), "w") as sourceFile:
+            sourceFile.write(
+                """
+      #if __has_include(<__config_site>)
+      #  include <__config_site>
+      #endif
+      """
+            )
+        unparsedOutput, err, exitCode, _, cmd = _executeWithFakeConfig(
+            test, ["%{{cxx}} %s -dM -E %{{flags}} %{{compile_flags}} {}".format(flags)]
+        )
+        if exitCode != 0:
+            raise ConfigurationCompilationError(
+                "Failed to retrieve compiler macros, compiler invocation is:\n{}\nstderr is:\n{}".format(
+                    cmd, err
+                )
+            )
+        parsedMacros = dict()
+        defines = (
+            l.strip() for l in unparsedOutput.split("\n") if l.startswith("#define ")
+        )
+        for line in defines:
+            line = line[len("#define ") :]
+            macro, _, value = line.partition(" ")
+            parsedMacros[macro] = value
+        return parsedMacros
+
+
+def featureTestMacros(config, flags=""):
+    """
+    Return a dictionary of feature test macros.
+
+    The keys are strings representing feature test macros, and the values are
+    integers representing the value of the macro.
+    """
+    allMacros = compilerMacros(config, flags)
+    return {
+        m: int(v.rstrip("LlUu"))
+        for (m, v) in allMacros.items()
+        if m.startswith("__cpp_")
+    }
+
+
+def _getSubstitution(substitution, config):
+  for (orig, replacement) in config.substitutions:
+    if orig == substitution:
+      return replacement
+  raise ValueError('Substitution {} is not in the config.'.format(substitution))
+
+def _appendToSubstitution(substitutions, key, value):
+    return [(k, v + " " + value) if k == key else (k, v) for (k, v) in substitutions]
+
+def _prependToSubstitution(substitutions, key, value):
+    return [(k, value + " " + v) if k == key else (k, v) for (k, v) in substitutions]
+
+def _ensureFlagIsSupported(config, flag):
+    (exitCode, out, err) = tryCompileFlag(config, flag)
+    assert (
+        exitCode == 0
+    ), f"Trying to enable compiler flag {flag}, which is not supported. stdout was:\n{out}\n\nstderr was:\n{err}"
+
+
+class ConfigAction(object):
+    """
+    This class represents an action that can be performed on a Lit TestingConfig
+    object.
+
+    Examples of such actions are adding or modifying substitutions, Lit features,
+    etc. This class only provides the interface of such actions, and it is meant
+    to be subclassed appropriately to create new actions.
+    """
+
+    def applyTo(self, config):
+        """
+        Applies the action to the given configuration.
+
+        This should modify the configuration object in place, and return nothing.
+
+        If applying the action to the configuration would yield an invalid
+        configuration, and it is possible to diagnose it here, this method
+        should produce an error. For example, it should be an error to modify
+        a substitution in a way that we know for sure is invalid (e.g. adding
+        a compiler flag when we know the compiler doesn't support it). Failure
+        to do so early may lead to difficult-to-diagnose issues down the road.
+        """
+        pass
+
+    def pretty(self, config, litParams):
+        """
+        Returns a short and human-readable string describing what this action does.
+
+        This is used for logging purposes when running the test suite, so it should
+        be kept concise.
+        """
+        pass
+
+
+class AddFeature(ConfigAction):
+    """
+    This action defines the given Lit feature when running the test suite.
+
+    The name of the feature can be a string or a callable, in which case it is
+    called with the configuration to produce the feature name (as a string).
+    """
+
+    def __init__(self, name):
+        self._name = name
+
+    def _getName(self, config):
+        name = self._name(config) if callable(self._name) else self._name
+        if not isinstance(name, str):
+            raise ValueError(
+                "Lit feature did not resolve to a string (got {})".format(name)
+            )
+        return name
+
+    def applyTo(self, config):
+        config.available_features.add(self._getName(config))
+
+    def pretty(self, config, litParams):
+        return "add Lit feature {}".format(self._getName(config))
+
+
+class AddFlag(ConfigAction):
+    """
+    This action adds the given flag to the %{flags} substitution.
+
+    The flag can be a string or a callable, in which case it is called with the
+    configuration to produce the actual flag (as a string).
+    """
+
+    def __init__(self, flag):
+        self._getFlag = lambda config: flag(config) if callable(flag) else flag
+
+    def applyTo(self, config):
+        flag = self._getFlag(config)
+        _ensureFlagIsSupported(config, flag)
+        config.substitutions = _appendToSubstitution(
+            config.substitutions, "%{flags}", flag
+        )
+
+    def pretty(self, config, litParams):
+        return "add {} to %{{flags}}".format(self._getFlag(config))
+
+class AddFlagIfSupported(ConfigAction):
+    """
+    This action adds the given flag to the %{flags} substitution, only if
+    the compiler supports the flag.
+
+    The flag can be a string or a callable, in which case it is called with the
+    configuration to produce the actual flag (as a string).
+    """
+
+    def __init__(self, flag):
+        self._getFlag = lambda config: flag(config) if callable(flag) else flag
+
+    def applyTo(self, config):
+        flag = self._getFlag(config)
+        if hasCompileFlag(config, flag):
+            config.substitutions = _appendToSubstitution(
+                config.substitutions, "%{flags}", flag
+            )
+
+    def pretty(self, config, litParams):
+        return "add {} to %{{flags}}".format(self._getFlag(config))
+
+
+class AddCompileFlag(ConfigAction):
+    """
+    This action adds the given flag to the %{compile_flags} substitution.
+
+    The flag can be a string or a callable, in which case it is called with the
+    configuration to produce the actual flag (as a string).
+    """
+
+    def __init__(self, flag):
+        self._getFlag = lambda config: flag(config) if callable(flag) else flag
+
+    def applyTo(self, config):
+        flag = self._getFlag(config)
+        _ensureFlagIsSupported(config, flag)
+        config.substitutions = _appendToSubstitution(
+            config.substitutions, "%{compile_flags}", flag
+        )
+
+    def pretty(self, config, litParams):
+        return "add {} to %{{compile_flags}}".format(self._getFlag(config))
+
+
+class AddLinkFlag(ConfigAction):
+    """
+    This action appends the given flag to the %{link_flags} substitution.
+
+    The flag can be a string or a callable, in which case it is called with the
+    configuration to produce the actual flag (as a string).
+    """
+
+    def __init__(self, flag):
+        self._getFlag = lambda config: flag(config) if callable(flag) else flag
+
+    def applyTo(self, config):
+        flag = self._getFlag(config)
+        _ensureFlagIsSupported(config, flag)
+        config.substitutions = _appendToSubstitution(
+            config.substitutions, "%{link_flags}", flag
+        )
+
+    def pretty(self, config, litParams):
+        return "append {} to %{{link_flags}}".format(self._getFlag(config))
+
+
+class PrependLinkFlag(ConfigAction):
+    """
+    This action prepends the given flag to the %{link_flags} substitution.
+
+    The flag can be a string or a callable, in which case it is called with the
+    configuration to produce the actual flag (as a string).
+    """
+
+    def __init__(self, flag):
+        self._getFlag = lambda config: flag(config) if callable(flag) else flag
+
+    def applyTo(self, config):
+        flag = self._getFlag(config)
+        _ensureFlagIsSupported(config, flag)
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
         config.substitutions = _prependToSubstitution(
             config.substitutions, "%{link_flags}", flag
         )

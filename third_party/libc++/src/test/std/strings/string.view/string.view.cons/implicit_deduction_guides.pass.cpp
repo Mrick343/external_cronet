@@ -25,9 +25,15 @@
 // (2)  basic_string_view(const basic_string_view&)
 // (3)  basic_string_view(const CharT*, size_type)
 // (4)  basic_string_view(const CharT*)
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
   { // Testing (1)
+=======
+int main(int, char**) {
+  {
+    // Testing (1)
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     // Nothing to do. Cannot deduce without any arguments.
   }
   { // Testing (2)

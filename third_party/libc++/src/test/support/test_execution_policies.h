@@ -58,8 +58,11 @@ struct Bool {
   }
 };
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef TEST_HAS_NO_EXCEPTIONS
 [[noreturn]] inline void terminate_successful() { std::exit(0); }
 #endif
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif // TEST_SUPPORT_TEST_EXECUTION_POLICIES

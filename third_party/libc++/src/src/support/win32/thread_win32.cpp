@@ -7,6 +7,11 @@
 //===----------------------------------------------------------------------===//
 
 #include <__threading_support>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <chrono>
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

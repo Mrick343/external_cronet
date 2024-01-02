@@ -25,7 +25,11 @@ _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 // file, and the executable bit is always returned as set. When setting
 // permissions, as long as the write bit is set for either owner, group or
 // others, the readonly flag is cleared.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 enum class _LIBCPP_ENUM_VIS perms : unsigned {
+=======
+enum class perms : unsigned {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   none = 0,
 
   owner_read = 0400,

@@ -10,6 +10,13 @@
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Starting in Android N (API 24), SELinux policy prevents the shell user from
+// creating a FIFO file.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{21|22|23}}
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // file_status symlink_status(const path& p);

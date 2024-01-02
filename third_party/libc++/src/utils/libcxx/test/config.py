@@ -52,4 +52,8 @@ def configure(parameters, features, config, lit_config):
         note("Using {} substitution: '{}'".format(sub, _getSubstitution(sub, config)))
 
     # Print all available features
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     note("All available features: {}".format(", ".join(config.available_features)))
+=======
+    note("All available features: {}".format(", ".join(sorted(config.available_features))))
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

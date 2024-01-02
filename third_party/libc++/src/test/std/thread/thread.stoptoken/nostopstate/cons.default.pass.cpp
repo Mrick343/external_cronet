@@ -7,6 +7,10 @@
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: no-threads
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// UNSUPPORTED: libcpp-has-no-experimental-stop_token
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
 // struct nostopstate_t {

@@ -18,5 +18,9 @@
 
 void f() {
   using BadIter = std::reverse_iterator<forward_iterator<int*>>;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   BadIter i; //expected-error-re@*:* {{{{(static_assert|static assertion)}} failed{{.*}}reverse_iterator<It> requires It to be a bidirectional iterator.}}
+=======
+  BadIter i; //expected-error-re@*:* {{static assertion failed{{.*}}reverse_iterator<It> requires It to be a bidirectional iterator.}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

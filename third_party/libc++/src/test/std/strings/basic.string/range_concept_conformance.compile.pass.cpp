@@ -15,8 +15,11 @@
 #include <concepts>
 #include <ranges>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 static_assert(std::same_as<std::ranges::iterator_t<std::string>, std::string::iterator>);
 static_assert(std::ranges::common_range<std::string>);
 static_assert(std::ranges::random_access_range<std::string>);

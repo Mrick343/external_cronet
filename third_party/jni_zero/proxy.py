@@ -19,7 +19,11 @@ _MAX_CHARS_FOR_HASHED_NATIVE_METHODS = 8
 
 def get_gen_jni_class(*, short=False, name_prefix=None, package_prefix=None):
   """Returns the JavaClass for GEN_JNI."""
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   package = 'J' if short else 'org/chromium/base/natives'
+=======
+  package = 'J' if short else 'org/jni_zero'
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   name_prefix = name_prefix + '_' if name_prefix else ''
   name = name_prefix + ('N' if short else 'GEN_JNI')
 

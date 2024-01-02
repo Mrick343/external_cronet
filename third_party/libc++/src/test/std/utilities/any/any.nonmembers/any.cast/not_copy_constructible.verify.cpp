@@ -46,6 +46,7 @@ struct no_move {
 
 void f() {
     std::any a;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     // expected-error-re@any:* {{{{(static_assert|static assertion)}} failed{{.*}}ValueType is required to be an lvalue reference or a CopyConstructible type}}
     std::any_cast<no_copy>(static_cast<std::any&>(a)); // expected-note {{requested here}}
 
@@ -55,5 +56,16 @@ void f() {
     std::any_cast<no_copy>(static_cast<std::any &&>(a)); // OK
 
     // expected-error-re@any:* {{{{(static_assert|static assertion)}} failed{{.*}}ValueType is required to be an rvalue reference or a CopyConstructible type}}
+=======
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be an lvalue reference or a CopyConstructible type}}
+    std::any_cast<no_copy>(static_cast<std::any&>(a)); // expected-note {{requested here}}
+
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be a const lvalue reference or a CopyConstructible type}}
+    std::any_cast<no_copy>(static_cast<std::any const&>(a)); // expected-note {{requested here}}
+
+    std::any_cast<no_copy>(static_cast<std::any &&>(a)); // OK
+
+    // expected-error-re@any:* {{static assertion failed{{.*}}ValueType is required to be an rvalue reference or a CopyConstructible type}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     std::any_cast<no_move>(static_cast<std::any &&>(a));
 }

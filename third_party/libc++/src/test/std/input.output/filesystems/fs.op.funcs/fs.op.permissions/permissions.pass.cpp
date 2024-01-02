@@ -10,6 +10,14 @@
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Android's fchmodat seems broken on various OS versions -- see D140183. This
+// test probably passes on new-enough phones (not the emulator).
+// XFAIL: LIBCXX-ANDROID-FIXME && target={{i686|x86_64}}-{{.+}}-android{{.*}}
+// XFAIL: LIBCXX-ANDROID-FIXME && android-device-api={{21|22}}
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // void permissions(const path& p, perms prms,

@@ -120,6 +120,7 @@ private:
   // TODO FMT Validate whether lazy creation is the best solution.
   optional<_VSTD::locale> __loc_;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   template <class __OutIt, class __CharT>
   friend _LIBCPP_HIDE_FROM_ABI basic_format_context<__OutIt, __CharT>
   __format_context_create(__OutIt, basic_format_args<basic_format_context<__OutIt, __CharT>>,
@@ -136,6 +137,24 @@ private:
   template <class __OutIt, class __CharT>
   friend _LIBCPP_HIDE_FROM_ABI basic_format_context<__OutIt, __CharT>
       __format_context_create(__OutIt, basic_format_args<basic_format_context<__OutIt, __CharT>>);
+=======
+  template <class _OtherOutIt, class _OtherCharT>
+  friend _LIBCPP_HIDE_FROM_ABI basic_format_context<_OtherOutIt, _OtherCharT>
+  __format_context_create(_OtherOutIt, basic_format_args<basic_format_context<_OtherOutIt, _OtherCharT>>,
+                          optional<_VSTD::locale>&&);
+
+  // Note: the Standard doesn't specify the required constructors.
+  _LIBCPP_HIDE_FROM_ABI
+  explicit basic_format_context(_OutIt __out_it,
+                                basic_format_args<basic_format_context> __args,
+                                optional<_VSTD::locale>&& __loc)
+      : __out_it_(_VSTD::move(__out_it)), __args_(__args),
+        __loc_(_VSTD::move(__loc)) {}
+#else
+  template <class _OtherOutIt, class _OtherCharT>
+  friend _LIBCPP_HIDE_FROM_ABI basic_format_context<_OtherOutIt, _OtherCharT>
+      __format_context_create(_OtherOutIt, basic_format_args<basic_format_context<_OtherOutIt, _OtherCharT>>);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   _LIBCPP_HIDE_FROM_ABI
   explicit basic_format_context(_OutIt __out_it,

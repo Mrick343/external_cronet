@@ -76,6 +76,7 @@ struct std::formatter<status, CharT> {
     case CharT('}'):
       return begin;
     default:
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
       throw_format_error("The format-spec type has a type not supported for a status argument");
     }
 
@@ -206,6 +207,138 @@ std::basic_string<CharT> get_colons() {
 
 constexpr std::string_view get_format_types() {
   return "aAbBcdeEfFgGopsxX"
+=======
+      throw_format_error("The type option contains an invalid value for a status formatting argument");
+    }
+
+    ++begin;
+    if (begin != end && *begin != CharT('}'))
+      throw_format_error("The format specifier should consume the input or end with a '}'");
+
+    return begin;
+  }
+
+  template <class Out>
+  auto format(status s, basic_format_context<Out, CharT>& ctx) const -> decltype(ctx.out()) {
+    const char* names[] = {"foo", "bar", "foobar"};
+    char buffer[7];
+    const char* begin = names[0];
+    const char* end = names[0];
+    switch (type) {
+    case -1:
+      throw_format_error("The formatter's parse function has not been called.");
+
+    case 0:
+      begin = buffer;
+      buffer[0] = '0';
+      buffer[1] = 'x';
+      end = std::to_chars(&buffer[2], std::end(buffer), static_cast<std::uint16_t>(s), 16).ptr;
+      buffer[6] = '\0';
+      break;
+
+    case 1:
+      begin = buffer;
+      buffer[0] = '0';
+      buffer[1] = 'X';
+      end = std::to_chars(&buffer[2], std::end(buffer), static_cast<std::uint16_t>(s), 16).ptr;
+      std::transform(static_cast<const char*>(&buffer[2]), end, &buffer[2], [](char c) {
+        return static_cast<char>(std::toupper(c)); });
+      buffer[6] = '\0';
+      break;
+
+    case 2:
+      switch (s) {
+      case status::foo:
+        begin = names[0];
+        break;
+      case status::bar:
+        begin = names[1];
+        break;
+      case status::foobar:
+        begin = names[2];
+        break;
+      }
+      end = begin + strlen(begin);
+      break;
+    }
+
+    return std::copy(begin, end, ctx.out());
+  }
+
+private:
+  [[noreturn]] void throw_format_error([[maybe_unused]] const char* s) const {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    throw std::format_error(s);
+#else
+    std::abort();
+#endif
+  }
+};
+
+struct parse_call_validator {
+  struct parse_function_not_called {};
+
+  friend constexpr auto operator<=>(const parse_call_validator& lhs, const parse_call_validator& rhs) {
+    return &lhs <=> &rhs;
+  }
+};
+
+// The formatter for a user-defined type used to test the handle formatter.
+//
+// Like std::formatter<status, CharT> this formatter validates that parse is
+// called. This formatter is intended to be used when the formatter's parse is
+// called directly and not with format. In that case the format-spec does not
+// require a terminating }. The tests must be written in a fashion where this
+// formatter is always called with an empty format-spec. This requirement
+// allows testing of certain code paths that are never reached by using a
+// well-formed format-string in the format functions.
+template <class CharT>
+struct std::formatter<parse_call_validator, CharT> {
+  bool parse_called{false};
+
+  constexpr auto parse(basic_format_parse_context<CharT>& parse_ctx) -> decltype(parse_ctx.begin()) {
+    auto begin = parse_ctx.begin();
+    auto end   = parse_ctx.end();
+    assert(begin == end);
+    parse_called = true;
+    return begin;
+  }
+
+  auto format(parse_call_validator, auto& ctx) const -> decltype(ctx.out()) {
+    if (!parse_called)
+      throw_error<parse_call_validator::parse_function_not_called>();
+    return ctx.out();
+  }
+
+private:
+  template <class T>
+  [[noreturn]] void throw_error() const {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    throw T{};
+#else
+    std::abort();
+#endif
+  }
+};
+
+// Creates format string for the invalid types.
+//
+// valid contains a list of types that are valid.
+// - The type ?s is the only type requiring 2 characters, use S for that type.
+// - Whether n is a type or not depends on the context, is is always used.
+//
+// The return value is a collection of basic_strings, instead of
+// basic_string_views since the values are temporaries.
+namespace detail {
+template <class CharT, std::size_t N>
+std::basic_string<CharT> get_colons() {
+  static std::basic_string<CharT> result(N, CharT(':'));
+  return result;
+}
+
+constexpr std::string_view get_format_types() {
+  return "aAbBcdeEfFgGopPsxX"
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #if TEST_STD_VER > 20
          "?"
 #endif

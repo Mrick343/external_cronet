@@ -17,9 +17,14 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     assert(std::char_traits<char>::eof() == EOF);
+=======
+int main(int, char**) {
+  assert(std::char_traits<char>::eof() == EOF);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

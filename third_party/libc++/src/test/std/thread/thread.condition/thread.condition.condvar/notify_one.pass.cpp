@@ -8,6 +8,12 @@
 //
 // UNSUPPORTED: no-threads
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// This test occasionally fails on Android.
+// UNSUPPORTED: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // <condition_variable>
 
 // class condition_variable;

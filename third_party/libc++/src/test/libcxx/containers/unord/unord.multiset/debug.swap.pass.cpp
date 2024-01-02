@@ -15,7 +15,11 @@
 // void swap(unordered_multiset& x, unordered_multiset& y);
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include <unordered_set>
 

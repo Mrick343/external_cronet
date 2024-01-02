@@ -10,7 +10,11 @@
 //  declaration of 'lerp' must be imported from module 'std.compat.cmath'
 //  before it is required
 // therefore disable the test in this configuration.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: modules-build
+=======
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // <math.h>
 

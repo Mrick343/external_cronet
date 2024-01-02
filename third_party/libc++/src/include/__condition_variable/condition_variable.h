@@ -20,6 +20,7 @@
 #include <__type_traits/enable_if.h>
 #include <__type_traits/is_floating_point.h>
 #include <__utility/move.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <ratio>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
@@ -115,6 +116,102 @@ __safe_nanosecond_cast(chrono::duration<_Rep, _Period> __d) {
 template <class _Rep, class _Period>
 inline _LIBCPP_HIDE_FROM_ABI __enable_if_t<!is_floating_point<_Rep>::value, chrono::nanoseconds>
 __safe_nanosecond_cast(chrono::duration<_Rep, _Period> __d) {
+=======
+#include <limits>
+#include <ratio>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_PUSH_MACROS
+#include <__undef_macros>
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#ifndef _LIBCPP_HAS_NO_THREADS
+
+// enum class cv_status
+_LIBCPP_DECLARE_STRONG_ENUM(cv_status){no_timeout, timeout};
+_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(cv_status)
+
+class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
+  __libcpp_condvar_t __cv_ = _LIBCPP_CONDVAR_INITIALIZER;
+
+public:
+  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR condition_variable() _NOEXCEPT = default;
+
+#  ifdef _LIBCPP_HAS_TRIVIAL_CONDVAR_DESTRUCTION
+  ~condition_variable() = default;
+#  else
+  ~condition_variable();
+#  endif
+
+  condition_variable(const condition_variable&)            = delete;
+  condition_variable& operator=(const condition_variable&) = delete;
+
+  void notify_one() _NOEXCEPT;
+  void notify_all() _NOEXCEPT;
+
+  void wait(unique_lock<mutex>& __lk) _NOEXCEPT;
+  template <class _Predicate>
+  _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS void wait(unique_lock<mutex>& __lk, _Predicate __pred);
+
+  template <class _Clock, class _Duration>
+  _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS cv_status
+  wait_until(unique_lock<mutex>& __lk, const chrono::time_point<_Clock, _Duration>& __t);
+
+  template <class _Clock, class _Duration, class _Predicate>
+  _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS bool
+  wait_until(unique_lock<mutex>& __lk, const chrono::time_point<_Clock, _Duration>& __t, _Predicate __pred);
+
+  template <class _Rep, class _Period>
+  _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS cv_status
+  wait_for(unique_lock<mutex>& __lk, const chrono::duration<_Rep, _Period>& __d);
+
+  template <class _Rep, class _Period, class _Predicate>
+  bool _LIBCPP_HIDE_FROM_ABI
+  wait_for(unique_lock<mutex>& __lk, const chrono::duration<_Rep, _Period>& __d, _Predicate __pred);
+
+  typedef __libcpp_condvar_t* native_handle_type;
+  _LIBCPP_HIDE_FROM_ABI native_handle_type native_handle() { return &__cv_; }
+
+private:
+  void
+  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<chrono::system_clock, chrono::nanoseconds>) _NOEXCEPT;
+#  if defined(_LIBCPP_HAS_COND_CLOCKWAIT)
+  _LIBCPP_HIDE_FROM_ABI void
+  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<chrono::steady_clock, chrono::nanoseconds>) _NOEXCEPT;
+#  endif
+  template <class _Clock>
+  _LIBCPP_HIDE_FROM_ABI void
+  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<_Clock, chrono::nanoseconds>) _NOEXCEPT;
+};
+#endif // !_LIBCPP_HAS_NO_THREADS
+
+template <class _Rep, class _Period, __enable_if_t<is_floating_point<_Rep>::value, int> = 0>
+inline _LIBCPP_HIDE_FROM_ABI chrono::nanoseconds __safe_nanosecond_cast(chrono::duration<_Rep, _Period> __d) {
+  using namespace chrono;
+  using __ratio       = ratio_divide<_Period, nano>;
+  using __ns_rep      = nanoseconds::rep;
+  _Rep __result_float = __d.count() * __ratio::num / __ratio::den;
+
+  _Rep __result_max = numeric_limits<__ns_rep>::max();
+  if (__result_float >= __result_max) {
+    return nanoseconds::max();
+  }
+
+  _Rep __result_min = numeric_limits<__ns_rep>::min();
+  if (__result_float <= __result_min) {
+    return nanoseconds::min();
+  }
+
+  return nanoseconds(static_cast<__ns_rep>(__result_float));
+}
+
+template <class _Rep, class _Period, __enable_if_t<!is_floating_point<_Rep>::value, int> = 0>
+inline _LIBCPP_HIDE_FROM_ABI chrono::nanoseconds __safe_nanosecond_cast(chrono::duration<_Rep, _Period> __d) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   using namespace chrono;
   if (__d.count() == 0) {
     return nanoseconds(0);

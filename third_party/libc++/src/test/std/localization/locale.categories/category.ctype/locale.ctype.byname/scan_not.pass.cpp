@@ -15,6 +15,12 @@
 // REQUIRES: locale.en_US.UTF-8
 // XFAIL: no-wide-characters
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Bionic has minimal locale support, investigate this later.
+// XFAIL: LIBCXX-ANDROID-FIXME
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <locale>
 #include <string>
 #include <vector>

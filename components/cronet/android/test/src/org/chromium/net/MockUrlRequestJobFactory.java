@@ -6,10 +6,16 @@ package org.chromium.net;
 
 import static com.google.common.truth.Truth.assertThat;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 import org.chromium.net.CronetEngine;
 
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
+=======
+import org.jni_zero.JNINamespace;
+import org.jni_zero.NativeMethods;
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 import org.chromium.net.impl.CronetUrlRequestContext;
 import org.chromium.net.test.FailurePhase;
 

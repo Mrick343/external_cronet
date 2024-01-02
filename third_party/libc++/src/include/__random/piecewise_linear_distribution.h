@@ -13,8 +13,13 @@
 #include <__config>
 #include <__random/is_valid.h>
 #include <__random/uniform_real_distribution.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <iosfwd>
 #include <numeric>
+=======
+#include <cmath>
+#include <iosfwd>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <vector>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)

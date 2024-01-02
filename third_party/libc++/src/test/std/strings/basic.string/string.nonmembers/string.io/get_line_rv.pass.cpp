@@ -20,6 +20,7 @@
 #include "test_macros.h"
 #include "min_allocator.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     {
@@ -48,6 +49,29 @@ int main(int, char**)
         assert(s == L" abc");
     }
 #endif
+=======
+template <template <class> class Alloc>
+void test() {
+  {
+    using S = std::basic_string<char, std::char_traits<char>, Alloc<char> >;
+    S s("initial text");
+    std::getline(std::istringstream(" abc\n  def\n   ghij"), s);
+    assert(s == " abc");
+  }
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
+  {
+    using WS = std::basic_string<wchar_t, std::char_traits<wchar_t>, Alloc<wchar_t> >;
+    WS s(L"initial text");
+    std::getline(std::wistringstream(L" abc\n  def\n   ghij"), s);
+    assert(s == L" abc");
+  }
+#endif
+}
+
+int main(int, char**) {
+  test<std::allocator>();
+  test<min_allocator>();
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

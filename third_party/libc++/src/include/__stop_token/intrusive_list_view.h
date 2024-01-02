@@ -67,7 +67,11 @@ struct __intrusive_list_view {
         __node->__next_->__prev_ = __node->__prev_;
       }
     } else {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
       _LIBCPP_ASSERT_UNCATEGORIZED(__node == __head_, "Node to be removed has no prev node, so it has to be the head");
+=======
+      _LIBCPP_ASSERT_INTERNAL(__node == __head_, "Node to be removed has no prev node, so it has to be the head");
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
       __pop_front();
     }
   }

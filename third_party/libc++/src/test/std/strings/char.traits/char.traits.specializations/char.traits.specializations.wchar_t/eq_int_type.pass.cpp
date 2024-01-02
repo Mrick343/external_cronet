@@ -19,6 +19,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
     assert( std::char_traits<wchar_t>::eq_int_type(L'a', L'a'));
@@ -26,6 +27,13 @@ int main(int, char**)
     assert(!std::char_traits<wchar_t>::eq_int_type(std::char_traits<wchar_t>::eof(), L'A'));
     assert( std::char_traits<wchar_t>::eq_int_type(std::char_traits<wchar_t>::eof(),
                                                    std::char_traits<wchar_t>::eof()));
+=======
+int main(int, char**) {
+  assert(std::char_traits<wchar_t>::eq_int_type(L'a', L'a'));
+  assert(!std::char_traits<wchar_t>::eq_int_type(L'a', L'A'));
+  assert(!std::char_traits<wchar_t>::eq_int_type(std::char_traits<wchar_t>::eof(), L'A'));
+  assert(std::char_traits<wchar_t>::eq_int_type(std::char_traits<wchar_t>::eof(), std::char_traits<wchar_t>::eof()));
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

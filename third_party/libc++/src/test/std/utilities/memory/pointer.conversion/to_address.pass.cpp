@@ -153,6 +153,17 @@ constexpr bool test() {
     assert(std::to_address(&p11) == &p11);
     ASSERT_SAME_TYPE(decltype(std::to_address(&p11)), int(**)());
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    // See https://github.com/llvm/llvm-project/issues/67449
+    {
+        struct S { };
+        S* p = nullptr;
+        assert(std::to_address<S>(p) == p);
+        ASSERT_SAME_TYPE(decltype(std::to_address<S>(p)), S*);
+    }
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     return true;
 }
 

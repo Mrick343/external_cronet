@@ -13,6 +13,7 @@
 #include <__config>
 #include <__functional/operations.h>
 #include <__iterator/iterator_traits.h>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header
@@ -26,6 +27,22 @@ _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20 _Tp reduce(_InputIterato
                                                                    _Tp __init, _BinaryOp __b) {
   for (; __first != __last; ++__first)
     __init = __b(__init, *__first);
+=======
+#include <__utility/move.h>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 17
+template <class _InputIterator, class _Tp, class _BinaryOp>
+_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20 _Tp reduce(_InputIterator __first, _InputIterator __last,
+                                                                   _Tp __init, _BinaryOp __b) {
+  for (; __first != __last; ++__first)
+    __init = __b(std::move(__init), *__first);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   return __init;
 }
 

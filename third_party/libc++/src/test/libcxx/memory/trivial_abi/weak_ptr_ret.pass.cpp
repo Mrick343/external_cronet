@@ -21,6 +21,11 @@ __attribute__((noinline)) void call_something() { asm volatile(""); }
 
 struct Node {
   explicit Node() {}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  Node(const Node&) = default;
+  Node& operator=(const Node&) = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   ~Node() {}
 };
 

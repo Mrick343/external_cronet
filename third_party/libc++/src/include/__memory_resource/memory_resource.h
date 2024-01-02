@@ -11,6 +11,10 @@
 
 #include <__availability>
 #include <__config>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <__fwd/memory_resource.h>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <cstddef>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)

@@ -149,7 +149,11 @@ static constinit __libcpp_mutex_t mut_back[__sp_mut_count] =
     _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER
 };
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 _LIBCPP_CONSTEXPR __sp_mut::__sp_mut(void* p) noexcept
+=======
+constexpr __sp_mut::__sp_mut(void* p) noexcept
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
    : __lx_(p)
 {
 }

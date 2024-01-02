@@ -81,6 +81,17 @@ constexpr bool test() {
     assert(e.value().i == 10);
   }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  // TailClobberer
+  {
+    std::expected<TailClobberer<0>, bool> e(std::unexpect);
+    auto list = {4, 5, 6};
+    e.emplace(list);
+    assert(e.has_value());
+  }
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   return true;
 }
 

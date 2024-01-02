@@ -6,6 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <limits>
 
 #include "test_macros.h"

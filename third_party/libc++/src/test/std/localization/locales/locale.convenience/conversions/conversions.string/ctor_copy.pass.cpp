@@ -21,9 +21,16 @@
 
 // XFAIL: no-wide-characters
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <locale>
 #include <codecvt>
 #include <cassert>
+=======
+#include <cassert>
+#include <codecvt>
+#include <locale>
+#include <type_traits>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 

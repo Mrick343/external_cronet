@@ -25,9 +25,15 @@ int main(int, char**) {
   {
     std::multimap<int, int, std::less<int>, std::allocator<int>> s1;
     std::multimap<int, int, std::less<int>, test_allocator<int>> s2;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
     s1 <=> s2;
     // expected-error-re@*:* {{{{(static_assert|static assertion)}} failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
+=======
+    // expected-error-re@*:* {{static assertion failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
+    s1 <=> s2;
+    // expected-error-re@*:* {{static assertion failed due to requirement 'is_same<int, std::pair<const int, int>>::value'{{.*}}Allocator::value_type must be same type as value_type}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     s2 <=> s1;
   }
   // Mismatching comparision functions

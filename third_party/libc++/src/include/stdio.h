@@ -115,6 +115,11 @@ void perror(const char* s);
 #undef clearerr
 #undef feof
 #undef ferror
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#undef putchar
+#undef getchar
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #endif
 

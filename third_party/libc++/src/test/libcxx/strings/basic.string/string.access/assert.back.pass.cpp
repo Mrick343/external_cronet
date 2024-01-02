@@ -12,6 +12,7 @@
 
 // REQUIRES: has-unix-headers
 // UNSUPPORTED: c++03
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
 
@@ -33,4 +34,25 @@ int main(int, char**) {
     }
 
     return 0;
+=======
+// UNSUPPORTED: libcpp-hardening-mode=unchecked
+// XFAIL: availability-verbose_abort-missing
+
+#include <string>
+
+#include "check_assertion.h"
+#include "min_allocator.h"
+
+template <class S>
+void test() {
+  S s;
+  TEST_LIBCPP_ASSERT_FAILURE(s.back(), "string::back(): string is empty");
+}
+
+int main(int, char**) {
+  test<std::string>();
+  test<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+
+  return 0;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

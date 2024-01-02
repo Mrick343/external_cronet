@@ -23,6 +23,10 @@ constexpr bool test() {
 }
 
 void f() {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   // expected-error-re@+1 {{{{(static_assert|static assertion)}} expression is not an integral constant expression}}
+=======
+  // expected-error@+1 {{static assertion expression is not an integral constant expression}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   static_assert(test());
 }

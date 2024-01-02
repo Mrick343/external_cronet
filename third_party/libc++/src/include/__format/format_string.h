@@ -124,6 +124,7 @@ __parse_number(_Iterator __begin, _Iterator __end_input) {
     if (__v > __number_max ||
         (__begin != __end_input && *__begin >= _CharT('0') &&
          *__begin <= _CharT('9')))
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
       std::__throw_format_error("The numeric value of the format-spec is too large");
 
     __value = __v;
@@ -155,6 +156,39 @@ __parse_arg_id(_Iterator __begin, _Iterator __end, auto& __parse_ctx) {
   }
   if (*__begin < _CharT('0') || *__begin > _CharT('9'))
     std::__throw_format_error("The arg-id of the format-spec starts with an invalid character");
+=======
+      std::__throw_format_error("The numeric value of the format specifier is too large");
+
+    __value = __v;
+  }
+
+  return {__begin, __value};
+}
+
+/**
+ * Multiplexer for all parse functions.
+ *
+ * The parser will return a pointer beyond the last consumed character. This
+ * should be the closing '}' of the arg-id.
+ */
+template <contiguous_iterator _Iterator>
+_LIBCPP_HIDE_FROM_ABI constexpr __parse_number_result<_Iterator>
+__parse_arg_id(_Iterator __begin, _Iterator __end, auto& __parse_ctx) {
+  using _CharT = iter_value_t<_Iterator>;
+  switch (*__begin) {
+  case _CharT('0'):
+    return __detail::__parse_zero(__begin, __end, __parse_ctx);
+
+  case _CharT(':'):
+    // This case is conditionally valid. It's allowed in an arg-id in the
+    // replacement-field, but not in the std-format-spec. The caller can
+    // provide a better diagnostic, so accept it here unconditionally.
+  case _CharT('}'):
+    return __detail::__parse_automatic(__begin, __end, __parse_ctx);
+  }
+  if (*__begin < _CharT('0') || *__begin > _CharT('9'))
+    std::__throw_format_error("The argument index starts with an invalid character");
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   return __detail::__parse_manual(__begin, __end, __parse_ctx);
 }

@@ -6,6 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// This test fails because Clang no longer enables -fdelayed-template-parsing
+// by default on Windows with C++20 (#69431).
+// XFAIL: msvc && clang-18
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // UNSUPPORTED: c++03, c++11
 
 #include <cassert>

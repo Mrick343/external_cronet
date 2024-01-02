@@ -8,6 +8,10 @@
 
 #include <string_view>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**) {
   return 0;
 }
+=======
+int main(int, char**) { return 0; }
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

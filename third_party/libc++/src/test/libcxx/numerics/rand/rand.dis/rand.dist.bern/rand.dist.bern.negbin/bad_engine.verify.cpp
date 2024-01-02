@@ -26,6 +26,10 @@ void test(std::negative_binomial_distribution<int> dist)
   G<int> badg;
   G<unsigned> okg;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   dist(badg); //expected-error-re@*:* 7 {{{{(static_assert|static assertion)}} failed}} //expected-note {{in instantiation}}
+=======
+  dist(badg); //expected-error@*:* 7 {{static assertion failed}} //expected-note {{in instantiation}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   dist(okg);
 }

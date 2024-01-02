@@ -136,10 +136,19 @@ using ::div _LIBCPP_USING_IF_EXISTS;
 using ::ldiv _LIBCPP_USING_IF_EXISTS;
 using ::lldiv _LIBCPP_USING_IF_EXISTS;
 using ::mblen _LIBCPP_USING_IF_EXISTS;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 using ::mbtowc _LIBCPP_USING_IF_EXISTS;
 using ::wctomb _LIBCPP_USING_IF_EXISTS;
 using ::mbstowcs _LIBCPP_USING_IF_EXISTS;
 using ::wcstombs _LIBCPP_USING_IF_EXISTS;
+=======
+#ifndef _LIBCPP_HAS_NO_WIDE_CHARACTERS
+using ::mbtowc _LIBCPP_USING_IF_EXISTS;
+using ::wctomb _LIBCPP_USING_IF_EXISTS;
+using ::mbstowcs _LIBCPP_USING_IF_EXISTS;
+using ::wcstombs _LIBCPP_USING_IF_EXISTS;
+#endif
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #if !defined(_LIBCPP_CXX03_LANG)
 using ::at_quick_exit _LIBCPP_USING_IF_EXISTS;
 using ::quick_exit _LIBCPP_USING_IF_EXISTS;

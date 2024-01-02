@@ -64,7 +64,11 @@ int main(int, char**)
   std::make_heap(v.begin(), v.end());
   assert(stats.copied == 0);
   assert(stats.moved == 153'486);
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifndef _LIBCPP_ENABLE_DEBUG_MODE
+=======
+#if !_LIBCPP_ENABLE_DEBUG_MODE
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   assert(stats.compared == 188'285);
 #endif
 

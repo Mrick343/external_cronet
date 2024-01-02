@@ -8,6 +8,7 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // istream wcout;
 
 // UNSUPPORTED: no-wide-characters
@@ -17,6 +18,17 @@
 // FILE_DEPENDENCIES: check-stdout.sh, test.dat
 // RUN: %{build}
 // RUN: %{exec} bash check-stdout.sh "%t.exe" "test.dat"
+=======
+// wostream wcout;
+
+// UNSUPPORTED: no-wide-characters
+// REQUIRES: target={{.+}}-windows-{{.+}}
+
+// FILE_DEPENDENCIES: test.dat
+// RUN: %{build}
+// RUN: %{exec} %t.exe > %t.actual
+// RUN: diff test.dat %t.actual
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // Check that wcout works, preserving the unicode characters, after switching
 // stdout to wide mode.

@@ -19,8 +19,12 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
+=======
+int main(int, char**) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   assert(std::char_traits<wchar_t>::lt(L'\0', L'A') == (L'\0' < L'A'));
   assert(std::char_traits<wchar_t>::lt(L'A', L'\0') == (L'A' < L'\0'));
 

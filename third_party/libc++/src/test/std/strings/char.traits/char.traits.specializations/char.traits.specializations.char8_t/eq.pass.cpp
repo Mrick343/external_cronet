@@ -18,11 +18,18 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**)
 {
 #ifndef TEST_HAS_NO_CHAR8_T
     assert( std::char_traits<char8_t>::eq(u8'a', u8'a'));
     assert(!std::char_traits<char8_t>::eq(u8'a', u8'A'));
+=======
+int main(int, char**) {
+#ifndef TEST_HAS_NO_CHAR8_T
+  assert(std::char_traits<char8_t>::eq(u8'a', u8'a'));
+  assert(!std::char_traits<char8_t>::eq(u8'a', u8'A'));
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif
 
   return 0;

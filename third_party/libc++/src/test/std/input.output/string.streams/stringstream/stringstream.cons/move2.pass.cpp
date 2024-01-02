@@ -25,6 +25,7 @@
 
 int main(int, char**)
 {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     std::vector<std::istringstream> vecis;
     vecis.push_back(std::istringstream());
     vecis.back().str("hub started at [00 6b 8b 45 69]");
@@ -36,6 +37,18 @@ int main(int, char**)
         vecis[n].seekg(0, std::ios_base::beg);
         assert(vecis[n].str().size() == 31);
     }
+=======
+  std::vector<std::stringstream> vecss;
+  vecss.push_back(std::stringstream());
+  vecss.back().str("hub started at [00 6b 8b 45 69]");
+  vecss.push_back(std::stringstream());
+  vecss.back().str("hub started at [00 6b 8b 45 69]");
+  for (std::size_t n = 0; n < vecss.size(); n++) {
+    assert(vecss[n].str().size() == 31);
+    vecss[n].seekg(0, std::ios_base::beg);
+    assert(vecss[n].str().size() == 31);
+  }
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

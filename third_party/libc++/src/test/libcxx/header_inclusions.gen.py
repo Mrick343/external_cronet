@@ -13,7 +13,11 @@
 
 import sys
 sys.path.append(sys.argv[1])
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 from libcxx.test.header_information import lit_header_restrictions, public_headers, mandatory_inclusions
+=======
+from libcxx.header_information import lit_header_restrictions, public_headers, mandatory_inclusions
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 for header in public_headers:
   header_guard = lambda h: f"_LIBCPP_{h.upper().replace('.', '_').replace('/', '_')}"

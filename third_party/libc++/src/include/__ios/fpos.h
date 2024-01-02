@@ -11,7 +11,11 @@
 #define _LIBCPP___IOS_FPOS_H
 
 #include <__config>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <iosfwd>
+=======
+#include <__fwd/ios.h>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header

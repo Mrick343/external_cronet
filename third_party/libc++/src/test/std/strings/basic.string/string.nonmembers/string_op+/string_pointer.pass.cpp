@@ -35,6 +35,7 @@ TEST_CONSTEXPR_CXX20 void test1(S&& lhs, const typename S::value_type* rhs, cons
 }
 #endif
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 bool test() {
   {
     typedef std::string S;
@@ -125,6 +126,50 @@ TEST_CONSTEXPR_CXX20 bool test() {
     test1(S("abcdefghijklmnopqrst"), "12345678901234567890",
           S("abcdefghijklmnopqrst12345678901234567890"));
   }
+=======
+template <class S>
+TEST_CONSTEXPR_CXX20 void test_string() {
+  test0(S(""), "", S(""));
+  test0(S(""), "12345", S("12345"));
+  test0(S(""), "1234567890", S("1234567890"));
+  test0(S(""), "12345678901234567890", S("12345678901234567890"));
+  test0(S("abcde"), "", S("abcde"));
+  test0(S("abcde"), "12345", S("abcde12345"));
+  test0(S("abcde"), "1234567890", S("abcde1234567890"));
+  test0(S("abcde"), "12345678901234567890", S("abcde12345678901234567890"));
+  test0(S("abcdefghij"), "", S("abcdefghij"));
+  test0(S("abcdefghij"), "12345", S("abcdefghij12345"));
+  test0(S("abcdefghij"), "1234567890", S("abcdefghij1234567890"));
+  test0(S("abcdefghij"), "12345678901234567890", S("abcdefghij12345678901234567890"));
+  test0(S("abcdefghijklmnopqrst"), "", S("abcdefghijklmnopqrst"));
+  test0(S("abcdefghijklmnopqrst"), "12345", S("abcdefghijklmnopqrst12345"));
+  test0(S("abcdefghijklmnopqrst"), "1234567890", S("abcdefghijklmnopqrst1234567890"));
+  test0(S("abcdefghijklmnopqrst"), "12345678901234567890", S("abcdefghijklmnopqrst12345678901234567890"));
+#if TEST_STD_VER >= 11
+  test1(S(""), "", S(""));
+  test1(S(""), "12345", S("12345"));
+  test1(S(""), "1234567890", S("1234567890"));
+  test1(S(""), "12345678901234567890", S("12345678901234567890"));
+  test1(S("abcde"), "", S("abcde"));
+  test1(S("abcde"), "12345", S("abcde12345"));
+  test1(S("abcde"), "1234567890", S("abcde1234567890"));
+  test1(S("abcde"), "12345678901234567890", S("abcde12345678901234567890"));
+  test1(S("abcdefghij"), "", S("abcdefghij"));
+  test1(S("abcdefghij"), "12345", S("abcdefghij12345"));
+  test1(S("abcdefghij"), "1234567890", S("abcdefghij1234567890"));
+  test1(S("abcdefghij"), "12345678901234567890", S("abcdefghij12345678901234567890"));
+  test1(S("abcdefghijklmnopqrst"), "", S("abcdefghijklmnopqrst"));
+  test1(S("abcdefghijklmnopqrst"), "12345", S("abcdefghijklmnopqrst12345"));
+  test1(S("abcdefghijklmnopqrst"), "1234567890", S("abcdefghijklmnopqrst1234567890"));
+  test1(S("abcdefghijklmnopqrst"), "12345678901234567890", S("abcdefghijklmnopqrst12345678901234567890"));
+#endif
+}
+
+TEST_CONSTEXPR_CXX20 bool test() {
+  test_string<std::string>();
+#if TEST_STD_VER >= 11
+  test_string<std::basic_string<char, std::char_traits<char>, min_allocator<char> > >();
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif
 
   return true;

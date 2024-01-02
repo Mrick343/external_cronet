@@ -10,6 +10,13 @@
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// On Android L, ~scoped_test_env() is unable to delete the temp dir using
+// chmod+rm because chmod is too broken.
+// XFAIL: LIBCXX-ANDROID-FIXME && android-device-api={{21|22}}
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // <filesystem>
 
 // class recursive_directory_iterator

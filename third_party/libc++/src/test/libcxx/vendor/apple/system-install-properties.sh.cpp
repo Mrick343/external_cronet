@@ -42,3 +42,10 @@
 // when they are loaded by dyld, if the compatibility version was bumped.
 //
 // RUN: otool -L "%{lib}/libc++.1.dylib" | grep "libc++.1.dylib" | grep "compatibility version 1.0.0"
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+
+// Make sure we use the libdispatch backend for the PSTL.
+//
+// RUN: grep "%{include}/__config_site" -e '#define _LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH'
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

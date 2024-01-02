@@ -44,6 +44,11 @@ struct alloc_last
         allocator_constructed = true;
     }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    alloc_last(const alloc_last&) = default;
+    alloc_last& operator=(const alloc_last&) = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     ~alloc_last() {data_ = -1;}
 
     friend bool operator==(const alloc_last& x, const alloc_last& y)

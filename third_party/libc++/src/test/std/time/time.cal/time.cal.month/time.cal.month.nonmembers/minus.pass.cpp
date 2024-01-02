@@ -58,12 +58,20 @@ int main(int, char**)
     for (unsigned i = 1; i <= 12; ++i)
     {
         month m1   = m - months{i};
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
         // months off = m - month {i};
         int exp = 6 - i;
         if (exp < 1)
             exp += 12;
         assert(static_cast<unsigned>(m1) == static_cast<unsigned>(exp));
         // assert(off.count()            == static_cast<unsigned>(exp));
+=======
+        assert(m1.ok());
+        int exp = 6 - i;
+        if (exp < 1)
+            exp += 12;
+        assert(static_cast<unsigned>(m1) == static_cast<unsigned>(exp));
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     }
 
   return 0;

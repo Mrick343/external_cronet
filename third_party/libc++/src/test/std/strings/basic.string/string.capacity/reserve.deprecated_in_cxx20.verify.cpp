@@ -15,6 +15,11 @@
 #include <string>
 
 void f() {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     std::string s;
     s.reserve(); // expected-warning {{'reserve' is deprecated}}
+=======
+  std::string s;
+  s.reserve(); // expected-warning {{'reserve' is deprecated}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

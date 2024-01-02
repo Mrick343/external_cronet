@@ -12,7 +12,11 @@
 // TODO FMT This test should not require std::to_chars(floating-point)
 // XFAIL: availability-fp_to_chars-missing
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: c++03, c++11, c++14 ,c++17
+=======
+// UNSUPPORTED: c++03, c++11, c++14, c++17
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_NODISCARD_EXT
 

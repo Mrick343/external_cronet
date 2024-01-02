@@ -36,7 +36,12 @@ struct B
     int id_;
 
     explicit B(int i) : id_(i) {}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
+=======
+    B(const B&) = default;
+    B& operator=(const B&) = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     virtual ~B() {}
 };
 

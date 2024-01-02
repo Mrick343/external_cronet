@@ -33,8 +33,13 @@ class _LIBCPP_EXPORTED_FROM_ABI nested_exception {
 
 public:
   nested_exception() _NOEXCEPT;
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   //     nested_exception(const nested_exception&) noexcept = default;
   //     nested_exception& operator=(const nested_exception&) noexcept = default;
+=======
+  _LIBCPP_HIDE_FROM_ABI nested_exception(const nested_exception&) _NOEXCEPT            = default;
+  _LIBCPP_HIDE_FROM_ABI nested_exception& operator=(const nested_exception&) _NOEXCEPT = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   virtual ~nested_exception() _NOEXCEPT;
 
   // access functions

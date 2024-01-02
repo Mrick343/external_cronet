@@ -38,6 +38,7 @@ get_temporary_buffer(ptrdiff_t __n) _NOEXCEPT
 #if !defined(_LIBCPP_HAS_NO_ALIGNED_ALLOCATION)
     if (__is_overaligned_for_new(_LIBCPP_ALIGNOF(_Tp)))
         {
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
             align_val_t __al =
                 align_val_t(alignment_of<_Tp>::value);
             __r.first = static_cast<_Tp*>(::operator new(
@@ -73,6 +74,50 @@ void return_temporary_buffer(_Tp* __p) _NOEXCEPT
 {
   _VSTD::__libcpp_deallocate_unsized((void*)__p, _LIBCPP_ALIGNOF(_Tp));
 }
+=======
+            align_val_t __al = align_val_t(_LIBCPP_ALIGNOF(_Tp));
+            __r.first = static_cast<_Tp*>(::operator new(
+                __n * sizeof(_Tp), __al, nothrow));
+        } else {
+            __r.first = static_cast<_Tp*>(::operator new(
+                __n * sizeof(_Tp), nothrow));
+        }
+#else
+    if (__is_overaligned_for_new(_LIBCPP_ALIGNOF(_Tp)))
+        {
+            // Since aligned operator new is unavailable, return an empty
+            // buffer rather than one with invalid alignment.
+            return __r;
+        }
+
+        __r.first = static_cast<_Tp*>(::operator new(__n * sizeof(_Tp), nothrow));
+#endif
+
+        if (__r.first)
+        {
+            __r.second = __n;
+            break;
+        }
+        __n /= 2;
+    }
+    return __r;
+}
+
+template <class _Tp>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_DEPRECATED_IN_CXX17
+void return_temporary_buffer(_Tp* __p) _NOEXCEPT
+{
+  _VSTD::__libcpp_deallocate_unsized((void*)__p, _LIBCPP_ALIGNOF(_Tp));
+}
+
+struct __return_temporary_buffer
+{
+_LIBCPP_SUPPRESS_DEPRECATED_PUSH
+    template <class _Tp>
+    _LIBCPP_INLINE_VISIBILITY void operator()(_Tp* __p) const {_VSTD::return_temporary_buffer(__p);}
+_LIBCPP_SUPPRESS_DEPRECATED_POP
+};
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 _LIBCPP_END_NAMESPACE_STD
 

@@ -52,6 +52,7 @@ struct __move_loop {
 
     _OutIter& __result_;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     _LIBCPP_HIDE_FROM_ABI _MoveSegment(_OutIter& __result) : __result_(__result) {}
 
     _LIBCPP_HIDE_FROM_ABI void
@@ -74,6 +75,31 @@ struct __move_loop {
                           int> = 0>
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
   operator()(_InIter __first, _InIter __last, _OutIter __result) {
+=======
+    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 explicit _MoveSegment(_OutIter& __result)
+        : __result_(__result) {}
+
+    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 void
+    operator()(typename _Traits::__local_iterator __lfirst, typename _Traits::__local_iterator __llast) {
+      __result_ = std::__move<_AlgPolicy>(__lfirst, __llast, std::move(__result_)).second;
+    }
+  };
+
+  template <class _InIter, class _OutIter, __enable_if_t<__is_segmented_iterator<_InIter>::value, int> = 0>
+  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
+  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
+    std::__for_each_segment(__first, __last, _MoveSegment<_InIter, _OutIter>(__result));
+    return std::make_pair(__last, std::move(__result));
+  }
+
+  template <class _InIter,
+            class _OutIter,
+            __enable_if_t<__has_random_access_iterator_category<_InIter>::value &&
+                              !__is_segmented_iterator<_InIter>::value && __is_segmented_iterator<_OutIter>::value,
+                          int> = 0>
+  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
+  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     using _Traits = __segmented_iterator_traits<_OutIter>;
     using _DiffT  = typename common_type<__iter_diff_t<_InIter>, __iter_diff_t<_OutIter> >::type;
 

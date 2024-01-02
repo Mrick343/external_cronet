@@ -15,7 +15,11 @@
 
 // GCC supports noexcept function types but this test still fails.
 // This is likely a bug in their implementation. Investigation needed.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // XFAIL: gcc-11, gcc-12
+=======
+// XFAIL: gcc-13
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include <cassert>
 

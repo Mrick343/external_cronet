@@ -37,6 +37,11 @@ class Copyable
     int data_;
 public:
     Copyable() : data_(0) {}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    Copyable(const Copyable&) = default;
+    Copyable& operator=(const Copyable&) = default;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     ~Copyable() {data_ = -1;}
 
     friend bool operator==(const Copyable& x, const Copyable& y)

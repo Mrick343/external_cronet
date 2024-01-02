@@ -61,7 +61,11 @@ static_assert( test_convertible<std::ranges::split_view<View, Pattern>, View, Pa
 constexpr bool test() {
   {
     std::string_view input = "abc def";
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     std::ranges::lazy_split_view<std::string_view, std::string_view> v(input, " ");
+=======
+    std::ranges::split_view<std::string_view, std::string_view> v(input, " ");
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     assert(v.base() == input);
     assert(std::ranges::equal(*v.begin(), std::string_view{"abc"}));
   }

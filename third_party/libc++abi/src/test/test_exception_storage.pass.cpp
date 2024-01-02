@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -73,4 +74,21 @@ int main() {
     // Check that __cxa_get_globals() is not NULL.
     return (thread_globals == 0) ? 1 : 0;
 #endif // !TEST_HAS_NO_THREADS
+=======
+// UNSUPPORTED: c++03
+
+#include "assert_macros.h"
+#include "concat_macros.h"
+#include "../src/cxa_exception.h"
+
+int main(int, char**) {
+  void* globals = __cxxabiv1::__cxa_get_globals();
+  TEST_REQUIRE(globals != nullptr, TEST_WRITE_CONCATENATED("Got null result from __cxa_get_globals"));
+
+  void* fast_globals = __cxxabiv1::__cxa_get_globals_fast();
+  TEST_REQUIRE(globals == fast_globals, TEST_WRITE_CONCATENATED("__cxa_get_globals returned ", globals,
+                                                                " but __cxa_get_globals_fast returned ", fast_globals));
+
+  return 0;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

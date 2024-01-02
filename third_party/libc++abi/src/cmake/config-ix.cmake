@@ -95,6 +95,7 @@ if(FUCHSIA)
   set(LIBCXXABI_HAS_PTHREAD_LIB NO)
   check_library_exists(c __cxa_thread_atexit_impl ""
     LIBCXXABI_HAS_CXA_THREAD_ATEXIT_IMPL)
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   set(LIBCXXABI_HAS_SYSTEM_LIB NO)
 else()
   check_library_exists(dl dladdr "" LIBCXXABI_HAS_DL_LIB)
@@ -102,4 +103,11 @@ else()
   check_library_exists(c __cxa_thread_atexit_impl ""
     LIBCXXABI_HAS_CXA_THREAD_ATEXIT_IMPL)
   check_library_exists(System write "" LIBCXXABI_HAS_SYSTEM_LIB)
+=======
+else()
+  check_library_exists(dl dladdr "" LIBCXXABI_HAS_DL_LIB)
+  check_library_exists(pthread pthread_once "" LIBCXXABI_HAS_PTHREAD_LIB)
+  check_library_exists(c __cxa_thread_atexit_impl ""
+    LIBCXXABI_HAS_CXA_THREAD_ATEXIT_IMPL)
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 endif()

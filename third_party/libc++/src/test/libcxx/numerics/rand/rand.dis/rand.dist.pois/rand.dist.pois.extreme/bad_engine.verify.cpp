@@ -25,6 +25,10 @@ void test(std::extreme_value_distribution<double> dist)
   G<int> badg;
   G<unsigned> okg;
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   dist(badg); //expected-error-re@*:* 2 {{{{(static_assert|static assertion)}} failed}} //expected-note {{in instantiation}}
+=======
+  dist(badg); //expected-error@*:* 2 {{static assertion failed}} //expected-note {{in instantiation}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   dist(okg);
 }

@@ -24,6 +24,7 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #if __has_builtin(__is_convertible) && !defined(_LIBCPP_USE_IS_CONVERTIBLE_FALLBACK)
 
 template <class _T1, class _T2>
@@ -107,6 +108,14 @@ struct _LIBCPP_TEMPLATE_VIS is_convertible : public __is_convertible<_T1, _T2> {
 #if _LIBCPP_STD_VER >= 17
 template <class _From, class _To>
 inline constexpr bool is_convertible_v = is_convertible<_From, _To>::value;
+=======
+template <class _T1, class _T2>
+struct _LIBCPP_TEMPLATE_VIS is_convertible : public integral_constant<bool, __is_convertible(_T1, _T2)> {};
+
+#if _LIBCPP_STD_VER >= 17
+template <class _From, class _To>
+inline constexpr bool is_convertible_v = __is_convertible(_From, _To);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif
 
 _LIBCPP_END_NAMESPACE_STD

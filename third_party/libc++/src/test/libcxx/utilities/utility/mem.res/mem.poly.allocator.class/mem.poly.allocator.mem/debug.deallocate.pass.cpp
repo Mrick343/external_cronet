@@ -6,7 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03, c++11, c++14
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03, c++11, c++14
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // REQUIRES: has-unix-headers
 
 // <memory_resource>

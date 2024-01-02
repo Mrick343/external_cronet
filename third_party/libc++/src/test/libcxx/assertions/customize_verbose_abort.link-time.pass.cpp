@@ -8,8 +8,11 @@
 
 // Test that we can set a custom verbose termination function at link-time.
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_ASSERTIONS=1
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // We flag uses of the verbose termination function in older dylibs at compile-time to avoid runtime
 // failures when back-deploying.
 // XFAIL: availability-verbose_abort-missing

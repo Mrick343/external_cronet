@@ -98,6 +98,7 @@ public:
 #endif // _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(result_type __sd) : __e_(__sd) {__init();}
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     template<class _Sseq>
         _LIBCPP_INLINE_VISIBILITY
         explicit shuffle_order_engine(_Sseq& __q,
@@ -191,6 +192,88 @@ private:
             __uratio<_Np, _Dp>::num <= 0xFFFFFFFFFFFFFFFFull / (_Max - _Min),
             result_type
         >::type
+=======
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, shuffle_order_engine>::value &&
+                                        !is_convertible<_Sseq, _Engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        explicit shuffle_order_engine(_Sseq& __q)
+         : __e_(__q) {__init();}
+    _LIBCPP_INLINE_VISIBILITY
+    void seed() {__e_.seed(); __init();}
+    _LIBCPP_INLINE_VISIBILITY
+    void seed(result_type __sd) {__e_.seed(__sd); __init();}
+    template<class _Sseq, __enable_if_t<__is_seed_sequence<_Sseq, shuffle_order_engine>::value, int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        void
+        seed(_Sseq& __q) {__e_.seed(__q); __init();}
+
+    // generating functions
+    _LIBCPP_INLINE_VISIBILITY
+    result_type operator()() {return __eval(integral_constant<bool, _Rp != 0>());}
+    _LIBCPP_INLINE_VISIBILITY
+    void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
+
+    // property functions
+    _LIBCPP_INLINE_VISIBILITY
+    const _Engine& base() const _NOEXCEPT {return __e_;}
+
+private:
+    template<class _Eng, size_t _Kp>
+    friend
+    bool
+    operator==(
+        const shuffle_order_engine<_Eng, _Kp>& __x,
+        const shuffle_order_engine<_Eng, _Kp>& __y);
+
+    template<class _Eng, size_t _Kp>
+    friend
+    bool
+    operator!=(
+        const shuffle_order_engine<_Eng, _Kp>& __x,
+        const shuffle_order_engine<_Eng, _Kp>& __y);
+
+    template <class _CharT, class _Traits,
+              class _Eng, size_t _Kp>
+    friend
+    basic_ostream<_CharT, _Traits>&
+    operator<<(basic_ostream<_CharT, _Traits>& __os,
+               const shuffle_order_engine<_Eng, _Kp>& __x);
+
+    template <class _CharT, class _Traits,
+              class _Eng, size_t _Kp>
+    friend
+    basic_istream<_CharT, _Traits>&
+    operator>>(basic_istream<_CharT, _Traits>& __is,
+               shuffle_order_engine<_Eng, _Kp>& __x);
+
+    _LIBCPP_INLINE_VISIBILITY
+    void __init()
+    {
+        for (size_t __i = 0; __i < __k; ++__i)
+            __v_[__i] = __e_();
+        __y_ = __e_();
+    }
+
+    _LIBCPP_INLINE_VISIBILITY
+    result_type __eval(false_type) {return __eval2(integral_constant<bool, __k & 1>());}
+    _LIBCPP_INLINE_VISIBILITY
+    result_type __eval(true_type) {return __eval(__uratio<__k, _Rp>());}
+
+    _LIBCPP_INLINE_VISIBILITY
+    result_type __eval2(false_type) {return __eval(__uratio<__k/2, 0x8000000000000000ull>());}
+    _LIBCPP_INLINE_VISIBILITY
+    result_type __eval2(true_type) {return __evalf<__k, 0>();}
+
+    template <uint64_t _Np, uint64_t _Dp, __enable_if_t<(__uratio<_Np, _Dp>::num > 0xFFFFFFFFFFFFFFFFull / (_Max - _Min)), int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        result_type
+        __eval(__uratio<_Np, _Dp>)
+            {return __evalf<__uratio<_Np, _Dp>::num, __uratio<_Np, _Dp>::den>();}
+
+    template <uint64_t _Np, uint64_t _Dp, __enable_if_t<__uratio<_Np, _Dp>::num <= 0xFFFFFFFFFFFFFFFFull / (_Max - _Min), int> = 0>
+        _LIBCPP_INLINE_VISIBILITY
+        result_type
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
         __eval(__uratio<_Np, _Dp>)
         {
             const size_t __j = static_cast<size_t>(__uratio<_Np, _Dp>::num * (__y_ - _Min)

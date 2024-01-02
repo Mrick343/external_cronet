@@ -14,6 +14,7 @@
 #include <iterator>
 #include <cassert>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include "test_macros.h"
 #include "min_allocator.h"
 #include "asan_testing.h"
@@ -86,6 +87,100 @@ TEST_CONSTEXPR_CXX20 bool tests()
         assert(is_contiguous_container_asan_correct(outer));
         assert(is_contiguous_container_asan_correct(outer[0]));
         assert(is_contiguous_container_asan_correct(outer[1]));
+=======
+#include "asan_testing.h"
+#include "min_allocator.h"
+#include "MoveOnly.h"
+#include "test_macros.h"
+
+#ifndef TEST_HAS_NO_EXCEPTIONS
+struct Throws {
+    Throws() : v_(0) {}
+    Throws(int v) : v_(v) {}
+    Throws(const Throws  &rhs) : v_(rhs.v_) { if (sThrows) throw 1; }
+    Throws(      Throws &&rhs) : v_(rhs.v_) { if (sThrows) throw 1; }
+    Throws& operator=(const Throws  &rhs) { v_ = rhs.v_; return *this; }
+    Throws& operator=(      Throws &&rhs) { v_ = rhs.v_; return *this; }
+    int v_;
+    static bool sThrows;
+    };
+
+bool Throws::sThrows = false;
+#endif
+
+TEST_CONSTEXPR_CXX20 bool tests()
+{
+    int a1[] = {1, 2, 3};
+    {
+        std::vector<int> l1(a1, a1+3);
+        assert(is_contiguous_container_asan_correct(l1));
+        std::vector<int>::iterator i = l1.erase(l1.cbegin(), l1.cbegin());
+        assert(l1.size() == 3);
+        assert(std::distance(l1.cbegin(), l1.cend()) == 3);
+        assert(i == l1.begin());
+        assert(is_contiguous_container_asan_correct(l1));
+    }
+    {
+        std::vector<int> l1(a1, a1+3);
+        assert(is_contiguous_container_asan_correct(l1));
+        std::vector<int>::iterator i = l1.erase(l1.cbegin(), std::next(l1.cbegin()));
+        assert(l1.size() == 2);
+        assert(std::distance(l1.cbegin(), l1.cend()) == 2);
+        assert(i == l1.begin());
+        assert(l1 == std::vector<int>(a1+1, a1+3));
+        assert(is_contiguous_container_asan_correct(l1));
+    }
+    {
+        std::vector<int> l1(a1, a1+3);
+        assert(is_contiguous_container_asan_correct(l1));
+        std::vector<int>::iterator i = l1.erase(l1.cbegin(), std::next(l1.cbegin(), 2));
+        assert(l1.size() == 1);
+        assert(std::distance(l1.cbegin(), l1.cend()) == 1);
+        assert(i == l1.begin());
+        assert(l1 == std::vector<int>(a1+2, a1+3));
+        assert(is_contiguous_container_asan_correct(l1));
+    }
+    {
+        std::vector<int> l1(a1, a1+3);
+        assert(is_contiguous_container_asan_correct(l1));
+        std::vector<int>::iterator i = l1.erase(l1.cbegin(), std::next(l1.cbegin(), 3));
+        assert(l1.size() == 0);
+        assert(std::distance(l1.cbegin(), l1.cend()) == 0);
+        assert(i == l1.begin());
+        assert(is_contiguous_container_asan_correct(l1));
+    }
+    {
+        std::vector<std::vector<int> > outer(2, std::vector<int>(1));
+        assert(is_contiguous_container_asan_correct(outer));
+        assert(is_contiguous_container_asan_correct(outer[0]));
+        assert(is_contiguous_container_asan_correct(outer[1]));
+        outer.erase(outer.begin(), outer.begin());
+        assert(outer.size() == 2);
+        assert(outer[0].size() == 1);
+        assert(outer[1].size() == 1);
+        assert(is_contiguous_container_asan_correct(outer));
+        assert(is_contiguous_container_asan_correct(outer[0]));
+        assert(is_contiguous_container_asan_correct(outer[1]));
+    }
+    // Make sure vector::erase works with move-only types
+    {
+        // When non-trivial
+        {
+            std::vector<MoveOnly> v;
+            v.emplace_back(1); v.emplace_back(2); v.emplace_back(3);
+            v.erase(v.begin(), v.begin() + 2);
+            assert(v.size() == 1);
+            assert(v[0] == MoveOnly(3));
+        }
+        // When trivial
+        {
+            std::vector<TrivialMoveOnly> v;
+            v.emplace_back(1); v.emplace_back(2); v.emplace_back(3);
+            v.erase(v.begin(), v.begin() + 2);
+            assert(v.size() == 1);
+            assert(v[0] == TrivialMoveOnly(3));
+        }
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     }
 #if TEST_STD_VER >= 11
     {

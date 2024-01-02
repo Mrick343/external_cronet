@@ -50,6 +50,7 @@ void format_tests(TestFunction check, ExceptionTest check_exception) {
 #endif // !defined(__APPLE__) && !defined(__FreeBSD__)
 
   /***** Test the type generic part *****/
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   check_exception("The format-spec fill field contains an invalid character", SV("{:}<}"), input);
   check_exception("The format-spec fill field contains an invalid character", SV("{:{<}"), input);
 
@@ -63,6 +64,21 @@ void format_tests(TestFunction check, ExceptionTest check_exception) {
 
   // *** zero-padding ***
   check_exception("A format-spec width field shouldn't have a leading zero", SV("{:0}"), input);
+=======
+  check_exception("The fill option contains an invalid value", SV("{:}<}"), input);
+  check_exception("The fill option contains an invalid value", SV("{:{<}"), input);
+
+  // *** sign ***
+  check_exception("The replacement field misses a terminating '}'", SV("{:-}"), input);
+  check_exception("The replacement field misses a terminating '}'", SV("{:+}"), input);
+  check_exception("The replacement field misses a terminating '}'", SV("{: }"), input);
+
+  // *** alternate form ***
+  check_exception("The replacement field misses a terminating '}'", SV("{:#}"), input);
+
+  // *** zero-padding ***
+  check_exception("The width option should not have a leading zero", SV("{:0}"), input);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   // *** precision ***
   check_exception("The replacement field misses a terminating '}'", SV("{:.}"), input);

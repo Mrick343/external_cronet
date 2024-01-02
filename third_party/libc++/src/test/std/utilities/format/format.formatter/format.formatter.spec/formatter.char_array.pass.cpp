@@ -7,7 +7,11 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 // TODO FMT __builtin_memcpy isn't constexpr in GCC
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: gcc-12
+=======
+// UNSUPPORTED: gcc-13
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // <format>
 

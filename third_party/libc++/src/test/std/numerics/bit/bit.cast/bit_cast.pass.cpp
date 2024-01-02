@@ -239,6 +239,31 @@ bool tests() {
 #endif
     }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+    // Test pointers
+    {
+        {
+            int obj = 3;
+            void* p = &obj;
+            test_roundtrip_through_nested_T(p);
+            test_roundtrip_through_buffer(p);
+            test_roundtrip_through<void*>(p);
+            test_roundtrip_through<char*>(p);
+            test_roundtrip_through<int*>(p);
+        }
+        {
+            int obj = 3;
+            int* p = &obj;
+            test_roundtrip_through_nested_T(p);
+            test_roundtrip_through_buffer(p);
+            test_roundtrip_through<int*>(p);
+            test_roundtrip_through<char*>(p);
+            test_roundtrip_through<void*>(p);
+        }
+    }
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     return true;
 }
 

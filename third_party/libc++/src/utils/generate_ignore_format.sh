@@ -12,7 +12,11 @@ rm libcxx/utils/data/ignore_format.txt
 # Since it's hard to match empty extensions the following
 # method is used, remove all files with an extension, then
 # add the list of extensions that should be formatted.
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 for file in $(find libcxx/{benchmarks,include,src} -type f -not -name '*.*' -or \( \
+=======
+for file in $(find libcxx -type f -not -name '*.*' -or \( \
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 	 -name "*.h" -or -name "*.hpp" -or \
 	 -name "*.c" -or -name "*.cpp" -or \
 	 -name "*.inc" -or -name "*.ipp" \

@@ -3,3 +3,12 @@ InheritParentConfig: true
 CheckOptions:
   - key:   readability-identifier-naming.ParameterPrefix
     value: ""
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  - key:   readability-identifier-naming.PrivateMemberPrefix
+    value: ""
+  - key:   readability-identifier-naming.LocalVariablePrefix
+    value: ""
+  - key:   readability-identifier-naming.TemplateParameterPrefix
+    value: ""
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

@@ -475,4 +475,32 @@ TEST_CONSTEXPR inline bool operator!=(limited_allocator<T, N> const& LHS, limite
   return !(LHS == RHS);
 }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Track the "provenance" of this allocator instance: how many times was
+// select_on_container_copy_construction called in order to produce it?
+//
+template <class T>
+struct SocccAllocator {
+  using value_type = T;
+
+  int count_ = 0;
+  explicit SocccAllocator(int i) : count_(i) {}
+
+  template <class U>
+  SocccAllocator(const SocccAllocator<U>& a) : count_(a.count_) {}
+
+  T* allocate(std::size_t n) { return std::allocator<T>().allocate(n); }
+  void deallocate(T* p, std::size_t n) { std::allocator<T>().deallocate(p, n); }
+
+  SocccAllocator select_on_container_copy_construction() const { return SocccAllocator(count_ + 1); }
+
+  bool operator==(const SocccAllocator&) const { return true; }
+
+  using propagate_on_container_copy_assignment = std::false_type;
+  using propagate_on_container_move_assignment = std::false_type;
+  using propagate_on_container_swap            = std::false_type;
+};
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif // TEST_ALLOCATOR_H

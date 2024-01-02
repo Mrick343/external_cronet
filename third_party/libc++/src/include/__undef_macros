@@ -14,3 +14,18 @@
 #ifdef max
 #  undef max
 #endif
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+
+#ifdef refresh
+#  undef refresh
+#endif
+
+#ifdef move
+#  undef move
+#endif
+
+#ifdef erase
+#  undef erase
+#endif
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)

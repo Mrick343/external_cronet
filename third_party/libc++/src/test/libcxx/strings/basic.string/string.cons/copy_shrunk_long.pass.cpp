@@ -18,6 +18,7 @@
 #include "min_allocator.h"
 
 template <class S>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 bool test()
 {
   // Tests that a long string holding a SSO size string results in
@@ -34,6 +35,22 @@ TEST_CONSTEXPR_CXX20 bool test()
 
 int main(int, char**)
 {
+=======
+TEST_CONSTEXPR_CXX20 bool test() {
+  // Tests that a long string holding a SSO size string results in
+  // an SSO copy constructed value.
+  S s1("1234567890123456789012345678901234567890123456789012345678901234567890");
+  s1.resize(7);
+  S s2(s1);
+  LIBCPP_ASSERT(s2.__invariants());
+  assert(s2 == s1);
+  assert(s2.capacity() < sizeof(S));
+
+  return true;
+}
+
+int main(int, char**) {
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   test<std::basic_string<char, std::char_traits<char>, test_allocator<char> > >();
 #if TEST_STD_VER >= 11
   test<std::basic_string<char, std::char_traits<char>, min_allocator<char>>>();

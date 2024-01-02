@@ -24,9 +24,15 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <class _InputIter>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX17
     typename enable_if<__has_input_iterator_category<_InputIter>::value, _InputIter>::type
+=======
+template <class _InputIter, __enable_if_t<__has_input_iterator_category<_InputIter>::value, int> = 0>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX17
+    _InputIter
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
     prev(_InputIter __x, typename iterator_traits<_InputIter>::difference_type __n = 1) {
   _LIBCPP_ASSERT_UNCATEGORIZED(__n <= 0 || __has_bidirectional_iterator_category<_InputIter>::value,
                                "Attempt to prev(it, n) with a positive n on a non-bidirectional iterator");

@@ -78,6 +78,7 @@
 
 #elif TEST_STD_VER > 23
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 # if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_bitset
 #     error "__cpp_lib_bitset should be defined in c++26"
@@ -89,6 +90,13 @@
 #   ifdef __cpp_lib_bitset
 #     error "__cpp_lib_bitset should not be defined because it is unimplemented in libc++!"
 #   endif
+=======
+# ifndef __cpp_lib_bitset
+#   error "__cpp_lib_bitset should be defined in c++26"
+# endif
+# if __cpp_lib_bitset != 202306L
+#   error "__cpp_lib_bitset should have the value 202306L in c++26"
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 # endif
 
 # ifndef __cpp_lib_constexpr_bitset

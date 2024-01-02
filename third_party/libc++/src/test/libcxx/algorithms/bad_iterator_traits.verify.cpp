@@ -57,5 +57,9 @@ struct BadIter {
 // behavior when these iterators are passed to standard algorithms.
 void test() {
   std::sort(BadIter(), BadIter());
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
   //expected-error-re@*:* {{{{(static_assert|static assertion)}} failed {{.*}}It looks like your iterator's `iterator_traits<It>::reference` does not match the return type of dereferencing the iterator}}
+=======
+  //expected-error-re@*:* {{static assertion failed {{.*}}It looks like your iterator's `iterator_traits<It>::reference` does not match the return type of dereferencing the iterator}}
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

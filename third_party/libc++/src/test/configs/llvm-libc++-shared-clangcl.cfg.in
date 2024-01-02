@@ -5,10 +5,17 @@ lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
 
 config.substitutions.append(('%{flags}', '--driver-mode=g++'))
 config.substitutions.append(('%{compile_flags}',
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     '-nostdinc++ -I %{include} -I %{target-include} -I %{libcxx}/test/support -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_STDIO_ISO_WIDE_SPECIFIERS -DNOMINMAX'
 ))
 config.substitutions.append(('%{link_flags}',
     '-nostdlib -L %{lib} -lc++ -lmsvcrt -lmsvcprt -loldnames'
+=======
+    '-fms-runtime-lib=' + config.fms_runtime_lib + ' -nostdinc++ -I %{include} -I %{target-include} -I %{libcxx}/test/support -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_STDIO_ISO_WIDE_SPECIFIERS -DNOMINMAX' + config.dbg_include
+))
+config.substitutions.append(('%{link_flags}',
+    '-nostdlib -L %{lib} -lc++ -l' + config.cxx_lib
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 ))
 config.substitutions.append(('%{exec}',
     '%{executor} --execdir %T --prepend_env PATH=%{lib} -- '

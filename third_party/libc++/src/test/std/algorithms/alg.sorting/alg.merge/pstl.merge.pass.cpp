@@ -49,6 +49,7 @@ struct Test {
       assert((out == std::array{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
     }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
     { // check that it works with the first range being empty
       std::array<int, 0> a;
       int b[] = {2, 4, 6, 8, 10};
@@ -98,6 +99,68 @@ struct Test {
       std::vector<int> out(std::size(a) + std::size(b));
       std::merge(
           Iter1(a.data()), Iter1(a.data() + a.size()), Iter2(b.data()), Iter2(b.data() + b.size()), std::begin(out));
+=======
+    { // check that it works with both ranges being empty
+      std::array<int, 0> a;
+      std::array<int, 0> b;
+      std::array<int, std::size(a) + std::size(b)> out;
+      std::merge(
+          policy, Iter1(std::begin(a)), Iter1(std::end(a)), Iter2(std::begin(b)), Iter2(std::end(b)), std::begin(out));
+    }
+    { // check that it works with the first range being empty
+      std::array<int, 0> a;
+      int b[] = {2, 4, 6, 8, 10};
+      std::array<int, std::size(a) + std::size(b)> out;
+      std::merge(
+          policy, Iter1(std::begin(a)), Iter1(std::end(a)), Iter2(std::begin(b)), Iter2(std::end(b)), std::begin(out));
+      assert((out == std::array{2, 4, 6, 8, 10}));
+    }
+
+    { // check that it works with the second range being empty
+      int a[] = {2, 4, 6, 8, 10};
+      std::array<int, 0> b;
+      std::array<int, std::size(a) + std::size(b)> out;
+      std::merge(
+          policy, Iter1(std::begin(a)), Iter1(std::end(a)), Iter2(std::begin(b)), Iter2(std::end(b)), std::begin(out));
+      assert((out == std::array{2, 4, 6, 8, 10}));
+    }
+
+    { // check that it works when the ranges don't have the same length
+      int a[] = {2, 4, 6, 8, 10};
+      int b[] = {3, 4};
+      std::array<int, std::size(a) + std::size(b)> out;
+      std::merge(
+          policy, Iter1(std::begin(a)), Iter1(std::end(a)), Iter2(std::begin(b)), Iter2(std::end(b)), std::begin(out));
+      assert((out == std::array{2, 3, 4, 4, 6, 8, 10}));
+    }
+
+    { // check that large ranges work
+      std::vector<int> a(100);
+      std::vector<int> b(100);
+      {
+        int i = 0;
+        for (auto& e : a) {
+          e = i;
+          i += 2;
+        }
+      }
+
+      {
+        int i = 1;
+        for (auto& e : b) {
+          e = i;
+          i += 2;
+        }
+      }
+
+      std::vector<int> out(std::size(a) + std::size(b));
+      std::merge(policy,
+                 Iter1(a.data()),
+                 Iter1(a.data() + a.size()),
+                 Iter2(b.data()),
+                 Iter2(b.data() + b.size()),
+                 std::begin(out));
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
       std::vector<int> expected(200);
       std::iota(expected.begin(), expected.end(), 0);
       assert(std::equal(out.begin(), out.end(), expected.begin()));

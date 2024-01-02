@@ -35,6 +35,7 @@ template <class _Tp>
 struct __has_element_type<_Tp, __void_t<typename _Tp::element_type> > : true_type {};
 
 template <class _Ptr, bool = __has_element_type<_Ptr>::value>
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 struct __pointer_traits_element_type;
 
 template <class _Ptr>
@@ -132,6 +133,110 @@ public:
     static pointer pointer_to(__conditional_t<is_void<element_type>::value, __nat, element_type>& __r)
         {return pointer::pointer_to(__r);}
 };
+=======
+struct __pointer_traits_element_type {};
+
+template <class _Ptr>
+struct __pointer_traits_element_type<_Ptr, true>
+{
+    typedef _LIBCPP_NODEBUG typename _Ptr::element_type type;
+};
+
+template <template <class, class...> class _Sp, class _Tp, class ..._Args>
+struct __pointer_traits_element_type<_Sp<_Tp, _Args...>, true>
+{
+    typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::element_type type;
+};
+
+template <template <class, class...> class _Sp, class _Tp, class ..._Args>
+struct __pointer_traits_element_type<_Sp<_Tp, _Args...>, false>
+{
+    typedef _LIBCPP_NODEBUG _Tp type;
+};
+
+template <class _Tp, class = void>
+struct __has_difference_type : false_type {};
+
+template <class _Tp>
+struct __has_difference_type<_Tp, __void_t<typename _Tp::difference_type> > : true_type {};
+
+template <class _Ptr, bool = __has_difference_type<_Ptr>::value>
+struct __pointer_traits_difference_type
+{
+    typedef _LIBCPP_NODEBUG ptrdiff_t type;
+};
+
+template <class _Ptr>
+struct __pointer_traits_difference_type<_Ptr, true>
+{
+    typedef _LIBCPP_NODEBUG typename _Ptr::difference_type type;
+};
+
+template <class _Tp, class _Up>
+struct __has_rebind
+{
+private:
+    template <class _Xp> static false_type __test(...);
+    _LIBCPP_SUPPRESS_DEPRECATED_PUSH
+    template <class _Xp> static true_type __test(typename _Xp::template rebind<_Up>* = 0);
+    _LIBCPP_SUPPRESS_DEPRECATED_POP
+public:
+    static const bool value = decltype(__test<_Tp>(0))::value;
+};
+
+template <class _Tp, class _Up, bool = __has_rebind<_Tp, _Up>::value>
+struct __pointer_traits_rebind
+{
+#ifndef _LIBCPP_CXX03_LANG
+    typedef _LIBCPP_NODEBUG typename _Tp::template rebind<_Up> type;
+#else
+    typedef _LIBCPP_NODEBUG typename _Tp::template rebind<_Up>::other type;
+#endif
+};
+
+template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
+struct __pointer_traits_rebind<_Sp<_Tp, _Args...>, _Up, true>
+{
+#ifndef _LIBCPP_CXX03_LANG
+    typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::template rebind<_Up> type;
+#else
+    typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::template rebind<_Up>::other type;
+#endif
+};
+
+template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
+struct __pointer_traits_rebind<_Sp<_Tp, _Args...>, _Up, false>
+{
+    typedef _Sp<_Up, _Args...> type;
+};
+
+template <class _Ptr, class = void>
+struct __pointer_traits_impl {};
+
+template <class _Ptr>
+struct __pointer_traits_impl<_Ptr, __void_t<typename __pointer_traits_element_type<_Ptr>::type> > {
+  typedef _Ptr pointer;
+  typedef typename __pointer_traits_element_type<pointer>::type element_type;
+  typedef typename __pointer_traits_difference_type<pointer>::type difference_type;
+
+#ifndef _LIBCPP_CXX03_LANG
+    template <class _Up> using rebind = typename __pointer_traits_rebind<pointer, _Up>::type;
+#else
+    template <class _Up> struct rebind
+        {typedef typename __pointer_traits_rebind<pointer, _Up>::type other;};
+#endif // _LIBCPP_CXX03_LANG
+
+private:
+    struct __nat {};
+public:
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
+    static pointer pointer_to(__conditional_t<is_void<element_type>::value, __nat, element_type>& __r)
+        {return pointer::pointer_to(__r);}
+};
+
+template <class _Ptr>
+struct _LIBCPP_TEMPLATE_VIS pointer_traits : __pointer_traits_impl<_Ptr> {};
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 template <class _Tp>
 struct _LIBCPP_TEMPLATE_VIS pointer_traits<_Tp*>

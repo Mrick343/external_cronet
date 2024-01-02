@@ -7,11 +7,16 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // When the debug mode is enabled, we don't unwrap iterators in `std::copy` and similar algorithms so we never get the
 // optimization.
 // UNSUPPORTED: libcpp-has-debug-mode
 // In the modules build, adding another overload of `memmove` doesn't work.
 // UNSUPPORTED: modules-build
+=======
+// In the modules build, adding another overload of `memmove` doesn't work.
+// UNSUPPORTED: clang-modules-build
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // GCC complains about "ambiguating" `__builtin_memmove`.
 // UNSUPPORTED: gcc
 

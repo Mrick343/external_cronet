@@ -22,6 +22,7 @@
 #include <type_traits>
 
 #include "test_macros.h"
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 struct NoDedefaultCtor {
   NoDedefaultCtor() = delete;
@@ -59,6 +60,46 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+struct NoDedefaultCtor {
+  NoDedefaultCtor() = delete;
+};
+
+// Test constraints
+static_assert(std::is_default_constructible_v<std::expected<int, int>>);
+static_assert(!std::is_default_constructible_v<std::expected<NoDedefaultCtor, int>>);
+
+struct MyInt {
+  int i;
+  friend constexpr bool operator==(const MyInt&, const MyInt&) = default;
+};
+
+template <class T, class E>
+constexpr void testDefaultCtor() {
+  std::expected<T, E> e;
+  assert(e.has_value());
+  assert(e.value() == T());
+}
+
+template <class T>
+constexpr void testTypes() {
+  testDefaultCtor<T, bool>();
+  testDefaultCtor<T, int>();
+  testDefaultCtor<T, NoDedefaultCtor>();
+}
+
+constexpr bool test() {
+  testTypes<int>();
+  testTypes<MyInt>();
+  testTypes<TailClobberer<0>>();
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing() { throw Except{}; };
   };

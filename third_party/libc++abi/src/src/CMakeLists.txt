@@ -67,6 +67,7 @@ if (LIBCXXABI_ENABLE_FORGIVING_DYNAMIC_CAST)
   add_definitions(-D_LIBCXXABI_FORGIVING_DYNAMIC_CAST)
 endif()
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 if (APPLE)
   add_library_flags_if(LIBCXXABI_HAS_SYSTEM_LIB System)
 else()
@@ -204,6 +205,144 @@ if (LIBCXXABI_ENABLE_SHARED)
   target_link_libraries(cxxabi_shared
     PUBLIC cxxabi_shared_objects
     PRIVATE ${LIBCXXABI_SHARED_LIBRARIES} ${LIBCXXABI_LIBRARIES})
+=======
+if (NOT APPLE) # On Apple platforms, we always use -nostdlib++ so we don't need to re-add other libraries
+  if (LIBCXXABI_ENABLE_THREADS)
+    add_library_flags_if(LIBCXXABI_HAS_PTHREAD_LIB pthread)
+  endif()
+
+  add_library_flags_if(LIBCXXABI_HAS_C_LIB c)
+endif()
+
+if (NOT LIBCXXABI_USE_COMPILER_RT)
+  add_library_flags_if(LIBCXXABI_HAS_GCC_LIB gcc)
+endif()
+if (NOT LIBCXXABI_USE_LLVM_UNWINDER)
+  add_library_flags_if(LIBCXXABI_HAS_GCC_S_LIB gcc_s)
+endif()
+
+if (MINGW)
+  # MINGW_LIBRARIES is defined in config-ix.cmake
+  list(APPEND LIBCXXABI_LIBRARIES ${MINGW_LIBRARIES})
+endif()
+if (ANDROID AND ANDROID_PLATFORM_LEVEL LESS 21)
+  list(APPEND LIBCXXABI_LIBRARIES android_support)
+endif()
+
+# Setup flags.
+if (CXX_SUPPORTS_NOSTDLIBXX_FLAG)
+  add_link_flags_if_supported(-nostdlib++)
+else()
+  add_link_flags_if_supported(-nodefaultlibs)
+endif()
+
+if (CXX_SUPPORTS_UNWINDLIB_EQ_NONE_FLAG AND LIBCXXABI_USE_LLVM_UNWINDER)
+  # If we're linking directly against the libunwind that we're building
+  # in the same invocation, don't try to link in the toolchain's
+  # default libunwind (which may be missing still).
+  add_link_flags_if_supported(--unwindlib=none)
+endif()
+
+if ( APPLE )
+  if (LLVM_USE_SANITIZER)
+    if (("${LLVM_USE_SANITIZER}" STREQUAL "Address") OR
+        ("${LLVM_USE_SANITIZER}" STREQUAL "Address;Undefined") OR
+        ("${LLVM_USE_SANITIZER}" STREQUAL "Undefined;Address"))
+      set(LIBFILE "libclang_rt.asan_osx_dynamic.dylib")
+    elseif("${LLVM_USE_SANITIZER}" STREQUAL "Undefined")
+      set(LIBFILE "libclang_rt.ubsan_osx_dynamic.dylib")
+    elseif("${LLVM_USE_SANITIZER}" STREQUAL "Thread")
+      set(LIBFILE "libclang_rt.tsan_osx_dynamic.dylib")
+    else()
+      message(WARNING "LLVM_USE_SANITIZER=${LLVM_USE_SANITIZER} is not supported on OS X")
+    endif()
+    if (LIBFILE)
+      find_compiler_rt_library(builtins LIBCXXABI_BUILTINS_LIBRARY)
+      get_filename_component(LIBDIR "${LIBCXXABI_BUILTINS_LIBRARY}" DIRECTORY)
+      if (NOT IS_DIRECTORY "${LIBDIR}")
+        message(FATAL_ERROR "Cannot find compiler-rt directory on OS X required for LLVM_USE_SANITIZER")
+      endif()
+      set(LIBCXXABI_SANITIZER_LIBRARY "${LIBDIR}/${LIBFILE}")
+      set(LIBCXXABI_SANITIZER_LIBRARY "${LIBCXXABI_SANITIZER_LIBRARY}" PARENT_SCOPE)
+      message(STATUS "Manually linking compiler-rt library: ${LIBCXXABI_SANITIZER_LIBRARY}")
+      add_library_flags("${LIBCXXABI_SANITIZER_LIBRARY}")
+      add_link_flags("-Wl,-rpath,${LIBDIR}")
+    endif()
+  endif()
+
+  # Make sure we link in CrashReporterClient if we find it -- it's used by
+  # abort() on Apple platforms when building the system dylib.
+  find_library(CrashReporterClient NAMES libCrashReporterClient.a
+                                   PATHS "${CMAKE_OSX_SYSROOT}/usr/local/lib")
+  if (CrashReporterClient)
+    message(STATUS "Linking with CrashReporterClient at ${CrashReporterClient}")
+    add_library_flags("${CrashReporterClient}")
+  else()
+    message(STATUS "Could not find CrashReporterClient, not linking against it")
+  endif()
+endif()
+
+split_list(LIBCXXABI_COMPILE_FLAGS)
+split_list(LIBCXXABI_LINK_FLAGS)
+
+# FIXME: libc++abi.so will not link when modules are enabled because it depends
+# on symbols defined in libc++.so which has not yet been built.
+if (LLVM_ENABLE_MODULES)
+  string(REPLACE "-Wl,-z,defs" "" CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
+endif()
+
+include(WarningFlags)
+
+# Build the shared library.
+add_library(cxxabi_shared_objects OBJECT EXCLUDE_FROM_ALL ${LIBCXXABI_SOURCES} ${LIBCXXABI_HEADERS})
+cxx_add_warning_flags(cxxabi_shared_objects ${LIBCXXABI_ENABLE_WERROR} ${LIBCXXABI_ENABLE_PEDANTIC})
+if (LIBCXXABI_USE_LLVM_UNWINDER)
+  if (LIBCXXABI_STATICALLY_LINK_UNWINDER_IN_SHARED_LIBRARY OR
+      (DEFINED LIBUNWIND_ENABLE_SHARED AND NOT LIBUNWIND_ENABLE_SHARED))
+    target_link_libraries(cxxabi_shared_objects PUBLIC unwind_shared_objects) # propagate usage requirements
+    target_sources(cxxabi_shared_objects PUBLIC $<TARGET_OBJECTS:unwind_shared_objects>)
+  else()
+    target_link_libraries(cxxabi_shared_objects PUBLIC unwind_shared)
+  endif()
+endif()
+target_link_libraries(cxxabi_shared_objects PRIVATE cxx-headers ${LIBCXXABI_BUILTINS_LIBRARY} ${LIBCXXABI_LIBRARIES})
+target_link_libraries(cxxabi_shared_objects PUBLIC cxxabi-headers)
+set_target_properties(cxxabi_shared_objects
+  PROPERTIES
+    CXX_EXTENSIONS OFF
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED OFF
+    COMPILE_FLAGS "${LIBCXXABI_COMPILE_FLAGS}"
+    DEFINE_SYMBOL ""
+)
+if (CMAKE_POSITION_INDEPENDENT_CODE OR NOT DEFINED CMAKE_POSITION_INDEPENDENT_CODE)
+  set_target_properties(cxxabi_shared_objects PROPERTIES POSITION_INDEPENDENT_CODE ON) # must set manually because it's an object library
+endif()
+
+if (LIBCXXABI_ENABLE_SHARED)
+  add_library(cxxabi_shared SHARED)
+  set_target_properties(cxxabi_shared
+    PROPERTIES
+      LINK_FLAGS "${LIBCXXABI_LINK_FLAGS}"
+      OUTPUT_NAME "${LIBCXXABI_SHARED_OUTPUT_NAME}"
+      SOVERSION "1"
+      VERSION "${LIBCXXABI_LIBRARY_VERSION}"
+  )
+
+  if (ZOS)
+    add_custom_command(TARGET cxxabi_shared POST_BUILD
+      COMMAND
+        ${LIBCXXABI_LIBCXX_PATH}/utils/zos_rename_dll_side_deck.sh
+        $<TARGET_LINKER_FILE_NAME:cxxabi_shared> $<TARGET_FILE_NAME:cxxabi_shared> "${LIBCXXABI_DLL_NAME}"
+      COMMENT "Rename dll name inside the side deck file"
+      WORKING_DIRECTORY $<TARGET_FILE_DIR:cxxabi_shared>
+    )
+  endif ()
+
+  target_link_libraries(cxxabi_shared
+    PUBLIC cxxabi_shared_objects
+    PRIVATE ${LIBCXXABI_LIBRARIES})
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   list(APPEND LIBCXXABI_BUILD_TARGETS "cxxabi_shared")
   if (LIBCXXABI_INSTALL_SHARED_LIBRARY)

@@ -30,7 +30,10 @@ config.substitutions.append(('%{include}', '@LIBCXX_GENERATED_INCLUDE_DIR@'))
 config.substitutions.append(('%{target-include}', '@LIBCXX_GENERATED_INCLUDE_TARGET_DIR@'))
 config.substitutions.append(('%{lib}', '@LIBCXX_LIBRARY_DIR@'))
 config.substitutions.append(('%{module}', '@LIBCXX_GENERATED_MODULE_DIR@'))
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 config.substitutions.append(('%{executor}', '@LIBCXX_EXECUTOR@'))
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 config.substitutions.append(('%{test-tools}', '@LIBCXX_TEST_TOOLS_PATH@'))
 
 # The test needs to manually rebuild the module. The compiler flags used in the

@@ -14,8 +14,15 @@
 //   basic_regex& assign(const basic_string<charT, string_traits, A>& s,
 //                       flag_type f = regex_constants::ECMAScript);
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <regex>
 #include <cassert>
+=======
+#include <cassert>
+#include <regex>
+#include <string>
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include "test_macros.h"
 
 int main(int, char**)

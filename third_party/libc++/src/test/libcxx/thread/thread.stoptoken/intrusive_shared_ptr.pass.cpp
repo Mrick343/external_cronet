@@ -8,7 +8,10 @@
 //
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // ADDITIONAL_COMPILE_FLAGS: -Wno-private-header
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include <__stop_token/intrusive_shared_ptr.h>
 #include <atomic>

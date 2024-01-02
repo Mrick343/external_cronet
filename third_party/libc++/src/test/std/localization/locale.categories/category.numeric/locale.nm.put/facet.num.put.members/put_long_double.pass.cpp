@@ -14,6 +14,13 @@
 
 // XFAIL: win32-broken-printf-g-precision
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+// Needs more investigation, but this is probably failing on Android M (API 23)
+// and up because the printf formatting of NAN changed.
+// XFAIL: LIBCXX-ANDROID-FIXME && !android-device-api={{21|22}}
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <locale>
 #include <ios>
 #include <cassert>

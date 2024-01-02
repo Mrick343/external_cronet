@@ -12,6 +12,7 @@
 //   iterator insert(const_iterator p, InputIterator first, InputIterator last);
 
 // REQUIRES: has-unix-headers
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // UNSUPPORTED: !libcpp-has-debug-mode, c++03
 
 #include <string>
@@ -27,4 +28,26 @@ int main(int, char**) {
                                "Attempted to add/subtract an iterator outside its valid range");
 
     return 0;
+=======
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+
+#include <string>
+
+#include "check_assertion.h"
+
+template <class S>
+void test() {
+  S v;
+  S v2;
+  char a[]    = "123";
+  const int N = sizeof(a) / sizeof(a[0]);
+  TEST_LIBCPP_ASSERT_FAILURE(
+      v.insert(v2.cbegin() + 10, a, a + N), "Attempted to add/subtract an iterator outside its valid range");
+}
+
+int main(int, char**) {
+  test<std::string>();
+
+  return 0;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

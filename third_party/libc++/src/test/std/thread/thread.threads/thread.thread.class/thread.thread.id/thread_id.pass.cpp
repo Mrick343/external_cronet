@@ -18,8 +18,14 @@
 
 // Not very portable
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include <thread>
 #include <cassert>
+=======
+#include <cassert>
+#include <functional>
+#include <thread>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 #include "test_macros.h"
 

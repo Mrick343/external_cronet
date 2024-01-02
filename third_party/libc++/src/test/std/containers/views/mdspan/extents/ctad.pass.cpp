@@ -18,6 +18,7 @@
 #include <mdspan>
 #include <cassert>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #include "ConvertibleToIntegral.h"
 #include "test_macros.h"
 
@@ -35,6 +36,33 @@ constexpr bool test() {
   test(std::extents(1, 2u), std::extents<std::size_t, D, D>(1, 2u));
   test(std::extents(1, 2u, 3, 4, 5, 6, 7, 8, 9),
        std::extents<std::size_t, D, D, D, D, D, D, D, D, D>(1, 2u, 3, 4, 5, 6, 7, 8, 9));
+=======
+#include "../ConvertibleToIntegral.h"
+#include "test_macros.h"
+
+struct NoDefaultCtorIndex {
+  size_t value;
+  constexpr NoDefaultCtorIndex() = delete;
+  constexpr NoDefaultCtorIndex(size_t val) : value(val){};
+  constexpr operator size_t() const noexcept { return value; }
+};
+
+template <class E, class Expected>
+constexpr void test(E e, Expected expected) {
+  ASSERT_SAME_TYPE(E, Expected);
+  assert(e == expected);
+}
+
+constexpr bool test() {
+  constexpr std::size_t D = std::dynamic_extent;
+
+  test(std::extents(), std::extents<size_t>());
+  test(std::extents(1), std::extents<std::size_t, D>(1));
+  test(std::extents(1, 2u), std::extents<std::size_t, D, D>(1, 2u));
+  test(std::extents(1, 2u, 3, 4, 5, 6, 7, 8, 9),
+       std::extents<std::size_t, D, D, D, D, D, D, D, D, D>(1, 2u, 3, 4, 5, 6, 7, 8, 9));
+  test(std::extents(NoDefaultCtorIndex{1}, NoDefaultCtorIndex{2}), std::extents<std::size_t, D, D>(1, 2));
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   return true;
 }
 

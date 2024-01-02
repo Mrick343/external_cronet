@@ -23,7 +23,11 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 namespace ranges {
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 enum class _LIBCPP_ENUM_VIS subrange_kind : bool { unsized, sized };
+=======
+enum class subrange_kind : bool { unsized, sized };
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 template <input_or_output_iterator _Iter, sentinel_for<_Iter> _Sent, subrange_kind _Kind>
   requires(_Kind == subrange_kind::sized || !sized_sentinel_for<_Sent, _Iter>)

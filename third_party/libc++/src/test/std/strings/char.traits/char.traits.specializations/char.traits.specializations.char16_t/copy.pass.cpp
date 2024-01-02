@@ -17,6 +17,7 @@
 
 #include "test_macros.h"
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 TEST_CONSTEXPR_CXX20 bool test()
 {
     char16_t s1[] = {1, 2, 3};
@@ -40,4 +41,27 @@ int main(int, char**)
 #endif
 
     return 0;
+=======
+TEST_CONSTEXPR_CXX20 bool test() {
+  char16_t s1[]  = {1, 2, 3};
+  char16_t s2[3] = {0};
+  assert(std::char_traits<char16_t>::copy(s2, s1, 3) == s2);
+  assert(s2[0] == char16_t(1));
+  assert(s2[1] == char16_t(2));
+  assert(s2[2] == char16_t(3));
+  assert(std::char_traits<char16_t>::copy(NULL, s1, 0) == NULL);
+  assert(std::char_traits<char16_t>::copy(s1, NULL, 0) == s1);
+
+  return true;
+}
+
+int main(int, char**) {
+  test();
+
+#if TEST_STD_VER > 17
+  static_assert(test());
+#endif
+
+  return 0;
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }

@@ -50,6 +50,17 @@ CheckOptions:
     value: lower_case
   - key:   readability-identifier-naming.LocalVariablePrefix
     value: __
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+  - key:   readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+  - key:   readability-identifier-naming.TemplateParameterPrefix
+    value: _
+  - key:   readability-identifier-naming.TemplateParameterIgnoredRegexp
+    value: (.*\:auto|expr-type) # This is https://llvm.org/PR56464
+  - key:   readability-identifier-naming.ValueTemplateParameterIgnoredRegexp # TODO: enforce naming of variable parameters
+    value: .*
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 # TODO: investigate these checks
 # bugprone-branch-clone,

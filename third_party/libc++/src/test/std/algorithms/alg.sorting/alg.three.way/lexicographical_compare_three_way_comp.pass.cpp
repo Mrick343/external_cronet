@@ -156,10 +156,17 @@ constexpr void test_comparator_invocation_count() {
   // The comparator is invoked only `min(left.size(), right.size())` times
   test_lexicographical_compare<const int*, const int*>(
       std::array{0, 1, 2}, std::array{0, 1, 2, 3}, compare_last_digit_counting, std::strong_ordering::less);
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 #ifdef _LIBCPP_ENABLE_DEBUG_MODE
   assert(compare_invocation_count <= 6);
 #else
   assert(compare_invocation_count <= 3);
+=======
+#if !_LIBCPP_ENABLE_DEBUG_MODE
+  assert(compare_invocation_count <= 3);
+#else
+  assert(compare_invocation_count <= 6);
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif
 }
 

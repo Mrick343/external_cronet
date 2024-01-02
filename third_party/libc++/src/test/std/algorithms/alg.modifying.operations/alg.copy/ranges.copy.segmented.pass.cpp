@@ -92,6 +92,7 @@ constexpr void test_join_view() {
   }
 }
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 int main(int, char**) {
   if (!std::is_constant_evaluated()) {
     test_containers<std::deque<int>, std::deque<int>>();
@@ -105,6 +106,26 @@ int main(int, char**) {
     test_join_view<Iter, sentinel_wrapper<Iter>>();
     test_join_view<Iter, sized_sentinel<Iter>>();
   });
+=======
+constexpr bool test_constexpr() {
+  test_containers<std::vector<int>, std::vector<int>>();
+
+  types::for_each(types::forward_iterator_list<int*>{}, []<class Iter> {
+    test_join_view<Iter, Iter>();
+    test_join_view<Iter, sentinel_wrapper<Iter>>();
+    test_join_view<Iter, sized_sentinel<Iter>>();
+  });
+  return true;
+}
+
+int main(int, char**) {
+  test_containers<std::deque<int>, std::deque<int>>();
+  test_containers<std::deque<int>, std::vector<int>>();
+  test_containers<std::vector<int>, std::deque<int>>();
+
+  test_constexpr();
+  static_assert(test_constexpr());
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
   return 0;
 }

@@ -222,6 +222,7 @@ struct _LIBCPP_HIDDEN __integral<16> {
 
 } // namespace __itoa
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template <unsigned _Base, typename _Tp, typename enable_if<(sizeof(_Tp) >= sizeof(unsigned)), int>::type = 0>
 _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI int __to_chars_integral_width(_Tp __value) {
   return __itoa::__integral<_Base>::__width(__value);
@@ -309,6 +310,95 @@ to_chars(char* __first, char* __last, _Tp __value) {
 }
 
 template <typename _Tp, typename enable_if<is_integral<_Tp>::value, int>::type = 0>
+=======
+template <unsigned _Base, typename _Tp, __enable_if_t<(sizeof(_Tp) >= sizeof(unsigned)), int> = 0>
+_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI int __to_chars_integral_width(_Tp __value) {
+  return __itoa::__integral<_Base>::__width(__value);
+}
+
+template <unsigned _Base, typename _Tp, __enable_if_t<(sizeof(_Tp) < sizeof(unsigned)), int> = 0>
+_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI int __to_chars_integral_width(_Tp __value) {
+  return std::__to_chars_integral_width<_Base>(static_cast<unsigned>(__value));
+}
+
+template <unsigned _Base, typename _Tp, __enable_if_t<(sizeof(_Tp) >= sizeof(unsigned)), int> = 0>
+_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI to_chars_result
+__to_chars_integral(char* __first, char* __last, _Tp __value) {
+  return __itoa::__integral<_Base>::__to_chars(__first, __last, __value);
+}
+
+template <unsigned _Base, typename _Tp, __enable_if_t<(sizeof(_Tp) < sizeof(unsigned)), int> = 0>
+_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI to_chars_result
+__to_chars_integral(char* __first, char* __last, _Tp __value) {
+  return std::__to_chars_integral<_Base>(__first, __last, static_cast<unsigned>(__value));
+}
+
+template <typename _Tp>
+_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI int __to_chars_integral_width(_Tp __value, unsigned __base) {
+  _LIBCPP_ASSERT_UNCATEGORIZED(__value >= 0, "The function requires a non-negative value.");
+
+  unsigned __base_2 = __base * __base;
+  unsigned __base_3 = __base_2 * __base;
+  unsigned __base_4 = __base_2 * __base_2;
+
+  int __r = 0;
+  while (true) {
+    if (__value < __base)
+      return __r + 1;
+    if (__value < __base_2)
+      return __r + 2;
+    if (__value < __base_3)
+      return __r + 3;
+    if (__value < __base_4)
+      return __r + 4;
+
+    __value /= __base_4;
+    __r += 4;
+  }
+
+  __libcpp_unreachable();
+}
+
+template <typename _Tp>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI to_chars_result
+__to_chars_integral(char* __first, char* __last, _Tp __value, int __base, false_type) {
+  if (__base == 10) [[likely]]
+    return std::__to_chars_itoa(__first, __last, __value, false_type());
+
+  switch (__base) {
+  case 2:
+    return std::__to_chars_integral<2>(__first, __last, __value);
+  case 8:
+    return std::__to_chars_integral<8>(__first, __last, __value);
+  case 16:
+    return std::__to_chars_integral<16>(__first, __last, __value);
+  }
+
+  ptrdiff_t __cap = __last - __first;
+  int __n         = std::__to_chars_integral_width(__value, __base);
+  if (__n > __cap)
+    return {__last, errc::value_too_large};
+
+  __last    = __first + __n;
+  char* __p = __last;
+  do {
+    unsigned __c = __value % __base;
+    __value /= __base;
+    *--__p = "0123456789abcdefghijklmnopqrstuvwxyz"[__c];
+  } while (__value != 0);
+  return {__last, errc(0)};
+}
+
+template <typename _Tp, __enable_if_t<is_integral<_Tp>::value, int> = 0>
+inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI to_chars_result
+to_chars(char* __first, char* __last, _Tp __value) {
+  using _Type = __make_32_64_or_128_bit_t<_Tp>;
+  static_assert(!is_same<_Type, void>::value, "unsupported integral type used in to_chars");
+  return std::__to_chars_itoa(__first, __last, static_cast<_Type>(__value), is_signed<_Tp>());
+}
+
+template <typename _Tp, __enable_if_t<is_integral<_Tp>::value, int> = 0>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 inline _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI to_chars_result
 to_chars(char* __first, char* __last, _Tp __value, int __base) {
   _LIBCPP_ASSERT_UNCATEGORIZED(2 <= __base && __base <= 36, "base not in [2, 36]");

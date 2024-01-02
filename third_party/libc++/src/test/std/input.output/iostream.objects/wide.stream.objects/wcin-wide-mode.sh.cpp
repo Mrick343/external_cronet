@@ -8,6 +8,7 @@
 
 // <iostream>
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // istream wcin;
 
 // UNSUPPORTED: no-wide-characters
@@ -17,6 +18,16 @@
 // FILE_DEPENDENCIES: send-stdin.sh, test.dat
 // RUN: %{build}
 // RUN: %{exec} bash send-stdin.sh "%t.exe" "test.dat"
+=======
+// wistream wcin;
+
+// UNSUPPORTED: no-wide-characters
+// REQUIRES: target={{.+}}-windows-{{.+}}
+
+// FILE_DEPENDENCIES: test.dat
+// RUN: %{build}
+// RUN: cat test.dat | %{exec} %t.exe
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 
 // Check that wcin works, preserving the unicode characters, after switching
 // stdin to wide mode.

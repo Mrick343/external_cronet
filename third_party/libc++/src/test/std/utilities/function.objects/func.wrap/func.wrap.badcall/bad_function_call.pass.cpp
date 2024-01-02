@@ -18,6 +18,10 @@
 //   bad_function_call();
 // };
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#include <exception>
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #include <functional>
 #include <type_traits>
 

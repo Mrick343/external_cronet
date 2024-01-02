@@ -62,4 +62,11 @@ namespace std::pmr {
 #  pragma GCC system_header
 #endif
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
+=======
+#if !defined(_LIBCPP_REMOVE_TRANSITIVE_INCLUDES) && _LIBCPP_STD_VER <= 20
+#  include <stdexcept>
+#endif
+
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 #endif /* _LIBCPP_MEMORY_RESOURCE */

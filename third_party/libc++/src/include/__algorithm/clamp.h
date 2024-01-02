@@ -20,6 +20,7 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER >= 17
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
 _LIBCPP_INLINE_VISIBILITY constexpr
@@ -38,6 +39,24 @@ const _Tp&
 clamp(const _Tp& __v, const _Tp& __lo, const _Tp& __hi)
 {
     return _VSTD::clamp(__v, __lo, __hi, __less<>());
+=======
+template <class _Tp, class _Compare>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI constexpr const _Tp&
+clamp(_LIBCPP_LIFETIMEBOUND const _Tp& __v,
+      _LIBCPP_LIFETIMEBOUND const _Tp& __lo,
+      _LIBCPP_LIFETIMEBOUND const _Tp& __hi,
+      _Compare __comp) {
+  _LIBCPP_ASSERT_UNCATEGORIZED(!__comp(__hi, __lo), "Bad bounds passed to std::clamp");
+  return __comp(__v, __lo) ? __lo : __comp(__hi, __v) ? __hi : __v;
+}
+
+template <class _Tp>
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI constexpr const _Tp&
+clamp(_LIBCPP_LIFETIMEBOUND const _Tp& __v,
+      _LIBCPP_LIFETIMEBOUND const _Tp& __lo,
+      _LIBCPP_LIFETIMEBOUND const _Tp& __hi) {
+  return _VSTD::clamp(__v, __lo, __hi, __less<>());
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 }
 #endif
 

@@ -6,10 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 // When the debug mode is enabled, we don't unwrap iterators in std::copy
 // so we don't get this optimization.
 // UNSUPPORTED: libcpp-has-debug-mode
 
+=======
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
 // check that std::__unwrap_iter() returns the correct type
 
 #include <algorithm>

@@ -27,6 +27,7 @@
 
 #include "MoveOnly.h"
 #include "test_macros.h"
+<<<<<<< HEAD   (ddd8f6 Merge remote-tracking branch 'aosp/main' into upstream_stagi)
 
 // Test Constraints
 static_assert(std::is_constructible_v<std::expected<int, int>, std::unexpected<int>>);
@@ -77,6 +78,58 @@ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
   struct Except {};
 
+=======
+#include "../../types.h"
+
+// Test Constraints
+static_assert(std::is_constructible_v<std::expected<int, int>, std::unexpected<int>>);
+static_assert(std::is_constructible_v<std::expected<int, MoveOnly>, std::unexpected<MoveOnly>>);
+
+// !is_constructible_v<E, GF>
+struct foo {};
+static_assert(!std::is_constructible_v<std::expected<int, int>, std::unexpected<foo>>);
+
+// explicit(!is_convertible_v<G, E>)
+struct NotConvertible {
+  explicit NotConvertible(int);
+};
+static_assert(std::is_convertible_v<std::unexpected<int>&&, std::expected<int, int>>);
+static_assert(!std::is_convertible_v<std::unexpected<int>&&, std::expected<int, NotConvertible>>);
+
+struct MyInt {
+  int i;
+  constexpr MyInt(int ii) : i(ii) {}
+  friend constexpr bool operator==(const MyInt&, const MyInt&) = default;
+};
+
+template <class Err, class V = int>
+constexpr void testInt() {
+  std::unexpected<int> u(5);
+  std::expected<V, Err> e(std::move(u));
+  assert(!e.has_value());
+  assert(e.error() == 5);
+}
+
+constexpr void testMoveOnly() {
+  std::unexpected<MoveOnly> u(MoveOnly(5));
+  std::expected<int, MoveOnly> e(std::move(u));
+  assert(!e.has_value());
+  assert(e.error() == 5);
+  assert(u.error() == 0);
+}
+
+constexpr bool test() {
+  testInt<int>();
+  testInt<MyInt>();
+  testInt<MoveOnly>();
+  testInt<TailClobberer<1>, bool>();
+  testMoveOnly();
+  return true;
+}
+
+void testException() {
+#ifndef TEST_HAS_NO_EXCEPTIONS
+>>>>>>> BRANCH (a593a1 Import Cronet version 121.0.6103.2)
   struct Throwing {
     Throwing(int) { throw Except{}; }
   };
