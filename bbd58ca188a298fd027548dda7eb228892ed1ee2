@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83e2ef10_544efc34",
+        "filename": "android/tools/import/copy.bara.sky",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-02T14:59:13Z",
+      "side": 1,
+      "message": "From https://chromium-review.googlesource.com/c/chromium/src/+/4885470/13/net/BUILD.gn, this is just used for testing, correct?",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 42
+      },
+      "revId": "bbd58ca188a298fd027548dda7eb228892ed1ee2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
