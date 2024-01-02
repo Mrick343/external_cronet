@@ -1571,13 +1571,22 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--output-name " +
          "Runtime_jni.h " +
          "--input-file " +
          "java/lang/Runtime.class",
+=======
+         "$(location :javap) " +
+         "--package_prefix " +
+         "android.net.connectivity",
+>>>>>>> BRANCH (2ef2a4 Update AOSP testing timestamp)
     out: [
         "base/android_runtime_jni_headers/Runtime_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -1613,13 +1622,20 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--output-name " +
          "Runtime_jni.h " +
          "--input-file " +
          "java/lang/Runtime.class",
+=======
+         "$(location :javap)",
+>>>>>>> BRANCH (2ef2a4 Update AOSP testing timestamp)
     out: [
         "base/android_runtime_jni_headers/Runtime_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -1655,14 +1671,23 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--unchecked-exceptions " +
          "--output-name " +
          "Runnable_jni.h " +
          "--input-file " +
          "java/lang/Runnable.class",
+=======
+         "$(location :javap) " +
+         "--package_prefix " +
+         "android.net.connectivity",
+>>>>>>> BRANCH (2ef2a4 Update AOSP testing timestamp)
     out: [
         "base/android_runtime_unchecked_jni_headers/Runnable_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -1698,14 +1723,21 @@ cc_genrule {
          "--jar-file " +
          "$(location :current_android_jar) " +
          "--javap " +
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
          "$$(find $${OUT_DIR:-out}/.path -name javap) " +
          "--unchecked-exceptions " +
          "--output-name " +
          "Runnable_jni.h " +
          "--input-file " +
          "java/lang/Runnable.class",
+=======
+         "$(location :javap)",
+>>>>>>> BRANCH (2ef2a4 Update AOSP testing timestamp)
     out: [
         "base/android_runtime_unchecked_jni_headers/Runnable_jni.h",
+    ],
+    tools: [
+        ":javap",
     ],
     tool_files: [
         ":current_android_jar",
@@ -5071,7 +5103,11 @@ cc_library_static {
 cc_genrule {
     name: "cronet_aml_base_build_date",
     cmd: "$(location base/write_build_date_header.py) $(out) " +
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
          "1692289734",
+=======
+         "1702301943",
+>>>>>>> BRANCH (2ef2a4 Update AOSP testing timestamp)
     out: [
         "base/generated_build_date.h",
     ],
@@ -5087,7 +5123,11 @@ cc_genrule {
 cc_genrule {
     name: "cronet_aml_base_build_date__testing",
     cmd: "$(location base/write_build_date_header.py) $(out) " +
+<<<<<<< HEAD   (1e5f44 Merge changes I2f93b488,I33a20e84 into upstream-staging)
          "1692289734",
+=======
+         "1702301943",
+>>>>>>> BRANCH (2ef2a4 Update AOSP testing timestamp)
     host_supported: true,
     out: [
         "base/generated_build_date.h",
