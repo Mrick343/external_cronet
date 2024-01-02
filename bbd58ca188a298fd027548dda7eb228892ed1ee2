@@ -22,6 +22,30 @@
       },
       "revId": "bbd58ca188a298fd027548dda7eb228892ed1ee2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9668db4e_3191bbe5",
+        "filename": "android/tools/import/copy.bara.sky",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-02T17:39:28Z",
+      "side": 1,
+      "message": "I think so? I will add a note to mark it as testonly.",
+      "parentUuid": "83e2ef10_544efc34",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 42
+      },
+      "revId": "bbd58ca188a298fd027548dda7eb228892ed1ee2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
