@@ -16,6 +16,24 @@
       "message": "Is this a safe change? What if we release a mainline update that is compiled against a certain guava version (with its own ABI) but the device has a different one (with a different ABI)?",
       "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3e36bda_d3665539",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-09T14:45:32Z",
+      "side": 1,
+      "message": "It seems that the problem was the jarjar tool, See (b/319237637).\n\nGuava was packaging some classes that were not being jarjared by the jarjar tool. I have created a bug and assignd it to Remi, for the time being I removed those classes using a jarjar rule in a new CL.",
+      "parentUuid": "263a42ad_0825420d",
+      "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
