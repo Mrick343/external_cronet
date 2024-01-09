@@ -16,6 +16,24 @@
       "message": "Where is the AndroidTest.xml file (and its changes)?",
       "revId": "eea6887b61be9f609d4206aa6993ed1e8fd30531",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "647103f5_78c43da5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-09T11:13:05Z",
+      "side": 1,
+      "message": "This is happening in an upcoming CL [here](https://android-review.git.corp.google.com/c/platform/packages/modules/Connectivity/+/2893182)",
+      "parentUuid": "068563e5_bb118e4c",
+      "revId": "eea6887b61be9f609d4206aa6993ed1e8fd30531",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
