@@ -16,6 +16,24 @@
       "message": "LGTM but let\u0027s wait for the necessary gn2bp CLs to land before deleting these.",
       "revId": "13d7b051dfe3c6273646df11cc04b712e97ed1a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60186fee_737b4f26",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-09T16:45:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2b6bb2c_76f2ce1a",
+      "revId": "13d7b051dfe3c6273646df11cc04b712e97ed1a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
