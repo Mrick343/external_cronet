@@ -22,6 +22,30 @@
       },
       "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe8eb7fb_29e1a8f8",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-09T14:46:12Z",
+      "side": 0,
+      "message": "This was never needed in the first place, it is a remnant of perfetto.\n\nI will ACK and remove it later.",
+      "parentUuid": "c9288743_10f2c579",
+      "range": {
+        "startLine": 562,
+        "startChar": 25,
+        "endLine": 562,
+        "endChar": 36
+      },
+      "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
