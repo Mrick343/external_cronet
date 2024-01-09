@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9288743_10f2c579",
+        "filename": "android/tools/gn2bp/gn_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-09T11:10:35Z",
+      "side": 0,
+      "message": "is this no longer needed?",
+      "range": {
+        "startLine": 562,
+        "startChar": 25,
+        "endLine": 562,
+        "endChar": 36
+      },
+      "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
