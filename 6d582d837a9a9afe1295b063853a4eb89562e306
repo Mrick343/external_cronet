@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cc8c956_409f47dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-09T11:23:04Z",
+      "side": 1,
+      "message": "I think it might be best to exclude these at the copybara level (assuming we were not already doing that)?",
+      "revId": "6d582d837a9a9afe1295b063853a4eb89562e306",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
