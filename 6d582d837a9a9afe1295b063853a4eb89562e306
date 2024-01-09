@@ -16,6 +16,24 @@
       "message": "I think it might be best to exclude these at the copybara level (assuming we were not already doing that)?",
       "revId": "6d582d837a9a9afe1295b063853a4eb89562e306",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb0eab84_981c94f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-09T11:34:33Z",
+      "side": 1,
+      "message": "Nope, I will keep this open until I add the exclusion to the copybara level then delete those files one more time 😄",
+      "parentUuid": "9cc8c956_409f47dd",
+      "revId": "6d582d837a9a9afe1295b063853a4eb89562e306",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
