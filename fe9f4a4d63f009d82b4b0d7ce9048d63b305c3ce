@@ -52,6 +52,24 @@
       "parentUuid": "b3e36bda_d3665539",
       "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4828e970_d90086a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-10T11:18:11Z",
+      "side": 1,
+      "message": "Yep, I will abandon it.",
+      "parentUuid": "12593946_3a339433",
+      "revId": "fe9f4a4d63f009d82b4b0d7ce9048d63b305c3ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
