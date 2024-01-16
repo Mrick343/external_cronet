@@ -208,7 +208,7 @@ android_library {
     ],
     lint: { test: true },
     visibility: [
-        "//packages/modules/Connectivity:__subpackages__",
+        "//external/cronet/android:__subpackages__",
     ],
 }
 
