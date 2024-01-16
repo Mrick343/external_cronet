@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f33c379c_6371322c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-16T15:36:33Z",
+      "side": 1,
+      "message": "Bypassing lint because this CL is simply moving the tests around, those tests are already running on presubmits and meeting the SLOs",
+      "revId": "1fce8df82a90c2799afb93643c939bf16d42e29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
