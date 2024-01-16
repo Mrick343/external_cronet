@@ -1,15 +1,53 @@
 {
-  "imports": [
-    {
-      "path": "packages/modules/Connectivity"
-    }
-  ],
   "presubmit": [
     {
       "name": "net_unittests_tester"
     },
     {
       "name": "cronet_unittests_tester"
+    },
+    // This target lives within packages/modules/Connectivity because it.
+    // runs both CTS + MTS tests. However, we want to keep the TEST_MAPPING
+    // definition within external/cronet as it changes over imports and
+    // OWNERS to Connectivity is limited.
+    {
+      "name": "NetHttpCoverageTests",
+      "options": [
+        {
+          "exclude-annotation": "com.android.testutils.SkipPresubmit"
+        },
+        {
+          // These sometimes take longer than 1 min which is the presubmit timeout
+          "exclude-annotation": "androidx.test.filters.LargeTest"
+        }
+      ]
+    }
+  ],
+  "postsubmit": [
+    // This target lives within packages/modules/Connectivity because it
+    // runs both CTS + MTS tests. However, we want to keep the TEST_MAPPING
+    // definition within external/cronet as it changes over imports and
+    // OWNERS to Connectivity is limited.
+    {
+      "name": "NetHttpCoverageTests"
+    }
+  ],
+  "mainline-presubmit": [
+    // This target lives within packages/modules/Connectivity because it
+    // runs both CTS + MTS tests. However, we want to keep the TEST_MAPPING
+    // definition within external/cronet as it changes over imports and
+    // OWNERS to Connectivity is limited.
+    {
+      "name": "NetHttpCoverageTests[CaptivePortalLoginGoogle.apk+NetworkStackGoogle.apk+com.google.android.resolv.apex+com.google.android.tethering.apex]",
+      "options": [
+        {
+          "exclude-annotation": "com.android.testutils.SkipPresubmit"
+        },
+        {
+          // These sometimes take longer than 1 min which is the presubmit timeout
+          "exclude-annotation": "androidx.test.filters.LargeTest"
+        }
+      ]
     }
   ]
 }
