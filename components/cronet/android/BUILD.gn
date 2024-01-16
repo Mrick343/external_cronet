@@ -1156,6 +1156,7 @@ android_library("cronet_javatests") {
     "test/javatests/src/org/chromium/net/CronetTestRuleTest.java",
     "test/javatests/src/org/chromium/net/CronetUploadTest.java",
     "test/javatests/src/org/chromium/net/CronetUrlRequestContextTest.java",
+    "test/javatests/src/org/chromium/net/CronetUrlRequestHTTPSTest.java",
     "test/javatests/src/org/chromium/net/CronetUrlRequestTest.java",
     "test/javatests/src/org/chromium/net/DiskStorageTest.java",
     "test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java",
@@ -1260,8 +1261,6 @@ instrumentation_test_apk("cronet_test_instrumentation_apk") {
            "//third_party/netty-tcnative:netty-tcnative-so",
            "//third_party/netty4:netty_all_java",
          ] + cronet_tests_androidx_common_srcs
-
-  additional_apks = [ "//net/android:net_test_support_apk" ]
 
   data_deps = [ "//net:test_support" ]
 
