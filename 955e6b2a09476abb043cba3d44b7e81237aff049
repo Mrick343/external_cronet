@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f735071_fe484ede",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1745,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-17T18:44:05Z",
+      "side": 1,
+      "message": "I have removed BUILD.gn files changes completely, they are unnecessary and we can just let me happen organically on the next import. I also removed `components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestHTTPSTest.java` as it exists as file but not part of Android.bp, we can let that happen organically on the next import too.",
+      "parentUuid": "8d00a886_29d73a81",
+      "range": {
+        "startLine": 1736,
+        "startChar": 0,
+        "endLine": 1745,
+        "endChar": 1
+      },
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aea8b865_fa5c01b0",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-17T13:16:58Z",
       "side": 1,
       "message": "Same as above",
+      "range": {
+        "startLine": 1919,
+        "startChar": 8,
+        "endLine": 1919,
+        "endChar": 45
+      },
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d242311_efe2dab6",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1919,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-17T18:44:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aea8b865_fa5c01b0",
       "range": {
         "startLine": 1919,
         "startChar": 8,
@@ -64,6 +112,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac0d21c4_a4ba04ed",
+        "filename": "components/cronet/android/test/src/org/chromium/net/NativeTestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-17T18:44:05Z",
+      "side": 1,
+      "message": "It is already implemented on AOSP, that\u0027s why there is no delta. See https://android-review.git.corp.google.com/c/platform/external/cronet/+/2510260",
+      "parentUuid": "a95bfea2_2805e38d",
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78fb5df1_2b1d3b9d",
@@ -77,6 +143,24 @@
       "writtenOn": "2024-01-17T13:16:58Z",
       "side": 1,
       "message": "You\u0027re missing `components/cronet/testing/test_server/data/server_error.txt`",
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad7e34a2_e57f77b0",
+        "filename": "components/cronet/testing/test_server/data/server_error.txt.mock-http-headers",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-17T18:44:05Z",
+      "side": 1,
+      "message": "It already exist, see https://android-review.git.corp.google.com/c/platform/external/cronet/+/2510260. For the next import, we should always pick the upstream version rather than the staging one.",
+      "parentUuid": "78fb5df1_2b1d3b9d",
       "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
