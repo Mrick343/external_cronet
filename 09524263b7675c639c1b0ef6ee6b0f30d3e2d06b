@@ -34,6 +34,24 @@
       "parentUuid": "a6bcb978_24159a82",
       "revId": "09524263b7675c639c1b0ef6ee6b0f30d3e2d06b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8094a935_2523f9a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T13:21:56Z",
+      "side": 1,
+      "message": "Yeah, just wanted to confirm why there was a merge conflict.\n\nLGTM, though you\u0027ll have to merge again back into staging after this.",
+      "parentUuid": "6e3cf483_bef3194b",
+      "revId": "09524263b7675c639c1b0ef6ee6b0f30d3e2d06b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
