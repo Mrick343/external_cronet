@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58ba76a8_05ca9836",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-17T11:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10dd510c_a7569202",
+      "range": {
+        "startLine": 9,
+        "startChar": 98,
+        "endLine": 9,
+        "endChar": 113
+      },
+      "revId": "5e39e1d6bdf181b8c6f6bb7b4ed3903b1d805569",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0038ded1_9f86dac3",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-10-16T10:36:33Z",
       "side": 1,
       "message": "LGTM, but let\u0027s land only once http://crrev/c/4936671 lands.",
+      "revId": "5e39e1d6bdf181b8c6f6bb7b4ed3903b1d805569",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33f1cd8b_f5e217ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-17T11:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0038ded1_9f86dac3",
       "revId": "5e39e1d6bdf181b8c6f6bb7b4ed3903b1d805569",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
