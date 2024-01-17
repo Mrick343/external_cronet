@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d00a886_29d73a81",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1745,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T13:16:58Z",
+      "side": 1,
+      "message": "Can you also drop this stuff like in https://chromium-review.googlesource.com/c/chromium/src/+/5177031?\n\nI think it might be best to do exactly what the upstream CL does (from a future merge conflict perspective)",
+      "range": {
+        "startLine": 1736,
+        "startChar": 0,
+        "endLine": 1745,
+        "endChar": 1
+      },
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aea8b865_fa5c01b0",
+        "filename": "components/cronet/android/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1919,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T13:16:58Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 1919,
+        "startChar": 8,
+        "endLine": 1919,
+        "endChar": 45
+      },
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a95bfea2_2805e38d",
+        "filename": "components/cronet/android/test/src/org/chromium/net/NativeTestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T13:16:58Z",
+      "side": 1,
+      "message": "You\u0027re missing `getServerErrorURL`",
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78fb5df1_2b1d3b9d",
+        "filename": "components/cronet/testing/test_server/data/server_error.txt.mock-http-headers",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T13:16:58Z",
+      "side": 1,
+      "message": "You\u0027re missing `components/cronet/testing/test_server/data/server_error.txt`",
+      "revId": "955e6b2a09476abb043cba3d44b7e81237aff049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
