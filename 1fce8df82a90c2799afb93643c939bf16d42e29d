@@ -16,6 +16,46 @@
       "message": "Bypassing lint because this CL is simply moving the tests around, those tests are already running on presubmits and meeting the SLOs",
       "revId": "1fce8df82a90c2799afb93643c939bf16d42e29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87ffbeda_191bc4bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T11:06:28Z",
+      "side": 1,
+      "message": "Will +2 once we discuss/+2 the Connectivity CL",
+      "revId": "1fce8df82a90c2799afb93643c939bf16d42e29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4366ab5_2ea4dd56",
+        "filename": "android/mts/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-17T11:06:28Z",
+      "side": 1,
+      "message": "nit: can you add default private visibility?\n\nRight now it defaults to the default_visibility of the first ancestor package defining it https://android.googlesource.com/platform/build/soong/+/refs/heads/master/README.md#visibility, which is error prone.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 7
+      },
+      "revId": "1fce8df82a90c2799afb93643c939bf16d42e29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
