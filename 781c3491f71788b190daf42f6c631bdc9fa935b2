@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc7a5321_86b9e93c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-19T12:55:52Z",
+      "side": 1,
+      "message": "Does aosp/2917946 need to propagate to git_udc-qpr-dev-plus-aosp https://android-build.corp.google.com/artifact/pending/P68366345/test_suites_x86_64-trunk_staging/latest/view/logs%2Fbuild_error.log?\n\nOr are we fine with that branch being red?",
+      "revId": "781c3491f71788b190daf42f6c631bdc9fa935b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
