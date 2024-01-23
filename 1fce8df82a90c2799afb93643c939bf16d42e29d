@@ -56,6 +56,30 @@
       },
       "revId": "1fce8df82a90c2799afb93643c939bf16d42e29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a88797f_a7318096",
+        "filename": "android/mts/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-23T16:04:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4366ab5_2ea4dd56",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 7
+      },
+      "revId": "1fce8df82a90c2799afb93643c939bf16d42e29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
