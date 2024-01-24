@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f50acfc3_67a6b553",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-24T19:17:06Z",
+      "side": 1,
+      "message": "I did that locally and forgot to upload ;( Sorry",
+      "revId": "82abf3be4a3146d19dbf6eb7f07304d893c032cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
