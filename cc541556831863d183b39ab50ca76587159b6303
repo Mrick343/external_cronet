@@ -16,6 +16,24 @@
       "message": "Should we trigger a build in udc-mainline-prod with this CL just to be safe?",
       "revId": "cc541556831863d183b39ab50ca76587159b6303",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4fffe38_e55967bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-25T13:13:16Z",
+      "side": 1,
+      "message": "https://android-build.corp.google.com/builds/abtd/run/L52100030001524729",
+      "parentUuid": "3e05cd37_46acac15",
+      "revId": "cc541556831863d183b39ab50ca76587159b6303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
