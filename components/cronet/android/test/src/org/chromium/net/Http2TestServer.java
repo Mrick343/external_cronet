@@ -7,6 +7,7 @@ package org.chromium.net;
 import android.content.Context;
 import android.os.Build;
 
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
 import org.chromium.base.Log;
 import org.chromium.net.test.util.CertTestUtil;
 
@@ -16,6 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+=======
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -38,6 +41,15 @@ import io.netty.handler.ssl.OpenSslServerContext;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SupportedCipherSuiteFilter;
 
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
+=======
+import org.chromium.base.Log;
+import org.chromium.net.test.util.CertTestUtil;
+
+import java.io.File;
+import java.util.concurrent.CountDownLatch;
+
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
 /** Wrapper class to start a HTTP/2 test server. */
 public final class Http2TestServer {
     private static Channel sServerChannel;
@@ -158,13 +170,22 @@ public final class Http2TestServer {
     }
 
     private static boolean startHttp2TestServer(
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         Context context,
         String certFileName,
         String keyFileName,
         CountDownLatch hangingUrlLatch)
         throws Exception {
+=======
+            Context context,
+            String certFileName,
+            String keyFileName,
+            CountDownLatch hangingUrlLatch)
+            throws Exception {
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
         sReportingCollector = new ReportingCollector();
         Http2TestServerRunnable http2TestServerRunnable =
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
             new Http2TestServerRunnable(
                 new File(CertTestUtil.CERTS_DIRECTORY + certFileName),
                 new File(CertTestUtil.CERTS_DIRECTORY + keyFileName),
@@ -174,6 +195,15 @@ public final class Http2TestServer {
         // the caller should assert on the value returned to make sure that the test
         // fails if the server has failed to start up.
         return EXECUTOR.submit(http2TestServerRunnable).get();
+=======
+                new Http2TestServerRunnable(
+                        new File(CertTestUtil.CERTS_DIRECTORY + certFileName),
+                        new File(CertTestUtil.CERTS_DIRECTORY + keyFileName),
+                        hangingUrlLatch);
+        new Thread(http2TestServerRunnable).start();
+        http2TestServerRunnable.blockUntilStarted();
+        return true;
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
     }
 
     private Http2TestServer() {}
@@ -183,18 +213,28 @@ public final class Http2TestServer {
         private final CountDownLatch mHangingUrlLatch;
 
         Http2TestServerRunnable(File certFile, File keyFile, CountDownLatch hangingUrlLatch)
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
             throws Exception {
             ApplicationProtocolConfig applicationProtocolConfig =
                 new ApplicationProtocolConfig(
                     Protocol.ALPN, SelectorFailureBehavior.NO_ADVERTISE,
                     SelectedListenerFailureBehavior.ACCEPT,
                     ApplicationProtocolNames.HTTP_2);
+=======
+                throws Exception {
+            ApplicationProtocolConfig applicationProtocolConfig =
+                    new ApplicationProtocolConfig(
+                            Protocol.ALPN, SelectorFailureBehavior.NO_ADVERTISE,
+                            SelectedListenerFailureBehavior.ACCEPT,
+                                    ApplicationProtocolNames.HTTP_2);
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
 
             // Don't make netty use java.security.KeyStore.getInstance("JKS") as it doesn't
             // exist.  Just avoid a KeyManagerFactory as it's unnecessary for our testing.
             System.setProperty("io.netty.handler.ssl.openssl.useKeyManagerFactory", "false");
 
             mSslCtx =
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
                 new OpenSslServerContext(
                     certFile,
                     keyFile,
@@ -205,6 +245,18 @@ public final class Http2TestServer {
                     applicationProtocolConfig,
                     0,
                     0);
+=======
+                    new OpenSslServerContext(
+                            certFile,
+                            keyFile,
+                            null,
+                            null,
+                            Http2SecurityUtil.CIPHERS,
+                            SupportedCipherSuiteFilter.INSTANCE,
+                            applicationProtocolConfig,
+                            0,
+                            0);
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
 
             mHangingUrlLatch = hangingUrlLatch;
         }
@@ -226,6 +278,7 @@ public final class Http2TestServer {
                     Log.i(TAG, "Netty HTTP/2 server started on " + getServerUrl());
                     return true;
                 } catch (Exception e) {
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
                     // Netty test server fails to startup and this is a common issue
                     // https://github.com/netty/netty/issues/2616. It is not well understood
                     // why this is happening or how to fix it, we can workaround this by
@@ -234,6 +287,16 @@ public final class Http2TestServer {
                     Log.w(TAG, "Netty server failed to start", e);
                     // Sleep for half a second before trying again.
                     Thread.sleep(/* milliseconds = */ 500);
+=======
+                    Log.e(TAG, "Netty server failed to start", e);
+                    // Retry once if we hit https://github.com/netty/netty/issues/2616 before the
+                    // server starts.
+                    retry =
+                            !retry
+                                    && sServerChannel == null
+                                    && e.toString()
+                                            .contains("java.nio.channels.ClosedChannelException");
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
                 }
             }
             return false;
@@ -253,9 +316,15 @@ public final class Http2TestServer {
         @Override
         public void initChannel(SocketChannel ch) {
             ch.pipeline()
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
                 .addLast(
                     mSslCtx.newHandler(ch.alloc()),
                     new Http2NegotiationHandler(mHangingUrlLatch));
+=======
+                    .addLast(
+                            mSslCtx.newHandler(ch.alloc()),
+                            new Http2NegotiationHandler(mHangingUrlLatch));
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
         }
     }
 
@@ -272,12 +341,21 @@ public final class Http2TestServer {
             throws Exception {
             if (ApplicationProtocolNames.HTTP_2.equals(protocol)) {
                 ctx.pipeline()
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
                     .addLast(
                         new Http2TestHandler.Builder()
                             .setReportingCollector(sReportingCollector)
                             .setServerUrl(getServerUrl())
                             .setHangingUrlLatch(mHangingUrlLatch)
                             .build());
+=======
+                        .addLast(
+                                new Http2TestHandler.Builder()
+                                        .setReportingCollector(sReportingCollector)
+                                        .setServerUrl(getServerUrl())
+                                        .setHangingUrlLatch(mHangingUrlLatch)
+                                        .build());
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
                 return;
             }
 

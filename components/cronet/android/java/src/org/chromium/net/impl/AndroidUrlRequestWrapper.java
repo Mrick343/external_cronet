@@ -4,15 +4,22 @@
 
 package org.chromium.net.impl;
 
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+=======
+import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_API_LEVEL;
+import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_VERSION;
+
+import androidx.annotation.RequiresExtension;
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
 
 import org.chromium.net.UrlResponseInfo;
 
 import java.nio.ByteBuffer;
 
-@RequiresApi(34)
+@RequiresExtension(extension = EXT_API_LEVEL, version = EXT_VERSION)
 class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     private final android.net.http.UrlRequest mBackend;
 
@@ -47,7 +54,7 @@ class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
 
     @Override
     public void getStatus(StatusListener listener) {
-        mBackend.getStatus(new UrlRequestStatusListenerWrapper(listener));
+        mBackend.getStatus(new AndroidUrlRequestStatusListenerWrapper(listener));
     }
 
     @Override

@@ -24,6 +24,7 @@ public final class NativeTestServer {
 
     public static boolean startNativeTestServer(Context context) {
         TestFilesInstaller.installIfNeeded(context);
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         return NativeTestServerJni.get().startNativeTestServer(
                 TestFilesInstaller.getInstalledPath(context),
             UrlUtils.getIsolatedTestRoot(),
@@ -40,6 +41,12 @@ public final class NativeTestServer {
                 UrlUtils.getIsolatedTestRoot(),
                 true, // useHttps
                 serverCertificate);
+=======
+        return NativeTestServerJni.get()
+                .startNativeTestServer(
+                        TestFilesInstaller.getInstalledPath(context),
+                        UrlUtils.getIsolatedTestRoot());
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
     }
 
     public static void shutdownNativeTestServer() {
@@ -108,20 +115,34 @@ public final class NativeTestServer {
 
     @NativeMethods("cronet_tests")
     interface Natives {
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         boolean startNativeTestServer(
                 String filePath,
                 String testDataDir,
                 boolean useHttps,
                 @ServerCertificate int certificate);
+=======
+        boolean startNativeTestServer(String filePath, String testDataDir);
+
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
         void shutdownNativeTestServer();
+
         String getEchoBodyURL();
+
         String getEchoHeaderURL(String header);
+
         String getEchoAllHeadersURL();
+
         String getEchoMethodURL();
+
         String getRedirectToEchoBody();
+
         String getFileURL(String filePath);
+
         String getExabyteResponseURL();
+
         String getHostPort();
+
         int getPort();
     }
 }

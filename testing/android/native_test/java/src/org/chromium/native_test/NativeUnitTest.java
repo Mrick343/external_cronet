@@ -13,9 +13,7 @@ import org.chromium.base.PathUtils;
 import org.chromium.base.PowerMonitor;
 import org.chromium.base.library_loader.LibraryLoader;
 
-/**
- * A helper for running native unit tests (i.e., not browser tests)
- */
+/** A helper for running native unit tests (i.e., not browser tests) */
 public class NativeUnitTest extends NativeTest {
     private static final String TAG = "NativeTest";
 
@@ -44,6 +42,7 @@ public class NativeUnitTest extends NativeTest {
         // Needed by system_monitor_unittest.cc
         PowerMonitor.createForTests();
 
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
         // For NativeActivity based tests,
         // dependency libraries must be loaded before NativeActivity::OnCreate,
         // otherwise loading android.app.lib_name will fail
@@ -54,6 +53,11 @@ public class NativeUnitTest extends NativeTest {
             Log.e(TAG, "No Library provided for native tests! Exiting");
             activity.finish();
         }
+=======
+        // For NativeActivity based tests, dependency libraries must be loaded before
+        // NativeActivity::OnCreate, otherwise loading android.app.lib_name will fail
+        loadLibraries();
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
     }
 
     private void loadLibrary(String library) {

@@ -29,8 +29,12 @@ public final class CronetFixedModeOutputStream extends CronetOutputStream {
     // to consume the data. This field is non-final, so it can be changed for tests.
     // Using 16384 bytes is because the internal read buffer is 14520 for QUIC,
     // 16384 for SPDY, and 16384 for normal HTTP/1.1 stream.
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
     @VisibleForTesting
     public static int sDefaultBufferLength = 16384;
+=======
+    @VisibleForTesting private static int sDefaultBufferLength = 16384;
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
     private final CronetHttpURLConnection mConnection;
     private final MessageLoop mMessageLoop;
     private final long mContentLength;
@@ -58,8 +62,8 @@ public final class CronetFixedModeOutputStream extends CronetOutputStream {
      * @param contentLength The content length of the request body. Non-zero for
      *            non-chunked upload.
      */
-    CronetFixedModeOutputStream(CronetHttpURLConnection connection,
-            long contentLength, MessageLoop messageLoop) {
+    CronetFixedModeOutputStream(
+            CronetHttpURLConnection connection, long contentLength, MessageLoop messageLoop) {
         if (connection == null) {
             throw new NullPointerException();
         }
@@ -144,9 +148,11 @@ public final class CronetFixedModeOutputStream extends CronetOutputStream {
      */
     private void checkNotExceedContentLength(int numBytes) throws ProtocolException {
         if (mBytesWritten + numBytes > mContentLength) {
-            throw new ProtocolException("expected "
-                    + (mContentLength - mBytesWritten) + " bytes but received "
-                    + numBytes);
+            throw new ProtocolException(
+                    "expected "
+                            + (mContentLength - mBytesWritten)
+                            + " bytes but received "
+                            + numBytes);
         }
     }
 
@@ -200,11 +206,16 @@ public final class CronetFixedModeOutputStream extends CronetOutputStream {
         }
     }
 
+<<<<<<< HEAD   (750af1 Merge remote-tracking branch 'aosp/main' into upstream-stagi)
     /**
      * Sets the default buffer length for use in tests.
      */
     @VisibleForTesting
     public static void setDefaultBufferLengthForTesting(int length) {
+=======
+    /** Sets the default buffer length for use in tests. */
+    static void setDefaultBufferLengthForTesting(int length) {
+>>>>>>> BRANCH (abce8a Import Cronet version 121.0.6167.71)
         sDefaultBufferLength = length;
     }
 }
