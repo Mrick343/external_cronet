@@ -16,6 +16,24 @@
       "message": "Re-assigning to stefanoduo@ since aymanm@ is out sick.",
       "revId": "750af12f98e5668cb90bdb3a7d9193b333fc6c34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d37ae0d_a5b3877a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-29T11:36:13Z",
+      "side": 1,
+      "message": "Same as https://android-review.git.corp.google.com/c/platform/external/cronet/+/2927838/comments/287ac5ee_66dcaded.",
+      "parentUuid": "6d393bf2_02460c19",
+      "revId": "750af12f98e5668cb90bdb3a7d9193b333fc6c34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
