@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d393bf2_02460c19",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-01-29T11:29:02Z",
+      "side": 1,
+      "message": "Re-assigning to stefanoduo@ since aymanm@ is out sick.",
+      "revId": "750af12f98e5668cb90bdb3a7d9193b333fc6c34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
