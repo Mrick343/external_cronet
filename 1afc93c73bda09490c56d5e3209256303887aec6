@@ -16,6 +16,24 @@
       "message": "Re-assigning to stefanoduo@ since aymanm@ is out sick.",
       "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cdd2a5b_e6ef1ab1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-01-29T11:34:54Z",
+      "side": 1,
+      "message": "I think it\u0027s best to wait for aymanm@ to be back (as long as he won\u0027t be away for too long).\n\nHaving multiple people review an import chain makes it more likely to miss inconsistencies (they might be missing context on decisions made previously in the chain).",
+      "parentUuid": "287ac5ee_66dcaded",
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
