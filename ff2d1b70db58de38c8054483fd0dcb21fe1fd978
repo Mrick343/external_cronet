@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adf41ba5_c8e83234",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-30T14:06:59Z",
+      "side": 0,
+      "message": "Please use the upstream-version here instead of the down-stream, this is a formatting changes and we don\u0027t want to introduce divergence.",
+      "range": {
+        "startLine": 74,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 27
+      },
+      "revId": "ff2d1b70db58de38c8054483fd0dcb21fe1fd978",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

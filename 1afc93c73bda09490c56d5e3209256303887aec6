@@ -34,6 +34,75 @@
       "parentUuid": "287ac5ee_66dcaded",
       "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad46f9cf_a08f1b13",
+        "filename": "components/cronet/android/api/src/org/chromium/net/ExperimentalOptionsTranslatingCronetEngineBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-30T14:06:59Z",
+      "side": 1,
+      "message": "You may need to add the `public` identifier back again because this class gets jar-jared and you will hit a `Illegal access` as you try to access a non-public mainline class.\n\nAlso @VisibileForTesting.\n\nThose can be done in a follow-up CL because making changes to a merge-commit is awful but I will leave that up to you (this note applies to all of my comments).",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 5
+      },
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfd786f7_1a88aa7a",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-30T14:06:59Z",
+      "side": 1,
+      "message": "`UserAgent.getDefault()` does not exist downstream, Use the version from downstream until I have resolved this divergence.",
+      "range": {
+        "startLine": 437,
+        "startChar": 29,
+        "endLine": 437,
+        "endChar": 65
+      },
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c84f2491_08193239",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifier.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-30T14:06:59Z",
+      "side": 1,
+      "message": "`public` identifier is missing which will fail the tests.",
+      "range": {
+        "startLine": 330,
+        "startChar": 4,
+        "endLine": 330,
+        "endChar": 8
+      },
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
