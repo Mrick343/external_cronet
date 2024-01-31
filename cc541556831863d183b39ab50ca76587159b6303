@@ -69,6 +69,24 @@
       "message": "Don\u0027t Submit until ag/26010411 is submitted.",
       "revId": "cc541556831863d183b39ab50ca76587159b6303",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94b7c32e_dec41cd1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-01-31T10:20:52Z",
+      "side": 1,
+      "message": "https://android-build.corp.google.com/abtd/run/L50000030001725244/?referrer\u003demail\n\nPassed builds with this CL which means it is now safe to submit.",
+      "parentUuid": "cd0e0374_87247142",
+      "revId": "cc541556831863d183b39ab50ca76587159b6303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
