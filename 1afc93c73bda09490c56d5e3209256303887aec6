@@ -59,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f84984fd_f0dae3c0",
+        "filename": "components/cronet/android/api/src/org/chromium/net/ExperimentalOptionsTranslatingCronetEngineBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-01-31T16:23:47Z",
+      "side": 1,
+      "message": "Fixed in https://r.android.com/2939885",
+      "parentUuid": "ad46f9cf_a08f1b13",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 5
+      },
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfd786f7_1a88aa7a",

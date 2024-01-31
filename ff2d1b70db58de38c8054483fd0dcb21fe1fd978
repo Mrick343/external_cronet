@@ -22,6 +22,30 @@
       },
       "revId": "ff2d1b70db58de38c8054483fd0dcb21fe1fd978",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d4c2363_09c459e4",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-01-31T16:23:47Z",
+      "side": 0,
+      "message": "Fixed in https://r.android.com/2939885",
+      "parentUuid": "adf41ba5_c8e83234",
+      "range": {
+        "startLine": 74,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 27
+      },
+      "revId": "ff2d1b70db58de38c8054483fd0dcb21fe1fd978",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
