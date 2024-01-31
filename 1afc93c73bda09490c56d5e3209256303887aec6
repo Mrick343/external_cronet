@@ -82,6 +82,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30d2cd83_ada8bd2b",
+        "filename": "components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-01-31T14:50:15Z",
+      "side": 1,
+      "message": "`getDefault()` exists downstream which is why I picked it. https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/components/cronet/android/java/src/org/chromium/net/impl/UserAgent.java",
+      "parentUuid": "bfd786f7_1a88aa7a",
+      "range": {
+        "startLine": 437,
+        "startChar": 29,
+        "endLine": 437,
+        "endChar": 65
+      },
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c84f2491_08193239",
@@ -95,6 +119,30 @@
       "writtenOn": "2024-01-30T14:06:59Z",
       "side": 1,
       "message": "`public` identifier is missing which will fail the tests.",
+      "range": {
+        "startLine": 330,
+        "startChar": 4,
+        "endLine": 330,
+        "endChar": 8
+      },
+      "revId": "1afc93c73bda09490c56d5e3209256303887aec6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2cd8614_760ffdde",
+        "filename": "net/android/java/src/org/chromium/net/NetworkChangeNotifier.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-01-31T14:50:15Z",
+      "side": 1,
+      "message": "I confirmed that our test ie NetworkChangesTest(pka NetworkChangeNotifierTest no longer calls this method) so this is safe.",
+      "parentUuid": "c84f2491_08193239",
       "range": {
         "startLine": 330,
         "startChar": 4,
