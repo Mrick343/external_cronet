@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ece46cd1_cf1853cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-01T14:24:21Z",
+      "side": 1,
+      "message": "(1) it seems that some changes have happened to JNI, once again, RIP.\n(2) it seems that https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/BUILD.gn;l\u003d308;drc\u003dd3d4ff28768842dd1ce94f408f89d1e2d31dd4fd;bpv\u003d0?q\u003dcronet_stats_log_java\u0026sq\u003d\u0026ss\u003dchromium%2Fchromium%2Fsrc has been imported, so you will face compilation error. the correct approach here is to use `sdk_version: \"system_current\" for that module and probably every module that depends on it.",
+      "revId": "ba52f6af19cc3b496ad8eb56cc602da736f2e17d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
