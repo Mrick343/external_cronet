@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca6bf9a1_19f215c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-01T14:06:16Z",
+      "side": 1,
+      "message": "STAMP, I can\u0027t review this, I will take a look at the Android.extras.bp instead.",
+      "revId": "115696d2518a09628af9d99681430f8e47a47a92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
