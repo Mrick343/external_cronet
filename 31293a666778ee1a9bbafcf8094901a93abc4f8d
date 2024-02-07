@@ -94,6 +94,30 @@
       },
       "revId": "31293a666778ee1a9bbafcf8094901a93abc4f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40831783_6a470671",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-07T19:06:09Z",
+      "side": 0,
+      "message": "In chromium, it\u0027s a `component` and desc_.json, it\u0027s a `static_library`",
+      "parentUuid": "30e1c17d_2e2a8928",
+      "range": {
+        "startLine": 1793,
+        "startChar": 1,
+        "endLine": 1795,
+        "endChar": 11
+      },
+      "revId": "31293a666778ee1a9bbafcf8094901a93abc4f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
