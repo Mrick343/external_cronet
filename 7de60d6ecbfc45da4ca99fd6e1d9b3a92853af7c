@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ad8cf91_6a7bb84a",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1708,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-07T11:06:40Z",
+      "side": 1,
+      "message": "`module.type in [\"java_library\", \"java_import\"]` or `module.type.startswith(\"java_\")`",
+      "range": {
+        "startLine": 1708,
+        "startChar": 29,
+        "endLine": 1708,
+        "endChar": 60
+      },
+      "revId": "7de60d6ecbfc45da4ca99fd6e1d9b3a92853af7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
