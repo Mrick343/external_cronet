@@ -46,6 +46,30 @@
       },
       "revId": "31293a666778ee1a9bbafcf8094901a93abc4f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33641fd5_eed7bc9e",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-07T18:17:12Z",
+      "side": 0,
+      "message": "Can you change to\n\n```\n if module.type in [\u0027cc_library_shared\u0027, \u0027cc_binary\u0027] and dep_module.type \u003d\u003d \u0027cc_library_static\u0027:\n        module_target.whole_static_libs.add(dep_module.name)\n      elif module.type \u003d\u003d\u0027cc_library_static\u0027:\n        ...\n      else:\n         raise Exception(...)\n```\n\nI want to see if there is a case where a java module depends on a cc module which is a little bit unusual.",
+      "parentUuid": "2fc2ed10_13509ae9",
+      "range": {
+        "startLine": 1793,
+        "startChar": 1,
+        "endLine": 1795,
+        "endChar": 11
+      },
+      "revId": "31293a666778ee1a9bbafcf8094901a93abc4f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
