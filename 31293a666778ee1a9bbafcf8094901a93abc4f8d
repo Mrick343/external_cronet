@@ -70,6 +70,30 @@
       },
       "revId": "31293a666778ee1a9bbafcf8094901a93abc4f8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30e1c17d_2e2a8928",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-07T19:02:13Z",
+      "side": 0,
+      "message": "So we have java_library `cronet_aml_base_base_java` depending on cc_library_static `cronet_aml_third_party_jni_zero_jni_zero_utils`. The target was removed in https://chromium-review.googlesource.com/c/chromium/src/+/5240901 though",
+      "parentUuid": "33641fd5_eed7bc9e",
+      "range": {
+        "startLine": 1793,
+        "startChar": 1,
+        "endLine": 1795,
+        "endChar": 11
+      },
+      "revId": "31293a666778ee1a9bbafcf8094901a93abc4f8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
