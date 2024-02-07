@@ -147,9 +147,9 @@ if [ -z "${ANDROID_BUILD_TOP}" ]; then
 fi
 
 
-setup_chromium_src_repo "${rev}" "${chromium_dir}" "${force_reset}"
+#setup_chromium_src_repo "${rev}" "${chromium_dir}" "${force_reset}"
 gn_desc x86 "${chromium_dir}"
 gn_desc x64 "${chromium_dir}"
 gn_desc arm "${chromium_dir}"
 gn_desc arm64 "${chromium_dir}"
-
+gn_desc riscv64 "${chromium_dir}"
