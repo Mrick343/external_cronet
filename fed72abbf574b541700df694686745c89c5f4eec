@@ -16,6 +16,24 @@
       "message": "Investigating the bloatbuster warning comes as a priority before submitting",
       "revId": "fed72abbf574b541700df694686745c89c5f4eec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ee32948_45456578",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-09T16:45:46Z",
+      "side": 1,
+      "message": "https://android-build.corp.google.com/build-details/P69745405/targets/aosp_cf_riscv64_phone-trunk_staging-userdebug\n\nThis means that the increase comes from adding RISCV64 cronet shared library which makes sense.",
+      "parentUuid": "f0d994fa_dce1d267",
+      "revId": "fed72abbf574b541700df694686745c89c5f4eec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
