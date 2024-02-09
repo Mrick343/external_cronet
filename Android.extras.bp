@@ -141,7 +141,7 @@ android_test_helper_app {
     defaults: [
         "cronet_native_unittests_defaults",
     ],
-    manifest: "test_runner/AndroidManifest.xml",
+    manifest: "test_runner/native_test_runner/AndroidManifest.xml",
     jni_libs: [
         "cronet_aml_components_cronet_android_cronet_unittests_android__library__testing",
     ],
@@ -153,7 +153,7 @@ android_test_helper_app {
     defaults: [
         "cronet_native_unittests_defaults",
     ],
-    manifest: "test_runner/AndroidNetManifest.xml",
+    manifest: "test_runner/native_test_runner/AndroidNetManifest.xml",
     jni_libs: [
         "cronet_aml_net_net_unittests__library__testing",
     ],
