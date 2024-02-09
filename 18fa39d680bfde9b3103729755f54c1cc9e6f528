@@ -16,6 +16,24 @@
       "message": "Remove `- Running bpfmt -w Android.pb.swp` this step please, it distorts the entire diff.",
       "revId": "18fa39d680bfde9b3103729755f54c1cc9e6f528",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e5c890e_04ef680b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2009995
+      },
+      "writtenOn": "2024-02-09T13:40:28Z",
+      "side": 1,
+      "message": "\u003e Remove `- Running bpfmt -w Android.pb.swp` this\n\u003e step please, it distorts the entire diff.\n\nIs this something to do in a separate commit of its own, or something to avoid entirely today? Was it a mistake on my part to see the ⚠️ and feel inspired to act?",
+      "parentUuid": "2b7c3c0e_741f069c",
+      "revId": "18fa39d680bfde9b3103729755f54c1cc9e6f528",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
