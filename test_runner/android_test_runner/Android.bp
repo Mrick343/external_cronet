@@ -1,0 +1,8 @@
+tradefed_java_library_host {
+    name: "chromium_android_test_runner",
+    srcs: ["src/**/*.java"],
+    libs: [
+        "tradefed",
+        "framework-annotations-lib",
+    ],
+}
