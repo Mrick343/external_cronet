@@ -34,6 +34,24 @@
       "parentUuid": "2b7c3c0e_741f069c",
       "revId": "18fa39d680bfde9b3103729755f54c1cc9e6f528",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a259e9c_e521c27a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-09T13:43:37Z",
+      "side": 1,
+      "message": "The problem is that this should be done automatically by the `gn2bp` script after generation of `Android.bp.swp` to prevent this warning from coming up the next time.\n\nI would prefer if we could integrate the execution of this command into the gn2bp itself rather than doing it manually.\n\n-- More context:\n\nThis warning wasn\u0027t there last year, it has been recently added ~2 months, that\u0027s why we never bothered.",
+      "parentUuid": "2e5c890e_04ef680b",
+      "revId": "18fa39d680bfde9b3103729755f54c1cc9e6f528",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
