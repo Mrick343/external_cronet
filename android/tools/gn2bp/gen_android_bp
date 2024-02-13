@@ -1711,6 +1711,7 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
           module.jarjar_rules = REMOVE_GEN_JNI_JARJAR_RULES_FILE
       module.min_sdk_version = 30
       module.apex_available = [tethering_apex]
+      module.sdk_version = target.sdk_version
   else:
     raise Exception('Unknown target %s (%s)' % (target.name, target.type))
 
@@ -1758,9 +1759,7 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
       # identified by third_party/android_sdk/public/platforms/android-34/framework.aidl.
       module.aidl["include_dirs"] = {"frameworks/base/core/java/"}
       module.aidl["local_include_dirs"] = target.local_aidl_includes
-    # This is used to compile against the public SDK APIs.
-    # See build/soong/android/sdk_version.go for more information on different SDK versions.
-    module.sdk_version = "current"
+    module.sdk_version = target.sdk_version
 
   if module.is_compiled() and not module.type.startswith("java"):
     # Don't try to inject library/source dependencies into genrules or
@@ -1815,6 +1814,19 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
 
     if dep_module is None:
       continue
+
+    # A module depending on a module with system_current sdk version should also compile against
+    # the system sdk. This is because a module's SDK API surface should be >= its deps SDK API surface.
+    # And system_current has a larger API surface than current or module_current.
+    def _maybe_update_sdk_version(current_sdk, new_sdk):
+      if new_sdk == 'system_current':
+        return new_sdk
+      elif new_sdk == 'module_current' and current_sdk == 'current':
+        return new_sdk
+      else:
+        return current_sdk
+    module.sdk_version = _maybe_update_sdk_version(module.sdk_version, dep_module.sdk_version)
+
     # TODO: Proper dependency check for genrule.
     # Currently, only propagating genrule dependencies.
     # Also, currently, all the dependencies are propagated upwards.
