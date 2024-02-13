@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c213062_852ce4c2",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-13T20:07:12Z",
+      "side": 0,
+      "message": "how did this ever work without system_current?",
+      "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
