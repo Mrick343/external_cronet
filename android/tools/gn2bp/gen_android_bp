@@ -276,6 +276,16 @@ additional_args = {
       })
     ],
     # end export_include_dir.
+    'cronet_aml_components_cronet_android_cronet_stats_log_java': [
+      ('libs', {
+        'framework-statsd',
+      })
+    ],
+    'cronet_aml_components_cronet_android_cronet_stats_log_java__testing': [
+      ('libs', {
+        'framework-statsd',
+      })
+    ]
 }
 
 def always_disable(module, arch):
