@@ -34,6 +34,24 @@
       "parentUuid": "3c213062_852ce4c2",
       "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7e4891e_8e1b3c43",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-14T10:42:07Z",
+      "side": 0,
+      "message": "It doesn\u0027t work as is. I thought it did when I uploaded this cl but the failure was being masked by another failure. statsEvent is annotated with @SystemApi meaning that it should only be accessible when compiling against `system_current`. I\u0027ll figure out what I\u0027m getting wrong",
+      "parentUuid": "c749dfc5_95f770e5",
+      "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
