@@ -16,6 +16,24 @@
       "message": "how did this ever work without system_current?",
       "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c749dfc5_95f770e5",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-14T10:31:06Z",
+      "side": 0,
+      "message": "Because in AOSP, you can depend on statsd right away as it exist as a module there but in Chromium, statsd doesn\u0027t exist as an individual module so you will have to depend on the entire system sdk JAR.\n\nAlso it seems that statsd in AOSP doesn\u0027t compile against any system SDK as per https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/common/sdk/ModuleDefaults.bp;l\u003d119?q\u003dname:%5C%20%22framework-module-defaults%22\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain\n\nIt compiles against the public API which is why you didn\u0027t need to change anything.",
+      "parentUuid": "3c213062_852ce4c2",
+      "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
