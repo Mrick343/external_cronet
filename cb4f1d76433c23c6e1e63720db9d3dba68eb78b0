@@ -33,6 +33,24 @@
       "message": "Can you link to a Chromium CL where this has changed? I don\u0027t understand what\u0027s going on, was Chromium using that cflag the entire time or did they introduce it lately? If it is a latter then is there a CL for that?",
       "revId": "cb4f1d76433c23c6e1e63720db9d3dba68eb78b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3ea6cd8_b7c2373f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-19T15:41:46Z",
+      "side": 1,
+      "message": "Yes they did the latter. I\u0027ve updated the description.",
+      "parentUuid": "79f5499b_430eb348",
+      "revId": "cb4f1d76433c23c6e1e63720db9d3dba68eb78b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
