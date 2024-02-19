@@ -16,6 +16,29 @@
       "message": "Re-review",
       "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4304fb25_cff04a34",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1765,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-19T16:47:12Z",
+      "side": 1,
+      "message": "Use `additional_args` [https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/android/tools/gn2bp/gen_android_bp;l\u003d142?q\u003dgen_android_bp\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain]",
+      "range": {
+        "startLine": 1761,
+        "startChar": 3,
+        "endLine": 1765,
+        "endChar": 60
+      },
+      "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
