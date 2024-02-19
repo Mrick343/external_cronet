@@ -63,6 +63,30 @@
       },
       "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6374363b_91fe0531",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1765,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-19T16:55:28Z",
+      "side": 1,
+      "message": "I would ask you to submit a CL in Chromium, that embeds into the metadata which SDK is being used, is it the public SDK or system sdk, and set the `sdk_version` on GN target accordingly.\n\nThe change should happen https://source.chromium.org/chromium/chromium/src/+/main:build/config/android/internal_rules.gni;l\u003d4289?q\u003dtemplate%5C(%5C%22java_library_impl%20-path:third_part\u0026ss\u003dchromium%2Fchromium%2Fsrc\n\nThis will allow us to remove this kind of `if statement` in the future.",
+      "parentUuid": "20979f3a_9a1d4ca9",
+      "range": {
+        "startLine": 1761,
+        "startChar": 3,
+        "endLine": 1765,
+        "endChar": 60
+      },
+      "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
