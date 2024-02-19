@@ -52,6 +52,24 @@
       "parentUuid": "c749dfc5_95f770e5",
       "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b4ab0f4_dd119a3f",
+        "filename": "Android.extras.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-19T16:34:57Z",
+      "side": 0,
+      "message": "I selectively added `system_current` to `cronet_stat_logs` and its dependents.",
+      "parentUuid": "e7e4891e_8e1b3c43",
+      "revId": "aa29defaef8704b0f73552b718e742ad4417287e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
