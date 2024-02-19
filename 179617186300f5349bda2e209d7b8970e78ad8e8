@@ -39,6 +39,30 @@
       },
       "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20979f3a_9a1d4ca9",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1765,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-19T16:48:03Z",
+      "side": 1,
+      "message": "nvm, realised that this wouldn\u0027t work since those are applied while printing of Android.bp not processing of modules.",
+      "parentUuid": "4304fb25_cff04a34",
+      "range": {
+        "startLine": 1761,
+        "startChar": 3,
+        "endLine": 1765,
+        "endChar": 60
+      },
+      "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
