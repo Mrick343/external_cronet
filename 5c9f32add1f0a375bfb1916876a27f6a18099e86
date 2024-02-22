@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fa12446_26dd46d4",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1821,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-22T17:29:00Z",
+      "side": 1,
+      "message": "removed the method.",
+      "parentUuid": "e3c50914_7e44b7c7",
+      "range": {
+        "startLine": 1821,
+        "startChar": 4,
+        "endLine": 1821,
+        "endChar": 56
+      },
+      "revId": "5c9f32add1f0a375bfb1916876a27f6a18099e86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5bbc048_1ae9c33d",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-02-22T17:08:37Z",
       "side": 1,
       "message": "This might not be necessary, if you want to safeguard against some random SDK version slipping in then you can add an assert to make sure that `current_sdk` and `new_sdk` are only `[\"module_current\", \"system_current\"]`",
+      "range": {
+        "startLine": 1824,
+        "startChar": 6,
+        "endLine": 1825,
+        "endChar": 22
+      },
+      "revId": "5c9f32add1f0a375bfb1916876a27f6a18099e86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c8e319a_c3d6f841",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1825,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-22T17:29:00Z",
+      "side": 1,
+      "message": "done. decided to do the simplified thing.",
+      "parentUuid": "e5bbc048_1ae9c33d",
       "range": {
         "startLine": 1824,
         "startChar": 6,
