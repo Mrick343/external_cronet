@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c50914_7e44b7c7",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1821,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-22T17:08:37Z",
+      "side": 1,
+      "message": "Don\u0027t nest methods please, it makes it harder to read, just move this method elsewhere.",
+      "range": {
+        "startLine": 1821,
+        "startChar": 4,
+        "endLine": 1821,
+        "endChar": 56
+      },
+      "revId": "5c9f32add1f0a375bfb1916876a27f6a18099e86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5bbc048_1ae9c33d",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1825,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-22T17:08:37Z",
+      "side": 1,
+      "message": "This might not be necessary, if you want to safeguard against some random SDK version slipping in then you can add an assert to make sure that `current_sdk` and `new_sdk` are only `[\"module_current\", \"system_current\"]`",
+      "range": {
+        "startLine": 1824,
+        "startChar": 6,
+        "endLine": 1825,
+        "endChar": 22
+      },
+      "revId": "5c9f32add1f0a375bfb1916876a27f6a18099e86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
