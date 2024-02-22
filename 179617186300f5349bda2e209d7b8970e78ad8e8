@@ -87,6 +87,30 @@
       },
       "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a30af3c_7703a79e",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1765,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-22T17:00:47Z",
+      "side": 1,
+      "message": "Done in https://crrev.com/c/5317651",
+      "parentUuid": "6374363b_91fe0531",
+      "range": {
+        "startLine": 1761,
+        "startChar": 3,
+        "endLine": 1765,
+        "endChar": 60
+      },
+      "revId": "179617186300f5349bda2e209d7b8970e78ad8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
