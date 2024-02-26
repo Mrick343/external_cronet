@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5c6ac4c_6206b625",
+        "filename": "third_party/boringssl/src/util/generate_build_files.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-26T13:00:57Z",
+      "side": 1,
+      "message": "TODO: Send cl to boringssl once this works.",
+      "revId": "9204ef3a54874ea06b5dc2246f34cf83d6f54c00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
