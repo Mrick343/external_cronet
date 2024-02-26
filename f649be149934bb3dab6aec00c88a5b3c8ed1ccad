@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc10de36_0668ca07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-26T17:48:23Z",
+      "side": 1,
+      "message": "Please remove the Android.bp changes, the Chromium CL does not make any changes to any BUILD.gn file hence not needed.",
+      "revId": "f649be149934bb3dab6aec00c88a5b3c8ed1ccad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
