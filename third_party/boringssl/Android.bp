@@ -266,6 +266,19 @@ cc_library_shared {
     shared_libs: ["libcrypto"],
 }
 
+cc_library_shared {
+    name: "libpki",
+    defaults: [
+        "boringssl_defaults",
+        "boringssl_flags",
+        "cronet_defaults",
+        "libpki_sources",
+    ],
+    unique_host_soname: true,
+    cflags: ["-D_BORINGSSL_LIBPKI_"],
+    shared_libs: ["libcrypto"],
+}
+
 // Utility binary for CMVP on-site testing.
 cc_binary {
     name: "test_fips",
