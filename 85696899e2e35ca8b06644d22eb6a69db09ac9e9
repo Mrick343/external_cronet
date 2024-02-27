@@ -34,6 +34,24 @@
       "parentUuid": "770ac909_1ffac5a5",
       "revId": "85696899e2e35ca8b06644d22eb6a69db09ac9e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b429875_6facff47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-27T11:04:33Z",
+      "side": 1,
+      "message": "I think what you need to do is go back and use [this](https://source.chromium.org/chromium/chromium/src/+/main:components/cronet/android/test/javatests/src/org/chromium/net/CronetTestRule.java;l\u003d251?q\u003dcronetTestRule\u0026ss\u003dchromium%2Fchromium%2Fsrc)\n\nThis will make sure that it behaves correctly on both AOSP / Chromium",
+      "parentUuid": "8abe4dde_2c071abb",
+      "revId": "85696899e2e35ca8b06644d22eb6a69db09ac9e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
