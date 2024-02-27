@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f80f224b_be03c6a1",
+        "filename": "android/tools/gn2bp/gen_desc_json.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-02-27T18:16:59Z",
+      "side": 1,
+      "message": "from `setup_chromium_src_repo` function, we should already be in the chromium dir, no?",
+      "revId": "309109d37b194346db9843ad4935671410a1e571",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
