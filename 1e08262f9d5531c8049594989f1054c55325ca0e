@@ -33,6 +33,24 @@
       "message": "Assuming this fixes the issue. Can we coordinate upstream before landing this here?",
       "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7819b5a8_e712a6e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-28T13:26:22Z",
+      "side": 1,
+      "message": "I\u0027m doing that with agrieve@, even if agrieve@ rejects the change upstream, I think the best option is to accept a single-line divergence because this is annoying our partners.\n\nI\u0027m not sure if you have a better solution but I couldn\u0027t find any on the top of my mind.",
+      "parentUuid": "898855a3_cb2e4eeb",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
