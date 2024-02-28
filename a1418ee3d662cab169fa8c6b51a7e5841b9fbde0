@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1841115d_3e25965f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-28T17:48:25Z",
+      "side": 1,
+      "message": "Why are there merge conflicts in Android.bp? Hmmm",
+      "revId": "a1418ee3d662cab169fa8c6b51a7e5841b9fbde0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
