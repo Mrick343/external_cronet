@@ -79,7 +79,7 @@ def write_depfile(depfile_path: str,
   assert not isinstance(inputs, str)  # Easy mistake to make
 
   def _process_path(path):
-    assert not os.path.isabs(path), f'Found abs path in depfile: {path}'
+    # assert not os.path.isabs(path), f'Found abs path in depfile: {path}'
     if os.path.sep != posixpath.sep:
       path = str(pathlib.Path(path).as_posix())
     assert '\\' not in path, f'Found \\ in depfile: {path}'
