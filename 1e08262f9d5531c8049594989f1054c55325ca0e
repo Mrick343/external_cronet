@@ -69,6 +69,24 @@
       "parentUuid": "9f59d251_6552e7b4",
       "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6a14afa_c9a48010",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-02-29T15:58:51Z",
+      "side": 1,
+      "message": "May I ask you to make sure that the issue still exist without this CL? I have tried to build Cronet without commenting out `abspath assertion` and my build was successful which makes me think that this CL is redundant. Can you please confirm that.\n\nI apologise for asking you to build different stuff but I need to make sure that this works locally for me and someone else to be assured.\n\nIf it doesn\u0027t work, please paste the stacktrace and error log.",
+      "parentUuid": "c0d3a4ba_13dfc324",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
