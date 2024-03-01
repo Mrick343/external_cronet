@@ -105,6 +105,41 @@
       "parentUuid": "b6a14afa_c9a48010",
       "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2687ee8e_630b2c33",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2024-03-01T19:32:36Z",
+      "side": 1,
+      "message": "I am not testing on main, I am testing on the latest Android-14 tag with this picked to external/cronet.\n\nI set OUT_DIR_COMMON_BASE to another disk, which is what triggers the original issue.\n\nI can attest that this patch fixes the issue there. It likely won\u0027t make it into Android 14 QPR tags (would be nice), but my goal here is that it makes it into Android15 tags.\n\nI sync\u0027ed `main` per your request, and this is absolutely valid still, breakage appears when you set OUT_DIR_COMMON_BASE as opposed to just a custom OUT.\n\nThis remediates it on `main` synced as of _like an hour ago_.",
+      "parentUuid": "6b5509cb_2198e01d",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "385746eb_7bf81dc1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2024-03-01T19:32:36Z",
+      "side": 1,
+      "message": "good to merge IMO.",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
