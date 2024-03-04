@@ -12914,6 +12914,7 @@ java_library {
         "com.android.tethering",
     ],
     min_sdk_version: "30",
+<<<<<<< HEAD   (60b4fd Cronet 121_0_6167_71: Merge branch 'upstream-staging')
     sdk_version: "system_current",
     jarjar_rules: "android/tools/remove-gen-jni-jarjar-rules.txt",
     libs: [
@@ -12936,6 +12937,30 @@ java_library {
     libs: [
     	"androidx.annotation_annotation-nodeps",
     ],
+=======
+    libs: [
+        "androidx.annotation_annotation-nodeps",
+    ],
+    sdk_version: "system_current",
+    jarjar_rules: "android/tools/remove-gen-jni-jarjar-rules.txt",
+}
+
+// GN: //components/cronet/android:cronet_stats_log_java__testing
+java_library {
+    name: "cronet_aml_components_cronet_android_cronet_stats_log_java__testing",
+    srcs: [
+        "components/cronet/android/java/src/org/chromium/net/telemetry/CronetStatsLog.java",
+    ],
+    apex_available: [
+        "com.android.tethering",
+    ],
+    min_sdk_version: "30",
+    libs: [
+        "androidx.annotation_annotation-nodeps",
+    ],
+    sdk_version: "system_current",
+    jarjar_rules: "android/tools/remove-gen-jni-jarjar-rules.txt",
+>>>>>>> BRANCH (25b2da Cronet 121_0_6167_71: cherrypick https://crrev.com/c/5340179)
 }
 
 // GN: //components/cronet/android:cronet_test_apk_java__testing

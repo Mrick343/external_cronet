@@ -9,11 +9,15 @@
 
 package org.chromium.net.telemetry;
 
+import android.os.Build;
 import android.util.StatsEvent;
 import android.util.StatsLog;
 
+<<<<<<< HEAD   (60b4fd Cronet 121_0_6167_71: Merge branch 'upstream-staging')
 import android.os.Build;
 
+=======
+>>>>>>> BRANCH (25b2da Cronet 121_0_6167_71: cherrypick https://crrev.com/c/5340179)
 import androidx.annotation.RequiresApi;
 
 /** Utility class for logging statistics events. */
