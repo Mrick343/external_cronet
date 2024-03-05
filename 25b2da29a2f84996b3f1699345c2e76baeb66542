@@ -59,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79e5e59b_8e6a3e85",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-03-05T13:01:51Z",
+      "side": 1,
+      "message": "This is the result of a regeneration. And this is actually the correct state when compared to the current main Android.bp. The Android.bp in https://r.android.com/2982191\u0027s merge was what changed things.",
+      "parentUuid": "91e408bb_dc07ec23",
+      "range": {
+        "startLine": 1234,
+        "startChar": 10,
+        "endLine": 1236,
+        "endChar": 277
+      },
+      "revId": "25b2da29a2f84996b3f1699345c2e76baeb66542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7cbf0d82_88a4d005",
@@ -72,6 +96,30 @@
       "writtenOn": "2024-03-05T12:35:27Z",
       "side": 1,
       "message": "Can I ask you to perform a clean cherry-pick (read: add the comment again which is in Chromium), files that are under external/cronet are all assumed to be imported from Chromium as-is and shouldn\u0027t be changed.",
+      "range": {
+        "startLine": 570,
+        "startChar": 4,
+        "endLine": 570,
+        "endChar": 46
+      },
+      "revId": "25b2da29a2f84996b3f1699345c2e76baeb66542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee7e0518_e98a0546",
+        "filename": "components/cronet/android/java/src/org/chromium/net/telemetry/CronetStatsLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-03-05T13:01:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cbf0d82_88a4d005",
       "range": {
         "startLine": 570,
         "startChar": 4,
