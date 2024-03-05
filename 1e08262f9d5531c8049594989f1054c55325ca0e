@@ -176,6 +176,24 @@
       "parentUuid": "96a970ff_01071768",
       "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b029d106_cbce5ef4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1112368
+      },
+      "writtenOn": "2024-03-05T16:00:49Z",
+      "side": 1,
+      "message": "please try OUT_DIR_COMMON_BASE, that\u0027s the broken test case for me.",
+      "parentUuid": "51ad0f52_a064964c",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
