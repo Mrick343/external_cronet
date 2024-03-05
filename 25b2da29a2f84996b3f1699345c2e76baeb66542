@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cbf0d82_88a4d005",
+        "filename": "components/cronet/android/java/src/org/chromium/net/telemetry/CronetStatsLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-05T12:35:27Z",
+      "side": 1,
+      "message": "Can I ask you to perform a clean cherry-pick (read: add the comment again which is in Chromium), files that are under external/cronet are all assumed to be imported from Chromium as-is and shouldn\u0027t be changed.",
+      "range": {
+        "startLine": 570,
+        "startChar": 4,
+        "endLine": 570,
+        "endChar": 46
+      },
+      "revId": "25b2da29a2f84996b3f1699345c2e76baeb66542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
