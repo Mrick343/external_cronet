@@ -158,6 +158,24 @@
       "parentUuid": "2687ee8e_630b2c33",
       "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51ad0f52_a064964c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-05T15:40:59Z",
+      "side": 1,
+      "message": "I tested this locally with `export OUT_DIR\u003d/path/outside/of/repo \u0026\u0026 cd external/cronet \u0026\u0026 mma`.\n\nI didn\u0027t create a full system image but this should be enough to conclude that this problem is obsolete and no action should be needed from my side.",
+      "parentUuid": "96a970ff_01071768",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
