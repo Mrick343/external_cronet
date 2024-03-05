@@ -3,6 +3,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7b91c02c_c9eca501",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-05T12:37:05Z",
+      "side": 1,
+      "message": "Regenerate",
+      "revId": "25b2da29a2f84996b3f1699345c2e76baeb66542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91e408bb_dc07ec23",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-05T12:37:05Z",
+      "side": 1,
+      "message": "Seems to be a spurious change which can be fixed through re-generating the Android.bp file.",
+      "range": {
+        "startLine": 1234,
+        "startChar": 10,
+        "endLine": 1236,
+        "endChar": 277
+      },
+      "revId": "25b2da29a2f84996b3f1699345c2e76baeb66542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7cbf0d82_88a4d005",
         "filename": "components/cronet/android/java/src/org/chromium/net/telemetry/CronetStatsLog.java",
         "patchSetId": 1
