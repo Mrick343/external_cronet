@@ -194,6 +194,24 @@
       "parentUuid": "51ad0f52_a064964c",
       "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "484a08ec_49c1e5f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-07T10:32:33Z",
+      "side": 1,
+      "message": "I tested that too and it passes for me fine without this CL. I am not entirely sure what is the difference between our setup but I verified that it is using another directory to build + `mma` in external/cronet works.",
+      "parentUuid": "b029d106_cbce5ef4",
+      "revId": "1e08262f9d5531c8049594989f1054c55325ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
