@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68331901_b06c37c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-03-07T15:41:50Z",
+      "side": 1,
+      "message": "thanks a lot for working on this Muhammad. I can\u0027t approve this cl as aosp/2989534 removes this library hence I\u0027d run into merge conflicts. This change would also become unnecessary,",
+      "revId": "2f7447e102d61771974d2460d298fa53fe6f9246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
