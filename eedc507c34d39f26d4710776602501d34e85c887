@@ -22,6 +22,30 @@
       },
       "revId": "eedc507c34d39f26d4710776602501d34e85c887",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cbad2e9_ed4c5943",
+        "filename": "android/tools/gn2bp/gen_desc_json.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-03-07T11:07:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4dfb81a_709322f0",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 114
+      },
+      "revId": "eedc507c34d39f26d4710776602501d34e85c887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
