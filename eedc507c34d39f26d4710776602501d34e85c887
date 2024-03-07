@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4dfb81a_709322f0",
+        "filename": "android/tools/gn2bp/gen_desc_json.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-07T10:54:18Z",
+      "side": 1,
+      "message": "Remove this, this file should only include changes that affects desc_*.json which are changes that affects *.gn or *.gni files.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 114
+      },
+      "revId": "eedc507c34d39f26d4710776602501d34e85c887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
