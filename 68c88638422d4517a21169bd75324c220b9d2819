@@ -52,6 +52,24 @@
       "parentUuid": "5ab77389_1bc61092",
       "revId": "68c88638422d4517a21169bd75324c220b9d2819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "876416af_8ea7e5e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863710
+      },
+      "writtenOn": "2024-03-12T12:04:26Z",
+      "side": 1,
+      "message": "I guess it\u0027s not used here. Though would it make sense to keep the script up to date if someone tries to run it?",
+      "parentUuid": "76469a84_075831d4",
+      "revId": "68c88638422d4517a21169bd75324c220b9d2819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
