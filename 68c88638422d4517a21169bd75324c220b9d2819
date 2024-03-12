@@ -16,6 +16,24 @@
       "message": "What are you trying to do here? Because the file you changed is practically dead-code that we don\u0027t use, so if you could give me more context, I would be able to help here.\n\nI have taken a quick look at the bug but seems unfamiliar to me.",
       "revId": "68c88638422d4517a21169bd75324c220b9d2819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ab77389_1bc61092",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863710
+      },
+      "writtenOn": "2024-03-12T11:47:30Z",
+      "side": 1,
+      "message": "I\u0027m guessing where `javac_extractor` is being run from. The problem is that if running it with OpenJDK 21, the extra two `--add-exports` are needed, otherwise the reflective calls introduce in aosp/2973817 will fail.\nIf you know where this is ran from, it\u0027d be useful. I found a lot of instances where this binary is executed.",
+      "parentUuid": "c5663574_44ba3d01",
+      "revId": "68c88638422d4517a21169bd75324c220b9d2819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
