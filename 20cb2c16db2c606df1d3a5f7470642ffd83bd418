@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0482b2f_2e12f640",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-03-12T18:27:51Z",
+      "side": 1,
+      "message": "This is a special staging branch which is not automerged anywhere. The correct revert is aosp/2998736.",
+      "revId": "20cb2c16db2c606df1d3a5f7470642ffd83bd418",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
