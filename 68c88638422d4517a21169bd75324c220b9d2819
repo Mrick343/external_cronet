@@ -34,6 +34,24 @@
       "parentUuid": "c5663574_44ba3d01",
       "revId": "68c88638422d4517a21169bd75324c220b9d2819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76469a84_075831d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-03-12T11:50:44Z",
+      "side": 1,
+      "message": "We use Soong\u0027s native targets to compile our java targets, those python scripts are just copied over from Chromium as a bulk because some of them are used and some of them aren\u0027t used.\n\nAll of the java scripts are not used at all, we rely on Soong\u0027s `java_library` to build, so I guess no action should be taken here?",
+      "parentUuid": "5ab77389_1bc61092",
+      "revId": "68c88638422d4517a21169bd75324c220b9d2819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
