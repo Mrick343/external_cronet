@@ -34,6 +34,24 @@
       "parentUuid": "68331901_b06c37c5",
       "revId": "2f7447e102d61771974d2460d298fa53fe6f9246",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62a6557f_19d15a72",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1431413
+      },
+      "writtenOn": "2024-03-13T20:57:29Z",
+      "side": 1,
+      "message": "It looks like aosp/2989534 was submitted and then reverted. Are there plans to resubmit it?",
+      "parentUuid": "86316298_1434282f",
+      "revId": "2f7447e102d61771974d2460d298fa53fe6f9246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
