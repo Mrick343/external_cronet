@@ -52,6 +52,24 @@
       "parentUuid": "86316298_1434282f",
       "revId": "2f7447e102d61771974d2460d298fa53fe6f9246",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7da2797b_c8a1dc83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-03-14T10:25:50Z",
+      "side": 1,
+      "message": "I\u0027ll just submit this and resolve the conflict separately. I don\u0027t have an ETA on when I\u0027ll resubmit that cl.",
+      "parentUuid": "62a6557f_19d15a72",
+      "revId": "2f7447e102d61771974d2460d298fa53fe6f9246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
