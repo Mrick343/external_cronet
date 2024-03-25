@@ -4091,8 +4091,13 @@ java_library {
     ],
     min_sdk_version: "30",
     libs: [
+<<<<<<< PATCH SET (bdb1ec Don't use androidx nodeps modules)
+        "androidx.annotation_annotation-experimental",
+        "androidx.annotation_annotation",
+=======
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental",
+>>>>>>> BASE      (ca44fa Don't use androidx nodeps modules)
         "error_prone_annotations",
         "jsr305",
     ],
@@ -4258,8 +4263,13 @@ java_library {
     ],
     min_sdk_version: "30",
     libs: [
+<<<<<<< PATCH SET (bdb1ec Don't use androidx nodeps modules)
+        "androidx.annotation_annotation-experimental",
+        "androidx.annotation_annotation",
+=======
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental",
+>>>>>>> BASE      (ca44fa Don't use androidx nodeps modules)
         "error_prone_annotations",
         "jsr305",
     ],
@@ -7036,8 +7046,13 @@ java_library {
     ],
     min_sdk_version: "30",
     libs: [
+<<<<<<< PATCH SET (bdb1ec Don't use androidx nodeps modules)
+        "androidx.annotation_annotation-experimental",
+        "androidx.annotation_annotation",
+=======
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental",
+>>>>>>> BASE      (ca44fa Don't use androidx nodeps modules)
         "androidx.collection_collection",
         "androidx.core_core",
         "jsr305",
@@ -10702,8 +10717,13 @@ java_library {
     ],
     min_sdk_version: "30",
     libs: [
+<<<<<<< PATCH SET (bdb1ec Don't use androidx nodeps modules)
+        "androidx.annotation_annotation-experimental",
+        "androidx.annotation_annotation",
+=======
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental",
+>>>>>>> BASE      (ca44fa Don't use androidx nodeps modules)
     ],
     sdk_version: "current",
     visibility: [
@@ -10749,8 +10769,13 @@ java_library {
     ],
     min_sdk_version: "30",
     libs: [
+<<<<<<< PATCH SET (bdb1ec Don't use androidx nodeps modules)
+        "androidx.annotation_annotation-experimental",
+        "androidx.annotation_annotation",
+=======
         "androidx.annotation_annotation",
         "androidx.annotation_annotation-experimental",
+>>>>>>> BASE      (ca44fa Don't use androidx nodeps modules)
     ],
     sdk_version: "current",
     jarjar_rules: "android/tools/remove-gen-jni-jarjar-rules.txt",
@@ -11372,7 +11397,54 @@ java_library {
         "com.android.tethering",
     ],
     min_sdk_version: "30",
+<<<<<<< PATCH SET (bdb1ec Don't use androidx nodeps modules)
+    sdk_version: "current",
+    jarjar_rules: "android/tools/remove-gen-jni-jarjar-rules.txt",
+}
+
+// GN: //components/cronet/android:cronet_impl_aosp_native_base_java__testing
+java_library {
+    name: "cronet_aml_components_cronet_android_cronet_impl_aosp_native_base_java__testing",
+    srcs: [
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidBidirectionalStreamBuilderWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidBidirectionalStreamWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidCallbackExceptionWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidHeaderBlockWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpExceptionWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidNetworkExceptionWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidQuicExceptionWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidUploadDataSinkWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlRequestBuilderWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlRequestWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlResponseInfoWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/BidirectionalStreamCallbackWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/CronetExceptionTranslationUtils.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/PlatformCronetProvider.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/UploadDataProviderWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/UrlRequestCallbackWrapper.java",
+        "components/cronet/android/java/src/org/chromium/net/impl/UrlRequestStatusListenerWrapper.java",
+    ],
+    static_libs: [
+        "cronet_aml_base_base_java__testing",
+        "cronet_aml_build_android_build_java__testing",
+        "cronet_aml_components_cronet_android_cronet_api_java__testing",
+        "cronet_aml_components_cronet_android_cronet_impl_common_base_java__testing",
+        "cronet_aml_third_party_jni_zero_jni_zero_java__testing",
+    ],
+    apex_available: [
+        "com.android.tethering",
+    ],
+    min_sdk_version: "30",
+    libs: [
+        "androidx.annotation_annotation",
+        "androidx.core_core",
+    ],
+    sdk_version: "current",
+=======
     sdk_version: "system_current",
+>>>>>>> BASE      (ca44fa Don't use androidx nodeps modules)
     jarjar_rules: "android/tools/remove-gen-jni-jarjar-rules.txt",
 }
 
