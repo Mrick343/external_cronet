@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55b95bd6_611c3370",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-04-02T17:59:44Z",
+      "side": 1,
+      "message": "Tested on:\n- Coverage: http://android-build/build_explorer/branch_dashboard/git_udc-mainline-prod/build_id/P72618588/?activeTarget\u003dtest_suites_x86_64\n\n- S image: http://android-build/test_investigate/?invocationId\u003dI42200010261779704\u0026testResultId\u003dTR64229239167797546\n\n- SV2 image: https://android-build.corp.google.com/test_investigate/?invocationId\u003dI29100010261795943\u0026testResultId\u003dTR40429239174126609\n\n- T image: http://android-build/test_investigate/?invocationId\u003dI84700010261786432\u0026testResultId\u003dTR06229239151153073\n\n- U image: http://android-build/test_investigate/?invocationId\u003dI91700010261801296\u0026testResultId\u003dTR77329239170799107\n\n- Main: https://android-build.corp.google.com/test_investigate/?invocationId\u003dI45600010261767281\u0026testResultId\u003dTR39029239166430748",
+      "revId": "181bb755f589c53bd3e47be5f2a1883b9c33a562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
