@@ -33,6 +33,24 @@
       "message": "Mohannad, does this require changes to our gn2bp?",
       "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa5b66ac_e07d992e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-04-02T11:13:21Z",
+      "side": 1,
+      "message": "Yep. I will approve this change and send another CL with the appropriate changes to the gn2bp.",
+      "parentUuid": "5da173d0_80a152ab",
+      "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
