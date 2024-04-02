@@ -16,6 +16,23 @@
       "message": "LGTM, aymanm@ to approve when he is back",
       "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5da173d0_80a152ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2024-04-02T01:51:04Z",
+      "side": 1,
+      "message": "Mohannad, does this require changes to our gn2bp?",
+      "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
