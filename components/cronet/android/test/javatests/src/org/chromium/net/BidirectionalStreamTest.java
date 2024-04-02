@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 
 /** Test functionality of BidirectionalStream interface. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK},
         reason = "The fallback implementation doesn't support bidirectional streaming")

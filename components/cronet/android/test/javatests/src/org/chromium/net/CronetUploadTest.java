@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
  * simulate different ordering of reset, init, read, and rewind calls.
  */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},
         reason = "crbug.com/1494845: Testing internals of the native implementation")

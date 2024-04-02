@@ -34,7 +34,7 @@ import java.io.FileReader;
 
 /** Test CronetEngine disk storage. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK},
         reason = "The fallback implementation doesn't support on-disk caches")

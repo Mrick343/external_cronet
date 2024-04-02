@@ -40,7 +40,7 @@ import java.util.concurrent.ThreadFactory;
 
 /** Test Network Quality Estimator. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},
         reason = "Fallback and AOSP implementations do not support network quality estimating")

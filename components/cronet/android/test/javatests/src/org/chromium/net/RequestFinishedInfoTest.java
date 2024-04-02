@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Test RequestFinishedInfo.Listener and the metrics information it provides. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},
         reason = "Fallback and AOSP implementations do not support RequestFinishedListeners")

@@ -25,7 +25,7 @@ import org.chromium.net.CronetTestRule.IgnoreFor;
 
 /** Tests requests that generate Network Error Logging reports. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},
         reason = "Fallback and AOSP implementations do not support network error logging")

@@ -29,7 +29,7 @@ import org.chromium.net.impl.CronetUrlRequestContext;
 import org.chromium.net.impl.JavaCronetEngine;
 
 /** Tests features of CronetTestRule. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @Batch(Batch.UNIT_TESTS)
 public class CronetTestRuleTest {
     @Rule public final CronetTestRule mTestRule = CronetTestRule.withAutomaticEngineStartup();

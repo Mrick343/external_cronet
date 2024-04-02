@@ -21,7 +21,7 @@ import java.util.List;
  * A test file which is used to teach people how to build, test and submit changes to Cronet. Do not
  * move, change or delete unless you modify the onboarding instructions as well.
  */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @Batch(Batch.UNIT_TESTS)
 public class CronetOnboardingTest {
     // TODO(noogler): STEP 1 - add your name here

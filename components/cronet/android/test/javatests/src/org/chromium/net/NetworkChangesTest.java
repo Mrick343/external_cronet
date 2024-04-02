@@ -43,7 +43,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 
 /** Test Cronet under different network change scenarios. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @DoNotBatch(reason = "crbug/1459563")
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},

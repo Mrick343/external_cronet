@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
  * expected.
  */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 public class GetStatusTest {
     @Rule public final CronetTestRule mTestRule = CronetTestRule.withAutomaticEngineStartup();
     @Rule public ExpectedException thrown = ExpectedException.none();

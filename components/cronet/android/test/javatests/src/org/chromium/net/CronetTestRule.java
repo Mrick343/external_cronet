@@ -212,7 +212,6 @@ public class CronetTestRule implements TestRule {
                 .that(implementationsUnderTest)
                 .isNotEmpty();
 
-        if (packageName.startsWith("org.chromium.net")) {
             for (CronetImplementation implementation : implementationsUnderTest) {
                 if (isRunningInAOSP() && implementation.equals(CronetImplementation.FALLBACK)) {
                     // Skip executing tests for JavaCronetEngine.
@@ -222,9 +221,6 @@ public class CronetTestRule implements TestRule {
                 setImplementationUnderTest(implementation);
                 evaluateWithFramework(base, testName, netLogEnabled);
             }
-        } else {
-            evaluateWithFramework(base, testName, netLogEnabled);
-        }
     }
 
     /**
@@ -407,6 +403,11 @@ public class CronetTestRule implements TestRule {
                         // Ensure the code under test (in particular, the CronetEngineBuilderImpl
                         // constructor) cannot use this method to "escape" context interception.
                         return this;
+                    }
+
+                    @Override
+                    public ClassLoader getClassLoader() {
+                        return CronetTestRule.class.getClassLoader();
                     }
                 };
 

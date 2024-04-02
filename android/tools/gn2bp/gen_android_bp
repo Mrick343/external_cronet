@@ -1177,7 +1177,7 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
     self._update_value_arg('--extra-include', self._sanitize_filepath, False)
     self._update_list_arg('--input-file', self._sanitize_filepath)
     self._update_list_arg('--input-file', self._add_location_tag_to_filepath)
-    if not self.is_test_target and not self._has_arg('--jar-file'):
+    if not self._has_arg('--jar-file'):
       # Don't jarjar classes that already exists within the java SDK. The headers generated
       # from those genrule can simply call into the original class as it exists outside
       # of cronet's jar.
@@ -1249,9 +1249,7 @@ class JniRegistrationGeneratorSanitizer(BaseActionSanitizer):
     self._update_value_arg('--header-path', self._sanitize_filepath)
     self._delete_value_arg('--depfile', False)
     self._set_value_arg('--java-sources-file', '$(genDir)/java.sources')
-    if not self.is_test_target:
-      # Only jarjar platform code
-      self._append_arg('--package-prefix', 'android.net.connectivity')
+    self._append_arg('--package-prefix', 'android.net.connectivity')
     super()._sanitize_args()
 
   def get_cmd(self):

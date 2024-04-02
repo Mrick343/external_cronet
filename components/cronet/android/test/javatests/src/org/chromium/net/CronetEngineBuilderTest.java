@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /** Tests {@link CronetEngine.Builder}. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK},
         reason = "These tests don't depend on Cronet's impl")

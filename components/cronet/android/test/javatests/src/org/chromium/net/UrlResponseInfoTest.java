@@ -25,7 +25,7 @@ import java.util.Map;
 
 /** Tests for {@link UrlResponseInfo}. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 public class UrlResponseInfoTest {
     /** Test for public API of {@link UrlResponseInfo}. */
     @Test

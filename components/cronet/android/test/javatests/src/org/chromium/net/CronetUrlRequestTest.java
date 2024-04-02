@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 
 /** Test functionality of CronetUrlRequest. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 public class CronetUrlRequestTest {
     private static final String TAG = CronetUrlRequestTest.class.getSimpleName();
 

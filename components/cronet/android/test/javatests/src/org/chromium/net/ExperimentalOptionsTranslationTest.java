@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @JNINamespace("cronet")
 @OptIn(
         markerClass = {

@@ -5412,7 +5412,9 @@ cc_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/task/PostTask.java) " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java)",
+         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/base_jni.srcjar",
         "base/base_jni/ApkAssets_jni.h",
@@ -5698,7 +5700,9 @@ java_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/task/PostTask.java) " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java)",
+         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/base_jni.srcjar",
         "base/base_jni/ApkAssets_jni.h",
@@ -5818,7 +5822,9 @@ cc_genrule {
          "--output-name " +
          "SharedPreferencesManager_jni.h " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java)",
+         "$(location base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/base_shared_preferences_jni.srcjar",
         "base/base_shared_preferences_jni/SharedPreferencesManager_jni.h",
@@ -6048,7 +6054,7 @@ cc_library_static {
 cc_genrule {
     name: "cronet_aml_base_build_date",
     cmd: "mkdir -p $(genDir)/base && $(location base/write_build_date_header.py) $(out) " +
-         "1707253023",
+         "1699011758",
     out: [
         "base/generated_build_date.h",
     ],
@@ -6064,7 +6070,7 @@ cc_genrule {
 cc_genrule {
     name: "cronet_aml_base_build_date__testing",
     cmd: "mkdir -p $(genDir)/base && $(location base/write_build_date_header.py) $(out) " +
-         "1707253023",
+         "1699011758",
     host_supported: true,
     out: [
         "base/generated_build_date.h",
@@ -7277,7 +7283,9 @@ cc_genrule {
          "--output-name " +
          "ChildProcessService_jni.h " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java)",
+         "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/process_launcher_jni.srcjar",
         "base/process_launcher_jni/ChildProcessService_jni.h",
@@ -7317,7 +7325,9 @@ java_genrule {
          "--output-name " +
          "ChildProcessService_jni.h " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java)",
+         "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/process_launcher_jni.srcjar",
         "base/process_launcher_jni/ChildProcessService_jni.h",
@@ -7661,7 +7671,9 @@ cc_genrule {
          "--input-file " +
          "$(location base/test/android/java/src/org/chromium/base/ContentUriTestUtils.java) " +
          "--input-file " +
-         "$(location base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java)",
+         "$(location base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/test/base_unittests_jni_headers.srcjar",
         "base/test/base_unittests_jni_headers/ContentUriTestUtils_jni.h",
@@ -8207,7 +8219,9 @@ cc_genrule {
          "--input-file " +
          "$(location base/test/android/javatests/src/org/chromium/base/test/task/ThreadPoolTestHelpers.java) " +
          "--input-file " +
-         "$(location base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java)",
+         "$(location base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "base/test/test_support_jni_headers.srcjar",
         "base/test/test_support_jni_headers/MainReturnCodeResult_jni.h",
@@ -12031,7 +12045,9 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java)",
+         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_jni_headers.srcjar",
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
@@ -12095,7 +12111,9 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java)",
+         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_jni_headers.srcjar",
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
@@ -12405,7 +12423,9 @@ cc_genrule {
          "--use-proxy-hash " +
          "--manual-jni-registration " +
          "--header-path " +
-         "$(genDir)/components/cronet/android/cronet_jni_registration_generated.h",
+         "$(genDir)/components/cronet/android/cronet_jni_registration_generated.h " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_jni_registration.srcjar",
         "components/cronet/android/cronet_jni_registration_generated.h",
@@ -12535,7 +12555,9 @@ java_genrule {
          "--use-proxy-hash " +
          "--manual-jni-registration " +
          "--header-path " +
-         "$(genDir)/components/cronet/android/cronet_jni_registration_generated.h",
+         "$(genDir)/components/cronet/android/cronet_jni_registration_generated.h " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_jni_registration.srcjar",
     ],
@@ -13122,7 +13144,9 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/src/org/chromium/net/QuicTestServer.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java)",
+         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_test_apk_jni.srcjar",
         "components/cronet/android/cronet_test_apk_jni/CronetTestUtil_jni.h",
@@ -13192,7 +13216,9 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/src/org/chromium/net/QuicTestServer.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java)",
+         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_test_apk_jni.srcjar",
         "components/cronet/android/cronet_test_apk_jni/CronetTestUtil_jni.h",
@@ -13546,7 +13572,9 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java)",
+         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_tests_jni_headers.srcjar",
         "components/cronet/android/cronet_tests_jni_headers/CronetUrlRequestContextTest_jni.h",
@@ -13598,7 +13626,9 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java)",
+         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_tests_jni_headers.srcjar",
         "components/cronet/android/cronet_tests_jni_headers/CronetUrlRequestContextTest_jni.h",
@@ -13729,7 +13759,9 @@ java_genrule {
          "--header-path " +
          "$(genDir)/components/cronet/android/cronet_tests_jni_registration_generated.h " +
          "--module-name " +
-         "cronet_tests",
+         "cronet_tests " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/cronet/android/cronet_tests_jni_registration.srcjar",
     ],
@@ -17277,7 +17309,9 @@ cc_genrule {
          "--output-name " +
          "PrefService_jni.h " +
          "--input-file " +
-         "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java)",
+         "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "components/prefs/android/jni_headers.srcjar",
         "components/prefs/android/jni_headers/PrefService_jni.h",
@@ -18985,7 +19019,9 @@ cc_genrule {
          "--output-name " +
          "AndroidNetworkLibraryTestUtil_jni.h " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/android/net_test_support_jni.srcjar",
         "net/android/net_test_support_jni/AndroidNetworkLibraryTestUtil_jni.h",
@@ -19025,7 +19061,9 @@ java_genrule {
          "--output-name " +
          "AndroidNetworkLibraryTestUtil_jni.h " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/android/net_test_support_jni.srcjar",
         "net/android/net_test_support_jni/AndroidNetworkLibraryTestUtil_jni.h",
@@ -19096,7 +19134,9 @@ cc_genrule {
          "--input-file " +
          "$(location net/test/android/javatests/src/org/chromium/net/test/DummySpnegoAuthenticator.java) " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/android/net_test_support_provider_jni.srcjar",
         "net/android/net_test_support_provider_jni/DummySpnegoAuthenticator_jni.h",
@@ -19142,7 +19182,9 @@ java_genrule {
          "--input-file " +
          "$(location net/test/android/javatests/src/org/chromium/net/test/DummySpnegoAuthenticator.java) " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/android/net_test_support_provider_jni.srcjar",
         "net/android/net_test_support_provider_jni/DummySpnegoAuthenticator_jni.h",
@@ -19228,7 +19270,9 @@ cc_genrule {
          "--input-file " +
          "$(location net/android/javatests/src/org/chromium/net/AndroidKeyStoreTestUtil.java) " +
          "--input-file " +
-         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java)",
+         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/android/net_tests_jni.srcjar",
         "net/android/net_tests_jni/AndroidKeyStoreTestUtil_jni.h",
@@ -19274,7 +19318,9 @@ java_genrule {
          "--input-file " +
          "$(location net/android/javatests/src/org/chromium/net/AndroidKeyStoreTestUtil.java) " +
          "--input-file " +
-         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java)",
+         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/android/net_tests_jni.srcjar",
         "net/android/net_tests_jni/AndroidKeyStoreTestUtil_jni.h",
@@ -26356,7 +26402,9 @@ cc_genrule {
          "--input-file " +
          "$(location net/android/java/src/org/chromium/net/ProxyChangeListener.java) " +
          "--input-file " +
-         "$(location net/android/java/src/org/chromium/net/X509Util.java)",
+         "$(location net/android/java/src/org/chromium/net/X509Util.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/net_jni_headers.srcjar",
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
@@ -26468,7 +26516,9 @@ java_genrule {
          "--input-file " +
          "$(location net/android/java/src/org/chromium/net/ProxyChangeListener.java) " +
          "--input-file " +
-         "$(location net/android/java/src/org/chromium/net/X509Util.java)",
+         "$(location net/android/java/src/org/chromium/net/X509Util.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "net/net_jni_headers.srcjar",
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
@@ -34256,7 +34306,9 @@ cc_genrule {
          "--output-name " +
          "MainRunner_jni.h " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "testing/android/native_test/native_main_runner_jni.srcjar",
         "testing/android/native_test/native_main_runner_jni/MainRunner_jni.h",
@@ -34296,7 +34348,9 @@ java_genrule {
          "--output-name " +
          "MainRunner_jni.h " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "testing/android/native_test/native_main_runner_jni.srcjar",
         "testing/android/native_test/native_main_runner_jni/MainRunner_jni.h",
@@ -34375,7 +34429,9 @@ cc_genrule {
          "--input-file " +
          "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeBrowserTest.java) " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "testing/android/native_test/native_test_jni.srcjar",
         "testing/android/native_test/native_test_jni/NativeBrowserTest_jni.h",
@@ -34421,7 +34477,9 @@ java_genrule {
          "--input-file " +
          "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeBrowserTest.java) " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "testing/android/native_test/native_test_jni.srcjar",
         "testing/android/native_test/native_test_jni/NativeBrowserTest_jni.h",
@@ -57115,7 +57173,9 @@ cc_genrule {
          "--output-name " +
          "IDNStringUtil_jni.h " +
          "--input-file " +
-         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java)",
+         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "url/url_jni_headers.srcjar",
         "url/url_jni_headers/IDNStringUtil_jni.h",
@@ -57155,7 +57215,9 @@ java_genrule {
          "--output-name " +
          "IDNStringUtil_jni.h " +
          "--input-file " +
-         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java)",
+         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java) " +
+         "--package-prefix " +
+         "android.net.connectivity",
     out: [
         "url/url_jni_headers.srcjar",
         "url/url_jni_headers/IDNStringUtil_jni.h",

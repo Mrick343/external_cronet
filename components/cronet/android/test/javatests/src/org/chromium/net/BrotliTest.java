@@ -27,7 +27,7 @@ import org.chromium.net.CronetTestRule.RequiresMinApi;
 import java.util.Arrays;
 
 /** Simple test for Brotli support. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @RequiresMinApi(5) // Brotli support added in API version 5: crrev.com/465216
 @Batch(Batch.UNIT_TESTS)
 @IgnoreFor(

@@ -49,7 +49,7 @@ import java.util.concurrent.CountDownLatch;
 
 /** Tests for experimental options. */
 @DoNotBatch(reason = "crbug/1459563")
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @JNINamespace("cronet")
 @OptIn(
         markerClass = {

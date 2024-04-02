@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 
 /** Tests functionality of BidirectionalStream's QUIC implementation. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @Batch(Batch.UNIT_TESTS)
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},

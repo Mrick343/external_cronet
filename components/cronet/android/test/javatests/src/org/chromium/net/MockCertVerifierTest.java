@@ -25,7 +25,7 @@ import org.chromium.net.CronetTestRule.CronetImplementation;
 import org.chromium.net.CronetTestRule.IgnoreFor;
 
 /** Unit tests for {@code MockCertVerifier}. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @DoNotBatch(reason = "crbug/1459563")
 @IgnoreFor(
         implementations = {CronetImplementation.FALLBACK, CronetImplementation.AOSP_PLATFORM},

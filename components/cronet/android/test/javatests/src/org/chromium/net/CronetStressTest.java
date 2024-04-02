@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /** Tests that making a large number of requests do not lead to crashes. */
-@RunWith(AndroidJUnit4.class)
+@RunWith(CronetClassLoader.class)
 @Batch(Batch.UNIT_TESTS)
 public class CronetStressTest {
     @Rule public final CronetTestRule mTestRule = CronetTestRule.withAutomaticEngineStartup();
