@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ff5ec0e_dd614608",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-04-02T12:16:34Z",
+      "side": 1,
+      "message": "Please add this to the `cc_default` target that we create instead, See https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/android/tools/gn2bp/gen_android_bp;l\u003d1846",
+      "range": {
+        "startLine": 1785,
+        "startChar": 2,
+        "endLine": 1786,
+        "endChar": 77
+      },
+      "revId": "1d168d8ffaaf8daf672534b2f4c43adc40255d6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
