@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d930f8ad_c4531328",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-04-08T15:59:30Z",
+      "side": 1,
+      "message": "Thanks for this Chidera!",
+      "revId": "8da3704b1d732318e1a304579b77c925bb8c933e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
