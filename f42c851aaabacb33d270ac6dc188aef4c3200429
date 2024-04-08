@@ -16,6 +16,24 @@
       "message": "@aymanm@google.com Do you know why this command\u0027s ordering isn\u0027t the same? It keeps changing the order each time.",
       "revId": "f42c851aaabacb33d270ac6dc188aef4c3200429",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5aa26e12_5764630d",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-04-08T12:44:29Z",
+      "side": 1,
+      "message": "https://cs.android.com/android/platform/superproject/main/+/main:external/cronet/android/tools/gn2bp/gen_android_bp;l\u003d1559?q\u003dandroid%2Ftools%2Fgn2bp%2Fgen_android_bp\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain\n\nYou might want to sort modules.items() list before iterating over it. This will ensure deterministic behavior.",
+      "parentUuid": "f2a229e9_5cb2811a",
+      "revId": "f42c851aaabacb33d270ac6dc188aef4c3200429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
