@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c966bd9_b867803a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-04-09T18:23:36Z",
+      "side": 1,
+      "message": "Errorprone lint bypassed as this is a rollback and the lint was previously overriden in aosp/3005178.",
+      "revId": "44e8bfa2b9216493e459c35310cb0e9a8c30440c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
