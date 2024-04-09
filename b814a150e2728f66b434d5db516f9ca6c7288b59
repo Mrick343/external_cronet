@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "549d1415_45003d72",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2024-04-09T16:36:28Z",
+      "side": 1,
+      "message": "Looks like this project has a `.swp` file checked-in by accident.",
+      "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
