@@ -16,6 +16,24 @@
       "message": "Looks like this project has a `.swp` file checked-in by accident.",
       "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccf578df_fc40f7ae",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-04-09T16:46:34Z",
+      "side": 1,
+      "message": "It\u0027s not an accident. It\u0027s part of the setup we use while building cronet. It\u0027s possible we can remove it at some point, but we haven\u0027t looked into that.",
+      "parentUuid": "549d1415_45003d72",
+      "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
