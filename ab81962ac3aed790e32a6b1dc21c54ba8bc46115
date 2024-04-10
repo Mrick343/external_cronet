@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1da2cb5_a55c55b8",
+        "filename": "android/java/src/android/net/http/BidirectionalStream.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-04-10T13:40:53Z",
+      "side": 1,
+      "message": "Nit: I\u0027m worried this will leave an awkward space character before the `.`?",
+      "range": {
+        "startLine": 190,
+        "startChar": 58,
+        "endLine": 191,
+        "endChar": 19
+      },
+      "revId": "ab81962ac3aed790e32a6b1dc21c54ba8bc46115",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
