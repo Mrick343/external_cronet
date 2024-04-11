@@ -34,6 +34,24 @@
       "parentUuid": "549d1415_45003d72",
       "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b50830c_cc9d8ad1",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2024-04-11T17:43:41Z",
+      "side": 1,
+      "message": "My comment was about the vim .swp file - is that part of the cronet workflow?",
+      "parentUuid": "ccf578df_fc40f7ae",
+      "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
