@@ -70,6 +70,24 @@
       "parentUuid": "1b50830c_cc9d8ad1",
       "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6952ae2_c823a982",
+        "filename": "android/tools/gn2bp/Android.bp.swp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2024-04-12T19:03:03Z",
+      "side": 1,
+      "message": "`Android.bp.swp` is a vim temporary file: https://www.baeldung.com/linux/vim-swap-files#:~:text\u003dSwap%20files%20are%20buffer%20files,the%20swap%20file%20is%20deleted..  The `Android.bp` is used to specify build rules for Android.  The `Android.bp.swp` is likely the temporary file created while editing Android.bp and someone checked it in by accident.",
+      "parentUuid": "8e69ce01_a4d4e139",
+      "revId": "b814a150e2728f66b434d5db516f9ca6c7288b59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
