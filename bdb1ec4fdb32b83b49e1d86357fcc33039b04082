@@ -69,6 +69,24 @@
       "parentUuid": "fa5b66ac_e07d992e",
       "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ba1ae32_6543eabc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1044446
+      },
+      "writtenOn": "2024-04-22T20:32:17Z",
+      "side": 1,
+      "message": "This is blocking aosp/3052342 (ag/27048639 downstream) to clean up the AndroidX build files.",
+      "parentUuid": "17179de0_92302f23",
+      "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
