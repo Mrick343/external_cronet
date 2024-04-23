@@ -123,6 +123,24 @@
       "parentUuid": "5b131005_939b0df7",
       "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd2ec589_4c5383b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-04-23T15:02:06Z",
+      "side": 1,
+      "message": "Sure. This can be abandoned now.",
+      "parentUuid": "5788639c_cccea512",
+      "revId": "bdb1ec4fdb32b83b49e1d86357fcc33039b04082",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
