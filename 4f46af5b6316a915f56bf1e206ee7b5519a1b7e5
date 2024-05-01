@@ -33,6 +33,24 @@
       "message": "Also, don\u0027t you need to add this to some .bp file?",
       "revId": "4f46af5b6316a915f56bf1e206ee7b5519a1b7e5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0a86791_f5363a9c",
+        "filename": "third_party/zlib/zlib.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-01T10:41:39Z",
+      "side": 1,
+      "message": "The header approach is much simpler and less maintainable for this specific case. My reasons are the following:\n\n1. If we use copybara, we have to define which files do we need to change which can be inefficient as if we expand the scope too much, we might be messing with files that don\u0027t want to mess with. If we narrow the scope then we might forget to change some files for which we will have to restart the import with the new changes to copybara. But this approach doesn\u0027t have this problem because if the file uses zlib then it will find its way to `third_party/zlib/zlib.h` and if it doesn\u0027t then nothing happens.\n\n2. This is much much faster to iterate on, you make the changes in AOSP and test them right away, you don\u0027t have to re-run copybara.",
+      "parentUuid": "ff925baf_cf3e9bbe",
+      "revId": "4f46af5b6316a915f56bf1e206ee7b5519a1b7e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
