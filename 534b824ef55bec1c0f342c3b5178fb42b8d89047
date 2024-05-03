@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dafa96ff_639b14b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1291338
+      },
+      "writtenOn": "2024-05-03T05:52:41Z",
+      "side": 1,
+      "message": "This makes build outputs nondeterministic. It\u0027s against the effort making build outputs deterministic as much as possible.\n\nI filed b/338516524 to track this.",
+      "revId": "534b824ef55bec1c0f342c3b5178fb42b8d89047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
