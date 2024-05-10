@@ -9,7 +9,7 @@
 #include <numeric>
 #include <utility>
 
-#include "base/bind.h"
+#include "base/functional/bind.h"
 #include "base/memory/ptr_util.h"
 #include "base/memory/raw_ptr.h"
 #include "base/memory/raw_ref.h"
@@ -319,16 +319,16 @@ TEST(StackSamplerTest, RecordStackFramesUMAMetric) {
                                      PlatformThread::CurrentId());
 
     // Should have no new samples in the
-    // Memory.StackSamplingProfiler.StackSampleSize histogram.
+    // Memory.StackSamplingProfiler.StackSampleSize2 histogram.
     histogram_tester.ExpectUniqueSample(
-        "Memory.StackSamplingProfiler.StackSampleSize", kExpectedSizeKB, 0);
+        "Memory.StackSamplingProfiler.StackSampleSize2", kExpectedSizeKB, 0);
   }
 
   stack_sampler->RecordStackFrames(stack_buffer.get(), &profile_builder,
                                    PlatformThread::CurrentId());
 
   histogram_tester.ExpectUniqueSample(
-      "Memory.StackSamplingProfiler.StackSampleSize", kExpectedSizeKB, 1);
+      "Memory.StackSamplingProfiler.StackSampleSize2", kExpectedSizeKB, 1);
 }
 #endif  // #if BUILDFLAG(IS_CHROMEOS)
 

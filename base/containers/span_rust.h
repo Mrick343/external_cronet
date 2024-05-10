@@ -8,7 +8,12 @@
 #include <stdint.h>
 
 #include "base/containers/span.h"
-#include "third_party/rust/cxx/v1/crate/include/cxx.h"
+#include "base/rust_buildflags.h"
+#include "third_party/rust/cxx/v1/cxx.h"
+
+#if !BUILDFLAG(BUILD_RUST_BASE_CONVERSIONS)
+#error "span_rust.h included without BUILD_RUST_BASE_CONVERSIONS"
+#endif
 
 namespace base {
 

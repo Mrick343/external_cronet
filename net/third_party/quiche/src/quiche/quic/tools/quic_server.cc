@@ -97,8 +97,13 @@ void QuicServer::Initialize() {
 }
 
 QuicServer::~QuicServer() {
-  close(fd_);
-  fd_ = -1;
+  if (event_loop_ != nullptr) {
+    if (!event_loop_->UnregisterSocket(fd_)) {
+      QUIC_LOG(ERROR) << "Failed to unregister socket: " << fd_;
+    }
+  }
+  (void)socket_api::Close(fd_);
+  fd_ = kInvalidSocketFd;
 
   // Should be fine without because nothing should send requests to the backend
   // after `this` is destroyed, but for extra pointer safety, clear the socket
@@ -125,9 +130,8 @@ bool QuicServer::CreateUDPSocketAndListen(const QuicSocketAddress& address) {
   overflow_supported_ = socket_api.EnableDroppedPacketCount(fd_);
   socket_api.EnableReceiveTimestamp(fd_);
 
-  sockaddr_storage addr = address.generic_address();
-  int rc = bind(fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
-  if (rc < 0) {
+  bool success = socket_api.Bind(fd_, address);
+  if (!success) {
     QUIC_LOG(ERROR) << "Bind failed: " << strerror(errno);
     return false;
   }

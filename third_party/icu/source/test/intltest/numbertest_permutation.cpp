@@ -163,7 +163,7 @@ outerEnd:
 
     // Compare it to the golden file
     const char* codePage = "UTF-8";
-    LocalUCHARBUFPointer f(ucbuf_open(goldenFilePath.data(), &codePage, TRUE, FALSE, status));
+    LocalUCHARBUFPointer f(ucbuf_open(goldenFilePath.data(), &codePage, true, false, status));
     if (!assertSuccess("Can't open data file", status)) {
         return;
     }
@@ -171,7 +171,7 @@ outerEnd:
     int32_t lineNumber = 1;
     int32_t lineLength;
     for (const auto& actualLine : resultLines) {
-        const UChar* lineBuf = ucbuf_readline(f.getAlias(), &lineLength, status);
+        const char16_t* lineBuf = ucbuf_readline(f.getAlias(), &lineLength, status);
         if (lineBuf == nullptr) {
             errln("More lines generated than are in the data file!");
             break;

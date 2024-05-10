@@ -32,13 +32,16 @@ class QUIC_NO_EXPORT MasqueClientSession : public QuicSpdyClientSession {
     // Notifies the owner that a settings frame has been received.
     virtual void OnSettingsReceived() = 0;
   };
-  // Interface meant to be implemented by encapsulated client sessions, i.e.
-  // the end-to-end QUIC client sessions that run inside MASQUE encapsulation.
+
+  // Interface meant to be implemented by client sessions encapsulated inside
+  // CONNECT-UDP, i.e. the end-to-end QUIC client sessions that run inside
+  // CONNECT-UDP encapsulation.
   class QUIC_NO_EXPORT EncapsulatedClientSession {
    public:
     virtual ~EncapsulatedClientSession() {}
 
-    // Process packet that was just decapsulated.
+    // Process UDP packet that was just decapsulated. |packet| contains the UDP
+    // payload.
     virtual void ProcessPacket(absl::string_view packet,
                                QuicSocketAddress target_server_address) = 0;
 
@@ -48,16 +51,49 @@ class QUIC_NO_EXPORT MasqueClientSession : public QuicSpdyClientSession {
         ConnectionCloseBehavior connection_close_behavior) = 0;
   };
 
-  // Takes ownership of |connection|, but not of |crypto_config| or
-  // |push_promise_index| or |owner|. All pointers must be non-null. Caller
-  // must ensure that |push_promise_index| and |owner| stay valid for the
-  // lifetime of the newly created MasqueClientSession.
+  // Interface meant to be implemented by client sessions encapsulated inside
+  // CONNECT-IP, i.e. the end-to-end QUIC client sessions that run inside
+  // CONNECT-IP encapsulation.
+  class QUIC_NO_EXPORT EncapsulatedIpSession {
+   public:
+    virtual ~EncapsulatedIpSession() {}
+
+    // Process packet that was just decapsulated. |packet| contains the IP
+    // header and payload.
+    virtual void ProcessIpPacket(absl::string_view packet) = 0;
+
+    // Close the encapsulated connection.
+    virtual void CloseIpSession(const std::string& details) = 0;
+
+    virtual bool OnAddressAssignCapsule(
+        const quiche::AddressAssignCapsule& capsule) = 0;
+    virtual bool OnAddressRequestCapsule(
+        const quiche::AddressRequestCapsule& capsule) = 0;
+    virtual bool OnRouteAdvertisementCapsule(
+        const quiche::RouteAdvertisementCapsule& capsule) = 0;
+  };
+
+  // CONNECT-ETHERNET.
+  class QUIC_NO_EXPORT EncapsulatedEthernetSession {
+   public:
+    virtual ~EncapsulatedEthernetSession() {}
+
+    // Process packet that was just decapsulated. |frame| contains the
+    // Ethernet header and payload.
+    virtual void ProcessEthernetFrame(absl::string_view frame) = 0;
+
+    // Close the encapsulated connection.
+    virtual void CloseEthernetSession(const std::string& details) = 0;
+  };
+
+  // Takes ownership of |connection|, but not of |crypto_config| or |owner|.
+  // All pointers must be non-null. Caller must ensure that |owner| stays valid
+  // for the lifetime of the newly created MasqueClientSession.
   MasqueClientSession(MasqueMode masque_mode, const std::string& uri_template,
                       const QuicConfig& config,
                       const ParsedQuicVersionVector& supported_versions,
                       QuicConnection* connection, const QuicServerId& server_id,
                       QuicCryptoClientConfig* crypto_config,
-                      QuicClientPushPromiseIndex* push_promise_index,
                       Owner* owner);
 
   // Disallow copy and assign.
@@ -75,14 +111,39 @@ class QUIC_NO_EXPORT MasqueClientSession : public QuicSpdyClientSession {
   // From QuicSpdySession.
   bool OnSettingsFrame(const SettingsFrame& frame) override;
 
-  // Send encapsulated packet.
+  // Send encapsulated UDP packet. |packet| contains the UDP payload.
   void SendPacket(absl::string_view packet,
                   const QuicSocketAddress& target_server_address,
                   EncapsulatedClientSession* encapsulated_client_session);
 
+  // Send encapsulated IP packet. |packet| contains the IP header and payload.
+  void SendIpPacket(absl::string_view packet,
+                    EncapsulatedIpSession* encapsulated_ip_session);
+
+  // Send encapsulated Ethernet frame. |frame| contains the Ethernet
+  // header and payload.
+  void SendEthernetFrame(
+      absl::string_view frame,
+      EncapsulatedEthernetSession* encapsulated_ethernet_session);
+
   // Close CONNECT-UDP stream tied to this encapsulated client session.
   void CloseConnectUdpStream(
       EncapsulatedClientSession* encapsulated_client_session);
+
+  // Close CONNECT-IP stream tied to this encapsulated client session.
+  void CloseConnectIpStream(EncapsulatedIpSession* encapsulated_ip_session);
+
+  // Close CONNECT-ETHERNET stream tied to this encapsulated client session.
+  void CloseConnectEthernetStream(
+      EncapsulatedEthernetSession* encapsulated_ethernet_session);
+
+  // Generate a random Unique Local Address and register a mapping from
+  // that address to the corresponding hostname. The returned address should be
+  // removed by calling RemoveFakeAddress() once it is no longer needed.
+  quiche::QuicheIpAddress GetFakeAddress(absl::string_view hostname);
+
+  // Removes a fake address that was previously created by GetFakeAddress().
+  void RemoveFakeAddress(const quiche::QuicheIpAddress& fake_address);
 
  private:
   // State that the MasqueClientSession keeps for each CONNECT-UDP request.
@@ -116,6 +177,8 @@ class QUIC_NO_EXPORT MasqueClientSession : public QuicSpdyClientSession {
     // From QuicSpdyStream::Http3DatagramVisitor.
     void OnHttp3Datagram(QuicStreamId stream_id,
                          absl::string_view payload) override;
+    void OnUnknownCapsule(QuicStreamId /*stream_id*/,
+                          const quiche::UnknownCapsule& /*capsule*/) override {}
 
    private:
     QuicSpdyClientStream* stream_;                            // Unowned.
@@ -124,17 +187,111 @@ class QUIC_NO_EXPORT MasqueClientSession : public QuicSpdyClientSession {
     QuicSocketAddress target_server_address_;
   };
 
+  // State that the MasqueClientSession keeps for each CONNECT-IP request.
+  class QUIC_NO_EXPORT ConnectIpClientState
+      : public QuicSpdyStream::Http3DatagramVisitor,
+        public QuicSpdyStream::ConnectIpVisitor {
+   public:
+    // |stream| and |encapsulated_client_session| must be valid for the lifetime
+    // of the ConnectUdpClientState.
+    explicit ConnectIpClientState(
+        QuicSpdyClientStream* stream,
+        EncapsulatedIpSession* encapsulated_ip_session,
+        MasqueClientSession* masque_session);
+
+    ~ConnectIpClientState();
+
+    // Disallow copy but allow move.
+    ConnectIpClientState(const ConnectIpClientState&) = delete;
+    ConnectIpClientState(ConnectIpClientState&&);
+    ConnectIpClientState& operator=(const ConnectIpClientState&) = delete;
+    ConnectIpClientState& operator=(ConnectIpClientState&&);
+
+    QuicSpdyClientStream* stream() const { return stream_; }
+    EncapsulatedIpSession* encapsulated_ip_session() const {
+      return encapsulated_ip_session_;
+    }
+
+    // From QuicSpdyStream::Http3DatagramVisitor.
+    void OnHttp3Datagram(QuicStreamId stream_id,
+                         absl::string_view payload) override;
+    void OnUnknownCapsule(QuicStreamId /*stream_id*/,
+                          const quiche::UnknownCapsule& /*capsule*/) override {}
+
+    // From QuicSpdyStream::ConnectIpVisitor.
+    bool OnAddressAssignCapsule(
+        const quiche::AddressAssignCapsule& capsule) override;
+    bool OnAddressRequestCapsule(
+        const quiche::AddressRequestCapsule& capsule) override;
+    bool OnRouteAdvertisementCapsule(
+        const quiche::RouteAdvertisementCapsule& capsule) override;
+    void OnHeadersWritten() override;
+
+   private:
+    QuicSpdyClientStream* stream_;                    // Unowned.
+    EncapsulatedIpSession* encapsulated_ip_session_;  // Unowned.
+    MasqueClientSession* masque_session_;             // Unowned.
+  };
+
+  // State that the MasqueClientSession keeps for each CONNECT-ETHERNET request.
+  class QUIC_NO_EXPORT ConnectEthernetClientState
+      : public QuicSpdyStream::Http3DatagramVisitor {
+   public:
+    // |stream| and |encapsulated_client_session| must be valid for the lifetime
+    // of the ConnectUdpClientState.
+    explicit ConnectEthernetClientState(
+        QuicSpdyClientStream* stream,
+        EncapsulatedEthernetSession* encapsulated_ethernet_session,
+        MasqueClientSession* masque_session);
+
+    ~ConnectEthernetClientState();
+
+    // Disallow copy but allow move.
+    ConnectEthernetClientState(const ConnectEthernetClientState&) = delete;
+    ConnectEthernetClientState(ConnectEthernetClientState&&);
+    ConnectEthernetClientState& operator=(const ConnectEthernetClientState&) =
+        delete;
+    ConnectEthernetClientState& operator=(ConnectEthernetClientState&&);
+
+    QuicSpdyClientStream* stream() const { return stream_; }
+    EncapsulatedEthernetSession* encapsulated_ethernet_session() const {
+      return encapsulated_ethernet_session_;
+    }
+
+    // From QuicSpdyStream::Http3DatagramVisitor.
+    void OnHttp3Datagram(QuicStreamId stream_id,
+                         absl::string_view payload) override;
+    void OnUnknownCapsule(QuicStreamId /*stream_id*/,
+                          const quiche::UnknownCapsule& /*capsule*/) override {}
+
+   private:
+    QuicSpdyClientStream* stream_;                                // Unowned.
+    EncapsulatedEthernetSession* encapsulated_ethernet_session_;  // Unowned.
+    MasqueClientSession* masque_session_;                         // Unowned.
+  };
+
   HttpDatagramSupport LocalHttpDatagramSupport() override {
-    return HttpDatagramSupport::kDraft09;
+    return HttpDatagramSupport::kRfc;
   }
 
   const ConnectUdpClientState* GetOrCreateConnectUdpClientState(
       const QuicSocketAddress& target_server_address,
       EncapsulatedClientSession* encapsulated_client_session);
 
+  const ConnectIpClientState* GetOrCreateConnectIpClientState(
+      EncapsulatedIpSession* encapsulated_ip_session);
+
+  const ConnectEthernetClientState* GetOrCreateConnectEthernetClientState(
+      EncapsulatedEthernetSession* encapsulated_ethernet_session);
+
   MasqueMode masque_mode_;
   std::string uri_template_;
   std::list<ConnectUdpClientState> connect_udp_client_states_;
+  std::list<ConnectIpClientState> connect_ip_client_states_;
+  std::list<ConnectEthernetClientState> connect_ethernet_client_states_;
+  // Maps fake addresses generated by GetFakeAddress() to their corresponding
+  // hostnames.
+  absl::flat_hash_map<std::string, std::string> fake_addresses_;
   Owner* owner_;  // Unowned;
 };
 

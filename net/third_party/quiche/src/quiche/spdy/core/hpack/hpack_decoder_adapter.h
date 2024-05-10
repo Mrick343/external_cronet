@@ -10,16 +10,13 @@
 
 #include <stddef.h>
 
-#include <cstdint>
-#include <memory>
+#include <string>
 
 #include "absl/strings/string_view.h"
 #include "quiche/http2/hpack/decoder/hpack_decoder.h"
 #include "quiche/http2/hpack/decoder/hpack_decoder_listener.h"
-#include "quiche/http2/hpack/decoder/hpack_decoder_tables.h"
-#include "quiche/http2/hpack/http2_hpack_constants.h"
+#include "quiche/http2/hpack/decoder/hpack_decoding_error.h"
 #include "quiche/common/platform/api/quiche_export.h"
-#include "quiche/spdy/core/hpack/hpack_header_table.h"
 #include "quiche/spdy/core/http2_header_block.h"
 #include "quiche/spdy/core/spdy_headers_handler_interface.h"
 
@@ -28,7 +25,7 @@ namespace test {
 class HpackDecoderAdapterPeer;
 }  // namespace test
 
-class QUICHE_EXPORT_PRIVATE HpackDecoderAdapter {
+class QUICHE_EXPORT HpackDecoderAdapter {
  public:
   friend test::HpackDecoderAdapterPeer;
   HpackDecoderAdapter();
@@ -91,8 +88,7 @@ class QUICHE_EXPORT_PRIVATE HpackDecoderAdapter {
   std::string detailed_error() const { return detailed_error_; }
 
  private:
-  class QUICHE_EXPORT_PRIVATE ListenerAdapter
-      : public http2::HpackDecoderListener {
+  class QUICHE_EXPORT ListenerAdapter : public http2::HpackDecoderListener {
    public:
     ListenerAdapter();
     ~ListenerAdapter() override;

@@ -1,4 +1,4 @@
-// Copyright 2022 The Chromium Authors. All rights reserved.
+// Copyright 2022 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -7,14 +7,14 @@
 #include <algorithm>
 #include <utility>
 
-#include "base/bind.h"
 #include "base/check_op.h"
+#include "base/functional/bind.h"
 #include "base/functional/callback.h"
 #include "base/location.h"
 #include "base/memory/raw_ptr.h"
 #include "base/notreached.h"
 #include "base/strings/string_util.h"
-#include "base/threading/sequenced_task_runner_handle.h"
+#include "base/task/sequenced_task_runner.h"
 #include "net/base/address_list.h"
 #include "net/base/ip_endpoint.h"
 #include "net/base/net_errors.h"
@@ -51,7 +51,7 @@ void HostResolverNat64Task::Start(base::OnceClosure completion_closure) {
   next_state_ = State::kResolve;
   int rv = DoLoop(OK);
   if (rv != ERR_IO_PENDING) {
-    base::SequencedTaskRunnerHandle::Get()->PostTask(
+    base::SequencedTaskRunner::GetCurrentDefault()->PostTask(
         FROM_HERE, std::move(completion_closure_));
   }
 }
@@ -144,8 +144,7 @@ int HostResolverNat64Task::DoSynthesizeToIpv6() {
           ipv4_address, ipv4onlyarpa_AAAA_address, pref64_length);
 
       IPEndPoint converted_ip_endpoint(converted_address, 0);
-      if (std::find(converted_addresses.begin(), converted_addresses.end(),
-                    converted_ip_endpoint) == converted_addresses.end()) {
+      if (!base::Contains(converted_addresses, converted_ip_endpoint)) {
         converted_addresses.push_back(std::move(converted_ip_endpoint));
       }
     }

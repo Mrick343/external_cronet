@@ -6,9 +6,9 @@
 
 #include <utility>
 
-#include "base/bind.h"
-#include "base/callback_helpers.h"
 #include "base/containers/contains.h"
+#include "base/functional/bind.h"
+#include "base/functional/callback_helpers.h"
 #include "base/logging.h"
 #include "base/memory/raw_ptr.h"
 #include "base/metrics/histogram_functions.h"
@@ -72,7 +72,7 @@ class ProofVerifierChromium::Job {
       const uint16_t port,
       const std::string& server_config,
       quic::QuicTransportVersion quic_version,
-      absl::string_view chlo_hash,
+      std::string_view chlo_hash,
       const std::vector<std::string>& certs,
       const std::string& cert_sct,
       const std::string& signature,
@@ -123,7 +123,7 @@ class ProofVerifierChromium::Job {
 
   bool VerifySignature(const std::string& signed_data,
                        quic::QuicTransportVersion quic_version,
-                       absl::string_view chlo_hash,
+                       std::string_view chlo_hash,
                        const std::string& signature,
                        const std::string& cert);
 
@@ -209,7 +209,7 @@ quic::QuicAsyncStatus ProofVerifierChromium::Job::VerifyProof(
     const uint16_t port,
     const string& server_config,
     quic::QuicTransportVersion quic_version,
-    absl::string_view chlo_hash,
+    std::string_view chlo_hash,
     const std::vector<string>& certs,
     const std::string& cert_sct,
     const string& signature,
@@ -457,7 +457,7 @@ int ProofVerifierChromium::Job::DoVerifyCertComplete(int result) {
 bool ProofVerifierChromium::Job::VerifySignature(
     const string& signed_data,
     quic::QuicTransportVersion quic_version,
-    absl::string_view chlo_hash,
+    std::string_view chlo_hash,
     const string& signature,
     const string& cert) {
   size_t size_bits;
@@ -492,7 +492,7 @@ bool ProofVerifierChromium::Job::VerifySignature(
   verifier.VerifyUpdate(
       base::as_bytes(base::make_span(quic::kProofSignatureLabel)));
   uint32_t len = chlo_hash.length();
-  verifier.VerifyUpdate(base::as_bytes(base::make_span(&len, 1)));
+  verifier.VerifyUpdate(base::as_bytes(base::make_span(&len, 1u)));
   verifier.VerifyUpdate(base::as_bytes(base::make_span(chlo_hash)));
   verifier.VerifyUpdate(base::as_bytes(base::make_span(signed_data)));
 
@@ -517,16 +517,6 @@ int ProofVerifierChromium::Job::CheckCTCompliance() {
   verify_details_->cert_verify_result.policy_compliance =
       policy_enforcer_->CheckCompliance(cert_verify_result.verified_cert.get(),
                                         verified_scts, net_log_);
-  if (verify_details_->cert_verify_result.cert_status & CERT_STATUS_IS_EV) {
-    if (verify_details_->cert_verify_result.policy_compliance !=
-            ct::CTPolicyCompliance::CT_POLICY_COMPLIES_VIA_SCTS &&
-        verify_details_->cert_verify_result.policy_compliance !=
-            ct::CTPolicyCompliance::CT_POLICY_BUILD_NOT_TIMELY) {
-      verify_details_->cert_verify_result.cert_status |=
-          CERT_STATUS_CT_COMPLIANCE_FAILED;
-      verify_details_->cert_verify_result.cert_status &= ~CERT_STATUS_IS_EV;
-    }
-  }
 
   TransportSecurityState::CTRequirementsStatus ct_requirement_status =
       transport_security_state_->CheckCTRequirements(
@@ -534,10 +524,7 @@ int ProofVerifierChromium::Job::CheckCTCompliance() {
           cert_verify_result.is_issued_by_known_root,
           cert_verify_result.public_key_hashes,
           cert_verify_result.verified_cert.get(), cert_.get(),
-          cert_verify_result.scts,
-          TransportSecurityState::ENABLE_EXPECT_CT_REPORTS,
-          cert_verify_result.policy_compliance,
-          proof_verifier_->network_anonymization_key_);
+          cert_verify_result.scts, cert_verify_result.policy_compliance);
 
   if (sct_auditing_delegate_) {
     sct_auditing_delegate_->MaybeEnqueueReport(
@@ -581,7 +568,7 @@ quic::QuicAsyncStatus ProofVerifierChromium::VerifyProof(
     const uint16_t port,
     const std::string& server_config,
     quic::QuicTransportVersion quic_version,
-    absl::string_view chlo_hash,
+    std::string_view chlo_hash,
     const std::vector<std::string>& certs,
     const std::string& cert_sct,
     const std::string& signature,

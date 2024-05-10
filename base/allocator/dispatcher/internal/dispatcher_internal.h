@@ -5,21 +5,18 @@
 #ifndef BASE_ALLOCATOR_DISPATCHER_INTERNAL_DISPATCHER_INTERNAL_H_
 #define BASE_ALLOCATOR_DISPATCHER_INTERNAL_DISPATCHER_INTERNAL_H_
 
-#include "base/allocator/buildflags.h"
 #include "base/allocator/dispatcher/configuration.h"
 #include "base/allocator/dispatcher/internal/dispatch_data.h"
 #include "base/allocator/dispatcher/internal/tools.h"
-#include "base/allocator/dispatcher/reentry_guard.h"
 #include "base/allocator/dispatcher/subsystem.h"
+#include "base/allocator/partition_allocator/src/partition_alloc/partition_alloc_allocation_data.h"
+#include "base/allocator/partition_allocator/src/partition_alloc/partition_alloc_buildflags.h"
+#include "base/check.h"
 #include "base/compiler_specific.h"
 #include "build/build_config.h"
 
-#if BUILDFLAG(USE_PARTITION_ALLOC)
-#include "base/allocator/partition_allocator/partition_alloc.h"
-#endif
-
 #if BUILDFLAG(USE_ALLOCATOR_SHIM)
-#include "base/allocator/partition_allocator/shim/allocator_shim.h"
+#include "base/allocator/partition_allocator/src/partition_alloc/shim/allocator_shim.h"
 #endif
 
 #include <tuple>
@@ -36,19 +33,19 @@ template <typename CheckObserverPredicate,
 void inline PerformObserverCheck(const std::tuple<ObserverTypes...>& observers,
                                  std::index_sequence<Indices...>,
                                  CheckObserverPredicate check_observer) {
-  ((DCHECK(check_observer(std::get<Indices>(observers)))), ...);
+  ([](bool b) { DCHECK(b); }(check_observer(std::get<Indices>(observers))),
+   ...);
 }
 
 template <typename... ObserverTypes, size_t... Indices>
 ALWAYS_INLINE void PerformAllocationNotification(
     const std::tuple<ObserverTypes...>& observers,
     std::index_sequence<Indices...>,
-    void* address,
-    size_t size,
-    AllocationSubsystem subSystem,
-    const char* type_name) {
-  ((std::get<Indices>(observers)->OnAllocation(address, size, subSystem,
-                                               type_name)),
+    const partition_alloc::AllocationNotificationData& notification_data,
+    AllocationSubsystem sub_system) {
+  ((std::get<Indices>(observers)->OnAllocation(
+       notification_data.address(), notification_data.size(), sub_system,
+       notification_data.type_name())),
    ...);
 }
 
@@ -56,8 +53,8 @@ template <typename... ObserverTypes, size_t... Indices>
 ALWAYS_INLINE void PerformFreeNotification(
     const std::tuple<ObserverTypes...>& observers,
     std::index_sequence<Indices...>,
-    void* address) {
-  ((std::get<Indices>(observers)->OnFree(address)), ...);
+    const partition_alloc::FreeNotificationData& notification_data) {
+  ((std::get<Indices>(observers)->OnFree(notification_data.address())), ...);
 }
 
 // DispatcherImpl provides hooks into the various memory subsystems. These hooks
@@ -97,15 +94,15 @@ struct DispatcherImpl {
   }
 
 #if BUILDFLAG(USE_PARTITION_ALLOC)
-  static void PartitionAllocatorAllocationHook(void* address,
-                                               size_t size,
-                                               const char* type_name) {
-    DoNotifyAllocation(address, size, AllocationSubsystem::kPartitionAllocator,
-                       type_name);
+  static void PartitionAllocatorAllocationHook(
+      const partition_alloc::AllocationNotificationData& notification_data) {
+    DoNotifyAllocation(notification_data,
+                       AllocationSubsystem::kPartitionAllocator);
   }
 
-  static void PartitionAllocatorFreeHook(void* address) {
-    DoNotifyFree(address);
+  static void PartitionAllocatorFreeHook(
+      const partition_alloc::FreeNotificationData& notification_data) {
+    DoNotifyFree(notification_data);
   }
 #endif
 
@@ -113,23 +110,25 @@ struct DispatcherImpl {
   static void* AllocFn(const AllocatorDispatch* self,
                        size_t size,
                        void* context) {
-    ReentryGuard guard;
     void* const address = self->next->alloc_function(self->next, size, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(address, size, AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(
+        partition_alloc::AllocationNotificationData(address, size, nullptr),
+        AllocationSubsystem::kAllocatorShim);
+
     return address;
   }
 
   static void* AllocUncheckedFn(const AllocatorDispatch* self,
                                 size_t size,
                                 void* context) {
-    ReentryGuard guard;
     void* const address =
         self->next->alloc_unchecked_function(self->next, size, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(address, size, AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(
+        partition_alloc::AllocationNotificationData(address, size, nullptr),
+        AllocationSubsystem::kAllocatorShim);
+
     return address;
   }
 
@@ -137,13 +136,13 @@ struct DispatcherImpl {
                                       size_t n,
                                       size_t size,
                                       void* context) {
-    ReentryGuard guard;
     void* const address = self->next->alloc_zero_initialized_function(
         self->next, n, size, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(address, n * size,
-                         AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(
+        partition_alloc::AllocationNotificationData(address, n * size, nullptr),
+        AllocationSubsystem::kAllocatorShim);
+
     return address;
   }
 
@@ -151,12 +150,13 @@ struct DispatcherImpl {
                               size_t alignment,
                               size_t size,
                               void* context) {
-    ReentryGuard guard;
     void* const address = self->next->alloc_aligned_function(
         self->next, alignment, size, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(address, size, AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(
+        partition_alloc::AllocationNotificationData(address, size, nullptr),
+        AllocationSubsystem::kAllocatorShim);
+
     return address;
   }
 
@@ -164,20 +164,15 @@ struct DispatcherImpl {
                          void* address,
                          size_t size,
                          void* context) {
-    ReentryGuard guard;
     // Note: size == 0 actually performs free.
-    // Note: ReentryGuard prevents from recursions introduced by malloc and
-    // initialization of thread local storage which happen in the allocation
-    // path only (please see docs of ReentryGuard for full details). Therefore,
-    // the DoNotifyFree doesn't need to be guarded. Instead, making it unguarded
-    // also ensures proper notification.
-    DoNotifyFree(address);
+    DoNotifyFree(partition_alloc::FreeNotificationData(address));
     void* const reallocated_address =
         self->next->realloc_function(self->next, address, size, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(reallocated_address, size,
-                         AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(partition_alloc::AllocationNotificationData(
+                           reallocated_address, size, nullptr),
+                       AllocationSubsystem::kAllocatorShim);
+
     return reallocated_address;
   }
 
@@ -189,9 +184,7 @@ struct DispatcherImpl {
     // being freed before calling free_function, as once the latter is executed
     // the address becomes available and can be allocated by another thread.
     // That would be racy otherwise.
-    // Note: The code doesn't need to protect from recursions using
-    // ReentryGuard, see ReallocFn for details.
-    DoNotifyFree(address);
+    DoNotifyFree(partition_alloc::FreeNotificationData(address));
     self->next->free_function(self->next, address, context);
   }
 
@@ -201,19 +194,29 @@ struct DispatcherImpl {
     return self->next->get_size_estimate_function(self->next, address, context);
   }
 
+  static size_t GoodSizeFn(const AllocatorDispatch* self,
+                           size_t size,
+                           void* context) {
+    return self->next->good_size_function(self->next, size, context);
+  }
+
+  static bool ClaimedAddressFn(const AllocatorDispatch* self,
+                               void* address,
+                               void* context) {
+    return self->next->claimed_address_function(self->next, address, context);
+  }
+
   static unsigned BatchMallocFn(const AllocatorDispatch* self,
                                 size_t size,
                                 void** results,
                                 unsigned num_requested,
                                 void* context) {
-    ReentryGuard guard;
     unsigned const num_allocated = self->next->batch_malloc_function(
         self->next, size, results, num_requested, context);
-    if (LIKELY(guard)) {
-      for (unsigned i = 0; i < num_allocated; ++i) {
-        DoNotifyAllocation(results[i], size,
-                           AllocationSubsystem::kAllocatorShim);
-      }
+    for (unsigned i = 0; i < num_allocated; ++i) {
+      DoNotifyAllocation(partition_alloc::AllocationNotificationData(
+                             results[i], size, nullptr),
+                         AllocationSubsystem::kAllocatorShim);
     }
     return num_allocated;
   }
@@ -222,11 +225,10 @@ struct DispatcherImpl {
                           void** to_be_freed,
                           unsigned num_to_be_freed,
                           void* context) {
-    // Note: The code doesn't need to protect from recursions using
-    // ReentryGuard, see ReallocFn for details.
     for (unsigned i = 0; i < num_to_be_freed; ++i) {
-      DoNotifyFree(to_be_freed[i]);
+      DoNotifyFree(partition_alloc::FreeNotificationData(to_be_freed[i]));
     }
+
     self->next->batch_free_function(self->next, to_be_freed, num_to_be_freed,
                                     context);
   }
@@ -235,22 +237,28 @@ struct DispatcherImpl {
                                  void* address,
                                  size_t size,
                                  void* context) {
-    // Note: The code doesn't need to protect from recursions using
-    // ReentryGuard, see ReallocFn for details.
-    DoNotifyFree(address);
+    DoNotifyFree(partition_alloc::FreeNotificationData(address));
     self->next->free_definite_size_function(self->next, address, size, context);
+  }
+
+  static void TryFreeDefaultFn(const AllocatorDispatch* self,
+                               void* address,
+                               void* context) {
+    DoNotifyFree(partition_alloc::FreeNotificationData(address));
+    self->next->try_free_default_function(self->next, address, context);
   }
 
   static void* AlignedMallocFn(const AllocatorDispatch* self,
                                size_t size,
                                size_t alignment,
                                void* context) {
-    ReentryGuard guard;
     void* const address = self->next->aligned_malloc_function(
         self->next, size, alignment, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(address, size, AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(
+        partition_alloc::AllocationNotificationData(address, size, nullptr),
+        AllocationSubsystem::kAllocatorShim);
+
     return address;
   }
 
@@ -259,44 +267,38 @@ struct DispatcherImpl {
                                 size_t size,
                                 size_t alignment,
                                 void* context) {
-    ReentryGuard guard;
     // Note: size == 0 actually performs free.
-    // Note: DoNotifyFree doesn't need to protect from recursions using
-    // ReentryGuard, see ReallocFn for details.
-    // Instead, making it unguarded also ensures proper notification of the free
-    // portion.
-    DoNotifyFree(address);
+    DoNotifyFree(partition_alloc::FreeNotificationData(address));
     address = self->next->aligned_realloc_function(self->next, address, size,
                                                    alignment, context);
-    if (LIKELY(guard)) {
-      DoNotifyAllocation(address, size, AllocationSubsystem::kAllocatorShim);
-    }
+
+    DoNotifyAllocation(
+        partition_alloc::AllocationNotificationData(address, size, nullptr),
+        AllocationSubsystem::kAllocatorShim);
+
     return address;
   }
 
   static void AlignedFreeFn(const AllocatorDispatch* self,
                             void* address,
                             void* context) {
-    // Note: The code doesn't need to protect from recursions using
-    // ReentryGuard, see ReallocFn for details.
-    DoNotifyFree(address);
+    DoNotifyFree(partition_alloc::FreeNotificationData(address));
     self->next->aligned_free_function(self->next, address, context);
   }
 
   static AllocatorDispatch allocator_dispatch_;
 #endif
 
-  static ALWAYS_INLINE void DoNotifyAllocation(
-      void* address,
-      size_t size,
-      AllocationSubsystem subSystem,
-      const char* type_name = nullptr) {
-    PerformAllocationNotification(s_observers, AllObservers{}, address, size,
-                                  subSystem, type_name);
+  ALWAYS_INLINE static void DoNotifyAllocation(
+      const partition_alloc::AllocationNotificationData& notification_data,
+      AllocationSubsystem sub_system) {
+    PerformAllocationNotification(s_observers, AllObservers{},
+                                  notification_data, sub_system);
   }
 
-  static ALWAYS_INLINE void DoNotifyFree(void* address) {
-    PerformFreeNotification(s_observers, AllObservers{}, address);
+  ALWAYS_INLINE static void DoNotifyFree(
+      const partition_alloc::FreeNotificationData& notification_data) {
+    PerformFreeNotification(s_observers, AllObservers{}, notification_data);
   }
 
   static std::tuple<ObserverTypes*...> s_observers;
@@ -315,9 +317,12 @@ AllocatorDispatch DispatcherImpl<ObserverTypes...>::allocator_dispatch_ = {
     &ReallocFn,
     &FreeFn,
     &GetSizeEstimateFn,
+    &GoodSizeFn,
+    &ClaimedAddressFn,
     &BatchMallocFn,
     &BatchFreeFn,
     &FreeDefiniteSizeFn,
+    &TryFreeDefaultFn,
     &AlignedMallocFn,
     &AlignedReallocFn,
     &AlignedFreeFn,

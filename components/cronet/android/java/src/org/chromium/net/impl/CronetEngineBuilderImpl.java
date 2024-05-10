@@ -11,14 +11,14 @@ import android.util.Base64;
 import androidx.annotation.IntDef;
 import androidx.annotation.VisibleForTesting;
 
-import android.net.http.HttpEngine;
-import android.net.http.IHttpEngineBuilder;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.ICronetEngineBuilder;
 
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.IDN;
-import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,13 +26,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-/**
- * Implementation of {@link IHttpEngineBuilder}.
- */
-public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
-    /**
-     * A hint that a host supports QUIC.
-     */
+/** Implementation of {@link ICronetEngineBuilder}. */
+public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
+    /** A hint that a host supports QUIC. */
     public static class QuicHint {
         // The host.
         final String mHost;
@@ -48,9 +44,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
         }
     }
 
-    /**
-     * A public key pin.
-     */
+    /** A public key pin. */
     public static class Pkp {
         // Host to pin for.
         final String mHost;
@@ -59,21 +53,19 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
         // Should pin apply to subdomains?
         final boolean mIncludeSubdomains;
         // When the pin expires.
-        final Instant mExpirationInsant;
+        final Date mExpirationDate;
 
-        Pkp(String host, byte[][] hashes, boolean includeSubdomains, Instant expirationInstant) {
+        Pkp(String host, byte[][] hashes, boolean includeSubdomains, Date expirationDate) {
             mHost = host;
             mHashes = hashes;
             mIncludeSubdomains = includeSubdomains;
-            mExpirationInsant = expirationInstant;
+            mExpirationDate = expirationDate;
         }
     }
 
-    /**
-     * Mapping between public builder view of HttpCacheMode and internal builder one.
-     */
+    /** Mapping between public builder view of HttpCacheMode and internal builder one. */
     @VisibleForTesting
-    static enum HttpCacheMode {
+    public enum HttpCacheMode {
         DISABLED(HttpCacheType.DISABLED, false),
         DISK(HttpCacheType.DISK, true),
         DISK_NO_HTTP(HttpCacheType.DISK, false),
@@ -96,31 +88,32 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
         }
 
         @HttpCacheSetting
-        int toPublicBuilderCacheMode() {
+        @VisibleForTesting
+        public int toPublicBuilderCacheMode() {
             switch (this) {
                 case DISABLED:
-                    return HttpEngine.Builder.HTTP_CACHE_DISABLED;
+                    return CronetEngine.Builder.HTTP_CACHE_DISABLED;
                 case DISK_NO_HTTP:
-                    return HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP;
+                    return CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP;
                 case DISK:
-                    return HttpEngine.Builder.HTTP_CACHE_DISK;
+                    return CronetEngine.Builder.HTTP_CACHE_DISK;
                 case MEMORY:
-                    return HttpEngine.Builder.HTTP_CACHE_IN_MEMORY;
+                    return CronetEngine.Builder.HTTP_CACHE_IN_MEMORY;
                 default:
                     throw new IllegalArgumentException("Unknown internal builder cache mode");
             }
         }
 
         @VisibleForTesting
-        static HttpCacheMode fromPublicBuilderCacheMode(@HttpCacheSetting int cacheMode) {
+        public static HttpCacheMode fromPublicBuilderCacheMode(@HttpCacheSetting int cacheMode) {
             switch (cacheMode) {
-                case HttpEngine.Builder.HTTP_CACHE_DISABLED:
+                case CronetEngine.Builder.HTTP_CACHE_DISABLED:
                     return DISABLED;
-                case HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP:
+                case CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP:
                     return DISK_NO_HTTP;
-                case HttpEngine.Builder.HTTP_CACHE_DISK:
+                case CronetEngine.Builder.HTTP_CACHE_DISK:
                     return DISK;
-                case HttpEngine.Builder.HTTP_CACHE_IN_MEMORY:
+                case CronetEngine.Builder.HTTP_CACHE_IN_MEMORY:
                     return MEMORY;
                 default:
                     throw new IllegalArgumentException("Unknown public builder cache mode");
@@ -160,7 +153,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
         enableQuic(true);
         enableHttp2(true);
         enableBrotli(false);
-        enableHttpCache(HttpEngine.Builder.HTTP_CACHE_DISABLED, 0);
+        enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISABLED, 0);
         enableNetworkQualityEstimator(false);
         enablePublicKeyPinningBypassForLocalTrustAnchors(true);
     }
@@ -177,7 +170,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    String getUserAgent() {
+    public String getUserAgent() {
         return mUserAgent;
     }
 
@@ -191,8 +184,26 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    String storagePath() {
+    public String storagePath() {
         return mStoragePath;
+    }
+
+    @Override
+    public CronetEngineBuilderImpl setLibraryLoader(CronetEngine.Builder.LibraryLoader loader) {
+        // |CronetEngineBuilderImpl| is an abstract class that is used by concrete builder
+        // implementations, including the Java Cronet engine builder; therefore, the implementation
+        // of this method should be "no-op". Subclasses that care about the library loader
+        // should override this method.
+        return this;
+    }
+
+    /**
+     * Default implementation of the method that returns {@code null}.
+     *
+     * @return {@code null}.
+     */
+    VersionSafeCallbacks.LibraryLoader libraryLoader() {
+        return null;
     }
 
     @Override
@@ -202,7 +213,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    boolean quicEnabled() {
+    public boolean quicEnabled() {
         return mQuicEnabled;
     }
 
@@ -223,7 +234,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    boolean http2Enabled() {
+    public boolean http2Enabled() {
         return mHttp2Enabled;
     }
 
@@ -239,12 +250,16 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    boolean brotliEnabled() {
+    public boolean brotliEnabled() {
         return mBrotiEnabled;
     }
 
-    @IntDef({HttpEngine.Builder.HTTP_CACHE_DISABLED, HttpEngine.Builder.HTTP_CACHE_IN_MEMORY,
-            HttpEngine.Builder.HTTP_CACHE_DISK_NO_HTTP, HttpEngine.Builder.HTTP_CACHE_DISK})
+    @IntDef({
+        CronetEngine.Builder.HTTP_CACHE_DISABLED,
+        CronetEngine.Builder.HTTP_CACHE_IN_MEMORY,
+        CronetEngine.Builder.HTTP_CACHE_DISK_NO_HTTP,
+        CronetEngine.Builder.HTTP_CACHE_DISK
+    })
     @Retention(RetentionPolicy.SOURCE)
     public @interface HttpCacheSetting {}
 
@@ -271,12 +286,13 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    int httpCacheMode() {
+    public int httpCacheMode() {
         return mHttpCacheMode.getType();
     }
 
     @HttpCacheSetting
-    int publicBuilderHttpCacheMode() {
+    @VisibleForTesting
+    public int publicBuilderHttpCacheMode() {
         return mHttpCacheMode.toPublicBuilderCacheMode();
     }
 
@@ -294,15 +310,18 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @Override
-    public CronetEngineBuilderImpl addPublicKeyPins(String hostName, Set<byte[]> pinsSha256,
-            boolean includeSubdomains, Instant expirationInstant) {
+    public CronetEngineBuilderImpl addPublicKeyPins(
+            String hostName,
+            Set<byte[]> pinsSha256,
+            boolean includeSubdomains,
+            Date expirationDate) {
         if (hostName == null) {
             throw new NullPointerException("The hostname cannot be null");
         }
         if (pinsSha256 == null) {
             throw new NullPointerException("The set of SHA256 pins cannot be null");
         }
-        if (expirationInstant == null) {
+        if (expirationDate == null) {
             throw new NullPointerException("The pin expiration date cannot be null");
         }
         String idnHostName = validateHostNameForPinningAndConvert(hostName);
@@ -315,8 +334,12 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
             hashes.put(Base64.encodeToString(pinSha256, 0), pinSha256);
         }
         // Add new element to PKP list.
-        mPkps.add(new Pkp(idnHostName, hashes.values().toArray(new byte[hashes.size()][]),
-                includeSubdomains, expirationInstant));
+        mPkps.add(
+                new Pkp(
+                        idnHostName,
+                        hashes.values().toArray(new byte[hashes.size()][]),
+                        includeSubdomains,
+                        expirationDate));
         return this;
     }
 
@@ -335,7 +358,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     }
 
     @VisibleForTesting
-    boolean publicKeyPinningBypassForLocalTrustAnchorsEnabled() {
+    public boolean publicKeyPinningBypassForLocalTrustAnchorsEnabled() {
         return mPublicKeyPinningBypassForLocalTrustAnchorsEnabled;
     }
 
@@ -357,19 +380,28 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
     private static String validateHostNameForPinningAndConvert(String hostName)
             throws IllegalArgumentException {
         if (INVALID_PKP_HOST_NAME.matcher(hostName).matches()) {
-            throw new IllegalArgumentException("Hostname " + hostName + " is illegal."
-                    + " A hostname should not consist of digits and/or dots only.");
+            throw new IllegalArgumentException(
+                    "Hostname "
+                            + hostName
+                            + " is illegal."
+                            + " A hostname should not consist of digits and/or dots only.");
         }
         // Workaround for crash, see crbug.com/634914
         if (hostName.length() > 255) {
-            throw new IllegalArgumentException("Hostname " + hostName + " is too long."
-                    + " The name of the host does not comply with RFC 1122 and RFC 1123.");
+            throw new IllegalArgumentException(
+                    "Hostname "
+                            + hostName
+                            + " is too long."
+                            + " The name of the host does not comply with RFC 1122 and RFC 1123.");
         }
         try {
             return IDN.toASCII(hostName, IDN.USE_STD3_ASCII_RULES);
         } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Hostname " + hostName + " is illegal."
-                    + " The name of the host does not comply with RFC 1122 and RFC 1123.");
+            throw new IllegalArgumentException(
+                    "Hostname "
+                            + hostName
+                            + " is illegal."
+                            + " The name of the host does not comply with RFC 1122 and RFC 1123.");
         }
     }
 
@@ -390,7 +422,6 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
      * @param mockCertVerifier pointer to native MockCertVerifier.
      * @return the builder to facilitate chaining.
      */
-    @VisibleForTesting
     public CronetEngineBuilderImpl setMockCertVerifierForTesting(long mockCertVerifier) {
         mMockCertVerifier = mockCertVerifier;
         return this;
@@ -405,7 +436,7 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
      * this builder.
      */
     @VisibleForTesting
-    boolean networkQualityEstimatorEnabled() {
+    public boolean networkQualityEstimatorEnabled() {
         return mNetworkQualityEstimatorEnabled;
     }
 
@@ -424,11 +455,9 @@ public abstract class CronetEngineBuilderImpl extends IHttpEngineBuilder {
         return this;
     }
 
-    /**
-     * @return thread priority provided by user, or {@code defaultThreadPriority} if none provided.
-     */
+    /** @return thread priority provided by user, or {@code defaultThreadPriority} if none provided. */
     @VisibleForTesting
-    int threadPriority(int defaultThreadPriority) {
+    public int threadPriority(int defaultThreadPriority) {
         return mThreadPriority == INVALID_THREAD_PRIORITY ? defaultThreadPriority : mThreadPriority;
     }
 

@@ -4,9 +4,13 @@
 
 #include "quiche/quic/load_balancer/load_balancer_server_id_map.h"
 
+#include <cstdint>
+#include <optional>
+
+#include "absl/types/span.h"
+#include "quiche/quic/load_balancer/load_balancer_server_id.h"
 #include "quiche/quic/platform/api/quic_expect_bug.h"
 #include "quiche/quic/platform/api/quic_test.h"
-#include "quiche/quic/test_tools/quic_test_utils.h"
 
 namespace quic {
 
@@ -54,7 +58,7 @@ TEST_F(LoadBalancerServerIdMapTest, LookupWhenEmpty) {
   auto pool = LoadBalancerServerIdMap<int>::Create(4);
   EXPECT_NE(pool, nullptr);
   EXPECT_EQ(pool->LookupNoCopy(valid_server_id_), nullptr);
-  absl::optional<int> result = pool->Lookup(valid_server_id_);
+  std::optional<int> result = pool->Lookup(valid_server_id_);
   EXPECT_FALSE(result.has_value());
 }
 
@@ -66,7 +70,7 @@ TEST_F(LoadBalancerServerIdMapTest, AddLookup) {
   EXPECT_TRUE(other_server_id.has_value());
   pool->AddOrReplace(valid_server_id_, record1);
   pool->AddOrReplace(*other_server_id, record2);
-  absl::optional<int> result = pool->Lookup(valid_server_id_);
+  std::optional<int> result = pool->Lookup(valid_server_id_);
   EXPECT_TRUE(result.has_value());
   EXPECT_EQ(*result, record1);
   auto result_ptr = pool->LookupNoCopy(valid_server_id_);

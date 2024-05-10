@@ -7,16 +7,16 @@
 #include <algorithm>
 #include <memory>
 #include <utility>
-#include <zlib.h>
 
-#include "base/bind.h"
 #include "base/bit_cast.h"
 #include "base/check_op.h"
+#include "base/functional/bind.h"
 #include "base/memory/ptr_util.h"
 #include "base/memory/ref_counted.h"
 #include "base/notreached.h"
 #include "base/numerics/checked_math.h"
 #include "net/base/io_buffer.h"
+#include "third_party/zlib/zlib.h"
 
 namespace net {
 
@@ -191,7 +191,8 @@ base::expected<size_t, Error> GzipSourceStream::FilterData(
         input_state_ = replay_state_;
         size_t bytes_used;
         scoped_refptr<IOBuffer> replay_buffer =
-            base::MakeRefCounted<WrappedIOBuffer>(replay_data_.data());
+            base::MakeRefCounted<WrappedIOBuffer>(replay_data_.data(),
+                                                  replay_data_.size());
         base::expected<size_t, Error> result =
             FilterData(output_buffer, output_buffer_size, replay_buffer.get(),
                        replay_data_.size(), &bytes_used, upstream_end_reached);

@@ -1,11 +1,18 @@
 #include "quiche/spdy/core/metadata_extension.h"
 
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/functional/bind_front.h"
-#include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
 #include "quiche/common/platform/api/quiche_test.h"
 #include "quiche/spdy/core/array_output_buffer.h"
+#include "quiche/spdy/core/http2_frame_decoder_adapter.h"
+#include "quiche/spdy/core/http2_header_block.h"
 #include "quiche/spdy/core/spdy_framer.h"
 #include "quiche/spdy/core/spdy_no_op_visitor.h"
 #include "quiche/spdy/core/spdy_protocol.h"
@@ -15,7 +22,6 @@ namespace spdy {
 namespace test {
 namespace {
 
-using ::absl::bind_front;
 using ::testing::_;
 using ::testing::ElementsAre;
 using ::testing::HasSubstr;
@@ -29,9 +35,9 @@ class MetadataExtensionTest : public quiche::test::QuicheTest {
   MetadataExtensionTest() : test_buffer_(kBuffer, kBufferSize) {}
 
   void SetUp() override {
-    extension_ = absl::make_unique<MetadataVisitor>(
-        bind_front(&MetadataExtensionTest::OnCompletePayload, this),
-        bind_front(&MetadataExtensionTest::OnMetadataSupport, this));
+    extension_ = std::make_unique<MetadataVisitor>(
+        absl::bind_front(&MetadataExtensionTest::OnCompletePayload, this),
+        absl::bind_front(&MetadataExtensionTest::OnMetadataSupport, this));
   }
 
   void OnCompletePayload(spdy::SpdyStreamId stream_id,

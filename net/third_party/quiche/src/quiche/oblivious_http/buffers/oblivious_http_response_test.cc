@@ -15,6 +15,7 @@
 #include "openssl/hpke.h"
 #include "quiche/common/platform/api/quiche_test.h"
 #include "quiche/oblivious_http/buffers/oblivious_http_request.h"
+#include "quiche/oblivious_http/common/oblivious_http_header_key_config.h"
 
 namespace quiche {
 
@@ -50,7 +51,7 @@ const ObliviousHttpHeaderKeyConfig GetOhttpKeyConfig(uint8_t key_id,
   auto ohttp_key_config =
       ObliviousHttpHeaderKeyConfig::Create(key_id, kem_id, kdf_id, aead_id);
   EXPECT_TRUE(ohttp_key_config.ok());
-  return std::move(ohttp_key_config.value());
+  return ohttp_key_config.value();
 }
 
 bssl::UniquePtr<EVP_HPKE_CTX> GetSeededClientContext(uint8_t key_id,
@@ -90,11 +91,12 @@ bssl::UniquePtr<EVP_HPKE_KEY> ConstructHpkeKey(
 ObliviousHttpRequest SetUpObliviousHttpContext(uint8_t key_id, uint16_t kem_id,
                                                uint16_t kdf_id,
                                                uint16_t aead_id,
-                                               absl::string_view plaintext) {
+                                               std::string plaintext) {
   auto ohttp_key_config = GetOhttpKeyConfig(key_id, kem_id, kdf_id, aead_id);
   auto client_request_encapsulate =
       ObliviousHttpRequest::CreateClientWithSeedForTesting(
-          plaintext, GetHpkePublicKey(), ohttp_key_config, GetSeed());
+          std::move(plaintext), GetHpkePublicKey(), ohttp_key_config,
+          GetSeed());
   EXPECT_TRUE(client_request_encapsulate.ok());
   auto oblivious_request =
       client_request_encapsulate->EncapsulateAndSerialize();
@@ -189,7 +191,8 @@ TEST(ObliviousHttpResponse, TestEncapsulateWithQuicheRandom) {
       std::move(server_seeded_request).ReleaseContext();
   auto server_response_encapsulate =
       ObliviousHttpResponse::CreateServerObliviousResponse(
-          "test response", server_request_context, &random);
+          "test response", server_request_context,
+          ObliviousHttpHeaderKeyConfig::kOhttpResponseLabel, &random);
   EXPECT_TRUE(server_response_encapsulate.ok());
   std::string response_nonce =
       server_response_encapsulate->EncapsulateAndSerialize().substr(

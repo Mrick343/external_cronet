@@ -52,6 +52,33 @@ TEST(RandUtilTest, RandFloat) {
   EXPECT_LE(0.f, number);
 }
 
+TEST(RandUtilTest, RandTimeDelta) {
+  {
+    const auto delta =
+        base::RandTimeDelta(-base::Seconds(2), -base::Seconds(1));
+    EXPECT_GE(delta, -base::Seconds(2));
+    EXPECT_LT(delta, -base::Seconds(1));
+  }
+
+  {
+    const auto delta = base::RandTimeDelta(-base::Seconds(2), base::Seconds(2));
+    EXPECT_GE(delta, -base::Seconds(2));
+    EXPECT_LT(delta, base::Seconds(2));
+  }
+
+  {
+    const auto delta = base::RandTimeDelta(base::Seconds(1), base::Seconds(2));
+    EXPECT_GE(delta, base::Seconds(1));
+    EXPECT_LT(delta, base::Seconds(2));
+  }
+}
+
+TEST(RandUtilTest, RandTimeDeltaUpTo) {
+  const auto delta = base::RandTimeDeltaUpTo(base::Seconds(2));
+  EXPECT_FALSE(delta.is_negative());
+  EXPECT_LT(delta, base::Seconds(2));
+}
+
 TEST(RandUtilTest, BitsToOpenEndedUnitInterval) {
   // Force 64-bit precision, making sure we're not in an 80-bit FPU register.
   volatile double all_zeros = BitsToOpenEndedUnitInterval(0x0);
@@ -106,6 +133,22 @@ TEST(RandUtilTest, RandBytes) {
 // Verify that calling base::RandBytes with an empty buffer doesn't fail.
 TEST(RandUtilTest, RandBytes0) {
   base::RandBytes(nullptr, 0);
+}
+
+TEST(RandUtilTest, RandBytesAsVector) {
+  std::vector<uint8_t> random_vec = base::RandBytesAsVector(0);
+  EXPECT_TRUE(random_vec.empty());
+  random_vec = base::RandBytesAsVector(1);
+  EXPECT_EQ(1U, random_vec.size());
+  random_vec = base::RandBytesAsVector(145);
+  EXPECT_EQ(145U, random_vec.size());
+  char accumulator = 0;
+  for (auto i : random_vec) {
+    accumulator |= i;
+  }
+  // In theory this test can fail, but it won't before the universe dies of
+  // heat death.
+  EXPECT_NE(0, accumulator);
 }
 
 TEST(RandUtilTest, RandBytesAsString) {

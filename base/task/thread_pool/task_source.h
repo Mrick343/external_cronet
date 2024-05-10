@@ -11,6 +11,7 @@
 #include "base/containers/intrusive_heap.h"
 #include "base/dcheck_is_on.h"
 #include "base/memory/raw_ptr.h"
+#include "base/memory/raw_ptr_exclusion.h"
 #include "base/memory/ref_counted.h"
 #include "base/sequence_token.h"
 #include "base/task/common/checked_lock.h"
@@ -39,17 +40,22 @@ struct BASE_EXPORT ExecutionEnvironment {
 };
 
 // A TaskSource is a virtual class that provides a series of Tasks that must be
-// executed.
+// executed immediately or in the future.
 //
-// A task source is registered when it's ready to be queued. A task source is
-// ready to be queued when either:
+// When a task source has delayed tasks but no immediate tasks, the scheduler
+// must call OnBecomeReady() after HasReadyTasks(now) == true, which is
+// guaranteed once now >= GetDelayedSortKey().
+//
+// A task source is registered when it's ready to be added to the immediate
+// queue. A task source is ready to be queued when either:
 // 1- It has new tasks that can run concurrently as a result of external
-//    operations, e.g. posting a new task to an empty Sequence or increasing
-//    max concurrency of a JobTaskSource;
+//    operations, e.g. posting a new immediate task to an empty Sequence or
+//    increasing max concurrency of a JobTaskSource;
 // 2- A worker finished running a task from it and both DidProcessTask() and
 //    WillReEnqueue() returned true; or
 // 3- A worker is about to run a task from it and WillRunTask() returned
 //    kAllowedNotSaturated.
+// 4- A delayed task became ready and OnBecomeReady() returns true.
 //
 // A worker may perform the following sequence of operations on a
 // RegisteredTaskSource after obtaining it from the queue:
@@ -98,7 +104,8 @@ class BASE_EXPORT TaskSource : public RefCountedThreadSafe<TaskSource> {
   // A Transaction can perform multiple operations atomically on a
   // TaskSource. While a Transaction is alive, it is guaranteed that nothing
   // else will access the TaskSource; the TaskSource's lock is held for the
-  // lifetime of the Transaction.
+  // lifetime of the Transaction. No Transaction must be held when ~TaskSource()
+  // is called.
   class BASE_EXPORT Transaction {
    public:
     Transaction(Transaction&& other);
@@ -116,13 +123,17 @@ class BASE_EXPORT TaskSource : public RefCountedThreadSafe<TaskSource> {
 
     TaskSource* task_source() const { return task_source_; }
 
+    void Release();
+
    protected:
     explicit Transaction(TaskSource* task_source);
 
    private:
     friend class TaskSource;
 
-    TaskSource* task_source_;
+    // This field is not a raw_ptr<> because it was filtered by the rewriter
+    // for: #union
+    RAW_PTR_EXCLUSION TaskSource* task_source_;
   };
 
   // |traits| is metadata that applies to all Tasks in the TaskSource.
@@ -152,6 +163,13 @@ class BASE_EXPORT TaskSource : public RefCountedThreadSafe<TaskSource> {
   // Returns a Timeticks object representing the next delayed runtime of the
   // TaskSource.
   virtual TimeTicks GetDelayedSortKey() const = 0;
+  // Returns true if there are tasks ready to be executed. Thread-safe but the
+  // returned value may immediately be obsolete.
+  virtual bool HasReadyTasks(TimeTicks now) const = 0;
+  // Returns true if the TaskSource should be moved to the immediate queue
+  // due to ready delayed tasks. Note: Returns false if the TaskSource contains
+  // ready delayed tasks, but expects to already be in the immediate queue.
+  virtual bool OnBecomeReady() = 0;
 
   // Support for IntrusiveHeap in ThreadGroup::PriorityQueue.
   void SetImmediateHeapHandle(const HeapHandle& handle);
@@ -209,7 +227,7 @@ class BASE_EXPORT TaskSource : public RefCountedThreadSafe<TaskSource> {
   // The implementation needs to support this being called multiple times;
   // unless it guarantees never to hand-out multiple RegisteredTaskSources that
   // are concurrently ready.
-  virtual Task Clear(TaskSource::Transaction* transaction) = 0;
+  virtual absl::optional<Task> Clear(TaskSource::Transaction* transaction) = 0;
 
   // Sets TaskSource priority to |priority|.
   void UpdatePriority(TaskPriority priority);
@@ -224,7 +242,6 @@ class BASE_EXPORT TaskSource : public RefCountedThreadSafe<TaskSource> {
   mutable CheckedLock lock_{UniversalPredecessor()};
 
  private:
-  virtual void OnBecomeReady() = 0;
   friend class RefCountedThreadSafe<TaskSource>;
   friend class RegisteredTaskSource;
 
@@ -284,10 +301,6 @@ class BASE_EXPORT RegisteredTaskSource {
   // that indicates if the operation is allowed (TakeTask() can be called).
   TaskSource::RunStatus WillRunTask();
 
-  // Informs this TaskSource that it has become ready to run and is being moved
-  // from delayed to immediate queue.
-  void OnBecomeReady();
-
   // Returns the next task to run from this TaskSource. This should be called
   // only after WillRunTask() returned RunStatus::kAllowed*. |transaction| is
   // optional and should only be provided if this operation is already part of
@@ -311,7 +324,8 @@ class BASE_EXPORT RegisteredTaskSource {
   // Returns a task that clears this TaskSource to make it empty. |transaction|
   // is optional and should only be provided if this operation is already part
   // of a transaction.
-  [[nodiscard]] Task Clear(TaskSource::Transaction* transaction = nullptr);
+  [[nodiscard]] absl::optional<Task> Clear(
+      TaskSource::Transaction* transaction = nullptr);
 
  private:
   friend class TaskTracker;
@@ -329,26 +343,27 @@ class BASE_EXPORT RegisteredTaskSource {
 #endif  // DCHECK_IS_ON()
 
   scoped_refptr<TaskSource> task_source_;
-  TaskTracker* task_tracker_ = nullptr;
+  // This field is not a raw_ptr<> because it was filtered by the rewriter for:
+  // #union
+  RAW_PTR_EXCLUSION TaskTracker* task_tracker_ = nullptr;
 };
 
 // A pair of Transaction and RegisteredTaskSource. Useful to carry a
 // RegisteredTaskSource with an associated Transaction.
-// TODO(crbug.com/839091): Rename to RegisteredTaskSourceAndTransaction.
-struct BASE_EXPORT TransactionWithRegisteredTaskSource {
+struct BASE_EXPORT RegisteredTaskSourceAndTransaction {
  public:
-  TransactionWithRegisteredTaskSource(RegisteredTaskSource task_source_in,
-                                      TaskSource::Transaction transaction_in);
+  RegisteredTaskSourceAndTransaction(RegisteredTaskSource task_source_in,
+                                     TaskSource::Transaction transaction_in);
 
-  TransactionWithRegisteredTaskSource(
-      TransactionWithRegisteredTaskSource&& other) = default;
-  TransactionWithRegisteredTaskSource(
-      const TransactionWithRegisteredTaskSource&) = delete;
-  TransactionWithRegisteredTaskSource& operator=(
-      const TransactionWithRegisteredTaskSource&) = delete;
-  ~TransactionWithRegisteredTaskSource() = default;
+  RegisteredTaskSourceAndTransaction(
+      RegisteredTaskSourceAndTransaction&& other) = default;
+  RegisteredTaskSourceAndTransaction(
+      const RegisteredTaskSourceAndTransaction&) = delete;
+  RegisteredTaskSourceAndTransaction& operator=(
+      const RegisteredTaskSourceAndTransaction&) = delete;
+  ~RegisteredTaskSourceAndTransaction() = default;
 
-  static TransactionWithRegisteredTaskSource FromTaskSource(
+  static RegisteredTaskSourceAndTransaction FromTaskSource(
       RegisteredTaskSource task_source_in);
 
   RegisteredTaskSource task_source;

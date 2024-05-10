@@ -49,9 +49,48 @@ absl_cc_library(
   SRCS
     "log_severity.cc"
   DEPS
+    absl::config
     absl::core_headers
   COPTS
     ${ABSL_DEFAULT_COPTS}
+)
+
+absl_cc_library(
+  NAME
+    no_destructor
+  HDRS
+    "no_destructor.h"
+  DEPS
+    absl::config
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+absl_cc_library(
+  NAME
+    nullability
+  HDRS
+    "nullability.h"
+  SRCS
+    "internal/nullability_impl.h"
+  DEPS
+    absl::core_headers
+    absl::type_traits
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+absl_cc_test(
+  NAME
+    nullability_test
+  SRCS
+    "nullability_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    absl::core_headers
+    absl::nullability
+    GTest::gtest_main
 )
 
 # Internal-only target, do not depend on directly.
@@ -198,7 +237,7 @@ absl_cc_library(
   LINKOPTS
     ${ABSL_DEFAULT_LINKOPTS}
     $<$<BOOL:${LIBRT}>:-lrt>
-    $<$<BOOL:${MINGW}>:"advapi32">
+    $<$<BOOL:${MINGW}>:-ladvapi32>
   DEPS
     absl::atomic_hook
     absl::base_internal
@@ -480,6 +519,20 @@ absl_cc_test(
 
 absl_cc_test(
   NAME
+    no_destructor_test
+  SRCS
+    "no_destructor_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    absl::no_destructor
+    absl::config
+    absl::raw_logging_internal
+    GTest::gtest_main
+)
+
+absl_cc_test(
+  NAME
     raw_logging_test
   SRCS
     "raw_logging_test.cc"
@@ -642,25 +695,25 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-# Internal-only target, do not depend on directly.
 absl_cc_library(
   NAME
     prefetch
   HDRS
-    "internal/prefetch.h"
+    "prefetch.h"
   COPTS
     ${ABSL_DEFAULT_COPTS}
   LINKOPTS
     ${ABSL_DEFAULT_LINKOPTS}
   DEPS
     absl::config
+    absl::core_headers
 )
 
 absl_cc_test(
   NAME
     prefetch_test
   SRCS
-    "internal/prefetch_test.cc"
+    "prefetch_test.cc"
   COPTS
     ${ABSL_TEST_COPTS}
   DEPS

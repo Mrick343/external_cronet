@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -14,7 +15,6 @@
 #include "absl/strings/escaping.h"
 #include "absl/strings/str_format.h"
 #include "absl/strings/string_view.h"
-#include "absl/types/optional.h"
 #include "openssl/sha.h"
 #include "openssl/ssl.h"
 #include "quiche/quic/core/crypto/aes_128_gcm_12_decrypter.h"
@@ -915,7 +915,7 @@ void QuicCryptoServerConfig::ProcessClientHelloAfterCalculateSharedKeys(
     context->Fail(QUIC_CRYPTO_INTERNAL_ERROR, "Failed to get certs");
     return;
   }
-  hkdf_suffix.append(context->signed_config()->chain->certs.at(0));
+  hkdf_suffix.append(context->signed_config()->chain->certs[0]);
 
   absl::string_view cetv_ciphertext;
   if (configs.requested->channel_id_enabled &&
@@ -1339,6 +1339,7 @@ void QuicCryptoServerConfig::EvaluateClientHello(
   // for DoS reasons then we must reject the CHLO.
   if (GetQuicReloadableFlag(quic_require_handshake_confirmation) &&
       info->server_nonce.empty()) {
+    QUIC_RELOADABLE_FLAG_COUNT(quic_require_handshake_confirmation);
     info->reject_reasons.push_back(SERVER_NONCE_REQUIRED_FAILURE);
   }
   helper.ValidationComplete(QUIC_NO_ERROR, "",
@@ -1535,7 +1536,7 @@ void QuicCryptoServerConfig::BuildRejection(
           std::unique_ptr<CertificateView> view =
               CertificateView::ParseSingleCertificate(certs[0]);
           if (view != nullptr) {
-            absl::optional<std::string> maybe_ca_subject =
+            std::optional<std::string> maybe_ca_subject =
                 view->GetHumanReadableSubject();
             if (maybe_ca_subject.has_value()) {
               ca_subject = *maybe_ca_subject;
@@ -1610,12 +1611,10 @@ QuicCryptoServerConfig::ParseConfigProtobuf(
     QUIC_LOG(WARNING) << "Server config message is missing SCID";
     return nullptr;
   }
-  if (GetQuicRestartFlag(quic_return_error_on_empty_scid) && scid.empty()) {
-    QUIC_RESTART_FLAG_COUNT(quic_return_error_on_empty_scid);
+  if (scid.empty()) {
     QUIC_LOG(WARNING) << "Server config message contains an empty SCID";
     return nullptr;
   }
-  QUICHE_DCHECK(!scid.empty());
   config->id = std::string(scid);
 
   if (msg->GetTaglist(kAEAD, &config->aead) != QUIC_NO_ERROR) {
@@ -1874,7 +1873,7 @@ bool QuicCryptoServerConfig::ValidateExpectedLeafCertificate(
   if (client_hello.GetUint64(kXLCT, &hash_from_client) != QUIC_NO_ERROR) {
     return false;
   }
-  return CryptoUtils::ComputeLeafCertHash(certs.at(0)) == hash_from_client;
+  return CryptoUtils::ComputeLeafCertHash(certs[0]) == hash_from_client;
 }
 
 bool QuicCryptoServerConfig::IsNextConfigReady(QuicWallTime now) const {

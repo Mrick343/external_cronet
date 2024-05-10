@@ -12,7 +12,6 @@
 #include <string>
 
 #include "base/base_export.h"
-#include "base/memory/weak_ptr.h"
 #include "base/strings/string_piece.h"
 #include "base/trace_event/common/trace_event_common.h"
 #include "base/trace_event/memory_allocator_dump_guid.h"
@@ -43,7 +42,6 @@ struct IgnoredValue {
 #define INTERNAL_TRACE_EVENT_ADD(...) INTERNAL_TRACE_IGNORE(__VA_ARGS__)
 #define INTERNAL_TRACE_EVENT_ADD_SCOPED(...) INTERNAL_TRACE_IGNORE(__VA_ARGS__)
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ID(...) INTERNAL_TRACE_IGNORE(__VA_ARGS__)
-#define INTERNAL_TRACE_LOG_MESSAGE(...) INTERNAL_TRACE_IGNORE(__VA_ARGS__)
 #define INTERNAL_TRACE_EVENT_ADD_SCOPED_WITH_FLOW(...) \
   INTERNAL_TRACE_IGNORE(__VA_ARGS__)
 #define INTERNAL_TRACE_EVENT_ADD_WITH_ID_TID_AND_TIMESTAMP(...) \
@@ -159,34 +157,16 @@ class BASE_EXPORT MemoryDumpManager {
       TRACE_DISABLED_BY_DEFAULT("memory-infra");
 };
 
-class BASE_EXPORT TraceLog {
- public:
-  class BASE_EXPORT AsyncEnabledStateObserver {
-   public:
-    virtual ~AsyncEnabledStateObserver() = default;
-
-    virtual void OnTraceLogEnabled() = 0;
-    virtual void OnTraceLogDisabled() = 0;
-  };
-
-  static TraceLog* GetInstance() {
-    static TraceLog obj;
-    return &obj;
-  }
-
-  bool IsEnabled() {
-    return false;
-  }
-
-  void AddAsyncEnabledStateObserver(WeakPtr<AsyncEnabledStateObserver>) {}
-  void RemoveAsyncEnabledStateObserver(AsyncEnabledStateObserver*) {}
-};
+inline uint64_t GetNextGlobalTraceId() {
+  return 0;
+}
 
 }  // namespace trace_event
 }  // namespace base
 
 // Stub implementation for
-// perfetto::StaticString/ThreadTrack/TracedValue/TracedDictionary/TracedArray.
+// perfetto::StaticString/ThreadTrack/TracedValue/TracedDictionary/TracedArray/
+// Track.
 namespace perfetto {
 
 class TracedArray;
@@ -250,7 +230,13 @@ class TracedArray {
 template <class T>
 void WriteIntoTracedValue(TracedValue, T&&) {}
 
-namespace protos::pbzero::SequenceManagerTask {
+struct Track {
+  explicit Track(uint64_t id) {}
+};
+
+namespace protos::pbzero {
+namespace SequenceManagerTask {
+
 enum class QueueName {
   UNKNOWN_TQ = 0,
   DEFAULT_TQ = 1,
@@ -272,7 +258,16 @@ inline const char* QueueName_Name(QueueName value) {
       return "TEST_TQ";
   }
 }
-}  // namespace protos::pbzero::SequenceManagerTask
+
+}  // namespace SequenceManagerTask
+
+namespace ChromeProcessDescriptor {
+
+enum ProcessType {};
+
+}  // namespace ChromeProcessDescriptor
+
+}  // namespace protos::pbzero
 }  // namespace perfetto
 
 #endif  // BASE_TRACE_EVENT_TRACE_EVENT_STUB_H_

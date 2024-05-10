@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "base/big_endian.h"
-#include "base/bind.h"
+#include "base/functional/bind.h"
 #include "base/memory/raw_ptr.h"
 #include "base/memory/scoped_refptr.h"
 #include "base/strings/strcat.h"
@@ -295,8 +295,8 @@ TEST_F(HttpsWithDnsOverHttpsTest, EndToEnd) {
   request_info.url = http_server.GetURL("localhost", "/preconnect");
 
   std::unique_ptr<HttpStreamRequest> request(factory->RequestStream(
-      request_info, DEFAULT_PRIORITY, SSLConfig(), SSLConfig(),
-      &request_delegate, false, false, NetLogWithSource()));
+      request_info, DEFAULT_PRIORITY, SSLConfig(), &request_delegate, false,
+      false, NetLogWithSource()));
   loop.Run();
 
   ClientSocketPool::GroupId group_id(
@@ -304,7 +304,7 @@ TEST_F(HttpsWithDnsOverHttpsTest, EndToEnd) {
       NetworkAnonymizationKey(), SecureDnsPolicy::kAllow);
   EXPECT_EQ(network_session
                 ->GetSocketPool(HttpNetworkSession::NORMAL_SOCKET_POOL,
-                                ProxyServer::Direct())
+                                ProxyChain::Direct())
                 ->IdleSocketCountInGroup(group_id),
             1u);
 

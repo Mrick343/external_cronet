@@ -4,7 +4,9 @@
 
 package org.chromium.net.urlconnection;
 
-import android.net.http.UploadDataProvider;
+import org.chromium.net.UploadDataProvider;
+
+import androidx.annotation.VisibleForTesting;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,7 +15,8 @@ import java.io.OutputStream;
  * An abstract class of {@link OutputStream} that concrete implementations must
  * extend in order to be used in {@link CronetHttpURLConnection}.
  */
-abstract class CronetOutputStream extends OutputStream {
+@VisibleForTesting
+public abstract class CronetOutputStream extends OutputStream {
     private IOException mException;
     private boolean mClosed;
     private boolean mRequestCompleted;
@@ -35,9 +38,7 @@ abstract class CronetOutputStream extends OutputStream {
      */
     abstract void checkReceivedEnoughContent() throws IOException;
 
-    /**
-     * Returns {@link UploadDataProvider} implementation.
-     */
+    /** Returns {@link UploadDataProvider} implementation. */
     abstract UploadDataProvider getUploadDataProvider();
 
     /**
@@ -49,9 +50,7 @@ abstract class CronetOutputStream extends OutputStream {
         mRequestCompleted = true;
     }
 
-    /**
-     * Throws an IOException if the stream is closed or the request is done.
-     */
+    /** Throws an IOException if the stream is closed or the request is done. */
     protected void checkNotClosed() throws IOException {
         if (mRequestCompleted) {
             checkNoException();

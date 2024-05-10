@@ -16,13 +16,16 @@
 
 #include "absl/strings/str_cat.h"
 
+#include <cstddef>
 #include <cstdint>
+#include <cstdlib>
+#include <limits>
 #include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
 #include "absl/strings/str_format.h"
-#include "absl/strings/substitute.h"
+#include "absl/strings/string_view.h"
 
 #ifdef __ANDROID__
 // Android assert messages only go to system log, so death tests cannot inspect
@@ -443,7 +446,7 @@ TEST(StrCat, AvoidsMemcpyWithNullptr) {
   EXPECT_EQ(result, "12345");
 }
 
-#ifdef GTEST_HAS_DEATH_TEST
+#if GTEST_HAS_DEATH_TEST
 TEST(StrAppend, Death) {
   std::string s = "self";
   // on linux it's "assertion", on mac it's "Assertion",
@@ -648,6 +651,34 @@ TEST(StrCat, AbslStringifyExampleUsingFormat) {
   PointStringifyUsingFormat p;
   EXPECT_EQ(absl::StrCat(p), "(10, 20)");
   EXPECT_EQ(absl::StrCat("a ", p, " z"), "a (10, 20) z");
+}
+
+enum class EnumWithStringify { Many = 0, Choices = 1 };
+
+template <typename Sink>
+void AbslStringify(Sink& sink, EnumWithStringify e) {
+  absl::Format(&sink, "%s", e == EnumWithStringify::Many ? "Many" : "Choices");
+}
+
+TEST(StrCat, AbslStringifyWithEnum) {
+  const auto e = EnumWithStringify::Choices;
+  EXPECT_EQ(absl::StrCat(e), "Choices");
+}
+
+template <typename Integer>
+void CheckSingleArgumentIntegerLimits() {
+  Integer max = std::numeric_limits<Integer>::max();
+  Integer min = std::numeric_limits<Integer>::min();
+
+  EXPECT_EQ(absl::StrCat(max), std::to_string(max));
+  EXPECT_EQ(absl::StrCat(min), std::to_string(min));
+}
+
+TEST(StrCat, SingleArgumentLimits) {
+  CheckSingleArgumentIntegerLimits<int32_t>();
+  CheckSingleArgumentIntegerLimits<uint32_t>();
+  CheckSingleArgumentIntegerLimits<int64_t>();
+  CheckSingleArgumentIntegerLimits<uint64_t>();
 }
 
 }  // namespace

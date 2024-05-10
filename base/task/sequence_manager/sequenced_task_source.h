@@ -6,7 +6,8 @@
 #define BASE_TASK_SEQUENCE_MANAGER_SEQUENCED_TASK_SOURCE_H_
 
 #include "base/base_export.h"
-#include "base/callback_helpers.h"
+#include "base/functional/callback_helpers.h"
+#include "base/memory/raw_ptr_exclusion.h"
 #include "base/pending_task.h"
 #include "base/task/common/lazy_now.h"
 #include "base/task/sequence_manager/task_queue.h"
@@ -37,7 +38,9 @@ class SequencedTaskSource {
                  QueueName task_queue_name);
     ~SelectedTask();
 
-    Task& task;
+    // `task` is not a raw_ref<> for performance reasons: based on this sampling
+    // profiler result on Mac. go/brp-mac-prof-diff-20230403
+    RAW_PTR_EXCLUSION Task& task;
     // Callback to fill trace event arguments associated with the task
     // execution. Can be null
     TaskExecutionTraceLogger task_execution_trace_logger =
@@ -60,18 +63,13 @@ class SequencedTaskSource {
   // from SelectNextTask() has been completed.
   virtual void DidRunTask(LazyNow& lazy_now) = 0;
 
-  // Removes all canceled delayed tasks from the front of the queue. After
-  // calling this, GetPendingWakeUp() is guaranteed to return a ready time for a
-  // non-canceled task.
-  virtual void RemoveAllCanceledDelayedTasksFromFront(LazyNow* lazy_now) = 0;
-
   // Returns a WakeUp for the next pending task, is_immediate() if the
   // next task can run immediately, or nullopt if there are no more immediate or
   // delayed tasks. |option| allows control on which kind of tasks can be
-  // selected.
+  // selected. May delete canceled tasks.
   virtual absl::optional<WakeUp> GetPendingWakeUp(
       LazyNow* lazy_now,
-      SelectTaskOption option = SelectTaskOption::kDefault) const = 0;
+      SelectTaskOption option = SelectTaskOption::kDefault) = 0;
 
   // Return true if there are any pending tasks in the task source which require
   // high resolution timing.
@@ -81,6 +79,11 @@ class SequencedTaskSource {
   // becomes available as a result of any processing done by this callback,
   // return true to schedule a future DoWork.
   virtual bool OnSystemIdle() = 0;
+
+  // Called prior to running `selected_task` to emit trace event data for it.
+  virtual void MaybeEmitTaskDetails(
+      perfetto::EventContext& ctx,
+      const SelectedTask& selected_task) const = 0;
 };
 
 }  // namespace internal

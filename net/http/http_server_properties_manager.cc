@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <utility>
 
-#include "base/bind.h"
 #include "base/containers/adapters.h"
 #include "base/feature_list.h"
+#include "base/functional/bind.h"
 #include "base/metrics/histogram_macros.h"
 #include "base/strings/string_number_conversions.h"
 #include "base/time/tick_clock.h"
@@ -227,17 +227,11 @@ void HttpServerPropertiesManager::ReadPrefs(
 
   net_log_.EndEvent(NetLogEventType::HTTP_SERVER_PROPERTIES_INITIALIZATION);
 
-  const base::Value* http_server_properties_value =
-      pref_delegate_->GetServerProperties();
-  // If there are no preferences set, do nothing.
-  if (!http_server_properties_value || !http_server_properties_value->is_dict())
-    return;
-
   const base::Value::Dict& http_server_properties_dict =
-      http_server_properties_value->GetDict();
+      pref_delegate_->GetServerProperties();
 
   net_log_.AddEvent(NetLogEventType::HTTP_SERVER_PROPERTIES_UPDATE_CACHE,
-                    [&] { return http_server_properties_value->Clone(); });
+                    [&] { return http_server_properties_dict.Clone(); });
   absl::optional<int> maybe_version_number =
       http_server_properties_dict.FindInt(kVersionKey);
   if (!maybe_version_number.has_value() ||
@@ -275,8 +269,8 @@ void HttpServerPropertiesManager::ReadPrefs(
       std::make_unique<HttpServerProperties::QuicServerInfoMap>(
           max_server_configs_stored_in_properties_);
 
-  bool use_network_anonymization_key = base::FeatureList::IsEnabled(
-      features::kPartitionHttpServerPropertiesByNetworkIsolationKey);
+  bool use_network_anonymization_key =
+      NetworkAnonymizationKey::IsPartitioningEnabled();
 
   // Iterate `servers_list` (least-recently-used item is in the front) so that
   // entries are inserted into `server_info_map` from oldest to newest.
@@ -320,10 +314,6 @@ void HttpServerPropertiesManager::ReadPrefs(
   }
 
   // Set the properties loaded from prefs on |http_server_properties_impl_|.
-
-  // TODO(mmenke): Rename this once more information is stored in this map.
-  UMA_HISTOGRAM_COUNTS_1M("Net.HttpServerProperties.CountOfServers",
-                          (*server_info_map)->size());
 
   UMA_HISTOGRAM_COUNTS_1000("Net.CountOfQuicServerInfos",
                             (*quic_server_info_map)->size());
@@ -770,12 +760,11 @@ void HttpServerPropertiesManager::WriteToPrefs(
       broken_alternative_service_list, kMaxBrokenAlternativeServicesToPersist,
       recently_broken_alternative_services, http_server_properties_dict);
 
-  pref_delegate_->SetServerProperties(
-      base::Value(http_server_properties_dict.Clone()), std::move(callback));
+  net_log_.AddEvent(NetLogEventType::HTTP_SERVER_PROPERTIES_UPDATE_PREFS,
+                    [&] { return http_server_properties_dict.Clone(); });
 
-  net_log_.AddEvent(NetLogEventType::HTTP_SERVER_PROPERTIES_UPDATE_PREFS, [&] {
-    return base::Value(std::move(http_server_properties_dict));
-  });
+  pref_delegate_->SetServerProperties(std::move(http_server_properties_dict),
+                                      std::move(callback));
 }
 
 void HttpServerPropertiesManager::SaveAlternativeServiceToServerPrefs(

@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <string>
+#include <vector>
 
 #include "base/base_export.h"
 #include "base/compiler_specific.h"
@@ -20,7 +21,13 @@
 #include "third_party/boringssl/src/include/openssl/rand.h"
 #endif
 
+namespace memory_simulator {
+class MemoryHolder;
+}
+
 namespace base {
+
+class TimeDelta;
 
 namespace internal {
 
@@ -44,6 +51,9 @@ BASE_EXPORT double RandDoubleAvoidAllocation();
 BASE_EXPORT uint64_t RandUint64();
 
 // Returns a random number between min and max (inclusive). Thread-safe.
+//
+// TODO(crbug.com/1488681): Change from fully-closed to half-closed (i.e.
+// exclude `max`) to parallel other APIs here.
 BASE_EXPORT int RandInt(int min, int max);
 
 // Returns a random number in range [0, range).  Thread-safe.
@@ -54,6 +64,16 @@ BASE_EXPORT double RandDouble();
 
 // Returns a random float in range [0, 1). Thread-safe.
 BASE_EXPORT float RandFloat();
+
+// Returns a random duration in [`start`, `limit`). Thread-safe.
+//
+// REQUIRES: `start` < `limit`
+BASE_EXPORT TimeDelta RandTimeDelta(TimeDelta start, TimeDelta limit);
+
+// Returns a random duration in [`TimeDelta()`, `limit`). Thread-safe.
+//
+// REQUIRES: `limit.is_positive()`
+BASE_EXPORT TimeDelta RandTimeDeltaUpTo(TimeDelta limit);
 
 // Given input |bits|, convert with maximum precision to a double in
 // the range [0, 1). Thread-safe.
@@ -70,6 +90,15 @@ BASE_EXPORT float BitsToOpenEndedUnitIntervalF(uint64_t bits);
 // crypto::RandBytes instead to ensure the requirement is easily discoverable.
 BASE_EXPORT void RandBytes(void* output, size_t output_length);
 
+// Creates a vector of `length` bytes, fills it with random data, and returns
+// it. Thread-safe.
+//
+// Although implementations are required to use a cryptographically secure
+// random number source, code outside of base/ that relies on this should use
+// crypto::RandBytes instead to ensure the requirement is easily discoverable.
+BASE_EXPORT std::vector<uint8_t> RandBytesAsVector(size_t length);
+
+// DEPRECATED. Prefert RandBytesAsVector() above.
 // Fills a string of length |length| with random data and returns it.
 // |length| should be nonzero. Thread-safe.
 //
@@ -168,6 +197,10 @@ class BASE_EXPORT InsecureRandomGenerator {
   // base::Rand*() is too high, using something more representative than a
   // microbenchmark.
 
+  // Uses the generator to fill memory pages with random content to make them
+  // hard to compress, in a simulation tool not bundled with Chrome. CPU
+  // overhead must be minimized to correctly measure memory effects.
+  friend class memory_simulator::MemoryHolder;
   // Uses the generator to sub-sample metrics.
   friend class MetricsSubSampler;
 
@@ -182,6 +215,13 @@ class BASE_EXPORT MetricsSubSampler {
  public:
   MetricsSubSampler();
   bool ShouldSample(double probability);
+
+  // Disables subsampling in a scope. Useful for testing.
+  class BASE_EXPORT ScopedDisableForTesting {
+   public:
+    ScopedDisableForTesting();
+    ~ScopedDisableForTesting();
+  };
 
  private:
   InsecureRandomGenerator generator_;

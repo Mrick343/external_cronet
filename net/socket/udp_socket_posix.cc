@@ -22,20 +22,19 @@
 
 #include <memory>
 
-#include "base/bind.h"
-#include "base/callback.h"
-#include "base/callback_helpers.h"
 #include "base/debug/alias.h"
 #include "base/feature_list.h"
 #include "base/files/file_util.h"
+#include "base/functional/bind.h"
+#include "base/functional/callback.h"
+#include "base/functional/callback_helpers.h"
 #include "base/logging.h"
-#include "base/metrics/histogram_functions.h"
 #include "base/posix/eintr_wrapper.h"
 #include "base/rand_util.h"
 #include "base/task/current_thread.h"
 #include "base/task/thread_pool.h"
-#include "base/trace_event/base_tracing.h"
 #include "build/chromeos_buildflags.h"
+#include "net/base/cronet_buildflags.h"
 #include "net/base/features.h"
 #include "net/base/io_buffer.h"
 #include "net/base/ip_address.h"
@@ -44,11 +43,11 @@
 #include "net/base/network_activity_monitor.h"
 #include "net/base/sockaddr_storage.h"
 #include "net/base/trace_constants.h"
+#include "net/base/tracing.h"
 #include "net/log/net_log.h"
 #include "net/log/net_log_event_type.h"
 #include "net/log/net_log_source.h"
 #include "net/log/net_log_source_type.h"
-#include "net/socket/ios_cronet_buildflags.h"
 #include "net/socket/socket_descriptor.h"
 #include "net/socket/socket_options.h"
 #include "net/socket/socket_tag.h"
@@ -58,7 +57,6 @@
 #if BUILDFLAG(IS_ANDROID)
 #include "base/native_library.h"
 #include "net/android/network_library.h"
-#include "net/android/radio_activity_tracker.h"
 #endif  // BUILDFLAG(IS_ANDROID)
 
 #if BUILDFLAG(IS_MAC)
@@ -140,6 +138,22 @@ UDPSocketPosix::UDPSocketPosix(DatagramSocket::BindType bind_type,
   net_log_.BeginEventReferencingSource(NetLogEventType::SOCKET_ALIVE, source);
 }
 
+UDPSocketPosix::UDPSocketPosix(DatagramSocket::BindType bind_type,
+                               NetLogWithSource source_net_log)
+    : socket_(kInvalidSocket),
+      bind_type_(bind_type),
+      read_socket_watcher_(FROM_HERE),
+      write_socket_watcher_(FROM_HERE),
+      read_watcher_(this),
+      write_watcher_(this),
+      net_log_(source_net_log),
+      bound_network_(handles::kInvalidNetworkHandle),
+      always_update_bytes_received_(base::FeatureList::IsEnabled(
+          features::kUdpSocketPosixAlwaysUpdateBytesReceived)) {
+  net_log_.BeginEventReferencingSource(NetLogEventType::SOCKET_ALIVE,
+                                       net_log_.source());
+}
+
 UDPSocketPosix::~UDPSocketPosix() {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   Close();
@@ -154,10 +168,33 @@ int UDPSocketPosix::Open(AddressFamily address_family) {
   if (owned_socket_count.empty())
     return ERR_INSUFFICIENT_RESOURCES;
 
+  owned_socket_count_ = std::move(owned_socket_count);
   addr_family_ = ConvertAddressFamily(address_family);
   socket_ = CreatePlatformSocket(addr_family_, SOCK_DGRAM, 0);
-  if (socket_ == kInvalidSocket)
+  if (socket_ == kInvalidSocket) {
+    owned_socket_count_.Reset();
     return MapSystemError(errno);
+  }
+
+  return ConfigureOpenedSocket();
+}
+
+int UDPSocketPosix::AdoptOpenedSocket(AddressFamily address_family,
+                                      int socket) {
+  DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+  DCHECK_EQ(socket_, kInvalidSocket);
+  auto owned_socket_count = TryAcquireGlobalUDPSocketCount();
+  if (owned_socket_count.empty()) {
+    return ERR_INSUFFICIENT_RESOURCES;
+  }
+
+  owned_socket_count_ = std::move(owned_socket_count);
+  socket_ = socket;
+  addr_family_ = ConvertAddressFamily(address_family);
+  return ConfigureOpenedSocket();
+}
+
+int UDPSocketPosix::ConfigureOpenedSocket() {
 #if BUILDFLAG(IS_APPLE) && !BUILDFLAG(CRONET_BUILD)
   PCHECK(change_fdguard_np(socket_, nullptr, 0, &kSocketFdGuard,
                            GUARD_CLOSE | GUARD_DUP, nullptr) == 0);
@@ -171,7 +208,6 @@ int UDPSocketPosix::Open(AddressFamily address_family) {
   if (tag_ != SocketTag())
     tag_.Apply(socket_);
 
-  owned_socket_count_ = std::move(owned_socket_count);
   return OK;
 }
 
@@ -368,9 +404,6 @@ int UDPSocketPosix::Write(
     int buf_len,
     CompletionOnceCallback callback,
     const NetworkTrafficAnnotationTag& traffic_annotation) {
-#if BUILDFLAG(IS_ANDROID)
-  android::MaybeRecordUDPWriteForWakeupTrigger(traffic_annotation);
-#endif  // BUILDFLAG(IS_ANDROID)
   return SendToOrWrite(buf, buf_len, nullptr, std::move(callback));
 }
 
@@ -448,7 +481,6 @@ int UDPSocketPosix::InternalConnect(const IPEndPoint& address) {
   // else connect() does the DatagramSocket::DEFAULT_BIND
 
   if (rv < 0) {
-    base::UmaHistogramSparse("Net.UdpSocketRandomBindErrorCode", -rv);
     return rv;
   }
 
@@ -518,7 +550,7 @@ int UDPSocketPosix::SetDoNotFragment() {
 
 // setsockopt(IP_DONTFRAG) is supported on macOS from Big Sur
 #elif BUILDFLAG(IS_MAC)
-  if (!base::mac::IsAtLeastOS11()) {
+  if (base::mac::MacOSMajorVersion() < 11) {
     return ERR_NOT_IMPLEMENTED;
   }
   int val = 1;
@@ -554,6 +586,32 @@ int UDPSocketPosix::SetDoNotFragment() {
   int rv = setsockopt(socket_, IPPROTO_IP, IP_MTU_DISCOVER, &val, sizeof(val));
   return rv == 0 ? OK : MapSystemError(errno);
 #endif
+}
+
+int UDPSocketPosix::SetRecvEcn() {
+  DCHECK_NE(socket_, kInvalidSocket);
+  DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+
+  unsigned int ecn = 1;
+  if (addr_family_ == AF_INET6) {
+    if (setsockopt(socket_, IPPROTO_IPV6, IPV6_RECVTCLASS, &ecn, sizeof(ecn)) !=
+        0) {
+      return MapSystemError(errno);
+    }
+
+    int v6_only = false;
+    socklen_t v6_only_len = sizeof(v6_only);
+    if (getsockopt(socket_, IPPROTO_IPV6, IPV6_V6ONLY, &v6_only,
+                   &v6_only_len) != 0) {
+      return MapSystemError(errno);
+    }
+    if (v6_only) {
+      return OK;
+    }
+  }
+
+  int rv = setsockopt(socket_, IPPROTO_IP, IP_RECVTOS, &ecn, sizeof(ecn));
+  return rv == 0 ? OK : MapSystemError(errno);
 }
 
 void UDPSocketPosix::SetMsgConfirm(bool confirm) {
@@ -1043,6 +1101,14 @@ int UDPSocketPosix::SetDiffServCodePoint(DiffServCodePoint dscp) {
     return MapSystemError(errno);
 
   return OK;
+}
+
+int UDPSocketPosix::SetIPv6Only(bool ipv6_only) {
+  DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+  if (is_connected()) {
+    return ERR_SOCKET_IS_CONNECTED;
+  }
+  return net::SetIPv6Only(socket_, ipv6_only);
 }
 
 void UDPSocketPosix::DetachFromThread() {

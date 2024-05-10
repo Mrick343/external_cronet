@@ -4,12 +4,8 @@
 
 package org.chromium.net.apihelpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import android.net.http.apihelpers.ContentTypeParametersParser;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
@@ -33,9 +29,9 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
         Map.Entry<String, String> parameter = parser.getNextParameter();
 
-        assertEquals("charset", parameter.getKey());
-        assertEquals("utf-8", parameter.getValue());
-        assertFalse(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("charset");
+        assertThat(parameter.getValue()).isEqualTo("utf-8");
+        assertThat(parser.hasMore()).isFalse();
     }
 
     @Test
@@ -46,9 +42,9 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
         Map.Entry<String, String> parameter = parser.getNextParameter();
 
-        assertEquals("charset", parameter.getKey());
-        assertEquals("utf-8", parameter.getValue());
-        assertFalse(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("charset");
+        assertThat(parameter.getValue()).isEqualTo("utf-8");
+        assertThat(parser.hasMore()).isFalse();
     }
 
     @Test
@@ -59,9 +55,9 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
         Map.Entry<String, String> parameter = parser.getNextParameter();
 
-        assertEquals("charset", parameter.getKey());
-        assertEquals("utf-  8", parameter.getValue());
-        assertFalse(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("charset");
+        assertThat(parameter.getValue()).isEqualTo("utf-  8");
+        assertThat(parser.hasMore()).isFalse();
     }
 
     @Test
@@ -72,9 +68,9 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
         Map.Entry<String, String> parameter = parser.getNextParameter();
 
-        assertEquals("charset", parameter.getKey());
-        assertEquals("utf-\\8", parameter.getValue());
-        assertFalse(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("charset");
+        assertThat(parameter.getValue()).isEqualTo("utf-\\8");
+        assertThat(parser.hasMore()).isFalse();
     }
 
     @Test
@@ -86,27 +82,27 @@ public class ContentTypeParametersParserTest {
 
         Map.Entry<String, String> parameter = parser.getNextParameter();
 
-        assertEquals("charset", parameter.getKey());
-        assertEquals("utf-\\8", parameter.getValue());
-        assertTrue(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("charset");
+        assertThat(parameter.getValue()).isEqualTo("utf-\\8");
+        assertThat(parser.hasMore()).isTrue();
 
         parameter = parser.getNextParameter();
 
-        assertEquals("foo", parameter.getKey());
-        assertEquals(" bar", parameter.getValue());
-        assertTrue(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("foo");
+        assertThat(parameter.getValue()).isEqualTo(" bar");
+        assertThat(parser.hasMore()).isTrue();
 
         parameter = parser.getNextParameter();
 
-        assertEquals("baz", parameter.getKey());
-        assertEquals("quix", parameter.getValue());
-        assertTrue(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("baz");
+        assertThat(parameter.getValue()).isEqualTo("quix");
+        assertThat(parser.hasMore()).isTrue();
 
         parameter = parser.getNextParameter();
 
-        assertEquals("abc", parameter.getKey());
-        assertEquals("def", parameter.getValue());
-        assertFalse(parser.hasMore());
+        assertThat(parameter.getKey()).isEqualTo("abc");
+        assertThat(parameter.getValue()).isEqualTo("def");
+        assertThat(parser.hasMore()).isFalse();
     }
 
     @Test
@@ -117,10 +113,11 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
 
         ContentTypeParametersParser.ContentTypeParametersParserException exception =
-                assertThrows(ContentTypeParametersParser.ContentTypeParametersParserException.class,
-                        () -> parser.getNextParameter());
+                assertThrows(
+                        ContentTypeParametersParser.ContentTypeParametersParserException.class,
+                        parser::getNextParameter);
 
-        assertEquals(header.indexOf('\\'), exception.getErrorOffset());
+        assertThat(exception.getErrorOffset()).isEqualTo(header.indexOf('\\'));
     }
 
     @Test
@@ -131,10 +128,11 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
 
         ContentTypeParametersParser.ContentTypeParametersParserException exception =
-                assertThrows(ContentTypeParametersParser.ContentTypeParametersParserException.class,
-                        () -> parser.getNextParameter());
+                assertThrows(
+                        ContentTypeParametersParser.ContentTypeParametersParserException.class,
+                        parser::getNextParameter);
 
-        assertEquals(header.indexOf('\\'), exception.getErrorOffset());
+        assertThat(exception.getErrorOffset()).isEqualTo(header.indexOf('\\'));
     }
 
     @Test
@@ -145,10 +143,11 @@ public class ContentTypeParametersParserTest {
         ContentTypeParametersParser parser = new ContentTypeParametersParser(header);
 
         ContentTypeParametersParser.ContentTypeParametersParserException exception =
-                assertThrows(ContentTypeParametersParser.ContentTypeParametersParserException.class,
-                        () -> parser.getNextParameter());
+                assertThrows(
+                        ContentTypeParametersParser.ContentTypeParametersParserException.class,
+                        parser::getNextParameter);
 
-        assertEquals(header.indexOf('"'), exception.getErrorOffset());
+        assertThat(exception.getErrorOffset()).isEqualTo(header.indexOf('"'));
     }
 
     private <E extends Throwable> E assertThrows(Class<E> exceptionType, ThrowingRunnable runnable)
@@ -159,8 +158,8 @@ public class ContentTypeParametersParserTest {
         } catch (Throwable e) {
             actualException = e;
         }
-        assertNotNull("Exception not thrown", actualException);
-        assertEquals(exceptionType, actualException.getClass());
+        assertWithMessage("Exception not thrown").that(actualException).isNotNull();
+        assertThat(actualException.getClass()).isEqualTo(exceptionType);
         return (E) actualException;
     }
 

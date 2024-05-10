@@ -1,8 +1,11 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 {
   children: [
     {
       name: "test_fonts",
-      url: "fuchsia-pkg://fuchsia.com/fonts#meta/fonts.cm",
+      url: "fuchsia-pkg://fuchsia.com/fonts_configurable_for_test#meta/fonts_configurable_for_test.cm",
     },
   ],
   offer: [
@@ -26,4 +29,11 @@
       from: "#test_fonts",
     },
   ],
+  facets: {
+    "fuchsia.test": {
+        // TODO(crbug.com/1408597): Remove when the isolated font provider
+        // component is subpackaged.
+        "deprecated-allowed-packages": [ "fonts_configurable_for_test" ],
+    },
+  },
 }

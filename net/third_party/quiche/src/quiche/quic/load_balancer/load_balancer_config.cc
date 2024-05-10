@@ -4,10 +4,14 @@
 
 #include "quiche/quic/load_balancer/load_balancer_config.h"
 
-#include <memory>
-#include <string_view>
+#include <cstdint>
+#include <cstring>
+#include <optional>
 
+#include "absl/strings/string_view.h"
+#include "absl/types/span.h"
 #include "openssl/aes.h"
+#include "quiche/quic/core/quic_connection_id.h"
 #include "quiche/quic/platform/api/quic_bug_tracker.h"
 
 namespace quic {
@@ -33,19 +37,19 @@ bool CommonValidation(const uint8_t config_id, const uint8_t server_id_len,
 }
 
 // Initialize the key in the constructor
-absl::optional<AES_KEY> BuildKey(absl::string_view key, bool encrypt) {
+std::optional<AES_KEY> BuildKey(absl::string_view key, bool encrypt) {
   if (key.empty()) {
-    return absl::optional<AES_KEY>();
+    return std::optional<AES_KEY>();
   }
   AES_KEY raw_key;
   if (encrypt) {
     if (AES_set_encrypt_key(reinterpret_cast<const uint8_t *>(key.data()),
                             key.size() * 8, &raw_key) < 0) {
-      return absl::optional<AES_KEY>();
+      return std::optional<AES_KEY>();
     }
   } else if (AES_set_decrypt_key(reinterpret_cast<const uint8_t *>(key.data()),
                                  key.size() * 8, &raw_key) < 0) {
-    return absl::optional<AES_KEY>();
+    return std::optional<AES_KEY>();
   }
   return raw_key;
 }
@@ -54,70 +58,75 @@ absl::optional<AES_KEY> BuildKey(absl::string_view key, bool encrypt) {
 // TakePlaintextFrom{Left,Right}() reads the left or right half of 'from' and
 // expands it into a full encryption block ('to') in accordance with the
 // internet-draft.
-void TakePlaintextFromLeft(uint8_t *to, uint8_t *from, uint8_t plaintext_len,
-                           uint8_t index) {
+void TakePlaintextFromLeft(const uint8_t *from, const uint8_t plaintext_len,
+                           const uint8_t index, uint8_t *to) {
   uint8_t half = plaintext_len / 2;
-  memset(to, 0, kLoadBalancerBlockSize - 1);
-  memcpy(to, from, half);
+
+  to[0] = plaintext_len;
+  to[1] = index;
+  memcpy(to + 2, from, half);
   if (plaintext_len % 2) {
-    to[half] = from[half] & 0xf0;
+    to[2 + half] = from[half] & 0xf0;
+    half++;
   }
-  to[kLoadBalancerBlockSize - 1] = plaintext_len + 1;
-  to[kLoadBalancerBlockSize - 2] = index;
+  memset(to + 2 + half, 0, kLoadBalancerBlockSize - 2 - half);
 }
 
-void TakePlaintextFromRight(uint8_t *to, uint8_t *from, uint8_t plaintext_len,
-                            uint8_t index) {
-  const uint8_t half = plaintext_len / 2;
-  const uint8_t write_point = kLoadBalancerBlockSize - half;
-  const uint8_t read_point = plaintext_len - half;
-  memset((to + 1), 0, kLoadBalancerBlockSize - 1);
-  memcpy(to + write_point, from + read_point, half);
-  if (plaintext_len % 2) {
-    to[write_point - 1] = from[read_point - 1] & 0x0f;
-  }
-  to[0] = plaintext_len + 1;
+void TakePlaintextFromRight(const uint8_t *from, const uint8_t plaintext_len,
+                            const uint8_t index, uint8_t *to) {
+  uint8_t half = plaintext_len / 2;
+
+  to[0] = plaintext_len;
   to[1] = index;
+  memcpy(to + 2, from + half, half + (plaintext_len % 2));
+  if (plaintext_len % 2) {
+    to[2] &= 0x0f;
+    half++;
+  }
+  memset(to + 2 + half, 0, kLoadBalancerBlockSize - 2 - half);
 }
 
 // CiphertextXorWith{Left,Right}() takes the relevant end of the ciphertext in
 // 'from' and XORs it with half of the ConnectionId stored at 'to', in
 // accordance with the internet-draft.
-void CiphertextXorWithLeft(uint8_t *to, uint8_t *from, uint8_t plaintext_len) {
+void CiphertextXorWithLeft(const uint8_t *from, const uint8_t plaintext_len,
+                           uint8_t *to) {
   uint8_t half = plaintext_len / 2;
   for (int i = 0; i < half; i++) {
-    *(to + i) ^= *(from + i);
+    to[i] ^= from[i];
   }
   if (plaintext_len % 2) {
-    *(to + half) ^= (*(from + half) & 0xf0);
+    to[half] ^= (from[half] & 0xf0);
   }
 }
 
-void CiphertextXorWithRight(uint8_t *to, uint8_t *from, uint8_t plaintext_len) {
-  const uint8_t half = plaintext_len / 2;
-  const uint8_t write_point = plaintext_len - half;
-  const uint8_t read_point = kLoadBalancerBlockSize - half;
+void CiphertextXorWithRight(const uint8_t *from, const uint8_t plaintext_len,
+                            uint8_t *to) {
+  uint8_t half = plaintext_len / 2;
+  int i = 0;
   if (plaintext_len % 2) {
-    *(to + write_point - 1) ^= (*(from + read_point - 1) & 0x0f);
+    to[half] ^= (from[0] & 0x0f);
+    i++;
   }
-  for (int i = 0; i < half; i++) {
-    *(to + write_point + i) ^= *(from + read_point + i);
+  while ((half + i) < plaintext_len) {
+    to[half + i] ^= from[i];
+    i++;
   }
 }
 
 }  // namespace
 
-absl::optional<LoadBalancerConfig> LoadBalancerConfig::Create(
+std::optional<LoadBalancerConfig> LoadBalancerConfig::Create(
     const uint8_t config_id, const uint8_t server_id_len,
     const uint8_t nonce_len, const absl::string_view key) {
   //  Check for valid parameters.
   if (key.size() != kLoadBalancerKeyLen) {
     QUIC_BUG(quic_bug_433862549_02)
         << "Invalid LoadBalancerConfig Key Length: " << key.size();
-    return absl::optional<LoadBalancerConfig>();
+    return std::optional<LoadBalancerConfig>();
   }
   if (!CommonValidation(config_id, server_id_len, nonce_len)) {
-    return absl::optional<LoadBalancerConfig>();
+    return std::optional<LoadBalancerConfig>();
   }
   auto new_config =
       LoadBalancerConfig(config_id, server_id_len, nonce_len, key);
@@ -125,18 +134,18 @@ absl::optional<LoadBalancerConfig> LoadBalancerConfig::Create(
     // Something went wrong in assigning the key!
     QUIC_BUG(quic_bug_433862549_03) << "Something went wrong in initializing "
                                        "the load balancing key.";
-    return absl::optional<LoadBalancerConfig>();
+    return std::optional<LoadBalancerConfig>();
   }
   return new_config;
 }
 
 // Creates an unencrypted config.
-absl::optional<LoadBalancerConfig> LoadBalancerConfig::CreateUnencrypted(
+std::optional<LoadBalancerConfig> LoadBalancerConfig::CreateUnencrypted(
     const uint8_t config_id, const uint8_t server_id_len,
     const uint8_t nonce_len) {
   return CommonValidation(config_id, server_id_len, nonce_len)
              ? LoadBalancerConfig(config_id, server_id_len, nonce_len, "")
-             : absl::optional<LoadBalancerConfig>();
+             : std::optional<LoadBalancerConfig>();
 }
 
 bool LoadBalancerConfig::EncryptionPass(absl::Span<uint8_t> target,
@@ -146,18 +155,18 @@ bool LoadBalancerConfig::EncryptionPass(absl::Span<uint8_t> target,
     return false;
   }
   if (index % 2) {  // Odd indices go from left to right
-    TakePlaintextFromLeft(buf, target.data(), plaintext_len(), index);
+    TakePlaintextFromLeft(target.data(), plaintext_len(), index, buf);
   } else {
-    TakePlaintextFromRight(buf, target.data(), plaintext_len(), index);
+    TakePlaintextFromRight(target.data(), plaintext_len(), index, buf);
   }
   if (!BlockEncrypt(buf, buf)) {
     return false;
   }
   // XOR bits over the correct half.
   if (index % 2) {
-    CiphertextXorWithRight(target.data(), buf, plaintext_len());
+    CiphertextXorWithRight(buf, plaintext_len(), target.data());
   } else {
-    CiphertextXorWithLeft(target.data(), buf, plaintext_len());
+    CiphertextXorWithLeft(buf, plaintext_len(), target.data());
   }
   return true;
 }
@@ -168,7 +177,7 @@ bool LoadBalancerConfig::BlockEncrypt(
   if (!key_.has_value()) {
     return false;
   }
-  AES_encrypt(plaintext, ciphertext, &key_.value());
+  AES_encrypt(plaintext, ciphertext, &*key_);
   return true;
 }
 
@@ -178,7 +187,7 @@ bool LoadBalancerConfig::BlockDecrypt(
   if (!block_decrypt_key_.has_value()) {
     return false;
   }
-  AES_decrypt(ciphertext, plaintext, &block_decrypt_key_.value());
+  AES_decrypt(ciphertext, plaintext, &*block_decrypt_key_);
   return true;
 }
 
@@ -192,6 +201,6 @@ LoadBalancerConfig::LoadBalancerConfig(const uint8_t config_id,
       key_(BuildKey(key, /* encrypt = */ true)),
       block_decrypt_key_((server_id_len + nonce_len == kLoadBalancerBlockSize)
                              ? BuildKey(key, /* encrypt = */ false)
-                             : absl::optional<AES_KEY>()) {}
+                             : std::optional<AES_KEY>()) {}
 
 }  // namespace quic

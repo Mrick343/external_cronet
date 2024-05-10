@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "quiche_platform_impl/quiche_mem_slice_impl.h"
+
 #include "absl/strings/string_view.h"
 #include "quiche/common/platform/api/quiche_export.h"
 #include "quiche/common/quiche_buffer_allocator.h"
@@ -16,7 +17,7 @@ namespace quiche {
 
 // QuicheMemSlice is a wrapper around a platform-specific I/O buffer type. It
 // may be reference counted, though QUICHE itself does not rely on that.
-class QUICHE_EXPORT_PRIVATE QuicheMemSlice {
+class QUICHE_EXPORT QuicheMemSlice {
  public:
   // Constructs a empty QuicheMemSlice with no underlying data.
   QuicheMemSlice() = default;

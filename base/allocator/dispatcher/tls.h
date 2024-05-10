@@ -15,17 +15,16 @@
 #endif
 
 #if USE_LOCAL_TLS_EMULATION()
-#include "base/allocator/partition_allocator/partition_alloc_constants.h"
-#include "base/base_export.h"
-#include "base/check.h"
-#include "base/compiler_specific.h"
-#include "base/dcheck_is_on.h"
-#include "base/immediate_crash.h"
-
 #include <algorithm>
 #include <atomic>
 #include <memory>
 #include <mutex>
+
+#include "base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h"
+#include "base/base_export.h"
+#include "base/check.h"
+#include "base/compiler_specific.h"
+#include "base/strings/string_piece.h"
 
 #include <pthread.h>
 
@@ -34,6 +33,29 @@
 #else
 #define DISABLE_TSAN_INSTRUMENTATION
 #endif
+
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
+// Verify that a condition holds and cancel the process in case it doesn't. The
+// functionality is similar to RAW_CHECK but includes more information in the
+// logged messages. It is non allocating to prevent recursions.
+#define TLS_RAW_CHECK(error_message, condition) \
+  TLS_RAW_CHECK_IMPL(error_message, condition, __FILE__, __LINE__)
+
+#define TLS_RAW_CHECK_IMPL(error_message, condition, file, line)        \
+  do {                                                                  \
+    if (!(condition)) {                                                 \
+      constexpr const char* message =                                   \
+          "TLS System: " error_message " Failed condition '" #condition \
+          "' in (" file "@" STR(line) ").\n";                           \
+      ::logging::RawCheckFailure(message);                              \
+    }                                                                   \
+  } while (0)
+
+namespace base::debug {
+struct CrashKeyString;
+}
 
 namespace base::allocator::dispatcher {
 namespace internal {
@@ -73,11 +95,20 @@ using OnThreadTerminationFunction = void (*)(void*);
 
 // The TLS system used by default for the thread local storage. It stores and
 // retrieves thread specific data pointers.
-struct BASE_EXPORT PThreadTLSSystem {
+class BASE_EXPORT PThreadTLSSystem {
+ public:
+  PThreadTLSSystem();
+
+  PThreadTLSSystem(const PThreadTLSSystem&) = delete;
+  PThreadTLSSystem(PThreadTLSSystem&&);
+  PThreadTLSSystem& operator=(const PThreadTLSSystem&) = delete;
+  PThreadTLSSystem& operator=(PThreadTLSSystem&&);
+
   // Initialize the TLS system to store a data set for different threads.
   // @param thread_termination_function An optional function which will be
   // invoked upon termination of a thread.
-  bool Setup(OnThreadTerminationFunction thread_termination_function);
+  bool Setup(OnThreadTerminationFunction thread_termination_function,
+             const base::StringPiece instance_id);
   // Tear down the TLS system. After completing tear down, the thread
   // termination function passed to Setup will not be invoked anymore.
   bool TearDownForTesting();
@@ -90,6 +121,7 @@ struct BASE_EXPORT PThreadTLSSystem {
   bool SetThreadSpecificData(void* data);
 
  private:
+  base::debug::CrashKeyString* crash_key_ = nullptr;
   pthread_key_t data_access_key_ = 0;
 #if DCHECK_IS_ON()
   // From POSIX standard at https://www.open-std.org/jtc1/sc22/open/n4217.pdf:
@@ -164,16 +196,21 @@ template <typename PayloadType,
           size_t AllocationChunkSize,
           bool IsDestructibleForTesting>
 struct ThreadLocalStorage {
-  ThreadLocalStorage() : root_(AllocateAndInitializeChunk()) { Initialize(); }
+  explicit ThreadLocalStorage(const base::StringPiece instance_id)
+      : root_(AllocateAndInitializeChunk()) {
+    Initialize(instance_id);
+  }
 
   // Create a new instance of |ThreadLocalStorage| using the passed allocator
   // and TLS system. This initializes the underlying TLS system and creates the
   // first chunk of data.
-  ThreadLocalStorage(AllocatorType allocator, TLSSystemType tlsSystem)
+  ThreadLocalStorage(const base::StringPiece instance_id,
+                     AllocatorType allocator,
+                     TLSSystemType tls_system)
       : allocator_(std::move(allocator)),
-        tls_system_(std::move(tlsSystem)),
+        tls_system_(std::move(tls_system)),
         root_(AllocateAndInitializeChunk()) {
-    Initialize();
+    Initialize(instance_id);
   }
 
   // Deletes an instance of |ThreadLocalStorage| and delete all the data chunks
@@ -199,19 +236,21 @@ struct ThreadLocalStorage {
 
   // Get the data item for the current thread. If no data is registered so far,
   // find a free item in the chunks and register it for the current thread.
-  DISABLE_TSAN_INSTRUMENTATION PayloadType* GetThreadLocalData() {
+  PayloadType* GetThreadLocalData() {
     auto& tls_system = dereference(tls_system_);
 
     auto* slot = static_cast<SingleSlot*>(tls_system.GetThreadSpecificData());
 
     if (UNLIKELY(slot == nullptr)) {
       slot = FindAndAllocateFreeSlot(root_.load(std::memory_order_relaxed));
-      if (!tls_system.SetThreadSpecificData(slot)) {
-        IMMEDIATE_CRASH();
-      }
+
+      // We might be called in the course of handling a memory allocation. We do
+      // not use CHECK since they might allocate and cause a recursion.
+      TLS_RAW_CHECK("Failed to set thread specific data.",
+                    tls_system.SetThreadSpecificData(slot));
 
       // Reset the content to wipe out any previous data.
-      slot->item = {};
+      Reset(slot->item);
     }
 
     return &(slot->item);
@@ -308,33 +347,34 @@ struct ThreadLocalStorage {
     // SingleSlot and reset the is_used flag.
     auto* const slot = static_cast<SingleSlot*>(data);
 
-#if DCHECK_IS_ON()
-    if (!(slot && slot->is_used.test_and_set())) {
-      IMMEDIATE_CRASH();
-    }
-#endif
+    // We might be called in the course of handling a memory allocation.
+    // Therefore, do not use CHECK since it might allocate and cause a
+    // recursion.
+    TLS_RAW_CHECK("Received an invalid slot.",
+                  slot && slot->is_used.test_and_set());
 
     slot->is_used.clear(std::memory_order_relaxed);
   }
 
   // Perform common initialization during construction of an instance.
-  void Initialize() {
+  void Initialize(const base::StringPiece instance_id) {
     // The constructor must be called outside of the allocation path. Therefore,
     // it is secure to verify with CHECK.
 
     // Passing MarkSlotAsFree as thread_termination_function we ensure the
     // slot/item assigned to the finished thread will be returned to the pool of
     // unused items.
-    CHECK(dereference(tls_system_).Setup(&MarkSlotAsFree));
+    CHECK(dereference(tls_system_).Setup(&MarkSlotAsFree, instance_id));
   }
 
   Chunk* AllocateAndInitializeChunk() {
     void* const uninitialized_memory =
         dereference(allocator_).AllocateMemory(sizeof(Chunk));
 
-    if (uninitialized_memory == nullptr) {
-      IMMEDIATE_CRASH();
-    }
+    // We might be called in the course of handling a memory allocation. We do
+    // not use CHECK since they might allocate and cause a recursion.
+    TLS_RAW_CHECK("Failed to allocate memory for new chunk.",
+                  uninitialized_memory != nullptr);
 
     return new (uninitialized_memory) Chunk{};
   }
@@ -342,10 +382,10 @@ struct ThreadLocalStorage {
   void FreeAndDeallocateChunkForTesting(Chunk* chunk_to_erase) {
     chunk_to_erase->~Chunk();
 
-    if (!dereference(allocator_)
-             .FreeMemoryForTesting(chunk_to_erase, sizeof(Chunk))) {
-      IMMEDIATE_CRASH();
-    }
+    // FreeAndDeallocateChunkForTesting must be called outside of the allocation
+    // path. Therefore, it is secure to verify with CHECK.
+    CHECK(dereference(allocator_)
+              .FreeMemoryForTesting(chunk_to_erase, sizeof(Chunk)));
   }
 
   // Find a free slot in the passed chunk, reserve it and return it to the
@@ -402,6 +442,12 @@ struct ThreadLocalStorage {
     }
   }
 
+  // Reset a single item to its default value.
+  // Since items are re-used, they may be accessed from different threads,
+  // causing TSan to trigger. Therefore, the reset is exempt from TSan
+  // instrumentation.
+  DISABLE_TSAN_INSTRUMENTATION void Reset(PayloadType& item) { item = {}; }
+
   AllocatorType allocator_;
   TLSSystemType tls_system_;
   std::atomic<Chunk*> const root_;
@@ -424,6 +470,11 @@ using ThreadLocalStorage =
                                  IsDestructibleForTesting>;
 
 }  // namespace base::allocator::dispatcher
+
+#undef TLS_RAW_CHECK_IMPL
+#undef TLS_RAW_CHECK
+#undef STR
+#undef STR_HELPER
 
 #endif  // USE_LOCAL_TLS_EMULATION()
 #endif  // BASE_ALLOCATOR_DISPATCHER_TLS_H_

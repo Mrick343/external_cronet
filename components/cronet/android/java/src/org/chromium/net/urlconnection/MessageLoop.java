@@ -4,6 +4,8 @@
 
 package org.chromium.net.urlconnection;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.SocketTimeoutException;
@@ -16,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * A MessageLoop class for use in {@link CronetHttpURLConnection}.
  */
-class MessageLoop implements Executor {
+@VisibleForTesting
+public class MessageLoop implements Executor {
     private final BlockingQueue<Runnable> mQueue;
 
     // Indicates whether this message loop is currently running.
@@ -38,7 +41,7 @@ class MessageLoop implements Executor {
     private static final long INVALID_THREAD_ID = -1;
     private long mThreadId = INVALID_THREAD_ID;
 
-    MessageLoop() {
+    public MessageLoop() {
         mQueue = new LinkedBlockingQueue<Runnable>();
     }
 
@@ -109,8 +112,7 @@ class MessageLoop implements Executor {
             }
         }
         if (mLoopRunning) {
-            throw new IllegalStateException(
-                    "Cannot run loop when it is already running.");
+            throw new IllegalStateException("Cannot run loop when it is already running.");
         }
         mLoopRunning = true;
         while (mLoopRunning) {
@@ -144,9 +146,7 @@ class MessageLoop implements Executor {
         mLoopRunning = false;
     }
 
-    /**
-     * Posts a task to the message loop.
-     */
+    /** Posts a task to the message loop. */
     @Override
     public void execute(Runnable task) throws RejectedExecutionException {
         if (task == null) {
@@ -161,16 +161,12 @@ class MessageLoop implements Executor {
         }
     }
 
-    /**
-     * Returns whether the loop is currently running. Used in testing.
-     */
+    /** Returns whether the loop is currently running. Used in testing. */
     public boolean isRunning() {
         return mLoopRunning;
     }
 
-    /**
-     * Returns whether an exception occurred in {#loop()}. Used in testing.
-     */
+    /** Returns whether an exception occurred in {#loop()}. Used in testing. */
     public boolean hasLoopFailed() {
         return mLoopFailed;
     }
