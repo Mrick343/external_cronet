@@ -179,8 +179,8 @@ void BalsaHeaders::ParseTokenList(absl::string_view header_value,
   if (header_value.empty()) {
     return;
   }
-  const char* start = header_value.begin();
-  const char* end = header_value.end();
+  const char* start = header_value.data();
+  const char* end = header_value.data() + header_value.size();
   while (true) {
     // Cast `*start` to unsigned char to make values above 127 rank as expected
     // on platforms with signed char, where such values are represented as
@@ -873,8 +873,8 @@ std::string BalsaHeaders::DebugString() const {
 }
 
 bool BalsaHeaders::ForEachHeader(
-    std::function<bool(const absl::string_view key,
-                       const absl::string_view value)>
+    quiche::UnretainedCallback<bool(const absl::string_view key,
+                                    const absl::string_view value)>
         fn) const {
   int s = header_lines_.size();
   for (int i = 0; i < s; ++i) {
@@ -980,7 +980,7 @@ void BalsaHeaders::ReplaceOrAppendAuthority(absl::string_view value) {
 void BalsaHeaders::RemoveAuthority() { RemoveAllOfHeader(kHost); }
 
 void BalsaHeaders::ApplyToCookie(
-    std::function<void(absl::string_view cookie)> f) const {
+    quiche::UnretainedCallback<void(absl::string_view cookie)> f) const {
   f(GetHeader(kCookie));
 }
 

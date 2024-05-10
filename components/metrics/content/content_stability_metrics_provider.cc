@@ -30,15 +30,6 @@ ContentStabilityMetricsProvider::ContentStabilityMetricsProvider(
     : helper_(local_state), extensions_helper_(std::move(extensions_helper)) {
   BrowserChildProcessObserver::Add(this);
 
-  registrar_.Add(this, content::NOTIFICATION_LOAD_START,
-                 content::NotificationService::AllSources());
-  registrar_.Add(this, content::NOTIFICATION_RENDERER_PROCESS_CLOSED,
-                 content::NotificationService::AllSources());
-  registrar_.Add(this, content::NOTIFICATION_RENDER_WIDGET_HOST_HANG,
-                 content::NotificationService::AllSources());
-  registrar_.Add(this, content::NOTIFICATION_RENDERER_PROCESS_CREATED,
-                 content::NotificationService::AllSources());
-
 #if BUILDFLAG(IS_ANDROID)
   auto* crash_manager = crash_reporter::CrashMetricsReporter::GetInstance();
   DCHECK(crash_manager);
@@ -47,7 +38,6 @@ ContentStabilityMetricsProvider::ContentStabilityMetricsProvider(
 }
 
 ContentStabilityMetricsProvider::~ContentStabilityMetricsProvider() {
-  registrar_.RemoveAll();
   BrowserChildProcessObserver::Remove(this);
 }
 
@@ -66,48 +56,34 @@ void ContentStabilityMetricsProvider::ClearSavedStabilityMetrics() {
 }
 #endif  // BUILDFLAG(IS_ANDROID)
 
-void ContentStabilityMetricsProvider::Observe(
-    int type,
-    const content::NotificationSource& source,
-    const content::NotificationDetails& details) {
-  switch (type) {
-    case content::NOTIFICATION_LOAD_START:
-      helper_.LogLoadStarted();
-      break;
-
-    case content::NOTIFICATION_RENDERER_PROCESS_CLOSED: {
-      // On Android, the renderer crashes are recorded in
-      // `OnCrashDumpProcessed`.
-#if !BUILDFLAG(IS_ANDROID)
-      content::ChildProcessTerminationInfo* process_info =
-          content::Details<content::ChildProcessTerminationInfo>(details).ptr();
-      bool was_extension_process =
-          extensions_helper_ &&
-          extensions_helper_->IsExtensionProcess(
-              content::Source<content::RenderProcessHost>(source).ptr());
-      helper_.LogRendererCrash(was_extension_process, process_info->status,
-                               process_info->exit_code);
-#endif  // !BUILDFLAG(IS_ANDROID)
-      break;
-    }
-
-    case content::NOTIFICATION_RENDER_WIDGET_HOST_HANG:
-      helper_.LogRendererHang();
-      break;
-
-    case content::NOTIFICATION_RENDERER_PROCESS_CREATED: {
-      bool was_extension_process =
-          extensions_helper_ &&
-          extensions_helper_->IsExtensionProcess(
-              content::Source<content::RenderProcessHost>(source).ptr());
-      helper_.LogRendererLaunched(was_extension_process);
-      break;
-    }
-
-    default:
-      NOTREACHED();
-      break;
+void ContentStabilityMetricsProvider::OnRenderProcessHostCreated(
+    content::RenderProcessHost* host) {
+  bool was_extension_process =
+      extensions_helper_ && extensions_helper_->IsExtensionProcess(host);
+  helper_.LogRendererLaunched(was_extension_process);
+  if (!host_observation_.IsObservingSource(host)) {
+    host_observation_.AddObservation(host);
   }
+}
+
+void ContentStabilityMetricsProvider::RenderProcessExited(
+    content::RenderProcessHost* host,
+    const content::ChildProcessTerminationInfo& info) {
+  // On Android, the renderer crashes are recorded in
+  // `OnCrashDumpProcessed`.
+#if !BUILDFLAG(IS_ANDROID)
+  bool was_extension_process =
+      extensions_helper_ && extensions_helper_->IsExtensionProcess(host);
+  helper_.LogRendererCrash(was_extension_process, info.status, info.exit_code);
+#endif  // !BUILDFLAG(IS_ANDROID)
+}
+
+void ContentStabilityMetricsProvider::RenderProcessHostDestroyed(
+    content::RenderProcessHost* host) {
+  // In single-process mode, RenderProcessExited isn't called, so we ensure
+  // we remove observations here rather than there, to avoid later use-after-
+  // frees in single process mode.
+  host_observation_.RemoveObservation(host);
 }
 
 void ContentStabilityMetricsProvider::BrowserChildProcessCrashed(
@@ -154,5 +130,9 @@ void ContentStabilityMetricsProvider::OnCrashDumpProcessed(
   }
 }
 #endif  // BUILDFLAG(IS_ANDROID)
+
+void ContentStabilityMetricsProvider::OnPageLoadStarted() {
+  helper_.LogLoadStarted();
+}
 
 }  // namespace metrics

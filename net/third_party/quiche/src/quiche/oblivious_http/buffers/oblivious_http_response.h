@@ -9,10 +9,11 @@
 #include "absl/strings/string_view.h"
 #include "quiche/common/quiche_random.h"
 #include "quiche/oblivious_http/buffers/oblivious_http_request.h"
+#include "quiche/oblivious_http/common/oblivious_http_header_key_config.h"
 
 namespace quiche {
 
-class QUICHE_EXPORT_PRIVATE ObliviousHttpResponse {
+class QUICHE_EXPORT ObliviousHttpResponse {
  public:
   // Parse and decrypt the OHttp response using ObliviousHttpContext context obj
   // that was returned from `CreateClientObliviousRequest` method. On success,
@@ -20,8 +21,10 @@ class QUICHE_EXPORT_PRIVATE ObliviousHttpResponse {
   // @params: Note that `oblivious_http_request_context` is required to stay
   // alive only for the lifetime of this factory method call.
   static absl::StatusOr<ObliviousHttpResponse> CreateClientObliviousResponse(
-      absl::string_view encrypted_data,
-      ObliviousHttpRequest::Context& oblivious_http_request_context);
+      std::string encrypted_data,
+      ObliviousHttpRequest::Context& oblivious_http_request_context,
+      absl::string_view resp_label =
+          ObliviousHttpHeaderKeyConfig::kOhttpResponseLabel);
 
   // Encrypt the input param `plaintext_payload` and create OHttp response using
   // ObliviousHttpContext context obj that was returned from
@@ -37,8 +40,10 @@ class QUICHE_EXPORT_PRIVATE ObliviousHttpResponse {
   // string generation. `quiche_random` is required to stay alive only for the
   // lifetime of this factory method call.
   static absl::StatusOr<ObliviousHttpResponse> CreateServerObliviousResponse(
-      absl::string_view plaintext_payload,
+      std::string plaintext_payload,
       ObliviousHttpRequest::Context& oblivious_http_request_context,
+      absl::string_view resp_label =
+          ObliviousHttpHeaderKeyConfig::kOhttpResponseLabel,
       QuicheRandom* quiche_random = nullptr);
 
   // Copyable.
@@ -55,9 +60,12 @@ class QUICHE_EXPORT_PRIVATE ObliviousHttpResponse {
   // Generic Usecase : server-side calls this method in the context of Response
   // to serialize OHTTP response that will be returned to client-side.
   // Returns serialized OHTTP response bytestring.
-  std::string EncapsulateAndSerialize() const;
+  const std::string& EncapsulateAndSerialize() const;
 
-  absl::string_view GetPlaintextData() const;
+  const std::string& GetPlaintextData() const;
+  std::string ConsumePlaintextData() && {
+    return std::move(response_plaintext_);
+  }
 
  private:
   struct CommonAeadParamsResult {
@@ -72,8 +80,7 @@ class QUICHE_EXPORT_PRIVATE ObliviousHttpResponse {
     const std::string aead_nonce;
   };
 
-  explicit ObliviousHttpResponse(std::string resp_nonce,
-                                 std::string resp_ciphertext,
+  explicit ObliviousHttpResponse(std::string encrypted_data,
                                  std::string resp_plaintext);
 
   // Determines AEAD key len(Nk), AEAD nonce len(Nn) based on HPKE context and
@@ -85,10 +92,9 @@ class QUICHE_EXPORT_PRIVATE ObliviousHttpResponse {
   static absl::StatusOr<CommonOperationsResult> CommonOperationsToEncapDecap(
       absl::string_view response_nonce,
       ObliviousHttpRequest::Context& oblivious_http_request_context,
-      const size_t aead_key_len, const size_t aead_nonce_len,
-      const size_t secret_len);
-  std::string response_nonce_;
-  std::string response_ciphertext_;
+      absl::string_view resp_label, const size_t aead_key_len,
+      const size_t aead_nonce_len, const size_t secret_len);
+  std::string encrypted_data_;
   std::string response_plaintext_;
 };
 

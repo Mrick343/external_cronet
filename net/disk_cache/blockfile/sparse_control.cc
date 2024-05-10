@@ -6,15 +6,14 @@
 
 #include <stdint.h>
 
-#include "base/bind.h"
 #include "base/format_macros.h"
+#include "base/functional/bind.h"
 #include "base/location.h"
 #include "base/logging.h"
 #include "base/numerics/checked_math.h"
 #include "base/strings/string_util.h"
 #include "base/strings/stringprintf.h"
 #include "base/task/single_thread_task_runner.h"
-#include "base/threading/thread_task_runner_handle.h"
 #include "base/time/time.h"
 #include "net/base/interval.h"
 #include "net/base/io_buffer.h"
@@ -151,7 +150,7 @@ void ChildrenDeleter::DeleteChildren() {
   children_map_.Set(child_id, false);
 
   // Post a task to delete the next child.
-  base::ThreadTaskRunnerHandle::Get()->PostTask(
+  base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
       FROM_HERE, base::BindOnce(&ChildrenDeleter::DeleteChildren, this));
 }
 
@@ -389,11 +388,11 @@ void SparseControl::DeleteChildren(EntryImpl* entry) {
   deleter->AddRef();
 
   if (buffer) {
-    base::ThreadTaskRunnerHandle::Get()->PostTask(
+    base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
         FROM_HERE, base::BindOnce(&ChildrenDeleter::Start, deleter,
                                   std::move(buffer), data_len));
   } else {
-    base::ThreadTaskRunnerHandle::Get()->PostTask(
+    base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
         FROM_HERE,
         base::BindOnce(&ChildrenDeleter::ReadData, deleter, address, data_len));
   }
@@ -413,7 +412,7 @@ int SparseControl::CreateSparseEntry() {
 
   // Save the header. The bitmap is saved in the destructor.
   scoped_refptr<net::IOBuffer> buf = base::MakeRefCounted<net::WrappedIOBuffer>(
-      reinterpret_cast<char*>(&sparse_header_));
+      reinterpret_cast<char*>(&sparse_header_), sizeof(sparse_header_));
 
   int rv = entry_->WriteData(kSparseIndex, 0, buf.get(), sizeof(sparse_header_),
                              CompletionOnceCallback(), false);
@@ -443,7 +442,7 @@ int SparseControl::OpenSparseEntry(int data_len) {
     return net::ERR_CACHE_OPERATION_NOT_SUPPORTED;
 
   scoped_refptr<net::IOBuffer> buf = base::MakeRefCounted<net::WrappedIOBuffer>(
-      reinterpret_cast<char*>(&sparse_header_));
+      reinterpret_cast<char*>(&sparse_header_), sizeof(sparse_header_));
 
   // Read header.
   int rv = entry_->ReadData(kSparseIndex, 0, buf.get(), sizeof(sparse_header_),
@@ -459,7 +458,7 @@ int SparseControl::OpenSparseEntry(int data_len) {
     return net::ERR_CACHE_OPERATION_NOT_SUPPORTED;
 
   // Read the actual bitmap.
-  buf = base::MakeRefCounted<net::IOBuffer>(map_len);
+  buf = base::MakeRefCounted<net::IOBufferWithSize>(map_len);
   rv = entry_->ReadData(kSparseIndex, sizeof(sparse_header_), buf.get(),
                         map_len, CompletionOnceCallback());
   if (rv != map_len)
@@ -499,7 +498,7 @@ bool SparseControl::OpenChild() {
 
   scoped_refptr<net::WrappedIOBuffer> buf =
       base::MakeRefCounted<net::WrappedIOBuffer>(
-          reinterpret_cast<char*>(&child_data_));
+          reinterpret_cast<char*>(&child_data_), sizeof(child_data_));
 
   // Read signature.
   int rv = child_->ReadData(kSparseIndex, 0, buf.get(), sizeof(child_data_),
@@ -524,7 +523,7 @@ bool SparseControl::OpenChild() {
 void SparseControl::CloseChild() {
   scoped_refptr<net::WrappedIOBuffer> buf =
       base::MakeRefCounted<net::WrappedIOBuffer>(
-          reinterpret_cast<char*>(&child_data_));
+          reinterpret_cast<char*>(&child_data_), sizeof(child_data_));
 
   // Save the allocation bitmap before closing the child entry.
   int rv = child_->WriteData(kSparseIndex, 0, buf.get(), sizeof(child_data_),
@@ -591,10 +590,10 @@ void SparseControl::SetChildBit(bool value) {
 }
 
 void SparseControl::WriteSparseData() {
-  scoped_refptr<net::IOBuffer> buf = base::MakeRefCounted<net::WrappedIOBuffer>(
-      reinterpret_cast<const char*>(children_map_.GetMap()));
-
   int len = children_map_.ArraySize() * 4;
+  scoped_refptr<net::IOBuffer> buf = base::MakeRefCounted<net::WrappedIOBuffer>(
+      reinterpret_cast<const char*>(children_map_.GetMap()), len);
+
   int rv = entry_->WriteData(kSparseIndex, sizeof(sparse_header_), buf.get(),
                              len, CompletionOnceCallback(), false);
   if (rv != len) {
@@ -691,7 +690,7 @@ void SparseControl::InitChildData() {
 
   scoped_refptr<net::WrappedIOBuffer> buf =
       base::MakeRefCounted<net::WrappedIOBuffer>(
-          reinterpret_cast<char*>(&child_data_));
+          reinterpret_cast<char*>(&child_data_), sizeof(child_data_));
 
   int rv = child_->WriteData(kSparseIndex, 0, buf.get(), sizeof(child_data_),
                              CompletionOnceCallback(), false);
@@ -740,7 +739,6 @@ bool SparseControl::DoChildIO() {
   }
 
   int rv = 0;
-  bool optimistic = false;
   switch (operation_) {
     case kReadOperation:
       if (entry_->net_log().IsCapturing()) {
@@ -760,8 +758,7 @@ bool SparseControl::DoChildIO() {
                               child_->net_log().source(), child_len_);
       }
       rv = child_->WriteDataImpl(kSparseData, child_offset_, user_buf_.get(),
-                                 child_len_, std::move(callback), false,
-                                 &optimistic);
+                                 child_len_, std::move(callback), false);
       break;
     case kGetRangeOperation:
       rv = DoGetAvailableRange();
@@ -770,7 +767,7 @@ bool SparseControl::DoChildIO() {
       NOTREACHED();
   }
 
-  if (rv == net::ERR_IO_PENDING || optimistic) {
+  if (rv == net::ERR_IO_PENDING) {
     if (!pending_) {
       pending_ = true;
       // The child will protect himself against closing the entry while IO is in

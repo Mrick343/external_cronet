@@ -6,8 +6,12 @@
 #define QUICHE_QUIC_LOAD_BALANCER_LOAD_BALANCER_SERVER_ID_H_
 
 #include <array>
+#include <cstdint>
+#include <optional>
+#include <string>
 
-#include "quiche/quic/core/quic_types.h"
+#include "absl/strings/string_view.h"
+#include "absl/types/span.h"
 #include "quiche/quic/platform/api/quic_export.h"
 
 namespace quic {
@@ -25,8 +29,14 @@ inline constexpr uint8_t kLoadBalancerMaxServerIdLen = 15;
 class QUIC_EXPORT_PRIVATE LoadBalancerServerId {
  public:
   // Copies all the bytes from |data| into a new LoadBalancerServerId.
-  static absl::optional<LoadBalancerServerId> Create(
-      const absl::Span<const uint8_t> data);
+  static std::optional<LoadBalancerServerId> Create(
+      absl::Span<const uint8_t> data);
+
+  // For callers with a string_view at hand.
+  static std::optional<LoadBalancerServerId> Create(absl::string_view data) {
+    return Create(absl::MakeSpan(reinterpret_cast<const uint8_t*>(data.data()),
+                                 data.length()));
+  }
 
   // Server IDs are opaque bytes, but defining these operators allows us to sort
   // them into a tree and define ranges.
@@ -54,7 +64,7 @@ class QUIC_EXPORT_PRIVATE LoadBalancerServerId {
 
  private:
   // The constructor is private because it can't validate the input.
-  LoadBalancerServerId(const absl::Span<const uint8_t> data);
+  LoadBalancerServerId(absl::Span<const uint8_t> data);
 
   std::array<uint8_t, kLoadBalancerMaxServerIdLen> data_;
   uint8_t length_;

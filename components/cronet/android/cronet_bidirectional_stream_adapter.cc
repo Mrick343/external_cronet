@@ -8,10 +8,9 @@
 #include <utility>
 #include <vector>
 
-#include "base/bind.h"
+#include "base/functional/bind.h"
 #include "base/location.h"
 #include "base/logging.h"
-#include "base/strings/abseil_string_conversions.h"
 #include "base/strings/string_number_conversions.h"
 #include "components/cronet/android/cronet_context_adapter.h"
 #include "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h"
@@ -235,8 +234,8 @@ jboolean CronetBidirectionalStreamAdapter::WritevData(
                            i, 1, &limit);
     DCHECK_LE(pos, limit);
     scoped_refptr<net::WrappedIOBuffer> write_buffer =
-        base::MakeRefCounted<net::WrappedIOBuffer>(static_cast<char*>(data) +
-                                                   pos);
+        base::MakeRefCounted<net::WrappedIOBuffer>(
+            static_cast<char*>(data) + pos, limit - pos);
     pending_write_data->write_buffer_list.push_back(write_buffer);
     pending_write_data->write_buffer_len_list.push_back(limit - pos);
   }
@@ -279,9 +278,9 @@ void CronetBidirectionalStreamAdapter::OnHeadersReceived(
   // Get http status code from response headers.
   jint http_status_code = 0;
   const auto http_status_header = response_headers.find(":status");
-  if (http_status_header != response_headers.end())
-    base::StringToInt(base::StringViewToStringPiece(http_status_header->second),
-                      &http_status_code);
+  if (http_status_header != response_headers.end()) {
+    base::StringToInt(http_status_header->second, &http_status_code);
+  }
 
   std::string protocol;
   switch (bidi_stream_->GetProtocol()) {

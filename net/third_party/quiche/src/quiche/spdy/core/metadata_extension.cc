@@ -1,15 +1,20 @@
 #include "quiche/spdy/core/metadata_extension.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <list>
+#include <memory>
 #include <string>
+#include <utility>
 
-#include "absl/memory/memory.h"
-#include "absl/strings/str_cat.h"
 #include "quiche/http2/decoder/decode_buffer.h"
 #include "quiche/http2/hpack/decoder/hpack_decoder.h"
 #include "quiche/common/platform/api/quiche_bug_tracker.h"
 #include "quiche/common/platform/api/quiche_logging.h"
+#include "quiche/spdy/core/hpack/hpack_encoder.h"
+#include "quiche/spdy/core/http2_header_block.h"
 #include "quiche/spdy/core/http2_header_block_hpack_listener.h"
+#include "quiche/spdy/core/spdy_protocol.h"
 
 namespace spdy {
 
@@ -49,7 +54,7 @@ std::unique_ptr<spdy::SpdyFrameIR> MetadataFrameSequence::Next() {
       progressive_encoder_->Next(spdy::kHttp2DefaultFramePayloadLimit);
   const bool end_metadata = !HasNext();
   const uint8_t flags = end_metadata ? MetadataVisitor::kEndMetadataFlag : 0;
-  return absl::make_unique<spdy::SpdyUnknownIR>(
+  return std::make_unique<spdy::SpdyUnknownIR>(
       stream_id_, MetadataVisitor::kMetadataFrameType, flags,
       std::move(payload));
 }
@@ -106,7 +111,7 @@ bool MetadataVisitor::OnFrameHeader(SpdyStreamId stream_id, size_t length,
   }
   auto it = metadata_map_.find(stream_id);
   if (it == metadata_map_.end()) {
-    auto state = absl::make_unique<MetadataPayloadState>(
+    auto state = std::make_unique<MetadataPayloadState>(
         length, flags & kEndMetadataFlag);
     auto result =
         metadata_map_.insert(std::make_pair(stream_id, std::move(state)));

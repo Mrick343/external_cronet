@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include <memory>
+#include <string>
 #include <utility>
 
 #include "absl/memory/memory.h"
@@ -50,17 +51,19 @@ absl::StatusOr<ObliviousHttpGateway> ObliviousHttpGateway::Create(
 
 absl::StatusOr<ObliviousHttpRequest>
 ObliviousHttpGateway::DecryptObliviousHttpRequest(
-    absl::string_view encrypted_data) const {
+    absl::string_view encrypted_data, absl::string_view request_label) const {
   return ObliviousHttpRequest::CreateServerObliviousRequest(
-      encrypted_data, *(server_hpke_key_), ohttp_key_config_);
+      encrypted_data, *(server_hpke_key_), ohttp_key_config_, request_label);
 }
 
 absl::StatusOr<ObliviousHttpResponse>
 ObliviousHttpGateway::CreateObliviousHttpResponse(
-    absl::string_view plaintext_data,
-    ObliviousHttpRequest::Context& oblivious_http_request_context) const {
+    std::string plaintext_data,
+    ObliviousHttpRequest::Context& oblivious_http_request_context,
+    absl::string_view response_label) const {
   return ObliviousHttpResponse::CreateServerObliviousResponse(
-      plaintext_data, oblivious_http_request_context, quiche_random_);
+      std::move(plaintext_data), oblivious_http_request_context, response_label,
+      quiche_random_);
 }
 
 }  // namespace quiche

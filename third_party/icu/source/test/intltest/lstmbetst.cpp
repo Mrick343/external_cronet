@@ -42,7 +42,7 @@ void LSTMBETest::runIndexedTest( int32_t index, UBool exec, const char* &name, c
 //--------------------------------------------------------------------------------------
 
 LSTMBETest::LSTMBETest() {
-    fTestParams = NULL;
+    fTestParams = nullptr;
 }
 
 
@@ -82,14 +82,14 @@ void LSTMBETest::runTestFromFile(const char* filename) {
     testFileName.append(filename, -1, status);
 
     int len;
-    UChar *testFile = ReadAndConvertFile(testFileName.data(), len, "UTF-8", status);
+    char16_t *testFile = ReadAndConvertFile(testFileName.data(), len, "UTF-8", status);
     if (U_FAILURE(status)) {
         errln("%s:%d Error %s opening test file %s", __FILE__, __LINE__, u_errorName(status), filename);
         return;
     }
 
     //  Put the test data into a UnicodeString
-    UnicodeString testString(FALSE, testFile, len);
+    UnicodeString testString(false, testFile, len);
 
     int32_t start = 0;
 

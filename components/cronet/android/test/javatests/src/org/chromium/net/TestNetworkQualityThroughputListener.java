@@ -4,9 +4,8 @@
 
 package org.chromium.net;
 
-import static junit.framework.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
-import android.net.http.NetworkQualityThroughputListener;
 import android.os.ConditionVariable;
 
 import java.util.concurrent.Executor;
@@ -38,7 +37,7 @@ class TestNetworkQualityThroughputListener extends NetworkQualityThroughputListe
                 mExecutorThread = Thread.currentThread();
             }
             // Verify that the listener is always notified on the same thread.
-            assertEquals(mExecutorThread, Thread.currentThread());
+            assertThat(Thread.currentThread()).isEqualTo(mExecutorThread);
         }
     }
 

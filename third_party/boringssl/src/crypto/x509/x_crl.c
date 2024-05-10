@@ -67,10 +67,12 @@
 
 #include <assert.h>
 
+#include "../asn1/internal.h"
 #include "../internal.h"
 #include "internal.h"
 
-static int X509_REVOKED_cmp(const X509_REVOKED **a, const X509_REVOKED **b);
+static int X509_REVOKED_cmp(const X509_REVOKED *const *a,
+                            const X509_REVOKED *const *b);
 static int setup_idp(X509_CRL *crl, ISSUING_DIST_POINT *idp);
 
 ASN1_SEQUENCE(X509_REVOKED) = {
@@ -79,8 +81,8 @@ ASN1_SEQUENCE(X509_REVOKED) = {
     ASN1_SEQUENCE_OF_OPT(X509_REVOKED, extensions, X509_EXTENSION),
 } ASN1_SEQUENCE_END(X509_REVOKED)
 
-static int crl_lookup(X509_CRL *crl, X509_REVOKED **ret, ASN1_INTEGER *serial,
-                      X509_NAME *issuer);
+static int crl_lookup(X509_CRL *crl, X509_REVOKED **ret,
+                      const ASN1_INTEGER *serial, X509_NAME *issuer);
 
 // The X509_CRL_INFO structure needs a bit of customisation. Since we cache
 // the original encoding the signature wont be affected by reordering of the
@@ -360,7 +362,8 @@ IMPLEMENT_ASN1_FUNCTIONS(X509_CRL_INFO)
 IMPLEMENT_ASN1_FUNCTIONS(X509_CRL)
 IMPLEMENT_ASN1_DUP_FUNCTION(X509_CRL)
 
-static int X509_REVOKED_cmp(const X509_REVOKED **a, const X509_REVOKED **b) {
+static int X509_REVOKED_cmp(const X509_REVOKED *const *a,
+                            const X509_REVOKED *const *b) {
   return ASN1_STRING_cmp((*a)->serialNumber, (*b)->serialNumber);
 }
 
@@ -371,10 +374,9 @@ int X509_CRL_add0_revoked(X509_CRL *crl, X509_REVOKED *rev) {
     inf->revoked = sk_X509_REVOKED_new(X509_REVOKED_cmp);
   }
   if (!inf->revoked || !sk_X509_REVOKED_push(inf->revoked, rev)) {
-    OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
     return 0;
   }
-  inf->enc.modified = 1;
+  asn1_encoding_clear(&inf->enc);
   return 1;
 }
 
@@ -389,7 +391,7 @@ int X509_CRL_verify(X509_CRL *crl, EVP_PKEY *pkey) {
 }
 
 int X509_CRL_get0_by_serial(X509_CRL *crl, X509_REVOKED **ret,
-                            ASN1_INTEGER *serial) {
+                            const ASN1_INTEGER *serial) {
   return crl_lookup(crl, ret, serial, NULL);
 }
 
@@ -428,29 +430,29 @@ static int crl_revoked_issuer_match(X509_CRL *crl, X509_NAME *nm,
   return 0;
 }
 
-static struct CRYPTO_STATIC_MUTEX g_crl_sort_lock = CRYPTO_STATIC_MUTEX_INIT;
+static CRYPTO_MUTEX g_crl_sort_lock = CRYPTO_MUTEX_INIT;
 
-static int crl_lookup(X509_CRL *crl, X509_REVOKED **ret, ASN1_INTEGER *serial,
-                      X509_NAME *issuer) {
+static int crl_lookup(X509_CRL *crl, X509_REVOKED **ret,
+                      const ASN1_INTEGER *serial, X509_NAME *issuer) {
   // Use an assert, rather than a runtime error, because returning nothing for a
   // CRL is arguably failing open, rather than closed.
   assert(serial->type == V_ASN1_INTEGER || serial->type == V_ASN1_NEG_INTEGER);
   X509_REVOKED rtmp, *rev;
   size_t idx;
-  rtmp.serialNumber = serial;
+  rtmp.serialNumber = (ASN1_INTEGER *)serial;
   // Sort revoked into serial number order if not already sorted. Do this
   // under a lock to avoid race condition.
 
-  CRYPTO_STATIC_MUTEX_lock_read(&g_crl_sort_lock);
+  CRYPTO_MUTEX_lock_read(&g_crl_sort_lock);
   const int is_sorted = sk_X509_REVOKED_is_sorted(crl->crl->revoked);
-  CRYPTO_STATIC_MUTEX_unlock_read(&g_crl_sort_lock);
+  CRYPTO_MUTEX_unlock_read(&g_crl_sort_lock);
 
   if (!is_sorted) {
-    CRYPTO_STATIC_MUTEX_lock_write(&g_crl_sort_lock);
+    CRYPTO_MUTEX_lock_write(&g_crl_sort_lock);
     if (!sk_X509_REVOKED_is_sorted(crl->crl->revoked)) {
       sk_X509_REVOKED_sort(crl->crl->revoked);
     }
-    CRYPTO_STATIC_MUTEX_unlock_write(&g_crl_sort_lock);
+    CRYPTO_MUTEX_unlock_write(&g_crl_sort_lock);
   }
 
   if (!sk_X509_REVOKED_find(crl->crl->revoked, &idx, &rtmp)) {

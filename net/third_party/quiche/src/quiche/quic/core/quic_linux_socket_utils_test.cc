@@ -142,7 +142,7 @@ TEST_F(QuicLinuxSocketUtilsTest, QuicMsgHdr) {
   for (bool is_ipv4 : {true, false}) {
     QuicIpAddress self_addr =
         is_ipv4 ? QuicIpAddress::Loopback4() : QuicIpAddress::Loopback6();
-    char cbuf[kCmsgSpaceForIp + kCmsgSpaceForTTL];
+    alignas(cmsghdr) char cbuf[kCmsgSpaceForIp + kCmsgSpaceForTTL];
     QuicMsgHdr quic_hdr(packet_buf, sizeof(packet_buf), peer_addr, cbuf,
                         sizeof(cbuf));
     msghdr* hdr = const_cast<msghdr*>(quic_hdr.hdr());
@@ -178,7 +178,7 @@ TEST_F(QuicLinuxSocketUtilsTest, QuicMMsgHdr) {
       QuicSocketAddress(QuicIpAddress::Loopback6(), 6));
 
   QuicMMsgHdr quic_mhdr_without_cbuf(buffered_writes.begin(),
-                                     buffered_writes.end(), 0, nullptr);
+                                     buffered_writes.end(), 0);
   for (size_t i = 0; i < buffered_writes.size(); ++i) {
     const BufferedWrite& bw = buffered_writes[i];
     CheckMsghdrWithoutCbuf(&quic_mhdr_without_cbuf.mhdr()[i].msg_hdr, bw.buffer,

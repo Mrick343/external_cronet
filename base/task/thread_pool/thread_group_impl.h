@@ -27,7 +27,7 @@
 #include "base/task/thread_pool/thread_group.h"
 #include "base/task/thread_pool/tracked_ref.h"
 #include "base/task/thread_pool/worker_thread.h"
-#include "base/task/thread_pool/worker_thread_stack.h"
+#include "base/task/thread_pool/worker_thread_set.h"
 #include "base/time/time.h"
 #include "third_party/abseil-cpp/absl/types/optional.h"
 
@@ -89,9 +89,9 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
 
   ThreadGroupImpl(const ThreadGroupImpl&) = delete;
   ThreadGroupImpl& operator=(const ThreadGroupImpl&) = delete;
-  // Destroying a ThreadGroupImpl returned by Create() is not allowed in
-  // production; it is always leaked. In tests, it can only be destroyed after
-  // JoinForTesting() has returned.
+  // Destroying a ThreadGroupImpl is not allowed in production; it is always
+  // leaked. In tests, it can only be destroyed after JoinForTesting() has
+  // returned.
   ~ThreadGroupImpl() override;
 
   // ThreadGroup:
@@ -104,7 +104,7 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
   // disallowed from cleaning up during this call: tests using a custom
   // |suggested_reclaim_time_| need to be careful to invoke this swiftly after
   // unblocking the waited upon workers as: if a worker is already detached by
-  // the time this is invoked, it will never make it onto the idle stack and
+  // the time this is invoked, it will never make it onto the idle set and
   // this call will hang.
   void WaitForWorkersIdleForTesting(size_t n);
 
@@ -146,8 +146,7 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
   // ThreadGroup:
   void UpdateSortKey(TaskSource::Transaction transaction) override;
   void PushTaskSourceAndWakeUpWorkers(
-      TransactionWithRegisteredTaskSource transaction_with_task_source)
-      override;
+      RegisteredTaskSourceAndTransaction transaction_with_task_source) override;
   void EnsureEnoughWorkersLockRequired(BaseScopedCommandsExecutor* executor)
       override EXCLUSIVE_LOCKS_REQUIRED(lock_);
 
@@ -156,15 +155,12 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
   void MaintainAtLeastOneIdleWorkerLockRequired(
       ScopedCommandsExecutor* executor) EXCLUSIVE_LOCKS_REQUIRED(lock_);
 
-  // Returns true if worker cleanup is permitted.
-  bool CanWorkerCleanupForTestingLockRequired() EXCLUSIVE_LOCKS_REQUIRED(lock_);
-
   // Creates a worker, adds it to the thread group, schedules its start and
   // returns it. Cannot be called before Start().
-  scoped_refptr<WorkerThread> CreateAndRegisterWorkerLockRequired(
+  scoped_refptr<WorkerThreadWaitableEvent> CreateAndRegisterWorkerLockRequired(
       ScopedCommandsExecutor* executor) EXCLUSIVE_LOCKS_REQUIRED(lock_);
 
-  // Returns the number of workers that are awake (i.e. not on the idle stack).
+  // Returns the number of workers that are awake (i.e. not on the idle set).
   size_t GetNumAwakeWorkersLockRequired() const EXCLUSIVE_LOCKS_REQUIRED(lock_);
 
   // Returns the desired number of awake workers, given current workload and
@@ -208,7 +204,7 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
   // or when a new task is added to |priority_queue_|.
   void UpdateMinAllowedPriorityLockRequired() EXCLUSIVE_LOCKS_REQUIRED(lock_);
 
-  bool IsOnIdleStackLockRequired(WorkerThread* worker) const
+  bool IsOnIdleSetLockRequired(WorkerThreadWaitableEvent* worker) const
       EXCLUSIVE_LOCKS_REQUIRED(lock_);
 
   // Increments/decrements the number of tasks of |priority| that are currently
@@ -259,6 +255,11 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
     // The period between calls to AdjustMaxTasks() when the thread group is at
     // capacity.
     TimeDelta blocked_workers_poll_period;
+
+    // Whether EnsureEnoughWorkersLockRequired() should be called at the end of
+    // GetWork() instead of at the beginning.
+    bool ensure_enough_workers_at_end_of_get_work = false;
+
   } initialized_in_start_;
 
   InitializedInStart& in_start() {
@@ -274,11 +275,14 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
     return initialized_in_start_;
   }
 
+  const std::string histogram_label_;
   const std::string thread_group_label_;
   const ThreadType thread_type_hint_;
 
   // All workers owned by this thread group.
-  std::vector<scoped_refptr<WorkerThread>> workers_ GUARDED_BY(lock_);
+  std::vector<scoped_refptr<WorkerThreadWaitableEvent>> workers_
+      GUARDED_BY(lock_);
+  size_t worker_sequence_num_ GUARDED_BY(lock_) = 0;
 
   bool shutdown_started_ GUARDED_BY(lock_) = false;
 
@@ -298,15 +302,16 @@ class BASE_EXPORT ThreadGroupImpl : public ThreadGroup {
   int num_unresolved_may_block_ GUARDED_BY(lock_) = 0;
   int num_unresolved_best_effort_may_block_ GUARDED_BY(lock_) = 0;
 
-  // Stack of idle workers. Initially, all workers are on this stack. A worker
-  // is removed from the stack before its WakeUp() function is called and when
-  // it receives work from GetWork() (a worker calls GetWork() when its sleep
+  // Ordered set of idle workers; the order uses pointer comparison, this is
+  // arbitrary but stable. Initially, all workers are on this set. A worker is
+  // removed from the set before its WakeUp() function is called and when it
+  // receives work from GetWork() (a worker calls GetWork() when its sleep
   // timeout expires, even if its WakeUp() method hasn't been called). A worker
-  // is pushed on this stack when it receives nullptr from GetWork().
-  WorkerThreadStack idle_workers_stack_ GUARDED_BY(lock_);
+  // is inserted on this set when it receives nullptr from GetWork().
+  WorkerThreadSet idle_workers_set_ GUARDED_BY(lock_);
 
-  // Signaled when a worker is added to the idle workers stack.
-  std::unique_ptr<ConditionVariable> idle_workers_stack_cv_for_testing_
+  // Signaled when a worker is added to the idle workers set.
+  std::unique_ptr<ConditionVariable> idle_workers_set_cv_for_testing_
       GUARDED_BY(lock_);
 
   // Whether an AdjustMaxTasks() task was posted to the service thread.

@@ -1,17 +1,18 @@
 #ifndef QUICHE_SPDY_CORE_METADATA_EXTENSION_H_
 #define QUICHE_SPDY_CORE_METADATA_EXTENSION_H_
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
-#include <string>
-#include <vector>
+#include <type_traits>
 
 #include "absl/container/flat_hash_map.h"
 #include "quiche/common/platform/api/quiche_export.h"
+#include "quiche/common/quiche_callbacks.h"
 #include "quiche/spdy/core/hpack/hpack_encoder.h"
 #include "quiche/spdy/core/http2_frame_decoder_adapter.h"
 #include "quiche/spdy/core/http2_header_block.h"
 #include "quiche/spdy/core/spdy_protocol.h"
-#include "quiche/spdy/core/zero_copy_output_buffer.h"
 
 namespace spdy {
 
@@ -21,17 +22,16 @@ namespace spdy {
 // a setting with a setting ID of kMetadataExtensionId and a value of 1.
 //
 // Metadata is represented as a HPACK header block with literal encoding.
-class QUICHE_EXPORT_PRIVATE MetadataVisitor
-    : public spdy::ExtensionVisitorInterface {
+class QUICHE_EXPORT MetadataVisitor : public spdy::ExtensionVisitorInterface {
  public:
   using MetadataPayload = spdy::Http2HeaderBlock;
 
   static_assert(!std::is_copy_constructible<MetadataPayload>::value,
                 "MetadataPayload should be a move-only type!");
 
-  using OnMetadataSupport = std::function<void(bool)>;
+  using OnMetadataSupport = quiche::MultiUseCallback<void(bool)>;
   using OnCompletePayload =
-      std::function<void(spdy::SpdyStreamId, MetadataPayload)>;
+      quiche::MultiUseCallback<void(spdy::SpdyStreamId, MetadataPayload)>;
 
   // The HTTP/2 SETTINGS ID that is used to indicate support for METADATA
   // frames.
@@ -93,7 +93,7 @@ class QUICHE_EXPORT_PRIVATE MetadataVisitor
 
 // This class uses an HpackEncoder to serialize a METADATA block as a series of
 // METADATA frames.
-class QUICHE_EXPORT_PRIVATE MetadataFrameSequence {
+class QUICHE_EXPORT MetadataFrameSequence {
  public:
   MetadataFrameSequence(SpdyStreamId stream_id, spdy::Http2HeaderBlock payload);
 

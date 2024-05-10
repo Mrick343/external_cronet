@@ -4,8 +4,7 @@
 
 package org.chromium.net.impl;
 
-import android.net.http.UrlRequest;
-import android.net.http.UrlResponseInfo;
+import org.chromium.net.UrlResponseInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,8 +16,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Implements the container for basic information about a response. Included in
- * {@link UrlRequest.Callback} callbacks. Each
- * {@link UrlRequest.Callback#onRedirectReceived onRedirectReceived()}
+ * {@link org.chromium.net.UrlRequest.Callback} callbacks. Each
+ * {@link org.chromium.net.UrlRequest.Callback#onRedirectReceived onRedirectReceived()}
  * callback gets a different copy of {@code UrlResponseInfo} describing a particular
  * redirect response.
  */
@@ -32,9 +31,7 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
     private final AtomicLong mReceivedByteCount;
     private final HeaderBlockImpl mHeaders;
 
-    /**
-     * Unmodifiable container of response headers or trailers.
-     */
+    /** Unmodifiable container of response headers or trailers. */
     public static final class HeaderBlockImpl extends HeaderBlock {
         private final List<Map.Entry<String, String>> mAllHeadersList;
         private Map<String, List<String>> mHeadersMap;
@@ -83,9 +80,15 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
      * @param receivedByteCount minimum count of bytes received from the network to process this
      *         request.
      */
-    public UrlResponseInfoImpl(List<String> urlChain, int httpStatusCode, String httpStatusText,
-            List<Map.Entry<String, String>> allHeadersList, boolean wasCached,
-            String negotiatedProtocol, String proxyServer, long receivedByteCount) {
+    public UrlResponseInfoImpl(
+            List<String> urlChain,
+            int httpStatusCode,
+            String httpStatusText,
+            List<Map.Entry<String, String>> allHeadersList,
+            boolean wasCached,
+            String negotiatedProtocol,
+            String proxyServer,
+            long receivedByteCount) {
         mResponseInfoUrlChain = Collections.unmodifiableList(urlChain);
         mHttpStatusCode = httpStatusCode;
         mHttpStatusText = httpStatusText;
@@ -96,15 +99,25 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
         mReceivedByteCount = new AtomicLong(receivedByteCount);
     }
 
-    /**
-     * Constructor for backwards compatibility.  See main constructor above for more info.
-     */
+    /** Constructor for backwards compatibility.  See main constructor above for more info. */
     @Deprecated
-    public UrlResponseInfoImpl(List<String> urlChain, int httpStatusCode, String httpStatusText,
-            List<Map.Entry<String, String>> allHeadersList, boolean wasCached,
-            String negotiatedProtocol, String proxyServer) {
-        this(urlChain, httpStatusCode, httpStatusText, allHeadersList, wasCached,
-                negotiatedProtocol, proxyServer, 0);
+    public UrlResponseInfoImpl(
+            List<String> urlChain,
+            int httpStatusCode,
+            String httpStatusText,
+            List<Map.Entry<String, String>> allHeadersList,
+            boolean wasCached,
+            String negotiatedProtocol,
+            String proxyServer) {
+        this(
+                urlChain,
+                httpStatusCode,
+                httpStatusText,
+                allHeadersList,
+                wasCached,
+                negotiatedProtocol,
+                proxyServer,
+                0);
     }
 
     @Override
@@ -128,8 +141,13 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
     }
 
     @Override
-    public HeaderBlock getHeaders() {
-        return mHeaders;
+    public List<Map.Entry<String, String>> getAllHeadersAsList() {
+        return mHeaders.getAsList();
+    }
+
+    @Override
+    public Map<String, List<String>> getAllHeaders() {
+        return mHeaders.getAsMap();
     }
 
     @Override
@@ -154,19 +172,25 @@ public final class UrlResponseInfoImpl extends UrlResponseInfo {
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "UrlResponseInfo@[%s][%s]: urlChain = %s, "
+        return String.format(
+                Locale.ROOT,
+                "UrlResponseInfo@[%s][%s]: urlChain = %s, "
                         + "httpStatus = %d %s, headers = %s, wasCached = %b, "
                         + "negotiatedProtocol = %s, proxyServer= %s, receivedByteCount = %d",
                 // Prevent asserting on the contents of this string
-                Integer.toHexString(System.identityHashCode(this)), getUrl(),
-                getUrlChain().toString(), getHttpStatusCode(), getHttpStatusText(),
-                getHeaders().getAsList().toString(), wasCached(), getNegotiatedProtocol(),
-                getProxyServer(), getReceivedByteCount());
+                Integer.toHexString(System.identityHashCode(this)),
+                getUrl(),
+                getUrlChain().toString(),
+                getHttpStatusCode(),
+                getHttpStatusText(),
+                getAllHeadersAsList().toString(),
+                wasCached(),
+                getNegotiatedProtocol(),
+                getProxyServer(),
+                getReceivedByteCount());
     }
 
-    /**
-     * Sets mReceivedByteCount. Must not be called after request completion or cancellation.
-     */
+    /** Sets mReceivedByteCount. Must not be called after request completion or cancellation. */
     public void setReceivedByteCount(long currentReceivedByteCount) {
         mReceivedByteCount.set(currentReceivedByteCount);
     }

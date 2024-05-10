@@ -6,8 +6,8 @@
 
 #include <utility>
 
-#include "base/bind.h"
 #include "base/feature_list.h"
+#include "base/functional/bind.h"
 #include "base/json/json_reader.h"
 #include "base/logging.h"
 #include "base/memory/weak_ptr.h"
@@ -309,8 +309,8 @@ class ReportingServiceImpl : public ReportingService {
   bool initialized_ = false;
   std::vector<base::OnceClosure> task_backlog_;
 
-  bool respect_network_anonymization_key_ = base::FeatureList::IsEnabled(
-      features::kPartitionNelAndReportingByNetworkIsolationKey);
+  bool respect_network_anonymization_key_ =
+      NetworkAnonymizationKey::IsPartitioningEnabled();
 
   // Allows returning a NetworkAnonymizationKey by reference when
   // |respect_network_anonymization_key_| is false.

@@ -218,4 +218,12 @@ QUIC_PROTOCOL_FLAG(bool, quic_enforce_strict_amplification_factor, false,
 QUIC_PROTOCOL_FLAG(bool, quic_bounded_crypto_send_buffer, false,
                    "If true, close the connection if a crypto send buffer "
                    "exceeds its size limit.")
+
+QUIC_PROTOCOL_FLAG(bool, quic_interval_set_enable_add_optimization, true,
+                   "If true, enable an optimization in QuicIntervalSet")
+
+QUIC_PROTOCOL_FLAG(
+    bool, quic_enable_chaos_protection, true,
+    "If true, use chaos protection to randomize client initials.")
+
 #endif

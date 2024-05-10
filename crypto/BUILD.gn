@@ -39,7 +39,6 @@ component("crypto") {
     "random.h",
     "rsa_private_key.cc",
     "rsa_private_key.h",
-    "scoped_capi_types.h",
     "scoped_nss_types.h",
     "secure_hash.cc",
     "secure_hash.h",
@@ -57,15 +56,14 @@ component("crypto") {
     "unexportable_key.h",
     "unexportable_key_metrics.cc",
     "unexportable_key_metrics.h",
+    "unexportable_key_software_unsecure.cc",
   ]
 
-  deps = [
-    "//base",
-    "//base/third_party/dynamic_annotations",
-  ]
+  deps = [ "//base/third_party/dynamic_annotations" ]
 
   public_deps = [
     ":buildflags",
+    "//base",
     "//third_party/boringssl",
   ]
 
@@ -112,8 +110,8 @@ component("crypto") {
   }
   if (is_win) {
     sources += [
-      "capi_util.cc",
-      "capi_util.h",
+      "scoped_capi_types.h",
+      "scoped_cng_types.h",
       "unexportable_key_win.cc",
     ]
     libs = [ "ncrypt.lib" ]

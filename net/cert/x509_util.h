@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "base/containers/span.h"
-#include "base/memory/ref_counted.h"
+#include "base/memory/scoped_refptr.h"
 #include "base/strings/string_piece.h"
 #include "base/time/time.h"
 #include "crypto/signature_verifier.h"
@@ -20,6 +20,7 @@
 #include "net/base/net_export.h"
 #include "third_party/boringssl/src/include/openssl/base.h"
 #include "third_party/boringssl/src/include/openssl/pool.h"
+#include "third_party/boringssl/src/pki/parsed_certificate.h"
 
 namespace crypto {
 class RSAPrivateKey;
@@ -27,7 +28,6 @@ class RSAPrivateKey;
 
 namespace net {
 
-struct ParseCertificateOptions;
 class X509Certificate;
 
 namespace x509_util {
@@ -112,7 +112,7 @@ NET_EXPORT bssl::UniquePtr<CRYPTO_BUFFER> CreateCryptoBuffer(
 
 // Creates a CRYPTO_BUFFER in the same pool returned by GetBufferPool.
 NET_EXPORT bssl::UniquePtr<CRYPTO_BUFFER> CreateCryptoBuffer(
-    const base::StringPiece& data);
+    base::StringPiece data);
 
 // Overload with no definition, to disallow creating a CRYPTO_BUFFER from a
 // char* due to StringPiece implicit ctor.
@@ -151,7 +151,7 @@ NET_EXPORT bool CreateCertBuffersFromPKCS7Bytes(
     std::vector<bssl::UniquePtr<CRYPTO_BUFFER>>* handles);
 
 // Returns the default ParseCertificateOptions for the net stack.
-NET_EXPORT ParseCertificateOptions DefaultParseCertificateOptions();
+NET_EXPORT bssl::ParseCertificateOptions DefaultParseCertificateOptions();
 
 // On success, returns true and updates |hash| to be the SHA-256 hash of the
 // subjectPublicKeyInfo of the certificate in |buffer|. If |buffer| is not a

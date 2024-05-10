@@ -9,42 +9,81 @@ below:
 ### General Purpose Fragments
 
 #### archivist.shard.test-cml
-Runs an `archivist-without-attribution` with custom protocol routing for tests
+Runs an `archivist-for-embedding` with custom protocol routing for tests
 that want to intercept events written to a `LogSink` by a component.
 
 #### chromium_test_facet.shard.test-cml
-Runs CFv2 tests in the "chromium" test realm. This is generally required for all
-Chromium tests that must interact with true system services.
+Runs tests in the `chromium` test realm, which is mostly hermetic but has
+access to specific system services that cannot (currently) be faked. For more
+information, see https://fxbug.dev/91934. This is generally required for all
+Chromium tests not using the
+[`chromium_system_test_facet`](#chromium_system_test_facetshardtest-cml).
 
 #### fonts.shard.test-cml
-For tests that test fonts by providing `fuchsia.fonts.Provider`. This shard
-runs an isolated font provider, but serves the fonts present on the system.
+For tests that need `fuchsia.fonts.Provider` to provide a basic set of fonts.
+This shard runs an isolated font provider with fonts bundled into the fonts
+package.
 
 #### test_fonts.shard.test-cml
-For tests that use the fonts in `//third_party/test_fonts` by way of
-`//skia:test_fonts_cfv2`.
+For tests that need `fuchsia.fonts.Provider` to provide a specific set of fonts
+(beyond that provided by `fonts.shard.test-cml`). This shard requires fonts to
+be provided as a directory. The directory must be named `config-data`, must
+contain the file named `all_font_manifest.json`, and all the font files named
+in it. For details see the [font manifest][fm] in Fuchsia documentation.
+
+[fm]: https://fuchsia.dev/fuchsia-src/development/internationalization/fonts/build?hl=en#:font_collection-outputs
+
+The user of this shard must provide a directory `/pkg/test_fonts`, which must
+contain all the files described above.
+
+Within Chromium, these fonts are usually provided via the target
+`//skia:test_fonts`.
 
 #### mark_vmo_executable.shard.test-cml
 Required by tests that execute JavaScript. Should only be required in a small
 number of tests.
 
-#### minimum_capabilites.test-cmx and minimum.shard.test-cml
-Capabilities required by anything that uses `//base/test`, used as the base
-fragment for all test suites.
+#### minimum.shard.test-cml
+Capabilities required by anything that uses `//base/test` when running in the
+(default) `chromium` test realm. It is the default base fragment for most
+`test()` Components.
 
-`config-data` is included in the features list so that the platform can offer
-ICU timezone data to these tests when they are being run.  A more general
-approach is discussed in https://fxbug.dev/85845.
-
-#### read_debug_data.test-cmx
-Required by tests that need access to its debug directory. Should only be
-required in a small number of tests.
+The system-wide `config-data` directory capability is routed to tests running in
+the realm so that individual tests may route subdirectories as needed.
+TODO(crbug.com/1360077): Remove this after migrating to the new mechanism.
 
 #### logger.shard.test-cml
 For tests that test logging functionality by providing `fuchsia.logger.Log`.
 
+#### sysmem.shard.test-cml
+For tests that depend on the sysmem service (e.g. to allocate image buffers to
+share with Vulkan and Scenic).
+
+#### system_test_minimum.shard.test-cml
+Capabilities required by anything that uses `//base/test` when running as a
+system test in the `chromium-system` test realm. It is the base fragment for
+`test()` Components that use the
+[`chromium_system_test_facet`](#chromium_system_test_facetshardtest-cml).
+
+Most tests use the [`minimum`](#minimumshardtest-cml) shard.
+
+#### chromium_system_test_facet.shard.test-cml
+Runs tests in the `chromium-system` test realm. This is required for Chromium
+tests that are intended to run against the actual system and its real system
+services. This is required for, for example, performance tests intended to
+measure system performance. Another overlapping use case is tests that need to
+be run in environments without access to the packages containing fake
+implementations of required protocols that other tests use.
+(https://crbug.com/1408597 should make that use case obsolete.)
+
+Most tests should use the
+[`chromium_test_facet`](#chromium_test_facetshardtest-cml).
+
 #### test_ui_stack.shard.test-cml
-For tests that need an isolated Scenic by way of Fuchsia's test-ui-stack.
+For tests that need an isolated UI subsystem, that supports the Flatland
+API set.  This allows tests to e.g. run with view-focus unaffected by any
+other tests running concurrently on the device, as well as providing test-only
+functionality such as input-injection support.
 
 ### WebEngine Fragments
 The following fragments are specific to WebEngine functionality as documented
@@ -65,27 +104,17 @@ support of running on system images that don't run it.
 For tests that need access to network services, including those that access a
 local HTTP server.
 
-#### network_capabilities.test-cmx
+#### network.shard.test-cml
 Corresponds to the `NETWORK` flag. Required for enabling network access. Note
 that access to the root SSL certificates is not needed if ContextProvider is
 used to launch the `Context`. The `fuchsia.device.NameProvider` dependency comes
-from fdio. The injected `netstack.cmx` requires `fuchsia.stash.SecureStore`.
+from fdio.
 
 #### present_view.shard.test-cml
 Services that are needed to render web content in a Scenic view and present it.
 Most services are required per the FIDL documentation.
 
-#### vulkan_capabilities.test-cmx
-Corresponds to the `VULKAN` flag. Required for enabling GPU-accelerated
-rendering of the web content.
-
-CFv2 tests should use
-`//third_party/fuchsia-sdk/sdk/pkg/vulkan/client.shard.cml`.
-
-#### web_instance.shard.test-cml and web_engine_required_capabilities.test-cmx
+#### web_instance.shard.test-cml
 Contains services that need to be present when creating a `fuchsia.web.Context`.
 Note that the `fuchsia.scheduler.ProfileProvider` service is only used in tests
 that encounter memory pressure code.
-
-#### web_instance_host_capabilities.test-cmx and web_instance_host.shard.test-cml
-Contains services that need to be present to use `WebInstanceHost`.

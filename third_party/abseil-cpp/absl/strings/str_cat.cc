@@ -16,101 +16,19 @@
 
 #include <assert.h>
 
-#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <initializer_list>
 #include <string>
 
-#include "absl/strings/ascii.h"
+#include "absl/base/config.h"
 #include "absl/strings/internal/resize_uninitialized.h"
-#include "absl/strings/numbers.h"
 #include "absl/strings/string_view.h"
 
 namespace absl {
 ABSL_NAMESPACE_BEGIN
 
-namespace strings_internal {
-void StringifySink::Append(size_t count, char ch) { buffer_.append(count, ch); }
-
-void StringifySink::Append(string_view v) {
-  buffer_.append(v.data(), v.size());
-}
-
-bool StringifySink::PutPaddedString(string_view v, int width, int precision,
-                                    bool left) {
-  size_t space_remaining = 0;
-
-  if (width >= 0) space_remaining = static_cast<size_t>(width);
-
-  size_t n = v.size();
-
-  if (precision >= 0) n = (std::min)(n, static_cast<size_t>(precision));
-
-  string_view shown(v.data(), n);
-
-  if (shown.size() < space_remaining) {
-    space_remaining = space_remaining - shown.size();
-  } else {
-    space_remaining = 0;
-  }
-
-  if (!left) Append(space_remaining, ' ');
-  Append(shown);
-  if (left) Append(space_remaining, ' ');
-  return true;
-}
-
-}  // namespace strings_internal
-
-AlphaNum::AlphaNum(Hex hex) {
-  static_assert(numbers_internal::kFastToBufferSize >= 32,
-                "This function only works when output buffer >= 32 bytes long");
-  char* const end = &digits_[numbers_internal::kFastToBufferSize];
-  auto real_width =
-      absl::numbers_internal::FastHexToBufferZeroPad16(hex.value, end - 16);
-  if (real_width >= hex.width) {
-    piece_ = absl::string_view(end - real_width, real_width);
-  } else {
-    // Pad first 16 chars because FastHexToBufferZeroPad16 pads only to 16 and
-    // max pad width can be up to 20.
-    std::memset(end - 32, hex.fill, 16);
-    // Patch up everything else up to the real_width.
-    std::memset(end - real_width - 16, hex.fill, 16);
-    piece_ = absl::string_view(end - hex.width, hex.width);
-  }
-}
-
-AlphaNum::AlphaNum(Dec dec) {
-  assert(dec.width <= numbers_internal::kFastToBufferSize);
-  char* const end = &digits_[numbers_internal::kFastToBufferSize];
-  char* const minfill = end - dec.width;
-  char* writer = end;
-  uint64_t value = dec.value;
-  bool neg = dec.neg;
-  while (value > 9) {
-    *--writer = '0' + (value % 10);
-    value /= 10;
-  }
-  *--writer = '0' + static_cast<char>(value);
-  if (neg) *--writer = '-';
-
-  ptrdiff_t fillers = writer - minfill;
-  if (fillers > 0) {
-    // Tricky: if the fill character is ' ', then it's <fill><+/-><digits>
-    // But...: if the fill character is '0', then it's <+/-><fill><digits>
-    bool add_sign_again = false;
-    if (neg && dec.fill == '0') {  // If filling with '0',
-      ++writer;                    // ignore the sign we just added
-      add_sign_again = true;       // and re-add the sign later.
-    }
-    writer -= fillers;
-    std::fill_n(writer, fillers, dec.fill);
-    if (add_sign_again) *--writer = '-';
-  }
-
-  piece_ = absl::string_view(writer, static_cast<size_t>(end - writer));
-}
 
 // ----------------------------------------------------------------------
 // StrCat()
@@ -119,9 +37,10 @@ AlphaNum::AlphaNum(Dec dec) {
 //    of a mix of raw C strings, string_views, strings, and integer values.
 // ----------------------------------------------------------------------
 
+namespace {
 // Append is merely a version of memcpy that returns the address of the byte
 // after the area just overwritten.
-static char* Append(char* out, const AlphaNum& x) {
+inline char* Append(char* out, const AlphaNum& x) {
   // memcpy is allowed to overwrite arbitrary memory, so doing this after the
   // call would force an extra fetch of x.size().
   char* after = out + x.size();
@@ -130,6 +49,13 @@ static char* Append(char* out, const AlphaNum& x) {
   }
   return after;
 }
+
+inline void STLStringAppendUninitializedAmortized(std::string* dest,
+                                                  size_t to_append) {
+  strings_internal::AppendUninitializedTraits<std::string>::Append(dest,
+                                                                   to_append);
+}
+}  // namespace
 
 std::string StrCat(const AlphaNum& a, const AlphaNum& b) {
   std::string result;
@@ -177,12 +103,12 @@ namespace strings_internal {
 std::string CatPieces(std::initializer_list<absl::string_view> pieces) {
   std::string result;
   size_t total_size = 0;
-  for (const absl::string_view& piece : pieces) total_size += piece.size();
+  for (absl::string_view piece : pieces) total_size += piece.size();
   strings_internal::STLStringResizeUninitialized(&result, total_size);
 
   char* const begin = &result[0];
   char* out = begin;
-  for (const absl::string_view& piece : pieces) {
+  for (absl::string_view piece : pieces) {
     const size_t this_size = piece.size();
     if (this_size != 0) {
       memcpy(out, piece.data(), this_size);
@@ -205,16 +131,16 @@ std::string CatPieces(std::initializer_list<absl::string_view> pieces) {
 void AppendPieces(std::string* dest,
                   std::initializer_list<absl::string_view> pieces) {
   size_t old_size = dest->size();
-  size_t total_size = old_size;
-  for (const absl::string_view& piece : pieces) {
+  size_t to_append = 0;
+  for (absl::string_view piece : pieces) {
     ASSERT_NO_OVERLAP(*dest, piece);
-    total_size += piece.size();
+    to_append += piece.size();
   }
-  strings_internal::STLStringResizeUninitializedAmortized(dest, total_size);
+  STLStringAppendUninitializedAmortized(dest, to_append);
 
   char* const begin = &(*dest)[0];
   char* out = begin + old_size;
-  for (const absl::string_view& piece : pieces) {
+  for (absl::string_view piece : pieces) {
     const size_t this_size = piece.size();
     if (this_size != 0) {
       memcpy(out, piece.data(), this_size);
@@ -228,15 +154,19 @@ void AppendPieces(std::string* dest,
 
 void StrAppend(std::string* dest, const AlphaNum& a) {
   ASSERT_NO_OVERLAP(*dest, a);
-  dest->append(a.data(), a.size());
+  std::string::size_type old_size = dest->size();
+  STLStringAppendUninitializedAmortized(dest, a.size());
+  char* const begin = &(*dest)[0];
+  char* out = begin + old_size;
+  out = Append(out, a);
+  assert(out == begin + dest->size());
 }
 
 void StrAppend(std::string* dest, const AlphaNum& a, const AlphaNum& b) {
   ASSERT_NO_OVERLAP(*dest, a);
   ASSERT_NO_OVERLAP(*dest, b);
   std::string::size_type old_size = dest->size();
-  strings_internal::STLStringResizeUninitializedAmortized(
-      dest, old_size + a.size() + b.size());
+  STLStringAppendUninitializedAmortized(dest, a.size() + b.size());
   char* const begin = &(*dest)[0];
   char* out = begin + old_size;
   out = Append(out, a);
@@ -250,8 +180,7 @@ void StrAppend(std::string* dest, const AlphaNum& a, const AlphaNum& b,
   ASSERT_NO_OVERLAP(*dest, b);
   ASSERT_NO_OVERLAP(*dest, c);
   std::string::size_type old_size = dest->size();
-  strings_internal::STLStringResizeUninitializedAmortized(
-      dest, old_size + a.size() + b.size() + c.size());
+  STLStringAppendUninitializedAmortized(dest, a.size() + b.size() + c.size());
   char* const begin = &(*dest)[0];
   char* out = begin + old_size;
   out = Append(out, a);
@@ -267,8 +196,8 @@ void StrAppend(std::string* dest, const AlphaNum& a, const AlphaNum& b,
   ASSERT_NO_OVERLAP(*dest, c);
   ASSERT_NO_OVERLAP(*dest, d);
   std::string::size_type old_size = dest->size();
-  strings_internal::STLStringResizeUninitializedAmortized(
-      dest, old_size + a.size() + b.size() + c.size() + d.size());
+  STLStringAppendUninitializedAmortized(
+      dest, a.size() + b.size() + c.size() + d.size());
   char* const begin = &(*dest)[0];
   char* out = begin + old_size;
   out = Append(out, a);

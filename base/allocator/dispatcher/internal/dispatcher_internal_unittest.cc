@@ -6,6 +6,7 @@
 #include "base/allocator/dispatcher/testing/dispatcher_test.h"
 #include "base/allocator/dispatcher/testing/observer_mock.h"
 #include "base/allocator/dispatcher/testing/tools.h"
+#include "base/allocator/partition_allocator/src/partition_alloc/partition_alloc_buildflags.h"
 #include "base/dcheck_is_on.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
@@ -65,6 +66,14 @@ struct AllocationEventDispatcherInternalTest : public DispatcherTest {
                                            void*) {
     return GetEstimatedSize();
   }
+  static size_t good_size_function(const AllocatorDispatch*,
+                                   size_t size,
+                                   void*) {
+    return size;
+  }
+  static bool claimed_address_function(const AllocatorDispatch*, void*, void*) {
+    return GetEstimatedSize();
+  }
   static unsigned batch_malloc_function(const AllocatorDispatch*,
                                         size_t,
                                         void**,
@@ -94,9 +103,12 @@ struct AllocationEventDispatcherInternalTest : public DispatcherTest {
       &realloc_function,
       [](const AllocatorDispatch*, void*, void*) {},
       &get_size_estimate_function,
+      &good_size_function,
+      &claimed_address_function,
       &batch_malloc_function,
       [](const AllocatorDispatch*, void**, unsigned, void*) {},
       [](const AllocatorDispatch*, void*, size_t, void*) {},
+      [](const AllocatorDispatch*, void*, void*) {},
       &aligned_malloc_function,
       &aligned_realloc_function,
       [](const AllocatorDispatch*, void*, void*) {}};
@@ -159,7 +171,9 @@ TEST_F(AllocationEventDispatcherInternalTest,
   const auto dispatch_data =
       GetNotificationHooks(CreateTupleOfPointers(observers));
 
-  dispatch_data.GetAllocationObserverHook()(this, sizeof(*this), nullptr);
+  dispatch_data.GetAllocationObserverHook()(
+      partition_alloc::AllocationNotificationData(this, sizeof(*this),
+                                                  nullptr));
 }
 
 TEST_F(AllocationEventDispatcherInternalTest,
@@ -175,7 +189,8 @@ TEST_F(AllocationEventDispatcherInternalTest,
   const auto dispatch_data =
       GetNotificationHooks(CreateTupleOfPointers(observers));
 
-  dispatch_data.GetFreeObserverHook()(this);
+  dispatch_data.GetFreeObserverHook()(
+      partition_alloc::FreeNotificationData(this));
 }
 #endif
 
@@ -194,9 +209,11 @@ TEST_F(AllocationEventDispatcherInternalTest, VerifyAllocatorShimDataIsSet) {
   EXPECT_NE(nullptr, allocator_dispatch->realloc_function);
   EXPECT_NE(nullptr, allocator_dispatch->free_function);
   EXPECT_NE(nullptr, allocator_dispatch->get_size_estimate_function);
+  EXPECT_NE(nullptr, allocator_dispatch->claimed_address_function);
   EXPECT_NE(nullptr, allocator_dispatch->batch_malloc_function);
   EXPECT_NE(nullptr, allocator_dispatch->batch_free_function);
   EXPECT_NE(nullptr, allocator_dispatch->free_definite_size_function);
+  EXPECT_NE(nullptr, allocator_dispatch->try_free_default_function);
   EXPECT_NE(nullptr, allocator_dispatch->aligned_malloc_function);
   EXPECT_NE(nullptr, allocator_dispatch->aligned_realloc_function);
   EXPECT_NE(nullptr, allocator_dispatch->aligned_free_function);
@@ -446,6 +463,27 @@ TEST_F(AllocationEventDispatcherInternalTest,
 
   allocator_dispatch->free_definite_size_function(
       allocator_dispatch, GetAllocatedAddress(), GetAllocatedSize(), nullptr);
+}
+
+TEST_F(AllocationEventDispatcherInternalTest,
+       VerifyAllocatorShimHooksTriggerCorrectly_try_free_default_function) {
+  std::array<ObserverMock, kMaximumNumberOfObservers> observers;
+
+  for (auto& mock : observers) {
+    EXPECT_CALL(mock, OnFree(GetAllocatedAddress())).Times(1);
+    EXPECT_CALL(mock, OnAllocation(_, _, _, _)).Times(0);
+  }
+
+  DispatchData const dispatch_data =
+      GetNotificationHooks(CreateTupleOfPointers(observers));
+
+  auto* const allocator_dispatch = dispatch_data.GetAllocatorDispatch();
+  EXPECT_NE(allocator_dispatch->try_free_default_function, nullptr);
+
+  allocator_dispatch->next = GetNextAllocatorDispatch();
+
+  allocator_dispatch->try_free_default_function(allocator_dispatch,
+                                                GetAllocatedAddress(), nullptr);
 }
 
 TEST_F(AllocationEventDispatcherInternalTest,

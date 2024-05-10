@@ -30,6 +30,7 @@
 #include "net/http/transport_security_state.h"
 #include "net/http/transport_security_state_test_util.h"
 #include "net/quic/crypto/proof_source_chromium.h"
+#include "net/quic/quic_context.h"
 #include "net/test/cert_test_util.h"
 #include "net/test/ct_test_util.h"
 #include "net/test/test_data_directory.h"
@@ -45,7 +46,7 @@ namespace net::test {
 
 namespace {
 
-const char kCTAndPKPHost[] = "pkp-expect-ct.preloaded.test";
+const char kCTAndPKPHost[] = "hsts-hpkp-preloaded.test";
 
 // CertVerifier that will fail the test if it is ever called.
 class FailsTestCertVerifier : public CertVerifier {
@@ -63,6 +64,8 @@ class FailsTestCertVerifier : public CertVerifier {
     return ERR_FAILED;
   }
   void SetConfig(const Config& config) override {}
+  void AddObserver(Observer* observer) override {}
+  void RemoveObserver(Observer* observer) override {}
 };
 
 // A mock CTPolicyEnforcer that returns a custom verification result.
@@ -134,7 +137,7 @@ const char kLogDescription[] = "somelog";
 // This test exercises code that does not depend on the QUIC version in use
 // but that still requires a version so we just use the first one.
 const quic::QuicTransportVersion kTestTransportVersion =
-    quic::AllSupportedVersions().front().transport_version;
+    AllSupportedQuicVersions().front().transport_version;
 
 }  // namespace
 
@@ -450,50 +453,6 @@ TEST_F(ProofVerifierChromiumTest, PreservesEVIfAllowed) {
             verify_details->cert_verify_result.cert_status);
 }
 
-// Tests that the certificate policy enforcer is consulted for EV
-// and the certificate is not allowed to be EV.
-TEST_F(ProofVerifierChromiumTest, StripsEVIfNotAllowed) {
-  dummy_result_.cert_status = CERT_STATUS_IS_EV;
-
-  MockCertVerifier dummy_verifier;
-  dummy_verifier.AddResultForCert(test_cert_.get(), dummy_result_, OK);
-
-  EXPECT_CALL(ct_policy_enforcer_, CheckCompliance(_, _, _))
-      .WillRepeatedly(
-          Return(ct::CTPolicyCompliance::CT_POLICY_NOT_ENOUGH_SCTS));
-
-  ProofVerifierChromium proof_verifier(&dummy_verifier, &ct_policy_enforcer_,
-                                       &transport_security_state_, nullptr, {},
-                                       NetworkAnonymizationKey());
-
-  auto callback = std::make_unique<DummyProofVerifierCallback>();
-  quic::QuicAsyncStatus status = proof_verifier.VerifyProof(
-      kTestHostname, kTestPort, kTestConfig, kTestTransportVersion,
-      kTestChloHash, certs_, kTestEmptySCT, GetTestSignature(),
-      verify_context_.get(), &error_details_, &details_, std::move(callback));
-  ASSERT_EQ(quic::QUIC_SUCCESS, status);
-
-  ASSERT_TRUE(details_.get());
-  ProofVerifyDetailsChromium* verify_details =
-      static_cast<ProofVerifyDetailsChromium*>(details_.get());
-  EXPECT_EQ(CERT_STATUS_CT_COMPLIANCE_FAILED,
-            verify_details->cert_verify_result.cert_status &
-                (CERT_STATUS_CT_COMPLIANCE_FAILED | CERT_STATUS_IS_EV));
-
-  callback = std::make_unique<DummyProofVerifierCallback>();
-  status = proof_verifier.VerifyCertChain(
-      kTestHostname, kTestPort, certs_, kTestEmptyOCSPResponse, kTestEmptySCT,
-      verify_context_.get(), &error_details_, &details_, &tls_alert_,
-      std::move(callback));
-  ASSERT_EQ(quic::QUIC_SUCCESS, status);
-
-  ASSERT_TRUE(details_.get());
-  verify_details = static_cast<ProofVerifyDetailsChromium*>(details_.get());
-  EXPECT_EQ(CERT_STATUS_CT_COMPLIANCE_FAILED,
-            verify_details->cert_verify_result.cert_status &
-                (CERT_STATUS_CT_COMPLIANCE_FAILED | CERT_STATUS_IS_EV));
-}
-
 HashValueVector MakeHashValueVector(uint8_t tag) {
   HashValue hash(HASH_VALUE_SHA256);
   memset(hash.data(), tag, hash.size());
@@ -723,6 +682,8 @@ TEST_F(ProofVerifierChromiumTest, PKPReport) {
   EXPECT_EQ(report_uri, report_sender.latest_report_uri());
   EXPECT_EQ(network_anonymization_key,
             report_sender.latest_network_anonymization_key());
+
+  transport_security_state_.SetReportSender(nullptr);
 }
 
 // Test that when CT is required (in this case, by the delegate), the
@@ -775,6 +736,8 @@ TEST_F(ProofVerifierChromiumTest, CTIsRequired) {
   verify_details = static_cast<ProofVerifyDetailsChromium*>(details_.get());
   EXPECT_TRUE(verify_details->cert_verify_result.cert_status &
               CERT_STATUS_CERTIFICATE_TRANSPARENCY_REQUIRED);
+
+  transport_security_state_.SetRequireCTDelegate(nullptr);
 }
 
 // Test that CT is considered even when PKP fails.
@@ -838,6 +801,8 @@ TEST_F(ProofVerifierChromiumTest, PKPAndCTBothTested) {
               CERT_STATUS_PINNED_KEY_MISSING);
   EXPECT_TRUE(verify_details->cert_verify_result.cert_status &
               CERT_STATUS_CERTIFICATE_TRANSPARENCY_REQUIRED);
+
+  transport_security_state_.SetRequireCTDelegate(nullptr);
 }
 
 TEST_F(ProofVerifierChromiumTest, UnknownRootRejected) {

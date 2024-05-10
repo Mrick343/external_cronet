@@ -3,28 +3,22 @@
 // found in the LICENSE file.
 package org.chromium.net.impl;
 
-import static android.net.http.ExperimentalHttpEngine.UNBIND_NETWORK_HANDLE;
-
 import android.annotation.SuppressLint;
-import android.net.Network;
+import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
 
-import android.net.http.HttpEngine;
-import android.net.http.ExperimentalUrlRequest;
-import android.net.http.RequestFinishedInfo;
-import android.net.http.UploadDataProvider;
-import android.net.http.UrlRequest;
-
-import androidx.annotation.Nullable;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.ExperimentalUrlRequest;
+import org.chromium.net.RequestFinishedInfo;
+import org.chromium.net.UploadDataProvider;
+import org.chromium.net.UrlRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Executor;
 
-/**
- * Implements {@link ExperimentalUrlRequest.Builder}.
- */
+/** Implements {@link org.chromium.net.ExperimentalUrlRequest.Builder}. */
 public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     private static final String ACCEPT_ENCODING = "Accept-Encoding";
     private static final String TAG = UrlRequestBuilderImpl.class.getSimpleName();
@@ -50,8 +44,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     // Disable connection migration for just this request.
     private boolean mDisableConnectionMigration;
     // Priority of request. Default is medium.
-    @CronetEngineBase.RequestPriority
-    private int mPriority = REQUEST_PRIORITY_MEDIUM;
+    @CronetEngineBase.RequestPriority private int mPriority = REQUEST_PRIORITY_MEDIUM;
     // Request reporting annotations. Avoid extra object creation if no annotations added.
     private Collection<Object> mRequestAnnotations;
     // If request is an upload, this provides the request body data.
@@ -66,8 +59,7 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     private RequestFinishedInfo.Listener mRequestFinishedListener;
     private long mNetworkHandle = CronetEngineBase.DEFAULT_NETWORK_HANDLE;
     // Idempotency of the request.
-    @CronetEngineBase.Idempotency
-    private int mIdempotency = DEFAULT_IDEMPOTENCY;
+    @CronetEngineBase.Idempotency private int mIdempotency = DEFAULT_IDEMPOTENCY;
 
     /**
      * Creates a builder for {@link UrlRequest} objects. All callbacks for
@@ -79,9 +71,12 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
      * @param url URL for the generated requests.
      * @param callback callback object that gets invoked on different events.
      * @param executor {@link Executor} on which all callbacks will be invoked.
-     * @param cronetEngine {@link HttpEngine} used to execute this request.
+     * @param cronetEngine {@link CronetEngine} used to execute this request.
      */
-    UrlRequestBuilderImpl(String url, UrlRequest.Callback callback, Executor executor,
+    UrlRequestBuilderImpl(
+            String url,
+            UrlRequest.Callback callback,
+            Executor executor,
             CronetEngineBase cronetEngine) {
         super();
         if (url == null) {
@@ -120,7 +115,9 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
             throw new NullPointerException("Invalid header value.");
         }
         if (ACCEPT_ENCODING.equalsIgnoreCase(header)) {
-            Log.w(TAG, "It's not necessary to set Accept-Encoding on requests - cronet will do"
+            Log.w(
+                    TAG,
+                    "It's not necessary to set Accept-Encoding on requests - cronet will do"
                             + " this automatically for you, and setting it yourself has no "
                             + "effect. See https://crbug.com/581399 for details.",
                     new Exception());
@@ -210,22 +207,35 @@ public class UrlRequestBuilderImpl extends ExperimentalUrlRequest.Builder {
     }
 
     @Override
-    public UrlRequestBuilderImpl bindToNetwork(@Nullable Network network) {
-        if (network == null) {
-            mNetworkHandle = UNBIND_NETWORK_HANDLE;
-        } else {
-            mNetworkHandle = network.getNetworkHandle();
+    public UrlRequestBuilderImpl bindToNetwork(long networkHandle) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            throw new UnsupportedOperationException(
+                    "The multi-network API is available starting from Android Marshmallow");
         }
+        mNetworkHandle = networkHandle;
         return this;
     }
 
     @Override
     public UrlRequestBase build() {
         @SuppressLint("WrongConstant") // TODO(jbudorick): Remove this after rolling to the N SDK.
-        final UrlRequestBase request = mCronetEngine.createRequest(mUrl, mCallback, mExecutor,
-                mPriority, mRequestAnnotations, mDisableCache, mDisableConnectionMigration,
-                mAllowDirectExecutor, mTrafficStatsTagSet, mTrafficStatsTag, mTrafficStatsUidSet,
-                mTrafficStatsUid, mRequestFinishedListener, mIdempotency, mNetworkHandle);
+        final UrlRequestBase request =
+                mCronetEngine.createRequest(
+                        mUrl,
+                        mCallback,
+                        mExecutor,
+                        mPriority,
+                        mRequestAnnotations,
+                        mDisableCache,
+                        mDisableConnectionMigration,
+                        mAllowDirectExecutor,
+                        mTrafficStatsTagSet,
+                        mTrafficStatsTag,
+                        mTrafficStatsUidSet,
+                        mTrafficStatsUid,
+                        mRequestFinishedListener,
+                        mIdempotency,
+                        mNetworkHandle);
         if (mMethod != null) {
             request.setHttpMethod(mMethod);
         }

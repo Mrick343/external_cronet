@@ -12,7 +12,7 @@
 
 #include "base/compiler_specific.h"
 #include "base/memory/raw_ptr.h"
-#include "base/memory/ref_counted.h"
+#include "base/memory/scoped_refptr.h"
 #include "base/memory/weak_ptr.h"
 #include "base/time/time.h"
 #include "net/base/load_timing_info.h"
@@ -229,7 +229,7 @@ class NET_EXPORT BidirectionalStream : public BidirectionalStreamImpl::Delegate,
   std::unique_ptr<BidirectionalStreamRequestInfo> request_info_;
   const NetLogWithSource net_log_;
 
-  raw_ptr<HttpNetworkSession> session_;
+  raw_ptr<HttpNetworkSession, DanglingUntriaged> session_;
 
   bool send_request_headers_automatically_;
   // Whether request headers have been sent, as indicated in OnStreamReady()

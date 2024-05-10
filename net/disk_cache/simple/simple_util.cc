@@ -5,7 +5,6 @@
 #include "net/disk_cache/simple/simple_util.h"
 
 #include <limits>
-#include <zlib.h>
 
 #include "base/check_op.h"
 #include "base/files/file_util.h"
@@ -17,6 +16,7 @@
 #include "base/threading/thread_restrictions.h"
 #include "base/time/time.h"
 #include "net/disk_cache/simple/simple_entry_format.h"
+#include "third_party/zlib/zlib.h"
 
 namespace {
 
@@ -40,7 +40,7 @@ std::string GetEntryHashKeyAsHexString(const std::string& key) {
   return hash_key_str;
 }
 
-bool GetEntryHashKeyFromHexString(const base::StringPiece& hash_key,
+bool GetEntryHashKeyFromHexString(base::StringPiece hash_key,
                                   uint64_t* hash_key_out) {
   if (hash_key.size() != kEntryHashKeyAsHexStringSize) {
     return false;

@@ -5,16 +5,17 @@
 #ifndef BASE_BARRIER_CALLBACK_H_
 #define BASE_BARRIER_CALLBACK_H_
 
+#include <concepts>
 #include <memory>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-#include "base/bind.h"
-#include "base/callback.h"
-#include "base/callback_helpers.h"
 #include "base/check.h"
 #include "base/check_op.h"
+#include "base/functional/bind.h"
+#include "base/functional/callback.h"
+#include "base/functional/callback_helpers.h"
 #include "base/synchronization/lock.h"
 #include "base/template_util.h"
 #include "base/thread_annotations.h"
@@ -96,11 +97,9 @@ template <typename T,
           typename RawArg = base::remove_cvref_t<T>,
           typename DoneArg = std::vector<RawArg>,
           template <typename>
-          class CallbackType,
-          typename std::enable_if<std::is_same<
-              std::vector<RawArg>,
-              base::remove_cvref_t<DoneArg>>::value>::type* = nullptr,
-          typename = base::EnableIfIsBaseCallback<CallbackType>>
+          class CallbackType>
+  requires(std::same_as<std::vector<RawArg>, std::remove_cvref_t<DoneArg>> &&
+           IsBaseCallback<CallbackType<void()>>)
 RepeatingCallback<void(T)> BarrierCallback(
     size_t num_callbacks,
     CallbackType<void(DoneArg)> done_callback) {

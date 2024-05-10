@@ -5,13 +5,30 @@
 #include "components/metrics/metrics_service_observer.h"
 
 #include "base/base64.h"
+#include "base/callback_list.h"
+#include "base/files/file_util.h"
 #include "base/json/json_string_value_serializer.h"
+#include "base/logging.h"
 #include "base/strings/string_number_conversions.h"
 #include "base/time/time.h"
 #include "base/values.h"
+#include "components/metrics/metrics_logs_event_manager.h"
 
 namespace metrics {
 namespace {
+
+MetricsServiceObserver::Log::Event CreateEventStruct(
+    MetricsLogsEventManager::LogEvent event,
+    base::StringPiece message) {
+  MetricsServiceObserver::Log::Event event_struct;
+  event_struct.event = event;
+  event_struct.timestampMs =
+      base::Time::Now().InMillisecondsFSinceUnixEpochIgnoringNull();
+  if (!message.empty()) {
+    event_struct.message = std::string(message);
+  }
+  return event_struct;
+}
 
 std::string LogTypeToString(MetricsLog::LogType log_type) {
   switch (log_type) {
@@ -37,8 +54,38 @@ std::string EventToString(MetricsLogsEventManager::LogEvent event) {
       return "Uploading";
     case MetricsLogsEventManager::LogEvent::kLogUploaded:
       return "Uploaded";
+    case MetricsLogsEventManager::LogEvent::kLogCreated:
+      return "Created";
   }
   NOTREACHED();
+}
+
+std::string CreateReasonToString(
+    metrics::MetricsLogsEventManager::CreateReason reason) {
+  switch (reason) {
+    case MetricsLogsEventManager::CreateReason::kUnknown:
+      return std::string();
+    case MetricsLogsEventManager::CreateReason::kPeriodic:
+      return "Reason: Periodic log creation";
+    case MetricsLogsEventManager::CreateReason::kServiceShutdown:
+      return "Reason: Shutting down";
+    case MetricsLogsEventManager::CreateReason::kLoadFromPreviousSession:
+      return "Reason: Loaded from previous session";
+    case MetricsLogsEventManager::CreateReason::kBackgrounded:
+      return "Reason: Browser backgrounded";
+    case MetricsLogsEventManager::CreateReason::kForegrounded:
+      return "Reason: Browser foregrounded";
+    case MetricsLogsEventManager::CreateReason::kAlternateOngoingLogStoreSet:
+      return "Reason: Alternate ongoing log store set";
+    case MetricsLogsEventManager::CreateReason::kAlternateOngoingLogStoreUnset:
+      return "Reason: Alternate ongoing log store unset";
+    case MetricsLogsEventManager::CreateReason::kStability:
+      return "Reason: Stability metrics from previous session";
+    case MetricsLogsEventManager::CreateReason::kIndependent:
+      // TODO(crbug/1363747): Give more insight here (e.g. "independent log
+      // generated from pma file").
+      return "Reason: Independent log";
+  }
 }
 
 }  // namespace
@@ -57,9 +104,11 @@ MetricsServiceObserver::Log::Event&
 MetricsServiceObserver::Log::Event::operator=(const Event&) = default;
 MetricsServiceObserver::Log::Event::~Event() = default;
 
-void MetricsServiceObserver::OnLogCreated(base::StringPiece log_hash,
-                                          base::StringPiece log_data,
-                                          base::StringPiece log_timestamp) {
+void MetricsServiceObserver::OnLogCreated(
+    base::StringPiece log_hash,
+    base::StringPiece log_data,
+    base::StringPiece log_timestamp,
+    metrics::MetricsLogsEventManager::CreateReason reason) {
   DCHECK(!GetLogFromHash(log_hash));
 
   // Insert a new log into |logs_| with the given |log_hash| to indicate that
@@ -73,8 +122,17 @@ void MetricsServiceObserver::OnLogCreated(base::StringPiece log_hash,
     log->type = uma_log_type_;
   }
 
+  // Immediately create a |kLogCreated| log event, along with the reason why the
+  // log was created.
+  log->events.push_back(
+      CreateEventStruct(MetricsLogsEventManager::LogEvent::kLogCreated,
+                        CreateReasonToString(reason)));
+
   indexed_logs_.emplace(log->hash, log.get());
   logs_.push_back(std::move(log));
+
+  // Call all registered callbacks.
+  notified_callbacks_.Notify();
 }
 
 void MetricsServiceObserver::OnLogEvent(MetricsLogsEventManager::LogEvent event,
@@ -88,12 +146,10 @@ void MetricsServiceObserver::OnLogEvent(MetricsLogsEventManager::LogEvent event,
   if (!log)
     return;
 
-  Log::Event log_event;
-  log_event.event = event;
-  log_event.timestamp = base::NumberToString(base::Time::Now().ToTimeT());
-  if (!message.empty())
-    log_event.message = std::string(message);
-  log->events.push_back(std::move(log_event));
+  log->events.push_back(CreateEventStruct(event, message));
+
+  // Call all registered callbacks.
+  notified_callbacks_.Notify();
 }
 
 void MetricsServiceObserver::OnLogType(
@@ -127,7 +183,7 @@ bool MetricsServiceObserver::ExportLogsAsJson(bool include_log_proto_data,
     for (const Log::Event& event : log->events) {
       base::Value::Dict log_event_dict;
       log_event_dict.Set("event", EventToString(event.event));
-      log_event_dict.Set("timestamp", event.timestamp);
+      log_event_dict.Set("timestampMs", event.timestampMs);
       if (event.message.has_value())
         log_event_dict.Set("message", event.message.value());
       log_events_list.Append(std::move(log_event_dict));
@@ -140,12 +196,25 @@ bool MetricsServiceObserver::ExportLogsAsJson(bool include_log_proto_data,
   // Create a last |dict| that contains all the logs and |service_type_|,
   // convert it to a JSON string, and write it to |json_output|.
   base::Value::Dict dict;
-  dict.Set("log_type",
-           service_type_ == MetricsServiceType::UMA ? "UMA" : "UKM");
+  dict.Set("logType", service_type_ == MetricsServiceType::UMA ? "UMA" : "UKM");
   dict.Set("logs", std::move(logs_list));
 
   JSONStringValueSerializer serializer(json_output);
   return serializer.Serialize(dict);
+}
+
+void MetricsServiceObserver::ExportLogsToFile(const base::FilePath& path) {
+  std::string logs_data;
+  bool success = ExportLogsAsJson(/*include_log_proto_data=*/true, &logs_data);
+  DCHECK(success);
+  if (!base::WriteFile(path, logs_data)) {
+    LOG(ERROR) << "Failed to export logs to " << path << ": " << logs_data;
+  }
+}
+
+base::CallbackListSubscription MetricsServiceObserver::AddNotifiedCallback(
+    base::RepeatingClosure callback) {
+  return notified_callbacks_.Add(callback);
 }
 
 MetricsServiceObserver::Log* MetricsServiceObserver::GetLogFromHash(

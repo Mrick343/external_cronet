@@ -13,9 +13,9 @@
 #include "base/compiler_specific.h"
 #include "base/notreached.h"
 #include "base/strings/string_util.h"
+#include "base/task/sequenced_task_runner.h"
 #include "base/task/single_thread_task_runner.h"
 #include "base/task/thread_pool.h"
-#include "base/threading/thread_task_runner_handle.h"
 #include "base/types/pass_key.h"
 #include "build/build_config.h"
 #include "net/base/cache_type.h"
@@ -51,6 +51,7 @@
 #include "net/url_request/url_request_context.h"
 #include "net/url_request/url_request_job_factory.h"
 #include "net/url_request/url_request_throttler_manager.h"
+#include "third_party/abseil-cpp/absl/types/optional.h"
 #include "url/url_constants.h"
 
 #if BUILDFLAG(ENABLE_REPORTING)
@@ -274,8 +275,10 @@ std::unique_ptr<URLRequestContext> URLRequestContextBuilder::Build() {
       base::PassKey<URLRequestContextBuilder>());
 
   context->set_enable_brotli(enable_brotli_);
+  context->set_enable_zstd(enable_zstd_);
   context->set_check_cleartext_permitted(check_cleartext_permitted_);
-  context->set_require_network_isolation_key(require_network_isolation_key_);
+  context->set_require_network_anonymization_key(
+      require_network_anonymization_key_);
   context->set_network_quality_estimator(network_quality_estimator_);
 
   if (http_user_agent_settings_) {
@@ -450,7 +453,7 @@ std::unique_ptr<URLRequestContext> URLRequestContextBuilder::Build() {
     if (!proxy_config_service_) {
       proxy_config_service_ =
           ProxyConfigService::CreateSystemProxyConfigService(
-              base::ThreadTaskRunnerHandle::Get().get());
+              base::SingleThreadTaskRunner::GetCurrentDefault().get());
     }
 #endif  // !BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CHROMEOS) &&
         // !BUILDFLAG(IS_ANDROID)
@@ -556,8 +559,8 @@ std::unique_ptr<URLRequestContext> URLRequestContextBuilder::Build() {
           HttpCache::DefaultBackend::InMemory(http_cache_params_.max_size);
     }
 #if BUILDFLAG(IS_ANDROID)
-    http_cache_backend->SetAppStatusListener(
-        http_cache_params_.app_status_listener);
+    http_cache_backend->SetAppStatusListenerGetter(
+        http_cache_params_.app_status_listener_getter);
 #endif
 
     http_transaction_factory = std::make_unique<HttpCache>(
@@ -574,6 +577,10 @@ std::unique_ptr<URLRequestContext> URLRequestContextBuilder::Build() {
   protocol_handlers_.clear();
 
   context->set_job_factory(std::move(job_factory));
+
+  if (cookie_deprecation_label_.has_value()) {
+    context->set_cookie_deprecation_label(*cookie_deprecation_label_);
+  }
 
   return context;
 }

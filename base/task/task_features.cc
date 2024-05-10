@@ -4,35 +4,35 @@
 
 #include "base/task/task_features.h"
 
+#include <atomic>
+
 #include "base/base_export.h"
 #include "base/feature_list.h"
+#include "base/threading/platform_thread.h"
+#include "build/build_config.h"
 
 namespace base {
 
-#if HAS_NATIVE_THREAD_POOL()
-BASE_FEATURE(kUseNativeThreadPool,
-             "UseNativeThreadPool",
+// Note to implementers: thread pool code using task features must absolutely
+// not invoke FeatureList::IsEnabled outside of the main thread. Doing so
+// causes data races between worker threads and ~FeatureList when tests end
+// (crbug.com/1344573). A reliable moment to query and cache the feature state
+// is on ThreadPoolImpl::Start (and thus also on the first WorkerThread::Start,
+// not the later ones) as this is invoked from the main thread after
+// initializing the FeatureList. If caching the feature state in a static, you
+// must be aware that all tests sharing a process will have the same state,
+// regardless of future ScopedFeatureList instances.
+
+BASE_FEATURE(kUseUtilityThreadGroup,
+             "UseUtilityThreadGroup",
              base::FEATURE_DISABLED_BY_DEFAULT);
-BASE_FEATURE(kUseBackgroundNativeThreadPool,
-             "UseBackgroundNativeThreadPool",
-             base::FEATURE_DISABLED_BY_DEFAULT);
-#endif
 
 BASE_FEATURE(kNoWorkerThreadReclaim,
              "NoWorkerThreadReclaim",
-             base::FEATURE_DISABLED_BY_DEFAULT);
+             base::FEATURE_ENABLED_BY_DEFAULT);
 
-// static
-BASE_FEATURE(kNoWakeUpsForCanceledTasks,
-             "NoWakeUpsForCanceledTasks",
-             FEATURE_DISABLED_BY_DEFAULT);
-
-BASE_FEATURE(kRemoveCanceledTasksInTaskQueue,
-             "RemoveCanceledTasksInTaskQueue2",
-             base::FEATURE_DISABLED_BY_DEFAULT);
-
-BASE_FEATURE(kAlwaysAbandonScheduledTask,
-             "AlwaysAbandonScheduledTask",
+BASE_FEATURE(kDelayFirstWorkerWake,
+             "DelayFirstWorkerWake",
              base::FEATURE_DISABLED_BY_DEFAULT);
 
 BASE_FEATURE(kAddTaskLeewayFeature,
@@ -41,40 +41,33 @@ BASE_FEATURE(kAddTaskLeewayFeature,
 
 const base::FeatureParam<TimeDelta> kTaskLeewayParam{&kAddTaskLeewayFeature,
                                                      "leeway", kDefaultLeeway};
+const base::FeatureParam<TimeDelta> kMaxPreciseDelay{
+    &kAddTaskLeewayFeature, "max_precise_delay", kDefaultMaxPreciseDelay};
 
-BASE_FEATURE(kAlignWakeUps, "AlignWakeUps", base::FEATURE_ENABLED_BY_DEFAULT);
+BASE_FEATURE(kAlignWakeUps, "AlignWakeUps", base::FEATURE_DISABLED_BY_DEFAULT);
+
+BASE_FEATURE(kTimerSlackMac,
+             "TimerSlackMac",
+             base::FEATURE_DISABLED_BY_DEFAULT);
 
 BASE_FEATURE(kExplicitHighResolutionTimerWin,
              "ExplicitHighResolutionTimerWin",
-             base::FEATURE_DISABLED_BY_DEFAULT);
+             base::FEATURE_ENABLED_BY_DEFAULT);
 
 BASE_FEATURE(kRunTasksByBatches,
              "RunTasksByBatches",
+#if BUILDFLAG(IS_MAC) || BUILDFLAG(IS_CHROMEOS)
+             base::FEATURE_ENABLED_BY_DEFAULT);
+#else
+             base::FEATURE_DISABLED_BY_DEFAULT);
+#endif
+
+BASE_FEATURE(kThreadPoolCap2,
+             "ThreadPoolCap2",
              base::FEATURE_DISABLED_BY_DEFAULT);
 
-BASE_FEATURE(kBrowserPeriodicYieldingToNative,
-             "BrowserPeriodicYieldingToNative",
-             base::FEATURE_DISABLED_BY_DEFAULT);
-
-const BASE_EXPORT base::FeatureParam<base::TimeDelta>
-    kBrowserPeriodicYieldingToNativeNormalInputAfterMsParam{
-        &kBrowserPeriodicYieldingToNative,
-        "yield_to_android_looper_after_ms_normal_input", base::Milliseconds(8)};
-
-const BASE_EXPORT base::FeatureParam<base::TimeDelta>
-    kBrowserPeriodicYieldingToNativeFlingInputAfterMsParam{
-        &kBrowserPeriodicYieldingToNative,
-        "yield_to_android_looper_after_ms_fling_input", base::Milliseconds(16)};
-
-const BASE_EXPORT base::FeatureParam<base::TimeDelta>
-    kBrowserPeriodicYieldingToNativeNoInputAfterMsParam{
-        &kBrowserPeriodicYieldingToNative,
-        "yield_to_android_looper_after_ms_no_input", base::Milliseconds(100)};
-
-const BASE_EXPORT base::FeatureParam<base::TimeDelta>
-    kBrowserPeriodicYieldingToNativeDelay{&kBrowserPeriodicYieldingToNative,
-                                          "non_delayed_looper_defer_for_ns",
-                                          base::Nanoseconds(500000)};
+const base::FeatureParam<int> kThreadPoolCapRestrictedCount{
+    &kThreadPoolCap2, "restricted_count", 3};
 
 // Leeway value applied to delayed tasks. An atomic is used here because the
 // value is queried from multiple threads.
@@ -84,8 +77,28 @@ BASE_EXPORT void InitializeTaskLeeway() {
   g_task_leeway.store(kTaskLeewayParam.Get(), std::memory_order_relaxed);
 }
 
-BASE_EXPORT TimeDelta GetTaskLeeway() {
+BASE_EXPORT TimeDelta GetTaskLeewayForCurrentThread() {
+  // For some threads, there might be a override of the leeway, so check it
+  // first.
+  auto leeway_override = PlatformThread::GetThreadLeewayOverride();
+  if (leeway_override.has_value())
+    return leeway_override.value();
   return g_task_leeway.load(std::memory_order_relaxed);
 }
+
+BASE_EXPORT TimeDelta GetDefaultTaskLeeway() {
+  return g_task_leeway.load(std::memory_order_relaxed);
+}
+
+BASE_FEATURE(kMaxDelayedStarvationTasks,
+             "MaxDelayedStarvationTasks",
+             base::FEATURE_ENABLED_BY_DEFAULT);
+
+const base::FeatureParam<int> kMaxDelayedStarvationTasksParam{
+    &kMaxDelayedStarvationTasks, "count", 3};
+
+BASE_FEATURE(kUseNewJobImplementation,
+             "UseNewJobImplementation",
+             base::FEATURE_DISABLED_BY_DEFAULT);
 
 }  // namespace base

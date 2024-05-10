@@ -61,8 +61,9 @@ bool GetLocalCertificatesDir(const base::FilePath& certificates_dir,
   }
 
   base::FilePath src_dir;
-  if (!base::PathService::Get(base::DIR_SOURCE_ROOT, &src_dir))
+  if (!base::PathService::Get(base::DIR_SRC_TEST_DATA_ROOT, &src_dir)) {
     return false;
+  }
 
   *local_certificates_dir = src_dir.Append(certificates_dir);
   return true;
@@ -130,11 +131,6 @@ bool BaseTestServer::Start() {
 const HostPortPair& BaseTestServer::host_port_pair() const {
   DCHECK(started_);
   return host_port_pair_;
-}
-
-const base::Value& BaseTestServer::server_data() const {
-  DCHECK(server_data_);
-  return *server_data_;
 }
 
 std::string BaseTestServer::GetScheme() const {
@@ -290,9 +286,7 @@ bool BaseTestServer::SetAndParseServerData(const std::string& server_data,
     return false;
   }
 
-  server_data_ = std::move(*parsed_json);
-
-  absl::optional<int> port_value = server_data_->FindIntKey("port");
+  absl::optional<int> port_value = parsed_json->GetDict().FindInt("port");
   if (!port_value) {
     LOG(ERROR) << "Could not find port value";
     return false;

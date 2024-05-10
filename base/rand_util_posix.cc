@@ -96,7 +96,7 @@ bool KernelSupportsGetRandom() {
   int32_t minor = 0;
   int32_t bugfix = 0;
   KernelVersionNumbers(&major, &minor, &bugfix);
-  if (major >= 3 && minor >= 17)
+  if (major > 3 || (major == 3 && minor >= 17))
     return true;
   return false;
 }
@@ -126,7 +126,7 @@ std::atomic<bool> g_use_getrandom;
 // both are enabled.
 BASE_FEATURE(kUseGetrandomForRandBytes,
              "UseGetrandomForRandBytes",
-             FEATURE_DISABLED_BY_DEFAULT);
+             FEATURE_ENABLED_BY_DEFAULT);
 
 bool UseGetrandom() {
   return g_use_getrandom.load(std::memory_order_relaxed);
