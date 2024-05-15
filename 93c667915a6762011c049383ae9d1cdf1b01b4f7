@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c36f38ee_1ad7ab8c",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-15T13:01:46Z",
+      "side": 1,
+      "message": "```suggestion\n    # This is a bogus timestamp that points at Monday, January 1, 2024 12:00:00 AM\n```",
+      "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "487715db_6088cddb",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1164,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-15T13:01:46Z",
+      "side": 1,
+      "message": "Um, shouldn\u0027t this point to a time in the future not past?",
+      "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
