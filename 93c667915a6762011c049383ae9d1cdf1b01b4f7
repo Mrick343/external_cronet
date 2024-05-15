@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b86734b9_b0ad3acb",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-15T13:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c36f38ee_1ad7ab8c",
+      "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "487715db_6088cddb",
