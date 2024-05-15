@@ -69,6 +69,24 @@
       "parentUuid": "487715db_6088cddb",
       "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e55fba81_6bc454a1",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1164,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-15T13:43:26Z",
+      "side": 1,
+      "message": "Changed to 2030 instead of 2050 because of https://en.wikipedia.org/wiki/Year_2038_problem",
+      "parentUuid": "e20ef37d_2d1b18ce",
+      "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
