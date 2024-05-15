@@ -105,6 +105,24 @@
       "parentUuid": "e55fba81_6bc454a1",
       "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09cb6eaa_b4fd7215",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1164,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-15T13:51:20Z",
+      "side": 1,
+      "message": "Presubmit was failing 😞 https://android-build.corp.google.com/artifact/pending/P74693061/aosp_cf_x86_64_phone-trunk_staging-userdebug/latest/view/logs%2Fbuild_error.log\n\nLooks like Chromium is gonna explode on 2038",
+      "parentUuid": "e7b30783_61c9bfbe",
+      "revId": "93c667915a6762011c049383ae9d1cdf1b01b4f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
