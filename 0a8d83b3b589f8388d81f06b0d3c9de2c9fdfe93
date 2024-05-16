@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc1634ee_0f34af91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-16T05:16:35Z",
+      "side": 1,
+      "message": "This LGTM but I don\u0027t know much about cpp code\nSo I would like to get review from cronet team.",
+      "revId": "0a8d83b3b589f8388d81f06b0d3c9de2c9fdfe93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb7a6788_59a6eefc",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-16T05:16:35Z",
+      "side": 1,
+      "message": "I feel it\u0027s helpful to use meaningful name (e.g. base_stats_bytes).\nval1_func as well.",
+      "range": {
+        "startLine": 25,
+        "startChar": 47,
+        "endLine": 25,
+        "endChar": 51
+      },
+      "revId": "0a8d83b3b589f8388d81f06b0d3c9de2c9fdfe93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "589bf24b_2af05259",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-16T05:16:35Z",
+      "side": 1,
+      "message": "nits: I think this will retry max_retries + 1.",
+      "range": {
+        "startLine": 29,
+        "startChar": 26,
+        "endLine": 29,
+        "endChar": 37
+      },
+      "revId": "0a8d83b3b589f8388d81f06b0d3c9de2c9fdfe93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8cd1759_a4c56ed6",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-16T05:16:35Z",
+      "side": 1,
+      "message": "nits: Will this show meaningful failure message?",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 11
+      },
+      "revId": "0a8d83b3b589f8388d81f06b0d3c9de2c9fdfe93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01cad00a_e3a77130",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-16T05:16:35Z",
+      "side": 1,
+      "message": "nits: It would be helpful to have comment to explain why we need retry here.",
+      "revId": "0a8d83b3b589f8388d81f06b0d3c9de2c9fdfe93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
