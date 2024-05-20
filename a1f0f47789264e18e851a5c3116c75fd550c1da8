@@ -16,6 +16,46 @@
       "message": "Added edechamps for general C++ readability",
       "revId": "a1f0f47789264e18e851a5c3116c75fd550c1da8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09181767_fc4527e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-20T10:19:10Z",
+      "side": 1,
+      "message": "Need review from someone who knows C++, but LGTM.",
+      "revId": "a1f0f47789264e18e851a5c3116c75fd550c1da8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01aeb1db_30e0e35e",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-20T10:19:10Z",
+      "side": 1,
+      "message": "nits: Should this be `\u003c`? Otherwise, there will be unnecessary sleep after max_retries.",
+      "range": {
+        "startLine": 41,
+        "startChar": 25,
+        "endLine": 41,
+        "endChar": 26
+      },
+      "revId": "a1f0f47789264e18e851a5c3116c75fd550c1da8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
