@@ -1,0 +1,388 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9df9fed_7ebfd16a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "I can\u0027t parse this sentence. Did you mean: \"Currently, there is a rate limit\"?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9003578_1bbcc2e6",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "Instead of expecting greater than, it seems like this function should just focus on the retry logic, and just take a boolean predicate. This would make the interface simpler and more reusable.\n\n```\ntemplate \u003ctypename Predicate\u003e\nvoid ExpectWithRetry(Predicate predicate, ...);\n\nExpectWithRetry([\u0026]{\n    ...\n    return ret \u003e tx_bytes_before_request;\n});\n```",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ddd44cfb_3d86867f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 22,
+                "startChar": 0,
+                "endLine": 29,
+                "endChar": 0
+              },
+              "replacement": "// Function template for flexibility in the predicate type\ntemplate \u003ctypename Predicate\u003e\nvoid ExpectWithRetry(Predicate predicate,\n                     int max_retries \u003d 10,\n                     int retry_interval_ms \u003d 500) {\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 30,
+                "startChar": 0,
+                "endLine": 31,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "        if (predicate()) {\n            return;\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 80,
+                "startChar": 0,
+                "endLine": 81,
+                "endChar": 0
+              },
+              "replacement": "  ExpectWithRetry([]() -\u003e bool {\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 83,
+                "startChar": 0,
+                "endLine": 86,
+                "endChar": 0
+              },
+              "replacement": "    return ret \u003e tx_bytes_before_request;\n  });\n  ExpectWithRetry([]() -\u003e bool {\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 88,
+                "startChar": 0,
+                "endLine": 90,
+                "endChar": 0
+              },
+              "replacement": "      return ret \u003e rx_bytes_before_request;\n  });\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 122,
+                "startChar": 0,
+                "endLine": 123,
+                "endChar": 0
+              },
+              "replacement": "  ExpectWithRetry([]() -\u003e bool {\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 125,
+                "startChar": 0,
+                "endLine": 128,
+                "endChar": 0
+              },
+              "replacement": "      return ret \u003e tx_bytes_before_request;\n  });\n   ExpectWithRetry([]() -\u003e bool {\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 130,
+                "startChar": 0,
+                "endLine": 132,
+                "endChar": 0
+              },
+              "replacement": "       return ret \u003e rx_bytes_before_request;\n  });\n"
+            }
+          ]
+        }
+      ],
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f452c0d_3f0adb9b",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "In this codebase, function names are capitalized. `ExpectGtWithRetry`",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 22
+      },
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e825ba1_45857eb9",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "500 ms seems like a lot, and may unduly delay tests. `100` seems more reasonable.",
+      "range": {
+        "startLine": 28,
+        "startChar": 47,
+        "endLine": 28,
+        "endChar": 50
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "aa0c4a04_e87f4bb1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 28,
+                "startChar": 0,
+                "endLine": 29,
+                "endChar": 0
+              },
+              "replacement": "                       int retry_interval_ms \u003d 100) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a076bc41_14a7646f",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "Move this inside the while loop, and initialize in the declaration. https://google.github.io/styleguide/cppguide.html#Local_Variables",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f27205fc_4d3512a0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 30,
+                "startChar": 0,
+                "endLine": 31,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 34,
+                "startChar": 0,
+                "endLine": 35,
+                "endChar": 0
+              },
+              "replacement": "        int val_expect \u003d expect_func();\n"
+            }
+          ]
+        }
+      ],
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58fd262d_95b33eb7",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "`++retry_count;`\n\nhttps://google.github.io/styleguide/cppguide.html#Preincrement_and_Predecrement",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "42641344_2ced0064",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 40,
+                "startChar": 0,
+                "endLine": 41,
+                "endChar": 0
+              },
+              "replacement": "        ++retry_count;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0de3f09c_de4dddf1",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "The following would be more concise and would avoid stating the exit condition twice:\n\n```c++\nfor (int retry_count \u003d 0; ; ++retry_count) {\n   val_expect \u003d expect_func();\n   if (val_expect \u003e val_base) return;\n   if (retry_count \u003d\u003d max_retries) break;\n   usleep(retry_interval_ms * 1000);\n}\n```",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 5
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b81e70f6_e7ab2345",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 29,
+                "startChar": 0,
+                "endLine": 30,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 32,
+                "startChar": 0,
+                "endLine": 33,
+                "endChar": 0
+              },
+              "replacement": "    for (int retry_count \u003d 0; retry_count \u003c max_retries; ++retry_count) {\n"
+            },
+            {
+              "path": "net/android/traffic_stats_unittest.cc",
+              "range": {
+                "startLine": 40,
+                "startChar": 0,
+                "endLine": 44,
+                "endChar": 0
+              },
+              "replacement": "        usleep(retry_interval_ms * 1000);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47ddd088_cb286ec4",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-20T13:40:05Z",
+      "side": 1,
+      "message": "It would be nice to have a message for this, e.g. `FAIL() \u003c\u003c \"Condition remained false even after \" \u003c\u003c max_retries * retry_interval_ms \u003c\u003c \" ms\";`",
+      "range": {
+        "startLine": 47,
+        "startChar": 5,
+        "endLine": 47,
+        "endChar": 11
+      },
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
