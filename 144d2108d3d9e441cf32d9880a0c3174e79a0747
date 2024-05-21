@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b08edd4d_7d388c30",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-21T12:42:29Z",
+      "side": 0,
+      "message": "We do need to take actions by moving the NetHttpCoverageTests to external/cronet once more ;(\n\nI will do it in a follow-up CL.",
+      "parentUuid": "907ffc73_8af426d6",
+      "revId": "144d2108d3d9e441cf32d9880a0c3174e79a0747",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a0dab02b_af99e9ad",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-05-21T12:24:23Z",
       "side": 0,
       "message": "We still need postsubmit to monitor flakiness of skipped tests if any.",
+      "revId": "144d2108d3d9e441cf32d9880a0c3174e79a0747",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc0aba30_11e998af",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-21T12:42:29Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "a0dab02b_af99e9ad",
       "revId": "144d2108d3d9e441cf32d9880a0c3174e79a0747",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
