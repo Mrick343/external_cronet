@@ -307,6 +307,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "be02316f_b82f9837",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-21T09:25:26Z",
+      "side": 1,
+      "message": "If the thread sleeps for a 100 millisecond (assuming my calculation is correct) between each retry assuming a 10 retries so we will be very close to the one-second border. Isn\u0027t it wiser to keep at 500ms?",
+      "parentUuid": "ba3ade35_6ab4fa1f",
+      "range": {
+        "startLine": 28,
+        "startChar": 47,
+        "endLine": 28,
+        "endChar": 50
+      },
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a076bc41_14a7646f",
         "filename": "net/android/traffic_stats_unittest.cc",
         "patchSetId": 3
