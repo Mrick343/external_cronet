@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "907ffc73_8af426d6",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-21T12:24:23Z",
+      "side": 0,
+      "message": "Please check if we need to take action based on https://r.android.com/3086726",
+      "revId": "144d2108d3d9e441cf32d9880a0c3174e79a0747",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0dab02b_af99e9ad",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-21T12:24:23Z",
+      "side": 0,
+      "message": "We still need postsubmit to monitor flakiness of skipped tests if any.",
+      "revId": "144d2108d3d9e441cf32d9880a0c3174e79a0747",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
