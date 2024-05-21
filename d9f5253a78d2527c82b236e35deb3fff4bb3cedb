@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e418e6f6_b44b898e",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2024-05-21T10:53:09Z",
+      "side": 1,
+      "message": "There is no need for `() -\u003e bool`.\n\nSame below.",
+      "range": {
+        "startLine": 65,
+        "startChar": 21,
+        "endLine": 65,
+        "endChar": 31
+      },
+      "revId": "d9f5253a78d2527c82b236e35deb3fff4bb3cedb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
