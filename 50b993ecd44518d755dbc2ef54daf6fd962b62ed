@@ -329,6 +329,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc96b6dd_9ca421d3",
+        "filename": "net/android/traffic_stats_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1306837
+      },
+      "writtenOn": "2024-05-21T10:12:41Z",
+      "side": 1,
+      "message": "Raise max retries to 50 to address both concerns.\nSee if it works for you.",
+      "parentUuid": "be02316f_b82f9837",
+      "range": {
+        "startLine": 28,
+        "startChar": 47,
+        "endLine": 28,
+        "endChar": 50
+      },
+      "revId": "50b993ecd44518d755dbc2ef54daf6fd962b62ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a076bc41_14a7646f",
