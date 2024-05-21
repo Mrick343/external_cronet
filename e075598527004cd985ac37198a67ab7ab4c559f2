@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad96445b_4a810c2c",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-21T15:36:13Z",
+      "side": 1,
+      "message": "This makes sense.",
+      "revId": "e075598527004cd985ac37198a67ab7ab4c559f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40194228_8bc17c58",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-21T15:36:13Z",
+      "side": 1,
+      "message": "Discussed offline - I don\u0027t think this should still exist but since the ref cl https://r.android.com/3086726 did not remove theirs, we\u0027d leave as-is.",
+      "revId": "e075598527004cd985ac37198a67ab7ab4c559f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
