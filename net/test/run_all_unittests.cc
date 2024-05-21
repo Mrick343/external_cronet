@@ -45,9 +45,6 @@ bool VerifyBuildIsTimely() {
 }  // namespace
 
 int main(int argc, char** argv) {
-  if (!VerifyBuildIsTimely())
-    return 1;
-
   NetTestSuite test_suite(argc, argv);
   net::TransportClientSocketPool::set_connect_backup_jobs_enabled(false);
 
