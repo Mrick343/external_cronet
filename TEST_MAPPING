@@ -6,7 +6,23 @@
   ],
   "presubmit": [
     {
-      "name": "net_unittests_tester"
+      "name": "net_unittests_tester",
+      "options": [
+        {
+          "exclude-filter": "HttpAuthNegotiateAndroidTest#GenerateAuthToken",
+          "exclude-filter": "MerkleAuditProofDeathTest#DiesIfLeafIndexIsGreaterThanOrEqualToTreeSize",
+          "exclude-filter": "CertNetFetcherURLRequestTest#ParallelFetchDuplicates",
+          "exclude-filter": "DiskCacheBackendTest#SimpleDoomRecent",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#DisableCname",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#DisableCnameStandardPort",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#DisableCnameNonstandardPort",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#CnameSync",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#CnameAsync",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#ServerNotInKerberosDatabase",
+          "exclude-filter": "HttpAuthHandlerNegotiateTest#NoKerberosCredentials",
+          "exclude-filter": "EmbeddedTestServerTestInstantiation/EmbeddedTestServerTest#ConnectionListenerComplete/*"
+        }
+      ]
     },
     {
       "name": "cronet_unittests_tester"
@@ -28,6 +44,9 @@
   "postsubmit": [
     {
         "name": "NetHttpCoverageTests"
+    },
+    {
+      "name": "net_unittests_tester"
     }
   ],
   "mainline-presubmit": [
