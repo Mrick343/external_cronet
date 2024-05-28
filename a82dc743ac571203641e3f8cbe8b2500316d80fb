@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8e3f786_c51d474f",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-28T15:01:01Z",
+      "side": 1,
+      "message": "Is this deletion intentional?",
+      "revId": "a82dc743ac571203641e3f8cbe8b2500316d80fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

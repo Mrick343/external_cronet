@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc19b550_d6b17d25",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-05-28T15:01:01Z",
+      "side": 1,
+      "message": "Also, why are we adding this logging?",
+      "revId": "4a90c70030ba5ff4bedc05108dba8bc368c3ab48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
