@@ -35,11 +35,30 @@ public final class NativeTestServer {
         Context context, @ServerCertificate int serverCertificate) {
         TestFilesInstaller.installIfNeeded(context);
         return NativeTestServerJni.get()
+<<<<<<< HEAD   (5d4bab Merge remote-tracking branch 'aosp/main' into upstream-stagi)
             .startNativeTestServer(
                 TestFilesInstaller.getInstalledPath(context),
                 UrlUtils.getIsolatedTestRoot(),
                 true, // useHttps
                 serverCertificate);
+=======
+                .startNativeTestServer(
+                        TestFilesInstaller.getInstalledPath(context),
+                        UrlUtils.getIsolatedTestRoot(),
+                        false, // useHttps
+                        ServerCertificate.CERT_OK);
+    }
+
+    public static boolean startNativeTestServerWithHTTPS(
+            Context context, @ServerCertificate int serverCertificate) {
+        TestFilesInstaller.installIfNeeded(context);
+        return NativeTestServerJni.get()
+                .startNativeTestServer(
+                        TestFilesInstaller.getInstalledPath(context),
+                        UrlUtils.getIsolatedTestRoot(),
+                        true, // useHttps
+                        serverCertificate);
+>>>>>>> BRANCH (168f7e Import Cronet version 122.0.6261.43)
     }
 
     public static void shutdownNativeTestServer() {
@@ -113,6 +132,10 @@ public final class NativeTestServer {
                 String testDataDir,
                 boolean useHttps,
                 @ServerCertificate int certificate);
+<<<<<<< HEAD   (5d4bab Merge remote-tracking branch 'aosp/main' into upstream-stagi)
+=======
+
+>>>>>>> BRANCH (168f7e Import Cronet version 122.0.6261.43)
         void shutdownNativeTestServer();
 
         String getEchoBodyURL();
