@@ -16,6 +16,24 @@
       "message": "This is impossible to review. I will +2 as a token of trust here.",
       "revId": "4d95676069a3ee2f97161bcc549a8ffe7afedc7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eba5abe6_cf036b28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-29T10:24:26Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "75f991ac_fad18954",
+      "revId": "4d95676069a3ee2f97161bcc549a8ffe7afedc7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
