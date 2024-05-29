@@ -16,6 +16,24 @@
       "message": "This is impossible to review. I will +2 as a token of trust here.\n\nI took a look at the diff, I found nothing suspicious but yeah, a 4k diff is not meant for humans to review after all 😞",
       "revId": "a57891d6ee127f0f1a3b23f8d81fad6e846c6cdd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b70aafe_71e94333",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-05-29T10:24:40Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ec9f96bb_b0cb4706",
+      "revId": "a57891d6ee127f0f1a3b23f8d81fad6e846c6cdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
