@@ -16,6 +16,24 @@
       "message": "Also, why are we adding this logging?",
       "revId": "4a90c70030ba5ff4bedc05108dba8bc368c3ab48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b9bd439_57c778cf",
+        "filename": "test_runner/src/com.android.tests.chromium.host/ChromiumHostDrivenTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-29T09:53:52Z",
+      "side": 1,
+      "message": "This file is pretty important because it has the results of the test run from gtest perspective, while the terminal will only give you the results of the test run from tradefed perspective, so there is some mapping which happens.\n\nI added this here because it provides better QoE when debugging and I think it should stay there.",
+      "parentUuid": "dc19b550_d6b17d25",
+      "revId": "4a90c70030ba5ff4bedc05108dba8bc368c3ab48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
