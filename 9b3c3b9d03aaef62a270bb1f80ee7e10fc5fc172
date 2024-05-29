@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bcf1a09_4a4ebf11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-05-29T10:20:50Z",
+      "side": 1,
+      "message": "Thanks for the import Motomu!",
+      "revId": "9b3c3b9d03aaef62a270bb1f80ee7e10fc5fc172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
