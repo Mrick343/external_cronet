@@ -113,10 +113,6 @@ public final class NativeTestServer {
                 String testDataDir,
                 boolean useHttps,
                 @ServerCertificate int certificate);
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream-import
         void shutdownNativeTestServer();
 
         String getEchoBodyURL();
