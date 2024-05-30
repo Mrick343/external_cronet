@@ -1,0 +1,2 @@
+# CronetUrlRequestHTTPSTest depends on non-jarjared path
+org\.chromium\.net\.AndroidNetworkLibrary(\$.+)?

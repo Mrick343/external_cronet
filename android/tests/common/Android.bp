@@ -51,6 +51,7 @@ java_genrule {
     tool_files: [
         ":NetHttpTestsLibPreJarJar{.jar}",
         "jarjar_excludes.txt",
+        "test_jarjar_excludes.txt",
     ],
     tools: [
         "jarjar-rules-generator",
@@ -60,6 +61,7 @@ java_genrule {
         "$(location :NetHttpTestsLibPreJarJar{.jar}) " +
         "--prefix android.net.connectivity " +
         "--excludes $(location jarjar_excludes.txt) " +
+        "--excludes $(location test_jarjar_excludes.txt) " +
         "--output $(out)",
 }
 
