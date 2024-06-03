@@ -73,10 +73,6 @@ function setup_chromium_src_repo() (
 #######################################
 function cherry_pick_chromium_cls() (
   cd "${chromium_dir}"
-  # Remove once 123.0.6272.0 is imported
-  git fetch https://chromium.googlesource.com/chromium/src refs/changes/93/5164293/3 && git cherry-pick FETCH_HEAD
-  # Remove once 123.0.6286.0 is imported
-  git fetch https://chromium.googlesource.com/chromium/src refs/changes/42/5259242/5 && git cherry-pick FETCH_HEAD
   # Remove once 124.0.6317.0 is imported
   git fetch https://chromium.googlesource.com/chromium/src refs/changes/51/5317651/2 && git cherry-pick FETCH_HEAD
   # Remove once 124.0.6340.0 is imported
@@ -163,8 +159,8 @@ if [ -z "${ANDROID_BUILD_TOP}" ]; then
 fi
 
 
-setup_chromium_src_repo "${rev}" "${chromium_dir}" "${force_reset}"
-cherry_pick_chromium_cls "${chromium_dir}"
+# setup_chromium_src_repo "${rev}" "${chromium_dir}" "${force_reset}"
+# cherry_pick_chromium_cls "${chromium_dir}"
 gn_desc x86 "${chromium_dir}"
 gn_desc x64 "${chromium_dir}"
 gn_desc arm "${chromium_dir}"
