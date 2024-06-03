@@ -1,3 +1,4 @@
+<<<<<<< HEAD   (cd34b4 Import 123.0.6312.40: Merge aosp/main into upstream-staging)
 =========================================
 Libc++ 17.0.0 (In-Progress) Release Notes
 =========================================
@@ -181,3 +182,15 @@ Build System Changes
   - ``False`` became ``none``. This option does not test with modules enabled.
   - ``True`` became ``clang``. This option tests using Clang modules.
   - ``std`` is a new optional and tests with the experimental C++23 ``std`` module.
+=======
+.. include:: ReleaseNotes/19.rst
+
+.. Make sure to reference the previous release notes in a toctree to avoid Sphinx errors.
+.. toctree::
+    :hidden:
+
+    ReleaseNotes/18
+
+.. The release notes are in versioned files, but we make sure to keep publishing
+.. them in an unversioned ReleaseNotes.html page for external sites to reference.
+>>>>>>> BRANCH (b66ce5 Import Cronet version 123.0.6312.40)
