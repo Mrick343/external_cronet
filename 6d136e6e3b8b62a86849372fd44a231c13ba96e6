@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f95f7ba_97bb3360",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-04T10:11:34Z",
+      "side": 1,
+      "message": "Please do fix those comments in this CL or another CL at your convenience, I know how difficult it is to change merge commits.",
+      "revId": "6d136e6e3b8b62a86849372fd44a231c13ba96e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

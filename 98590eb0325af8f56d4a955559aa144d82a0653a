@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bef2ba77_03dc8038",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-04T10:11:34Z",
+      "side": 0,
+      "message": "We use `mainlinecronet` as the `.so` name\n\nhttps://cs.android.com/android/_/android/platform/external/cronet/+/ae4cef1e651b1b535e7b27333bd3da6e559d10d2:Android.bp;l\u003d10352;drc\u003d9ef62c80b1bf39943147c365f942a450cfd85a90;bpv\u003d0;bpt\u003d0\n\nKeep that line, we should ideally upstream this to Chromium.",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 98
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2deb42b9_c9831855",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+              "range": {
+                "startLine": 47,
+                "startChar": 0,
+                "endLine": 48,
+                "endChar": 0
+              },
+              "replacement": "    private static final String LIBRARY_NAME \u003d \"mainlinecronet.\" + ImplVersion.getCronetVersion();\n"
+            }
+          ]
+        }
+      ],
+      "revId": "98590eb0325af8f56d4a955559aa144d82a0653a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0abb0bd2_5b4b0c33",
+        "filename": "third_party/libc++/src/docs/ReleaseNotes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-04T10:11:34Z",
+      "side": 0,
+      "message": "Ideally, we should not hit merge conflicts in third_party at all. This has probably happened because I must have messed up one of the imports back then, I did a `git diff --stat aosp/upstream-import -- third_party/` and found out that there is alot of divergence with libc++. It would be great if you could do `git checkout aosp/upstream-import -- third_party/libc++`. This would basically update libc++ to match the imported version exactly.\n\nIf not, I will do it after you are done with the import.",
+      "revId": "98590eb0325af8f56d4a955559aa144d82a0653a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
