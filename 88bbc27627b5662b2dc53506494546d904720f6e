@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8383bcb7_fe058376",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-05T12:25:31Z",
+      "side": 1,
+      "message": "We can\u0027t upstream making our implementation methods public as they are private because we don\u0027t want users calling them. This is a fundamental problem that exists in AOSP and must be solved in AOSP.\n\nI have a draft CL that fixes this issue\n\nhttps://android-review.git.corp.google.com/c/platform/external/cronet/+/3022323",
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "968e94a2_35a9ce75",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-05T12:25:31Z",
+      "side": 1,
+      "message": "No No No, we don\u0027t want to make the wrapper public, The wrapper should stay package private as we don\u0027t want users messing with it or instantiating it on their own.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
