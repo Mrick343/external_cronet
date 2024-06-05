@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "816b7a38_e7fe80c0",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/CronetLibraryLoader.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-05T11:16:40Z",
+      "side": 0,
+      "message": "Fixed by aosp/3116187",
+      "parentUuid": "bef2ba77_03dc8038",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 98
+      },
+      "revId": "98590eb0325af8f56d4a955559aa144d82a0653a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0abb0bd2_5b4b0c33",
@@ -55,6 +79,24 @@
       "writtenOn": "2024-06-04T10:11:34Z",
       "side": 0,
       "message": "Ideally, we should not hit merge conflicts in third_party at all. This has probably happened because I must have messed up one of the imports back then, I did a `git diff --stat aosp/upstream-import -- third_party/` and found out that there is alot of divergence with libc++. It would be great if you could do `git checkout aosp/upstream-import -- third_party/libc++`. This would basically update libc++ to match the imported version exactly.\n\nIf not, I will do it after you are done with the import.",
+      "revId": "98590eb0325af8f56d4a955559aa144d82a0653a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1117f1d_6d56d731",
+        "filename": "third_party/libc++/src/docs/ReleaseNotes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-05T11:16:40Z",
+      "side": 0,
+      "message": "Fixed by aosp/3116188",
+      "parentUuid": "0abb0bd2_5b4b0c33",
       "revId": "98590eb0325af8f56d4a955559aa144d82a0653a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
