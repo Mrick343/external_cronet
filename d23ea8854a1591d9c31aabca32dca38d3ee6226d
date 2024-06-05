@@ -16,6 +16,24 @@
       "message": "Why are you updating the desc_*.Jason files here?",
       "revId": "d23ea8854a1591d9c31aabca32dca38d3ee6226d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26bc3a55_e4029190",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-05T12:43:55Z",
+      "side": 1,
+      "message": "desc_* jsons in the previous CL were wrong.\nI missed to clean up commits.",
+      "parentUuid": "9a1bed36_2ad97433",
+      "revId": "d23ea8854a1591d9c31aabca32dca38d3ee6226d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
