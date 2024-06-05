@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e61cea3b_82e446f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-05T12:38:27Z",
+      "side": 1,
+      "message": "I believe we should disable the test until we find a way to solve this problem fundamentally, Stefano can provide more feedback also.",
+      "parentUuid": "0705617e_62156233",
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "968e94a2_35a9ce75",
         "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
         "patchSetId": 4
