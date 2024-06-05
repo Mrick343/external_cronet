@@ -130,7 +130,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     private static final int INVALID_THREAD_PRIORITY = THREAD_PRIORITY_LOWEST + 1;
 
     @VisibleForTesting
-    static int sApiLevel = VersionSafeCallbacks.ApiVersion.getMaximumAvailableApiLevel();
+    public static int sApiLevel = VersionSafeCallbacks.ApiVersion.getMaximumAvailableApiLevel();
 
     protected final CronetLogger mLogger;
 
@@ -528,7 +528,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
         return mApplicationContext;
     }
 
-    CronetLogger.CronetEngineBuilderInfo toLoggerInfo() {
+    public CronetLogger.CronetEngineBuilderInfo toLoggerInfo() {
         return new CronetLogger.CronetEngineBuilderInfo(
                 /* publicKeyPinningBypassForLocalTrustAnchorsEnabled= */ publicKeyPinningBypassForLocalTrustAnchorsEnabled(),
                 /* userAgent= */ getUserAgent(),
