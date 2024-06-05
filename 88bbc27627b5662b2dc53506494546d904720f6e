@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "58795c21_3aa91a5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-06-05T13:35:57Z",
+      "side": 1,
+      "message": "What\u0027s the actual error that we\u0027re trying to fix here?\n\nAFAIU, there was stuff that was working before and with the 123.0.6312.40 import it no longer works? Knowing what is breaking and why will also help us from future breakages.",
+      "parentUuid": "ebb721e9_cb1ae15a",
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "968e94a2_35a9ce75",
         "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
         "patchSetId": 4
