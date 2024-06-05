@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Set;
 
 @RequiresExtension(extension = EXT_API_LEVEL, version = EXT_VERSION)
-class AndroidHttpEngineBuilderWrapper extends ICronetEngineBuilder {
+public class AndroidHttpEngineBuilderWrapper extends ICronetEngineBuilder {
     private static final String TAG = "HttpEngBuilderWrap";
 
     private final HttpEngine.Builder mBackend;
