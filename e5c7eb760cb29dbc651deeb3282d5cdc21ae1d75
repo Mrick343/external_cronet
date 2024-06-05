@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "353f0950_c918fe29",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-05T11:35:40Z",
+      "side": 1,
+      "message": "The Blind approval, until we have an automated bot.",
+      "revId": "e5c7eb760cb29dbc651deeb3282d5cdc21ae1d75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
