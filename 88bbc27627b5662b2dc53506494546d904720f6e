@@ -128,6 +128,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e16c072d_a03b1b65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-06T08:21:26Z",
+      "side": 1,
+      "message": "I have updated CL to disable failing tests and filed b/345344485 to solve the issue.",
+      "parentUuid": "fedf329a_979acec2",
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "968e94a2_35a9ce75",
         "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
         "patchSetId": 4
