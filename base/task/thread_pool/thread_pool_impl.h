@@ -24,7 +24,6 @@
 #include "base/task/thread_pool/task_source.h"
 #include "base/task/thread_pool/task_tracker.h"
 #include "base/task/thread_pool/thread_group.h"
-#include "base/task/thread_pool/thread_group_impl.h"
 #include "base/task/thread_pool/thread_pool_instance.h"
 #include "base/task/updateable_sequenced_task_runner.h"
 #include "base/thread_annotations.h"
@@ -175,6 +174,7 @@ class BASE_EXPORT ThreadPoolImpl : public ThreadPoolInstance,
 
   const std::string histogram_label_;
   const std::unique_ptr<TaskTrackerImpl> task_tracker_;
+  const bool use_background_threads_;
   ServiceThread service_thread_;
   DelayedTaskManager delayed_task_manager_;
   PooledSingleThreadTaskRunnerManager single_thread_task_runner_manager_;

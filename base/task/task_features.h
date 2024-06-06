@@ -60,18 +60,15 @@ BASE_EXPORT BASE_DECLARE_FEATURE(kExplicitHighResolutionTimerWin);
 // Feature to run tasks by batches before pumping out messages.
 BASE_EXPORT BASE_DECLARE_FEATURE(kRunTasksByBatches);
 
-BASE_EXPORT void InitializeTaskLeeway();
-BASE_EXPORT TimeDelta GetTaskLeewayForCurrentThread();
-BASE_EXPORT TimeDelta GetDefaultTaskLeeway();
-
 // Controls the max number of delayed tasks that can run before selecting an
 // immediate task in sequence manager.
 BASE_EXPORT BASE_DECLARE_FEATURE(kMaxDelayedStarvationTasks);
 extern const BASE_EXPORT base::FeatureParam<int>
     kMaxDelayedStarvationTasksParam;
 
-// Feature to use a JobTaskSource implementation that minimizes lock contention.
-BASE_EXPORT BASE_DECLARE_FEATURE(kUseNewJobImplementation);
+// Feature to use ThreadGroupSemaphore instead of ThreadGroupImpl.
+BASE_EXPORT BASE_DECLARE_FEATURE(kThreadGroupSemaphore);
+extern const BASE_EXPORT base::FeatureParam<int> kMaxNumWorkersCreated;
 
 }  // namespace base
 
