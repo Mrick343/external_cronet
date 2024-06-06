@@ -110,6 +110,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fedf329a_979acec2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-06T07:59:47Z",
+      "side": 1,
+      "message": "Some tests access non-test non-public class code that are under the same package.  \nCurrently, NetHttpCoverageTests does not jarjar the test code but jarjar non-test codes.\nSo after the jarjaring, tests and non-tests classes are under the different package and tests can not access non-test classes.\n\nThis issue is happening on all tests in AndroidHttpEngineBuilderWrapperTest and some tests in CronetLoggerTest.\n[122.0.6261.43](https://source.chromium.org/chromium/chromium/src/+/refs/tags/122.0.6261.43:components/cronet/android/test/javatests/src/org/chromium/net/impl/) did not have AndroidHttpEngineBuilderWrapperTest and did not access class and method that caused issue in CronetLoggerTest.\n\nChanges that cause issues were introduced in [123.0.6312.40](https://source.chromium.org/chromium/chromium/src/+/refs/tags/123.0.6312.40:components/cronet/android/test/javatests/src/org/chromium/net/impl/).",
+      "parentUuid": "58795c21_3aa91a5e",
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "968e94a2_35a9ce75",
         "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
         "patchSetId": 4
@@ -121,6 +139,30 @@
       "writtenOn": "2024-06-05T12:25:31Z",
       "side": 1,
       "message": "No No No, we don\u0027t want to make the wrapper public, The wrapper should stay package private as we don\u0027t want users messing with it or instantiating it on their own.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac381afa_c4a2f152",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidHttpEngineBuilderWrapper.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-06T07:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "968e94a2_35a9ce75",
       "range": {
         "startLine": 27,
         "startChar": 0,
