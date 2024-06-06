@@ -144,6 +144,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8afe175_3b2ec9bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1743321
+      },
+      "writtenOn": "2024-06-06T11:59:06Z",
+      "side": 1,
+      "message": "Thanks for clarifying Motomu, let\u0027s resolve this discussion for now.",
+      "parentUuid": "e16c072d_a03b1b65",
+      "revId": "88bbc27627b5662b2dc53506494546d904720f6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "968e94a2_35a9ce75",
