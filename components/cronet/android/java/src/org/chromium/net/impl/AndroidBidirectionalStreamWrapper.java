@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBidirectionalStream {
     private final android.net.http.BidirectionalStream mBackend;
 
-    AndroidBidirectionalStreamWrapper(android.net.http.BidirectionalStream backend) {
+    private AndroidBidirectionalStreamWrapper(android.net.http.BidirectionalStream backend) {
         this.mBackend = backend;
     }
 
@@ -53,6 +53,7 @@ class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBid
         return mBackend.isDone();
     }
 
+<<<<<<< HEAD   (06a0b4 Cronet 123.0.6312.40: Remove nist-pkits)
     @Override
     public boolean isDelayRequestHeadersUntilFirstFlushEnabled() {
         return mBackend.isDelayRequestHeadersUntilFirstFlushEnabled();
@@ -93,5 +94,25 @@ class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBid
     @Override
     public String getHttpMethod() {
         return mBackend.getHttpMethod();
+=======
+    /**
+     * Creates an {@link AndroidBidirectionalStreamWrapper} that is stored on the callback.
+     *
+     * @param backend the http BidirectionalStream
+     * @param callback the stream's callback
+     * @return
+     */
+    static AndroidBidirectionalStreamWrapper withRecordingToCallback(
+            android.net.http.BidirectionalStream backend,
+            AndroidBidirectionalStreamCallbackWrapper callback) {
+        AndroidBidirectionalStreamWrapper wrappedStream =
+                new AndroidBidirectionalStreamWrapper(backend);
+        callback.recordWrappedStream(wrappedStream);
+        return wrappedStream;
+    }
+
+    android.net.http.BidirectionalStream getBackend() {
+        return mBackend;
+>>>>>>> BRANCH (93dc77 Import Cronet version 124.0.6367.42)
     }
 }
