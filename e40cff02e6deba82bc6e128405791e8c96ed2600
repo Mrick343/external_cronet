@@ -16,6 +16,24 @@
       "message": "Checking if presubmit fails in aosp/3115573",
       "revId": "e40cff02e6deba82bc6e128405791e8c96ed2600",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4c34f2e_fcfa6c92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-07T03:43:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dddba7ff_f5377451",
+      "revId": "e40cff02e6deba82bc6e128405791e8c96ed2600",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

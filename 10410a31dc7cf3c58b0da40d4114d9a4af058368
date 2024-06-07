@@ -22,6 +22,30 @@
       },
       "revId": "10410a31dc7cf3c58b0da40d4114d9a4af058368",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f862c7fc_09c7cb6a",
+        "filename": "android/tools/import/copy.bara.sky",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-07T03:43:14Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "7aa93c3b_3ed8d6ee",
+      "range": {
+        "startLine": 80,
+        "startChar": 8,
+        "endLine": 80,
+        "endChar": 36
+      },
+      "revId": "10410a31dc7cf3c58b0da40d4114d9a4af058368",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
