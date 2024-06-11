@@ -16,6 +16,23 @@
       "message": "Add\n\n```\n// TODO: Remove once https://chromium-review.googlesource.com/c/chromium/src/+/5370266 has made its way to AOSP\n```",
       "revId": "f3cf721e82f4565a7eb030580eb69d4e6206b08d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39766ad4_6131a0b5",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-11T10:28:41Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "f3cf721e82f4565a7eb030580eb69d4e6206b08d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
