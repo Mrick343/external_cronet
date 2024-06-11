@@ -1,1 +1,0 @@
-zap **GEN_JNI
