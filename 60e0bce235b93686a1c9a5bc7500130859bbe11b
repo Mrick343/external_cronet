@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6feba020_edc0ce0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-11T10:30:51Z",
+      "side": 1,
+      "message": "Is there a way to update the framework library in AOSP instead of dropping the file this way? I know this is easier but we will probably run into this again.\n\nI will appreciate it if you could investigate the possibility of updating accessibility_test_framework, I will unblock this for now.",
+      "revId": "60e0bce235b93686a1c9a5bc7500130859bbe11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
