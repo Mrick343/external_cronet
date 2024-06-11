@@ -11,9 +11,13 @@ import android.net.http.HttpException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.annotation.RequiresExtension;
+import androidx.annotation.VisibleForTesting;
+
 import java.nio.ByteBuffer;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @RequiresExtension(extension = EXT_API_LEVEL, version = EXT_VERSION)
