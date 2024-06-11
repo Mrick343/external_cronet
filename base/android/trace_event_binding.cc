@@ -8,10 +8,16 @@
 
 #include "base/android/jni_string.h"
 #include "base/android/trace_event_binding.h"
-#include "base/base_jni/TraceEvent_jni.h"
 #include "base/metrics/histogram_macros.h"
 #include "base/trace_event/base_tracing.h"
 #include "base/tracing_buildflags.h"
+#include "build/robolectric_buildflags.h"
+
+#if BUILDFLAG(IS_ROBOLECTRIC)
+#include "base/base_robolectric_jni/TraceEvent_jni.h"  // nogncheck
+#else
+#include "base/base_jni/TraceEvent_jni.h"
+#endif
 
 #if BUILDFLAG(ENABLE_BASE_TRACING)
 #include "base/trace_event/trace_event_impl.h"  // no-presubmit-check
@@ -47,7 +53,7 @@ class TraceEnabledObserver : public perfetto::TrackEventSessionObserver {
   }
 
   void OnStart(const perfetto::DataSourceBase::StartArgs&) override {
-    JNIEnv* env = base::android::AttachCurrentThread();
+    JNIEnv* env = jni_zero::AttachCurrentThread();
     base::android::Java_TraceEvent_setEnabled(env, true);
     base::android::Java_TraceEvent_setEventNameFilteringEnabled(
         env, EventNameFilteringEnabled());
@@ -56,7 +62,7 @@ class TraceEnabledObserver : public perfetto::TrackEventSessionObserver {
   void OnStop(const perfetto::DataSourceBase::StopArgs& args) override {
     event_name_filtering_per_session_.erase(args.internal_instance_index);
 
-    JNIEnv* env = base::android::AttachCurrentThread();
+    JNIEnv* env = jni_zero::AttachCurrentThread();
     base::android::Java_TraceEvent_setEnabled(
         env, !event_name_filtering_per_session_.empty());
     base::android::Java_TraceEvent_setEventNameFilteringEnabled(
@@ -92,7 +98,7 @@ class TraceEnabledObserver
 
   // trace_event::TraceLog::EnabledStateObserver:
   void OnTraceLogEnabled() override {
-    JNIEnv* env = base::android::AttachCurrentThread();
+    JNIEnv* env = jni_zero::AttachCurrentThread();
     base::android::Java_TraceEvent_setEnabled(env, true);
     if (base::trace_event::TraceLog::GetInstance()
             ->GetCurrentTraceConfig()
@@ -102,7 +108,7 @@ class TraceEnabledObserver
   }
 
   void OnTraceLogDisabled() override {
-    JNIEnv* env = base::android::AttachCurrentThread();
+    JNIEnv* env = jni_zero::AttachCurrentThread();
     base::android::Java_TraceEvent_setEnabled(env, false);
     base::android::Java_TraceEvent_setEventNameFilteringEnabled(env, false);
   }
@@ -313,42 +319,41 @@ static void JNI_TraceEvent_InstantAndroidToolbar(JNIEnv* env,
 static void JNI_TraceEvent_WebViewStartupTotalFactoryInit(JNIEnv* env,
                                                           jlong start_time_ms,
                                                           jlong duration_ms) {
-  // The following code does nothing if base tracing is disabled.
-  // TODO(b/283286049): set the track name explicitly after the Perfetto SDK
-  // migration is finished (crbug/1006541).
-  [[maybe_unused]] auto t =
-      perfetto::Track(trace_event::GetNextGlobalTraceId());
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+  auto t = perfetto::Track::ThreadScoped(env);
+  auto desc = t.Serialize();
+  desc.set_name("android_webview.timeline");
   TRACE_EVENT_BEGIN("android_webview.timeline",
                     "WebView.Startup.CreationTime.TotalFactoryInitTime", t,
                     TimeTicks() + Milliseconds(start_time_ms));
   TRACE_EVENT_END("android_webview.timeline", t,
                   TimeTicks() + Milliseconds(start_time_ms + duration_ms));
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 }
 
 static void JNI_TraceEvent_WebViewStartupStage1(JNIEnv* env,
                                                 jlong start_time_ms,
                                                 jlong duration_ms) {
-  // The following code does nothing if base tracing is disabled.
-  // TODO(b/283286049): set the track name explicitly after the Perfetto SDK
-  // migration is finished (crbug/1006541).
-  [[maybe_unused]] auto t =
-      perfetto::Track(trace_event::GetNextGlobalTraceId());
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+  auto t = perfetto::Track::ThreadScoped(env);
+  auto desc = t.Serialize();
+  desc.set_name("android_webview.timeline");
   TRACE_EVENT_BEGIN("android_webview.timeline",
                     "WebView.Startup.CreationTime.Stage1.FactoryInit", t,
                     TimeTicks() + Milliseconds(start_time_ms));
   TRACE_EVENT_END("android_webview.timeline", t,
                   TimeTicks() + Milliseconds(start_time_ms + duration_ms));
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 }
 
 static void JNI_TraceEvent_WebViewStartupStage2(JNIEnv* env,
                                                 jlong start_time_ms,
                                                 jlong duration_ms,
                                                 jboolean is_cold_startup) {
-  // The following code does nothing if base tracing is disabled.
-  // TODO(b/283286049): set the track name explicitly after the Perfetto SDK
-  // migration is finished (crbug/1006541).
-  [[maybe_unused]] auto t =
-      perfetto::Track(trace_event::GetNextGlobalTraceId());
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+  auto t = perfetto::Track::ThreadScoped(env);
+  auto desc = t.Serialize();
+  desc.set_name("android_webview.timeline");
   if (is_cold_startup) {
     TRACE_EVENT_BEGIN("android_webview.timeline",
                       "WebView.Startup.CreationTime.Stage2.ProviderInit.Cold",
@@ -361,12 +366,43 @@ static void JNI_TraceEvent_WebViewStartupStage2(JNIEnv* env,
 
   TRACE_EVENT_END("android_webview.timeline", t,
                   TimeTicks() + Milliseconds(start_time_ms + duration_ms));
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 }
 
-static void JNI_TraceEvent_StartupLaunchCause(
+static void JNI_TraceEvent_WebViewStartupStartChromiumLocked(
     JNIEnv* env,
-    jlong activity_id,
-    jint cause) {
+    jlong start_time_ms,
+    jlong duration_ms) {
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+  auto t = perfetto::Track::ThreadScoped(env);
+  auto desc = t.Serialize();
+  desc.set_name("android_webview.timeline");
+  TrackEvent::SetTrackDescriptor(t, desc);
+  TRACE_EVENT_BEGIN("android_webview.timeline",
+                    "WebView.Startup.CreationTime.StartChromiumLocked", t,
+                    TimeTicks() + Milliseconds(start_time_ms));
+  TRACE_EVENT_END("android_webview.timeline", t,
+                  TimeTicks() + Milliseconds(start_time_ms + duration_ms));
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
+}
+
+static void JNI_TraceEvent_StartupActivityStart(JNIEnv* env,
+                                                jlong activity_id,
+                                                jlong start_time_ms) {
+  TRACE_EVENT_INSTANT(
+      "interactions", "Startup.ActivityStart",
+      TimeTicks() + Milliseconds(start_time_ms),
+      [&](perfetto::EventContext ctx) {
+        auto* start_up = ctx.event<perfetto::protos::pbzero::ChromeTrackEvent>()
+                             ->set_startup();
+        start_up->set_activity_id(activity_id);
+      });
+}
+
+static void JNI_TraceEvent_StartupLaunchCause(JNIEnv* env,
+                                              jlong activity_id,
+                                              jlong start_time_ms,
+                                              jint cause) {
 #if BUILDFLAG(ENABLE_BASE_TRACING)
   using Startup = perfetto::protos::pbzero::StartUp;
   auto launchType = Startup::OTHER;
@@ -430,7 +466,9 @@ static void JNI_TraceEvent_StartupLaunchCause(
   }
 
   TRACE_EVENT_INSTANT(
-      "interactions", "Startup.LaunchCause", [&](perfetto::EventContext ctx) {
+      "interactions,startup", "Startup.LaunchCause",
+      TimeTicks() + Milliseconds(start_time_ms),
+      [&](perfetto::EventContext ctx) {
         auto* start_up = ctx.event<perfetto::protos::pbzero::ChromeTrackEvent>()
                              ->set_startup();
         start_up->set_activity_id(activity_id);
@@ -449,7 +487,7 @@ static void JNI_TraceEvent_StartupTimeToFirstVisibleContent2(
       base::trace_event::GetNextGlobalTraceId(),
       perfetto::ProcessTrack::Current());
   TRACE_EVENT_BEGIN(
-      "interactions", "Startup.TimeToFirstVisibleContent2", track,
+      "interactions,startup", "Startup.TimeToFirstVisibleContent2", track,
       TimeTicks() + Milliseconds(start_time_ms),
       [&](perfetto::EventContext ctx) {
         auto* start_up = ctx.event<perfetto::protos::pbzero::ChromeTrackEvent>()
@@ -457,7 +495,7 @@ static void JNI_TraceEvent_StartupTimeToFirstVisibleContent2(
         start_up->set_activity_id(activity_id);
       });
 
-  TRACE_EVENT_END("interactions", track,
+  TRACE_EVENT_END("interactions,startup", track,
                   TimeTicks() + Milliseconds(start_time_ms + duration_ms));
 #endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 }

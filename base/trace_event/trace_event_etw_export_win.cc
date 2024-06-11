@@ -113,7 +113,7 @@ const char* const kFilteredEventGroupNames[] = {
     "media",                                 // 0x20000
     "loading",                               // 0x40000
     "base",                                  // 0x80000
-    "unused_bit_20",                         // 0x100000
+    "devtools.timeline",                     // 0x100000
     "unused_bit_21",                         // 0x200000
     "unused_bit_22",                         // 0x400000
     "unused_bit_23",                         // 0x800000
@@ -360,8 +360,8 @@ bool TraceEventETWExport::IsCategoryGroupEnabled(
   if (!instance->etw_provider_->IsEnabled())
     return false;
 
-  CStringTokenizer category_group_tokens(category_group_name.begin(),
-                                         category_group_name.end(), ",");
+  StringViewTokenizer category_group_tokens(category_group_name.begin(),
+                                            category_group_name.end(), ",");
   while (category_group_tokens.GetNext()) {
     StringPiece category_group_token = category_group_tokens.token_piece();
     if (instance->IsCategoryEnabled(category_group_token)) {
@@ -475,8 +475,8 @@ uint64_t CategoryGroupToETWKeyword(std::string_view category_group_name) {
   // TODO(joel@microsoft.com) Explore better methods in future integration
   // with perfetto.
 
-  CStringTokenizer category_group_tokens(category_group_name.begin(),
-                                         category_group_name.end(), ",");
+  StringViewTokenizer category_group_tokens(category_group_name.begin(),
+                                            category_group_name.end(), ",");
   while (category_group_tokens.GetNext()) {
     StringPiece category_group_token = category_group_tokens.token_piece();
 

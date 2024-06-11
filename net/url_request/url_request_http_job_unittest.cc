@@ -263,8 +263,7 @@ TEST_F(URLRequestHttpJobWithProxyTest, TestSuccessfulWithOneProxy) {
 
   std::unique_ptr<ProxyResolutionService> proxy_resolution_service =
       ConfiguredProxyResolutionService::CreateFixedFromPacResultForTest(
-          ProxyServerToPacResultElement(
-              proxy_chain.GetProxyServer(/*chain_index=*/0)),
+          ProxyServerToPacResultElement(proxy_chain.First()),
           TRAFFIC_ANNOTATION_FOR_TESTS);
 
   MockWrite writes[] = {MockWrite(kSimpleProxyGetMockWrite)};
@@ -307,9 +306,7 @@ TEST_F(URLRequestHttpJobWithProxyTest,
   // DIRECT.
   std::unique_ptr<ProxyResolutionService> proxy_resolution_service =
       ConfiguredProxyResolutionService::CreateFixedFromPacResultForTest(
-          ProxyServerToPacResultElement(
-              proxy_chain.GetProxyServer(/*chain_index=*/0)) +
-              "; DIRECT",
+          ProxyServerToPacResultElement(proxy_chain.First()) + "; DIRECT",
           TRAFFIC_ANNOTATION_FOR_TESTS);
 
   MockWrite writes[] = {MockWrite(kSimpleGetMockWrite)};
@@ -336,7 +333,7 @@ TEST_F(URLRequestHttpJobWithProxyTest,
 
   request->Start();
   ASSERT_TRUE(request->is_pending());
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsOk());
   EXPECT_EQ(ProxyChain::Direct(), request->proxy_chain());
@@ -602,7 +599,7 @@ TEST_F(URLRequestHttpJobWithMockSocketsTest,
 
   delegate.set_cancel_in_received_data(true);
   request->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsError(ERR_ABORTED));
   EXPECT_EQ(12, request->received_response_content_length());
@@ -642,7 +639,7 @@ TEST_F(URLRequestHttpJobWithMockSocketsTest,
 
   request->Start();
   ASSERT_TRUE(request->is_pending());
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsOk());
   EXPECT_EQ(12, request->received_response_content_length());
@@ -665,7 +662,7 @@ TEST_F(URLRequestHttpJobWithMockSocketsTest,
 
   delegate.set_cancel_in_response_started(true);
   request->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsError(ERR_ABORTED));
   EXPECT_EQ(0, request->received_response_content_length());
@@ -685,7 +682,7 @@ TEST_F(URLRequestHttpJobWithMockSocketsTest,
 
   request->Start();
   request->Cancel();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsError(ERR_ABORTED));
   EXPECT_EQ(0, request->received_response_content_length());
@@ -937,7 +934,7 @@ TEST_F(URLRequestHttpJobWithMockSocketsTest, EncodingAdvertisementOnRange) {
   request->SetExtraRequestHeaders(headers);
 
   request->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsOk());
   EXPECT_EQ(12, request->received_response_content_length());
@@ -976,7 +973,7 @@ TEST_F(URLRequestHttpJobWithMockSocketsTest, RangeRequestOverrideEncoding) {
   request->SetExtraRequestHeaders(headers);
 
   request->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsOk());
   EXPECT_EQ(12, request->received_response_content_length());
@@ -1268,8 +1265,8 @@ TEST_F(URLRequestHttpJobTest, ShouldBypassHSTSResponseAndConnectionNotReused) {
     EXPECT_TRUE(delegate.redirect_info().new_url.SchemeIs("https"));
     EXPECT_THAT(delegate.request_status(), net::ERR_IO_PENDING);
 
-    req->FollowDeferredRedirect(absl::nullopt /* removed_headers */,
-                                absl::nullopt /* modified_headers */);
+    req->FollowDeferredRedirect(std::nullopt /* removed_headers */,
+                                std::nullopt /* modified_headers */);
     delegate.RunUntilComplete();
     EXPECT_EQ(kSecureContent, delegate.data_received());
     EXPECT_FALSE(req->was_cached());
@@ -1317,8 +1314,8 @@ TEST_F(URLRequestHttpJobTest, HSTSInternalRedirectCallback) {
 
     raw_req_headers = HttpRawRequestHeaders();
 
-    r->FollowDeferredRedirect(absl::nullopt /* removed_headers */,
-                              absl::nullopt /* modified_headers */);
+    r->FollowDeferredRedirect(std::nullopt /* removed_headers */,
+                              std::nullopt /* modified_headers */);
     delegate.RunUntilComplete();
 
     EXPECT_FALSE(raw_req_headers.headers().empty());
@@ -1390,7 +1387,7 @@ TEST_F(URLRequestHttpJobWithBrotliSupportTest, NoBrotliAdvertisementOverHttp) {
       context_->CreateRequest(GURL("http://www.example.com"), DEFAULT_PRIORITY,
                               &delegate, TRAFFIC_ANNOTATION_FOR_TESTS);
   request->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsOk());
   EXPECT_EQ(12, request->received_response_content_length());
@@ -1424,7 +1421,7 @@ TEST_F(URLRequestHttpJobWithBrotliSupportTest, BrotliAdvertisement) {
       context_->CreateRequest(GURL("https://www.example.com"), DEFAULT_PRIORITY,
                               &delegate, TRAFFIC_ANNOTATION_FOR_TESTS);
   request->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate.RunUntilComplete();
 
   EXPECT_THAT(delegate.request_status(), IsOk());
   EXPECT_EQ(12, request->received_response_content_length());
@@ -1600,7 +1597,7 @@ class URLRequestHttpJobWebSocketTest : public TestWithTaskEnvironment {
 
 TEST_F(URLRequestHttpJobWebSocketTest, RejectedWithoutCreateHelper) {
   req_->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate_.RunUntilComplete();
   EXPECT_THAT(delegate_.request_status(), IsError(ERR_DISALLOWED_URL_SCHEME));
 }
 
@@ -1643,7 +1640,7 @@ TEST_F(URLRequestHttpJobWebSocketTest, CreateHelperPassedThrough) {
                     std::move(websocket_stream_create_helper));
   req_->SetLoadFlags(LOAD_DISABLE_CACHE);
   req_->Start();
-  base::RunLoop().RunUntilIdle();
+  delegate_.RunUntilComplete();
   EXPECT_THAT(delegate_.request_status(), IsOk());
   EXPECT_TRUE(delegate_.response_completed());
 
@@ -1665,8 +1662,8 @@ bool CreateAndSetCookie(CookieStore* cs,
                         const GURL& url,
                         const std::string& cookie_line) {
   auto cookie = CanonicalCookie::Create(
-      url, cookie_line, base::Time::Now(), absl::nullopt /* server_time */,
-      absl::nullopt /* cookie_partition_key */);
+      url, cookie_line, base::Time::Now(), std::nullopt /* server_time */,
+      std::nullopt /* cookie_partition_key */);
   if (!cookie)
     return false;
   DCHECK(cs);
@@ -1717,8 +1714,7 @@ TEST_F(URLRequestHttpJobTest, CookieSchemeRequestSchemeHistogram) {
   // would normally only happen during an existing cookie DB version upgrade.
   std::unique_ptr<CanonicalCookie> unset_cookie1 = CanonicalCookie::Create(
       secure_url_for_unset1, "NoSourceSchemeHttps=val", base::Time::Now(),
-      absl::nullopt /* server_time */,
-      absl::nullopt /* cookie_partition_key */);
+      std::nullopt /* server_time */, std::nullopt /* cookie_partition_key */);
   unset_cookie1->SetSourceScheme(net::CookieSourceScheme::kUnset);
 
   CookieList list1 = {*unset_cookie1};
@@ -1738,8 +1734,7 @@ TEST_F(URLRequestHttpJobTest, CookieSchemeRequestSchemeHistogram) {
 
   std::unique_ptr<CanonicalCookie> unset_cookie2 = CanonicalCookie::Create(
       nonsecure_url_for_unset2, "NoSourceSchemeHttp=val", base::Time::Now(),
-      absl::nullopt /* server_time */,
-      absl::nullopt /* cookie_partition_key */);
+      std::nullopt /* server_time */, std::nullopt /* cookie_partition_key */);
   unset_cookie2->SetSourceScheme(net::CookieSourceScheme::kUnset);
 
   CookieList list2 = {*unset_cookie2};

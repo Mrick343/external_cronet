@@ -5,17 +5,18 @@
 #ifndef NET_DNS_PUBLIC_DOH_PROVIDER_ENTRY_H_
 #define NET_DNS_PUBLIC_DOH_PROVIDER_ENTRY_H_
 
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
 
 #include "base/feature_list.h"
+#include "base/memory/raw_ptr.h"
 #include "base/memory/raw_ptr_exclusion.h"
 #include "base/strings/string_piece.h"
 #include "net/base/ip_address.h"
 #include "net/base/net_export.h"
 #include "net/dns/public/dns_over_https_server_config.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 
 namespace net {
 
@@ -36,7 +37,7 @@ namespace net {
 // the dropdown menu.
 struct NET_EXPORT DohProviderEntry {
  public:
-  using List = std::vector<const DohProviderEntry*>;
+  using List = std::vector<raw_ptr<const DohProviderEntry, VectorExperimental>>;
 
   enum class LoggingLevel {
     // Indicates the normal amount of logging, monitoring, and metrics.
