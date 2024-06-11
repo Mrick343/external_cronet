@@ -10,6 +10,7 @@ import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_VERSION;
 import android.net.Network;
 
 import androidx.annotation.RequiresExtension;
+import androidx.annotation.VisibleForTesting;
 
 import org.chromium.net.CronetEngine;
 
@@ -67,4 +68,5 @@ class AndroidBidirectionalStreamBuilderWrapper
     public org.chromium.net.ExperimentalBidirectionalStream build() {
         return new AndroidBidirectionalStreamWrapper(mBackend.build());
     }
+
 }

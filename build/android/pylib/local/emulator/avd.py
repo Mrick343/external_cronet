@@ -557,6 +557,8 @@ class AvdConfig:
       # Wait for this step to complete since it can take a while for old OSs
       # like M, otherwise the avd may have "Encryption Unsuccessful" error.
       instance.device.WaitUntilFullyBooted(decrypt=True, timeout=360, retries=0)
+      logging.info('The build fingerprint of the system is %r',
+                   instance.device.build_fingerprint)
 
       if additional_apks:
         for apk in additional_apks:
@@ -1030,7 +1032,7 @@ class _AvdInstance:
         # Always print timestamp when debug tags are set.
         self._debug_tags.add('time')
         emulator_cmd.extend(['-debug', ','.join(self._debug_tags)])
-        if 'kernel' in self._debug_tags:
+        if 'kernel' in self._debug_tags or 'all' in self._debug_tags:
           # TODO(crbug.com/1404176): newer API levels need "-virtio-console"
           # as well to print kernel log.
           emulator_cmd.append('-show-kernel')
@@ -1212,6 +1214,10 @@ def _EnsureSystemSettings(device):
   strgmtime = time.strftime(set_date_format, time.gmtime())
   set_date_command.append(strgmtime)
   device.RunShellCommand(set_date_command, check_return=True, as_root=True)
+
+  logging.info('Hide system error dialogs such as crash and ANR dialogs.')
+  device.RunShellCommand(
+      ['settings', 'put', 'global', 'hide_error_dialogs', '1'])
 
 
 def _EnableNetwork(device):
