@@ -8,6 +8,7 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <set>
 #include <string>
 #include <utility>
@@ -19,17 +20,17 @@
 #include "base/dcheck_is_on.h"
 #include "base/immediate_crash.h"
 #include "base/memory/ptr_util.h"
+#include "base/numerics/byte_conversions.h"
 #include "base/strings/string_piece.h"
 #include "net/base/ip_address.h"
 #include "net/dns/dns_names_util.h"
 #include "net/dns/public/dns_protocol.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 
 namespace net {
 
 namespace {
 
-bool ReadNextServiceParam(absl::optional<uint16_t> last_key,
+bool ReadNextServiceParam(std::optional<uint16_t> last_key,
                           base::BigEndianReader& reader,
                           uint16_t* out_param_key,
                           base::StringPiece* out_param_value) {
@@ -109,11 +110,13 @@ bool ParseIpAddresses(base::StringPiece param_value,
   auto reader = base::BigEndianReader::FromStringPiece(param_value);
 
   std::vector<IPAddress> addresses;
-  uint8_t addr_bytes[ADDRESS_SIZE];
   do {
-    if (!reader.ReadBytes(addr_bytes, ADDRESS_SIZE))
+    if (auto addr_bytes = reader.ReadSpan(ADDRESS_SIZE);
+        !addr_bytes.has_value()) {
       return false;
-    addresses.emplace_back(addr_bytes);
+    } else {
+      addresses.emplace_back(*addr_bytes);
+    }
     DCHECK(addresses.back().IsValid());
   } while (reader.remaining() > 0);
 
@@ -187,13 +190,13 @@ std::unique_ptr<AliasFormHttpsRecordRdata> AliasFormHttpsRecordRdata::Parse(
   if (priority != 0)
     return nullptr;
 
-  absl::optional<std::string> alias_name =
+  std::optional<std::string> alias_name =
       dns_names_util::NetworkToDottedName(reader, true /* require_complete */);
   if (!alias_name.has_value())
     return nullptr;
 
   // Ignore any params.
-  absl::optional<uint16_t> last_param_key;
+  std::optional<uint16_t> last_param_key;
   while (reader.remaining() > 0) {
     uint16_t param_key;
     base::StringPiece param_value;
@@ -229,7 +232,7 @@ ServiceFormHttpsRecordRdata::ServiceFormHttpsRecordRdata(
     std::set<uint16_t> mandatory_keys,
     std::vector<std::string> alpn_ids,
     bool default_alpn,
-    absl::optional<uint16_t> port,
+    std::optional<uint16_t> port,
     std::vector<IPAddress> ipv4_hint,
     std::string ech_config,
     std::vector<IPAddress> ipv6_hint,
@@ -295,7 +298,7 @@ std::unique_ptr<ServiceFormHttpsRecordRdata> ServiceFormHttpsRecordRdata::Parse(
   if (priority == 0)
     return nullptr;
 
-  absl::optional<std::string> service_name =
+  std::optional<std::string> service_name =
       dns_names_util::NetworkToDottedName(reader, true /* require_complete */);
   if (!service_name.has_value())
     return nullptr;
@@ -305,7 +308,7 @@ std::unique_ptr<ServiceFormHttpsRecordRdata> ServiceFormHttpsRecordRdata::Parse(
         HttpsRecordPriority{priority}, std::move(service_name).value(),
         std::set<uint16_t>() /* mandatory_keys */,
         std::vector<std::string>() /* alpn_ids */, true /* default_alpn */,
-        absl::nullopt /* port */, std::vector<IPAddress>() /* ipv4_hint */,
+        std::nullopt /* port */, std::vector<IPAddress>() /* ipv4_hint */,
         std::string() /* ech_config */,
         std::vector<IPAddress>() /* ipv6_hint */,
         std::map<uint16_t, std::string>() /* unparsed_params */);
@@ -313,9 +316,10 @@ std::unique_ptr<ServiceFormHttpsRecordRdata> ServiceFormHttpsRecordRdata::Parse(
 
   uint16_t param_key = 0;
   base::StringPiece param_value;
-  if (!ReadNextServiceParam(absl::nullopt /* last_key */, reader, &param_key,
-                            &param_value))
+  if (!ReadNextServiceParam(std::nullopt /* last_key */, reader, &param_key,
+                            &param_value)) {
     return nullptr;
+  }
 
   // Assume keys less than Mandatory are not possible.
   DCHECK_GE(param_key, dns_protocol::kHttpsServiceParamKeyMandatory);
@@ -354,14 +358,13 @@ std::unique_ptr<ServiceFormHttpsRecordRdata> ServiceFormHttpsRecordRdata::Parse(
     }
   }
 
-  absl::optional<uint16_t> port;
+  std::optional<uint16_t> port;
   if (param_key == dns_protocol::kHttpsServiceParamKeyPort) {
     DCHECK(IsSupportedKey(param_key));
     if (param_value.size() != 2)
       return nullptr;
-    uint16_t port_val;
-    base::ReadBigEndian(reinterpret_cast<const uint8_t*>(param_value.data()),
-                        &port_val);
+    uint16_t port_val = base::numerics::U16FromBigEndian(
+        base::as_byte_span(param_value).first<2>());
     port = port_val;
     if (reader.remaining() > 0 &&
         !ReadNextServiceParam(param_key, reader, &param_key, &param_value)) {

@@ -53,6 +53,42 @@
 namespace net {
 
 #if BUILDFLAG(CHROME_ROOT_STORE_SUPPORTED)
+class SystemTrustStoreChromeOnly : public SystemTrustStore {
+ public:
+  // Creates a SystemTrustStore that gets publicly trusted roots from
+  // |trust_store_chrome|.
+  explicit SystemTrustStoreChromeOnly(
+      std::unique_ptr<TrustStoreChrome> trust_store_chrome)
+      : trust_store_chrome_(std::move(trust_store_chrome)) {}
+
+  bssl::TrustStore* GetTrustStore() override {
+    return trust_store_chrome_.get();
+  }
+
+  // IsKnownRoot returns true if the given trust anchor is a standard one (as
+  // opposed to a user-installed root)
+  bool IsKnownRoot(const bssl::ParsedCertificate* trust_anchor) const override {
+    return trust_store_chrome_->Contains(trust_anchor);
+  }
+
+  int64_t chrome_root_store_version() const override {
+    return trust_store_chrome_->version();
+  }
+
+  base::span<const ChromeRootCertConstraints> GetChromeRootConstraints(
+      const bssl::ParsedCertificate* cert) const override {
+    return trust_store_chrome_->GetConstraintsForCert(cert);
+  }
+
+ private:
+  std::unique_ptr<TrustStoreChrome> trust_store_chrome_;
+};
+
+std::unique_ptr<SystemTrustStore> CreateChromeOnlySystemTrustStore(
+    std::unique_ptr<TrustStoreChrome> chrome_root) {
+  return std::make_unique<SystemTrustStoreChromeOnly>(std::move(chrome_root));
+}
+
 class SystemTrustStoreChromeWithUnOwnedSystemStore : public SystemTrustStore {
  public:
   // Creates a SystemTrustStore that gets publicly trusted roots from
@@ -79,6 +115,11 @@ class SystemTrustStoreChromeWithUnOwnedSystemStore : public SystemTrustStore {
 
   int64_t chrome_root_store_version() const override {
     return trust_store_chrome_->version();
+  }
+
+  base::span<const ChromeRootCertConstraints> GetChromeRootConstraints(
+      const bssl::ParsedCertificate* cert) const override {
+    return trust_store_chrome_->GetConstraintsForCert(cert);
   }
 
  private:
@@ -177,8 +218,7 @@ class FuchsiaSystemCerts {
     }
 
     CertificateList certs = X509Certificate::CreateCertificateListFromBytes(
-        base::as_bytes(base::make_span(certs_file)),
-        X509Certificate::FORMAT_AUTO);
+        base::as_byte_span(certs_file), X509Certificate::FORMAT_AUTO);
 
     for (const auto& cert : certs) {
       bssl::CertErrors errors;
