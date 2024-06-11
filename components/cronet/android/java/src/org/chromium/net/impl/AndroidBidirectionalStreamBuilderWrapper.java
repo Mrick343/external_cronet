@@ -18,13 +18,10 @@ import org.chromium.net.CronetEngine;
 class AndroidBidirectionalStreamBuilderWrapper
         extends org.chromium.net.ExperimentalBidirectionalStream.Builder {
     private final android.net.http.BidirectionalStream.Builder mBackend;
-    private final AndroidBidirectionalStreamCallbackWrapper mWrappedCallback;
 
     public AndroidBidirectionalStreamBuilderWrapper(
-            android.net.http.BidirectionalStream.Builder backend,
-            AndroidBidirectionalStreamCallbackWrapper wrappedCallback) {
-        mBackend = backend;
-        mWrappedCallback = wrappedCallback;
+            android.net.http.BidirectionalStream.Builder backend) {
+        this.mBackend = backend;
     }
 
     @Override
@@ -69,12 +66,7 @@ class AndroidBidirectionalStreamBuilderWrapper
 
     @Override
     public org.chromium.net.ExperimentalBidirectionalStream build() {
-        return AndroidBidirectionalStreamWrapper.withRecordingToCallback(
-                mBackend.build(), mWrappedCallback);
+        return new AndroidBidirectionalStreamWrapper(mBackend.build());
     }
 
-    @VisibleForTesting
-    AndroidBidirectionalStreamCallbackWrapper getCallback() {
-        return mWrappedCallback;
-    }
 }
