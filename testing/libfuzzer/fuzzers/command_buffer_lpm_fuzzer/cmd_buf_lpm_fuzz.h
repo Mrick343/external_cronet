@@ -139,15 +139,14 @@ class CmdBufFuzz : public base::TestSuite {
   std::unique_ptr<webgpu::WebGPUCmdHelper> webgpu_cmd_helper_ = nullptr;
   // std::unique_ptr<gpu::CommandBufferProxyImpl> command_buffer_proxy_impl_;
   //  scoped_refptr<viz::ContextProviderCommandBuffer> provider_;
-  std::unique_ptr<wgpu::Instance> webgpu_instance_;
+  wgpu::Instance webgpu_instance_;
   raw_ptr<webgpu::WebGPUDecoder> decoder_;
-  std::unique_ptr<wgpu::Adapter> webgpu_adapter_;
+  wgpu::Adapter webgpu_adapter_;
   std::unique_ptr<gpu::TransferBuffer> transfer_buffer_;
   raw_ptr<gpu::webgpu::WebGPUImplementation> webgpu_impl_;
   std::unique_ptr<dawn::wire::WireServer> wire_server_;
   scoped_refptr<webgpu::APIChannel> wire_channel_;
   std::unique_ptr<dawn::native::Instance> dawn_instance_;
-  std::unique_ptr<DawnProcTable> dawn_procs_;
   std::unique_ptr<dawn::wire::WireServerDescriptor> wire_descriptor_;
   scoped_refptr<Buffer> buffer_;
   int32_t command_buffer_id_ = -1;

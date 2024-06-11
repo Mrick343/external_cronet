@@ -77,7 +77,7 @@ public class MultiprocessTestClientServiceDelegate implements ChildProcessServic
 
     @Override
     public void runMain() {
-        int result = MainRunner.runMain(CommandLine.getJavaSwitchesOrNull());
+        int result = MainRunner.runMain(CommandLine.getJavaSwitchesForTesting());
         try {
             mTestCallback.mainReturned(result);
         } catch (RemoteException re) {

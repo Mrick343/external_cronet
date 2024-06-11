@@ -12,6 +12,7 @@
 #include "quiche/quic/core/crypto/null_encrypter.h"
 #include "quiche/quic/core/http/quic_spdy_client_session.h"
 #include "quiche/quic/core/http/spdy_utils.h"
+#include "quiche/quic/core/quic_error_codes.h"
 #include "quiche/quic/core/quic_utils.h"
 #include "quiche/quic/platform/api/quic_logging.h"
 #include "quiche/quic/platform/api/quic_socket_address.h"
@@ -23,6 +24,7 @@
 
 using spdy::Http2HeaderBlock;
 using testing::_;
+using testing::ElementsAre;
 using testing::StrictMock;
 
 namespace quic {
@@ -114,6 +116,8 @@ TEST_P(QuicSpdyClientStreamTest, TestReceivingIllegalResponseStatusCode) {
                               headers);
   EXPECT_THAT(stream_->stream_error(),
               IsStreamError(QUIC_BAD_APPLICATION_PAYLOAD));
+  EXPECT_EQ(stream_->ietf_application_error(),
+            static_cast<uint64_t>(QuicHttp3ErrorCode::GENERAL_PROTOCOL_ERROR));
 }
 
 TEST_P(QuicSpdyClientStreamTest, InvalidResponseHeader) {
@@ -126,6 +130,8 @@ TEST_P(QuicSpdyClientStreamTest, InvalidResponseHeader) {
                               headers);
   EXPECT_THAT(stream_->stream_error(),
               IsStreamError(QUIC_BAD_APPLICATION_PAYLOAD));
+  EXPECT_EQ(stream_->ietf_application_error(),
+            static_cast<uint64_t>(QuicHttp3ErrorCode::GENERAL_PROTOCOL_ERROR));
 }
 
 TEST_P(QuicSpdyClientStreamTest, MissingStatusCode) {
@@ -138,6 +144,8 @@ TEST_P(QuicSpdyClientStreamTest, MissingStatusCode) {
                               headers);
   EXPECT_THAT(stream_->stream_error(),
               IsStreamError(QUIC_BAD_APPLICATION_PAYLOAD));
+  EXPECT_EQ(stream_->ietf_application_error(),
+            static_cast<uint64_t>(QuicHttp3ErrorCode::GENERAL_PROTOCOL_ERROR));
 }
 
 TEST_P(QuicSpdyClientStreamTest, TestFraming) {
@@ -164,6 +172,8 @@ TEST_P(QuicSpdyClientStreamTest, HostAllowedInResponseHeader) {
   stream_->OnStreamHeaderList(false, headers.uncompressed_header_bytes(),
                               headers);
   EXPECT_THAT(stream_->stream_error(), IsStreamError(QUIC_STREAM_NO_ERROR));
+  EXPECT_EQ(stream_->ietf_application_error(),
+            static_cast<uint64_t>(QuicHttp3ErrorCode::HTTP3_NO_ERROR));
 }
 
 TEST_P(QuicSpdyClientStreamTest, Test100ContinueBeforeSuccessful) {
@@ -341,6 +351,8 @@ TEST_P(QuicSpdyClientStreamTest,
       QuicStreamFrame(stream_->id(), /*fin=*/false, /*offset=*/0, data));
 
   EXPECT_NE(QUIC_STREAM_NO_ERROR, stream_->stream_error());
+  EXPECT_EQ(stream_->ietf_application_error(),
+            static_cast<uint64_t>(QuicHttp3ErrorCode::GENERAL_PROTOCOL_ERROR));
 }
 
 // Test that receiving trailing headers (on the headers stream), containing a
@@ -377,6 +389,65 @@ TEST_P(QuicSpdyClientStreamTest, ReceivingTrailers) {
   stream_->OnStreamFrame(
       QuicStreamFrame(stream_->id(), /*fin=*/false, /*offset=*/0, data));
   EXPECT_TRUE(stream_->reading_stopped());
+}
+
+TEST_P(QuicSpdyClientStreamTest, Capsules) {
+  if (!VersionUsesHttp3(connection_->transport_version())) {
+    return;
+  }
+  SavingHttp3DatagramVisitor h3_datagram_visitor;
+  stream_->RegisterHttp3DatagramVisitor(&h3_datagram_visitor);
+  headers_.erase("content-length");
+  auto headers = AsHeaderList(headers_);
+  stream_->OnStreamHeaderList(false, headers.uncompressed_header_bytes(),
+                              headers);
+  std::string capsule_data = {0, 6, 1, 2, 3, 4, 5, 6, 0x17, 4, 1, 2, 3, 4};
+  quiche::QuicheBuffer data_frame_header =
+      HttpEncoder::SerializeDataFrameHeader(
+          capsule_data.length(), quiche::SimpleBufferAllocator::Get());
+  std::string stream_data =
+      absl::StrCat(data_frame_header.AsStringView(), capsule_data);
+  stream_->OnStreamFrame(
+      QuicStreamFrame(stream_->id(), /*fin=*/false, /*offset=*/0, stream_data));
+  // Datagram capsule.
+  std::string http_datagram_payload = {1, 2, 3, 4, 5, 6};
+  EXPECT_THAT(h3_datagram_visitor.received_h3_datagrams(),
+              ElementsAre(SavingHttp3DatagramVisitor::SavedHttp3Datagram{
+                  stream_->id(), http_datagram_payload}));
+  // Unknown capsule.
+  uint64_t capsule_type = 0x17u;
+  std::string unknown_capsule_payload = {1, 2, 3, 4};
+  EXPECT_THAT(h3_datagram_visitor.received_unknown_capsules(),
+              ElementsAre(SavingHttp3DatagramVisitor::SavedUnknownCapsule{
+                  stream_->id(), capsule_type, unknown_capsule_payload}));
+  // Cleanup.
+  stream_->UnregisterHttp3DatagramVisitor();
+}
+
+TEST_P(QuicSpdyClientStreamTest, CapsulesOnUnsuccessfulResponse) {
+  if (!VersionUsesHttp3(connection_->transport_version())) {
+    return;
+  }
+  SavingHttp3DatagramVisitor h3_datagram_visitor;
+  stream_->RegisterHttp3DatagramVisitor(&h3_datagram_visitor);
+  headers_[":status"] = "401";
+  headers_.erase("content-length");
+  auto headers = AsHeaderList(headers_);
+  stream_->OnStreamHeaderList(false, headers.uncompressed_header_bytes(),
+                              headers);
+  std::string capsule_data = {0, 6, 1, 2, 3, 4, 5, 6, 0x17, 4, 1, 2, 3, 4};
+  quiche::QuicheBuffer data_frame_header =
+      HttpEncoder::SerializeDataFrameHeader(
+          capsule_data.length(), quiche::SimpleBufferAllocator::Get());
+  std::string stream_data =
+      absl::StrCat(data_frame_header.AsStringView(), capsule_data);
+  stream_->OnStreamFrame(
+      QuicStreamFrame(stream_->id(), /*fin=*/false, /*offset=*/0, stream_data));
+  // Ensure received capsules were ignored.
+  EXPECT_TRUE(h3_datagram_visitor.received_h3_datagrams().empty());
+  EXPECT_TRUE(h3_datagram_visitor.received_unknown_capsules().empty());
+  // Cleanup.
+  stream_->UnregisterHttp3DatagramVisitor();
 }
 
 }  // namespace

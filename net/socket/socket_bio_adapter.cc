@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/socket/socket_bio_adapter.h"
 
 #include <stdio.h>
@@ -288,7 +293,7 @@ void SocketBIOAdapter::SocketWrite() {
     int write_size =
         std::min(write_buffer_used_, write_buffer_->RemainingCapacity());
 
-    // TODO(crbug.com/1440692): Remove this once the crash is resolved.
+    // TODO(crbug.com/40064248): Remove this once the crash is resolved.
     char debug[128];
     snprintf(debug, sizeof(debug),
              "offset=%d;remaining=%d;used=%d;write_size=%d",
@@ -300,7 +305,7 @@ void SocketBIOAdapter::SocketWrite() {
     int result = socket_->Write(write_buffer_.get(), write_size,
                                 write_callback_, kTrafficAnnotation);
 
-    // TODO(crbug.com/1440692): Remove this once the crash is resolved.
+    // TODO(crbug.com/40064248): Remove this once the crash is resolved.
     char debug2[32];
     snprintf(debug2, sizeof(debug2), "result=%d", result);
     base::debug::Alias(debug2);
@@ -308,7 +313,7 @@ void SocketBIOAdapter::SocketWrite() {
     // If `write_buffer_used_` changed across a call to the underlying socket,
     // something went very wrong.
     //
-    // TODO(crbug.com/1440692): Remove this once the crash is resolved.
+    // TODO(crbug.com/40064248): Remove this once the crash is resolved.
     CHECK_EQ(write_buffer_used_old, write_buffer_used_);
     if (result != ERR_IO_PENDING) {
       // `HandleSocketWriteResult` will update `write_error_` based on `result.

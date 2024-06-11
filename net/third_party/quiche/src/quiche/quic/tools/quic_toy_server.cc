@@ -4,6 +4,8 @@
 
 #include "quiche/quic/tools/quic_toy_server.h"
 
+#include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -90,8 +92,7 @@ QuicToyServer::MemoryCacheBackendFactory::CreateBackend() {
       std::optional<QuicServerId> destination_server_id =
           QuicServerId::ParseFromHostPortString(destination);
       QUICHE_CHECK(destination_server_id.has_value());
-      connect_proxy_destinations.insert(
-          std::move(destination_server_id).value());
+      connect_proxy_destinations.insert(*std::move(destination_server_id));
     }
 
     absl::flat_hash_set<QuicServerId> connect_udp_proxy_targets;
@@ -101,7 +102,7 @@ QuicToyServer::MemoryCacheBackendFactory::CreateBackend() {
       std::optional<QuicServerId> target_server_id =
           QuicServerId::ParseFromHostPortString(target);
       QUICHE_CHECK(target_server_id.has_value());
-      connect_udp_proxy_targets.insert(std::move(target_server_id).value());
+      connect_udp_proxy_targets.insert(*std::move(target_server_id));
     }
 
     QUICHE_CHECK(!connect_proxy_destinations.empty() ||

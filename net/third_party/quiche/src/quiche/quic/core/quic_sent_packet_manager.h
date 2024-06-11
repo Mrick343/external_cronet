@@ -85,9 +85,6 @@ class QUICHE_EXPORT QuicSentPacketManager {
                                            QuicByteCount /*old_cwnd*/,
                                            QuicByteCount /*new_cwnd*/) {}
 
-    virtual void OnAdjustBurstSize(int /*old_burst_size*/,
-                                   int /*new_burst_size*/) {}
-
     virtual void OnOvershootingDetected() {}
 
     virtual void OnConfigProcessed(const SendParameters& /*parameters*/) {}
@@ -358,10 +355,6 @@ class QUICHE_EXPORT QuicSentPacketManager {
 
   void SetDebugDelegate(DebugDelegate* debug_delegate);
 
-  void SetPacingAlarmGranularity(QuicTime::Delta alarm_granularity) {
-    pacing_sender_.set_alarm_granularity(alarm_granularity);
-  }
-
   QuicPacketNumber GetLargestObserved() const {
     return unacked_packets_.largest_acked();
   }
@@ -397,6 +390,11 @@ class QUICHE_EXPORT QuicSentPacketManager {
   const SendAlgorithmInterface* GetSendAlgorithm() const {
     return send_algorithm_.get();
   }
+
+  // Wrapper for SendAlgorithmInterface functions, since these functions are
+  // not const.
+  bool EnableECT0() { return send_algorithm_->EnableECT0(); }
+  bool EnableECT1() { return send_algorithm_->EnableECT1(); }
 
   void SetSessionNotifier(SessionNotifierInterface* session_notifier) {
     unacked_packets_.SetSessionNotifier(session_notifier);

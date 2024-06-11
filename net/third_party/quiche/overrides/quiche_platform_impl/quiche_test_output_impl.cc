@@ -29,8 +29,7 @@ void QuicheRecordTestOutputToFile(std::string_view filename,
   auto path = base::FilePath::FromUTF8Unsafe(output_dir)
                   .Append(base::FilePath::FromUTF8Unsafe(filename));
 
-  int bytes_written = base::WriteFile(path, data.data(), data.size());
-  if (bytes_written < 0) {
+  if (!base::WriteFile(path, base::as_byte_span(data))) {
     QUIC_LOG(WARNING) << "Failed to write into " << path;
     return;
   }
@@ -75,7 +74,7 @@ void QuicheRecordTraceImpl(std::string_view identifier, std::string_view data) {
   strftime(timestamp, sizeof(timestamp), "%Y%m%d%H%M%S", &now);
 
   std::string filename = base::StringPrintf(
-      "%s.%s.%s.%s.qtr", test_info->name(), test_info->test_case_name(),
+      "%s.%s.%s.%s.qtr", test_info->name(), test_info->test_suite_name(),
       identifier.data(), timestamp);
 
   QuicheRecordTestOutputToFile(filename, data);

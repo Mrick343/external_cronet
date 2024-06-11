@@ -141,17 +141,16 @@ void CmdBufFuzz::GfxInit() {
 
   VLOG(3) << "Wire protocol setup";
   wire_channel_ = webgpu()->GetAPIChannel();
-  dawn_procs_ = std::make_unique<DawnProcTable>(wire_channel_->GetProcs());
-  dawnProcSetProcs(dawn_procs_.get());
+  dawnProcSetProcs(&dawn::wire::client::GetProcs());
   dawn_wire_services_ =
       static_cast<webgpu::DawnWireServices*>(wire_channel_.get());
   dawn_wire_serializer_ = dawn_wire_services_->serializer();
   wire_descriptor_ = std::make_unique<dawn::wire::WireServerDescriptor>();
-  wire_descriptor_->procs = dawn_procs_.get();
+  wire_descriptor_->procs = &dawn::wire::client::GetProcs();
   wire_descriptor_->serializer = dawn_wire_serializer_.get();
   wire_server_ = std::make_unique<dawn::wire::WireServer>(*wire_descriptor_);
   dawn_instance_ = std::make_unique<dawn::native::Instance>();
-  wire_server_->InjectInstance(dawn_instance_->Get(), 1, 0);
+  wire_server_->InjectInstance(dawn_instance_->Get(), {1, 0});
 
   VLOG(3) << "Populate data structure grab bag";
   command_buffer_ = webgpu_context_->GetCommandBufferForTest();
@@ -165,8 +164,7 @@ void CmdBufFuzz::GfxInit() {
   surface_ = gl::init::CreateOffscreenGLSurface(gl_display_, gfx::Size());
   CHECK(surface_.get());
   decoder_ = command_buffer_->GetWebGPUDecoderForTest();
-  webgpu_instance_ =
-      std::make_unique<wgpu::Instance>(wire_channel_->GetWGPUInstance());
+  webgpu_instance_ = wgpu::Instance(wire_channel_->GetWGPUInstance());
   buffer_ = cmd_helper_->get_ring_buffer();
   CHECK(buffer_);
   command_buffer_id_ = cmd_helper_->get_ring_buffer_id();
@@ -470,9 +468,11 @@ void CmdBufFuzz::RunCommandBuffer(fuzzing::CmdBufSession session) {
             // Passing totally unstructured data leads to hitting validation
             // errors in webgpu_decoder_impl.cc.
 
-            // TODO(bookholt): Explore whether it's worth giving some structure
-            // to data sent to HandleReturnData().
-            command_buffer_->HandleReturnData(data_span);
+            // We don't fuzz HandleReturnData because, as of right now, that
+            // command is exclusively used by the client in the renderer.
+            // {GPU Process}->{Renderer Process} attacks are not in our threat
+            // model.
+            // command_buffer_->HandleReturnData(data_span);
             break;
           }
 

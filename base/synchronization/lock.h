@@ -22,14 +22,13 @@ namespace base {
 // AssertAcquired() method.
 class LOCKABLE BASE_EXPORT Lock {
  public:
-#if !DCHECK_IS_ON()
-  // Optimized wrapper implementation
-  Lock() : lock_() {}
+  Lock() = default;
 
   Lock(const Lock&) = delete;
   Lock& operator=(const Lock&) = delete;
 
-  ~Lock() {}
+#if !DCHECK_IS_ON()
+  ~Lock() = default;
 
   void Acquire() EXCLUSIVE_LOCK_FUNCTION() { lock_.Lock(); }
   void Release() UNLOCK_FUNCTION() { lock_.Unlock(); }
@@ -44,7 +43,6 @@ class LOCKABLE BASE_EXPORT Lock {
   void AssertAcquired() const ASSERT_EXCLUSIVE_LOCK() {}
   void AssertNotHeld() const {}
 #else
-  Lock();
   ~Lock();
 
   // NOTE: We do not permit recursive locks and will commonly fire a DCHECK() if
@@ -115,6 +113,12 @@ class LOCKABLE BASE_EXPORT Lock {
 // A helper class that acquires the given Lock while the AutoLock is in scope.
 using AutoLock = internal::BasicAutoLock<Lock>;
 
+// A helper class that acquires the given Lock while the MovableAutoLock is in
+// scope. Unlike AutoLock, the lock can be moved out of MovableAutoLock. Unlike
+// AutoLockMaybe, the passed in lock is always valid, so need to check only on
+// destruction.
+using MovableAutoLock = internal::BasicMovableAutoLock<Lock>;
+
 // A helper class that tries to acquire the given Lock while the AutoTryLock is
 // in scope.
 using AutoTryLock = internal::BasicAutoTryLock<Lock>;
@@ -124,13 +128,13 @@ using AutoTryLock = internal::BasicAutoTryLock<Lock>;
 using AutoUnlock = internal::BasicAutoUnlock<Lock>;
 
 // Like AutoLock but is a no-op when the provided Lock* is null. Inspired from
-// absl::MutexLockMaybe. Use this instead of absl::optional<base::AutoLock> to
+// absl::MutexLockMaybe. Use this instead of std::optional<base::AutoLock> to
 // get around -Wthread-safety-analysis warnings for conditional locking.
 using AutoLockMaybe = internal::BasicAutoLockMaybe<Lock>;
 
 // Like AutoLock but permits Release() of its mutex before destruction.
 // Release() may be called at most once. Inspired from
-// absl::ReleasableMutexLock. Use this instead of absl::optional<base::AutoLock>
+// absl::ReleasableMutexLock. Use this instead of std::optional<base::AutoLock>
 // to get around -Wthread-safety-analysis warnings for AutoLocks that are
 // explicitly released early (prefer proper scoping to this).
 using ReleasableAutoLock = internal::BasicReleasableAutoLock<Lock>;

@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PAGE_ALLOCATOR_H_
-#define BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PAGE_ALLOCATOR_H_
+#ifndef PARTITION_ALLOC_PAGE_ALLOCATOR_H_
+#define PARTITION_ALLOC_PAGE_ALLOCATOR_H_
 
 #include <cstddef>
 #include <cstdint>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/page_allocator_constants.h"
 #include "partition_alloc/partition_alloc_base/compiler_specific.h"
 #include "partition_alloc/partition_alloc_base/component_export.h"
@@ -33,12 +33,15 @@ struct PageAccessibilityConfiguration {
     // that don't support Arm's BTI.
     kReadExecuteProtected,
     kReadExecute,
+    // This flag is mapped to `kReadWriteExecute` on systems that do not support
+    // Arm's BTI.
+    kReadWriteExecuteProtected,
     // This flag is deprecated and will go away soon.
     // TODO(bbudge) Remove this as soon as V8 doesn't need RWX pages.
     kReadWriteExecute,
   };
 
-#if BUILDFLAG(ENABLE_THREAD_ISOLATION)
+#if PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
   constexpr explicit PageAccessibilityConfiguration(Permissions permissions)
       : permissions(permissions) {}
   constexpr PageAccessibilityConfiguration(
@@ -48,13 +51,13 @@ struct PageAccessibilityConfiguration {
 #else
   constexpr explicit PageAccessibilityConfiguration(Permissions permissions)
       : permissions(permissions) {}
-#endif  // BUILDFLAG(ENABLE_THREAD_ISOLATION)
+#endif  // PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
 
   Permissions permissions;
-#if BUILDFLAG(ENABLE_THREAD_ISOLATION)
+#if PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
   // Tag the page with a Memory Protection Key. Use 0 for none.
   ThreadIsolationOption thread_isolation;
-#endif  // BUILDFLAG(ENABLE_THREAD_ISOLATION)
+#endif  // PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
 };
 
 // Use for De/RecommitSystemPages API.
@@ -243,14 +246,12 @@ void DecommitSystemPages(
 // In contrast to |DecommitSystemPages|, this API guarantees that the pages are
 // zeroed and will always mark the region as inaccessible (the equivalent of
 // setting them to PageAccessibilityConfiguration::kInaccessible).
-//
-// This API will crash if the operation cannot be performed.
 PA_COMPONENT_EXPORT(PARTITION_ALLOC)
-void DecommitAndZeroSystemPages(uintptr_t address,
+bool DecommitAndZeroSystemPages(uintptr_t address,
                                 size_t length,
                                 PageTag page_tag = PageTag::kChromium);
 PA_COMPONENT_EXPORT(PARTITION_ALLOC)
-void DecommitAndZeroSystemPages(void* address,
+bool DecommitAndZeroSystemPages(void* address,
                                 size_t length,
                                 PageTag page_tag = PageTag::kChromium);
 
@@ -258,7 +259,7 @@ void DecommitAndZeroSystemPages(void* address,
 // recommitted. Do not assume that this will not change over time.
 constexpr PA_COMPONENT_EXPORT(
     PARTITION_ALLOC) bool DecommittedMemoryIsAlwaysZeroed() {
-#if BUILDFLAG(IS_APPLE)
+#if PA_BUILDFLAG(IS_APPLE)
   return false;
 #else
   return true;
@@ -379,15 +380,15 @@ PA_COMPONENT_EXPORT(PARTITION_ALLOC) uint32_t GetAllocPageErrorCode();
 // to assess address space pressure.
 PA_COMPONENT_EXPORT(PARTITION_ALLOC) size_t GetTotalMappedSize();
 
-#if BUILDFLAG(IS_WIN)
+#if PA_BUILDFLAG(IS_WIN)
 // Sets whether to retry the allocation of pages when a commit failure
 // happens. This doesn't cover cases where the system is out of address space,
 // or reaches another limit.
 PA_COMPONENT_EXPORT(PARTITION_ALLOC)
 void SetRetryOnCommitFailure(bool retry_on_commit_failure);
 bool GetRetryOnCommitFailure();
-#endif  // BUILDFLAG(IS_WIN)
+#endif  // PA_BUILDFLAG(IS_WIN)
 
 }  // namespace partition_alloc
 
-#endif  // BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PAGE_ALLOCATOR_H_
+#endif  // PARTITION_ALLOC_PAGE_ALLOCATOR_H_

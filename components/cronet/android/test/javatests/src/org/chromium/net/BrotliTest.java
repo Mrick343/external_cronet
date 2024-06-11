@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.chromium.base.test.util.Batch;
+import org.chromium.base.test.util.RequiresRestart;
 import org.chromium.net.CronetTestRule.CronetImplementation;
 import org.chromium.net.CronetTestRule.IgnoreFor;
 import org.chromium.net.CronetTestRule.RequiresMinApi;
@@ -40,7 +41,7 @@ public class BrotliTest {
 
     @Before
     public void setUp() throws Exception {
-        // TODO(crbug/1490552): Fallback to MockCertVerifier when custom CAs are not supported.
+        // TODO(crbug.com/40284777): Fallback to MockCertVerifier when custom CAs are not supported.
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             mTestRule
                     .getTestFramework()
@@ -88,6 +89,7 @@ public class BrotliTest {
 
     @Test
     @SmallTest
+    @RequiresRestart("crbug.com/344959577")
     public void testBrotliDecoded() throws Exception {
         mTestRule
                 .getTestFramework()

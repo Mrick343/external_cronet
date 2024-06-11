@@ -4,24 +4,42 @@
 
 package org.chromium.net.impl;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_API_LEVEL;
 import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_VERSION;
 
 import androidx.annotation.RequiresExtension;
 
-import org.chromium.net.UrlResponseInfo;
+import org.chromium.net.CronetEngine;
+import org.chromium.net.CronetException;
+import org.chromium.net.RequestFinishedInfo;
+import org.chromium.net.RequestFinishedInfo.Listener;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 
 @RequiresExtension(extension = EXT_API_LEVEL, version = EXT_VERSION)
 class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     private final android.net.http.UrlRequest mBackend;
+    private final AndroidHttpEngineWrapper mEngine;
+    private final String mInitialUrl;
+    private final Collection<Object> mAnnotations;
+    private final VersionSafeCallbacks.RequestFinishedInfoListener mRequestFinishedInfoListener;
 
-    AndroidUrlRequestWrapper(android.net.http.UrlRequest backend) {
+    AndroidUrlRequestWrapper(
+            android.net.http.UrlRequest backend,
+            AndroidHttpEngineWrapper engine,
+            String url,
+            Collection<Object> annotations,
+            RequestFinishedInfo.Listener requestFinishedInfoListener) {
         this.mBackend = backend;
+        this.mEngine = engine;
+        this.mInitialUrl = url;
+        this.mAnnotations = annotations;
+        this.mRequestFinishedInfoListener =
+                requestFinishedInfoListener == null
+                        ? null
+                        : new VersionSafeCallbacks.RequestFinishedInfoListener(
+                                requestFinishedInfoListener);
     }
 
     @Override
@@ -54,50 +72,47 @@ class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
         mBackend.getStatus(new AndroidUrlRequestStatusListenerWrapper(listener));
     }
 
-    @Override
-    public int getTrafficStatsUid() {
-        return mBackend.getTrafficStatsUid();
+    /**
+     * Creates an {@link AndroidUrlRequestWrapper} that is recorded on the callback.
+     *
+     * @param backend the http UrlRequest
+     * @param callback the stream's callback
+     * @return the wrapped request
+     */
+    static AndroidUrlRequestWrapper createAndAddToCallback(
+            android.net.http.UrlRequest backend,
+            AndroidUrlRequestCallbackWrapper callback,
+            AndroidHttpEngineWrapper engine,
+            String url,
+            Collection<Object> annotations,
+            RequestFinishedInfo.Listener requestFinishedInfoListener) {
+        AndroidUrlRequestWrapper wrappedRequest =
+                new AndroidUrlRequestWrapper(
+                        backend, engine, url, annotations, requestFinishedInfoListener);
+        callback.setRequest(wrappedRequest);
+        return wrappedRequest;
     }
 
-    @Override
-    public int getPriority() {
-        return mBackend.getPriority();
-    }
-
-    @Override
-    public boolean hasTrafficStatsTag() {
-        return mBackend.hasTrafficStatsTag();
-    }
-
-    @Override
-    public boolean hasTrafficStatsUid() {
-        return mBackend.hasTrafficStatsUid();
-    }
-
-    @Override
-    public int getTrafficStatsTag() {
-        return mBackend.getTrafficStatsTag();
-    }
-
-    @Override
-    public boolean isDirectExecutorAllowed() {
-        return mBackend.isDirectExecutorAllowed();
-    }
-
-    @Override
-    public boolean isCacheDisabled() {
-        return mBackend.isCacheDisabled();
-    }
-
-    @NonNull
-    @Override
-    public UrlResponseInfo.HeaderBlock getHeaders() {
-        return new AndroidHeaderBlockWrapper(mBackend.getHeaders());
-    }
-
-    @Nullable
-    @Override
-    public String getHttpMethod() {
-        return mBackend.getHttpMethod();
+    /**
+     * HttpEngine does not support {@link CronetEngine#addRequestFinishedListener(Listener)}). To
+     * preserve compatibility with Cronet users who use that method, we reimplement the
+     * functionality with a placeholder CronetMetric object. This reimplementation allows for {@link
+     * RequestFinishedInfo.Listener#onRequestFinished(RequestFinishedInfo)} to be called so as not
+     * to unknowingly block users who might be depending on that API call.
+     */
+    void maybeReportMetrics(
+            @RequestFinishedInfoImpl.FinishedReason int finishedReason,
+            AndroidUrlResponseInfoWrapper responseInfo,
+            CronetException exception) {
+        final RequestFinishedInfo requestInfo =
+                new RequestFinishedInfoImpl(
+                        mInitialUrl,
+                        mAnnotations,
+                        new CronetMetrics(
+                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, false, -1, -1),
+                        finishedReason,
+                        responseInfo,
+                        exception);
+        mEngine.reportRequestFinished(requestInfo, mRequestFinishedInfoListener);
     }
 }

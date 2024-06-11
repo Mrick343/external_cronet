@@ -8,6 +8,8 @@
 #include "base/base_export.h"
 #include "base/check.h"
 #include "base/dcheck_is_on.h"
+#include "base/memory/raw_ptr_exclusion.h"
+#include "base/memory/stack_allocated.h"
 #include "base/thread_annotations.h"
 #include "build/build_config.h"
 
@@ -129,6 +131,8 @@ void LockImpl::Unlock() {
 // This is an implementation used for AutoLock templated on the lock type.
 template <class LockType>
 class SCOPED_LOCKABLE BasicAutoLock {
+  STACK_ALLOCATED();
+
  public:
   struct AlreadyAcquired {};
 
@@ -155,11 +159,48 @@ class SCOPED_LOCKABLE BasicAutoLock {
   LockType& lock_;
 };
 
+// This is an implementation used for MovableAutoLock templated on the lock
+// type.
+template <class LockType>
+class SCOPED_LOCKABLE BasicMovableAutoLock {
+ public:
+  explicit BasicMovableAutoLock(LockType& lock) EXCLUSIVE_LOCK_FUNCTION(lock)
+      : lock_(&lock) {
+    lock_->Acquire();
+  }
+
+  BasicMovableAutoLock(const BasicMovableAutoLock&) = delete;
+  BasicMovableAutoLock& operator=(const BasicMovableAutoLock&) = delete;
+  BasicMovableAutoLock(BasicMovableAutoLock&& other) :
+      lock_(std::exchange(other.lock_, nullptr)) {}
+  BasicMovableAutoLock& operator=(BasicMovableAutoLock&& other) = delete;
+
+  ~BasicMovableAutoLock() UNLOCK_FUNCTION() {
+    // The lock may have been moved out.
+    if (lock_) {
+      lock_->AssertAcquired();
+      lock_->Release();
+    }
+  }
+
+ private:
+  // RAW_PTR_EXCLUSION: Stack-scoped.
+  RAW_PTR_EXCLUSION LockType* lock_;
+};
+
 // This is an implementation used for AutoTryLock templated on the lock type.
 template <class LockType>
 class SCOPED_LOCKABLE BasicAutoTryLock {
+  STACK_ALLOCATED();
+
  public:
-  explicit BasicAutoTryLock(LockType& lock) EXCLUSIVE_LOCK_FUNCTION(lock)
+  // The `LOCKS_EXCLUDED(lock)` annotation requires that the caller has not
+  // acquired `lock`. Without the annotation, Clang's Thread Safety Analysis
+  // would generate a false positive despite correct usage. For instance, a
+  // caller that checks `is_acquired()` before writing to guarded data would be
+  // flagged with "writing variable 'foo' requires holding 'lock' exclusively."
+  // See <https://crbug.com/340196356>.
+  explicit BasicAutoTryLock(LockType& lock) LOCKS_EXCLUDED(lock)
       : lock_(lock), is_acquired_(lock_.Try()) {}
 
   BasicAutoTryLock(const BasicAutoTryLock&) = delete;
@@ -172,7 +213,9 @@ class SCOPED_LOCKABLE BasicAutoTryLock {
     }
   }
 
-  bool is_acquired() const { return is_acquired_; }
+  bool is_acquired() const EXCLUSIVE_TRYLOCK_FUNCTION(true) {
+    return is_acquired_;
+  }
 
  private:
   LockType& lock_;
@@ -182,6 +225,8 @@ class SCOPED_LOCKABLE BasicAutoTryLock {
 // This is an implementation used for AutoUnlock templated on the lock type.
 template <class LockType>
 class BasicAutoUnlock {
+  STACK_ALLOCATED();
+
  public:
   explicit BasicAutoUnlock(LockType& lock) : lock_(lock) {
     // We require our caller to have the lock.
@@ -201,6 +246,8 @@ class BasicAutoUnlock {
 // This is an implementation used for AutoLockMaybe templated on the lock type.
 template <class LockType>
 class SCOPED_LOCKABLE BasicAutoLockMaybe {
+  STACK_ALLOCATED();
+
  public:
   explicit BasicAutoLockMaybe(LockType* lock) EXCLUSIVE_LOCK_FUNCTION(lock)
       : lock_(lock) {
@@ -226,6 +273,8 @@ class SCOPED_LOCKABLE BasicAutoLockMaybe {
 // type.
 template <class LockType>
 class SCOPED_LOCKABLE BasicReleasableAutoLock {
+  STACK_ALLOCATED();
+
  public:
   explicit BasicReleasableAutoLock(LockType* lock) EXCLUSIVE_LOCK_FUNCTION(lock)
       : lock_(lock) {
