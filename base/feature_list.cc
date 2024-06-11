@@ -29,6 +29,11 @@
 #include "base/strings/string_util.h"
 #include "base/strings/stringprintf.h"
 #include "build/build_config.h"
+#include "build/chromeos_buildflags.h"
+
+#if BUILDFLAG(IS_CHROMEOS_ASH)
+#include "base/feature_visitor.h"
+#endif  // BUILDFLAG(IS_CHROMEOS_ASH)
 
 namespace base {
 
@@ -48,26 +53,31 @@ class EarlyFeatureAccessTracker {
   }
 
   // Invoked when `feature` is accessed before FeatureList registration.
-  void AccessedFeature(const Feature& feature) {
+  void AccessedFeature(const Feature& feature,
+                       bool with_feature_allow_list = false) {
     AutoLock lock(lock_);
-    if (fail_instantly_)
-      Fail(&feature);
-    else if (!feature_)
+    if (fail_instantly_) {
+      Fail(&feature, with_feature_allow_list);
+    } else if (!feature_) {
       feature_ = &feature;
+      feature_had_feature_allow_list_ = with_feature_allow_list;
+    }
   }
 
   // Asserts that no feature was accessed before FeatureList registration.
   void AssertNoAccess() {
     AutoLock lock(lock_);
-    if (feature_)
-      Fail(feature_);
+    if (feature_) {
+      Fail(feature_, feature_had_feature_allow_list_);
+    }
   }
 
   // Makes calls to AccessedFeature() fail instantly.
   void FailOnFeatureAccessWithoutFeatureList() {
     AutoLock lock(lock_);
-    if (feature_)
-      Fail(feature_);
+    if (feature_) {
+      Fail(feature_, feature_had_feature_allow_list_);
+    }
     fail_instantly_ = true;
   }
 
@@ -84,7 +94,7 @@ class EarlyFeatureAccessTracker {
   }
 
  private:
-  void Fail(const Feature* feature) {
+  void Fail(const Feature* feature, bool with_feature_allow_list) {
     // TODO(crbug.com/1358639): Enable this check on all platforms.
 #if !BUILDFLAG(IS_IOS) && !BUILDFLAG(IS_ANDROID) && !BUILDFLAG(IS_CHROMEOS)
 #if !BUILDFLAG(IS_NACL)
@@ -92,9 +102,14 @@ class EarlyFeatureAccessTracker {
     // facilitate crash triage.
     SCOPED_CRASH_KEY_STRING256("FeatureList", "feature-accessed-too-early",
                                feature->name);
+    SCOPED_CRASH_KEY_BOOL("FeatureList", "early-access-allow-list",
+                          with_feature_allow_list);
 #endif  // !BUILDFLAG(IS_NACL)
     CHECK(!feature) << "Accessed feature " << feature->name
-                    << " before FeatureList registration.";
+                    << (with_feature_allow_list
+                            ? " which is not on the allow list passed to "
+                              "SetEarlyAccessInstance()."
+                            : " before FeatureList registration.");
 #endif  // !BUILDFLAG(IS_IOS) && !BUILDFLAG(IS_ANDROID) &&
         // !BUILDFLAG(IS_CHROMEOS)
   }
@@ -108,6 +123,7 @@ class EarlyFeatureAccessTracker {
 
   // First feature to be accessed before FeatureList registration.
   raw_ptr<const Feature> feature_ GUARDED_BY(lock_) = nullptr;
+  bool feature_had_feature_allow_list_ GUARDED_BY(lock_) = false;
 
   // Whether AccessedFeature() should fail instantly.
   bool fail_instantly_ GUARDED_BY(lock_) = false;
@@ -245,6 +261,11 @@ uint32_t PackFeatureCache(FeatureList::OverrideState override_state,
          (caching_context & 0xFFFF);
 }
 
+// A monotonically increasing id, passed to `FeatureList`s as they are created
+// to invalidate the cache member of `base::Feature` objects that were queried
+// with a different `FeatureList` installed.
+uint16_t g_current_caching_context = 1;
+
 }  // namespace
 
 #if BUILDFLAG(DCHECK_IS_CONFIGURABLE)
@@ -253,7 +274,7 @@ BASE_FEATURE(kDCheckIsFatalFeature,
              FEATURE_DISABLED_BY_DEFAULT);
 #endif  // BUILDFLAG(DCHECK_IS_CONFIGURABLE)
 
-FeatureList::FeatureList() = default;
+FeatureList::FeatureList() : caching_context_(g_current_caching_context++) {}
 
 FeatureList::~FeatureList() = default;
 
@@ -435,7 +456,9 @@ void FeatureList::GetCommandLineFeatureOverrides(
 bool FeatureList::IsEnabled(const Feature& feature) {
   if (!g_feature_list_instance ||
       !g_feature_list_instance->AllowFeatureAccess(feature)) {
-    EarlyFeatureAccessTracker::GetInstance()->AccessedFeature(feature);
+    EarlyFeatureAccessTracker::GetInstance()->AccessedFeature(
+        feature, g_feature_list_instance &&
+                     g_feature_list_instance->IsEarlyAccessInstance());
     return feature.default_state == FEATURE_ENABLED_BY_DEFAULT;
   }
   return g_feature_list_instance->IsFeatureEnabled(feature);
@@ -447,12 +470,14 @@ bool FeatureList::IsValidFeatureOrFieldTrialName(StringPiece name) {
 }
 
 // static
-absl::optional<bool> FeatureList::GetStateIfOverridden(const Feature& feature) {
+std::optional<bool> FeatureList::GetStateIfOverridden(const Feature& feature) {
   if (!g_feature_list_instance ||
       !g_feature_list_instance->AllowFeatureAccess(feature)) {
-    EarlyFeatureAccessTracker::GetInstance()->AccessedFeature(feature);
+    EarlyFeatureAccessTracker::GetInstance()->AccessedFeature(
+        feature, g_feature_list_instance &&
+                     g_feature_list_instance->IsEarlyAccessInstance());
     // If there is no feature list, there can be no overrides.
-    return absl::nullopt;
+    return std::nullopt;
   }
   return g_feature_list_instance->IsFeatureEnabledIfOverridden(feature);
 }
@@ -461,7 +486,9 @@ absl::optional<bool> FeatureList::GetStateIfOverridden(const Feature& feature) {
 FieldTrial* FeatureList::GetFieldTrial(const Feature& feature) {
   if (!g_feature_list_instance ||
       !g_feature_list_instance->AllowFeatureAccess(feature)) {
-    EarlyFeatureAccessTracker::GetInstance()->AccessedFeature(feature);
+    EarlyFeatureAccessTracker::GetInstance()->AccessedFeature(
+        feature, g_feature_list_instance &&
+                     g_feature_list_instance->IsEarlyAccessInstance());
     return nullptr;
   }
   return g_feature_list_instance->GetAssociatedFieldTrial(feature);
@@ -562,12 +589,10 @@ FeatureList* FeatureList::GetInstance() {
 void FeatureList::SetInstance(std::unique_ptr<FeatureList> instance) {
   DCHECK(!g_feature_list_instance ||
          g_feature_list_instance->IsEarlyAccessInstance());
-  // If there is an existing early-access instance, release it after
-  // updating the caching context sequence.
+  // If there is an existing early-access instance, release it.
   if (g_feature_list_instance) {
     std::unique_ptr<FeatureList> old_instance =
         WrapUnique(g_feature_list_instance);
-    instance->caching_context_ = old_instance->caching_context_ + 1;
     g_feature_list_instance = nullptr;
   }
   instance->FinalizeInitialization();
@@ -602,9 +627,9 @@ void FeatureList::SetInstance(std::unique_ptr<FeatureList> instance) {
   if (FeatureList::IsEnabled(kDCheckIsFatalFeature) ||
       CommandLine::ForCurrentProcess()->HasSwitch(
           "gtest_internal_run_death_test")) {
-    logging::LOGGING_DCHECK = logging::LOG_FATAL;
+    logging::LOGGING_DCHECK = logging::LOGGING_FATAL;
   } else {
-    logging::LOGGING_DCHECK = logging::LOG_INFO;
+    logging::LOGGING_DCHECK = logging::LOGGING_ERROR;
   }
 #endif  // BUILDFLAG(DCHECK_IS_CONFIGURABLE)
 }
@@ -641,10 +666,6 @@ void FeatureList::FailOnFeatureAccessWithoutFeatureList() {
       ->FailOnFeatureAccessWithoutFeatureList();
 }
 
-void FeatureList::SetCachingContextForTesting(uint16_t caching_context) {
-  caching_context_ = caching_context;
-}
-
 // static
 const Feature* FeatureList::GetEarlyAccessedFeatureForTesting() {
   return EarlyFeatureAccessTracker::GetInstance()->GetFeature();
@@ -659,6 +680,33 @@ void FeatureList::AddEarlyAllowedFeatureForTesting(std::string feature_name) {
   CHECK(IsEarlyAccessInstance());
   allowed_feature_names_.insert(std::move(feature_name));
 }
+
+#if BUILDFLAG(IS_CHROMEOS_ASH)
+// static
+void FeatureList::VisitFeaturesAndParams(FeatureVisitor& visitor) {
+  CHECK(g_feature_list_instance);
+  FieldTrialParamAssociator* params_associator =
+      FieldTrialParamAssociator::GetInstance();
+
+  for (auto& feature_override : g_feature_list_instance->overrides_) {
+    FieldTrial* field_trial = feature_override.second.field_trial;
+
+    std::string trial_name;
+    std::string group_name;
+    FieldTrialParams params;
+    if (field_trial) {
+      trial_name = field_trial->trial_name();
+      group_name = field_trial->group_name();
+      params_associator->GetFieldTrialParamsWithoutFallback(
+          trial_name, group_name, &params);
+    }
+
+    visitor.Visit(feature_override.first,
+                  feature_override.second.overridden_state, params, trial_name,
+                  group_name);
+  }
+}
+#endif  // BULDFLAG(IS_CHROMEOS_ASH)
 
 void FeatureList::FinalizeInitialization() {
   DCHECK(!initialized_);
@@ -677,7 +725,7 @@ bool FeatureList::IsFeatureEnabled(const Feature& feature) const {
   return feature.default_state == FEATURE_ENABLED_BY_DEFAULT;
 }
 
-absl::optional<bool> FeatureList::IsFeatureEnabledIfOverridden(
+std::optional<bool> FeatureList::IsFeatureEnabledIfOverridden(
     const Feature& feature) const {
   OverrideState overridden_state = GetOverrideState(feature);
 
@@ -685,7 +733,7 @@ absl::optional<bool> FeatureList::IsFeatureEnabledIfOverridden(
   if (overridden_state != OVERRIDE_USE_DEFAULT)
     return overridden_state == OVERRIDE_ENABLE_FEATURE;
 
-  return absl::nullopt;
+  return std::nullopt;
 }
 
 FeatureList::OverrideState FeatureList::GetOverrideState(
