@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "655705cb_5c8c02eb",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-11T10:38:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "040fb171_870b1c3b",
+      "revId": "f3cf721e82f4565a7eb030580eb69d4e6206b08d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39766ad4_6131a0b5",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-06-11T10:28:41Z",
       "side": 1,
       "message": "ditto",
+      "revId": "f3cf721e82f4565a7eb030580eb69d4e6206b08d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07bf92a7_279e76e7",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-11T10:38:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39766ad4_6131a0b5",
       "revId": "f3cf721e82f4565a7eb030580eb69d4e6206b08d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
