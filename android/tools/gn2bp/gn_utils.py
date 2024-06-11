@@ -156,13 +156,20 @@ class GnParser(object):
         self.outputs = set()
         self.args = []
         self.response_file_contents = ''
+        self.rust_flags = list()
 
     def __init__(self, name, type):
       self.name = name  # e.g. //src/ipc:ipc
 
       VALID_TYPES = ('static_library', 'shared_library', 'executable', 'group',
+<<<<<<< HEAD
                      'action', 'source_set', 'proto_library', 'copy', 'action_foreach')
       assert (type in VALID_TYPES)
+=======
+                     'action', 'source_set', 'proto_library', 'copy',
+                     'action_foreach', 'generated_file', "rust_library", "rust_proc_macro")
+      assert (type in VALID_TYPES), f"Unable to parse target {name} with type {type}."
+>>>>>>> 16e1c1564 (Add support for rust_library and rust_proc_macro)
       self.type = type
       self.testonly = False
       self.toolchain = None
@@ -208,6 +215,8 @@ class GnParser(object):
       # an import of a JAR like `android_java_prebuilt` targets in GN
       self.jar_path = ""
       self.sdk_version = ""
+      self.crate_name = None
+      self.crate_root = None
 
     # Properties to forward access to common arch.
     # TODO: delete these after the transition has been completed.
@@ -267,10 +276,18 @@ class GnParser(object):
     def deps(self, val):
       self.arch['common'].deps = val
 
+    @property
+    def rust_flags(self):
+      return self.arch['common'].rust_flags
+
+    @rust_flags.setter
+    def rust_flags(self, val):
+      self.arch['common'].rust_flags = val
 
     @property
     def include_dirs(self):
       return self.arch['common'].include_dirs
+
 
     @property
     def ldflags(self):
@@ -301,12 +318,25 @@ class GnParser(object):
                         sort_keys=True)
 
     def update(self, other, arch):
-      for key in ('cflags', 'defines', 'deps', 'include_dirs', 'ldflags',
-                  'proto_deps', 'libs', 'proto_paths'):
+      non_arch_keys = ('cflags', 'defines', 'deps', 'include_dirs', 'ldflags',
+                       'proto_deps', 'libs', 'proto_paths')
+      for key in non_arch_keys:
         getattr(self, key).update(getattr(other, key, []))
 
-      for key_in_arch in ('cflags', 'defines', 'include_dirs', 'deps', 'ldflags'):
-        getattr(self.arch[arch], key_in_arch).update(getattr(other.arch[arch], key_in_arch, []))
+      if arch in other.arch:
+        for key_in_arch in ('cflags', 'defines', 'include_dirs', 'deps', 'ldflags'):
+          getattr(self.arch[arch], key_in_arch).update(getattr(other.arch[arch], key_in_arch, []))
+        # List-only attributes.
+        for key_in_arch in ['rust_flags']:
+          getattr(self.arch[arch], key_in_arch).extend(getattr(other.arch[arch], key_in_arch, []))
+      else:
+        # Sometimes we can have an android-arch depending on a host-only target, this
+        # can be the case with actions that are available for android depending on
+        # executables that are only compiled for the host.
+        if "host" in other.arch:
+          # Update all the dependencies directly as non-arch deps.
+          for key in non_arch_keys:
+            getattr(self, key).update(getattr(other.arch["host"], key, []))
 
     def get_archs(self):
       """ Returns a dict of archs without the common arch """
@@ -349,7 +379,7 @@ class GnParser(object):
         return
 
       for key in ('sources', 'cflags', 'defines', 'include_dirs', 'deps',
-                  'inputs', 'outputs', 'args', 'response_file_contents', 'ldflags'):
+                  'inputs', 'outputs', 'args', 'response_file_contents', 'ldflags', 'rust_flags'):
         self._finalize_attribute(key)
 
     def get_target_name(self):
@@ -442,6 +472,12 @@ class GnParser(object):
       # return early, no need to parse any further as the module is a builtin.
       return target
 
+    if target_name.startswith("//build/rust/std") or "_build_script" in gn_target_name:
+      # We intentionally don't parse build/rust/std as we use AOSP's stdlib.
+      # Don't parse build_script as we can't execute them in AOSP, we use a different
+      # source of truth.
+      return target
+
     target.testonly = desc.get('testonly', False)
 
     deps = desc.get("deps", {})
@@ -454,6 +490,8 @@ class GnParser(object):
       target.arch[arch].sources.update(desc.get('sources', []))
       target.arch[arch].inputs.update(desc.get('inputs', []))
     elif target.type == 'source_set':
+      target.arch[arch].sources.update(source for source in desc.get('sources', []) if not source.startswith("//out"))
+    elif target.type == "rust_executable":
       target.arch[arch].sources.update(source for source in desc.get('sources', []) if not source.startswith("//out"))
     elif target.is_linker_unit_type():
       target.arch[arch].sources.update(source for source in desc.get('sources', []) if not source.startswith("//out"))
@@ -500,8 +538,13 @@ class GnParser(object):
     elif target.type == 'group':
       # Groups are bubbled upward without creating an equivalent GN target.
       pass
+<<<<<<< HEAD
+=======
+    elif target.type in ["rust_library", "rust_proc_macro"]:
+      target.arch[arch].sources.update(source for source in desc.get('sources', []) if not source.startswith("//out"))
+>>>>>>> 16e1c1564 (Add support for rust_library and rust_proc_macro)
     else:
-      raise Exception(f"Encountered GN target with unknown type\nCulprit target: {gn_target_name}\ntype: {type_}")
+      raise Exception(f"Encountered GN target with unknown type\nCulprit target: {gn_target_name}\ntype: {target.type}")
 
     # Default for 'public' is //* - all headers in 'sources' are public.
     # TODO(primiano): if a 'public' section is specified (even if empty), then
@@ -510,13 +553,19 @@ class GnParser(object):
     # accessible headers.
     public_headers = [x for x in desc.get('public', []) if x != '*']
     target.public_headers.update(public_headers)
-
     target.arch[arch].cflags.update(desc.get('cflags', []) + desc.get('cflags_cc', []))
     target.libs.update(desc.get('libs', []))
     target.arch[arch].ldflags.update(desc.get('ldflags', []))
     target.arch[arch].defines.update(desc.get('defines', []))
     target.arch[arch].include_dirs.update(desc.get('include_dirs', []))
     target.output_name = desc.get('output_name', None)
+    target.crate_name = desc.get("crate_name", None)
+    target.crate_root = desc.get("crate_root", None)
+    target.arch[arch].rust_flags = desc.get("rustflags", list())
+    if target.type == "executable" and target.crate_root:
+      # Find a more decisive way to figure out that this is a rust executable.
+      # TODO: Add a metadata to the executable from Chromium side.
+      target.type = "rust_executable"
     if "-frtti" in target.arch[arch].cflags:
       target.rtti = True
 
@@ -538,10 +587,13 @@ class GnParser(object):
         target.transitive_jni_java_sources.update(dep.transitive_jni_java_sources)
       elif dep.is_linker_unit_type():
         target.arch[arch].deps.add(dep.name)
+      elif dep.type == "rust_executable":
+        target.arch[arch].deps.add(dep.name)
       elif dep.type == 'java_library':
         target.deps.add(dep.name)
         target.transitive_jni_java_sources.update(dep.transitive_jni_java_sources)
-
+      elif dep.type in ['rust_binary', "rust_library", "rust_proc_macro"]:
+        target.arch[arch].deps.add(dep.name)
       if dep.type in ['static_library', 'source_set']:
         # Bubble up static_libs and source_set. Necessary, since soong does not propagate
         # static_libs up the build tree.

@@ -33,6 +33,7 @@ import os
 import re
 import sys
 import copy
+from typing import List, Dict, Set
 from pathlib import Path
 
 import gn_utils
@@ -41,27 +42,27 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CRONET_LICENSE_NAME = "external_cronet_license"
 
-# Default targets to translate to the blueprint file.
 DEFAULT_TARGETS = [
     "//components/cronet/android:cronet_api_java",
     '//components/cronet/android:cronet',
     '//components/cronet/android:cronet_impl_native_java',
     '//components/cronet/android:cronet_jni_registration_java',
+    "//build/rust/tests/test_rust_static_library:test_rust_static_library" # Added to make sure that rust still compiles
 ]
 
 DEFAULT_TESTS = [
-  '//components/cronet/android:cronet_unittests_android__library',
-  '//net:net_unittests__library',
-  '//components/cronet/android:cronet_tests',
-  '//components/cronet/android:cronet',
-  '//components/cronet/android:cronet_javatests',
-  '//components/cronet/android:cronet_jni_registration_java',
-  '//components/cronet/android:cronet_tests_jni_registration_java',
-  '//testing/android/native_test:native_test_java',
-  '//net/android:net_test_support_provider_java',
-  '//net/android:net_tests_java',
-  '//third_party/netty-tcnative:netty-tcnative-so',
-  '//third_party/netty4:netty_all_java',
+    '//components/cronet/android:cronet_unittests_android__library',
+    '//net:net_unittests__library',
+    '//components/cronet/android:cronet_tests',
+    '//components/cronet/android:cronet',
+    '//components/cronet/android:cronet_javatests',
+    '//components/cronet/android:cronet_jni_registration_java',
+    '//components/cronet/android:cronet_tests_jni_registration_java',
+    '//testing/android/native_test:native_test_java',
+    '//net/android:net_test_support_provider_java',
+    '//net/android:net_tests_java',
+    '//third_party/netty-tcnative:netty-tcnative-so',
+    '//third_party/netty4:netty_all_java',
 ]
 
 EXTRAS_ANDROID_BP_FILE = "Android.extras.bp"
@@ -144,6 +145,22 @@ additional_args = {
       ('export_include_dirs', {
         "net/third_party/quiche/src",
       })
+    ],
+    # no_literal_* should be removed once AOSP starts using rustc version >= 1.79
+    'libproc_macro2_cronet_aml_third_party_rust_proc_macro2_v1_lib__testing': [
+        ('target', ("host", {
+                "cfgs": {"span_locations", "wrap_proc_macro", "proc_macro_span",
+                         "no_literal_byte_character", "no_literal_c_string"}
+            }),
+        )
+    ],
+    # no_literal_* should be removed once AOSP starts using rustc version >= 1.79
+    'libproc_macro2_cronet_aml_third_party_rust_proc_macro2_v1_lib': [
+        ('target', ("host", {
+            "cfgs": {"span_locations", "wrap_proc_macro", "proc_macro_span",
+                     "no_literal_byte_character", "no_literal_c_string"}
+        }),
+         )
     ],
     'cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen__testing_headers': [
         ('export_include_dirs', {
@@ -273,6 +290,18 @@ additional_args = {
     # end export_include_dir.
 }
 
+_FEATURE_REGEX = "feature=\\\"(.+)\\\""
+_RUST_FLAGS_TO_REMOVE = [
+    "--target", # Added by Soong
+    "--color", # Added by Soong.
+    "--edition", # Added to the appropriate field, must be removed from flags.
+    "--sysroot", # TBD
+    "-Cembed-bitcode=no", # Not compatible with Thin-LTO which is added by Soong.
+    "--cfg", # Added to the appropriate field.
+    "--extern",
+    "@", # Used by build_script outputs to have rustc load flags from a file.
+    "-Z", # AOSP does not support unstable features.
+]
 def always_disable(module, arch):
   return None
 
@@ -378,10 +407,22 @@ def add_androidx_activity_activity(module, arch):
 def add_androidx_fragment_fragment(module, arch):
   module.static_libs.add("androidx.fragment_fragment")
 
+def add_aosp_unicode_ident(module, arch):
+  module.rustlibs.add("libunicode_ident")
+
+def add_cxx_cppdeps(module, arch):
+  module.static_libs.add("libcxxbridge05")
+
+def add_rust_cxx(module, arch):
+  module.rustlibs.add("libcxx")
+
 # Android equivalents for third-party libraries that the upstream project
 # depends on. This will be applied to normal and testing targets.
 _builtin_deps = {
     '//buildtools/third_party/libunwind:libunwind':
+        always_disable,
+    # CXX Bridge on AOSP is used instead
+    '//third_party/rust/cxxbridge_cmd/v1:cxxbridge':
         always_disable,
     '//net/data/ssl/chrome_root_store:gen_root_store_inc':
         always_disable,
@@ -535,6 +576,13 @@ class Module(object):
       self.ldflags = set()
       self.compile_multilib = None
       self.stem = ""
+      self.edition = ""
+      self.features = set()
+      self.cfgs = set()
+      self.flags = list()
+      self.rustlibs = set()
+      self.proc_macros = set()
+      self.static_rlibs = set()
       if name == 'host':
         self.compile_multilib = '64'
 
@@ -553,6 +601,13 @@ class Module(object):
       self._output_field(nested_out, 'export_generated_headers')
       self._output_field(nested_out, 'ldflags')
       self._output_field(nested_out, 'stem')
+      self._output_field(nested_out, "edition")
+      self._output_field(nested_out, 'cfgs')
+      self._output_field(nested_out, 'features')
+      self._output_field(nested_out, 'flags', False)
+      self._output_field(nested_out, 'rustlibs')
+      self._output_field(nested_out, 'static_rlibs')
+      self._output_field(nested_out, 'proc_macros')
 
       if nested_out:
         # This is added here to make sure it doesn't add a `host` arch-specific module just for
@@ -641,6 +696,13 @@ class Module(object):
     self.gn_type = None
     self.jarjar_rules = ""
     self.jars = set()
+    self.crate_name = None
+    # Should be arch-dependant
+    self.crate_root = None
+    self.edition = None
+    self.rustlibs = set()
+    self.proc_macros = set()
+    self.static_rlibs = set()
 
   def to_string(self, output):
     if self.comment:
@@ -697,6 +759,11 @@ class Module(object):
     self._output_field(output, 'visibility')
     self._output_field(output, 'jarjar_rules')
     self._output_field(output, 'jars')
+    self._output_field(output, 'crate_name')
+    self._output_field(output, 'crate_root')
+    self._output_field(output, 'rustlibs')
+    self._output_field(output, 'static_rlibs')
+    self._output_field(output, 'proc_macros')
     if self.rtti:
       self._output_field(output, 'rtti')
 
@@ -770,11 +837,12 @@ class Blueprint(object):
 
   def to_string(self, output):
     for m in sorted(self.modules.values(), key=lambda m: m.name):
-      if m.type != "cc_library_static" or m.has_input_files():
+      if (m.type != "cc_library_static" or m.has_input_files()) and (m.type != "group"):
         # Don't print cc_library_static with empty srcs. These attributes are already
         # propagated up the tree. Printing them messes the presubmits because
         # every module is compiled while those targets are not reachable in
         # a normal compilation path.
+        # Soong does not handle groups, we handle groups manually in GN2BP.
         m.to_string(output)
 
 
@@ -790,13 +858,118 @@ def label_to_module_name(label):
 
 def is_supported_source_file(name):
   """Returns True if |name| can appear in a 'srcs' list."""
-  return os.path.splitext(name)[1] in ['.c', '.cc', '.cpp', '.java', '.proto', '.S', '.aidl']
+  return os.path.splitext(name)[1] in ['.c', '.cc', '.cpp', '.java', '.proto', '.S', '.aidl', '.rs']
 
+def _normalize_flags(rust_flags: List[str]) -> Dict[str, Set[str] | None]:
+  """
+  Normalizes the rust params where it tries to put (key, value) param
+  as a dictionary key. A key without value will have None as value.
+
+  :param rust_flags: List of rust flags.
+  :return: Dictionary of rust flags where each key will point to a list of
+  values.
+  """
+  args_mapping = {}
+  previous_key = None
+  for rust_flag in rust_flags:
+    if not rust_flag.startswith("-"):
+      # This might be a key on its own, rustc supports params with no keys
+      # such as (@path).
+      if rust_flag.startswith("@"):
+        args_mapping[rust_flag] = None
+        if previous_key:
+          args_mapping[previous_key] = None
+      else:
+        if previous_key not in args_mapping:
+          args_mapping[previous_key] = set()
+        args_mapping[previous_key].add(rust_flag)
+        previous_key = None
+    else:
+      if previous_key:
+        # We have a previous key, that means that the previous key is
+        # a no-value key.
+        args_mapping[previous_key] = None
+        previous_key = None
+      # This can be a key-only string, key=value, key and value in different strings.
+      if "=" in rust_flag:
+        # We found an equal, this is probably a key=value string.
+        rust_flag_split = rust_flag.split("=")
+        if rust_flag_split[0] not in args_mapping:
+          args_mapping[rust_flag_split[0]] = set()
+        args_mapping[rust_flag_split[0]].add("=".join(rust_flag_split[1:]))
+      else:
+        # Assume this is a key-only string. This will be resolved in the next
+        # iteration.
+        previous_key = rust_flag
+  return args_mapping
+
+
+def _set_rust_flags(module: Module.Target, rust_flags: List[str], arch_name: str) -> None:
+  rust_flags_dict = _normalize_flags(rust_flags)
+  if "--edition" in rust_flags_dict:
+    module.edition = list(rust_flags_dict["--edition"])[0]
+  for cfg in rust_flags_dict.get("--cfg", set()):
+    feature_regex = re.match(_FEATURE_REGEX, cfg)
+    if feature_regex:
+      module.features.add(feature_regex.group(1))
+    else:
+      module.cfgs.add(cfg.replace("\"", "\\\""))
+  pre_filter_flags = []
+  for (key, values) in rust_flags_dict.items():
+    if values is None:
+      pre_filter_flags.append(key)
+    else:
+      pre_filter_flags.extend(f"{key}={param_val}" for param_val in values)
+  flags_to_remove = _RUST_FLAGS_TO_REMOVE
+  # AOSP compiles everything for host under panic=unwind instead of abort.
+  # In order to be consistent with the ecosystem, remove the -Cpanic flag.
+  if arch_name == "host":
+    flags_to_remove.append("-Cpanic")
+  # Remove restricted flags
+  for pre_filter_flag in pre_filter_flags:
+    if not any([pre_filter_flag.startswith(restricted_flag) for restricted_flag in _RUST_FLAGS_TO_REMOVE]):
+      module.flags.append(pre_filter_flag)
 
 def get_protoc_module_name(gn):
   protoc_gn_target_name = gn.get_target('//third_party/protobuf:protoc').name
   return label_to_module_name(protoc_gn_target_name)
 
+def create_cxx_module(blueprint, gn, target):
+  """Generate genrules for a CXX GN target
+
+    GN actions are used to dynamically generate files during the build. The
+    Soong equivalent is a genrule. This function turns a specific kind of
+    genrule which turns lib.rs file into source and header files into a pair
+    equivalent genrules.
+
+    Args:
+        blueprint: Blueprint instance which is being generated.
+        target: gn_utils.Target object.
+
+    Returns:
+        The source_genrule module.
+  """
+  header_genrule = Module("cc_genrule", label_to_module_name(target.name) + "_header", target.name)
+  header_genrule.tools = {"cxxbridge"}
+  header_genrule.cmd = "$(location cxxbridge) $(in) --header > $(out)"
+  header_genrule.srcs = set([gn_utils.label_to_path(src) for src in target.sources])
+  # The output of the cc_genrule is the input + ".h" suffix, this is because
+  # the input to a CXX genrule is just one source file.
+  header_genrule.out = set([f"{gn_utils.label_to_path(out)}.h" for out in target.sources])
+
+  cc_genrule = Module("cc_genrule", label_to_module_name(target.name), target.name)
+  cc_genrule.tools = {"cxxbridge"}
+  cc_genrule.cmd = "$(location cxxbridge) $(in) > $(out)"
+  cc_genrule.srcs = set([gn_utils.label_to_path(src) for src in target.sources])
+  cc_genrule.genrule_srcs = {f":{cc_genrule.name}"}
+  # The output of the cc_genrule is the input + ".cc" suffix, this is because
+  # the input to a CXX genrule is just one source file.
+  cc_genrule.out = set([f"{gn_utils.label_to_path(out)}.cc" for out in target.sources])
+
+  cc_genrule.genrule_headers.add(header_genrule.name)
+  blueprint.add_module(cc_genrule)
+  blueprint.add_module(header_genrule)
+  return cc_genrule
 
 def create_proto_modules(blueprint, gn, target):
   """Generate genrules for a proto GN target.
@@ -1212,6 +1385,33 @@ class GnRunBinarySanitizer(BaseActionSanitizer):
     # Remove the script and use the binary right away
     return self.get_pre_cmd() + NEWLINE.join(self.target.args)
 
+class RunBuildScriptSanitizer(BaseActionSanitizer):
+  def __init__(self, target, arch):
+    super().__init__(target, arch)
+    self.binary = "cronet_aml_third_party_rust_proc_macro2_v1_proc_macro2_lib_v1_build_script__rlib"
+
+  def get_tools(self):
+    tools = super().get_tools()
+    tools.add(self.binary)
+    return tools
+
+  def _replace_binary(self, arg):
+    return self.binary
+
+  def _sanitize_args(self):
+    self._update_arg_at(1, self._replace_binary)
+    super()._sanitize_args()
+
+class GeneratedFileSanitizer(BaseActionSanitizer):
+  def __init__(self, target, arch):
+    super().__init__(target, arch)
+
+  def get_base_cmd(self):
+    return f"echo {self.target.response_file_contents} > $(out)"
+
+  def get_tool_files(self):
+    return set()
+
 class JniGeneratorSanitizer(BaseActionSanitizer):
   def __init__(self, target, arch, is_test_target):
     self.is_test_target = is_test_target
@@ -1425,6 +1625,21 @@ class WriteNativeLibrariesJavaSanitizer(BaseActionSanitizer):
     self._set_value_arg('--output', '$(out)')
     super()._sanitize_args()
 
+class CXXBridgeSanitizer(BaseActionSanitizer):
+  def __init__(self, target, arch, gn):
+    super().__init__(target, arch)
+
+  def _sanitize_args(self):
+    super()._sanitize_args()
+
+  def get_srcs(self):
+    return {gn_utils.label_to_path(file) for file in self.target.sources}
+
+  def get_deps(self):
+    return super().get_deps()
+
+  def get_tool_files(self):
+    return [tool_file for tool_file in super().get_tool_files() if tool_file.endswith(".py")]
 
 class ProtocJavaSanitizer(BaseActionSanitizer):
   def __init__(self, target, arch, gn):
@@ -1470,6 +1685,10 @@ def get_action_sanitizer(gn, target, type, arch, is_test_target):
     return GnRunBinarySanitizer(target, arch)
   elif target.script == '//build/protoc_java.py':
     return ProtocJavaSanitizer(target, arch, gn)
+  elif target.script == '//build/rust/run_build_script.py':
+    return RunBuildScriptSanitizer(target, arch)
+  elif target.script == 'echo':
+    return GeneratedFileSanitizer(target, arch)
   elif target.script == '//third_party/jni_zero/jni_zero.py':
     if target.args[0] == 'generate-final':
       if type == 'java_genrule':
@@ -1611,7 +1830,7 @@ def merge_modules(modules, genrule_type):
   merged_module = list(modules.values())[0]
 
   # Following attributes must be the same between archs
-  for key in ('out', 'genrule_headers', 'srcs', 'tool_files'):
+  for key in ('genrule_headers', 'srcs', 'tool_files'):
     if any([getattr(merged_module, key) != getattr(module, key) for module in modules.values()]):
       raise Exception(f'{merged_module.name} has different values for {key} between archs')
 
@@ -1706,6 +1925,16 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
   if target.type == "action" and is_descendant_of_java:
     bp_module_name += "__java"
 
+  if target.type in ["rust_library", "rust_proc_macro"]:
+    # "lib{crate_name}" must be a prefix of the module name, this is a Soong
+    # restriction.
+    # https://cs.android.com/android/_/android/platform/build/soong/+/31934a55a8a1f9e4d56d68810f4a646f12ab6eb5:rust/library.go;l=724;drc=fdec8723d574daf54b956cc0f6dc879087da70a6;bpv=0;bpt=0
+    bp_module_name = f"lib{target.crate_name}_{bp_module_name}"
+
+  # There is a limit on the length of the module name as the output depends
+  # on that.
+  if len(bp_module_name) > 100:
+    bp_module_name = bp_module_name[:100]
   if bp_module_name in blueprint.modules:
     return blueprint.modules[bp_module_name]
 
@@ -1718,22 +1947,38 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
       # Can be used for both host and device targets.
       module_type = 'cc_binary'
     module = Module(module_type, bp_module_name, gn_target_name)
+  elif target.type == 'rust_executable':
+    module = Module("rust_binary", bp_module_name, gn_target_name)
+  elif target.type == "rust_library":
+    # Chromium only uses rlibs.
+    module = Module("rust_library_rlib", bp_module_name, gn_target_name)
+  elif target.type == "rust_proc_macro":
+    module = Module("rust_proc_macro", bp_module_name, gn_target_name)
   elif target.type in ['static_library', 'source_set']:
     module = Module('cc_library_static', bp_module_name, gn_target_name)
   elif target.type == 'shared_library':
     module = Module('cc_library_shared', bp_module_name, gn_target_name)
   elif target.type == 'group':
-    # "group" targets are resolved recursively by gn_utils.get_target().
-    # There's nothing we need to do at this level for them.
-    return None
+    # Group modules are already resolved in terms of dependency by gn_utils.
+    # Create a fake group that will not be printed to the final Android.bp but
+    # its dependencies needs to be printed.
+    module = Module("group", bp_module_name, gn_target_name)
   elif target.type == 'proto_library':
     module = create_proto_modules(blueprint, gn, target)
     if module is None:
       return None
+<<<<<<< HEAD
   elif target.type == 'action':
     module = create_action_module(blueprint, gn, target, 'java_genrule' if is_descendant_of_java else 'cc_genrule', is_test_target)
+=======
+  elif target.type in ['action', 'generated_file']:
+      module = create_action_module(blueprint, gn, target, 'java_genrule' if is_descendant_of_java else 'cc_genrule', is_test_target)
+>>>>>>> 16e1c1564 (Add support for rust_library and rust_proc_macro)
   elif target.type == 'action_foreach':
-    module = create_action_foreach_modules(blueprint, gn, target, is_test_target)
+    if target.script == "//third_party/rust/cxx/chromium_integration/run_cxxbridge.py":
+      module = create_cxx_module(blueprint, gn, target)
+    else:
+      module = create_action_foreach_modules(blueprint, gn, target, is_test_target)
   elif target.type == 'copy':
     # TODO: careful now! copy targets are not supported yet, but this will stop
     # traversing the dependency tree. For //base:base, this is not a big
@@ -1787,9 +2032,18 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
         module.target[arch_name].cflags.add('-march=armv8-a+memtag')
       set_module_include_dirs(module.target[arch_name], arch.cflags, arch.include_dirs)
 
-  module.host_supported = target.host_supported()
-  module.device_supported = target.device_supported()
+  if not module.type == "rust_proc_macro":
+    module.host_supported = target.host_supported()
+    module.device_supported = target.device_supported()
   module.gn_type = target.type
+
+  if module.type in ["rust_binary", "rust_library_rlib", "rust_proc_macro"]:
+    module.crate_name = target.crate_name
+    module.crate_root = gn_utils.label_to_path(target.crate_root)
+    module.min_sdk_version = 30
+    module.apex_available = [tethering_apex]
+    for arch_name, arch in target.get_archs().items():
+      _set_rust_flags(module.target[arch_name], arch.rust_flags, arch_name)
 
   if module.is_genrule():
     module.apex_available.add(tethering_apex)
@@ -1803,7 +2057,8 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
       module.aidl["local_include_dirs"] = target.local_aidl_includes
     module.sdk_version = target.sdk_version
 
-  if module.is_compiled() and not module.type.startswith("java"):
+  if (module.is_compiled() and not module.type.startswith("java")
+      and not module.type.startswith("rust")):
     # Don't try to inject library/source dependencies into genrules or
     # filegroups because they are not compiled in the traditional sense.
     module.defaults = [defaults_module]
@@ -1850,6 +2105,9 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
       builtin_deps[dep_name](module, arch_name)
       continue
 
+    if "_build_script" in dep_name:
+      continue
+
     dep_module = create_modules_from_target(blueprint, gn, dep_name, is_descendant_of_java, is_test_target)
 
     if dep_module is None:
@@ -1894,6 +2152,19 @@ def create_modules_from_target(blueprint, gn, gn_target_name, is_descendant_of_j
         module_target.generated_headers.update(dep_module.generated_headers)
         module_target.shared_libs.update(dep_module.shared_libs)
         module_target.header_libs.update(dep_module.header_libs)
+      elif module.type == "rust_library_rlib":
+        module_target.static_libs.add(dep_module.name)
+      elif module.type == "rust_binary":
+        module_target.static_libs.add(dep_module.name)
+      else:
+        raise Exception(f"Trying to add an unknown type {dep_module.type} to a type of {module.type}")
+    elif dep_module.type == "rust_library_rlib":
+      if module.type.startswith("rust_"):
+        module_target.rustlibs.add(dep_module.name)
+      else:
+        module_target.static_rlibs.add(dep_module.name)
+    elif dep_module.type == "rust_proc_macro":
+      module_target.proc_macros.add(dep_module.name)
     elif dep_module.type == 'cc_genrule':
       module_target.generated_headers.update(dep_module.genrule_headers)
       module_target.srcs.update(dep_module.genrule_srcs)
