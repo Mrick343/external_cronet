@@ -7,6 +7,7 @@ package org.chromium.net;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 import static org.chromium.net.truth.UrlResponseInfoSubject.assertThat;
@@ -207,11 +208,6 @@ public class CronetTestRule implements TestRule {
             excludedImplementations.addAll(
                     Arrays.asList(ignoreDueToMethodAnnotation.implementations()));
         }
-        if (Build.VERSION.SDK_INT < 34) {
-            excludedImplementations.add(CronetImplementation.AOSP_PLATFORM);
-        }
-
-        Log.i(TAG, "Excluded implementations: %s", excludedImplementations);
 
         Set<CronetImplementation> implementationsUnderTest =
                 EnumSet.complementOf(excludedImplementations);
@@ -220,6 +216,17 @@ public class CronetTestRule implements TestRule {
                                 + "Use DisabledTest instead")
                 .that(implementationsUnderTest)
                 .isNotEmpty();
+
+        if (Build.VERSION.SDK_INT < 34) {
+            implementationsUnderTest.remove(CronetImplementation.AOSP_PLATFORM);
+            assumeFalse(
+                    desc.getMethodName()
+                            + " skipped because it's supposed to run against only AOSP_PLATFORM but"
+                            + " test device is not U+",
+                    implementationsUnderTest.isEmpty());
+        }
+
+        Log.i(TAG, "Implementations to be tested against: %s", implementationsUnderTest);
 
         if (packageName.startsWith("org.chromium.net")) {
             for (CronetImplementation implementation : implementationsUnderTest) {
@@ -238,8 +245,9 @@ public class CronetTestRule implements TestRule {
 
     /**
      * This method only returns the value of the `is_running_in_aosp` flag which for Chromium can be
-     * found inside components/cronet/android/test/res/values/bools.xml for which it should be equal
-     * to false. However, on AOSP, we ship a different value which is equal to true.
+     * found inside components/cronet/android/test/res/values/cronet-test-rule-configuration.xml
+     * for which it should be equal to false. However, on AOSP, we ship a different value
+     * which is equal to true.
      *
      * <p>This distinction between where the tests are being executed is crucial because we don't
      * want to run JavaCronetEngine tests in AOSP.

@@ -23,7 +23,7 @@
 #include <mach/vm_page_size.h>
 #endif
 
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
+#if BUILDFLAG(HAS_MEMORY_TAGGING)
 #include "partition_alloc/tagging.h"
 #endif
 
@@ -111,7 +111,7 @@ PartitionPageShift() {
   return 18;  // 256 KiB
 }
 #elif (BUILDFLAG(IS_APPLE) && defined(ARCH_CPU_64_BITS)) || \
-    (BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_ARM64))
+    defined(PARTITION_ALLOCATOR_CONSTANTS_POSIX_NONCONST_PAGE_SIZE)
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 PartitionPageShift() {
   return PageAllocationGranularityShift() + 2;
@@ -210,13 +210,13 @@ constexpr size_t kHighThresholdForAlternateDistribution =
 // Free Slot Bitmap is only present when USE_FREESLOT_BITMAP is true. State
 // Bitmap is inserted for partitions that may have quarantine enabled.
 //
-// If refcount_at_end_allocation is enabled, RefcountBitmap(4KiB) is inserted
-// after the Metadata page for BackupRefPtr. The guard pages after the bitmap
-// will be 4KiB.
+// If ENABLE_BACKUP_REF_PTR_SUPPORT is on, RefCountTable(4KiB) is inserted
+// after the Metadata page for BackupRefPtr. The guard pages after the table
+// is reduced to 4KiB.
 //
 //...
 //     | Metadata page (4 KiB) |
-//     | RefcountBitmap (4 KiB)|
+//     | RefCountTable (4 KiB) |
 //     | Guard pages (4 KiB)   |
 //...
 //
@@ -335,7 +335,7 @@ static_assert(kThreadIsolatedPoolHandle == kNumPools,
 // of large areas which are less likely to benefit from MTE protection.
 constexpr size_t kMaxMemoryTaggingSize = 1024;
 
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
+#if BUILDFLAG(HAS_MEMORY_TAGGING)
 // Returns whether the tag of |object| overflowed, meaning the containing slot
 // needs to be moved to quarantine.
 PA_ALWAYS_INLINE bool HasOverflowTag(void* object) {
@@ -345,7 +345,7 @@ PA_ALWAYS_INLINE bool HasOverflowTag(void* object) {
                 "Overflow tag must be in tag bits");
   return (reinterpret_cast<uintptr_t>(object) & kPtrTagMask) == kOverflowTag;
 }
-#endif  // PA_CONFIG(HAS_MEMORY_TAGGING)
+#endif  // BUILDFLAG(HAS_MEMORY_TAGGING)
 
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 NumPartitionPagesPerSuperPage() {
@@ -467,10 +467,22 @@ constexpr size_t kBitsPerSizeT = sizeof(void*) * CHAR_BIT;
 // PurgeFlags::kDecommitEmptySlotSpans flag will eagerly decommit all entries
 // in the ring buffer, so with periodic purge enabled, this typically happens
 // every few seconds.
-constexpr size_t kEmptyCacheIndexBits = 7;
+#if BUILDFLAG(USE_LARGE_EMPTY_SLOT_SPAN_RING)
+// USE_LARGE_EMPTY_SLOT_SPAN_RING results in two size. kMaxEmptyCacheIndexBits,
+// which is used when the renderer is in the foreground, and
+// kMinEmptyCacheIndexBits which is used when the renderer is in the background.
+constexpr size_t kMaxEmptyCacheIndexBits = 10;
+constexpr size_t kMinEmptyCacheIndexBits = 7;
+#else
+constexpr size_t kMaxEmptyCacheIndexBits = 7;
+constexpr size_t kMinEmptyCacheIndexBits = 7;
+#endif
+static_assert(kMinEmptyCacheIndexBits <= kMaxEmptyCacheIndexBits,
+              "min size must be <= max size");
 // kMaxFreeableSpans is the buffer size, but is never used as an index value,
 // hence <= is appropriate.
-constexpr size_t kMaxFreeableSpans = 1 << kEmptyCacheIndexBits;
+constexpr size_t kMaxFreeableSpans = 1 << kMaxEmptyCacheIndexBits;
+constexpr size_t kMinFreeableSpans = 1 << kMinEmptyCacheIndexBits;
 constexpr size_t kDefaultEmptySlotSpanRingSize = 16;
 
 // If the total size in bytes of allocated but not committed pages exceeds this
@@ -491,10 +503,11 @@ constexpr unsigned char kQuarantinedByte = 0xEF;
 // static_cast<uint32_t>(-1) is too close to a "real" size.
 constexpr size_t kInvalidBucketSize = 1;
 
-#if PA_CONFIG(ENABLE_MAC11_MALLOC_SIZE_HACK)
-// Requested size that require the hack.
+#if PA_CONFIG(MAYBE_ENABLE_MAC11_MALLOC_SIZE_HACK)
+// Requested size that requires the hack.
 constexpr size_t kMac11MallocSizeHackRequestedSize = 32;
-#endif  // PA_CONFIG(ENABLE_MAC11_MALLOC_SIZE_HACK)
+#endif
+
 }  // namespace internal
 
 // These constants are used outside PartitionAlloc itself, so we provide
