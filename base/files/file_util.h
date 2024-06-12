@@ -23,6 +23,7 @@
 #include "base/files/file_path.h"
 #include "base/files/scoped_file.h"
 #include "base/functional/callback.h"
+#include "base/strings/cstring_view.h"
 #include "base/types/pass_key.h"
 #include "build/build_config.h"
 
@@ -31,6 +32,7 @@
 #elif BUILDFLAG(IS_POSIX) || BUILDFLAG(IS_FUCHSIA)
 #include <sys/stat.h>
 #include <unistd.h>
+
 #include "base/posix/eintr_wrapper.h"
 #endif
 
@@ -293,8 +295,6 @@ BASE_EXPORT bool ReadStreamToStringWithMaxSize(FILE* stream,
 // into `buffer`. This function is protected against EINTR and partial reads.
 // Returns true iff `buffer` was successfully filled with bytes read from `fd`.
 BASE_EXPORT bool ReadFromFD(int fd, span<char> buffer);
-// TODO(https://crbug.com/1490484): Migrate callers to the span variant.
-BASE_EXPORT bool ReadFromFD(int fd, char* buffer, size_t bytes);
 
 // Performs the same function as CreateAndOpenTemporaryStreamInDir(), but
 // returns the file-descriptor wrapped in a ScopedFD, rather than the stream
@@ -339,6 +339,7 @@ BASE_EXPORT std::optional<FilePath> ReadSymbolicLinkAbsolute(
 
 // Bits and masks of the file permission.
 enum FilePermissionBits {
+  // clang-format off
   FILE_PERMISSION_MASK              = S_IRWXU | S_IRWXG | S_IRWXO,
   FILE_PERMISSION_USER_MASK         = S_IRWXU,
   FILE_PERMISSION_GROUP_MASK        = S_IRWXG,
@@ -353,6 +354,7 @@ enum FilePermissionBits {
   FILE_PERMISSION_READ_BY_OTHERS    = S_IROTH,
   FILE_PERMISSION_WRITE_BY_OTHERS   = S_IWOTH,
   FILE_PERMISSION_EXECUTE_BY_OTHERS = S_IXOTH,
+  // clang-format on
 };
 
 // Reads the permission of the given |path|, storing the file permission
@@ -456,8 +458,8 @@ BASE_EXPORT void SetDisableSecureSystemTempForTesting(bool disabled);
 #endif  // BUILDFLAG(IS_WIN)
 
 // Do NOT USE in new code. Use ScopedTempDir instead.
-// TODO(crbug.com/561597) Remove existing usage and make this an implementation
-// detail inside ScopedTempDir.
+// TODO(crbug.com/40446440) Remove existing usage and make this an
+// implementation detail inside ScopedTempDir.
 //
 // Create a new directory. If prefix is provided, the new directory name is in
 // the format of prefixyyyy.
@@ -476,7 +478,7 @@ BASE_EXPORT bool CreateNewTempDirectory(const FilePath::StringType& prefix,
 // Extra characters will be appended to |prefix| to ensure that the
 // new directory does not have the same name as an existing directory.
 BASE_EXPORT bool CreateTemporaryDirInDir(const FilePath& base_dir,
-                                         const FilePath::StringType& prefix,
+                                         FilePath::StringPieceType prefix,
                                          FilePath* new_dir);
 
 // Creates a directory, as well as creating any parent directories, if they
@@ -494,10 +496,15 @@ BASE_EXPORT bool CreateDirectory(const FilePath& full_path);
 BASE_EXPORT bool GetFileSize(const FilePath& file_path, int64_t* file_size);
 
 // Sets |real_path| to |path| with symbolic links and junctions expanded.
-// On windows, make sure the path starts with a lettered drive.
-// |path| must reference a file.  Function will fail if |path| points to
-// a directory or to a nonexistent path.  On windows, this function will
-// fail if |real_path| would be longer than MAX_PATH characters.
+// On Windows, the function ensures that the resulting |real_path| starts with a
+// drive letter.
+//
+// The |path| parameter can reference either a file or a directory. The function
+// will fail if |path| points to a nonexistent path or to a volume that isn't
+// mapped to a drive letter on Windows.
+//
+// In addition, on Windows this function will fail if the resulting |real_path|
+// would exceed 'MAX_PATH' characters in length.
 BASE_EXPORT bool NormalizeFilePath(const FilePath& path, FilePath* real_path);
 
 #if BUILDFLAG(IS_WIN)
@@ -557,7 +564,7 @@ BASE_EXPORT bool TruncateFile(FILE* file);
 // Reads from the file into `buffer`. This will read at most as many bytes as
 // `buffer` can hold, but may not always fill `buffer` entirely.
 // Returns the number of bytes read, or nullopt on error.
-// TODO(crbug.com/1333521): Despite the 64-bit return value, this only supports
+// TODO(crbug.com/40227936): Despite the 64-bit return value, this only supports
 // reading at most INT_MAX bytes. The program will crash if a buffer is passed
 // whose length exceeds INT_MAX.
 BASE_EXPORT std::optional<uint64_t> ReadFile(const FilePath& filename,
@@ -566,16 +573,17 @@ BASE_EXPORT std::optional<uint64_t> ReadFile(const FilePath& filename,
                                              span<uint8_t> buffer);
 
 // Same as above, but returns -1 on error.
-// TODO(https://crbug.com/1490484): Migrate callers to the span variant.
+// TODO(crbug.com/40284755): Migrate callers to the span variant.
 BASE_EXPORT int ReadFile(const FilePath& filename, char* data, int max_size);
 
 // Writes the given buffer into the file, overwriting any data that was
 // previously there.  Returns the number of bytes written, or -1 on error.
 // If file doesn't exist, it gets created with read/write permissions for all.
 // Note that the other variants of WriteFile() below may be easier to use.
-// TODO(https://crbug.com/1490484): Migrate callers to the span variant.
-BASE_EXPORT int WriteFile(const FilePath& filename, const char* data,
-                          int size);
+// TODO(crbug.com/40284755): Migrate callers to the span variant.
+UNSAFE_BUFFER_USAGE BASE_EXPORT int WriteFile(const FilePath& filename,
+                                              const char* data,
+                                              int size);
 
 // Writes |data| into the file, overwriting any data that was previously there.
 // Returns true if and only if all of |data| was written. If the file does not
@@ -619,20 +627,21 @@ BASE_EXPORT bool GetCurrentDirectory(FilePath* path);
 // Sets the current working directory for the process.
 BASE_EXPORT bool SetCurrentDirectory(const FilePath& path);
 
-// The largest value attempted by GetUniquePath{Number,}.
+// The largest value attempted by GetUniquePath.
 enum { kMaxUniqueFiles = 100 };
-
-// Returns the number N that makes |path| unique when formatted as " (N)" in a
-// suffix to its basename before any file extension, where N is a number between
-// 1 and 100 (inclusive). Returns 0 if |path| does not exist (meaning that it is
-// unique as-is), or -1 if no such number can be found.
-BASE_EXPORT int GetUniquePathNumber(const FilePath& path);
 
 // Returns |path| if it does not exist. Otherwise, returns |path| with the
 // suffix " (N)" appended to its basename before any file extension, where N is
 // a number between 1 and 100 (inclusive). Returns an empty path if no such
 // number can be found.
 BASE_EXPORT FilePath GetUniquePath(const FilePath& path);
+
+// Same as `GetUniquePath()`, except this method allows specifying a custom
+// suffix printf format string in cases where the default format doesn't work
+// (for example because you need a filename without spaces in it). Passing
+// " (%d)" as `suffix_format` makes this behave identical to `GetUniquePath()`.
+BASE_EXPORT FilePath GetUniquePathWithSuffixFormat(const FilePath& path,
+                                                   cstring_view suffix_format);
 
 // Sets the given |fd| to non-blocking mode.
 // Returns true if it was able to set it in the non-blocking mode, otherwise
@@ -684,7 +693,7 @@ BASE_EXPORT bool CreatePipe(ScopedFD* read_fd,
 // This creates a non-blocking pipe that is not intended to be shared with any
 // child process. This will be done atomically if the operating system supports
 // it. Returns true if it was able to create the pipe, otherwise false.
-BASE_EXPORT bool CreateLocalNonBlockingPipe(int fds[2]);
+BASE_EXPORT bool CreateLocalNonBlockingPipe(span<int, 2u> fds);
 
 // Sets the given |fd| to close-on-exec mode.
 // Returns true if it was able to set it in the close-on-exec mode, otherwise
@@ -743,8 +752,7 @@ namespace internal {
 
 // Same as Move but allows paths with traversal components.
 // Use only with extreme care.
-BASE_EXPORT bool MoveUnsafe(const FilePath& from_path,
-                            const FilePath& to_path);
+BASE_EXPORT bool MoveUnsafe(const FilePath& from_path, const FilePath& to_path);
 
 #if BUILDFLAG(IS_WIN)
 // Copy from_path to to_path recursively and then delete from_path recursively.

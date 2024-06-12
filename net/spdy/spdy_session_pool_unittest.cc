@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/spdy/spdy_session_pool.h"
 
 #include <cstddef>
@@ -1984,14 +1989,14 @@ TEST_F(SpdySessionPoolTest, SSLConfigForServerChangedWithStreams) {
   EXPECT_TRUE(session->IsGoingAway());
 
   // The pending and created stream are cancelled.
-  // TODO(https://crbug.com/1213609): Ideally, this would be recoverable.
+  // TODO(crbug.com/40768859): Ideally, this would be recoverable.
   EXPECT_THAT(callback.WaitForResult(), IsError(ERR_NETWORK_CHANGED));
   EXPECT_THAT(created_stream_delegate.WaitForClose(),
               IsError(ERR_NETWORK_CHANGED));
 
   // Close the active stream.
   active_stream->Close();
-  // TODO(https://crbug.com/982499): The invalidated session should be closed
+  // TODO(crbug.com/41469912): The invalidated session should be closed
   // after a RunUntilIdle(), but it is not.
 }
 
@@ -2050,7 +2055,7 @@ TEST_F(SpdySessionPoolTest, SSLConfigForServerChangedWithOnlyPendingStreams) {
   base::RunLoop().RunUntilIdle();
 
   // The pending stream is cancelled.
-  // TODO(https://crbug.com/1213609): Ideally, this would be recoverable.
+  // TODO(crbug.com/40768859): Ideally, this would be recoverable.
   EXPECT_THAT(callback.WaitForResult(), IsError(ERR_NETWORK_CHANGED));
   EXPECT_FALSE(session);
 }

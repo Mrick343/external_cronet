@@ -69,7 +69,7 @@ class BASE_EXPORT ThreadControllerWithMessagePumpImpl
   void RestoreDefaultTaskRunner() override;
   void AddNestingObserver(RunLoop::NestingObserver* observer) override;
   void RemoveNestingObserver(RunLoop::NestingObserver* observer) override;
-  void SetTaskExecutionAllowed(bool allowed) override;
+  void SetTaskExecutionAllowedInNativeNestedLoop(bool allowed) override;
   bool IsTaskExecutionAllowed() const override;
   MessagePump* GetBoundMessagePump() const override;
   void PrioritizeYieldingToNative(base::TimeTicks prioritize_until) override;
@@ -95,7 +95,7 @@ class BASE_EXPORT ThreadControllerWithMessagePumpImpl
   void BeforeWait() override;
   void BeginNativeWorkBeforeDoWork() override;
   MessagePump::Delegate::NextWorkInfo DoWork() override;
-  bool DoIdleWork() override;
+  void DoIdleWork() override;
   int RunDepth() override;
 
   void OnBeginWorkItemImpl(LazyNow& lazy_now);
@@ -176,7 +176,8 @@ class BASE_EXPORT ThreadControllerWithMessagePumpImpl
       GUARDED_BY(task_runner_lock_);
 
   WorkDeduplicator work_deduplicator_;
-  bool in_native_work_batch_ = false;
+  bool do_work_needed_before_wait_ = false;
+  bool task_execution_allowed_in_native_nested_loop_ = false;
 
   ThreadControllerPowerMonitor power_monitor_;
 

@@ -38,6 +38,9 @@ int HttpBasicStream::InitializeStream(bool can_send_early,
                                       CompletionOnceCallback callback) {
   DCHECK(request_info_);
   state_.Initialize(request_info_, priority, net_log);
+  // RequestInfo is no longer needed after this point.
+  request_info_ = nullptr;
+
   int ret = OK;
   if (!can_send_early) {
     // parser() cannot outlive |this|, so we can use base::Unretained().
@@ -45,8 +48,6 @@ int HttpBasicStream::InitializeStream(bool can_send_early,
         base::BindOnce(&HttpBasicStream::OnHandshakeConfirmed,
                        base::Unretained(this), std::move(callback)));
   }
-  // RequestInfo is no longer needed after this point.
-  request_info_ = nullptr;
   return ret;
 }
 
@@ -57,8 +58,9 @@ int HttpBasicStream::SendRequest(const HttpRequestHeaders& headers,
   if (request_headers_callback_) {
     HttpRawRequestHeaders raw_headers;
     raw_headers.set_request_line(state_.GenerateRequestLine());
-    for (net::HttpRequestHeaders::Iterator it(headers); it.GetNext();)
+    for (HttpRequestHeaders::Iterator it(headers); it.GetNext();) {
       raw_headers.Add(it.name(), it.value());
+    }
     request_headers_callback_.Run(std::move(raw_headers));
   }
   return parser()->SendRequest(
@@ -168,15 +170,6 @@ void HttpBasicStream::GetSSLInfo(SSLInfo* ssl_info) {
       !state_.connection()->socket()->GetSSLInfo(ssl_info)) {
     ssl_info->Reset();
   }
-}
-
-void HttpBasicStream::GetSSLCertRequestInfo(
-    SSLCertRequestInfo* cert_request_info) {
-  if (!state_.connection()->socket()) {
-    cert_request_info->Reset();
-    return;
-  }
-  parser()->GetSSLCertRequestInfo(cert_request_info);
 }
 
 int HttpBasicStream::GetRemoteEndpoint(IPEndPoint* endpoint) {

@@ -2,10 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/socket/udp_socket_win.h"
 
-#include <mstcpip.h>
 #include <winsock2.h>
+
+#include <mstcpip.h>
 
 #include <memory>
 
@@ -1154,7 +1160,7 @@ int UDPSocketWin::SetMulticastOptions() {
         break;
       }
       default:
-        NOTREACHED() << "Invalid address family";
+        NOTREACHED_IN_MIGRATION() << "Invalid address family";
         return ERR_ADDRESS_INVALID;
     }
   }
@@ -1219,7 +1225,7 @@ int UDPSocketWin::JoinGroup(const IPAddress& group_address) const {
       return OK;
     }
     default:
-      NOTREACHED() << "Invalid address family";
+      NOTREACHED_IN_MIGRATION() << "Invalid address family";
       return ERR_ADDRESS_INVALID;
   }
 }
@@ -1257,7 +1263,7 @@ int UDPSocketWin::LeaveGroup(const IPAddress& group_address) const {
       return OK;
     }
     default:
-      NOTREACHED() << "Invalid address family";
+      NOTREACHED_IN_MIGRATION() << "Invalid address family";
       return ERR_ADDRESS_INVALID;
   }
 }
@@ -1330,7 +1336,7 @@ QOS_TRAFFIC_TYPE DscpToTrafficType(DiffServCodePoint dscp) {
       traffic_type = QOSTrafficTypeControl;
       break;
     case DSCP_NO_CHANGE:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       break;
   }
   return traffic_type;

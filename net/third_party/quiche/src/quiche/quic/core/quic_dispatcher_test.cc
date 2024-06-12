@@ -4,8 +4,10 @@
 
 #include "quiche/quic/core/quic_dispatcher.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <list>
 #include <map>
 #include <memory>
 #include <optional>
@@ -2061,7 +2063,7 @@ class QuicDispatcherWriteBlockedListTest : public QuicDispatcherTestBase {
   MockQuicConnectionHelper helper_;
   MockAlarmFactory alarm_factory_;
   BlockingWriter* writer_;
-  QuicDispatcher::WriteBlockedList* blocked_list_;
+  QuicBlockedWriterList* blocked_list_;
 };
 
 INSTANTIATE_TEST_SUITE_P(QuicDispatcherWriteBlockedListTests,
@@ -2108,7 +2110,7 @@ TEST_P(QuicDispatcherWriteBlockedListTest, OnCanWriteRemove) {
   // Add and remove one connction.
   SetBlocked();
   dispatcher_->OnWriteBlocked(connection1());
-  blocked_list_->erase(connection1());
+  blocked_list_->Remove(*connection1());
   EXPECT_CALL(*connection1(), OnCanWrite()).Times(0);
   dispatcher_->OnCanWrite();
 
@@ -2116,14 +2118,14 @@ TEST_P(QuicDispatcherWriteBlockedListTest, OnCanWriteRemove) {
   SetBlocked();
   dispatcher_->OnWriteBlocked(connection1());
   dispatcher_->OnWriteBlocked(connection2());
-  blocked_list_->erase(connection1());
+  blocked_list_->Remove(*connection1());
   EXPECT_CALL(*connection2(), OnCanWrite());
   dispatcher_->OnCanWrite();
 
   // Add it, remove it, and add it back and make sure things are OK.
   SetBlocked();
   dispatcher_->OnWriteBlocked(connection1());
-  blocked_list_->erase(connection1());
+  blocked_list_->Remove(*connection1());
   dispatcher_->OnWriteBlocked(connection1());
   EXPECT_CALL(*connection1(), OnCanWrite()).Times(1);
   dispatcher_->OnCanWrite();
@@ -2134,7 +2136,7 @@ TEST_P(QuicDispatcherWriteBlockedListTest, DoubleAdd) {
   SetBlocked();
   dispatcher_->OnWriteBlocked(connection1());
   dispatcher_->OnWriteBlocked(connection1());
-  blocked_list_->erase(connection1());
+  blocked_list_->Remove(*connection1());
   EXPECT_CALL(*connection1(), OnCanWrite()).Times(0);
   dispatcher_->OnCanWrite();
 
@@ -3144,7 +3146,6 @@ TEST_P(BufferedPacketStoreTest, BufferedChloWithEcn) {
   if (!version_.HasIetfQuicFrames()) {
     return;
   }
-  SetQuicReloadableFlag(quic_clone_ecn, true);
   SetQuicRestartFlag(quic_support_ect1, true);
   InSequence s;
   QuicConnectionId conn_id = TestConnectionId(1);

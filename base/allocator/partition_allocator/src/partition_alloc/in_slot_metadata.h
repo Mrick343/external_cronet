@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_IN_SLOT_METADATA_H_
-#define BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_IN_SLOT_METADATA_H_
+#ifndef PARTITION_ALLOC_IN_SLOT_METADATA_H_
+#define PARTITION_ALLOC_IN_SLOT_METADATA_H_
 
 #include <atomic>
 #include <bit>
@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <limits>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/dangling_raw_ptr_checks.h"
 #include "partition_alloc/partition_alloc_base/compiler_specific.h"
 #include "partition_alloc/partition_alloc_base/component_export.h"
@@ -24,9 +24,9 @@
 #include "partition_alloc/partition_alloc_forward.h"
 #include "partition_alloc/tagging.h"
 
-#if BUILDFLAG(IS_APPLE)
+#if PA_BUILDFLAG(IS_APPLE)
 #include "partition_alloc/partition_alloc_base/bits.h"
-#endif  // BUILDFLAG(IS_APPLE)
+#endif  // PA_BUILDFLAG(IS_APPLE)
 
 namespace partition_alloc::internal {
 
@@ -37,19 +37,19 @@ namespace partition_alloc::internal {
 // Enabled on iOS as a workaround for a speculative bug in Swift's
 // __StringStorage.create https://crbug.com/327804972
 //
-// Placed outside `BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)`
+// Placed outside `PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)`
 // intentionally to accommodate usage in contexts also outside
 // this gating.
 PA_ALWAYS_INLINE size_t
 AlignUpInSlotMetadataSizeForApple(size_t in_slot_metadata_size) {
-#if BUILDFLAG(IS_APPLE)
+#if PA_BUILDFLAG(IS_APPLE)
   return internal::base::bits::AlignUp<size_t>(in_slot_metadata_size, 8);
 #else
   return in_slot_metadata_size;
-#endif  // BUILDFLAG(IS_APPLE)
+#endif  // PA_BUILDFLAG(IS_APPLE)
 }
 
-#if BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
+#if PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
 
 namespace {
 // Utility functions to define a bit field.
@@ -99,7 +99,7 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
   // 31     needs_mac11_malloc_    Whether malloc_size() return value needs to
   //          size_hack            be adjusted for this allocation.
   //
-  // On `BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)` builds, it holds two more
+  // On `PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)` builds, it holds two more
   // entries in total of 64 bits.
   //
   // bits   name                   description
@@ -127,11 +127,14 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
   // |dangling_detected| is set and the error is reported via
   // DanglingRawPtrDetected(id). The matching DanglingRawPtrReleased(id) will be
   // called when the last raw_ptr<> is released.
-#if !BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if !PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
   using CountType = uint32_t;
   static constexpr CountType kMemoryHeldByAllocatorBit =
       BitField<CountType>::Bit(0);
   static constexpr CountType kPtrCountMask = BitField<CountType>::Mask(1, 29);
+  // The most significant bit of the refcount is reserved to prevent races with
+  // overflow detection.
+  static constexpr CountType kMaxPtrCount = BitField<CountType>::Mask(1, 28);
   static constexpr CountType kRequestQuarantineBit =
       BitField<CountType>::Bit(30);
   static constexpr CountType kNeedsMac11MallocSizeHackBit =
@@ -140,10 +143,13 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
       BitField<CountType>::None();
   static constexpr CountType kUnprotectedPtrCountMask =
       BitField<CountType>::None();
-#else   // !BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#else   // !PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
   using CountType = uint64_t;
   static constexpr auto kMemoryHeldByAllocatorBit = BitField<CountType>::Bit(0);
   static constexpr auto kPtrCountMask = BitField<CountType>::Mask(1, 31);
+  // The most significant bit of the refcount is reserved to prevent races with
+  // overflow detection.
+  static constexpr auto kMaxPtrCount = BitField<CountType>::Mask(1, 30);
   static constexpr auto kDanglingRawPtrDetectedBit =
       BitField<CountType>::Bit(32);
   static constexpr auto kNeedsMac11MallocSizeHackBit =
@@ -152,7 +158,11 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
       BitField<CountType>::Bit(34);
   static constexpr auto kUnprotectedPtrCountMask =
       BitField<CountType>::Mask(35, 63);
-#endif  // !BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+  // The most significant bit of the refcount is reserved to prevent races with
+  // overflow detection.
+  static constexpr auto kMaxUnprotectedPtrCount =
+      BitField<CountType>::Mask(35, 62);
+#endif  // !PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
 
   // Quick check to assert these masks do not overlap.
   static_assert((kMemoryHeldByAllocatorBit + kPtrCountMask +
@@ -183,19 +193,18 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
 
     CountType old_count = count_.fetch_add(kPtrInc, std::memory_order_relaxed);
     // Check overflow.
-    PA_CHECK((old_count & kPtrCountMask) != kPtrCountMask);
+    PA_CHECK((old_count & kPtrCountMask) != kMaxPtrCount);
   }
 
   // Similar to |Acquire()|, but for raw_ptr<T, DisableDanglingPtrDetection>
   // instead of raw_ptr<T>.
   PA_ALWAYS_INLINE void AcquireFromUnprotectedPtr() {
-#if BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
     CheckCookieIfSupported();
     CountType old_count =
         count_.fetch_add(kUnprotectedPtrInc, std::memory_order_relaxed);
     // Check overflow.
-    PA_CHECK((old_count & kUnprotectedPtrCountMask) !=
-             kUnprotectedPtrCountMask);
+    PA_CHECK((old_count & kUnprotectedPtrCountMask) != kMaxUnprotectedPtrCount);
 #else
     Acquire();
 #endif
@@ -209,7 +218,7 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
     // Check underflow.
     PA_DCHECK(old_count & kPtrCountMask);
 
-#if BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
     // If a dangling raw_ptr<> was detected, report it.
     if (PA_UNLIKELY((old_count & kDanglingRawPtrDetectedBit) ==
                     kDanglingRawPtrDetectedBit)) {
@@ -224,7 +233,7 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
   // Similar to |Release()|, but for raw_ptr<T, DisableDanglingPtrDetection>
   // instead of raw_ptr<T>.
   PA_ALWAYS_INLINE bool ReleaseFromUnprotectedPtr() {
-#if BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
     CheckCookieIfSupported();
 
     CountType old_count =
@@ -252,11 +261,14 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
   PA_ALWAYS_INLINE bool ReleaseFromAllocator() {
     CheckCookieIfSupported();
 
-    // TODO(bartekn): Make the double-free check more effective. Once freed, the
-    // in-slot metadata is overwritten by an encoded freelist-next pointer.
     CountType old_count =
         count_.fetch_and(~kMemoryHeldByAllocatorBit, std::memory_order_release);
 
+    // If kMemoryHeldByAllocatorBit was already unset, it indicates a double
+    // free, but it could also be caused by a memory corruption. Note, this
+    // detection mechanism isn't perfect, because in-slot-metadata can be
+    // overwritten by the freelist pointer (or its shadow) for very small slots,
+    // thus masking the error away.
     if (PA_UNLIKELY(!(old_count & kMemoryHeldByAllocatorBit))) {
       DoubleFreeOrCorruptionDetected(old_count);
     }
@@ -359,7 +371,7 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
   // If there are some dangling raw_ptr<>. Turn on the error flag, and
   // emit the `DanglingPtrDetected` once to embedders.
   PA_ALWAYS_INLINE void CheckDanglingPointersOnFree(CountType count) {
-#if BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
     // The `kPtrCountMask` counts the number of raw_ptr<T>. It is expected to be
     // zero when there are no unexpected dangling pointers.
     if (PA_LIKELY((count & kPtrCountMask) == 0)) {
@@ -384,7 +396,7 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) InSlotMetadata {
 
     partition_alloc::internal::DanglingRawPtrDetected(
         reinterpret_cast<uintptr_t>(this));
-#endif  // BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#endif  // PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
   }
 
   // The common parts shared by Release() and ReleaseFromUnprotectedPtr().
@@ -475,9 +487,7 @@ PA_ALWAYS_INLINE InSlotMetadata::InSlotMetadata(
 static_assert(kAlignment % alignof(InSlotMetadata) == 0,
               "kAlignment must be multiples of alignof(InSlotMetadata).");
 
-static constexpr size_t kInSlotMetadataBufferSize = sizeof(InSlotMetadata);
-
-#if BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
 
 #if PA_CONFIG(IN_SLOT_METADATA_CHECK_COOKIE) || \
     PA_CONFIG(IN_SLOT_METADATA_STORE_REQUESTED_SIZE)
@@ -486,7 +496,7 @@ static constexpr size_t kInSlotMetadataSizeShift = 4;
 static constexpr size_t kInSlotMetadataSizeShift = 3;
 #endif
 
-#else  // BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#else  // PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
 
 #if PA_CONFIG(IN_SLOT_METADATA_CHECK_COOKIE) && \
     PA_CONFIG(IN_SLOT_METADATA_STORE_REQUESTED_SIZE)
@@ -540,7 +550,8 @@ PA_ALWAYS_INLINE InSlotMetadata* InSlotMetadataPointer(uintptr_t slot_start,
   if (PA_LIKELY(slot_start & SystemPageOffsetMask())) {
     uintptr_t refcount_address =
         slot_start + slot_size - sizeof(InSlotMetadata);
-#if BUILDFLAG(PA_DCHECK_IS_ON) || BUILDFLAG(ENABLE_BACKUP_REF_PTR_SLOW_CHECKS)
+#if PA_BUILDFLAG(PA_DCHECK_IS_ON) || \
+    PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SLOW_CHECKS)
     PA_CHECK(refcount_address % alignof(InSlotMetadata) == 0);
 #endif
     // TODO(bartekn): Plumb the tag from the callers, so that MTE tag can be
@@ -552,24 +563,23 @@ PA_ALWAYS_INLINE InSlotMetadata* InSlotMetadataPointer(uintptr_t slot_start,
         (slot_start & kSuperPageBaseMask) + SystemPageSize() * 2);
     size_t index = ((slot_start & kSuperPageOffsetMask) >> SystemPageShift())
                    << GetInSlotMetadataIndexMultiplierShift();
-#if BUILDFLAG(PA_DCHECK_IS_ON) || BUILDFLAG(ENABLE_BACKUP_REF_PTR_SLOW_CHECKS)
+#if PA_BUILDFLAG(PA_DCHECK_IS_ON) || \
+    PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SLOW_CHECKS)
     PA_CHECK(sizeof(InSlotMetadata) * index <= SystemPageSize());
 #endif
     return table_base + index;
   }
 }
 
-static_assert(sizeof(InSlotMetadata) <= kInSlotMetadataBufferSize,
-              "InSlotMetadata should fit into the in-slot buffer.");
+#endif  // PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
 
-#else  // BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
-
-static constexpr size_t kInSlotMetadataBufferSize = 0;
-
-#endif  // BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
-
-constexpr size_t kInSlotMetadataSizeAdjustment = kInSlotMetadataBufferSize;
+static inline constexpr size_t kInSlotMetadataSizeAdjustment =
+#if PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
+    sizeof(InSlotMetadata);
+#else
+    0ul;
+#endif
 
 }  // namespace partition_alloc::internal
 
-#endif  // BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_IN_SLOT_METADATA_H_
+#endif  // PARTITION_ALLOC_IN_SLOT_METADATA_H_

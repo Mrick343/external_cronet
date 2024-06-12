@@ -47,7 +47,7 @@ constexpr size_t kMaxNumberOfWorkers = 256;
 //    be scheduled concurrently when we believe that a BEST_EFFORT task is
 //    blocked forever.
 // Currently, only 1. is true as the configuration is per thread group.
-// TODO(https://crbug.com/927755): Fix racy condition when MayBlockThreshold ==
+// TODO(crbug.com/40612168): Fix racy condition when MayBlockThreshold ==
 // BlockedWorkersPoll.
 constexpr TimeDelta kForegroundMayBlockThreshold = Milliseconds(1000);
 constexpr TimeDelta kForegroundBlockedWorkersPoll = Milliseconds(1200);
@@ -164,8 +164,6 @@ void ThreadGroup::StartImpl(
     WorkerEnvironment worker_environment,
     bool synchronous_thread_start_for_testing,
     std::optional<TimeDelta> may_block_threshold) {
-  DCHECK(!replacement_thread_group_);
-
   if (synchronous_thread_start_for_testing) {
     worker_started_for_testing_.emplace(WaitableEvent::ResetPolicy::AUTOMATIC);
     // Don't emit a ScopedBlockingCallWithBaseSyncPrimitives from this
@@ -189,6 +187,7 @@ void ThreadGroup::StartImpl(
   CheckedAutoLock auto_lock(lock_);
 
   max_tasks_ = max_tasks;
+  baseline_max_tasks_ = max_tasks;
   DCHECK_GE(max_tasks_, 1U);
   in_start().initial_max_tasks = std::min(max_tasks_, kMaxNumberOfWorkers);
   max_best_effort_tasks_ = max_best_effort_tasks;
@@ -216,6 +215,17 @@ void ThreadGroup::UnbindFromCurrentThread() {
 
 bool ThreadGroup::IsBoundToCurrentThread() const {
   return current_thread_group == this;
+}
+
+void ThreadGroup::SetMaxTasks(size_t max_tasks) {
+  CheckedAutoLock auto_lock(lock_);
+  size_t extra_tasks = max_tasks_ - baseline_max_tasks_;
+  baseline_max_tasks_ = std::min(max_tasks, after_start().initial_max_tasks);
+  max_tasks_ = baseline_max_tasks_ + extra_tasks;
+}
+
+void ThreadGroup::ResetMaxTasks() {
+  SetMaxTasks(after_start().initial_max_tasks);
 }
 
 size_t
@@ -362,7 +372,6 @@ void ThreadGroup::UpdateSortKeyImpl(BaseScopedCommandsExecutor* executor,
 void ThreadGroup::PushTaskSourceAndWakeUpWorkersImpl(
     BaseScopedCommandsExecutor* executor,
     RegisteredTaskSourceAndTransaction transaction_with_task_source) {
-  DCHECK(!replacement_thread_group_);
   DCHECK_EQ(delegate_->GetThreadGroupForTraits(
                 transaction_with_task_source.transaction.traits()),
             this);
@@ -467,7 +476,7 @@ ThreadGroup::GetScopedWindowsThreadEnvironment(WorkerEnvironment environment) {
   if (environment == WorkerEnvironment::COM_MTA) {
     scoped_environment = std::make_unique<win::ScopedWinrtInitializer>();
 
-    // TODO(crbug.com/1498668): rollback the change or replace it with a CHECK
+    // TODO(crbug.com/40076080): rollback the change or replace it with a CHECK
     // before closing the bug.
     DUMP_WILL_BE_CHECK(scoped_environment->Succeeded());
   }
@@ -497,7 +506,7 @@ void ThreadGroup::WaitForWorkersIdleLockRequiredForTesting(size_t n) {
   AutoReset<bool> ban_cleanups(&worker_cleanup_disallowed_for_testing_, true);
 
   while (NumberOfIdleWorkersLockRequiredForTesting() < n) {
-    idle_workers_set_cv_for_testing_->Wait();
+    idle_workers_set_cv_for_testing_.Wait();
   }
 }
 
@@ -523,7 +532,8 @@ void ThreadGroup::WaitForWorkersCleanedUpForTesting(size_t n) {
   CheckedAutoLock auto_lock(lock_);
 
   if (!num_workers_cleaned_up_for_testing_cv_) {
-    num_workers_cleaned_up_for_testing_cv_ = lock_.CreateConditionVariable();
+    lock_.CreateConditionVariableAndEmplace(
+        num_workers_cleaned_up_for_testing_cv_);
   }
 
   while (num_workers_cleaned_up_for_testing_ < n) {

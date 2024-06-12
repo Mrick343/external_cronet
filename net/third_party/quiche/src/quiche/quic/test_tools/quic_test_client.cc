@@ -5,6 +5,8 @@
 #include "quiche/quic/test_tools/quic_test_client.h"
 
 #include <memory>
+#include <optional>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -860,7 +862,7 @@ void QuicTestClient::WaitForDelayedAcks() {
   // kWaitDuration is a period of time that is long enough for all delayed
   // acks to be sent and received on the other end.
   const QuicTime::Delta kWaitDuration =
-      4 * QuicTime::Delta::FromMilliseconds(kDefaultDelayedAckTimeMs);
+      4 * QuicTime::Delta::FromMilliseconds(GetDefaultDelayedAckTimeMs());
 
   const QuicClock* clock = client()->client_session()->connection()->clock();
 

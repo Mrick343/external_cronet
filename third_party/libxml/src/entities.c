@@ -33,35 +33,35 @@
  * The XML predefined entities.
  */
 
-static xmlEntity xmlEntityLt = {
+static const xmlEntity xmlEntityLt = {
     NULL, XML_ENTITY_DECL, BAD_CAST "lt",
     NULL, NULL, NULL, NULL, NULL, NULL,
     BAD_CAST "<", BAD_CAST "<", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
     NULL, NULL, NULL, NULL, 0, 0, 0
 };
-static xmlEntity xmlEntityGt = {
+static const xmlEntity xmlEntityGt = {
     NULL, XML_ENTITY_DECL, BAD_CAST "gt",
     NULL, NULL, NULL, NULL, NULL, NULL,
     BAD_CAST ">", BAD_CAST ">", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
     NULL, NULL, NULL, NULL, 0, 0, 0
 };
-static xmlEntity xmlEntityAmp = {
+static const xmlEntity xmlEntityAmp = {
     NULL, XML_ENTITY_DECL, BAD_CAST "amp",
     NULL, NULL, NULL, NULL, NULL, NULL,
     BAD_CAST "&", BAD_CAST "&", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
     NULL, NULL, NULL, NULL, 0, 0, 0
 };
-static xmlEntity xmlEntityQuot = {
+static const xmlEntity xmlEntityQuot = {
     NULL, XML_ENTITY_DECL, BAD_CAST "quot",
     NULL, NULL, NULL, NULL, NULL, NULL,
     BAD_CAST "\"", BAD_CAST "\"", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
     NULL, NULL, NULL, NULL, 0, 0, 0
 };
-static xmlEntity xmlEntityApos = {
+static const xmlEntity xmlEntityApos = {
     NULL, XML_ENTITY_DECL, BAD_CAST "apos",
     NULL, NULL, NULL, NULL, NULL, NULL,
     BAD_CAST "'", BAD_CAST "'", 1,
@@ -253,7 +253,7 @@ xmlAddEntity(xmlDocPtr doc, int extSubset, const xmlChar *name, int type,
             }
 	    table = dtd->pentities;
 	    break;
-        case XML_INTERNAL_PREDEFINED_ENTITY:
+        default:
 	    return(XML_ERR_ARGUMENT);
     }
     ret = xmlCreateEntity(dtd->doc, name, type, ExternalID, SystemID, content);
@@ -303,21 +303,21 @@ xmlGetPredefinedEntity(const xmlChar *name) {
     switch (name[0]) {
         case 'l':
 	    if (xmlStrEqual(name, BAD_CAST "lt"))
-	        return(&xmlEntityLt);
+	        return((xmlEntityPtr) &xmlEntityLt);
 	    break;
         case 'g':
 	    if (xmlStrEqual(name, BAD_CAST "gt"))
-	        return(&xmlEntityGt);
+	        return((xmlEntityPtr) &xmlEntityGt);
 	    break;
         case 'a':
 	    if (xmlStrEqual(name, BAD_CAST "amp"))
-	        return(&xmlEntityAmp);
+	        return((xmlEntityPtr) &xmlEntityAmp);
 	    if (xmlStrEqual(name, BAD_CAST "apos"))
-	        return(&xmlEntityApos);
+	        return((xmlEntityPtr) &xmlEntityApos);
 	    break;
         case 'q':
 	    if (xmlStrEqual(name, BAD_CAST "quot"))
-	        return(&xmlEntityQuot);
+	        return((xmlEntityPtr) &xmlEntityQuot);
 	    break;
 	default:
 	    break;
@@ -395,6 +395,8 @@ xmlNewEntity(xmlDocPtr doc, const xmlChar *name, int type,
     if ((doc != NULL) && (doc->intSubset != NULL)) {
 	return(xmlAddDocEntity(doc, name, type, ExternalID, SystemID, content));
     }
+    if (name == NULL)
+        return(NULL);
     return(xmlCreateEntity(doc, name, type, ExternalID, SystemID, content));
 }
 
@@ -654,11 +656,6 @@ xmlEncodeEntitiesInternal(xmlDocPtr doc, const xmlChar *input, int attr) {
                 l = 4;
                 val = xmlGetUTF8Char(cur, &l);
                 if (val < 0) {
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-                    fprintf(stderr, "xmlEncodeEntitiesInternal: "
-                            "invalid UTF-8\n");
-                    abort();
-#endif
                     val = 0xFFFD;
                     cur++;
                 } else {
@@ -937,7 +934,8 @@ xmlDumpEntityDecl(xmlBufferPtr buf, xmlEntityPtr ent) {
 
     save = xmlSaveToBuffer(buf, NULL, 0);
     xmlSaveTree(save, (xmlNodePtr) ent);
-    xmlSaveClose(save);
+    if (xmlSaveFinish(save) != XML_ERR_OK)
+        xmlFree(xmlBufferDetach(buf));
 }
 
 /**
@@ -948,9 +946,9 @@ xmlDumpEntityDecl(xmlBufferPtr buf, xmlEntityPtr ent) {
  * When using the hash table scan function, arguments need to be reversed
  */
 static void
-xmlDumpEntityDeclScan(void *ent, void *buf,
+xmlDumpEntityDeclScan(void *ent, void *save,
                       const xmlChar *name ATTRIBUTE_UNUSED) {
-    xmlDumpEntityDecl((xmlBufferPtr) buf, (xmlEntityPtr) ent);
+    xmlSaveTree(save, ent);
 }
 
 /**
@@ -962,6 +960,14 @@ xmlDumpEntityDeclScan(void *ent, void *buf,
  */
 void
 xmlDumpEntitiesTable(xmlBufferPtr buf, xmlEntitiesTablePtr table) {
-    xmlHashScan(table, xmlDumpEntityDeclScan, buf);
+    xmlSaveCtxtPtr save;
+
+    if ((buf == NULL) || (table == NULL))
+        return;
+
+    save = xmlSaveToBuffer(buf, NULL, 0);
+    xmlHashScan(table, xmlDumpEntityDeclScan, save);
+    if (xmlSaveFinish(save) != XML_ERR_OK)
+        xmlFree(xmlBufferDetach(buf));
 }
 #endif /* LIBXML_OUTPUT_ENABLED */

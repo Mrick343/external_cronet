@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/341324165): Fix and remove.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/dns/opt_record_rdata.h"
 
 #include <algorithm>
@@ -57,7 +62,7 @@ TEST(OptRecordRdataTest, ParseOptRecord) {
 
   // Check elements
 
-  // Note: When passing string or StringPiece as argument, make sure to
+  // Note: When passing string or std::string_view as argument, make sure to
   // construct arguments with length. Otherwise, strings containing a '\0'
   // character will be truncated.
   // https://crbug.com/1348679

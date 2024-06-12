@@ -59,8 +59,7 @@ struct NET_EXPORT HttpRequestInfo {
   HttpRequestHeaders extra_headers;
 
   // Any upload data.
-  raw_ptr<UploadDataStream, AcrossTasksDanglingUntriaged> upload_data_stream =
-      nullptr;
+  raw_ptr<UploadDataStream> upload_data_stream = nullptr;
 
   // Any load flags (see load_flags.h).
   int load_flags = 0;
@@ -81,7 +80,7 @@ struct NET_EXPORT HttpRequestInfo {
   SocketTag socket_tag;
 
   // Network traffic annotation received from URL request.
-  net::MutableNetworkTrafficAnnotationTag traffic_annotation;
+  MutableNetworkTrafficAnnotationTag traffic_annotation;
 
   // Reporting upload nesting depth of this request.
   //
@@ -94,7 +93,7 @@ struct NET_EXPORT HttpRequestInfo {
   // This may the top frame origin associated with a request, or it may be the
   // top frame site.  Or it may be nullptr.  Only used for histograms.
   //
-  // TODO(https://crbug.com/1136054): Investigate migrating the one consumer of
+  // TODO(crbug.com/40724003): Investigate migrating the one consumer of
   // this to NetworkIsolationKey::TopFrameSite().  That gives more consistent
   /// behavior, and may still provide useful metrics.
   std::optional<url::Origin> possibly_top_frame_origin;
@@ -110,7 +109,7 @@ struct NET_EXPORT HttpRequestInfo {
   // replay the request. If the request has any side effects, those effects can
   // happen multiple times. It is only safe to enable the 0-RTT if it is known
   // that the request is idempotent.
-  net::Idempotency idempotency = net::DEFAULT_IDEMPOTENCY;
+  Idempotency idempotency = DEFAULT_IDEMPOTENCY;
 
   // If not null, the value is used to evaluate whether the cache entry should
   // be bypassed; if is null, that means the request site does not match the

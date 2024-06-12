@@ -66,7 +66,7 @@ HttpConnectionInfo QuicHttpStream::ConnectionInfoFromQuicVersion(
       DCHECK(quic_version.UsesTls());
       return HttpConnectionInfo::kQUIC_2_DRAFT_8;
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return HttpConnectionInfo::kQUIC_UNKNOWN_VERSION;
 }
 
@@ -348,19 +348,21 @@ std::string_view QuicHttpStream::GetAcceptChViaAlps() const {
   return session()->GetAcceptChViaAlps(url::SchemeHostPort(request_info_->url));
 }
 
-std::optional<quic::QuicErrorCode> QuicHttpStream::GetQuicErrorCode() const {
+std::optional<HttpStream::QuicErrorDetails>
+QuicHttpStream::GetQuicErrorDetails() const {
+  QuicErrorDetails details;
   if (stream_) {
-    return stream_->connection_error();
+    details.connection_error = stream_->connection_error();
+    details.stream_error = stream_->stream_error();
+    details.connection_wire_error = stream_->connection_wire_error();
+    details.ietf_application_error = stream_->ietf_application_error();
+  } else {
+    details.connection_error = connection_error_;
+    details.stream_error = stream_error_;
+    details.connection_wire_error = connection_wire_error_;
+    details.ietf_application_error = ietf_application_error_;
   }
-  return connection_error_;
-}
-
-std::optional<quic::QuicRstStreamErrorCode>
-QuicHttpStream::GetQuicRstStreamErrorCode() const {
-  if (stream_) {
-    return stream_->stream_error();
-  }
-  return stream_error_;
+  return details;
 }
 
 void QuicHttpStream::ReadTrailingHeaders() {
@@ -452,7 +454,7 @@ int QuicHttpStream::DoLoop(int rv) {
         CHECK_EQ(OK, rv);
         break;
       default:
-        NOTREACHED() << "next_state_: " << next_state_;
+        NOTREACHED_IN_MIGRATION() << "next_state_: " << next_state_;
         break;
     }
   } while (next_state_ != STATE_NONE && next_state_ != STATE_OPEN &&
@@ -682,6 +684,8 @@ void QuicHttpStream::ResetStream() {
   closed_is_first_stream_ = stream_->IsFirstStream();
   connection_error_ = stream_->connection_error();
   stream_error_ = stream_->stream_error();
+  connection_wire_error_ = stream_->connection_wire_error();
+  ietf_application_error_ = stream_->ietf_application_error();
 }
 
 int QuicHttpStream::MapStreamError(int rv) {

@@ -9,9 +9,10 @@
 
 #include <array>
 #include <set>
+#include <string_view>
 #include <vector>
 
-#include "base/strings/string_piece.h"
+
 
 namespace base {
 
@@ -139,7 +140,7 @@ void ConstVectorDeducesAsConstSpan() {
 
 // make_span<N>() should CHECK whether N matches the actual size.
 void MakeSpanChecksSize() {
-  constexpr StringPiece str = "Foo";
+  constexpr std::string_view str = "Foo";
   constexpr auto made_span1 = make_span<2>(str.begin(), 3u);         // expected-error {{constexpr variable 'made_span1' must be initialized by a constant expression}}
   constexpr auto made_span2 = make_span<2>(str.begin(), str.end());  // expected-error {{constexpr variable 'made_span2' must be initialized by a constant expression}}
   constexpr auto made_span3 = make_span<2>(str);                     // expected-error {{constexpr variable 'made_span3' must be initialized by a constant expression}}
@@ -274,6 +275,19 @@ void CompareNotComparable() {
 void AsStringViewNotBytes() {
   const int arr[] = {1, 2, 3};
   as_string_view(base::span(arr));  // expected-error@*:* {{no matching function for call to 'as_string_view'}}
+}
+
+void SpanFromCstrings() {
+  static const char with_null[] = { 'a', 'b', '\0' };
+  base::span_from_cstring(with_null);
+
+  // Can't call span_from_cstring and friends with a non-null-terminated char
+  // array.
+  static const char no_null[] = { 'a', 'b' };
+  base::span_from_cstring(no_null);  // expected-error@*:* {{no matching function for call to 'span_from_cstring'}}
+  base::span_with_nul_from_cstring(no_null);  // expected-error@*:* {{no matching function for call to 'span_with_nul_from_cstring'}}
+  base::byte_span_from_cstring(no_null);  // expected-error@*:* {{no matching function for call to 'byte_span_from_cstring'}}
+  base::byte_span_with_nul_from_cstring(no_null);  // expected-error@*:* {{no matching function for call to 'byte_span_with_nul_from_cstring'}}
 }
 
 }  // namespace base

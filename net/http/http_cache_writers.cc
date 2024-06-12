@@ -31,8 +31,8 @@ bool IsValidResponseForWriter(bool is_partial,
   // Return false if the response code sent by the server is garbled.
   // Both 200 and 304 are valid since concurrent writing is supported.
   if (!is_partial &&
-      (response_info->headers->response_code() != net::HTTP_OK &&
-       response_info->headers->response_code() != net::HTTP_NOT_MODIFIED)) {
+      (response_info->headers->response_code() != HTTP_OK &&
+       response_info->headers->response_code() != HTTP_NOT_MODIFIED)) {
     return false;
   }
 
@@ -363,7 +363,7 @@ int HttpCache::Writers::DoLoop(int result) {
         rv = DoCacheWriteDataComplete(rv);
         break;
       case State::UNSET:
-        NOTREACHED() << "bad state";
+        NOTREACHED_IN_MIGRATION() << "bad state";
         rv = ERR_FAILED;
         break;
       case State::NONE:
@@ -398,7 +398,7 @@ int HttpCache::Writers::DoNetworkRead() {
   DCHECK(network_transaction_);
   next_state_ = State::NETWORK_READ_COMPLETE;
 
-  // TODO(https://crbug.com/778641): This is a partial mitigation. When
+  // TODO(crbug.com/40089413): This is a partial mitigation. When
   // reading from the network, a valid HttpNetworkTransaction must be always
   // available.
   if (!network_transaction_) {

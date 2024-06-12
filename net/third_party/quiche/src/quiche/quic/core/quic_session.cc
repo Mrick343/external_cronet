@@ -4,9 +4,16 @@
 
 #include "quiche/quic/core/quic_session.h"
 
+#include <algorithm>
 #include <cstdint>
+#include <limits>
+#include <memory>
+#include <optional>
+#include <ostream>
+#include <sstream>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "absl/memory/memory.h"
 #include "absl/strings/str_cat.h"
@@ -22,6 +29,7 @@
 #include "quiche/quic/core/quic_utils.h"
 #include "quiche/quic/core/quic_versions.h"
 #include "quiche/quic/core/quic_write_blocked_list.h"
+#include "quiche/quic/core/web_transport_write_blocked_list.h"
 #include "quiche/quic/platform/api/quic_bug_tracker.h"
 #include "quiche/quic/platform/api/quic_flag_utils.h"
 #include "quiche/quic/platform/api/quic_flags.h"
@@ -76,6 +84,18 @@ class StreamCountResetAlarmDelegate : public QuicAlarm::Delegate {
   QuicSession* session_;
 };
 
+std::unique_ptr<QuicWriteBlockedListInterface> CreateWriteBlockedList(
+    QuicPriorityType priority_type) {
+  switch (priority_type) {
+    case QuicPriorityType::kHttp:
+      return std::make_unique<QuicWriteBlockedList>();
+    case QuicPriorityType::kWebTransport:
+      return std::make_unique<WebTransportWriteBlockedList>();
+  }
+  QUICHE_NOTREACHED();
+  return nullptr;
+}
+
 }  // namespace
 
 #define ENDPOINT \
@@ -92,11 +112,12 @@ QuicSession::QuicSession(
     QuicConnection* connection, Visitor* owner, const QuicConfig& config,
     const ParsedQuicVersionVector& supported_versions,
     QuicStreamCount num_expected_unidirectional_static_streams,
-    std::unique_ptr<QuicDatagramQueue::Observer> datagram_observer)
+    std::unique_ptr<QuicDatagramQueue::Observer> datagram_observer,
+    QuicPriorityType priority_type)
     : connection_(connection),
       perspective_(connection->perspective()),
       visitor_(owner),
-      write_blocked_streams_(std::make_unique<QuicWriteBlockedList>()),
+      write_blocked_streams_(CreateWriteBlockedList(priority_type)),
       config_(config),
       stream_id_manager_(perspective(), connection->transport_version(),
                          kDefaultMaxStreamsPerConnection,
@@ -132,7 +153,8 @@ QuicSession::QuicSession(
       liveness_testing_in_progress_(false),
       stream_count_reset_alarm_(
           absl::WrapUnique<QuicAlarm>(connection->alarm_factory()->CreateAlarm(
-              new StreamCountResetAlarmDelegate(this)))) {
+              new StreamCountResetAlarmDelegate(this)))),
+      priority_type_(priority_type) {
   closed_streams_clean_up_alarm_ =
       absl::WrapUnique<QuicAlarm>(connection_->alarm_factory()->CreateAlarm(
           new ClosedStreamsCleanUpDelegate(this)));
@@ -540,7 +562,11 @@ void QuicSession::OnPacketReceived(const QuicSocketAddress& /*self_address*/,
   }
 }
 
-void QuicSession::OnPathDegrading() {}
+void QuicSession::OnPathDegrading() {
+  if (visitor_) {
+    visitor_->OnPathDegrading();
+  }
+}
 
 void QuicSession::OnForwardProgressMadeAfterPathDegrading() {}
 
@@ -1386,9 +1412,9 @@ void QuicSession::OnConfigNegotiated() {
               .Normalized()
               .host()
               .address_family();
-      std::optional<QuicSocketAddress> preferred_address =
-          config_.GetPreferredAddressToSend(address_family);
-      if (preferred_address.has_value()) {
+      std::optional<QuicSocketAddress> expected_preferred_address =
+          config_.GetMappedAlternativeServerAddress(address_family);
+      if (expected_preferred_address.has_value()) {
         // Set connection ID and token if SPAD has received and a preferred
         // address of the same address family is configured.
         std::optional<QuicNewConnectionIdFrame> frame =
@@ -1397,7 +1423,8 @@ void QuicSession::OnConfigNegotiated() {
           config_.SetPreferredAddressConnectionIdAndTokenToSend(
               frame->connection_id, frame->stateless_reset_token);
         }
-        connection_->set_sent_server_preferred_address(*preferred_address);
+        connection_->set_expected_server_preferred_address(
+            *expected_preferred_address);
       }
       // Clear the alternative address of the other address family in the
       // config.
@@ -2481,13 +2508,14 @@ HandshakeState QuicSession::GetHandshakeState() const {
 }
 
 QuicByteCount QuicSession::GetFlowControlSendWindowSize(QuicStreamId id) {
-  QuicStream* stream = GetActiveStream(id);
-  if (stream == nullptr) {
+  QUICHE_DCHECK(GetQuicRestartFlag(quic_opport_bundle_qpack_decoder_data5));
+  auto it = stream_map_.find(id);
+  if (it == stream_map_.end()) {
     // No flow control for invalid or inactive stream ids. Returning uint64max
     // allows QuicPacketCreator to write as much data as possible.
     return std::numeric_limits<QuicByteCount>::max();
   }
-  return stream->CalculateSendWindowSize();
+  return it->second->CalculateSendWindowSize();
 }
 
 WriteStreamDataResult QuicSession::WriteStreamData(QuicStreamId id,

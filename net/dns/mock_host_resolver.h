@@ -87,9 +87,7 @@ int ParseAddressList(std::string_view host_list,
 // rule, otherwise DCHECKs will fire.
 
 // Base class shared by MockHostResolver and MockCachingHostResolver.
-class MockHostResolverBase
-    : public HostResolver,
-      public base::SupportsWeakPtr<MockHostResolverBase> {
+class MockHostResolverBase : public HostResolver {
  private:
   class RequestImpl;
   class ProbeRequestImpl;
@@ -287,6 +285,11 @@ class MockHostResolverBase
       const NetworkAnonymizationKey& network_anonymization_key,
       const NetLogWithSource& net_log,
       const std::optional<ResolveHostParameters>& optional_parameters) override;
+  std::unique_ptr<ServiceEndpointRequest> CreateServiceEndpointRequest(
+      Host host,
+      NetworkAnonymizationKey network_anonymization_key,
+      NetLogWithSource net_log,
+      ResolveHostParameters parameters) override;
   std::unique_ptr<ProbeRequest> CreateDohProbeRequest() override;
   std::unique_ptr<MdnsListener> CreateMdnsListener(
       const HostPortPair& host,
@@ -452,6 +455,8 @@ class MockHostResolverBase
   scoped_refptr<State> state_;
 
   THREAD_CHECKER(thread_checker_);
+
+  base::WeakPtrFactory<MockHostResolverBase> weak_ptr_factory_{this};
 };
 
 class MockHostResolver : public MockHostResolverBase {
@@ -602,7 +607,7 @@ class RuleBasedHostResolverProc : public HostResolverProc {
               int* os_error) override;
 
   struct Rule {
-    // TODO(https://crbug.com/1298106) Deduplicate this enum's definition.
+    // TODO(crbug.com/40822747) Deduplicate this enum's definition.
     enum ResolverType {
       kResolverTypeFail,
       kResolverTypeFailTimeout,
@@ -697,6 +702,11 @@ class HangingHostResolver : public HostResolver {
       const NetworkAnonymizationKey& network_anonymization_key,
       const NetLogWithSource& net_log,
       const std::optional<ResolveHostParameters>& optional_parameters) override;
+  std::unique_ptr<ServiceEndpointRequest> CreateServiceEndpointRequest(
+      Host host,
+      NetworkAnonymizationKey network_anonymization_key,
+      NetLogWithSource net_log,
+      ResolveHostParameters parameters) override;
 
   std::unique_ptr<ProbeRequest> CreateDohProbeRequest() override;
 

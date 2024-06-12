@@ -1,4 +1,7 @@
-# Overview
+# JNI Zero
+A zero-overhead (or better!) middleware for JNI.
+
+## Overview
 JNI (Java Native Interface) is the mechanism that enables Java code to call
 native functions, and native code to call Java functions.
 
@@ -7,19 +10,17 @@ native functions, and native code to call Java functions.
  * Java code calls native functions by declaring body-less functions with the
   `native` keyword, and then calling them as normal Java functions.
 
-`jni_generator` generates boiler-plate code with the goal of making our code:
- 1. easier to write, and
+JNI Zero generates boiler-plate code with the goal of making our code:
+ 1. easier to write,
  2. typesafe.
+ 3. more optimizable.
 
-`jni_generator` uses regular expressions to parse .Java files, so don't do
+JNI Zero uses regular expressions to parse .Java files, so don't do
 anything too fancy. E.g.:
  * Classes must be either explicitly imported, or are assumed to be in
 the same package. To use `java.lang` classes, add an explicit import.
  * Inner classes need to be referenced through the outer class. E.g.:
    `void call(Outer.Inner inner)`
-
-The presense of any JNI within a class will result in ProGuard obfuscation for
-the class to be disabled.
 
 ### Exposing Native Methods
 
@@ -29,8 +30,8 @@ There are two ways to have native methods be found by Java:
 2) Export the symbols from the shared library, and let the runtime resolve them
    on-demand (using `dlsym()`) the first time a native method is called.
 
-2) Is generally preferred due to a smaller code size and less up-front work, but
-1) is sometimes required (e.g. when OS bugs prevent `dlsym()` from working).
+(2) Is generally preferred due to a smaller code size and less up-front work, but
+(1) is sometimes required (e.g. when OS bugs prevent `dlsym()` from working).
 Both ways are supported by this tool.
 
 ### Exposing Java Methods
@@ -409,7 +410,7 @@ all the fields as "final".
 Refer to [//build/config/android/rules.gni](https://cs.chromium.org/chromium/src/build/config/android/rules.gni)
 for more about the GN templates.
 
-## Changing `jni_generator`
+## Changing JNI Zero
 
  * Python tests live in `test/integration_tests.py`
- * A working demo app exists as `//third_party/jni_zero/sample:sample_jni_apk`
+ * A working demo app exists as `//third_party/jni_zero/sample:jni_zero_sample_apk`

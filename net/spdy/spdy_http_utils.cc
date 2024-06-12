@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/spdy/spdy_http_utils.h"
 
 #include <string>
@@ -243,16 +248,19 @@ void CreateSpdyHeadersFromHttpRequestForExtendedConnect(
     const HttpRequestHeaders& request_headers,
     spdy::Http2HeaderBlock* headers) {
   CHECK_EQ(info.method, "CONNECT");
-  CreateSpdyHeadersFromHttpRequest(info, priority, request_headers, headers);
 
   // Extended CONNECT, unlike CONNECT, requires scheme and path, and uses the
   // default port in the authority header.
-  headers->insert(
-      {spdy::kHttp2AuthorityHeader, GetHostAndOptionalPort(info.url)});
   headers->insert({spdy::kHttp2SchemeHeader, info.url.scheme()});
   headers->insert({spdy::kHttp2PathHeader, info.url.PathForRequest()});
-
   headers->insert({spdy::kHttp2ProtocolHeader, ext_connect_protocol});
+
+  CreateSpdyHeadersFromHttpRequest(info, priority, request_headers, headers);
+
+  // Replace the existing `:authority` header. This will still be ordered
+  // correctly, since the header was first added before any regular headers.
+  headers->insert(
+      {spdy::kHttp2AuthorityHeader, GetHostAndOptionalPort(info.url)});
 }
 
 void CreateSpdyHeadersFromHttpRequestForWebSocket(

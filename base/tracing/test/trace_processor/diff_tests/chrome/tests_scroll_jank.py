@@ -40,7 +40,7 @@ class ChromeScrollJankStdlib(TestSuite):
 
   def test_chrome_scrolls(self):
     return DiffTestBlueprint(
-        trace=Path('chrome_scroll_check.py'),
+        trace=DataPath('chrome_input_with_frame_view.pftrace'),
         query="""
         INCLUDE PERFETTO MODULE chrome.chrome_scrolls;
 
@@ -55,15 +55,15 @@ class ChromeScrollJankStdlib(TestSuite):
         """,
         out=Csv("""
         "id","ts","dur","gesture_scroll_begin_ts","gesture_scroll_end_ts"
-        5678,0,55000000,0,45000000
-        5679,60000000,40000000,60000000,90000000
-        5680,80000000,30000000,80000000,100000000
-        5681,120000000,70000000,120000000,"[NULL]"
+        4328,1035865535981926,1255745000,1035865535981926,1035866753550926
+        4471,1035866799527926,1358505000,1035866799527926,1035868108723926
+        4620,1035868146266926,111786000,1035868146266926,1035868230937926
+        4652,1035868607429926,1517121000,1035868607429926,1035870086449926
         """))
 
   def test_chrome_scroll_intervals(self):
     return DiffTestBlueprint(
-        trace=Path('chrome_scroll_check.py'),
+        trace=DataPath('chrome_input_with_frame_view.pftrace'),
         query="""
         INCLUDE PERFETTO MODULE chrome.chrome_scrolls;
 
@@ -76,14 +76,14 @@ class ChromeScrollJankStdlib(TestSuite):
         """,
         out=Csv("""
         "id","ts","dur"
-        1,0,55000000
-        2,60000000,50000000
-        3,120000000,70000000
+        1,1035865535981926,1255745000
+        2,1035866799527926,1458525000
+        3,1035868607429926,1517121000
         """))
 
   def test_chrome_scroll_input_offsets(self):
     return DiffTestBlueprint(
-        trace=DataPath('scroll_offsets.pftrace'),
+        trace=DataPath('scroll_offsets_trace_2.pftrace'),
         query="""
         INCLUDE PERFETTO MODULE chrome.scroll_jank.scroll_offsets;
 
@@ -91,18 +91,19 @@ class ChromeScrollJankStdlib(TestSuite):
           scroll_update_id,
           ts,
           delta_y,
-          offset_y
+          relative_offset_y
         FROM chrome_scroll_input_offsets
+        WHERE scroll_update_id IS NOT NULL
         ORDER by ts
         LIMIT 5;
         """,
         out=Csv("""
-        "scroll_update_id","ts","delta_y","offset_y"
-        1983,4687296612739,-36.999939,-36.999939
-        1983,4687307175845,-39.000092,-76.000031
-        1987,4687313206739,-35.999969,-112.000000
-        1987,4687323152462,-35.000000,-147.000000
-        1991,4687329240739,-28.999969,-175.999969
+        "scroll_update_id","ts","delta_y","relative_offset_y"
+        130,1349914859791,-6.932281,-220.834854
+        132,1349923327791,-32.999954,-253.834808
+        134,1349931893791,-39.999954,-293.834762
+        140,1349956886791,-51.000046,-344.834808
+        147,1349982489791,-89.808540,-434.643348
         """))
 
   def test_chrome_janky_event_latencies_v3(self):
@@ -125,7 +126,12 @@ class ChromeScrollJankStdlib(TestSuite):
         """,
         out=Csv("""
         "ts","dur","track_id","name","cause_of_jank","sub_cause_of_jank","delayed_frame_count","frame_jank_ts","frame_jank_dur"
-        1035869386651926,60311000,2314,"EventLatency","RendererCompositorQueueingDelay","[NULL]",1,1035869435114926,11847999
+        1035866897893926,49303000,968,"EventLatency","SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1,1035866935295926,11901000
+        1035868162888926,61845000,1672,"EventLatency","SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1,1035868212811926,11921999
+        1035868886494926,49285000,2055,"EventLatency","SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1,1035868923855926,11924000
+        1035869208882926,60201000,2230,"EventLatency","SubmitCompositorFrameToPresentationCompositorFrame","BufferReadyToLatch",1,1035869257151926,11932000
+        1035869319831926,71490000,2287,"EventLatency","SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1,1035869379377926,11944000
+        1035869386651926,60311000,2314,"EventLatency","RendererCompositorQueueingDelay","[NULL]",1,1035869434949926,12013000
         """))
 
   def test_chrome_janky_frame_presentation_intervals(self):
@@ -146,7 +152,12 @@ class ChromeScrollJankStdlib(TestSuite):
         """,
         out=Csv("""
         "id","ts","dur","cause_of_jank","sub_cause_of_jank","delayed_frame_count"
-        1,1035869435114926,11847999,"RendererCompositorQueueingDelay","[NULL]",1
+        1,1035866935295926,11901000,"SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1
+        2,1035868212811926,11921999,"SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1
+        3,1035868923855926,11924000,"SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1
+        4,1035869257151926,11932000,"SubmitCompositorFrameToPresentationCompositorFrame","BufferReadyToLatch",1
+        5,1035869379377926,11944000,"SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",1
+        6,1035869434949926,12013000,"RendererCompositorQueueingDelay","[NULL]",1
         """))
 
   def test_chrome_scroll_stats(self):
@@ -167,10 +178,10 @@ class ChromeScrollJankStdlib(TestSuite):
         """,
         out=Csv("""
         "scroll_id","missed_vsyncs","frame_count","presented_frame_count","janky_frame_count","janky_frame_percent"
-        4328,"[NULL]",109,110,0,0.000000
-        4471,"[NULL]",117,118,0,0.000000
-        4620,"[NULL]",5,4,0,0.000000
-        4652,1,122,122,1,0.820000
+        4328,"[NULL]",110,110,0,0.000000
+        4471,1,120,119,1,0.840000
+        4620,1,9,6,1,16.670000
+        4652,4,133,129,4,3.100000
         """))
 
   def test_chrome_scroll_jank_intervals_v3(self):
@@ -188,11 +199,16 @@ class ChromeScrollJankStdlib(TestSuite):
         """,
         out=Csv("""
         "id","ts","dur"
-        1,1035869435114926,11847999
+        1,1035866935295926,11901000
+        2,1035868212811926,11921999
+        3,1035868923855926,11924000
+        4,1035869257151926,11932000
+        5,1035869379377926,11944000
+        6,1035869434949926,12013000
         """))
   def test_chrome_presented_scroll_offsets(self):
     return DiffTestBlueprint(
-        trace=DataPath('scroll_offsets.pftrace'),
+        trace=DataPath('scroll_offsets_trace_2.pftrace'),
         query="""
         INCLUDE PERFETTO MODULE chrome.scroll_jank.scroll_offsets;
 
@@ -200,18 +216,19 @@ class ChromeScrollJankStdlib(TestSuite):
           scroll_update_id,
           ts,
           delta_y,
-          offset_y
+          relative_offset_y
         FROM chrome_presented_scroll_offsets
+        WHERE scroll_update_id IS NOT NULL
         ORDER by ts
         LIMIT 5;
         """,
         out=Csv("""
-        "scroll_update_id","ts","delta_y","offset_y"
-        1983,4687341817739,"[NULL]",0
-        1987,4687352950739,-50,-50
-        1991,4687364083739,-50,-100
-        1993,4687375224739,-81,-181
-        1996,4687386343739,-66,-247
+        "scroll_update_id","ts","delta_y","relative_offset_y"
+        130,1349963342791,-6.932281,-6.932281
+        132,1349985554791,-16.573090,-23.505371
+        134,1349996680791,-107.517273,-131.022644
+        140,1350007850791,-158.728424,-289.751068
+        147,1350018935791,-89.808540,-379.559608
         """))
 
   def test_scroll_jank_cause_map(self):
@@ -235,4 +252,31 @@ class ChromeScrollJankStdlib(TestSuite):
         # correspond to a valid EventLatency stage.
         out=Csv("""
         "event_latency_stage"
+        """))
+
+  def test_chrome_scroll_jank_with_pinches(self):
+    return DiffTestBlueprint(
+        trace=DataPath('scroll_jank_with_pinch.pftrace'),
+        query="""
+        INCLUDE PERFETTO MODULE chrome.scroll_jank.scroll_jank_v3;
+
+        SELECT
+          janks.cause_of_jank,
+          janks.sub_cause_of_jank,
+          janks.delay_since_last_frame,
+          janks.event_latency_id,
+          presented_frames.event_type
+        FROM chrome_janky_frames janks
+        LEFT JOIN chrome_presented_gesture_scrolls presented_frames
+          ON janks.event_latency_id = presented_frames.id
+        ORDER by event_latency_id;
+        """,
+        out=Csv("""
+        "cause_of_jank","sub_cause_of_jank","delay_since_last_frame","event_latency_id","event_type"
+        "SubmitCompositorFrameToPresentationCompositorFrame","StartDrawToSwapStart",22.252000,754,"GESTURE_SCROLL_UPDATE"
+        "SubmitCompositorFrameToPresentationCompositorFrame","SubmitToReceiveCompositorFrame",22.263000,25683,"GESTURE_SCROLL_UPDATE"
+        "SubmitCompositorFrameToPresentationCompositorFrame","ReceiveCompositorFrameToStartDraw",22.266000,26098,"GESTURE_SCROLL_UPDATE"
+        "SubmitCompositorFrameToPresentationCompositorFrame","BufferReadyToLatch",22.262000,40846,"GESTURE_SCROLL_UPDATE"
+        "BrowserMainToRendererCompositor","[NULL]",22.250000,50230,"GESTURE_SCROLL_UPDATE"
+        "SubmitCompositorFrameToPresentationCompositorFrame","BufferReadyToLatch",22.267000,50517,"GESTURE_SCROLL_UPDATE"
         """))

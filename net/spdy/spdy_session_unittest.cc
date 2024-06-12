@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/spdy/spdy_session.h"
 
 #include <algorithm>
@@ -807,7 +812,8 @@ TEST_F(SpdySessionTest, GoAwayWhileDraining) {
     out += goaway.size();
     ASSERT_EQ(out, joint_size);
   }
-  spdy::SpdySerializedFrame joint_frames(buffer.get(), joint_size, false);
+  spdy::SpdySerializedFrame joint_frames(
+      spdy::test::MakeSerializedFrame(buffer.get(), joint_size));
 
   MockRead reads[] = {
       CreateMockRead(resp, 1), CreateMockRead(joint_frames, 2),
@@ -5425,10 +5431,9 @@ TEST_F(SpdySessionTest, GreaseFrameTypeAfterSettings) {
           {type, flags, payload});
 
   // Connection preface.
-  spdy::SpdySerializedFrame preface(
+  spdy::SpdySerializedFrame preface(spdy::test::MakeSerializedFrame(
       const_cast<char*>(spdy::kHttp2ConnectionHeaderPrefix),
-      spdy::kHttp2ConnectionHeaderPrefixSize,
-      /* owns_buffer = */ false);
+      spdy::kHttp2ConnectionHeaderPrefixSize));
 
   // Initial SETTINGS frame.
   spdy::SettingsMap expected_settings;
@@ -5450,9 +5455,8 @@ TEST_F(SpdySessionTest, GreaseFrameTypeAfterSettings) {
       0x00, 0x00, 0x00, 0x00,  // stream ID
       'f',  'o',  'o'          // payload
   };
-  spdy::SpdySerializedFrame grease(reinterpret_cast<char*>(kRawFrameData),
-                                   std::size(kRawFrameData),
-                                   /* owns_buffer = */ false);
+  spdy::SpdySerializedFrame grease(spdy::test::MakeSerializedFrame(
+      reinterpret_cast<char*>(kRawFrameData), std::size(kRawFrameData)));
 
   MockWrite writes[] = {CreateMockWrite(combined_frame, 0),
                         CreateMockWrite(grease, 1)};
@@ -5545,10 +5549,9 @@ class SendInitialSettingsOnNewSpdySessionTest : public SpdySessionTest {
   void RunInitialSettingsTest(const spdy::SettingsMap expected_settings) {
     MockRead reads[] = {MockRead(SYNCHRONOUS, ERR_IO_PENDING)};
 
-    spdy::SpdySerializedFrame preface(
+    spdy::SpdySerializedFrame preface(spdy::test::MakeSerializedFrame(
         const_cast<char*>(spdy::kHttp2ConnectionHeaderPrefix),
-        spdy::kHttp2ConnectionHeaderPrefixSize,
-        /* owns_buffer = */ false);
+        spdy::kHttp2ConnectionHeaderPrefixSize));
     spdy::SpdySerializedFrame settings_frame(
         spdy_util_.ConstructSpdySettings(expected_settings));
 
@@ -5869,14 +5872,11 @@ TEST_F(AltSvcFrameTest, ProcessAltSvcFrameOnActiveStream) {
 TEST_F(AltSvcFrameTest,
        ProcessAltSvcFrameOnActiveStreamWithNetworkAnonymizationKey) {
   base::test::ScopedFeatureList feature_list;
-  feature_list.InitWithFeatures(
-      // enabled_features
-      {features::kPartitionHttpServerPropertiesByNetworkIsolationKey,
-       // Need to partition connections by NetworkAnonymizationKey for
-       // SpdySessionKeys to include NetworkAnonymizationKeys.
-       features::kPartitionConnectionsByNetworkIsolationKey},
-      // disabled_features
-      {});
+  // Need to partition connections by NetworkAnonymizationKey for
+  // SpdySessionKeys to include NetworkAnonymizationKeys.
+  feature_list.InitAndEnableFeature(
+      features::kPartitionConnectionsByNetworkIsolationKey);
+
   // Since HttpServerProperties caches the feature value, have to create a new
   // one.
   session_deps_.http_server_properties =

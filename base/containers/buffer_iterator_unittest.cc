@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/341324165): Fix and remove.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "base/containers/buffer_iterator.h"
 
 #include <string.h>
@@ -126,6 +131,44 @@ TEST(BufferIteratorTest, Span) {
   }
 }
 
+TEST(BufferIteratorTest, FixedSpan) {
+  TestStruct expected = CreateTestStruct();
+
+  std::vector<char> buffer(sizeof(TestStruct) * 3);
+
+  {
+    // Load the span with data.
+    BufferIterator<char> iterator(buffer);
+    auto span = iterator.MutableSpan<TestStruct, 3u>();
+    static_assert(std::same_as<std::optional<base::span<TestStruct, 3u>>,
+                               decltype(span)>);
+    for (auto& ts : *span) {
+      memcpy(&ts, &expected, sizeof(expected));
+    }
+  }
+  {
+    // Read the data back out.
+    BufferIterator<char> iterator(buffer);
+
+    const TestStruct* actual = iterator.Object<TestStruct>();
+    EXPECT_EQ(expected, *actual);
+
+    actual = iterator.Object<TestStruct>();
+    EXPECT_EQ(expected, *actual);
+
+    actual = iterator.Object<TestStruct>();
+    EXPECT_EQ(expected, *actual);
+
+    EXPECT_EQ(iterator.total_size(), iterator.position());
+  }
+  {
+    // Cannot create spans larger than there are data for.
+    BufferIterator<char> iterator(buffer);
+    auto maybe_span = iterator.Span<TestStruct, 4u>();
+    EXPECT_FALSE(maybe_span.has_value());
+  }
+}
+
 TEST(BufferIteratorTest, SpanOverflow) {
   char buffer[64];
 
@@ -134,9 +177,11 @@ TEST(BufferIteratorTest, SpanOverflow) {
       // pointer, stored in the BufferIterator is never moved past the start in
       // this test, as that would cause Undefined Behaviour.
       UNSAFE_BUFFERS(span(buffer, std::numeric_limits<size_t>::max())));
+
+  constexpr size_t kInvalidU64Size =
+      (std::numeric_limits<size_t>::max() / sizeof(uint64_t)) + 1u;
   {
-    span<const uint64_t> empty_span = iterator.Span<uint64_t>(
-        (std::numeric_limits<size_t>::max() / sizeof(uint64_t)) + 1);
+    span<const uint64_t> empty_span = iterator.Span<uint64_t>(kInvalidU64Size);
     EXPECT_TRUE(empty_span.empty());
   }
   {
@@ -193,7 +238,7 @@ TEST(BufferIteratorTest, CopyObject) {
 
 TEST(BufferIteratorTest, SeekWithSizeConfines) {
   const char buffer[] = "vindicate";
-  BufferIterator<const char> iterator(buffer);
+  BufferIterator<const char> iterator(base::span_from_cstring(buffer));
   iterator.Seek(5);
   iterator.TruncateTo(3);
   EXPECT_TRUE(iterator.Span<char>(4).empty());

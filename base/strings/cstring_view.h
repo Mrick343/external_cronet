@@ -17,7 +17,6 @@
 #include "base/containers/checked_iterators.h"
 #include "base/memory/raw_ptr_exclusion.h"
 #include "base/numerics/safe_conversions.h"
-#include "base/types/to_address.h"
 #include "build/build_config.h"
 
 namespace base {
@@ -86,6 +85,9 @@ class basic_cstring_view final {
   // type). The string parameter must outlive the cstring view, including that
   // it must not be moved-from or destroyed.
   //
+  // This conversion is implicit, which matches the conversion from std::string
+  // to std::string_view (through string's `operator string_view()`).
+  //
   // # Interaction with SSO
   // std::string stores its contents inline when they fit (which is an
   // implementation defined length), instead of in a heap-allocated buffer. This
@@ -102,10 +104,11 @@ class basic_cstring_view final {
   // constructor and requiring the incoming type to actually be a `std::string`
   // (or other `std::basic_string`). This also improves compiler errors,
   // compared to deleting a string&& overload, when passed an array that does
-  // not match the `ENABLE_IF_ATTR` constructor condition by not sending it to
-  // a deleted overload receiving `std::string`.
+  // not match the `ENABLE_IF_ATTR` constructor condition by not sending it to a
+  // deleted overload receiving `std::string`.
   template <std::same_as<std::basic_string<Char>> String>
-  explicit constexpr basic_cstring_view(const String& s LIFETIME_BOUND) noexcept
+  // NOLINTNEXTLINE(google-explicit-constructor)
+  constexpr basic_cstring_view(const String& s LIFETIME_BOUND) noexcept
       : ptr_(s.c_str()), len_(s.size()) {}
 
   // Unsafe construction from a pointer and length. Prefer to construct cstring
@@ -171,47 +174,44 @@ class basic_cstring_view final {
   }
 
   // Produces an iterator over the cstring view, excluding the terminating NUL.
-  PURE_FUNCTION constexpr const iterator begin() const noexcept {
+  PURE_FUNCTION constexpr iterator begin() const noexcept {
     // SAFETY: `ptr_ + len_` for a cstring view always gives a pointer in
     // the same allocation as `ptr_` based on the precondition of
     // the type.
     return UNSAFE_BUFFERS(iterator(ptr_, ptr_ + len_));
   }
   // Produces an iterator over the cstring view, excluding the terminating NUL.
-  PURE_FUNCTION constexpr const iterator end() const noexcept {
+  PURE_FUNCTION constexpr iterator end() const noexcept {
     // SAFETY: `ptr_ + len_` for a cstring view always gives a pointer in
     // the same allocation as `ptr_` based on the precondition of
     // the type.
     return UNSAFE_BUFFERS(iterator(ptr_, ptr_ + len_, ptr_ + len_));
   }
   // Produces an iterator over the cstring view, excluding the terminating NUL.
-  PURE_FUNCTION constexpr const const_iterator cbegin() const noexcept {
+  PURE_FUNCTION constexpr const_iterator cbegin() const noexcept {
     return begin();
   }
   // Produces an iterator over the cstring view, excluding the terminating NUL.
-  PURE_FUNCTION constexpr const const_iterator cend() const noexcept {
-    return end();
-  }
+  PURE_FUNCTION constexpr const_iterator cend() const noexcept { return end(); }
 
   // Produces a reverse iterator over the cstring view, excluding the
   // terminating NUL.
-  PURE_FUNCTION constexpr const reverse_iterator rbegin() const noexcept {
+  PURE_FUNCTION constexpr reverse_iterator rbegin() const noexcept {
     return std::reverse_iterator(end());
   }
   // Produces a reverse iterator over the cstring view, excluding the
   // terminating NUL.
-  PURE_FUNCTION constexpr const reverse_iterator rend() const noexcept {
+  PURE_FUNCTION constexpr reverse_iterator rend() const noexcept {
     return std::reverse_iterator(begin());
   }
   // Produces a reverse iterator over the cstring view, excluding the
   // terminating NUL.
-  PURE_FUNCTION constexpr const const_reverse_iterator rcbegin()
-      const noexcept {
+  PURE_FUNCTION constexpr const_reverse_iterator rcbegin() const noexcept {
     return std::reverse_iterator(cend());
   }
   // Produces a reverse iterator over the cstring view, excluding the
   // terminating NUL.
-  PURE_FUNCTION constexpr const const_reverse_iterator rcend() const noexcept {
+  PURE_FUNCTION constexpr const_reverse_iterator rcend() const noexcept {
     return std::reverse_iterator(cbegin());
   }
 
@@ -450,11 +450,47 @@ class basic_cstring_view final {
     return UNSAFE_BUFFERS(std::basic_string<Char>(ptr_, len_));
   }
 
+  // Concatenate a std::string with a cstring_view to produce another
+  // std::string.
+  //
+  // These act like overloads on `std::string` that work for concatenating
+  // `std::string` and `const char*`.
+  //
+  // The rvalue overloads allow `std::string` to reuse existing capacity, by
+  // calling through to the rvalue overloads on `std::string`.
+  template <class Traits, class Alloc>
+  friend constexpr std::basic_string<Char, Traits, Alloc> operator+(
+      basic_cstring_view lhs,
+      const std::basic_string<Char, Traits, Alloc>& rhs) {
+    return lhs.c_str() + rhs;
+  }
+  template <class Traits, class Alloc>
+  friend constexpr std::basic_string<Char, Traits, Alloc> operator+(
+      basic_cstring_view lhs,
+      std::basic_string<Char, Traits, Alloc>&& rhs) {
+    return lhs.c_str() + std::move(rhs);
+  }
+  template <class Traits, class Alloc>
+  friend constexpr std::basic_string<Char, Traits, Alloc> operator+(
+      const std::basic_string<Char, Traits, Alloc>& lhs,
+      basic_cstring_view rhs) {
+    return lhs + rhs.c_str();
+  }
+  template <class Traits, class Alloc>
+  friend constexpr std::basic_string<Char, Traits, Alloc> operator+(
+      std::basic_string<Char, Traits, Alloc>&& lhs,
+      basic_cstring_view rhs) {
+    return std::move(lhs) + rhs.c_str();
+  }
+
  private:
   // An empty string literal for the `Char` type.
   static constexpr Char kEmpty[] = {Char{0}};
 
   // An always-valid pointer (never null) to a NUL-terminated string.
+  //
+  // RAW_PTR_EXCLUSION: cstring_view is typically used on the stack as a local
+  // variable/function parameter, so no raw_ptr is used here.
   RAW_PTR_EXCLUSION const Char* ptr_;
   // The number of characters between `ptr_` and the NUL terminator.
   //
@@ -503,6 +539,12 @@ std::basic_ostream<Char, Traits>& operator<<(
     std::basic_ostream<Char, Traits>& os,
     basic_cstring_view<Char> view) {
   return os << std::basic_string_view<Char>(view);
+}
+
+// Explicitly define PrintTo to avoid gtest printing these as containers
+// rather than strings.
+inline void PrintTo(cstring_view view, std::ostream* os) {
+  *os << view;
 }
 
 }  // namespace base

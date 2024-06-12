@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/websockets/websocket_test_util.h"
 
 #include <stddef.h>
@@ -203,7 +208,7 @@ MockClientSocketFactory* WebSocketMockClientSocketFactoryMaker::factory() {
 void WebSocketMockClientSocketFactoryMaker::SetExpectations(
     const std::string& expect_written,
     const std::string& return_to_read) {
-  const size_t kHttpStreamParserBufferSize = 4096;
+  constexpr size_t kHttpStreamParserBufferSize = 4096;
   // We need to extend the lifetime of these strings.
   detail_->expect_written = expect_written;
   detail_->return_to_read = return_to_read;

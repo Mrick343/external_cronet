@@ -112,10 +112,8 @@ int WebSocketHttp3HandshakeStream::SendRequest(
       request_info_->url, base::Time::Now());
   request->headers = request_headers;
 
-  AddVectorHeaderIfNonEmpty(websockets::kSecWebSocketExtensions,
-                            requested_extensions_, &request->headers);
-  AddVectorHeaderIfNonEmpty(websockets::kSecWebSocketProtocol,
-                            requested_sub_protocols_, &request->headers);
+  AddVectorHeaders(requested_extensions_, requested_sub_protocols_,
+                   &request->headers);
 
   CreateSpdyHeadersFromHttpRequestForWebSocket(
       request_info_->url, request->headers, &http3_request_headers_);
@@ -210,10 +208,6 @@ bool WebSocketHttp3HandshakeStream::GetLoadTimingInfo(
 
 // TODO(momoka): Implement this.
 void WebSocketHttp3HandshakeStream::GetSSLInfo(SSLInfo* ssl_info) {}
-
-// TODO(momoka): Implement this.
-void WebSocketHttp3HandshakeStream::GetSSLCertRequestInfo(
-    SSLCertRequestInfo* cert_request_info) {}
 
 // TODO(momoka): Implement this.
 int WebSocketHttp3HandshakeStream::GetRemoteEndpoint(IPEndPoint* endpoint) {

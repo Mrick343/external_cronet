@@ -17,6 +17,7 @@ import sys
 import zipfile
 
 from codegen import header_common
+from codegen import natives_header
 import common
 import java_types
 import jni_generator
@@ -81,7 +82,7 @@ def _Flatten(jni_objs_by_path, paths):
   return itertools.chain(*(jni_objs_by_path[p] for p in paths))
 
 
-def _Generate(options, native_sources, java_sources):
+def _Generate(options, native_sources, java_sources, priority_java_sources):
   """Generates files required to perform JNI registration.
 
   Generates a srcjar containing a single class, GEN_JNI, that contains all
@@ -96,20 +97,30 @@ def _Generate(options, native_sources, java_sources):
         dependency tree. The source of truth.
     java_sources: A list of .jni.pickle or .java file paths. Used to assert
         against native_sources.
+    priority_java_sources: A list of .jni.pickle or .java file paths. Used to
+        put these listed java files first in multiplexing.
   """
-  # The native-based sources are the "source of truth" - the Java based ones
-  # will be used later to generate stubs and make assertions.
-  jni_objs_by_path = _LoadJniObjs(set(native_sources + java_sources), options)
+  native_sources_set = set(native_sources)
+  java_sources_set = set(java_sources)
+
+  jni_objs_by_path = _LoadJniObjs(native_sources_set | java_sources_set,
+                                  options)
   _FilterJniObjs(jni_objs_by_path, options)
 
   dicts = []
-  for jni_obj in _Flatten(jni_objs_by_path, native_sources):
+  for jni_obj in _Flatten(jni_objs_by_path,
+                          native_sources_set & java_sources_set):
     dicts.append(DictionaryGenerator(jni_obj, options).Generate())
-  # Sort to make output deterministic.
-  dicts.sort(key=lambda d: d['FULL_CLASS_NAME'])
 
-  stubs = _GenerateStubsAndAssert(options, jni_objs_by_path, native_sources,
-                                  java_sources)
+  priority_java_sources = set(
+      priority_java_sources) if priority_java_sources else {}
+  # Sort to make output deterministic, and to put priority_java_sources at the
+  # top.
+  dicts.sort(key=lambda d: (d['FILE_PATH'] not in priority_java_sources, d[
+      'FULL_CLASS_NAME']))
+
+  stubs = _GenerateStubsAndAssert(options, jni_objs_by_path, native_sources_set,
+                                  java_sources_set)
   combined_dict = {}
   for key in MERGEABLE_KEYS:
     combined_dict[key] = ''.join(d.get(key, '') for d in dicts)
@@ -187,10 +198,8 @@ def _Generate(options, native_sources, java_sources):
                                          stub_methods=stub_methods_string))
 
 
-def _GenerateStubsAndAssert(options, jni_objs_by_path, native_sources,
-                            java_sources):
-  native_sources_set = set(native_sources)
-  java_sources_set = set(java_sources)
+def _GenerateStubsAndAssert(options, jni_objs_by_path, native_sources_set,
+                            java_sources_set):
   native_only = native_sources_set - java_sources_set
   java_only = java_sources_set - native_sources_set
 
@@ -208,8 +217,7 @@ To bypass this check, add stubs to Java with --add-stubs-for-missing-jni.
 Excess Java files:
 '''
     sys.stderr.write(warning_message)
-    sys.stderr.write('\n'.join(jni_obj.filename
-                               for jni_obj in java_only_jni_objs))
+    sys.stderr.write('\n'.join(o.filename for o in java_only_jni_objs))
     sys.stderr.write('\n')
   if not options.remove_uncalled_methods and native_only_jni_objs:
     failed = True
@@ -220,15 +228,12 @@ To bypass this check, delete these extra methods with --remove-uncalled-jni.
 Unneeded Java files:
 '''
     sys.stderr.write(warning_message)
-    sys.stderr.write('\n'.join(native_only_jni_objs.filename
-                               for jni_obj in native_only_jni_objs))
+    sys.stderr.write('\n'.join(o.filename for o in native_only_jni_objs))
     sys.stderr.write('\n')
   if failed:
     sys.exit(1)
 
-  return [
-      _GenerateStubs(jni_obj.proxy_natives) for jni_obj in java_only_jni_objs
-  ]
+  return [_GenerateStubs(o.proxy_natives) for o in java_only_jni_objs]
 
 
 def _GenerateStubs(natives):
@@ -298,9 +303,9 @@ JNI_BOUNDARY_EXPORT ${RETURN} Java_${CLASS_NAME}_${PROXY_SIGNATURE}(
         switch (switch_num) {
           ${CASES}
           default:
-            JNI_ZERO_ELOG("${CLASS_NAME}_${PROXY_SIGNATURE} was called with an \
+            JNI_ZERO_ILOG("${CLASS_NAME}_${PROXY_SIGNATURE} was called with an \
 invalid switch number: %d", switch_num);
-            JNI_ZERO_DCHECK(false);
+            JNI_ZERO_CHECK(false);
             return${DEFAULT_RETURN};
         }
 }""")
@@ -394,8 +399,7 @@ ${REGISTER_NATIVES}
       'KMETHODS':
       registration_dict['PROXY_NATIVE_METHOD_ARRAY'],
       'REGISTRATION_NAME':
-      jni_generator.GetRegistrationFunctionName(
-          gen_jni_class.full_name_with_slashes),
+      _GetRegistrationFunctionName(gen_jni_class.full_name_with_slashes),
   }
 
   if registration_dict['PROXY_NATIVE_METHOD_ARRAY']:
@@ -512,6 +516,11 @@ def _GetJavaToNativeParamsList(param_types):
   return 'jint switch_num, ' + ', '.join(params_in_stub)
 
 
+def _GetRegistrationFunctionName(fully_qualified_class):
+  """Returns the register name with a given class."""
+  return 'RegisterNative_' + common.escape_class_name(fully_qualified_class)
+
+
 class DictionaryGenerator(object):
   """Generates an inline header file for JNI registration."""
   def __init__(self, jni_obj, options):
@@ -568,20 +577,11 @@ class DictionaryGenerator(object):
 
   def _AddForwardDeclaration(self):
     """Add the content of the forward declaration to the dictionary."""
-    template = string.Template("""\
-JNI_BOUNDARY_EXPORT ${RETURN} ${STUB_NAME}(
-    JNIEnv* env,
-    ${PARAMS_IN_STUB});
-""")
-    forward_declaration = ''
+    sb = common.StringBuilder()
     for native in self.natives:
-      value = {
-          'RETURN': native.proxy_return_type.to_cpp(),
-          'STUB_NAME': self.jni_obj.GetStubName(native),
-          'PARAMS_IN_STUB': jni_generator.GetParamsInStub(native),
-      }
-      forward_declaration += template.substitute(value)
-    self._SetDictValue('FORWARD_DECLARATIONS', forward_declaration)
+      with sb.statement():
+        natives_header.proxy_declaration(sb, self.jni_obj, native)
+    self._SetDictValue('FORWARD_DECLARATIONS', sb.to_string())
 
   def _AddRegisterNativesCalls(self):
     """Add the body of the RegisterNativesImpl method to the dictionary."""
@@ -596,7 +596,7 @@ JNI_BOUNDARY_EXPORT ${RETURN} ${STUB_NAME}(
 """)
     value = {
         'REGISTER_NAME':
-        jni_generator.GetRegistrationFunctionName(self.fully_qualified_class)
+        _GetRegistrationFunctionName(self.fully_qualified_class)
     }
     register_body = template.substitute(value)
     self._SetDictValue('REGISTER_NATIVES', register_body)
@@ -649,7 +649,7 @@ ${KMETHODS}
         stub_name = 'Java_' + class_name + '_' + proxy_signature
 
         multipliexed_signature = java_types.JavaSignature(
-            native.return_type, (java_types.LONG, ), None)
+            native.return_type, (java_types.INT, ), None)
         jni_descriptor = multipliexed_signature.to_descriptor()
       elif self.options.use_proxy_hash:
         name = native.hashed_proxy_name
@@ -711,9 +711,8 @@ ${NATIVES}\
 """)
     values = {
         'REGISTER_NAME':
-        jni_generator.GetRegistrationFunctionName(self.fully_qualified_class),
-        'NATIVES':
-        natives
+        _GetRegistrationFunctionName(self.fully_qualified_class),
+        'NATIVES': natives
     }
     self._SetDictValue('JNI_NATIVE_METHOD', template.substitute(values))
 
@@ -789,26 +788,32 @@ _MULTIPLEXED_CHAR_BY_TYPE = {
     'String': 'R',
     'short': 'S',
     'Throwable': 'T',
+    'void': 'V',
     'boolean': 'Z',
 }
+
+
+def _GetShortenedMultiplexingType(type_name):
+  # Parameter types could contain multi-dimensional arrays and every
+  # instance of [] has to be replaced in the proxy signature name.
+  for k, v in _MULTIPLEXED_CHAR_BY_TYPE.items():
+    type_name = type_name.replace(k, v)
+  return type_name
 
 
 def _GetMultiplexProxyName(signature):
   # Proxy signatures for methods are named after their return type and
   # parameters to ensure uniqueness, even for the same return types.
-  params_part = ''
-  params_list = [t.to_java() for t in signature.param_types]
-  # Parameter types could contain multi-dimensional arrays and every
-  # instance of [] has to be replaced in the proxy signature name.
-  for k, v in _MULTIPLEXED_CHAR_BY_TYPE.items():
-    params_list = [p.replace(k, v) for p in params_list]
+  params_list = [
+      _GetShortenedMultiplexingType(t.to_java()) for t in signature.param_types
+  ]
   params_part = ''
   if params_list:
     params_part = '_' + ''.join(p for p in params_list)
 
-  java_return_type = signature.return_type.to_java()
-  return_value_part = java_return_type.replace('[]', '_array').lower()
-  return 'resolve_for_' + return_value_part + params_part
+  return_value_part = _GetShortenedMultiplexingType(
+      signature.return_type.to_java())
+  return '_' + return_value_part + params_part
 
 
 def _MakeForwardingProxy(options, gen_jni_class, proxy_native):
@@ -918,8 +923,14 @@ def main(parser, args):
     parser.error('--require-mocks requires --enable-proxy-mocks.')
   if not args.header_path and args.manual_jni_registration:
     parser.error('--manual-jni-registration requires --header-path.')
+  if not args.header_path and args.enable_jni_multiplexing:
+    parser.error('--enable-jni-multiplexing requires --header-path.')
   if args.remove_uncalled_methods and not args.native_sources_file:
     parser.error('--remove-uncalled-methods requires --native-sources-file.')
+  if args.priority_java_sources_file and not args.enable_jni_multiplexing:
+    parser.error('--priority-java-sources is only for multiplexing.')
+  if args.enable_jni_multiplexing and not args.use_proxy_hash:
+    parser.error('--enable-jni-multiplexing requires --use_proxy_hash.')
 
   java_sources = _ParseSourceList(args.java_sources_file)
   if args.native_sources_file:
@@ -932,8 +943,12 @@ def main(parser, args):
       # Just treating it like we have perfect alignment between native and java
       # when only looking at java.
       native_sources = java_sources
+  if args.priority_java_sources_file:
+    priority_java_sources = _ParseSourceList(args.priority_java_sources_file)
+  else:
+    priority_java_sources = None
 
-  _Generate(args, native_sources, java_sources=java_sources)
+  _Generate(args, native_sources, java_sources, priority_java_sources)
 
   if args.depfile:
     # GN does not declare a dep on the sources files to avoid circular

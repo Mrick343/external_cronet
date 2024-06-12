@@ -3,12 +3,14 @@
 //
 package org.jni_zero;
 
+import java.util.Map;
 import org.jni_zero.CheckDiscard;
+import org.jni_zero.GEN_JNI;
 import org.jni_zero.JniStaticTestMocker;
 import org.jni_zero.NativeLibraryLoadedStatus;
-import org.jni_zero.GEN_JNI;
+import org.jni_zero.SampleForTests;
+import org.jni_zero.SampleProxyEdgeCases;
 import org.jni_zero.internal.Boolean;
-import java.util.Map;
 
 @CheckDiscard("crbug.com/993421")
 class SampleProxyEdgeCasesJni implements SampleProxyEdgeCases.Natives {
@@ -28,17 +30,23 @@ class SampleProxyEdgeCasesJni implements SampleProxyEdgeCases.Natives {
 
   @Override
   public int addStructB(SampleForTests caller, SampleForTests.InnerStructB b) {
-    return (int) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_addStructB(caller, b);
+    return (int) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_addStructB(
+        caller,
+        b);
   }
 
   @Override
   public String[][] arrayTypes1(int[] a, Object[][] b) {
-    return (String[][]) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_arrayTypes1(a, b);
+    return (String[][]) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_arrayTypes1(
+        a,
+        b);
   }
 
   @Override
   public int[] arrayTypes2(int[] a, Throwable[][] b) {
-    return (int[]) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_arrayTypes2(a, b);
+    return (int[]) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_arrayTypes2(
+        a,
+        b);
   }
 
   @Override
@@ -63,7 +71,8 @@ class SampleProxyEdgeCasesJni implements SampleProxyEdgeCases.Natives {
 
   @Override
   public Map[] genericsWithNestedClassArray(Map[] arg) {
-    return (Map[]) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_genericsWithNestedClassArray(arg);
+    return (Map[]) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_genericsWithNestedClassArray(
+        arg);
   }
 
   @Override
@@ -73,12 +82,14 @@ class SampleProxyEdgeCasesJni implements SampleProxyEdgeCases.Natives {
 
   @Override
   public boolean setStringBuilder(StringBuilder sb) {
-    return (boolean) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_setStringBuilder(sb);
+    return (boolean) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_setStringBuilder(
+        sb);
   }
 
   @Override
   public int setStringBuilder(int sb) {
-    return (int) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_setStringBuilder(sb);
+    return (int) GEN_JNI.org_jni_1zero_SampleProxyEdgeCases_setStringBuilder(
+        sb);
   }
 
   public static SampleProxyEdgeCases.Natives get() {

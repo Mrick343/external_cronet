@@ -113,7 +113,7 @@ base::TimeDelta GetTimeDeltaForConnectionTypeFromFieldTrialOrDefault(
 
 std::string CreateNamePointer(uint16_t offset) {
   DCHECK_EQ(offset & ~dns_protocol::kOffsetMask, 0);
-  std::array<uint8_t, 2> buf = base::numerics::U16ToBigEndian(offset);
+  std::array<uint8_t, 2> buf = base::U16ToBigEndian(offset);
   buf[0u] |= dns_protocol::kLabelPointer;
   return std::string(buf.begin(), buf.end());
 }
@@ -121,7 +121,7 @@ std::string CreateNamePointer(uint16_t offset) {
 uint16_t DnsQueryTypeToQtype(DnsQueryType dns_query_type) {
   switch (dns_query_type) {
     case DnsQueryType::UNSPECIFIED:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return 0;
     case DnsQueryType::A:
       return dns_protocol::kTypeA;
@@ -147,7 +147,7 @@ DnsQueryType AddressFamilyToDnsQueryType(AddressFamily address_family) {
     case ADDRESS_FAMILY_IPV6:
       return DnsQueryType::AAAA;
     default:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return DnsQueryType::UNSPECIFIED;
   }
 }

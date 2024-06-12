@@ -94,7 +94,7 @@ std::optional<HostCache::Entry> CreateCacheEntry(
     if (!ip_endpoints) {
       ip_endpoints = endpoint_result.ip_endpoints;
     } else {
-      // TODO(crbug.com/1264933): Support caching different IP endpoints
+      // TODO(crbug.com/40203587): Support caching different IP endpoints
       // resutls.
       CHECK(*ip_endpoints == endpoint_result.ip_endpoints)
           << "Currently caching MockHostResolver only supports same IP "
@@ -551,8 +551,8 @@ MockHostResolverBase::RuleResolver::Resolve(
   if (default_result_)
     return default_result_.value();
 
-  NOTREACHED() << "Request " << request_endpoint.GetHostname()
-               << " did not match any MockHostResolver rules.";
+  NOTREACHED_IN_MIGRATION() << "Request " << request_endpoint.GetHostname()
+                            << " did not match any MockHostResolver rules.";
   static const RuleResultOrError kUnexpected = ERR_UNEXPECTED;
   return kUnexpected;
 }
@@ -711,9 +711,9 @@ MockHostResolverBase::CreateRequest(
     NetworkAnonymizationKey network_anonymization_key,
     NetLogWithSource net_log,
     std::optional<ResolveHostParameters> optional_parameters) {
-  return std::make_unique<RequestImpl>(Host(std::move(host)),
-                                       network_anonymization_key,
-                                       optional_parameters, AsWeakPtr());
+  return std::make_unique<RequestImpl>(
+      Host(std::move(host)), network_anonymization_key, optional_parameters,
+      weak_ptr_factory_.GetWeakPtr());
 }
 
 std::unique_ptr<HostResolver::ResolveHostRequest>
@@ -723,18 +723,30 @@ MockHostResolverBase::CreateRequest(
     const NetLogWithSource& source_net_log,
     const std::optional<ResolveHostParameters>& optional_parameters) {
   return std::make_unique<RequestImpl>(Host(host), network_anonymization_key,
-                                       optional_parameters, AsWeakPtr());
+                                       optional_parameters,
+                                       weak_ptr_factory_.GetWeakPtr());
+}
+
+std::unique_ptr<HostResolver::ServiceEndpointRequest>
+MockHostResolverBase::CreateServiceEndpointRequest(
+    Host host,
+    NetworkAnonymizationKey network_anonymization_key,
+    NetLogWithSource net_log,
+    ResolveHostParameters parameters) {
+  NOTIMPLEMENTED();
+  return nullptr;
 }
 
 std::unique_ptr<HostResolver::ProbeRequest>
 MockHostResolverBase::CreateDohProbeRequest() {
-  return std::make_unique<ProbeRequestImpl>(AsWeakPtr());
+  return std::make_unique<ProbeRequestImpl>(weak_ptr_factory_.GetWeakPtr());
 }
 
 std::unique_ptr<HostResolver::MdnsListener>
 MockHostResolverBase::CreateMdnsListener(const HostPortPair& host,
                                          DnsQueryType query_type) {
-  return std::make_unique<MdnsListenerImpl>(host, query_type, AsWeakPtr());
+  return std::make_unique<MdnsListenerImpl>(host, query_type,
+                                            weak_ptr_factory_.GetWeakPtr());
 }
 
 HostCache* MockHostResolverBase::GetHostCache() {
@@ -777,7 +789,7 @@ int MockHostResolverBase::LoadIntoCache(
     return ERR_NAME_NOT_RESOLVED;
 
   RequestImpl request(endpoint, network_anonymization_key, optional_parameters,
-                      AsWeakPtr());
+                      weak_ptr_factory_.GetWeakPtr());
   return DoSynchronousResolution(request);
 }
 
@@ -786,8 +798,8 @@ void MockHostResolverBase::ResolveAllPending() {
   DCHECK(ondemand_mode_);
   for (auto& [id, request] : state_->mutable_requests()) {
     base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
-        FROM_HERE,
-        base::BindOnce(&MockHostResolverBase::ResolveNow, AsWeakPtr(), id));
+        FROM_HERE, base::BindOnce(&MockHostResolverBase::ResolveNow,
+                                  weak_ptr_factory_.GetWeakPtr(), id));
   }
 }
 
@@ -911,7 +923,7 @@ int MockHostResolverBase::Resolve(RequestImpl* request) {
   std::vector<HostResolverEndpointResult> endpoints;
   std::set<std::string> aliases;
   std::optional<HostCache::EntryStaleness> stale_info;
-  // TODO(crbug.com/1264933): Allow caching `ConnectionEndpoint` results.
+  // TODO(crbug.com/40203587): Allow caching `ConnectionEndpoint` results.
   int rv = ResolveFromIPLiteralOrCache(
       request->request_endpoint(), request->network_anonymization_key(),
       request->parameters().dns_query_type, request->host_resolver_flags(),
@@ -948,8 +960,8 @@ int MockHostResolverBase::Resolve(RequestImpl* request) {
 
   if (!ondemand_mode_) {
     base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
-        FROM_HERE,
-        base::BindOnce(&MockHostResolverBase::ResolveNow, AsWeakPtr(), id));
+        FROM_HERE, base::BindOnce(&MockHostResolverBase::ResolveNow,
+                                  weak_ptr_factory_.GetWeakPtr(), id));
   }
 
   return ERR_IO_PENDING;
@@ -1063,7 +1075,7 @@ int MockHostResolverBase::DoSynchronousResolution(RequestImpl& request) {
     const auto& aliases = rule_result.aliases;
     request.SetEndpointResults(endpoint_results, aliases,
                                /*staleness=*/std::nullopt);
-    // TODO(crbug.com/1264933): Change `error` on empty results?
+    // TODO(crbug.com/40203587): Change `error` on empty results?
     error = OK;
     if (cache_.get()) {
       cache_entry = CreateCacheEntry(request.request_endpoint().GetHostname(),
@@ -1355,7 +1367,7 @@ int RuleBasedHostResolverProc::Resolve(const std::string& host,
           return result;
         }
         default:
-          NOTREACHED();
+          NOTREACHED_IN_MIGRATION();
           return ERR_UNEXPECTED;
       }
     }
@@ -1486,7 +1498,7 @@ HangingHostResolver::CreateRequest(
     NetworkAnonymizationKey network_anonymization_key,
     NetLogWithSource net_log,
     std::optional<ResolveHostParameters> optional_parameters) {
-  // TODO(crbug.com/1206799): Propagate scheme and make affect behavior.
+  // TODO(crbug.com/40181080): Propagate scheme and make affect behavior.
   return CreateRequest(HostPortPair::FromSchemeHostPort(host),
                        network_anonymization_key, net_log, optional_parameters);
 }
@@ -1509,6 +1521,16 @@ HangingHostResolver::CreateRequest(
   }
 
   return std::make_unique<RequestImpl>(weak_ptr_factory_.GetWeakPtr());
+}
+
+std::unique_ptr<HostResolver::ServiceEndpointRequest>
+HangingHostResolver::CreateServiceEndpointRequest(
+    Host host,
+    NetworkAnonymizationKey network_anonymization_key,
+    NetLogWithSource net_log,
+    ResolveHostParameters parameters) {
+  NOTIMPLEMENTED();
+  return nullptr;
 }
 
 std::unique_ptr<HostResolver::ProbeRequest>

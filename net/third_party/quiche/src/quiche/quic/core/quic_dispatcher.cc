@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <list>
 #include <memory>
 #include <optional>
@@ -62,6 +63,7 @@
 #include "quiche/quic/platform/api/quic_socket_address.h"
 #include "quiche/quic/platform/api/quic_stack_trace.h"
 #include "quiche/common/platform/api/quiche_logging.h"
+#include "quiche/common/print_elements.h"
 #include "quiche/common/quiche_buffer_allocator.h"
 #include "quiche/common/quiche_callbacks.h"
 #include "quiche/common/quiche_text_utils.h"
@@ -141,7 +143,10 @@ class PacketCollector : public QuicPacketCreator::DelegateInterface,
     return true;
   }
 
-  void MaybeBundleOpportunistically() override { QUICHE_DCHECK(false); }
+  void MaybeBundleOpportunistically(
+      TransmissionType /*transmission_type*/) override {
+    QUICHE_DCHECK(false);
+  }
 
   QuicByteCount GetFlowControlSendWindowSize(QuicStreamId /*id*/) override {
     QUICHE_DCHECK(false);
@@ -791,7 +796,7 @@ void QuicDispatcher::CleanUpSession(QuicConnectionId server_connection_id,
                                     QuicErrorCode /*error*/,
                                     const std::string& /*error_details*/,
                                     ConnectionCloseSource /*source*/) {
-  write_blocked_list_.erase(connection);
+  write_blocked_list_.Remove(*connection);
   QuicTimeWaitListManager::TimeWaitAction action =
       QuicTimeWaitListManager::SEND_STATELESS_RESET;
   if (connection->termination_packets() != nullptr &&
@@ -869,9 +874,9 @@ std::unique_ptr<QuicPerPacketContext> QuicDispatcher::GetPerPacketContext()
 }
 
 void QuicDispatcher::DeleteSessions() {
-  if (!write_blocked_list_.empty()) {
+  if (!write_blocked_list_.Empty()) {
     for (const auto& session : closed_session_list_) {
-      if (write_blocked_list_.erase(session->connection()) != 0) {
+      if (write_blocked_list_.Remove(*session->connection())) {
         QUIC_BUG(quic_bug_12724_2)
             << "QuicConnection was in WriteBlockedList before destruction "
             << session->connection()->connection_id();
@@ -889,32 +894,11 @@ void QuicDispatcher::OnCanWrite() {
   // The socket is now writable.
   writer_->SetWritable();
 
-  // Move every blocked writer in |write_blocked_list_| to a temporary list.
-  const size_t num_blocked_writers_before = write_blocked_list_.size();
-  WriteBlockedList temp_list;
-  temp_list.swap(write_blocked_list_);
-  QUICHE_DCHECK(write_blocked_list_.empty());
-
-  // Give each blocked writer a chance to write what they intended to write.
-  // If they are blocked again, they will call |OnWriteBlocked| to add
-  // themselves back into |write_blocked_list_|.
-  while (!temp_list.empty()) {
-    QuicBlockedWriterInterface* blocked_writer = temp_list.begin()->first;
-    temp_list.erase(temp_list.begin());
-    blocked_writer->OnBlockedWriterCanWrite();
-  }
-  const size_t num_blocked_writers_after = write_blocked_list_.size();
-  if (num_blocked_writers_after != 0) {
-    if (num_blocked_writers_before == num_blocked_writers_after) {
-      QUIC_CODE_COUNT(quic_zero_progress_on_can_write);
-    } else {
-      QUIC_CODE_COUNT(quic_blocked_again_on_can_write);
-    }
-  }
+  write_blocked_list_.OnWriterUnblocked();
 }
 
 bool QuicDispatcher::HasPendingWrites() const {
-  return !write_blocked_list_.empty();
+  return !write_blocked_list_.Empty();
 }
 
 void QuicDispatcher::Shutdown() {
@@ -996,17 +980,7 @@ void QuicDispatcher::OnConnectionClosed(QuicConnectionId server_connection_id,
 
 void QuicDispatcher::OnWriteBlocked(
     QuicBlockedWriterInterface* blocked_writer) {
-  if (!blocked_writer->IsWriterBlocked()) {
-    // It is a programming error if this ever happens. When we are sure it is
-    // not happening, replace it with a QUICHE_DCHECK.
-    QUIC_BUG(quic_bug_12724_4)
-        << "Tried to add writer into blocked list when it shouldn't be added";
-    // Return without adding the connection to the blocked list, to avoid
-    // infinite loops in OnCanWrite.
-    return;
-  }
-
-  write_blocked_list_.insert(std::make_pair(blocked_writer, true));
+  write_blocked_list_.Add(*blocked_writer);
 }
 
 void QuicDispatcher::OnRstStreamReceived(const QuicRstStreamFrame& /*frame*/) {}
@@ -1318,7 +1292,11 @@ std::shared_ptr<QuicSession> QuicDispatcher::CreateSessionFromChlo(
           << ", version:" << version << ", self_address:" << self_address
           << ", peer_address:" << peer_address
           << ", parsed_chlo:" << parsed_chlo
-          << ", other peer address: " << other_connection->peer_address();
+          << ", other peer address: " << other_connection->peer_address()
+          << ", other CIDs: "
+          << quiche::PrintElements(
+                 other_connection->GetActiveServerConnectionIds())
+          << ", other stats: " << other_connection->GetStats();
     }
     if (replaced_connection_id) {
       QUIC_CODE_COUNT(quic_replaced_connection_id_collision);

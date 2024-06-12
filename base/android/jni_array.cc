@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "base/android/jni_array.h"
 
 #include "base/android/jni_android.h"
@@ -35,6 +40,15 @@ ScopedJavaLocalRef<jbyteArray> ToJavaByteArray(
 ScopedJavaLocalRef<jbyteArray> ToJavaByteArray(JNIEnv* env,
                                                const std::string& str) {
   return ToJavaByteArray(env, base::as_byte_span(str));
+}
+
+ScopedJavaLocalRef<jbooleanArray> ToJavaBooleanArray(
+    JNIEnv* env,
+    const std::vector<bool>& bool_vec) {
+  bool bool_arr[bool_vec.size()];
+  std::copy(bool_vec.begin(), bool_vec.end(), bool_arr);
+
+  return ToJavaBooleanArray(env, bool_arr, bool_vec.size());
 }
 
 ScopedJavaLocalRef<jbooleanArray> ToJavaBooleanArray(JNIEnv* env,

@@ -25,6 +25,7 @@
 
 #if BUILDFLAG(IS_WIN)
 #include <winsock2.h>
+
 #include <ws2bth.h>
 
 #include "net/base/winsock_util.h"  // For kBluetoothAddressSize
@@ -96,7 +97,7 @@ int IPEndPoint::GetSockAddrFamily() const {
       return AF_BTH;
 #endif
     default:
-      NOTREACHED() << "Bad IP address";
+      NOTREACHED_IN_MIGRATION() << "Bad IP address";
       return AF_UNSPEC;
   }
 }

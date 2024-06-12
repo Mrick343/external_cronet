@@ -9,6 +9,7 @@ load("@builtin//path.star", "path")
 load("@builtin//struct.star", "module")
 load("./clang_all.star", "clang_all")
 load("./clang_code_coverage_wrapper.star", "clang_code_coverage_wrapper")
+load("./config.star", "config")
 load("./rewrapper_cfg.star", "rewrapper_cfg")
 
 def __filegroups(ctx):
@@ -45,6 +46,27 @@ def __filegroups(ctx):
         "type": "glob",
         "includes": sdk_includes,
     }
+
+    # https://b.corp.google.com/issues/332652041#comment2
+    fg[ctx.fs.canonpath("./sdk/xcode_links/MacOSX14.4.sdk") + ":headers"] = {
+        "type": "glob",
+        "includes": sdk_includes,
+    }
+    fg[ctx.fs.canonpath("./sdk/xcode_links/iPhoneSimulator17.4.sdk") + ":headers"] = {
+        "type": "glob",
+        "includes": sdk_includes,
+    }
+
+    # https://chromium-review.googlesource.com/c/chromium/src/+/5568662
+    fg[ctx.fs.canonpath("./sdk/xcode_links/MacOSX14.5.sdk") + ":headers"] = {
+        "type": "glob",
+        "includes": sdk_includes,
+    }
+    fg[ctx.fs.canonpath("./sdk/xcode_links/iPhoneSimulator17.5.sdk") + ":headers"] = {
+        "type": "glob",
+        "includes": sdk_includes,
+    }
+
     fg[ctx.fs.canonpath("./sdk/xcode_links/iPhoneSimulator.platform/Developer/Library/Frameworks") + ":headers"] = {
         "type": "glob",
         "includes": sdk_includes,
@@ -84,6 +106,7 @@ def __step_config(ctx, step_config):
             # objc/objcxx uses hmap, which contains absolute path
             # see also b/256536089
             need_input_root_absolute_path_for_objc = True
+
         step_config["rules"].extend([
             {
                 "name": "clang/cxx",

@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include <inttypes.h>
 
 #include <iostream>
@@ -42,7 +47,7 @@ namespace {
 // `std::nullopt` if not found.
 std::optional<std::map<std::string, std::string>> DecodeCerts(
     std::string_view in) {
-  // TODO(https://crbug.com/1216547): net/cert/pem.h has a much nicer API, but
+  // TODO(crbug.com/40770548): net/cert/pem.h has a much nicer API, but
   // it would require some build refactoring to avoid a circular dependency.
   // This is assuming that the chrome trust store code goes in
   // net/cert/internal, which it may not.
@@ -148,6 +153,10 @@ std::string SecondsFromEpochToBaseTime(int64_t t) {
                        base::NumberToString(t), ")"});
 }
 
+std::string VersionFromString(std::string_view version_str) {
+  return base::StrCat({"\"", version_str, "\""});
+}
+
 // Returns true if file was correctly written, false otherwise.
 bool WriteRootCppFile(const RootStore& root_store,
                       const base::FilePath cpp_path) {
@@ -178,10 +187,10 @@ bool WriteRootCppFile(const RootStore& root_store,
     string_to_write += "};\n";
 
     if (anchor.constraints_size() > 0) {
-      base::StringAppendF(
-          &string_to_write,
-          "constexpr ChromeRootCertConstraints kChromeRootConstraints%d[] = {",
-          i);
+      base::StringAppendF(&string_to_write,
+                          "constexpr StaticChromeRootCertConstraints "
+                          "kChromeRootConstraints%d[] = {",
+                          i);
 
       std::vector<std::string> constraint_strings;
       for (const auto& constraint : anchor.constraints()) {
@@ -195,6 +204,16 @@ bool WriteRootCppFile(const RootStore& root_store,
         constraint_params.push_back(
             constraint.has_sct_all_after_sec()
                 ? SecondsFromEpochToBaseTime(constraint.sct_all_after_sec())
+                : kNulloptString);
+
+        constraint_params.push_back(
+            constraint.has_min_version()
+                ? VersionFromString(constraint.min_version())
+                : kNulloptString);
+
+        constraint_params.push_back(
+            constraint.has_max_version_exclusive()
+                ? VersionFromString(constraint.max_version_exclusive())
                 : kNulloptString);
 
         constraint_strings.push_back(
@@ -257,7 +276,7 @@ bool WriteEvCppFile(const RootStore& root_store,
     // struct EVMetadata {
     //  static const size_t kMaxOIDsPerCA = 2;
     //  SHA256HashValue fingerprint;
-    //  const base::StringPiece policy_oids[kMaxOIDsPerCA];
+    //  const std::string_view policy_oids[kMaxOIDsPerCA];
     // };
     string_to_write += "    {\n";
     string_to_write += "        {{";
@@ -349,7 +368,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  // TODO(https://crbug.com/1216547): Figure out how to use the serialized
+  // TODO(crbug.com/40770548): Figure out how to use the serialized
   // proto to support component update.
   // components/resources/ssl/ssl_error_assistant/push_proto.py
   // does it through a GCS bucket (I think) so that might be an option.

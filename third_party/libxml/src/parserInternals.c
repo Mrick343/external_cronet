@@ -1398,6 +1398,30 @@ xmlSetDeclaredEncoding(xmlParserCtxtPtr ctxt, xmlChar *encoding) {
     ctxt->encoding = encoding;
 }
 
+/**
+ * xmlGetActualEncoding:
+ * @ctxt:  the parser context
+ *
+ * Returns the actual used to parse the document. This can differ from
+ * the declared encoding.
+ */
+const xmlChar *
+xmlGetActualEncoding(xmlParserCtxtPtr ctxt) {
+    const xmlChar *encoding = NULL;
+
+    if ((ctxt->input->flags & XML_INPUT_USES_ENC_DECL) ||
+        (ctxt->input->flags & XML_INPUT_AUTO_ENCODING)) {
+        /* Preserve encoding exactly */
+        encoding = ctxt->encoding;
+    } else if ((ctxt->input->buf) && (ctxt->input->buf->encoder)) {
+        encoding = BAD_CAST ctxt->input->buf->encoder->name;
+    } else if (ctxt->input->flags & XML_INPUT_HAS_ENCODING) {
+        encoding = BAD_CAST "UTF-8";
+    }
+
+    return(encoding);
+}
+
 /************************************************************************
  *									*
  *	Commodity functions to handle entities processing		*
@@ -1820,9 +1844,7 @@ xmlNewEntityInputStream(xmlParserCtxtPtr ctxt, xmlEntityPtr ent) {
         input = xmlLoadExternalEntity((char *) ent->URI,
                                       (char *) ent->ExternalID, ctxt);
     } else {
-        input = xmlNewInputMemory(ctxt, NULL, "", 0, NULL,
-                                  XML_INPUT_BUF_STATIC |
-                                  XML_INPUT_BUF_ZERO_TERMINATED);
+        return(NULL);
     }
 
     if (input == NULL)
@@ -2011,7 +2033,8 @@ xmlParserInputPtr
 xmlNewInputFromFile(xmlParserCtxtPtr ctxt, const char *filename) {
     xmlParserInputBufferPtr buf;
     xmlParserInputPtr inputStream;
-    xmlChar *URI = NULL;
+    const xmlChar *URI;
+    xmlChar *canonic;
     int code;
 
     if ((ctxt == NULL) || (filename == NULL))
@@ -2036,12 +2059,18 @@ xmlNewInputFromFile(xmlParserCtxtPtr ctxt, const char *filename) {
         return(NULL);
 
     if (inputStream->filename == NULL)
-	URI = xmlStrdup((xmlChar *) filename);
+	URI = (xmlChar *) filename;
     else
-	URI = xmlStrdup((xmlChar *) inputStream->filename);
-    if (inputStream->filename != NULL) xmlFree((char *)inputStream->filename);
-    inputStream->filename = (char *) xmlCanonicPath((const xmlChar *) URI);
-    if (URI != NULL) xmlFree((char *) URI);
+	URI = (xmlChar *) inputStream->filename;
+    canonic = xmlCanonicPath(URI);
+    if (canonic == NULL) {
+        xmlCtxtErrMemory(ctxt);
+        xmlFreeInputStream(inputStream);
+        return(NULL);
+    }
+    if (inputStream->filename != NULL)
+        xmlFree((char *) inputStream->filename);
+    inputStream->filename = (char *) canonic;
 
     xmlBufResetInput(inputStream->buf->buffer, inputStream);
 

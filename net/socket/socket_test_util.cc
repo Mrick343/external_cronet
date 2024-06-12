@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/socket/socket_test_util.h"
 #include "base/memory/raw_ptr.h"
 
@@ -996,7 +1001,8 @@ void MockClientSocket::RunCallback(CompletionOnceCallback callback,
 MockTCPClientSocket::MockTCPClientSocket(const AddressList& addresses,
                                          net::NetLog* net_log,
                                          SocketDataProvider* data)
-    : MockClientSocket(NetLogWithSource::Make(net_log, NetLogSourceType::NONE)),
+    : MockClientSocket(
+          NetLogWithSource::Make(net_log, NetLogSourceType::SOCKET)),
       addresses_(addresses),
       data_(data),
       read_data_(SYNCHRONOUS, ERR_UNEXPECTED) {
@@ -1470,7 +1476,6 @@ MockSSLClientSocket::GetPeerApplicationSettings() const {
 }
 
 bool MockSSLClientSocket::GetSSLInfo(SSLInfo* requested_ssl_info) {
-  requested_ssl_info->Reset();
   *requested_ssl_info = data_->ssl_info;
   return true;
 }
@@ -1559,7 +1564,8 @@ MockUDPClientSocket::MockUDPClientSocket(SocketDataProvider* data,
     : data_(data),
       read_data_(SYNCHRONOUS, ERR_UNEXPECTED),
       source_host_(IPAddress(192, 0, 2, 33)),
-      net_log_(NetLogWithSource::Make(net_log, NetLogSourceType::NONE)) {
+      net_log_(NetLogWithSource::Make(net_log,
+                                      NetLogSourceType::UDP_CLIENT_SOCKET)) {
   if (data_) {
     data_->Initialize(this);
     peer_addr_ = data->connect_data().peer_addr;
@@ -2043,7 +2049,7 @@ void MockTransportClientSocketPool::SetPriority(
       return;
     }
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
 }
 
 void MockTransportClientSocketPool::CancelRequest(
@@ -2072,7 +2078,7 @@ WrappedStreamSocket::WrappedStreamSocket(
 WrappedStreamSocket::~WrappedStreamSocket() = default;
 
 int WrappedStreamSocket::Bind(const net::IPEndPoint& local_addr) {
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return ERR_FAILED;
 }
 

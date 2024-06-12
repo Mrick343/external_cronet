@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 // The rules for parsing content-types were borrowed from Firefox:
 // http://lxr.mozilla.org/mozilla/source/netwerk/base/src/nsURLHelper.cpp#834
 
@@ -270,8 +275,7 @@ bool HttpUtil::ParseRetryAfterHeader(const std::string& retry_after_string,
   base::Time time;
   base::TimeDelta interval;
 
-  if (net::ParseUint32(retry_after_string, ParseIntFormat::NON_NEGATIVE,
-                       &seconds)) {
+  if (ParseUint32(retry_after_string, ParseIntFormat::NON_NEGATIVE, &seconds)) {
     interval = base::Seconds(seconds);
   } else if (base::Time::FromUTCString(retry_after_string.c_str(), &time)) {
     interval = time - now;
@@ -374,24 +378,22 @@ bool HttpUtil::IsSafeHeader(std::string_view name, std::string_view value) {
       return false;
   }
 
-  if (base::FeatureList::IsEnabled(features::kBlockNewForbiddenHeaders)) {
-    bool is_forbidden_header_fields_with_forbidden_method = false;
-    for (const char* field : kForbiddenHeaderFieldsWithForbiddenMethod) {
-      if (base::EqualsCaseInsensitiveASCII(name, field)) {
-        is_forbidden_header_fields_with_forbidden_method = true;
-        break;
-      }
+  bool is_forbidden_header_fields_with_forbidden_method = false;
+  for (const char* field : kForbiddenHeaderFieldsWithForbiddenMethod) {
+    if (base::EqualsCaseInsensitiveASCII(name, field)) {
+      is_forbidden_header_fields_with_forbidden_method = true;
+      break;
     }
-    if (is_forbidden_header_fields_with_forbidden_method) {
-      std::string value_string(value);
-      ValuesIterator method_iterator(value_string.begin(), value_string.end(),
-                                     ',');
-      while (method_iterator.GetNext()) {
-        std::string_view method = method_iterator.value_piece();
-        for (const char* forbidden_method : kForbiddenMethods) {
-          if (base::EqualsCaseInsensitiveASCII(method, forbidden_method))
-            return false;
-        }
+  }
+  if (is_forbidden_header_fields_with_forbidden_method) {
+    std::string value_string(value);
+    ValuesIterator method_iterator(value_string.begin(), value_string.end(),
+                                   ',');
+    while (method_iterator.GetNext()) {
+      std::string_view method = method_iterator.value_piece();
+      for (const char* forbidden_method : kForbiddenMethods) {
+        if (base::EqualsCaseInsensitiveASCII(method, forbidden_method))
+          return false;
       }
     }
   }
@@ -431,7 +433,7 @@ bool HttpUtil::IsNonCoalescingHeader(std::string_view name) {
       // one.
       "strict-transport-security"};
 
-  for (const std::string_view& header : kNonCoalescingHeaders) {
+  for (std::string_view header : kNonCoalescingHeaders) {
     if (base::EqualsCaseInsensitiveASCII(name, header)) {
       return true;
     }

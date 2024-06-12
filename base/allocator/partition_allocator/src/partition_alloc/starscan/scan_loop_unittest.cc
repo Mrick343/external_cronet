@@ -6,14 +6,13 @@
 
 #include <algorithm>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc_base/cpu.h"
 #include "partition_alloc/partition_alloc_buildflags.h"
 #include "partition_alloc/partition_alloc_config.h"
-
 #include "testing/gtest/include/gtest/gtest.h"
 
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 
 namespace partition_alloc::internal {
 
@@ -82,7 +81,7 @@ TEST(PartitionAllocScanLoopTest, UnvectorizedWithRegularPool) {
   }
 }
 
-#if defined(ARCH_CPU_X86_64)
+#if PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
 TEST(PartitionAllocScanLoopTest, VectorizedSSE4) {
   base::CPU cpu;
   if (!cpu.has_sse41()) {
@@ -143,7 +142,7 @@ TEST(PartitionAllocScanLoopTest, VectorizedAVX2) {
                                  kValidPtr, kValidPtr);
   }
 }
-#endif  // defined(ARCH_CPU_X86_64)
+#endif  // PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
 
 #if PA_CONFIG(STARSCAN_NEON_SUPPORTED)
 TEST(PartitionAllocScanLoopTest, VectorizedNEON) {
@@ -173,4 +172,4 @@ TEST(PartitionAllocScanLoopTest, VectorizedNEON) {
 
 }  // namespace partition_alloc::internal
 
-#endif  // BUILDFLAG(HAS_64_BIT_POINTERS)
+#endif  // PA_BUILDFLAG(HAS_64_BIT_POINTERS)

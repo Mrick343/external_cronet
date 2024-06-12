@@ -13,7 +13,7 @@
 #include "base/feature_list.h"
 #include "base/logging.h"
 #include "base/memory/ptr_util.h"
-#include "base/memory/raw_ref.h"
+#include "base/memory/stack_allocated.h"
 #include "base/message_loop/message_pump.h"
 #include "base/metrics/histogram.h"
 #include "base/metrics/histogram_macros.h"
@@ -182,11 +182,20 @@ void ThreadControllerWithMessagePumpImpl::ScheduleWork() {
   }
 }
 void ThreadControllerWithMessagePumpImpl::BeginNativeWorkBeforeDoWork() {
+  do_work_needed_before_wait_ = true;
+
   if (!g_avoid_schedule_calls_during_native_event_processing.load(
           std::memory_order_relaxed)) {
     return;
   }
-  in_native_work_batch_ = true;
+
+  // Native nested loops don't guarantee that `DoWork()` will be called after
+  // executing native work. This is the invariant that is needed to avoid
+  // calls to `ScheduleWork()`. Since these calls can't be skipped there is
+  // nothing left to do in this function.
+  if (task_execution_allowed_in_native_nested_loop_) {
+    return;
+  }
 
   // Reuse the deduplicator facility to indicate that there is no need for
   // ScheduleWork() until the next time we look for work.
@@ -304,7 +313,7 @@ void ThreadControllerWithMessagePumpImpl::OnEndWorkItemImpl(
 void ThreadControllerWithMessagePumpImpl::BeforeWait() {
   // DoWork is guaranteed to be called after native work batches and before
   // wait.
-  CHECK(!in_native_work_batch_);
+  CHECK(!do_work_needed_before_wait_);
 
   // In most cases, DoIdleWork() will already have cleared the
   // `hang_watch_scope_` but in some cases where the native side of the
@@ -320,7 +329,6 @@ void ThreadControllerWithMessagePumpImpl::BeforeWait() {
 
 MessagePump::Delegate::NextWorkInfo
 ThreadControllerWithMessagePumpImpl::DoWork() {
-  in_native_work_batch_ = false;
 
 #if BUILDFLAG(IS_WIN)
   // We've been already in a wakeup here. Deactivate the high res timer of OS
@@ -350,6 +358,9 @@ ThreadControllerWithMessagePumpImpl::DoWork() {
            main_thread_only().yield_to_native_after_batch)) {
     next_work_info.yield_to_native = true;
   }
+
+  do_work_needed_before_wait_ = false;
+
   // Schedule a continuation.
   WorkDeduplicator::NextTask next_task =
       (next_wake_up && next_wake_up->is_immediate())
@@ -526,19 +537,22 @@ bool ThreadControllerWithMessagePumpImpl::RunsTasksByBatches() const {
          g_run_tasks_by_batches.load(std::memory_order_relaxed);
 }
 
-bool ThreadControllerWithMessagePumpImpl::DoIdleWork() {
+void ThreadControllerWithMessagePumpImpl::DoIdleWork() {
   struct OnIdle {
+    STACK_ALLOCATED();
+
+   public:
     OnIdle(const TickClock* time_source, RunLevelTracker& run_level_tracker_ref)
         : lazy_now(time_source), run_level_tracker(run_level_tracker_ref) {}
 
     // Very last step before going idle, must be fast as this is hidden from the
     // DoIdleWork trace event below.
-    ~OnIdle() { run_level_tracker->OnIdle(lazy_now); }
+    ~OnIdle() { run_level_tracker.OnIdle(lazy_now); }
 
     LazyNow lazy_now;
 
    private:
-    const raw_ref<RunLevelTracker> run_level_tracker;
+    RunLevelTracker& run_level_tracker;
   };
   std::optional<OnIdle> on_idle;
 
@@ -570,13 +584,14 @@ bool ThreadControllerWithMessagePumpImpl::DoIdleWork() {
 #endif  // BUILDFLAG(IS_WIN)
 
   if (main_thread_only().task_source->OnIdle()) {
+    work_id_provider_->IncrementWorkId();
     // The OnIdle() callback resulted in more immediate work, so schedule a
     // DoWork callback. For some message pumps returning true from here is
     // sufficient to do that but not on mac.
     pump_->ScheduleWork();
-    return false;
+    return;
   }
-
+  work_id_provider_->IncrementWorkId();
   // This is mostly redundant with the identical call in BeforeWait (upcoming)
   // but some uninstrumented MessagePump impls don't call BeforeWait so it must
   // also be done here.
@@ -589,14 +604,12 @@ bool ThreadControllerWithMessagePumpImpl::DoIdleWork() {
   if (main_thread_only().quit_runloop_after != TimeTicks::Max() &&
       main_thread_only().quit_runloop_after <= on_idle->lazy_now.Now()) {
     Quit();
-    return false;
+    return;
   }
 
   // RunLoop::Delegate knows whether we called Run() or RunUntilIdle().
   if (ShouldQuitWhenIdle())
     Quit();
-
-  return false;
 }
 
 int ThreadControllerWithMessagePumpImpl::RunDepth() {
@@ -690,20 +703,27 @@ void ThreadControllerWithMessagePumpImpl::EnsureWorkScheduled() {
   }
 }
 
-void ThreadControllerWithMessagePumpImpl::SetTaskExecutionAllowed(
-    bool allowed) {
+void ThreadControllerWithMessagePumpImpl::
+    SetTaskExecutionAllowedInNativeNestedLoop(bool allowed) {
   if (allowed) {
     // We need to schedule work unconditionally because we might be about to
     // enter an OS level nested message loop. Unlike a RunLoop().Run() we don't
     // get a call to DoWork on entering for free.
     work_deduplicator_.OnWorkRequested();  // Set the pending DoWork flag.
-    pump_->ScheduleWork();
   } else {
     // We've (probably) just left an OS level nested message loop. Make sure a
     // subsequent PostTask within the same Task doesn't ScheduleWork with the
     // pump (this will be done anyway when the task exits).
     work_deduplicator_.OnWorkStarted();
   }
+  if (!pump_->HandleNestedNativeLoopWithApplicationTasks(allowed)) {
+    // Pump does not have its own support for native nested loops,
+    // ThreadController must handle scheduling for upcoming tasks.
+    if (allowed) {
+      pump_->ScheduleWork();
+    }
+  }
+  task_execution_allowed_in_native_nested_loop_ = allowed;
   main_thread_only().task_execution_allowed = allowed;
 }
 

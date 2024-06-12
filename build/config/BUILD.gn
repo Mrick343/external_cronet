@@ -19,7 +19,6 @@ import("//build/config/pch.gni")
 import("//build/config/rust.gni")
 import("//build/config/sanitizers/sanitizers.gni")
 import("//build/config/ui.gni")
-import("//build/toolchain/goma.gni")
 if (is_android) {
   import("//build/config/android/abi.gni")
 }
@@ -68,7 +67,7 @@ config("feature_flags") {
     # but they also build some targets with the Android toolchain. This ensures
     # that Android targets still build with USE_OZONE=0 in such cases.
     #
-    # TODO(crbug.com/837032): Maybe this can be cleaned up if we can avoid
+    # TODO(crbug.com/41385586): Maybe this can be cleaned up if we can avoid
     # setting use_ozone globally.
     defines += [ "USE_OZONE=1" ]
   }
@@ -248,6 +247,10 @@ group("common_deps") {
     public_deps += [ "//buildtools/third_party/libc++" ]
   }
 
+  if (use_libfuzzer) {
+    public_deps += [ "//build/config/sanitizers:dlclose_shim" ]
+  }
+
   if (use_afl) {
     public_deps += [ "//third_party/afl" ]
   }
@@ -334,10 +337,10 @@ config("executable_config") {
   # If we're using the prebuilt instrumented libraries with the sanitizers, we
   # need to add ldflags to every binary to make sure they are picked up.
   if (prebuilt_instrumented_libraries_available) {
-    configs += [ "//third_party/instrumented_libraries:prebuilt_ldflags" ]
+    configs += [ "//third_party/instrumented_libs:prebuilt_ldflags" ]
   }
   if (use_locally_built_instrumented_libraries) {
-    configs += [ "//third_party/instrumented_libraries:locally_built_ldflags" ]
+    configs += [ "//third_party/instrumented_libs:locally_built_ldflags" ]
   }
 }
 
@@ -365,10 +368,10 @@ config("shared_library_config") {
   # If we're using the prebuilt instrumented libraries with the sanitizers, we
   # need to add ldflags to every binary to make sure they are picked up.
   if (prebuilt_instrumented_libraries_available) {
-    configs += [ "//third_party/instrumented_libraries:prebuilt_ldflags" ]
+    configs += [ "//third_party/instrumented_libs:prebuilt_ldflags" ]
   }
   if (use_locally_built_instrumented_libraries) {
-    configs += [ "//third_party/instrumented_libraries:locally_built_ldflags" ]
+    configs += [ "//third_party/instrumented_libs:locally_built_ldflags" ]
   }
 }
 

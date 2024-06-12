@@ -131,12 +131,6 @@ void JavaRef<jobject>::ResetGlobalRef() {
   }
 }
 
-jobject JavaRef<jobject>::ReleaseInternal() {
-  jobject obj = obj_;
-  obj_ = nullptr;
-  return obj;
-}
-
 JNIEnv* AttachCurrentThread() {
   JNI_ZERO_DCHECK(g_jvm);
   JNIEnv* env = nullptr;
@@ -336,5 +330,6 @@ jclass LazyGetClass(JNIEnv* env,
   }
   return ret;
 }
+
 }  // namespace internal
 }  // namespace jni_zero

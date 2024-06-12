@@ -61,7 +61,7 @@ struct NetErrorDetails;
 
 namespace {
 
-const char kConnectionErrorStatusLine[] = "HTTP/1.1 503 Connection Error";
+constexpr char kConnectionErrorStatusLine[] = "HTTP/1.1 503 Connection Error";
 
 }  // namespace
 
@@ -262,12 +262,8 @@ int WebSocketBasicHandshakeStream::SendRequest(
   }
   enriched_headers.SetHeader(websockets::kSecWebSocketKey, handshake_challenge);
 
-  AddVectorHeaderIfNonEmpty(websockets::kSecWebSocketExtensions,
-                            requested_extensions_,
-                            &enriched_headers);
-  AddVectorHeaderIfNonEmpty(websockets::kSecWebSocketProtocol,
-                            requested_sub_protocols_,
-                            &enriched_headers);
+  AddVectorHeaders(requested_extensions_, requested_sub_protocols_,
+                   &enriched_headers);
 
   handshake_challenge_response_ =
       ComputeSecWebSocketAccept(handshake_challenge);
@@ -313,6 +309,7 @@ void WebSocketBasicHandshakeStream::Close(bool not_reusable) {
   StreamSocket* socket = state_.connection()->socket();
   if (socket)
     socket->Disconnect();
+  parser()->OnConnectionClose();
   state_.connection()->Reset();
 }
 
@@ -357,15 +354,6 @@ void WebSocketBasicHandshakeStream::GetSSLInfo(SSLInfo* ssl_info) {
       !state_.connection()->socket()->GetSSLInfo(ssl_info)) {
     ssl_info->Reset();
   }
-}
-
-void WebSocketBasicHandshakeStream::GetSSLCertRequestInfo(
-    SSLCertRequestInfo* cert_request_info) {
-  if (!state_.connection()->socket()) {
-    cert_request_info->Reset();
-    return;
-  }
-  parser()->GetSSLCertRequestInfo(cert_request_info);
 }
 
 int WebSocketBasicHandshakeStream::GetRemoteEndpoint(IPEndPoint* endpoint) {

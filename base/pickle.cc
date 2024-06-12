@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "base/pickle.h"
 
 #include <algorithm>
@@ -288,13 +293,6 @@ Pickle::Pickle(UnownedData, span<const uint8_t> data)
     header_ = nullptr;
   }
 }
-
-// OBSOLETE and being removed (https://crbug.com/330028190).
-Pickle::Pickle(span<const uint8_t> data) : Pickle(kUnownedData, data) {}
-
-// OBSOLETE and being removed (https://crbug.com/330028190).
-Pickle::Pickle(const char* data, size_t data_len)
-    : UNSAFE_BUFFERS(Pickle(kUnownedData, as_bytes(span(data, data_len)))) {}
 
 Pickle::Pickle(const Pickle& other)
     : header_(nullptr),

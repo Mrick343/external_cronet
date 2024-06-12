@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/socket/transport_connect_job.h"
 
 #include <memory>
@@ -256,7 +261,7 @@ TEST_F(TransportConnectJobTest, LoadState) {
   EXPECT_EQ(transport_connect_job.GetLoadState(), LOAD_STATE_CONNECTING);
 }
 
-// TODO(crbug.com/1206799): Set up `host_resolver_` to require the expected
+// TODO(crbug.com/40181080): Set up `host_resolver_` to require the expected
 // scheme.
 TEST_F(TransportConnectJobTest, HandlesHttpsEndpoint) {
   TestConnectJobDelegate test_delegate;
@@ -272,7 +277,7 @@ TEST_F(TransportConnectJobTest, HandlesHttpsEndpoint) {
                                         false /* expect_sync_result */);
 }
 
-// TODO(crbug.com/1206799): Set up `host_resolver_` to require the expected
+// TODO(crbug.com/40181080): Set up `host_resolver_` to require the expected
 // lack of scheme.
 TEST_F(TransportConnectJobTest, HandlesNonStandardEndpoint) {
   TestConnectJobDelegate test_delegate;

@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/base/proxy_chain.h"
 
 #include <optional>
@@ -257,6 +262,26 @@ TEST(ProxyChainTest, SplitLast) {
   auto chain1 = ProxyChain({proxy_server1});
   EXPECT_EQ(chain1.SplitLast(),
             std::make_pair(ProxyChain::Direct(), proxy_server1));
+}
+
+TEST(ProxyChainTest, Prefix) {
+  auto proxy_server1 =
+      ProxyUriToProxyServer("foo:333", ProxyServer::SCHEME_HTTPS);
+  auto proxy_server2 =
+      ProxyUriToProxyServer("foo:444", ProxyServer::SCHEME_HTTPS);
+  auto proxy_server3 =
+      ProxyUriToProxyServer("foo:555", ProxyServer::SCHEME_HTTPS);
+  auto chain = ProxyChain::ForIpProtection(
+      {proxy_server1, proxy_server2, proxy_server3}, /*chain_id=*/2);
+  EXPECT_EQ(chain.Prefix(0), ProxyChain::ForIpProtection({}, /*chain_id=*/2));
+  EXPECT_EQ(chain.Prefix(1),
+            ProxyChain::ForIpProtection({proxy_server1}, /*chain_id=*/2));
+  EXPECT_EQ(chain.Prefix(2),
+            ProxyChain::ForIpProtection({proxy_server1, proxy_server2},
+                                        /*chain_id=*/2));
+  EXPECT_EQ(chain.Prefix(3),
+            ProxyChain::ForIpProtection(
+                {proxy_server1, proxy_server2, proxy_server3}, /*chain_id=*/2));
 }
 
 TEST(ProxyChainTest, First) {

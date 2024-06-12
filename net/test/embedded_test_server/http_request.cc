@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/test/embedded_test_server/http_request.h"
 
 #include <algorithm>
@@ -122,7 +127,7 @@ HttpRequestParser::ParseResult HttpRequestParser::ParseHeaders() {
       } else {
         GURL url(header_line_tokens[1]);
         CHECK(url.is_valid());
-        // TODO(crbug.com/1375303): This should retain the entire URL.
+        // TODO(crbug.com/40242862): This should retain the entire URL.
         http_request_->relative_url = url.PathForRequest();
       }
     }

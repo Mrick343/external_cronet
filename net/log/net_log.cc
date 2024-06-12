@@ -170,7 +170,7 @@ bool NetLog::HasCaptureModeObserver(ThreadSafeCaptureModeObserver* observer) {
 // static
 std::string NetLog::TickCountToString(const base::TimeTicks& time) {
   int64_t delta_time = time.since_origin().InMilliseconds();
-  // TODO(https://crbug.com/915391): Use NetLogNumberValue().
+  // TODO(crbug.com/40606676): Use NetLogNumberValue().
   return base::NumberToString(delta_time);
 }
 
@@ -200,7 +200,7 @@ const char* NetLog::SourceTypeToString(NetLogSourceType source) {
 #include "net/log/net_log_source_type_list.h"
 #undef SOURCE_TYPE
     default:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return nullptr;
   }
 }
@@ -224,7 +224,7 @@ const char* NetLog::EventPhaseToString(NetLogEventPhase phase) {
     case NetLogEventPhase::NONE:
       return "PHASE_NONE";
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return nullptr;
 }
 

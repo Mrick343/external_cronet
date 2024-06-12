@@ -504,8 +504,15 @@ std::unique_ptr<URLRequestContext> URLRequestContextBuilder::Build() {
 #endif  // BUILDFLAG(ENABLE_REPORTING)
 
 #if BUILDFLAG(ENABLE_DEVICE_BOUND_SESSIONS)
-  context->set_device_bound_session_service(
-      std::move(device_bound_session_service_));
+  if (has_device_bound_session_service_) {
+    context->set_device_bound_session_service(
+        DeviceBoundSessionService::Create(context.get()));
+  } else {
+    if (device_bound_session_service_) {
+      context->set_device_bound_session_service(
+          std::move(device_bound_session_service_));
+    }
+  }
 #endif  // BUILDFLAG(ENABLE_DEVICE_BOUND_SESSIONS)
 
   HttpNetworkSessionContext network_session_context;
@@ -548,7 +555,7 @@ std::unique_ptr<URLRequestContext> URLRequestContextBuilder::Build() {
           backend_type = CACHE_BACKEND_SIMPLE;
           break;
         case HttpCacheParams::IN_MEMORY:
-          NOTREACHED();
+          NOTREACHED_IN_MIGRATION();
           break;
       }
       http_cache_backend = std::make_unique<HttpCache::DefaultBackend>(

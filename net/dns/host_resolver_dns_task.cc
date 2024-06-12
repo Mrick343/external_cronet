@@ -113,6 +113,21 @@ void RecordResolveTimeDiff(const char* histogram_variant,
 
 }  // namespace
 
+HostResolverDnsTask::SingleTransactionResults::SingleTransactionResults(
+    DnsQueryType query_type,
+    Results results)
+    : query_type(query_type), results(std::move(results)) {}
+
+HostResolverDnsTask::SingleTransactionResults::~SingleTransactionResults() =
+    default;
+
+HostResolverDnsTask::SingleTransactionResults::SingleTransactionResults(
+    SingleTransactionResults&&) = default;
+
+HostResolverDnsTask::SingleTransactionResults&
+HostResolverDnsTask::SingleTransactionResults::operator=(
+    SingleTransactionResults&&) = default;
+
 HostResolverDnsTask::TransactionInfo::TransactionInfo(
     DnsQueryType type,
     TransactionErrorBehavior error_behavior)
@@ -237,11 +252,11 @@ base::Value::Dict HostResolverDnsTask::NetLogDnsTaskTimeoutParams() {
 
 DnsQueryTypeSet HostResolverDnsTask::MaybeDisableAdditionalQueries(
     DnsQueryTypeSet types) {
-  DCHECK(!types.Empty());
+  DCHECK(!types.empty());
   DCHECK(!types.Has(DnsQueryType::UNSPECIFIED));
 
   // No-op if the caller explicitly requested this one query type.
-  if (types.Size() == 1) {
+  if (types.size() == 1) {
     return types;
   }
 
@@ -253,7 +268,7 @@ DnsQueryTypeSet HostResolverDnsTask::MaybeDisableAdditionalQueries(
       httpssvc_metrics_.emplace(secure_);
     }
   }
-  DCHECK(!types.Empty());
+  DCHECK(!types.empty());
   return types;
 }
 
@@ -348,14 +363,17 @@ void HostResolverDnsTask::OnTimeout() {
       default:
         // The timeout timer is only started when all other transactions have
         // completed.
-        NOTREACHED();
+        NOTREACHED_IN_MIGRATION();
     }
   }
 
+  // Clear in-progress and scheduled transactions so that
+  // OnTransactionsFinished() doesn't call delegate's
+  // OnIntermediateTransactionComplete().
   transactions_needed_.clear();
   transactions_in_progress_.clear();
 
-  OnTransactionsFinished();
+  OnTransactionsFinished(/*single_transaction_results=*/std::nullopt);
 }
 
 void HostResolverDnsTask::OnDnsTransactionComplete(
@@ -517,7 +535,8 @@ void HostResolverDnsTask::OnDnsTransactionComplete(
       break;
   }
 
-  if (base::FeatureList::IsEnabled(features::kUseHostResolverCache)) {
+  if (base::FeatureList::IsEnabled(features::kUseHostResolverCache) ||
+      base::FeatureList::IsEnabled(features::kUseServiceEndpointRequest)) {
     SortTransactionAndHandleResults(std::move(transaction_info),
                                     std::move(results).value());
   } else {
@@ -736,10 +755,10 @@ void HostResolverDnsTask::HandleTransactionResults(
     return;
   }
 
-  // TODO(crbug.com/1381506): Use new results type directly instead of
+  // TODO(crbug.com/40245250): Use new results type directly instead of
   // converting to HostCache::Entry.
-  HostCache::Entry legacy_results(std::move(transaction_results),
-                                  base::Time::Now(), tick_clock_->NowTicks(),
+  HostCache::Entry legacy_results(transaction_results, base::Time::Now(),
+                                  tick_clock_->NowTicks(),
                                   HostCache::Entry::SOURCE_DNS);
 
   // Merge results with saved results from previous transactions.
@@ -772,18 +791,23 @@ void HostResolverDnsTask::HandleTransactionResults(
         break;
       default:
         // Only expect address query types with multiple transactions.
-        NOTREACHED();
+        NOTREACHED_IN_MIGRATION();
     }
   }
 
   saved_results_ = std::move(legacy_results);
-  OnTransactionsFinished();
+
+  OnTransactionsFinished(SingleTransactionResults(
+      transaction_info.type, std::move(transaction_results)));
 }
 
-void HostResolverDnsTask::OnTransactionsFinished() {
+void HostResolverDnsTask::OnTransactionsFinished(
+    std::optional<SingleTransactionResults> single_transaction_results) {
   if (!transactions_in_progress_.empty() || !transactions_needed_.empty()) {
-    delegate_->OnIntermediateTransactionsComplete();
     MaybeStartTimeoutTimer();
+    delegate_->OnIntermediateTransactionsComplete(
+        std::move(single_transaction_results));
+    // `this` may be deleted by `delegate_`. Do not add code below.
     return;
   }
 
@@ -883,7 +907,7 @@ void HostResolverDnsTask::OnFailure(
     saved_results_is_failure_ = true;
 
     CancelNonFatalTransactions();
-    OnTransactionsFinished();
+    OnTransactionsFinished(/*single_transaction_results=*/std::nullopt);
     return;
   }
 
@@ -967,7 +991,7 @@ void HostResolverDnsTask::MaybeStartTimeoutTimer() {
     }
   } else {
     // Unhandled supplemental type.
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
 
   base::TimeDelta timeout;

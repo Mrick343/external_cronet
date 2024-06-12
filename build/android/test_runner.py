@@ -270,6 +270,9 @@ def AddCommonOptions(parser):
                       help='If present, store test results on this path.')
   parser.add_argument('--isolated-script-test-perf-output',
                       help='If present, store chartjson results on this path.')
+  parser.add_argument('--timeout-scale',
+                      type=float,
+                      help='Factor by which timeouts should be scaled.')
 
   AddTestLauncherOptions(parser)
 
@@ -329,12 +332,7 @@ def AddDeviceOptions(parser):
       '--recover-devices',
       action='store_true',
       help='Attempt to recover devices prior to the final retry. Warning: '
-           'this will cause all devices to reboot.')
-  parser.add_argument(
-      '--tool',
-      dest='tool',
-      help='Run the test under a tool '
-           '(use --tool help to list them)')
+      'this will cause all devices to reboot.')
 
   parser.add_argument(
       '--upload-logcats-file',
@@ -651,10 +649,6 @@ def AddInstrumentationTestOptions(parser):
             'a proxy for determining if the current run is a retry without '
             'patch.'))
   parser.add_argument(
-      '--timeout-scale',
-      type=float,
-      help='Factor by which timeouts should be scaled.')
-  parser.add_argument(
       '--is-unit-test',
       action='store_true',
       help=('Specify the test suite as composed of unit tests, blocking '
@@ -855,6 +849,8 @@ def AddJUnitTestOptions(parser):
       '--resource-apk',
       required=True,
       help='Path to .ap_ containing binary resources for Robolectric.')
+  parser.add_argument('--shadows-allowlist',
+                      help='Path to Allowlist file for Shadows.')
 
 
 def AddLinkerTestOptions(parser):
@@ -1424,40 +1420,34 @@ def main():
   AddPythonTestOptions(subp)
 
   args, unknown_args = parser.parse_known_args()
+
   if unknown_args:
-    if hasattr(args, 'allow_unknown') and args.allow_unknown:
+    if getattr(args, 'allow_unknown', None):
       args.command_line_flags = unknown_args
     else:
       parser.error('unrecognized arguments: %s' % ' '.join(unknown_args))
 
-  # --replace-system-package/--remove-system-package has the potential to cause
-  # issues if --enable-concurrent-adb is set, so disallow that combination.
-  concurrent_adb_enabled = (hasattr(args, 'enable_concurrent_adb')
-                            and args.enable_concurrent_adb)
-  replacing_system_packages = (hasattr(args, 'replace_system_package')
-                               and args.replace_system_package)
-  removing_system_packages = (hasattr(args, 'system_packages_to_remove')
-                              and args.system_packages_to_remove)
-  if (concurrent_adb_enabled
-      and (replacing_system_packages or removing_system_packages)):
-    parser.error('--enable-concurrent-adb cannot be used with either '
-                 '--replace-system-package or --remove-system-package')
-
-  # --use-webview-provider has the potential to cause issues if
-  # --enable-concurrent-adb is set, so disallow that combination
-  if (hasattr(args, 'use_webview_provider') and
-      hasattr(args, 'enable_concurrent_adb') and args.use_webview_provider and
-      args.enable_concurrent_adb):
-    parser.error('--use-webview-provider and --enable-concurrent-adb cannot '
-                 'be used together')
+  # --enable-concurrent-adb does not handle device reboots gracefully.
+  if getattr(args, 'enable_concurrent_adb', None):
+    if getattr(args, 'replace_system_package', None):
+      logging.warning(
+          'Ignoring --enable-concurrent-adb due to --replace-system-package')
+      args.enable_concurrent_adb = False
+    elif getattr(args, 'system_packages_to_remove', None):
+      logging.warning(
+          'Ignoring --enable-concurrent-adb due to --remove-system-package')
+      args.enable_concurrent_adb = False
+    elif getattr(args, 'use_webview_provider', None):
+      logging.warning(
+          'Ignoring --enable-concurrent-adb due to --use-webview-provider')
+      args.enable_concurrent_adb = False
 
   if (getattr(args, 'coverage_on_the_fly', False)
       and not getattr(args, 'coverage_dir', '')):
     parser.error('--coverage-on-the-fly requires --coverage-dir')
 
-  if (hasattr(args, 'debug_socket') or
-      (hasattr(args, 'wait_for_java_debugger') and
-      args.wait_for_java_debugger)):
+  if (getattr(args, 'debug_socket', None)
+      or getattr(args, 'wait_for_java_debugger', None)):
     args.num_retries = 0
 
   # Result-sink may not exist in the environment if rdb stream is not enabled.

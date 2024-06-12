@@ -15,7 +15,6 @@
 
 namespace base::test {
 
-#if BUILDFLAG(USE_PERFETTO_CLIENT_LIBRARY)
 
 namespace {
 // Emitting the chrome_track_event.descriptor into the trace allows the trace
@@ -156,8 +155,7 @@ absl::Status TestTraceProcessor::StopAndParseTrace() {
 
   if (CommandLine::ForCurrentProcess()->HasSwitch(kSaveTraceSwitch)) {
     ScopedAllowBlockingForTesting allow;
-    WriteFile(base::FilePath::FromASCII("test.pftrace"), trace.data(),
-              trace.size());
+    WriteFile(base::FilePath::FromASCII("test.pftrace"), as_byte_span(trace));
   }
 
   return test_trace_processor_.ParseTrace(trace);
@@ -172,6 +170,5 @@ TestTraceProcessor::RunQuery(const std::string& query) {
   return base::ok(result_or_error.result());
 }
 
-#endif  // BUILDFLAG(USE_PERFETTO_CLIENT_LIBRARY)
 
 }  // namespace base::test

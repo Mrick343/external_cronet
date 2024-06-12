@@ -75,10 +75,11 @@ class QUICHE_EXPORT NgHttp2Adapter : public Http2Adapter {
 
   int32_t SubmitRequest(absl::Span<const Header> headers,
                         std::unique_ptr<DataFrameSource> data_source,
-                        void* user_data) override;
+                        bool end_stream, void* user_data) override;
 
   int SubmitResponse(Http2StreamId stream_id, absl::Span<const Header> headers,
-                     std::unique_ptr<DataFrameSource> data_source) override;
+                     std::unique_ptr<DataFrameSource> data_source,
+                     bool end_stream) override;
 
   int SubmitTrailer(Http2StreamId stream_id,
                     absl::Span<const Header> trailers) override;
@@ -103,6 +104,16 @@ class QUICHE_EXPORT NgHttp2Adapter : public Http2Adapter {
     }
     return 0;
   }
+
+  // Delegates a DATA frame read callback to either the visitor or a registered
+  // DataFrameSource.
+  ssize_t DelegateReadCallback(int32_t stream_id, size_t max_length,
+                               uint32_t* data_flags);
+
+  // Delegates a DATA frame send callback to either the visitor or a registered
+  // DataFrameSource.
+  int DelegateSendCallback(int32_t stream_id, const uint8_t* framehd,
+                           size_t length);
 
  private:
   class NotifyingMetadataSource;

@@ -62,10 +62,10 @@ class ReportingCacheTest : public ReportingTestBase,
  protected:
   ReportingCacheTest() {
     // This is a private API of the reporting service, so no need to test the
-    // case kPartitionNelAndReportingByNetworkIsolationKey is disabled - the
+    // case kPartitionConnectionsByNetworkIsolationKey is disabled - the
     // feature is only applied at the entry points of the service.
     feature_list_.InitAndEnableFeature(
-        features::kPartitionNelAndReportingByNetworkIsolationKey);
+        features::kPartitionConnectionsByNetworkIsolationKey);
 
     ReportingPolicy policy;
     policy.max_report_count = 5;
@@ -74,10 +74,12 @@ class ReportingCacheTest : public ReportingTestBase,
     policy.max_group_staleness = base::Days(3);
     UsePolicy(policy);
 
-    if (GetParam())
-      store_ = std::make_unique<MockPersistentReportingStore>();
-
-    UseStore(store_.get());
+    std::unique_ptr<MockPersistentReportingStore> store;
+    if (GetParam()) {
+      store = std::make_unique<MockPersistentReportingStore>();
+    }
+    store_ = store.get();
+    UseStore(std::move(store));
 
     context()->AddCacheObserver(&observer_);
   }
@@ -229,7 +231,7 @@ class ReportingCacheTest : public ReportingTestBase,
       ReportingEndpointGroupKey(kOtherNak_, kOrigin2_, kGroup2_);
 
   TestReportingCacheObserver observer_;
-  std::unique_ptr<MockPersistentReportingStore> store_;
+  raw_ptr<MockPersistentReportingStore> store_;
 };
 
 // Note: These tests exercise both sides of the cache (reports and clients),
@@ -520,9 +522,9 @@ TEST_P(ReportingCacheTest, GetReportsToDeliverForSource) {
   DCHECK(report3 != reports.end());
 
   // Get the reports for Source 1 and check the status of all reports.
-  EXPECT_EQ(
-      std::vector<vector_experimental_raw_ptr<const ReportingReport>>{*report1},
-      cache()->GetReportsToDeliverForSource(source1));
+  EXPECT_EQ((std::vector<raw_ptr<const ReportingReport, VectorExperimental>>{
+                *report1}),
+            cache()->GetReportsToDeliverForSource(source1));
   EXPECT_TRUE(cache()->IsReportPendingForTesting(*report1));
   EXPECT_FALSE(cache()->IsReportDoomedForTesting(*report1));
   EXPECT_FALSE(cache()->IsReportPendingForTesting(*report2));
@@ -545,9 +547,9 @@ TEST_P(ReportingCacheTest, GetReportsToDeliverForSource) {
                     ReportingReport::Status::QUEUED));
 
   // Get the reports for Source 2 and check the status again.
-  EXPECT_EQ(
-      std::vector<vector_experimental_raw_ptr<const ReportingReport>>{*report2},
-      cache()->GetReportsToDeliverForSource(source2));
+  EXPECT_EQ((std::vector<raw_ptr<const ReportingReport, VectorExperimental>>{
+                *report2}),
+            cache()->GetReportsToDeliverForSource(source2));
   EXPECT_TRUE(cache()->IsReportPendingForTesting(*report1));
   EXPECT_FALSE(cache()->IsReportDoomedForTesting(*report1));
   EXPECT_TRUE(cache()->IsReportPendingForTesting(*report2));
@@ -671,7 +673,7 @@ TEST_P(ReportingCacheTest, ClientsKeyedByEndpointGroupKey) {
 
   // SetEndpointInCache doesn't update store counts, which is why we start from
   // zero and they go negative.
-  // TODO(crbug.com/895821): Populate the cache via the store so we don't
+  // TODO(crbug.com/40598339): Populate the cache via the store so we don't
   // need negative counts.
   MockPersistentReportingStore::CommandList expected_commands;
   int stored_group_count = 0;
@@ -759,8 +761,8 @@ TEST_P(ReportingCacheTest, RemoveClientsForOrigin) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-3, store()->StoredEndpointsCount());
     EXPECT_EQ(-3, store()->StoredEndpointGroupsCount());
     MockPersistentReportingStore::CommandList expected_commands;
@@ -806,8 +808,8 @@ TEST_P(ReportingCacheTest, RemoveAllClients) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-4, store()->StoredEndpointsCount());
     EXPECT_EQ(-3, store()->StoredEndpointGroupsCount());
     MockPersistentReportingStore::CommandList expected_commands;
@@ -873,8 +875,8 @@ TEST_P(ReportingCacheTest, RemoveEndpointGroup) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-2, store()->StoredEndpointsCount());
     EXPECT_EQ(-2, store()->StoredEndpointGroupsCount());
     EXPECT_EQ(2,
@@ -932,8 +934,8 @@ TEST_P(ReportingCacheTest, RemoveEndpointsForUrl) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-2, store()->StoredEndpointsCount());
     EXPECT_EQ(-1, store()->StoredEndpointGroupsCount());
     EXPECT_EQ(2,

@@ -93,7 +93,7 @@ using test_server::BasicHttpResponse;
 using test_server::HttpRequest;
 using test_server::HttpResponse;
 
-static const char kEchoServer[] = "echo-with-no-extension";
+static constexpr char kEchoServer[] = "echo-with-no-extension";
 
 // Simplify changing URL schemes.
 GURL ReplaceUrlScheme(const GURL& in_url, std::string_view scheme) {
@@ -293,11 +293,16 @@ class TestProxyDelegateWithProxyInfo : public ProxyDelegate {
     resolved_proxy_info_.proxy_info = *result;
   }
 
+  void OnSuccessfulRequestAfterFailures(
+      const ProxyRetryInfoMap& proxy_retry_info) override {}
+
   void OnFallback(const ProxyChain& bad_chain, int net_error) override {}
 
-  void OnBeforeTunnelRequest(const ProxyChain& proxy_chain,
-                             size_t chain_index,
-                             HttpRequestHeaders* extra_headers) override {}
+  Error OnBeforeTunnelRequest(const ProxyChain& proxy_chain,
+                              size_t chain_index,
+                              HttpRequestHeaders* extra_headers) override {
+    return OK;
+  }
 
   Error OnTunnelHeadersReceived(
       const ProxyChain& proxy_chain,
@@ -399,7 +404,7 @@ TEST_F(WebSocketEndToEndTest, MAYBE_HttpsProxyUnauthedFails) {
   ProxyConfig proxy_config;
   proxy_config.proxy_rules().ParseFromString(
       "https=" + proxy_server.host_port_pair().ToString());
-  // TODO(https://crbug.com/901896): Don't rely on proxying localhost.
+  // TODO(crbug.com/40600992): Don't rely on proxying localhost.
   proxy_config.proxy_rules().bypass_rules.AddRulesToSubtractImplicit();
 
   std::unique_ptr<ProxyResolutionService> proxy_resolution_service(
@@ -426,7 +431,7 @@ TEST_F(WebSocketEndToEndTest, MAYBE_HttpsWssProxyUnauthedFails) {
   ProxyConfig proxy_config;
   proxy_config.proxy_rules().ParseFromString(
       "https=" + proxy_server.host_port_pair().ToString());
-  // TODO(https://crbug.com/901896): Don't rely on proxying localhost.
+  // TODO(crbug.com/40600992): Don't rely on proxying localhost.
   proxy_config.proxy_rules().bypass_rules.AddRulesToSubtractImplicit();
 
   std::unique_ptr<ProxyResolutionService> proxy_resolution_service(
@@ -455,7 +460,7 @@ TEST_F(WebSocketEndToEndTest, MAYBE_HttpsProxyUsed) {
   proxy_config.proxy_rules().ParseFromString(
       "https=" + proxy_server.host_port_pair().ToString() + ";" +
       "http=" + proxy_server.host_port_pair().ToString());
-  // TODO(https://crbug.com/901896): Don't rely on proxying localhost.
+  // TODO(crbug.com/40600992): Don't rely on proxying localhost.
   proxy_config.proxy_rules().bypass_rules.AddRulesToSubtractImplicit();
 
   std::unique_ptr<ProxyResolutionService> proxy_resolution_service(

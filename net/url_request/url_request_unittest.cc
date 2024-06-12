@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/url_request/url_request.h"
 
 #include <stdint.h>
@@ -14,6 +19,7 @@
 #include <string_view>
 #include <utility>
 
+#include "base/base64.h"
 #include "base/base64url.h"
 #include "base/compiler_specific.h"
 #include "base/files/file_path.h"
@@ -156,8 +162,10 @@
 
 #if BUILDFLAG(IS_WIN)
 #include <objbase.h>
-#include <shlobj.h>
+
 #include <windows.h>
+
+#include <shlobj.h>
 #include <wrl/client.h>
 
 #include "base/win/scoped_com_initializer.h"
@@ -584,7 +592,7 @@ int BlockingNetworkDelegate::MaybeBlockStage(
                                     weak_factory_.GetWeakPtr()));
       return ERR_IO_PENDING;
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return 0;
 }
 
@@ -1971,17 +1979,15 @@ TEST_F(URLRequestTest, DelayedCookieCallbackAsync) {
   replace_scheme.SetSchemeStr("https");
   GURL url = test_server.base_url().ReplaceComponents(replace_scheme);
 
-  auto cookie1 = CanonicalCookie::Create(
-      url, "AlreadySetCookie=1;Secure", base::Time::Now(),
-      std::nullopt /* server_time */, std::nullopt /* cookie_partition_key */);
+  auto cookie1 = CanonicalCookie::CreateForTesting(
+      url, "AlreadySetCookie=1;Secure", base::Time::Now());
   auto delayed_cm = std::make_unique<DelayedCookieMonster>();
   delayed_cm->SetCanonicalCookieAsync(std::move(cookie1), url,
                                       net::CookieOptions::MakeAllInclusive(),
                                       CookieStore::SetCookiesCallback());
 
-  auto cookie2 = CanonicalCookie::Create(
-      url, "AlreadySetCookie=1;Secure", base::Time::Now(),
-      std::nullopt /* server_time */, std::nullopt /* cookie_partition_key */);
+  auto cookie2 = CanonicalCookie::CreateForTesting(
+      url, "AlreadySetCookie=1;Secure", base::Time::Now());
   auto cm = std::make_unique<CookieMonster>(nullptr, nullptr);
   cm->SetCanonicalCookieAsync(std::move(cookie2), url,
                               net::CookieOptions::MakeAllInclusive(),
@@ -2236,7 +2242,7 @@ TEST_F(URLRequestTest, DoNotSendCookies_ViaPolicy) {
   }
 }
 
-// TODO(crbug.com/564656) This test is flaky on iOS.
+// TODO(crbug.com/41225288) This test is flaky on iOS.
 #if BUILDFLAG(IS_IOS)
 #define MAYBE_DoNotSaveCookies_ViaPolicy FLAKY_DoNotSaveCookies_ViaPolicy
 #else
@@ -3552,7 +3558,7 @@ TEST_F(URLRequestTest, PartitionedCookiesRedirect) {
 
   // Set partitioned cookie with same-site partitionkey.
   {
-    auto same_site_partitioned_cookie = CanonicalCookie::Create(
+    auto same_site_partitioned_cookie = CanonicalCookie::CreateForTesting(
         create_cookie_url, "samesite_partitioned=1;Secure;Partitioned",
         base::Time::Now(), std::nullopt,
         CookiePartitionKey::FromURLForTesting(create_cookie_url));
@@ -3569,7 +3575,7 @@ TEST_F(URLRequestTest, PartitionedCookiesRedirect) {
   // In the redirect below from site B to A, this cookie's partition key is site
   // B it should not be sent in the redirected request.
   {
-    auto cross_site_partitioned_cookie = CanonicalCookie::Create(
+    auto cross_site_partitioned_cookie = CanonicalCookie::CreateForTesting(
         create_cookie_url, "xsite_partitioned=1;Secure;Partitioned",
         base::Time::Now(), std::nullopt,
         CookiePartitionKey::FromURLForTesting(
@@ -3943,7 +3949,7 @@ class URLRequestTestHTTP : public URLRequestTest {
 
     std::unique_ptr<URLRequestJob> CreateJob(
         URLRequest* request) const override {
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return nullptr;
     }
 
@@ -4290,7 +4296,7 @@ void NetworkDelegateCancelRequest(BlockingNetworkDelegate::BlockMode block_mode,
     } else if (stage == BlockingNetworkDelegate::ON_HEADERS_RECEIVED) {
       EXPECT_TRUE(r->proxy_chain().is_direct());
     } else {
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
     }
     EXPECT_EQ(ERR_BLOCKED_BY_CLIENT, d.request_status());
     EXPECT_EQ(1, network_delegate.created_requests());
@@ -7765,9 +7771,8 @@ TEST_F(URLRequestTest, NoCookieInclusionStatusWarningIfWouldBeExcludedAnyway) {
   network_delegate.set_block_annotate_cookies();
   {
     GURL url = test_server.GetURL("/");
-    auto cookie1 = CanonicalCookie::Create(
-        url, "cookienosamesite=1", base::Time::Now(), std::nullopt,
-        std::nullopt /* cookie_partition_key */);
+    auto cookie1 = CanonicalCookie::CreateForTesting(url, "cookienosamesite=1",
+                                                     base::Time::Now());
     base::RunLoop run_loop;
     CookieAccessResult access_result;
     cm.SetCanonicalCookieAsync(
@@ -7808,9 +7813,8 @@ TEST_F(URLRequestTest, NoCookieInclusionStatusWarningIfWouldBeExcludedAnyway) {
   // Get cookies
   {
     GURL url = test_server.GetURL("/");
-    auto cookie2 = CanonicalCookie::Create(
-        url, "cookiewithpath=1;path=/foo", base::Time::Now(), std::nullopt,
-        std::nullopt /* cookie_partition_key */);
+    auto cookie2 = CanonicalCookie::CreateForTesting(
+        url, "cookiewithpath=1;path=/foo", base::Time::Now());
     base::RunLoop run_loop;
     // Note: cookie1 from the previous testcase is still in the cookie store.
     CookieAccessResult access_result;
@@ -7954,10 +7958,9 @@ TEST_F(URLRequestTestHTTP, AuthChallengeWithFilteredCookies) {
     auto context = context_builder->Build();
 
     auto* cm = static_cast<CookieMonster*>(context->cookie_store());
-    auto another_cookie = CanonicalCookie::Create(
-        url_requiring_auth_wo_cookies, "another_cookie=true", base::Time::Now(),
-        std::nullopt /* server_time */,
-        std::nullopt /* cookie_partition_key */);
+    auto another_cookie = CanonicalCookie::CreateForTesting(
+        url_requiring_auth_wo_cookies, "another_cookie=true",
+        base::Time::Now());
     cm->SetCanonicalCookieAsync(std::move(another_cookie),
                                 url_requiring_auth_wo_cookies,
                                 net::CookieOptions::MakeAllInclusive(),
@@ -7984,10 +7987,9 @@ TEST_F(URLRequestTestHTTP, AuthChallengeWithFilteredCookies) {
     // Check maybe_sent_cookies on second roundtrip.
     request->set_maybe_sent_cookies({});
     cm->DeleteAllAsync(CookieStore::DeleteCallback());
-    auto one_more_cookie = CanonicalCookie::Create(
+    auto one_more_cookie = CanonicalCookie::CreateForTesting(
         url_requiring_auth_wo_cookies, "one_more_cookie=true",
-        base::Time::Now(), std::nullopt /* server_time */,
-        std::nullopt /* cookie_partition_key */);
+        base::Time::Now());
     cm->SetCanonicalCookieAsync(std::move(one_more_cookie),
                                 url_requiring_auth_wo_cookies,
                                 net::CookieOptions::MakeAllInclusive(),
@@ -8375,10 +8377,8 @@ TEST_F(URLRequestTestHTTP, RedirectWithFilteredCookies) {
     auto context = context_builder->Build();
 
     auto* cm = static_cast<CookieMonster*>(context->cookie_store());
-    auto another_cookie = CanonicalCookie::Create(
-        original_url, "another_cookie=true", base::Time::Now(),
-        std::nullopt /* server_time */,
-        std::nullopt /* cookie_partition_key */);
+    auto another_cookie = CanonicalCookie::CreateForTesting(
+        original_url, "another_cookie=true", base::Time::Now());
     cm->SetCanonicalCookieAsync(std::move(another_cookie), original_url,
                                 net::CookieOptions::MakeAllInclusive(),
                                 CookieStore::SetCookiesCallback());
@@ -8402,10 +8402,8 @@ TEST_F(URLRequestTestHTTP, RedirectWithFilteredCookies) {
     // Check maybe_sent_cookies on second round trip
     request->set_maybe_sent_cookies({});
     cm->DeleteAllAsync(CookieStore::DeleteCallback());
-    auto one_more_cookie = CanonicalCookie::Create(
-        original_url_wo_cookie, "one_more_cookie=true", base::Time::Now(),
-        std::nullopt /* server_time */,
-        std::nullopt /* cookie_partition_key */);
+    auto one_more_cookie = CanonicalCookie::CreateForTesting(
+        original_url_wo_cookie, "one_more_cookie=true", base::Time::Now());
     cm->SetCanonicalCookieAsync(std::move(one_more_cookie),
                                 original_url_wo_cookie,
                                 net::CookieOptions::MakeAllInclusive(),
@@ -8677,7 +8675,7 @@ TEST_F(URLRequestTestHTTP, DefaultUserAgent) {
 
 // Check that if request overrides the User-Agent header,
 // the default is not appended.
-// TODO(crbug.com/564656) This test is flaky on iOS.
+// TODO(crbug.com/41225288) This test is flaky on iOS.
 #if BUILDFLAG(IS_IOS)
 #define MAYBE_OverrideUserAgent FLAKY_OverrideUserAgent
 #else
@@ -12906,16 +12904,72 @@ TEST_F(URLRequestTest, SetIsolationInfoFromNak) {
 }
 
 TEST_F(URLRequestTest, CookiePartitionKey) {
+  base::test::ScopedFeatureList feature_list;
+  feature_list.InitAndEnableFeature(
+      features::kAncestorChainBitEnabledInPartitionedCookies);
+
   const url::Origin kOrigin = url::Origin::Create(GURL("http://foo.test/"));
-  TestDelegate d;
-  std::unique_ptr<URLRequest> r(
-      default_context().CreateRequest(GURL("ws://foo.test/"), DEFAULT_PRIORITY,
-                                      &d, TRAFFIC_ANNOTATION_FOR_TESTS));
-  r->set_isolation_info(
-      IsolationInfo::Create(IsolationInfo::RequestType::kMainFrame, kOrigin,
-                            kOrigin, SiteForCookies::FromOrigin(kOrigin)));
-  EXPECT_TRUE(r->cookie_partition_key());
-  EXPECT_EQ(r->cookie_partition_key()->site(), SchemefulSite(kOrigin));
+  const url::Origin kCrossSiteOrigin =
+      url::Origin::Create(GURL("http://b.test/"));
+
+  struct {
+    const GURL request_url;
+    IsolationInfo::RequestType request_type;
+    const url::Origin frame_origin;
+    const SiteForCookies site_for_cookies;
+    const url::Origin initiator;
+    bool expected_third_party;
+    // If present, change the initiator
+    std::optional<GURL> change_initator = std::nullopt;
+
+  } cases[]{
+      // Request from the main frame: first party partitioned
+      {GURL("ws://foo.test/"), IsolationInfo::RequestType::kMainFrame, kOrigin,
+       SiteForCookies::FromOrigin(kOrigin), kOrigin, false},
+      // Request from the main frame with 3rd party initiator: first party
+      // partitioned
+      {GURL("ws://foo.test/"), IsolationInfo::RequestType::kMainFrame, kOrigin,
+       SiteForCookies::FromOrigin(kOrigin), kOrigin, false,
+       GURL("ws://b.test/")},
+      // Request from first party subframe to cross-site subframe: third party
+      // partitioned
+      {GURL("ws://foo.test/"), IsolationInfo::RequestType::kSubFrame, kOrigin,
+       SiteForCookies(), kCrossSiteOrigin, true},
+      // Request from cross-site subframe: third party partitioned
+      {GURL("ws://b.test/"), IsolationInfo::RequestType::kSubFrame,
+       kCrossSiteOrigin, SiteForCookies(), kCrossSiteOrigin, true},
+      // Request from cross-site subframe with 1st party initiator: third party
+      // partitioned
+      {GURL("ws://b.test/"), IsolationInfo::RequestType::kSubFrame,
+       kCrossSiteOrigin, SiteForCookies(), kCrossSiteOrigin, true,
+       GURL("ws://foo.test/")},
+      // Check that mismatch between request initiator and SiteForCookies: third
+      // party partitioned
+      {GURL("ws://b.test/"), IsolationInfo::RequestType::kSubFrame,
+       kCrossSiteOrigin, SiteForCookies::FromOrigin(kOrigin), kCrossSiteOrigin,
+       true},
+      // Request from first party subframe with null SiteForCookies indicating
+      // A1->B->A2 embed: third party partitioned.
+      {GURL("ws://foo.test/"), IsolationInfo::RequestType::kSubFrame, kOrigin,
+       SiteForCookies(), kOrigin, true},
+  };
+
+  for (const auto& tc : cases) {
+    TestDelegate d;
+    std::unique_ptr<URLRequest> r(default_context().CreateRequest(
+        tc.request_url, DEFAULT_PRIORITY, &d, TRAFFIC_ANNOTATION_FOR_TESTS));
+
+    r->set_isolation_info(IsolationInfo::Create(
+        tc.request_type, kOrigin, tc.frame_origin, tc.site_for_cookies));
+
+    if (tc.change_initator.has_value()) {
+      r->set_initiator(url::Origin::Create(tc.change_initator.value()));
+    }
+    EXPECT_TRUE(r->cookie_partition_key().has_value());
+    EXPECT_EQ(r->cookie_partition_key()->site(), SchemefulSite(kOrigin));
+    EXPECT_EQ(r->cookie_partition_key()->IsThirdParty(),
+              tc.expected_third_party);
+  }
 }
 
 class URLRequestMaybeAsyncFirstPartySetsTest
@@ -13003,10 +13057,8 @@ INSTANTIATE_TEST_SUITE_P(,
 class PartitionConnectionsByNetworkAnonymizationKey : public URLRequestTest {
  public:
   PartitionConnectionsByNetworkAnonymizationKey() {
-    scoped_feature_list_.InitWithFeatures(
-        {net::features::kPartitionConnectionsByNetworkIsolationKey,
-         net::features::kPartitionSSLSessionsByNetworkIsolationKey},
-        {});
+    scoped_feature_list_.InitAndEnableFeature(
+        net::features::kPartitionConnectionsByNetworkIsolationKey);
   }
   const SchemefulSite kTestSiteA = SchemefulSite(GURL("http://a.test/"));
   const SchemefulSite kTestSiteB = SchemefulSite(GURL("http://b.test/"));
@@ -13269,6 +13321,301 @@ TEST_F(PartitionConnectionsByNetworkAnonymizationKey,
     // always be separated regardless of scheme
     EXPECT_EQ(SSLInfo::HANDSHAKE_FULL, r2->ssl_info().handshake_type);
   }
+}
+
+class PatternedExpectBypassCacheNetworkDelegate : public TestNetworkDelegate {
+ public:
+  explicit PatternedExpectBypassCacheNetworkDelegate(
+      std::vector<bool> expectations)
+      : expectations_(std::move(expectations)) {}
+
+  ~PatternedExpectBypassCacheNetworkDelegate() override {
+    EXPECT_TRUE(expectations_.empty());
+  }
+
+  int OnBeforeURLRequest(URLRequest* request,
+                         CompletionOnceCallback callback,
+                         GURL* new_url) override {
+    CHECK(!expectations_.empty());
+    EXPECT_EQ(!!(request->load_flags() & LOAD_BYPASS_CACHE),
+              expectations_.front());
+    expectations_.erase(expectations_.begin());
+
+    return TestNetworkDelegate::OnBeforeURLRequest(request, std::move(callback),
+                                                   new_url);
+  }
+
+ private:
+  std::vector<bool> expectations_;
+};
+
+class StorageAccessHeaderURLRequestTest : public URLRequestTestHTTP {
+ public:
+  StorageAccessHeaderURLRequestTest() {
+    features_.InitAndEnableFeature(features::kStorageAccessHeaders);
+  }
+
+  ~StorageAccessHeaderURLRequestTest() override {
+    EXPECT_TRUE(http_test_server()->ShutdownAndWaitUntilComplete());
+    {
+      base::AutoLock auto_lock(lock_);
+      EXPECT_TRUE(response_sequence_.empty());
+    }
+  }
+
+  void SetUp() override {
+    URLRequestTestHTTP::SetUp();
+    http_test_server()->RegisterRequestHandler(base::BindRepeating(
+        &StorageAccessHeaderURLRequestTest::HandleRetryRequest,
+        base::Unretained(this)));
+    ASSERT_TRUE(http_test_server()->Start());
+  }
+
+  enum class ResponseKind {
+    kOk,
+    kRedirect,
+    kAuthChallenge,
+    kExpectAuthCredentials,
+  };
+
+  void set_response_sequence(const std::initializer_list<ResponseKind>& kinds) {
+    base::AutoLock auto_lock(lock_);
+    response_sequence_ = kinds;
+  }
+
+ protected:
+  static constexpr char kStorageAccessRetryPath[] =
+      "/retry-with-storage-access";
+
+ private:
+  std::unique_ptr<test_server::HttpResponse> HandleRetryRequest(
+      const test_server::HttpRequest& request) {
+    if (!base::StartsWith(request.GetURL().path(), kStorageAccessRetryPath)) {
+      return nullptr;
+    }
+    auto http_response = std::make_unique<test_server::BasicHttpResponse>();
+    http_response->set_content_type("text/plain");
+
+    // We add this header in all cases (including auth challenges and redirects)
+    // in order to verify that it's ignored for auth challenges, and respected
+    // for redirects.
+    http_response->AddCustomHeader("Activate-Storage-Access", "retry");
+
+    ResponseKind response_kind;
+    {
+      base::AutoLock auto_lock(lock_);
+      CHECK(!response_sequence_.empty());
+      response_kind = response_sequence_.front();
+      response_sequence_.erase(response_sequence_.begin());
+    }
+    switch (response_kind) {
+      case ResponseKind::kOk:
+        http_response->set_code(HTTP_OK);
+        return http_response;
+      case ResponseKind::kRedirect:
+        http_response->set_code(HTTP_TEMPORARY_REDIRECT);
+        http_response->AddCustomHeader(
+            "Location", http_test_server()->GetURL("/echo").spec());
+        return http_response;
+      case ResponseKind::kAuthChallenge:
+        return HandleAuthChallenge(request, std::move(http_response));
+      case ResponseKind::kExpectAuthCredentials:
+        return HandleExpectAuthCredentials(request, std::move(http_response));
+    }
+  }
+
+  static std::unique_ptr<test_server::HttpResponse> HandleAuthChallenge(
+      const test_server::HttpRequest& request,
+      std::unique_ptr<test_server::BasicHttpResponse> http_response) {
+    EXPECT_FALSE(base::Contains(request.headers, "Authorization"));
+
+    http_response->set_code(HTTP_UNAUTHORIZED);
+    http_response->AddCustomHeader("WWW-Authenticate", "Basic realm=\"REALM\"");
+    return http_response;
+  }
+
+  static std::unique_ptr<test_server::HttpResponse> HandleExpectAuthCredentials(
+      const test_server::HttpRequest& request,
+      std::unique_ptr<test_server::BasicHttpResponse> http_response) {
+    // Logic stolen from
+    // //net/test/embedded_test_server/default_handlers.cc
+    // (HandleBasicAuth).
+
+    EXPECT_TRUE(base::Contains(request.headers, "Authorization"));
+    std::string auth = request.headers.at("Authorization");
+    EXPECT_TRUE(base::Contains(auth, "Basic"));
+    std::string b64str = auth.substr(std::string("Basic ").size());
+    std::string userpass;
+    base::Base64Decode(b64str, &userpass);
+    size_t delimiter = userpass.find(":");
+    EXPECT_NE(delimiter, std::string::npos);
+    EXPECT_EQ(userpass.substr(0, delimiter), base::UTF16ToASCII(kUser));
+    EXPECT_EQ(userpass.substr(delimiter + 1), base::UTF16ToASCII(kSecret));
+
+    http_response->set_code(HTTP_OK);
+    return http_response;
+  }
+
+  base::Lock lock_;
+  std::vector<ResponseKind> response_sequence_ GUARDED_BY(lock_);
+
+  base::test::ScopedFeatureList features_;
+};
+
+// This test case makes a request to `kStorageAccessRetryPath`, which responds
+// with the "Activate-Storage-Access: retry" header. The browser then retries
+// the request (including unpartitioned cookies, if applicable). The second
+// response still includes the header, but the browser ignores it the second
+// time, since retrying would not make any difference.
+TEST_F(StorageAccessHeaderURLRequestTest, StorageAccessHeaderRetry) {
+  set_response_sequence({ResponseKind::kOk, ResponseKind::kOk});
+
+  auto context_builder = CreateTestURLRequestContextBuilder();
+  auto& network_delegate = *context_builder->set_network_delegate(
+      std::make_unique<PatternedExpectBypassCacheNetworkDelegate>(
+          std::vector({false, true})));
+  auto context = context_builder->Build();
+  TestDelegate d;
+
+  std::unique_ptr<URLRequest> req(context->CreateRequest(
+      http_test_server()->GetURL(kStorageAccessRetryPath), DEFAULT_PRIORITY, &d,
+      TRAFFIC_ANNOTATION_FOR_TESTS));
+
+  req->Start();
+  d.RunUntilComplete();
+
+  // This expects 4 records for 2 requests, since each request records the
+  // overrides in both `OnForcePrivacyMode` and in
+  // `OnAnnotateAndMoveUserBlockedCookies`.
+  EXPECT_THAT(
+      network_delegate.cookie_setting_overrides_records(),
+      ElementsAre(
+          CookieSettingOverrides(), CookieSettingOverrides(),
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader}),
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader})));
+}
+
+TEST_F(StorageAccessHeaderURLRequestTest,
+       StorageAccessHeaderRetry_RedirectPrioritizesRetryHeader) {
+  set_response_sequence({ResponseKind::kRedirect, ResponseKind::kRedirect});
+
+  auto context_builder = CreateTestURLRequestContextBuilder();
+  auto& network_delegate = *context_builder->set_network_delegate(
+      std::make_unique<PatternedExpectBypassCacheNetworkDelegate>(
+          std::vector({false, true, false})));
+  auto context = context_builder->Build();
+  TestDelegate d;
+
+  std::unique_ptr<URLRequest> req(context->CreateRequest(
+      http_test_server()->GetURL(kStorageAccessRetryPath), DEFAULT_PRIORITY, &d,
+      TRAFFIC_ANNOTATION_FOR_TESTS));
+
+  req->Start();
+  d.RunUntilRedirect();
+
+  EXPECT_EQ(req->url().path(), kStorageAccessRetryPath);
+  req->FollowDeferredRedirect(/*removed_headers=*/{}, /*modified_headers=*/{});
+
+  d.RunUntilComplete();
+
+  EXPECT_THAT(
+      network_delegate.cookie_setting_overrides_records(),
+      ElementsAre(
+          // The first request (OnForcePrivacyMode and
+          // OnAnnotateAndMoveUserBlockedCookies).
+          CookieSettingOverrides(), CookieSettingOverrides(),
+          // The first response included the retry header, so the request is
+          // retried, this time with the appropriate override.
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader}),
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader}),
+          // The second response was a (same-origin) redirect, and no
+          // longer carries the override.
+          CookieSettingOverrides(), CookieSettingOverrides()));
+  EXPECT_EQ(req->url().path(), "/echo");
+}
+
+TEST_F(StorageAccessHeaderURLRequestTest,
+       StorageAccessHeaderRetry_AuthIgnoresRetryHeader) {
+  set_response_sequence({ResponseKind::kAuthChallenge,
+                         ResponseKind::kExpectAuthCredentials,
+                         ResponseKind::kOk});
+
+  auto context_builder = CreateTestURLRequestContextBuilder();
+  auto& network_delegate = *context_builder->set_network_delegate(
+      std::make_unique<PatternedExpectBypassCacheNetworkDelegate>(
+          std::vector({false, true})));
+  auto context = context_builder->Build();
+  TestDelegate d;
+  d.set_credentials(AuthCredentials(kUser, kSecret));
+
+  std::unique_ptr<URLRequest> req(context->CreateRequest(
+      http_test_server()->GetURL(kStorageAccessRetryPath), DEFAULT_PRIORITY, &d,
+      TRAFFIC_ANNOTATION_FOR_TESTS));
+
+  req->Start();
+  d.RunUntilComplete();
+
+  EXPECT_THAT(
+      network_delegate.cookie_setting_overrides_records(),
+      ElementsAre(
+          // The first request (OnForcePrivacyMode and
+          // OnAnnotateAndMoveUserBlockedCookies).
+          CookieSettingOverrides(), CookieSettingOverrides(),
+          // The first response is an auth challenge, so we respond to
+          // the challenge (and record the overrides again in
+          // OnAnnotateAndMoveUserBlockedCookies).
+          CookieSettingOverrides(),
+          // The next response is a 200 but includes the retry response
+          // header, so we retry the request and include the appropriate
+          // overrides this time.
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader}),
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader})));
+  EXPECT_TRUE(d.auth_required_called());
+}
+
+TEST_F(StorageAccessHeaderURLRequestTest,
+       StorageAccessHeaderRetry_SurvivesPostAuthRetries) {
+  set_response_sequence({ResponseKind::kOk, ResponseKind::kAuthChallenge,
+                         ResponseKind::kExpectAuthCredentials});
+  auto context_builder = CreateTestURLRequestContextBuilder();
+  auto& network_delegate = *context_builder->set_network_delegate(
+      std::make_unique<PatternedExpectBypassCacheNetworkDelegate>(
+          std::vector({false, true})));
+  auto context = context_builder->Build();
+  TestDelegate d;
+  d.set_credentials(AuthCredentials(kUser, kSecret));
+
+  std::unique_ptr<URLRequest> req(context->CreateRequest(
+      http_test_server()->GetURL(kStorageAccessRetryPath), DEFAULT_PRIORITY, &d,
+      TRAFFIC_ANNOTATION_FOR_TESTS));
+
+  req->Start();
+  d.RunUntilComplete();
+
+  EXPECT_THAT(
+      network_delegate.cookie_setting_overrides_records(),
+      ElementsAre(
+          // The first request (OnForcePrivacyMode and
+          // OnAnnotateAndMoveUserBlockedCookies).
+          CookieSettingOverrides(), CookieSettingOverrides(),
+          // The first response includes the retry header (and is not
+          // auth), so we retry with the appropriate overrides).
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader}),
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader}),
+          // The next response is an auth challenge, so we respond to
+          // the challenge (and record the overrides again in
+          // OnAnnotateAndMoveUserBlockedCookies).
+          CookieSettingOverrides(
+              {CookieSettingOverride::kStorageAccessGrantEligibleViaHeader})));
+  EXPECT_TRUE(d.auth_required_called());
 }
 
 }  // namespace net

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_FREELIST_ENTRY_H_
-#define BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_FREELIST_ENTRY_H_
+#ifndef PARTITION_ALLOC_PARTITION_FREELIST_ENTRY_H_
+#define PARTITION_ALLOC_PARTITION_FREELIST_ENTRY_H_
 
 #include <cstddef>
 
@@ -26,9 +26,9 @@ namespace partition_alloc::internal {
 // We are assessing an alternate implementation using an alternate
 // encoding (pool offsets). When build support is enabled, the
 // freelist implementation is determined at runtime.
-#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#if PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 #include "partition_alloc/pool_offset_freelist.h"  // IWYU pragma: export
-#endif  // BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#endif
 
 namespace partition_alloc::internal {
 
@@ -36,32 +36,32 @@ namespace partition_alloc::internal {
 
 static_assert(kSmallestBucket >= sizeof(EncodedNextFreelistEntry),
               "Need enough space for freelist entries in the smallest slot");
-#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#if PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 static_assert(kSmallestBucket >= sizeof(PoolOffsetFreelistEntry),
               "Need enough space for freelist entries in the smallest slot");
-#endif  // BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#endif
 
 enum class PartitionFreelistEncoding {
   kEncodedFreeList,
   kPoolOffsetFreeList,
 };
 
-#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#if PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 union PartitionFreelistEntry {
   EncodedNextFreelistEntry encoded_entry_;
   PoolOffsetFreelistEntry pool_offset_entry_;
 };
 #else
 using PartitionFreelistEntry = EncodedNextFreelistEntry;
-#endif  // USE_FREELIST_POOL_OFFSETS
+#endif  // PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 
-#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#if PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 static_assert(offsetof(PartitionFreelistEntry, encoded_entry_) == 0ull);
 static_assert(offsetof(PartitionFreelistEntry, pool_offset_entry_) == 0ull);
-#endif  // BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#endif
 
 struct PartitionFreelistDispatcher {
-#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#if PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
   static const PartitionFreelistDispatcher* Create(
       PartitionFreelistEncoding encoding);
 
@@ -103,8 +103,6 @@ struct PartitionFreelistDispatcher {
       PartitionFreelistEntry* entry) const = 0;
   PA_ALWAYS_INLINE virtual constexpr bool IsEncodedNextPtrZero(
       PartitionFreelistEntry* entry) const = 0;
-
-  virtual ~PartitionFreelistDispatcher() = default;
 #else
   static const PartitionFreelistDispatcher* Create(
       PartitionFreelistEncoding encoding) {
@@ -185,24 +183,21 @@ struct PartitionFreelistDispatcher {
   }
 
   ~PartitionFreelistDispatcher() = default;
-#endif  // BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#endif  // PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 };
 
-#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+#if PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
 template <PartitionFreelistEncoding encoding>
-struct PartitionFreelistDispatcherImpl : PartitionFreelistDispatcher {
+struct PartitionFreelistDispatcherImpl final : PartitionFreelistDispatcher {
   using Entry =
       std::conditional_t<encoding ==
                              PartitionFreelistEncoding::kEncodedFreeList,
                          EncodedNextFreelistEntry,
                          PoolOffsetFreelistEntry>;
 
-  Entry& GetEntryImpl(PartitionFreelistEntry* entry) const {
-    if constexpr (encoding == PartitionFreelistEncoding::kEncodedFreeList) {
-      return entry->encoded_entry_;
-    } else {
-      return entry->pool_offset_entry_;
-    }
+  // `entry` can be passed in as `nullptr`
+  Entry* GetEntryImpl(PartitionFreelistEntry* entry) const {
+    return reinterpret_cast<Entry*>(entry);
   }
 
   PA_ALWAYS_INLINE PartitionFreelistEntry* EmplaceAndInitNull(
@@ -217,18 +212,12 @@ struct PartitionFreelistDispatcherImpl : PartitionFreelistDispatcher {
         Entry::EmplaceAndInitNull(slot_start));
   }
 
+  // `next` can be passed in as `nullptr`
   PA_ALWAYS_INLINE PartitionFreelistEntry* EmplaceAndInitForThreadCache(
       uintptr_t slot_start,
       PartitionFreelistEntry* next) const override {
-    if constexpr (encoding == PartitionFreelistEncoding::kEncodedFreeList) {
-      return reinterpret_cast<PartitionFreelistEntry*>(
-          Entry::EmplaceAndInitForThreadCache(slot_start,
-                                              &(next->encoded_entry_)));
-    } else {
-      return reinterpret_cast<PartitionFreelistEntry*>(
-          Entry::EmplaceAndInitForThreadCache(slot_start,
-                                              &(next->pool_offset_entry_)));
-    }
+    return reinterpret_cast<PartitionFreelistEntry*>(
+        Entry::EmplaceAndInitForThreadCache(slot_start, GetEntryImpl(next)));
   }
 
   PA_ALWAYS_INLINE void EmplaceAndInitForTest(
@@ -240,21 +229,21 @@ struct PartitionFreelistDispatcherImpl : PartitionFreelistDispatcher {
 
   PA_ALWAYS_INLINE void CorruptNextForTesting(PartitionFreelistEntry* entry,
                                               uintptr_t v) const override {
-    return GetEntryImpl(entry).CorruptNextForTesting(v);
+    return GetEntryImpl(entry)->CorruptNextForTesting(v);
   }
 
   PA_ALWAYS_INLINE PartitionFreelistEntry* GetNextForThreadCacheTrue(
       PartitionFreelistEntry* entry,
       size_t slot_size) const override {
     return reinterpret_cast<PartitionFreelistEntry*>(
-        GetEntryImpl(entry).template GetNextForThreadCache<true>(slot_size));
+        GetEntryImpl(entry)->template GetNextForThreadCache<true>(slot_size));
   }
 
   PA_ALWAYS_INLINE PartitionFreelistEntry* GetNextForThreadCacheFalse(
       PartitionFreelistEntry* entry,
       size_t slot_size) const override {
     return reinterpret_cast<PartitionFreelistEntry*>(
-        GetEntryImpl(entry).template GetNextForThreadCache<false>(slot_size));
+        GetEntryImpl(entry)->template GetNextForThreadCache<false>(slot_size));
   }
 
   PA_ALWAYS_INLINE PartitionFreelistEntry* GetNextForThreadCacheBool(
@@ -272,60 +261,63 @@ struct PartitionFreelistDispatcherImpl : PartitionFreelistDispatcher {
       PartitionFreelistEntry* entry,
       size_t slot_size) const override {
     return reinterpret_cast<PartitionFreelistEntry*>(
-        GetEntryImpl(entry).GetNext(slot_size));
+        GetEntryImpl(entry)->GetNext(slot_size));
   }
 
   PA_NOINLINE void CheckFreeList(PartitionFreelistEntry* entry,
                                  size_t slot_size) const override {
-    return GetEntryImpl(entry).CheckFreeList(slot_size);
+    return GetEntryImpl(entry)->CheckFreeList(slot_size);
   }
 
   PA_NOINLINE void CheckFreeListForThreadCache(
       PartitionFreelistEntry* entry,
       size_t slot_size) const override {
-    return GetEntryImpl(entry).CheckFreeListForThreadCache(slot_size);
+    return GetEntryImpl(entry)->CheckFreeListForThreadCache(slot_size);
   }
 
+  // `next` can be passed in as `nullptr`
   PA_ALWAYS_INLINE void SetNext(PartitionFreelistEntry* entry,
                                 PartitionFreelistEntry* next) const override {
-    if constexpr (encoding == PartitionFreelistEncoding::kEncodedFreeList) {
-      return GetEntryImpl(entry).SetNext(&(next->encoded_entry_));
-    } else {
-      return GetEntryImpl(entry).SetNext(&(next->pool_offset_entry_));
-    }
+    return GetEntryImpl(entry)->SetNext(GetEntryImpl(next));
   }
 
   PA_ALWAYS_INLINE uintptr_t
   ClearForAllocation(PartitionFreelistEntry* entry) const override {
-    return GetEntryImpl(entry).ClearForAllocation();
+    return GetEntryImpl(entry)->ClearForAllocation();
   }
 
   PA_ALWAYS_INLINE constexpr bool IsEncodedNextPtrZero(
       PartitionFreelistEntry* entry) const override {
-    return GetEntryImpl(entry).IsEncodedNextPtrZero();
+    return GetEntryImpl(entry)->IsEncodedNextPtrZero();
   }
 };
+
+// Both dispatchers are constexpr
+// 1. to avoid "declaration requires an exit-time destructor" error
+//    e.g. on android-cronet-mainline-clang-arm64-dbg.
+// 2. to not create re-entrancy issues with Windows CRT
+//    (crbug.com/336007395).
+inline static constexpr PartitionFreelistDispatcherImpl<
+    PartitionFreelistEncoding::kEncodedFreeList>
+    kEncodedImplDispatcher{};
+inline static constexpr PartitionFreelistDispatcherImpl<
+    PartitionFreelistEncoding::kPoolOffsetFreeList>
+    kPoolOffsetImplDispatcher{};
 
 PA_ALWAYS_INLINE const PartitionFreelistDispatcher*
 PartitionFreelistDispatcher::Create(PartitionFreelistEncoding encoding) {
   switch (encoding) {
     case PartitionFreelistEncoding::kEncodedFreeList: {
-      static constinit PartitionFreelistDispatcherImpl<
-          PartitionFreelistEncoding::kEncodedFreeList>
-          encoded = PartitionFreelistDispatcherImpl<
-              PartitionFreelistEncoding::kEncodedFreeList>();
-      return &encoded;
+      return &kEncodedImplDispatcher;
     }
     case PartitionFreelistEncoding::kPoolOffsetFreeList: {
-      static constinit PartitionFreelistDispatcherImpl<
-          PartitionFreelistEncoding::kPoolOffsetFreeList>
-          pool = PartitionFreelistDispatcherImpl<
-              PartitionFreelistEncoding::kPoolOffsetFreeList>();
-      return &pool;
+      return &kPoolOffsetImplDispatcher;
     }
   }
 }
-#endif  // USE_FREELIST_POOL_OFFSETS
+
+#endif  // PA_BUILDFLAG(USE_FREELIST_DISPATCHER)
+
 }  // namespace partition_alloc::internal
 
-#endif  // BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_FREELIST_ENTRY_H_
+#endif  // PARTITION_ALLOC_PARTITION_FREELIST_ENTRY_H_

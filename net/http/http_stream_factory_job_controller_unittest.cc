@@ -68,6 +68,7 @@
 #include "net/test/test_data_directory.h"
 #include "net/test/test_with_task_environment.h"
 #include "net/third_party/quiche/src/quiche/quic/core/quic_utils.h"
+#include "net/third_party/quiche/src/quiche/quic/core/quic_versions.h"
 #include "net/traffic_annotation/network_traffic_annotation_test_helper.h"
 #include "testing/gmock/include/gmock/gmock.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -133,19 +134,19 @@ class MockPrefDelegate : public HttpServerProperties::PrefDelegate {
 class TestProxyDelegateForIpProtection : public TestProxyDelegate {
  public:
   TestProxyDelegateForIpProtection() {
-    set_proxy_chain(net::ProxyChain::ForIpProtection(
-        {net::ProxyServer::FromSchemeHostAndPort(ProxyServer::SCHEME_HTTPS,
-                                                 "ip-pro", 443)}));
-    set_extra_header_name(net::HttpRequestHeaders::kAuthorization);
+    set_proxy_chain(
+        ProxyChain::ForIpProtection({ProxyServer::FromSchemeHostAndPort(
+            ProxyServer::SCHEME_HTTPS, "ip-pro", 443)}));
+    set_extra_header_name(HttpRequestHeaders::kAuthorization);
   }
   void OnResolveProxy(const GURL& url,
                       const NetworkAnonymizationKey& network_anonymization_key,
                       const std::string& method,
                       const ProxyRetryInfoMap& proxy_retry_info,
                       ProxyInfo* result) override {
-    net::ProxyList proxy_list;
+    ProxyList proxy_list;
     proxy_list.AddProxyChain(proxy_chain());
-    proxy_list.AddProxyChain(net::ProxyChain::Direct());
+    proxy_list.AddProxyChain(ProxyChain::Direct());
     result->UseProxyList(proxy_list);
   }
 };
@@ -202,8 +203,9 @@ class JobControllerPeer {
       const HttpRequestInfo& request_info,
       HttpStreamRequest::Delegate* delegate,
       HttpStreamRequest::StreamType stream_type) {
-    return job_controller->GetAlternativeServiceInfoFor(request_info, delegate,
-                                                        stream_type);
+    return job_controller->GetAlternativeServiceInfoFor(
+        request_info.url, HttpStreamFactory::StreamRequestInfo(request_info),
+        delegate, stream_type);
   }
 
   static quic::ParsedQuicVersion SelectQuicVersion(
@@ -440,7 +442,7 @@ class HttpStreamFactoryJobControllerTestBase : public TestWithTaskEnvironment {
   quic::ParsedQuicVersion version_ = DefaultSupportedQuicVersions().front();
   RecordingNetLogObserver net_log_observer_;
   NetLogWithSource net_log_with_source_{
-      NetLogWithSource::Make(NetLogSourceType::NONE)};
+      NetLogWithSource::Make(NetLogSourceType::HTTP_STREAM_JOB_CONTROLLER)};
   TestJobFactory job_factory_;
   MockHttpStreamRequestDelegate request_delegate_;
   MockQuicContext quic_context_;
@@ -650,7 +652,7 @@ TEST_F(JobControllerReconsiderProxyAfterErrorTest,
 
   const struct {
     ErrorPhase phase;
-    net::Error error;
+    Error error;
   } kRetriableErrors[] = {
       // These largely correspond to the list of errors in
       // CanFalloverToNextProxy() which can occur with an HTTP proxy.
@@ -839,7 +841,7 @@ TEST_F(JobControllerReconsiderProxyAfterErrorTest,
 
   const struct {
     ErrorPhase phase;
-    net::Error error;
+    Error error;
     // Each test case simulates a connection attempt through a proxy that fails
     // twice, followed by two connection attempts that succeed. For most cases,
     // this is done by having a connection attempt to the first proxy fail,
@@ -1080,7 +1082,7 @@ TEST_F(JobControllerReconsiderProxyAfterErrorTest,
 
   const struct {
     ErrorPhase phase;
-    net::Error error;
+    Error error;
     // For a description of this field, see the corresponding struct member
     // comment in `ReconsiderProxyAfterErrorHttpsProxy`.
     bool triggers_ssl_connect_job_retry_logic = false;
@@ -1322,7 +1324,7 @@ TEST_F(JobControllerReconsiderProxyAfterErrorTest,
 
   const struct {
     ErrorPhase phase;
-    net::Error error;
+    Error error;
     // For a description of this field, see the corresponding struct member
     // comment in `ReconsiderProxyAfterErrorHttpsProxy`.
     bool triggers_ssl_connect_job_retry_logic = false;
@@ -1637,7 +1639,7 @@ TEST_F(JobControllerReconsiderProxyAfterErrorTest,
 
   const struct {
     ErrorPhase phase;
-    net::Error error;
+    Error error;
   } kRetriableErrors[] = {
       // These largely correspond to the list of errors in
       // CanFalloverToNextProxy() which can occur with an HTTPS proxy.
@@ -2104,7 +2106,7 @@ void HttpStreamFactoryJobControllerTestBase::
   // QUIC session hasn't been created yet. The wait time should be greater than
   // 0.
   EXPECT_TRUE(job_controller_->ShouldWait(
-      const_cast<net::HttpStreamFactory::Job*>(job_controller_->main_job())));
+      const_cast<HttpStreamFactory::Job*>(job_controller_->main_job())));
   if (async_quic_session) {
     EXPECT_TRUE(JobControllerPeer::main_job_is_blocked(job_controller_));
   } else {
@@ -3477,7 +3479,7 @@ TEST_P(HttpStreamFactoryJobControllerTest, DelayedTCPWithLargeSrtt) {
   EXPECT_FALSE(job_controller_->alternative_job());
 }
 
-// TODO(https://crbug.com/1007502): Disabled because the pending task count does
+// TODO(crbug.com/40649375): Disabled because the pending task count does
 //                                  not match expectations.
 TEST_P(HttpStreamFactoryJobControllerTest,
        DISABLED_ResumeMainJobImmediatelyOnStreamFailed) {
@@ -3610,15 +3612,11 @@ TEST_P(HttpStreamFactoryJobControllerTest,
        PreconnectMultipleStreamsToH2ServerWithNetworkIsolationKey) {
   base::test::ScopedFeatureList feature_list;
   // It's not strictly necessary to enable
-  // |kPartitionConnectionsByNetworkIsolationKey|, but the second phase of the
+  // `kPartitionConnectionsByNetworkIsolationKey`, but the second phase of the
   // test would only make 4 connections, reusing the first connection, without
   // it.
-  feature_list.InitWithFeatures(
-      {// enabled_features
-       features::kPartitionHttpServerPropertiesByNetworkIsolationKey,
-       features::kPartitionConnectionsByNetworkIsolationKey},
-      // disabled_features
-      {});
+  feature_list.InitAndEnableFeature(
+      features::kPartitionConnectionsByNetworkIsolationKey);
   // Need to re-create HttpServerProperties after enabling the field trial,
   // since it caches the field trial value on construction.
   session_deps_.http_server_properties =
@@ -3677,7 +3675,7 @@ TEST_P(HttpStreamFactoryJobControllerTest,
 
     request_info.network_isolation_key = other_network_isolation_key;
     request_info.network_anonymization_key =
-        net::NetworkAnonymizationKey::CreateFromNetworkIsolationKey(
+        NetworkAnonymizationKey::CreateFromNetworkIsolationKey(
             other_network_isolation_key);
     MockHttpStreamRequestDelegate request_delegate;
     auto job_controller = std::make_unique<HttpStreamFactory::JobController>(
@@ -4080,12 +4078,8 @@ TEST_F(JobControllerLimitMultipleH2Requests, MultipleRequests) {
 TEST_F(JobControllerLimitMultipleH2Requests,
        MultipleRequestsNetworkIsolationKey) {
   base::test::ScopedFeatureList feature_list;
-  feature_list.InitWithFeatures(
-      {// enabled_features
-       features::kPartitionHttpServerPropertiesByNetworkIsolationKey,
-       features::kPartitionConnectionsByNetworkIsolationKey},
-      // disabled_features
-      {});
+  feature_list.InitAndEnableFeature(
+      features::kPartitionConnectionsByNetworkIsolationKey);
   // Need to re-create HttpServerProperties after enabling the field trial,
   // since it caches the field trial value on construction.
   session_deps_.http_server_properties =
@@ -4124,7 +4118,7 @@ TEST_F(JobControllerLimitMultipleH2Requests,
           kNetworkIsolationKey2}) {
       request_info.network_isolation_key = network_isolation_key;
       request_info.network_anonymization_key =
-          net::NetworkAnonymizationKey::CreateFromNetworkIsolationKey(
+          NetworkAnonymizationKey::CreateFromNetworkIsolationKey(
               network_isolation_key);
       // For kNetworkIsolationKey1, all requests but the first will be
       // throttled.
@@ -5372,6 +5366,38 @@ TEST_F(HttpStreamFactoryJobControllerDnsHttpsAlpnTest,
   // The success of |dns_alpn_h3_job| deletes |main_job|.
   CheckJobsStatus(/*main_job_exists=*/false, /*alternative_job_exists=*/false,
                   /*dns_alpn_h3_job_exists=*/true, "Main job must be deleted.");
+
+  request_.reset();
+  EXPECT_TRUE(HttpStreamFactoryPeer::IsJobControllerDeleted(factory_));
+}
+
+// Test that for a proxied session no DNS APLN H3 job is created (since we don't
+// want to perform DNS resolution corresponding to requests that will be
+// proxied).
+TEST_F(HttpStreamFactoryJobControllerDnsHttpsAlpnTest,
+       NoDnsAlpnH3JobForProxiedSession) {
+  crypto_client_stream_factory_.set_handshake_mode(
+      MockCryptoClientStream::COLD_START);
+  quic_data_ = std::make_unique<MockQuicData>(quic::ParsedQuicVersion::RFCv1());
+  quic_data_->AddRead(SYNCHRONOUS, ERR_IO_PENDING);
+
+  Initialize(HttpRequestInfo());
+
+  auto proxy_chain =
+      ProxyChain::ForIpProtection({ProxyServer::FromSchemeHostAndPort(
+          ProxyServer::SCHEME_QUIC, "proxy", 99)});
+
+  auto* test_proxy_delegate =
+      static_cast<TestProxyDelegate*>(session_deps_.proxy_delegate.get());
+  test_proxy_delegate->set_proxy_chain(proxy_chain);
+
+  request_ = CreateJobControllerAndStart(CreateTestHttpRequestInfo());
+
+  CheckJobsStatus(/*main_job_exists=*/true, /*alternative_job_exists=*/false,
+                  /*dns_alpn_h3_job_exists=*/false,
+                  "DNS ALPN H3 job must not have been created.");
+
+  base::RunLoop().RunUntilIdle();
 
   request_.reset();
   EXPECT_TRUE(HttpStreamFactoryPeer::IsJobControllerDeleted(factory_));

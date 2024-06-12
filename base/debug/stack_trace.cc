@@ -2,15 +2,21 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "base/debug/stack_trace.h"
 
 #include <string.h>
 
 #include <algorithm>
 #include <sstream>
+#include <utility>
 
 #include "base/check_op.h"
-#include "base/gtest_prod_util.h"
+#include "base/debug/debugging_buildflags.h"
 #include "build/build_config.h"
 #include "build/config/compiler/compiler_buildflags.h"
 
@@ -164,8 +170,15 @@ void* LinkStackFrames(void* fpp, void* parent_fp) {
 
 #endif  // BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
 
+// A message to be emitted in place of a symbolized stack trace. Ordinarily used
+// in death test child processes to inform a developer that they may rerun a
+// failing test with a switch to prevent the test launcher from suppressing
+// stacks in such processes.
+std::string* g_stack_trace_message = nullptr;
+
 // True if an OverrideStackTraceOutputForTesting instance is alive to force
-// generation of symbolized stack traces in death tests.
+// or prevent generation of symbolized stack traces despite a suppression
+// message having been set (or not).
 OverrideStackTraceOutputForTesting::Mode g_override_suppression =
     OverrideStackTraceOutputForTesting::Mode::kUnset;
 
@@ -260,9 +273,9 @@ bool StackTrace::WillSymbolizeToStreamForTesting() {
   // address offsets which are symbolized on the test host system, rather than
   // being symbolized in-process.
   return false;
-#elif defined(ADDRESS_SANITIZER) || defined(THREAD_SANITIZER) || \
-    defined(MEMORY_SANITIZER)
-  // Sanitizer configurations (ASan, TSan, MSan) emit unsymbolized stacks.
+#elif BUILDFLAG(PRINT_UNSYMBOLIZED_STACK_TRACES)
+  // Typically set in sanitizer configurations (ASan, TSan, MSan), which emit
+  // unsymbolized stacks and rely on an external script for symbolization.
   return false;
 #else
   return true;
@@ -270,17 +283,39 @@ bool StackTrace::WillSymbolizeToStreamForTesting() {
 }
 
 void StackTrace::Print() const {
-  PrintWithPrefix(nullptr);
+  PrintWithPrefix({});
+}
+
+void StackTrace::PrintWithPrefix(cstring_view prefix_string) const {
+  if (!count_ || ShouldSuppressOutput()) {
+    if (g_stack_trace_message) {
+      PrintMessageWithPrefix(prefix_string, *g_stack_trace_message);
+    }
+    return;
+  }
+  PrintWithPrefixImpl(prefix_string);
 }
 
 void StackTrace::OutputToStream(std::ostream* os) const {
-  OutputToStreamWithPrefix(os, nullptr);
+  OutputToStreamWithPrefix(os, {});
+}
+
+void StackTrace::OutputToStreamWithPrefix(std::ostream* os,
+                                          cstring_view prefix_string) const {
+  if (!count_ || ShouldSuppressOutput()) {
+    if (g_stack_trace_message) {
+      (*os) << prefix_string << *g_stack_trace_message;
+    }
+    return;
+  }
+  OutputToStreamWithPrefixImpl(os, prefix_string);
 }
 
 std::string StackTrace::ToString() const {
-  return ToStringWithPrefix(nullptr);
+  return ToStringWithPrefix({});
 }
-std::string StackTrace::ToStringWithPrefix(const char* prefix_string) const {
+
+std::string StackTrace::ToStringWithPrefix(cstring_view prefix_string) const {
   std::stringstream stream;
 #if !defined(__UCLIBC__) && !defined(_AIX)
   OutputToStreamWithPrefix(&stream, prefix_string);
@@ -289,14 +324,20 @@ std::string StackTrace::ToStringWithPrefix(const char* prefix_string) const {
 }
 
 // static
+void StackTrace::SuppressStackTracesWithMessageForTesting(std::string message) {
+  delete std::exchange(
+      g_stack_trace_message,
+      (message.empty() ? nullptr : new std::string(std::move(message))));
+}
+
+// static
 bool StackTrace::ShouldSuppressOutput() {
   using Mode = OverrideStackTraceOutputForTesting::Mode;
-  // Backtraces are not visible in death test children, so do not waste
-  // resources by generating any unless an OverrideStackTraceOutputForTesting
-  // instance is alive.
+  // Do not generate stack traces if a suppression message has been provided,
+  // unless an OverrideStackTraceOutputForTesting instance is alive.
   return g_override_suppression != Mode::kUnset
              ? (g_override_suppression == Mode::kSuppressOutput)
-             : ::base::internal::InDeathTestChild();
+             : (g_stack_trace_message != nullptr);
 }
 
 std::ostream& operator<<(std::ostream& os, const StackTrace& s) {

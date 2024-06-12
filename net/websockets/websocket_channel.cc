@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/websockets/websocket_channel.h"
 
 #include <limits.h>  // for INT_MAX
@@ -77,7 +82,7 @@ constexpr size_t kMaximumCloseReasonLength = 125 - kWebSocketCloseCodeLength;
 // explicitly by Javascript but the renderer uses it to indicate we should send
 // a Close frame with no payload.
 bool IsStrictlyValidCloseStatusCode(int code) {
-  static const int kInvalidRanges[] = {
+  static constexpr int kInvalidRanges[] = {
       // [BAD, OK)
       0,    1000,   // 1000 is the first valid code
       1006, 1007,   // 1006 MUST NOT be set.
@@ -253,7 +258,7 @@ class WebSocketChannel::ConnectDelegate
   // danger of this pointer being stale, because deleting the WebSocketChannel
   // cancels the connect process, deleting this object and preventing its
   // callbacks from being called.
-  const raw_ptr<WebSocketChannel, DanglingUntriaged> creator_;
+  const raw_ptr<WebSocketChannel> creator_;
 };
 
 WebSocketChannel::WebSocketChannel(
@@ -594,7 +599,7 @@ ChannelState WebSocketChannel::ReadFrames() {
     }
   }
 
-  // TODO(crbug.com/999235): Remove this CHECK.
+  // TODO(crbug.com/41479064): Remove this CHECK.
   CHECK(event_interface_);
   while (!event_interface_->HasPendingDataFrames()) {
     DCHECK(stream_);
@@ -613,7 +618,7 @@ ChannelState WebSocketChannel::ReadFrames() {
       return CHANNEL_DELETED;
     }
     DCHECK_NE(CLOSED, state_);
-    // TODO(crbug.com/999235): Remove this CHECK.
+    // TODO(crbug.com/41479064): Remove this CHECK.
     CHECK(event_interface_);
   }
   return CHANNEL_ALIVE;
@@ -961,8 +966,7 @@ ChannelState WebSocketChannel::SendClose(uint16_t code,
     size = payload_length;
     auto [code_span, body_span] =
         body->span().split_at<kWebSocketCloseCodeLength>();
-    base::as_writable_bytes(code_span).copy_from(
-        base::numerics::U16ToBigEndian(code));
+    base::as_writable_bytes(code_span).copy_from(base::U16ToBigEndian(code));
     static_assert(sizeof(code) == kWebSocketCloseCodeLength,
                   "they should both be two");
     body_span.copy_from(reason);
@@ -995,7 +999,7 @@ bool WebSocketChannel::ParseClose(base::span<const char> payload,
 
   const char* data = payload.data();
   uint16_t unchecked_code =
-      base::numerics::U16FromBigEndian(base::as_byte_span(payload).first<2>());
+      base::U16FromBigEndian(base::as_byte_span(payload).first<2>());
   static_assert(sizeof(unchecked_code) == kWebSocketCloseCodeLength,
                 "they should both be two bytes");
 

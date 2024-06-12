@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/test/cert_builder.h"
 
 #include <map>
@@ -79,7 +84,7 @@ std::string EcdsaWithSha1() {
   return std::string(std::begin(kDer), std::end(kDer));
 }
 
-// Adds bytes (specified as a StringPiece) to the given CBB.
+// Adds bytes (specified as a std::string_view) to the given CBB.
 // The argument ordering follows the boringssl CBB_* api style.
 bool CBBAddBytes(CBB* cbb, std::string_view bytes) {
   return CBB_add_bytes(cbb, reinterpret_cast<const uint8_t*>(bytes.data()),

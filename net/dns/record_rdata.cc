@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/dns/record_rdata.h"
 
 #include <algorithm>
@@ -9,8 +14,8 @@
 #include <string_view>
 #include <utility>
 
-#include "base/big_endian.h"
 #include "base/containers/span.h"
+#include "base/containers/span_reader.h"
 #include "base/logging.h"
 #include "base/memory/ptr_util.h"
 #include "base/rand_util.h"
@@ -61,11 +66,11 @@ std::unique_ptr<SrvRecordRdata> SrvRecordRdata::Create(
 
   auto rdata = base::WrapUnique(new SrvRecordRdata());
 
-  auto reader = base::BigEndianReader::FromStringPiece(data);
+  auto reader = base::SpanReader(base::as_byte_span(data));
   // 2 bytes for priority, 2 bytes for weight, 2 bytes for port.
-  reader.ReadU16(&rdata->priority_);
-  reader.ReadU16(&rdata->weight_);
-  reader.ReadU16(&rdata->port_);
+  reader.ReadU16BigEndian(rdata->priority_);
+  reader.ReadU16BigEndian(rdata->weight_);
+  reader.ReadU16BigEndian(rdata->port_);
 
   if (!parser.ReadName(data.substr(kSrvRecordMinimumSize).data(),
                        &rdata->target_)) {

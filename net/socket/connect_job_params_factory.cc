@@ -9,7 +9,9 @@
 
 #include "base/check.h"
 #include "base/containers/flat_set.h"
+#include "base/feature_list.h"
 #include "base/memory/scoped_refptr.h"
+#include "net/base/features.h"
 #include "net/base/host_port_pair.h"
 #include "net/base/network_anonymization_key.h"
 #include "net/base/privacy_mode.h"
@@ -18,6 +20,7 @@
 #include "net/base/request_priority.h"
 #include "net/dns/public/secure_dns_policy.h"
 #include "net/http/http_proxy_connect_job.h"
+#include "net/socket/connect_job_params.h"
 #include "net/socket/next_proto.h"
 #include "net/socket/socket_tag.h"
 #include "net/socket/socks_connect_job.h"
@@ -140,53 +143,13 @@ bool UsingSsl(const ConnectJobFactory::Endpoint& endpoint) {
   return absl::get<ConnectJobFactory::SchemelessEndpoint>(endpoint).using_ssl;
 }
 
-scoped_refptr<HttpProxySocketParams> MaybeHttpProxySocketParams(
-    const ConnectJobParams& params) {
-  if (auto p = get_if<scoped_refptr<HttpProxySocketParams>>(&params)) {
-    return *p;
-  }
-  return nullptr;
-}
-
-scoped_refptr<SOCKSSocketParams> MaybeSOCKSSocketParams(
-    const ConnectJobParams& params) {
-  if (auto p = get_if<scoped_refptr<SOCKSSocketParams>>(&params)) {
-    return *p;
-  }
-  return nullptr;
-}
-
-scoped_refptr<TransportSocketParams> MaybeTransportSocketParams(
-    const ConnectJobParams& params) {
-  if (auto p = get_if<scoped_refptr<TransportSocketParams>>(&params)) {
-    return *p;
-  }
-  return nullptr;
-}
-
-scoped_refptr<SSLSocketParams> MaybeSSLSocketParams(
-    const ConnectJobParams& params) {
-  if (auto p = get_if<scoped_refptr<SSLSocketParams>>(&params)) {
-    return *p;
-  }
-  return nullptr;
-}
-
 ConnectJobParams MakeSSLSocketParams(
     ConnectJobParams params,
     const HostPortPair& host_and_port,
     const SSLConfig& ssl_config,
     const NetworkAnonymizationKey& network_anonymization_key) {
-  scoped_refptr<TransportSocketParams> transport_socket_params =
-      MaybeTransportSocketParams(params);
-  scoped_refptr<HttpProxySocketParams> http_proxy_socket_params =
-      MaybeHttpProxySocketParams(params);
-  scoped_refptr<SOCKSSocketParams> socks_socket_params =
-      MaybeSOCKSSocketParams(params);
   return ConnectJobParams(base::MakeRefCounted<SSLSocketParams>(
-      std::move(transport_socket_params), std::move(socks_socket_params),
-      std::move(http_proxy_socket_params), host_and_port, ssl_config,
-      network_anonymization_key));
+      std::move(params), host_and_port, ssl_config, network_anonymization_key));
 }
 
 // Recursively generate the params for a proxy at `host_port_pair` and the given
@@ -200,15 +163,29 @@ ConnectJobParams CreateProxyParams(
     size_t proxy_chain_index,
     const std::optional<NetworkTrafficAnnotationTag>& proxy_annotation_tag,
     const OnHostResolutionCallback& resolution_callback,
-    const NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& endpoint_network_anonymization_key,
     SecureDnsPolicy secure_dns_policy,
     const CommonConnectJobParams* common_connect_job_params,
     const NetworkAnonymizationKey& proxy_dns_network_anonymization_key) {
   const ProxyServer& proxy_server =
       proxy_chain.GetProxyServer(proxy_chain_index);
 
+  // If the requested session will be used to speak to a downstream proxy, then
+  // it need not be partitioned based on the ultimate destination's NAK. If the
+  // session is to the destination, then partition using that destination's NAK.
+  // This allows sharing of connections to proxies in multi-server proxy chains.
+  bool use_empty_nak =
+      !base::FeatureList::IsEnabled(net::features::kPartitionProxyChains) &&
+      proxy_chain_index < proxy_chain.length() - 1;
+  // Note that C++ extends the lifetime of this value such that the reference
+  // remains valid as long as the reference.
+  const NetworkAnonymizationKey& network_anonymization_key =
+      use_empty_nak ? NetworkAnonymizationKey()
+                    : endpoint_network_anonymization_key;
+
   // Set up the SSLConfig if using SSL to the proxy.
   SSLConfig proxy_server_ssl_config;
+
   if (proxy_server.is_secure_http_like()) {
     // Disable cert verification network fetches for secure proxies, since
     // those network requests are probably going to need to go through the
@@ -223,17 +200,32 @@ ConnectJobParams CreateProxyParams(
                   // Always enable ALPN for proxies.
                   ConnectJobFactory::AlpnMode::kHttpAll,
                   network_anonymization_key, *common_connect_job_params,
-                  proxy_server_ssl_config, /*renego_allowed=*/false);
+                  proxy_server_ssl_config,
+                  /*renego_allowed=*/false);
   }
 
   // Create the nested parameters over which the connection to the proxy
   // will be made.
   ConnectJobParams params;
-  if (proxy_chain_index == 0) {
+
+  if (proxy_server.is_quic()) {
+    // If this and all proxies earlier in the chain are QUIC, then we can hand
+    // off the remainder of the proxy connecting work to the QuicSocketPool, so
+    // no further recursion is required. If any proxies earlier in the chain are
+    // not QUIC, then the chain is unsupported. Such ProxyChains cannot be
+    // constructed, so this is just a double-check.
+    for (size_t i = 0; i < proxy_chain_index; i++) {
+      CHECK(proxy_chain.GetProxyServer(i).is_quic());
+    }
+    return ConnectJobParams(base::MakeRefCounted<HttpProxySocketParams>(
+        std::move(proxy_server_ssl_config), host_port_pair, proxy_chain,
+        proxy_chain_index, should_tunnel, *proxy_annotation_tag,
+        network_anonymization_key, secure_dns_policy));
+  } else if (proxy_chain_index == 0) {
     // At the beginning of the chain, create the only TransportSocketParams
     // object, corresponding to the transport socket we want to create to the
     // first proxy.
-    // TODO(crbug.com/1206799): For an http-like proxy, should this pass a
+    // TODO(crbug.com/40181080): For an http-like proxy, should this pass a
     // `SchemeHostPort`, so proxies can participate in ECH? Note doing so
     // with `SCHEME_HTTP` requires handling the HTTPS record upgrade.
     params = ConnectJobParams(base::MakeRefCounted<TransportSocketParams>(
@@ -241,15 +233,11 @@ ConnectJobParams CreateProxyParams(
         secure_dns_policy, resolution_callback,
         SupportedProtocolsFromSSLConfig(proxy_server_ssl_config)));
   } else {
-    // TODO(https://crbug.com/1491092): For now we will assume that proxy
-    // chains with multiple proxies must all use HTTPS.
-    CHECK(proxy_chain.GetProxyServer(proxy_chain_index - 1)
-              .is_secure_http_like());
     params = CreateProxyParams(
         proxy_server.host_port_pair(), true, endpoint, proxy_chain,
         proxy_chain_index - 1, proxy_annotation_tag, resolution_callback,
-        network_anonymization_key, secure_dns_policy, common_connect_job_params,
-        proxy_dns_network_anonymization_key);
+        endpoint_network_anonymization_key, secure_dns_policy,
+        common_connect_job_params, proxy_dns_network_anonymization_key);
   }
 
   // For secure connections, wrap the underlying connection params in SSL
@@ -263,33 +251,18 @@ ConnectJobParams CreateProxyParams(
   // Further wrap the underlying connection params, or the SSL params wrapping
   // them, with the proxy params.
   if (proxy_server.is_http_like()) {
-    scoped_refptr<TransportSocketParams> transport_socket_params =
-        MaybeTransportSocketParams(params);
-    scoped_refptr<SSLSocketParams> ssl_socket_params =
-        MaybeSSLSocketParams(params);
-    std::optional<SSLConfig> quic_ssl_config;
-    if (proxy_server.is_quic()) {
-      // For QUIC, we only need the SSL config, not the full SSLSocketParams.
-      // A subsequent CL will remove the redundant SSLSocketParams creation.
-      quic_ssl_config = ssl_socket_params->ssl_config();
-      ssl_socket_params = nullptr;
-    }
+    CHECK(!proxy_server.is_quic());
     params = ConnectJobParams(base::MakeRefCounted<HttpProxySocketParams>(
-        std::move(transport_socket_params), std::move(ssl_socket_params),
-        std::move(quic_ssl_config), host_port_pair, proxy_chain,
-        proxy_chain_index, should_tunnel, *proxy_annotation_tag,
-        network_anonymization_key, secure_dns_policy));
+        std::move(params), host_port_pair, proxy_chain, proxy_chain_index,
+        should_tunnel, *proxy_annotation_tag, network_anonymization_key,
+        secure_dns_policy));
   } else {
     DCHECK(proxy_server.is_socks());
     DCHECK_EQ(1u, proxy_chain.length());
-    scoped_refptr<TransportSocketParams> transport_socket_params =
-        MaybeTransportSocketParams(params);
-    DCHECK(transport_socket_params);
-    // TODO(crbug.com/1206799): Pass `endpoint` directly (preserving scheme
+    // TODO(crbug.com/40181080): Pass `endpoint` directly (preserving scheme
     // when available)?
     params = ConnectJobParams(base::MakeRefCounted<SOCKSSocketParams>(
-        std::move(transport_socket_params),
-        proxy_server.scheme() == ProxyServer::SCHEME_SOCKS5,
+        std::move(params), proxy_server.scheme() == ProxyServer::SCHEME_SOCKS5,
         ToHostPortPair(endpoint), network_anonymization_key,
         *proxy_annotation_tag));
   }
@@ -308,7 +281,7 @@ ConnectJobParams ConstructConnectJobParams(
     bool force_tunnel,
     PrivacyMode privacy_mode,
     const OnHostResolutionCallback& resolution_callback,
-    const NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& endpoint_network_anonymization_key,
     SecureDnsPolicy secure_dns_policy,
     bool disable_cert_network_fetches,
     const CommonConnectJobParams* common_connect_job_params,
@@ -321,14 +294,14 @@ ConnectJobParams ConstructConnectJobParams(
     ssl_config.allowed_bad_certs = allowed_bad_certs;
     ssl_config.privacy_mode = privacy_mode;
 
-    ConfigureAlpn(endpoint, alpn_mode, network_anonymization_key,
+    ConfigureAlpn(endpoint, alpn_mode, endpoint_network_anonymization_key,
                   *common_connect_job_params, ssl_config,
                   /*renego_allowed=*/true);
 
     ssl_config.disable_cert_verification_network_fetches =
         disable_cert_network_fetches;
 
-    // TODO(https://crbug.com/964642): Also enable 0-RTT for TLS proxies.
+    // TODO(crbug.com/41459647): Also enable 0-RTT for TLS proxies.
     ssl_config.early_data_enabled =
         *common_connect_job_params->enable_early_data;
   }
@@ -338,7 +311,7 @@ ConnectJobParams ConstructConnectJobParams(
   ConnectJobParams params;
   if (proxy_chain.is_direct()) {
     params = ConnectJobParams(base::MakeRefCounted<TransportSocketParams>(
-        ToTransportEndpoint(endpoint), network_anonymization_key,
+        ToTransportEndpoint(endpoint), endpoint_network_anonymization_key,
         secure_dns_policy, resolution_callback,
         SupportedProtocolsFromSSLConfig(ssl_config)));
   } else {
@@ -349,17 +322,19 @@ ConnectJobParams ConstructConnectJobParams(
     params = CreateProxyParams(
         ToHostPortPair(endpoint), should_tunnel, endpoint, proxy_chain,
         /*proxy_chain_index=*/proxy_chain.length() - 1, proxy_annotation_tag,
-        resolution_callback, network_anonymization_key, secure_dns_policy,
-        common_connect_job_params, proxy_dns_network_anonymization_key);
+        resolution_callback, endpoint_network_anonymization_key,
+        secure_dns_policy, common_connect_job_params,
+        proxy_dns_network_anonymization_key);
   }
 
   if (UsingSsl(endpoint)) {
     // Wrap the final params (which includes connections through zero or more
     // proxies) in SSLSocketParams to handle SSL to to the endpoint.
-    // TODO(crbug.com/1206799): Pass `endpoint` directly (preserving scheme
+    // TODO(crbug.com/40181080): Pass `endpoint` directly (preserving scheme
     // when available)?
-    params = MakeSSLSocketParams(std::move(params), ToHostPortPair(endpoint),
-                                 ssl_config, network_anonymization_key);
+    params =
+        MakeSSLSocketParams(std::move(params), ToHostPortPair(endpoint),
+                            ssl_config, endpoint_network_anonymization_key);
   }
 
   return params;

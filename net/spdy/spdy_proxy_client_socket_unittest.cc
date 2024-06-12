@@ -31,6 +31,7 @@
 #include "net/log/test_net_log.h"
 #include "net/log/test_net_log_util.h"
 #include "net/socket/client_socket_factory.h"
+#include "net/socket/connect_job_params.h"
 #include "net/socket/connect_job_test_util.h"
 #include "net/socket/next_proto.h"
 #include "net/socket/socket_tag.h"
@@ -108,8 +109,7 @@ base::WeakPtr<SpdySession> CreateSpdyProxySession(
   SSLConfig ssl_config;
   ssl_config.privacy_mode = key.privacy_mode();
   auto ssl_params = base::MakeRefCounted<SSLSocketParams>(
-      transport_params, /*socks_proxy_params=*/nullptr,
-      /*http_proxy_params=*/nullptr,
+      ConnectJobParams(transport_params),
       HostPortPair::FromSchemeHostPort(destination), ssl_config,
       key.network_anonymization_key());
   TestConnectJobDelegate connect_job_delegate;
@@ -119,14 +119,14 @@ base::WeakPtr<SpdySession> CreateSpdyProxySession(
   connect_job_delegate.StartJobExpectingResult(&connect_job, OK,
                                                false /* expect_sync_result */);
 
-  base::WeakPtr<SpdySession> spdy_session =
+  base::expected<base::WeakPtr<SpdySession>, int> spdy_session_result =
       http_session->spdy_session_pool()->CreateAvailableSessionFromSocket(
           key, connect_job_delegate.ReleaseSocket(),
           LoadTimingInfo::ConnectTiming(), NetLogWithSource());
   // Failure is reported asynchronously.
-  EXPECT_TRUE(spdy_session);
+  EXPECT_TRUE(spdy_session_result.has_value());
   EXPECT_TRUE(HasSpdySession(http_session->spdy_session_pool(), key));
-  return spdy_session;
+  return spdy_session_result.value();
 }
 
 }  // namespace

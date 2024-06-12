@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include <stddef.h>
 
 #include <iterator>
@@ -56,7 +61,7 @@ class WebSocketFrameTestMaskBenchmark : public ::testing::Test {
 };
 
 TEST_F(WebSocketFrameTestMaskBenchmark, BenchmarkMaskShortPayload) {
-  static const char kShortPayload[] = "Short Payload";
+  static constexpr char kShortPayload[] = "Short Payload";
   Benchmark("short_payload", kShortPayload, std::size(kShortPayload));
 }
 

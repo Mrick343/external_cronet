@@ -84,7 +84,7 @@ void SHA1Context::Final() {
   Process();
 
   for (auto& t : H) {
-    t = numerics::ByteSwap(t);
+    t = ByteSwap(t);
   }
 }
 
@@ -128,7 +128,7 @@ void SHA1Context::Process() {
   // W and M are in a union, so no need to memcpy.
   // memcpy(W, M, sizeof(M));
   for (t = 0; t < 16; ++t) {
-    W[t] = numerics::ByteSwap(W[t]);
+    W[t] = ByteSwap(W[t]);
   }
 
   // b.
@@ -177,26 +177,19 @@ void SHA1Final(SHA1Context& context, SHA1Digest& digest) {
   memcpy(digest.data(), context.GetDigest(), kSHA1Length);
 }
 
-SHA1Digest SHA1HashSpan(span<const uint8_t> data) {
-  SHA1Digest hash;
-  SHA1HashBytes(data.data(), data.size(), hash.data());
-  return hash;
+SHA1Digest SHA1Hash(span<const uint8_t> data) {
+  SHA1Context context;
+  context.Init();
+  context.Update(data.data(), data.size());
+  context.Final();
+
+  SHA1Digest digest;
+  memcpy(digest.data(), context.GetDigest(), kSHA1Length);
+  return digest;
 }
 
 std::string SHA1HashString(std::string_view str) {
-  char hash[kSHA1Length];
-  SHA1HashBytes(reinterpret_cast<const unsigned char*>(str.data()),
-                str.length(), reinterpret_cast<unsigned char*>(hash));
-  return std::string(hash, kSHA1Length);
-}
-
-void SHA1HashBytes(const unsigned char* data, size_t len, unsigned char* hash) {
-  SHA1Context context;
-  context.Init();
-  context.Update(data, len);
-  context.Final();
-
-  memcpy(hash, context.GetDigest(), kSHA1Length);
+  return std::string(as_string_view(SHA1Hash(base::as_byte_span(str))));
 }
 
 }  // namespace base

@@ -284,15 +284,12 @@ class NET_EXPORT URLRequest : public base::SupportsUserData {
   // Sets IsolationInfo for the request, which affects whether SameSite cookies
   // are sent, what NetworkAnonymizationKey is used for cached resources, and
   // how that behavior changes when following redirects. This may only be
-  // changed before Start() is called.
+  // changed before Start() is called. Setting this value causes the
+  // cookie_partition_key_ to be recalculated.
   //
-  // TODO(https://crbug.com/1060631): This isn't actually used yet for SameSite
+  // TODO(crbug.com/40122112): This isn't actually used yet for SameSite
   // cookies. Update consumers and fix that.
-  void set_isolation_info(const IsolationInfo& isolation_info) {
-    isolation_info_ = isolation_info;
-    cookie_partition_key_ = CookiePartitionKey::FromNetworkIsolationKey(
-        isolation_info.network_isolation_key());
-  }
+  void set_isolation_info(const IsolationInfo& isolation_info);
 
   // This will convert the passed NetworkAnonymizationKey to an IsolationInfo.
   // This IsolationInfo mmay be assigned an inaccurate frame origin because the
@@ -574,7 +571,13 @@ class NET_EXPORT URLRequest : public base::SupportsUserData {
   const HttpResponseInfo& response_info() const { return response_info_; }
 
   // Access the LOAD_* flags modifying this request (see load_flags.h).
-  int load_flags() const { return load_flags_; }
+  int load_flags() const {
+    if (cookie_setting_overrides().Has(
+            CookieSettingOverride::kStorageAccessGrantEligibleViaHeader)) {
+      return partial_load_flags_ | LOAD_BYPASS_CACHE;
+    }
+    return partial_load_flags_;
+  }
 
   bool is_created_from_network_anonymization_key() const {
     return is_created_from_network_anonymization_key_;
@@ -825,7 +828,7 @@ class NET_EXPORT URLRequest : public base::SupportsUserData {
   // Delegate::OnCertificateRequested callback when cookies/credentials are also
   // suppressed. This method has no effect if credentials are enabled (cookies
   // saved and sent).
-  // TODO(https://crbug.com/775438): Remove this when the underlying
+  // TODO(crbug.com/40089326): Remove this when the underlying
   // issue is fixed.
   void set_send_client_certs(bool send_client_certs) {
     send_client_certs_ = send_client_certs;
@@ -843,6 +846,10 @@ class NET_EXPORT URLRequest : public base::SupportsUserData {
     has_storage_access_ = has_storage_access;
   }
   bool has_storage_access() const { return has_storage_access_; }
+
+  // Returns true if the corresponding `URLResponseHead`'s
+  // `load_with_storage_access` field should be set.
+  bool ShouldSetLoadWithStorageAccess() const;
 
   static bool DefaultCanUseCookies();
 
@@ -868,6 +875,10 @@ class NET_EXPORT URLRequest : public base::SupportsUserData {
   void Redirect(const RedirectInfo& redirect_info,
                 const std::optional<std::vector<std::string>>& removed_headers,
                 const std::optional<net::HttpRequestHeaders>& modified_headers);
+
+  // Allow the URLRequestJob to retry this request, after having activated
+  // Storage Access (if possible).
+  void RetryWithStorageAccess();
 
   // Called by URLRequestJob to allow interception when a redirect occurs.
   void NotifyReceivedRedirect(const RedirectInfo& redirect_info,
@@ -989,7 +1000,7 @@ class NET_EXPORT URLRequest : public base::SupportsUserData {
   HttpRequestHeaders extra_request_headers_;
   // Flags indicating the request type for the load. Expected values are LOAD_*
   // enums above.
-  int load_flags_ = LOAD_NORMAL;
+  int partial_load_flags_ = LOAD_NORMAL;
   // Whether the request is allowed to send credentials in general. Set by
   // caller.
   bool allow_credentials_ = true;

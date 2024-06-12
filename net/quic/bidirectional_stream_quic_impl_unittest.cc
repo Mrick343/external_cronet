@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/quic/bidirectional_stream_quic_impl.h"
 
 #include <memory>
@@ -17,6 +22,7 @@
 #include "base/time/time.h"
 #include "base/timer/timer.h"
 #include "net/base/completion_once_callback.h"
+#include "net/base/connection_endpoint_metadata.h"
 #include "net/base/ip_address.h"
 #include "net/base/load_timing_info.h"
 #include "net/base/load_timing_info_test_util.h"
@@ -370,7 +376,7 @@ class DeleteStreamDelegate : public TestDelegateBase {
     TestDelegateBase::OnHeadersReceived(headers_copy);
   }
 
-  void OnDataSent() override { NOTREACHED(); }
+  void OnDataSent() override { NOTREACHED_IN_MIGRATION(); }
 
   void OnDataRead(int bytes_read) override {
     DCHECK_NE(ON_HEADERS_RECEIVED, phase_);
@@ -555,8 +561,8 @@ class BidirectionalStreamQuicImplTest
         "CONNECTION_UNKNOWN", dns_start, dns_end,
         base::DefaultTickClock::GetInstance(),
         base::SingleThreadTaskRunner::GetCurrentDefault().get(),
-        /*socket_performance_watcher=*/nullptr, HostResolverEndpointResult(),
-        NetLog::Get());
+        /*socket_performance_watcher=*/nullptr, ConnectionEndpointMetadata(),
+        /*report_ecn=*/true, NetLogWithSource::Make(NetLogSourceType::NONE));
     session_->Initialize();
 
     // Blackhole QPACK decoder stream instead of constructing mock writes.

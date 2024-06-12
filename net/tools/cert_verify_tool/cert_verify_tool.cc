@@ -8,7 +8,6 @@
 #include "base/at_exit.h"
 #include "base/command_line.h"
 #include "base/functional/bind.h"
-#include "base/functional/callback_helpers.h"
 #include "base/logging.h"
 #include "base/message_loop/message_pump_type.h"
 #include "base/strings/string_split.h"
@@ -31,6 +30,7 @@
 #include "net/url_request/url_request_context.h"
 #include "net/url_request/url_request_context_builder.h"
 #include "net/url_request/url_request_context_getter.h"
+#include "third_party/abseil-cpp/absl/cleanup/cleanup.h"
 #include "third_party/boringssl/src/pki/trust_store.h"
 #include "third_party/boringssl/src/pki/trust_store_collection.h"
 
@@ -205,6 +205,11 @@ class DummySystemTrustStore : public net::SystemTrustStore {
   }
 
 #if BUILDFLAG(CHROME_ROOT_STORE_SUPPORTED)
+  bool IsLocallyTrustedRoot(
+      const bssl::ParsedCertificate* trust_anchor) override {
+    return false;
+  }
+
   int64_t chrome_root_store_version() const override { return 0; }
 
   base::span<const net::ChromeRootCertConstraints> GetChromeRootConstraints(
@@ -271,7 +276,7 @@ std::unique_ptr<CertVerifyImpl> CreateCertVerifyImplFromName(
         "CertVerifyProcBuiltin",
         net::CreateCertVerifyProcBuiltin(
             std::move(cert_net_fetcher), std::move(crl_set),
-            // TODO(https://crbug.com/848277): support CT.
+            // TODO(crbug.com/41392053): support CT.
             std::make_unique<net::DoNothingCTVerifier>(),
             base::MakeRefCounted<net::DefaultCTPolicyEnforcer>(),
             CreateSystemTrustStore(impl_name, root_store_type), {}));
@@ -418,8 +423,7 @@ int main(int argc, char** argv) {
     return 1;
   }
   base::ThreadPoolInstance::CreateAndStartWithDefaultParams("cert_verify_tool");
-  base::ScopedClosureRunner cleanup(
-      base::BindOnce([] { base::ThreadPoolInstance::Get()->Shutdown(); }));
+  absl::Cleanup cleanup = [] { base::ThreadPoolInstance::Get()->Shutdown(); };
   base::CommandLine& command_line = *base::CommandLine::ForCurrentProcess();
   logging::LoggingSettings settings;
   settings.logging_dest =
@@ -523,7 +527,7 @@ int main(int argc, char** argv) {
     der_certs_with_trust_settings.push_back({target_der_cert, trust});
   }
 
-  // TODO(https://crbug.com/1408473): Maybe default to the trust setting that
+  // TODO(crbug.com/40888483): Maybe default to the trust setting that
   // would be used for locally added anchors on the current platform?
   bssl::CertificateTrust root_trust = bssl::CertificateTrust::ForTrustAnchor();
 

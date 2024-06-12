@@ -2,10 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <list>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <utility>
@@ -1126,7 +1129,7 @@ TEST_P(EndToEndTest, SendAndReceiveCoalescedPackets) {
 // and ensure it gets to the server.
 TEST_P(EndToEndTest, SimpleRequestResponseWithAckDelayChange) {
   // Force the ACK delay to be something other than the default.
-  constexpr uint32_t kClientMaxAckDelay = kDefaultDelayedAckTimeMs + 100u;
+  const uint32_t kClientMaxAckDelay = GetDefaultDelayedAckTimeMs() + 100u;
   client_config_.SetMaxAckDelayToSendMs(kClientMaxAckDelay);
   ASSERT_TRUE(Initialize());
 
@@ -2338,9 +2341,7 @@ TEST_P(EndToEndTest, DoNotSetSendAlarmIfConnectionFlowControlBlocked) {
   // connection is still flow control blocked.
   session->connection()->OnCanWrite();
 
-  QuicAlarm* send_alarm =
-      QuicConnectionPeer::GetSendAlarm(session->connection());
-  EXPECT_FALSE(send_alarm->IsSet());
+  EXPECT_FALSE(QuicConnectionPeer::GetSendAlarm(session->connection()).IsSet());
 }
 
 TEST_P(EndToEndTest, InvalidStream) {
@@ -2847,7 +2848,7 @@ TEST_P(EndToEndTest, StreamCancelErrorTest) {
       client_connection->GetStats().packets_sent;
 
   if (version_.UsesHttp3()) {
-    if (GetQuicRestartFlag(quic_opport_bundle_qpack_decoder_data3)) {
+    if (GetQuicRestartFlag(quic_opport_bundle_qpack_decoder_data5)) {
       // QPACK decoder instructions and RESET_STREAM and STOP_SENDING frames are
       // sent in a single packet.
       EXPECT_EQ(packets_sent_before + 1, packets_sent_now);
@@ -3030,7 +3031,7 @@ TEST_P(EndToEndTest,
     return;
   }
   override_client_connection_id_length_ = kQuicDefaultConnectionIdLength;
-  SetQuicRestartFlag(quic_opport_bundle_qpack_decoder_data3, false);
+  SetQuicRestartFlag(quic_opport_bundle_qpack_decoder_data5, false);
   ASSERT_TRUE(Initialize());
   SendSynchronousFooRequestAndCheckResponse();
 
@@ -5395,6 +5396,131 @@ TEST_P(EndToEndTest, ClientMultiPortConnection) {
   // Verify that the previous path was retired.
   EXPECT_EQ(1u, client_connection->GetStats().num_retire_connection_id_sent);
   stream->Reset(QuicRstStreamErrorCode::QUIC_STREAM_NO_ERROR);
+}
+
+TEST_P(EndToEndTest, ClientPortMigrationOnPathDegrading) {
+  connect_to_server_on_initialize_ = false;
+  Initialize();
+  if (!version_.HasIetfQuicFrames()) {
+    CreateClientWithWriter();
+    return;
+  }
+
+  server_thread_->Pause();
+  QuicDispatcher* dispatcher =
+      QuicServerPeer::GetDispatcher(server_thread_->server());
+  if (dispatcher == nullptr) {
+    ADD_FAILURE() << "Missing dispatcher";
+    server_thread_->Resume();
+    return;
+  }
+  if (dispatcher->NumSessions() > 0) {
+    ADD_FAILURE() << "Dispatcher session map not empty";
+    server_thread_->Resume();
+    return;
+  }
+  auto* new_writer = new DroppingPacketsWithSpecificDestinationWriter();
+  // Note: this writer will only used by the server connection, not the time
+  // wait list.
+  QuicDispatcherPeer::UseWriter(dispatcher, new_writer);
+  server_thread_->Resume();
+
+  delete client_writer_;
+  client_.reset(EndToEndTest::CreateQuicClient(nullptr));
+  client_->client()->EnablePortMigrationUponPathDegrading(std::nullopt);
+  ASSERT_TRUE(client_->client()->WaitForHandshakeConfirmed());
+  QuicConnection* client_connection = GetClientConnection();
+  QuicSocketAddress original_self_addr = client_connection->self_address();
+  Http2HeaderBlock headers;
+  headers[":method"] = "POST";
+  headers[":path"] = "/bar";
+  headers[":scheme"] = "https";
+  headers[":authority"] = server_hostname_;
+  client_->SendMessage(headers, "aaaa", false);
+
+  // This causes the all server sent packets to the client's current address to
+  // be dropped.
+  new_writer->set_peer_address_to_drop(original_self_addr);
+  client_->SendData("bbbb", true);
+  // The response will be dropped till client migrates to a different port.
+  client_->WaitForResponse();
+  QuicSocketAddress new_self_addr1 = client_connection->self_address();
+  EXPECT_NE(original_self_addr, new_self_addr1);
+  EXPECT_EQ(1u, GetClientConnection()->GetStats().num_path_degrading);
+  EXPECT_EQ(1u, GetClientConnection()
+                    ->GetStats()
+                    .num_forward_progress_after_path_degrading);
+  EXPECT_EQ(1u, GetClientConnection()->GetStats().num_path_response_received);
+  size_t pto_count = GetClientConnection()->GetStats().pto_count;
+
+  // Wait for new connection id to be received.
+  WaitForNewConnectionIds();
+  // Use 1 PTO to detect path degrading more aggressively.
+  client_->client()->EnablePortMigrationUponPathDegrading({1});
+  new_writer->set_peer_address_to_drop(new_self_addr1);
+  client_->SendSynchronousRequest("/eep");
+  QuicSocketAddress new_self_addr2 = client_connection->self_address();
+  EXPECT_NE(new_self_addr1, new_self_addr2);
+  EXPECT_EQ(2u, GetClientConnection()->GetStats().num_path_degrading);
+  EXPECT_EQ(2u, GetClientConnection()
+                    ->GetStats()
+                    .num_forward_progress_after_path_degrading);
+  EXPECT_EQ(2u, GetClientConnection()->GetStats().num_path_response_received);
+  // It should take fewer PTOs to trigger port migration than the default(4).
+  EXPECT_GT(pto_count + 4, GetClientConnection()->GetStats().pto_count);
+}
+
+TEST_P(EndToEndTest, ClientLimitPortMigrationOnPathDegrading) {
+  connect_to_server_on_initialize_ = false;
+  Initialize();
+  if (!version_.HasIetfQuicFrames()) {
+    CreateClientWithWriter();
+    return;
+  }
+  const uint32_t max_num_path_degrading_to_mitigate =
+      GetQuicFlag(quic_max_num_path_degrading_to_mitigate);
+
+  delete client_writer_;
+  client_.reset(EndToEndTest::CreateQuicClient(nullptr));
+  client_->client()->EnablePortMigrationUponPathDegrading(std::nullopt);
+  ASSERT_TRUE(client_->client()->WaitForHandshakeConfirmed());
+  QuicConnection* client_connection = GetClientConnection();
+  Http2HeaderBlock headers;
+  headers[":method"] = "POST";
+  headers[":path"] = "/bar";
+  headers[":scheme"] = "https";
+  headers[":authority"] = server_hostname_;
+  // Manually trigger path degrading 5 times and expect they should all trigger
+  // port migration.
+  for (uint32_t i = 0; i < max_num_path_degrading_to_mitigate; ++i) {
+    client_->SendMessage(headers, "aaaa", false);
+    QuicSocketAddress original_self_addr = client_connection->self_address();
+    WaitForNewConnectionIds();
+    client_connection->OnPathDegradingDetected();
+    client_->SendData("bbbb", true);
+    // By the time the response is received, path validation should have been
+    // finished.
+    client_->WaitForResponse();
+    QuicSocketAddress new_self_addr = client_connection->self_address();
+    EXPECT_NE(original_self_addr, new_self_addr);
+  }
+
+  EXPECT_EQ(max_num_path_degrading_to_mitigate,
+            GetClientConnection()->GetStats().num_path_degrading);
+  EXPECT_EQ(max_num_path_degrading_to_mitigate,
+            GetClientConnection()->GetStats().num_path_response_received);
+
+  // The next path degrading shouldn't trigger port migration.
+  WaitForNewConnectionIds();
+  QuicSocketAddress original_self_addr = client_connection->self_address();
+  client_connection->OnPathDegradingDetected();
+  EXPECT_FALSE(client_->client()->HasPendingPathValidation());
+  client_->SendSynchronousRequest("/eep");
+  EXPECT_EQ(original_self_addr, client_connection->self_address());
+  EXPECT_EQ(max_num_path_degrading_to_mitigate + 1,
+            GetClientConnection()->GetStats().num_path_degrading);
+  EXPECT_EQ(max_num_path_degrading_to_mitigate,
+            GetClientConnection()->GetStats().num_path_response_received);
 }
 
 TEST_P(EndToEndTest, ClientMultiPortMigrationOnPathDegrading) {

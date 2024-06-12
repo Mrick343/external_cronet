@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/base/file_stream.h"
 
 #include <string>
@@ -845,7 +850,7 @@ TEST_F(FileStreamTest, AsyncFlagMismatch) {
 #endif
 
 #if BUILDFLAG(IS_ANDROID)
-// TODO(https://crbug.com/894599): flaky on both android and cronet bots.
+// TODO(crbug.com/41420277): flaky on both android and cronet bots.
 TEST_F(FileStreamTest, DISABLED_ContentUriRead) {
   base::FilePath test_dir;
   base::PathService::Get(base::DIR_SRC_TEST_DATA_ROOT, &test_dir);

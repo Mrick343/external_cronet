@@ -1,7 +1,12 @@
 // Copyright 2015 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 // Overview
 //
 // The main entry point is CertNetFetcherURLRequest. This is an implementation
@@ -523,7 +528,7 @@ void Job::StartURLRequest(URLRequestContext* context) {
   url_request_->SetSecureDnsPolicy(SecureDnsPolicy::kDisable);
 
   // Create IsolationInfo based on the origin of the requested URL.
-  // TODO(https://crbug.com/1016890): Cert validation needs to either be
+  // TODO(crbug.com/40104280): Cert validation needs to either be
   // double-keyed or based on a static database, to protect it from being used
   // as a cross-site user tracking vector. For now, just treat it as if it were
   // a subresource request of the origin used for the request. This allows the

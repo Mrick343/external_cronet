@@ -4,6 +4,7 @@
 
 #include "components/metrics/structured/lib/persistent_proto_internal.h"
 
+#include <atomic>
 #include <memory>
 #include <string>
 #include <utility>
@@ -49,13 +50,13 @@ PersistentProtoInternal::PersistentProtoInternal(
       task_runner_(base::ThreadPool::CreateSequencedTaskRunner(
           {base::TaskPriority::BEST_EFFORT, base::MayBlock(),
            base::TaskShutdownBehavior::BLOCK_SHUTDOWN})),
-      proto_file_(
-          base::ImportantFileWriter(path,
-                                    task_runner_,
-                                    write_delay,
-                                    "StructuredMetricsPersistentProto")) {
+      proto_file_(std::make_unique<base::ImportantFileWriter>(
+          path,
+          task_runner_,
+          write_delay,
+          "StructuredMetricsPersistentProto")) {
   task_runner_->PostTaskAndReplyWithResult(
-      FROM_HERE, base::BindOnce(&Read, proto_file_.path()),
+      FROM_HERE, base::BindOnce(&Read, proto_file_->path()),
       base::BindOnce(&PersistentProtoInternal::OnReadComplete,
                      weak_factory_.GetWeakPtr()));
 }
@@ -66,12 +67,18 @@ void PersistentProtoInternal::OnReadComplete(
     base::expected<std::string, ReadStatus> read_status) {
   ReadStatus status;
 
-  proto_ = GetProto();
+  // If the path was updated then we may not need to update the pointer.
+  if (proto_ == nullptr) {
+    proto_ = GetProto();
+  }
 
   if (read_status.has_value()) {
     status = ReadStatus::kOk;
 
-    if (!proto_->ParseFromString(read_status.value())) {
+    // Parses the value of |read_status| into |proto_| but attempts to preserve
+    // any existing content. Optional values will be overwritten and repeated
+    // fields will be appended with new values.
+    if (!proto_->MergeFromString(read_status.value())) {
       status = ReadStatus::kParseError;
       QueueWrite();
     }
@@ -81,13 +88,12 @@ void PersistentProtoInternal::OnReadComplete(
 
   // If there was an error, write an empty proto.
   if (status != ReadStatus::kOk) {
-    proto_->Clear();
     QueueWrite();
   }
 
   // Purge the read proto if |purge_after_reading_|.
   if (purge_after_reading_) {
-    proto_->Clear();
+    Purge();
     purge_after_reading_ = false;
   }
 
@@ -95,11 +101,17 @@ void PersistentProtoInternal::OnReadComplete(
 }
 
 void PersistentProtoInternal::QueueWrite() {
+  // Read |updating_path_| to check if we are actively updating the path of this
+  // proto.
+  if (updating_path_.load()) {
+    return;
+  }
+
   // |proto_| will be null if OnReadComplete() has not finished executing. It is
   // up to the user to verify that OnReadComplete() has finished with callback
   // |on_read_| before calling QueueWrite().
   CHECK(proto_);
-  proto_file_.ScheduleWrite(this);
+  proto_file_->ScheduleWrite(this);
 }
 
 void PersistentProtoInternal::OnWriteAttempt(bool write_successful) {
@@ -117,7 +129,7 @@ void PersistentProtoInternal::OnWriteComplete(const WriteStatus status) {
 void PersistentProtoInternal::Purge() {
   if (proto_) {
     proto_->Clear();
-    QueueWrite();
+    QueueFileDelete();
   } else {
     purge_after_reading_ = true;
   }
@@ -129,9 +141,9 @@ std::optional<std::string> PersistentProtoInternal::SerializeData() {
     OnWriteComplete(WriteStatus::kSerializationError);
     return std::nullopt;
   }
-  proto_file_.RegisterOnNextWriteCallbacks(
+  proto_file_->RegisterOnNextWriteCallbacks(
       base::BindOnce(base::IgnoreResult(&base::CreateDirectory),
-                     proto_file_.path().DirName()),
+                     proto_file_->path().DirName()),
       base::BindPostTask(
           base::SequencedTaskRunner::GetCurrentDefault(),
           base::BindOnce(&PersistentProtoInternal::OnWriteAttempt,
@@ -140,8 +152,44 @@ std::optional<std::string> PersistentProtoInternal::SerializeData() {
 }
 
 void PersistentProtoInternal::StartWriteForTesting() {
-  proto_file_.ScheduleWrite(this);
-  proto_file_.DoScheduledWrite();
+  proto_file_->ScheduleWrite(this);
+  proto_file_->DoScheduledWrite();
+}
+
+void PersistentProtoInternal::UpdatePath(const base::FilePath& path,
+                                         ReadCallback on_read,
+                                         bool remove_existing) {
+  updating_path_.store(true);
+
+  // Clean up the state of the current |proto_file_|.
+  if (proto_file_->HasPendingWrite()) {
+    proto_file_->DoScheduledWrite();
+  }
+
+  // If the previous file should be cleaned up then schedule the cleanup on
+  // separate thread.
+  if (remove_existing) {
+    task_runner_->PostTask(FROM_HERE,
+                           base::BindOnce(base::IgnoreResult(&base::DeleteFile),
+                                          proto_file_->path()));
+  }
+
+  // Overwrite the ImportantFileWriter a new one to the new path.
+  proto_file_ = std::make_unique<base::ImportantFileWriter>(
+      path, task_runner_, proto_file_->commit_interval(),
+      "StructuredMetricsPersistentProto");
+
+  on_read_ = std::move(on_read);
+  task_runner_->PostTaskAndReplyWithResult(
+      FROM_HERE, base::BindOnce(&Read, proto_file_->path()),
+      base::BindOnce(&PersistentProtoInternal::OnReadComplete,
+                     weak_factory_.GetWeakPtr()));
+
+  updating_path_.store(false);
+
+  // Write the content of the proto back to the path in case it has changed. If
+  // an error occurs while reading |path| then 2 write can occur.
+  QueueWrite();
 }
 
 void PersistentProtoInternal::DeallocProto() {
@@ -149,9 +197,15 @@ void PersistentProtoInternal::DeallocProto() {
   proto_ = nullptr;
 }
 
+void PersistentProtoInternal::QueueFileDelete() {
+  task_runner_->PostTask(FROM_HERE,
+                         base::BindOnce(base::IgnoreResult(&base::DeleteFile),
+                                        proto_file_->path()));
+}
+
 void PersistentProtoInternal::FlushQueuedWrites() {
-  if (proto_file_.HasPendingWrite()) {
-    proto_file_.DoScheduledWrite();
+  if (proto_file_->HasPendingWrite()) {
+    proto_file_->DoScheduledWrite();
   }
 }
 

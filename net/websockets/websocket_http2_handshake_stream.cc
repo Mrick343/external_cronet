@@ -115,10 +115,8 @@ int WebSocketHttp2HandshakeStream::SendRequest(
       request_info_->url, base::Time::Now());
   request->headers = headers;
 
-  AddVectorHeaderIfNonEmpty(websockets::kSecWebSocketExtensions,
-                            requested_extensions_, &request->headers);
-  AddVectorHeaderIfNonEmpty(websockets::kSecWebSocketProtocol,
-                            requested_sub_protocols_, &request->headers);
+  AddVectorHeaders(requested_extensions_, requested_sub_protocols_,
+                   &request->headers);
 
   CreateSpdyHeadersFromHttpRequestForWebSocket(
       request_info_->url, request->headers, &http2_request_headers_);
@@ -160,7 +158,7 @@ int WebSocketHttp2HandshakeStream::ReadResponseBody(
     CompletionOnceCallback callback) {
   // Callers should instead call Upgrade() to get a WebSocketStream
   // and call ReadFrames() on that.
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return OK;
 }
 
@@ -209,13 +207,6 @@ bool WebSocketHttp2HandshakeStream::GetLoadTimingInfo(
 void WebSocketHttp2HandshakeStream::GetSSLInfo(SSLInfo* ssl_info) {
   if (stream_)
     stream_->GetSSLInfo(ssl_info);
-}
-
-void WebSocketHttp2HandshakeStream::GetSSLCertRequestInfo(
-    SSLCertRequestInfo* cert_request_info) {
-  // A multiplexed stream cannot request client certificates. Client
-  // authentication may only occur during the initial SSL handshake.
-  NOTREACHED();
 }
 
 int WebSocketHttp2HandshakeStream::GetRemoteEndpoint(IPEndPoint* endpoint) {

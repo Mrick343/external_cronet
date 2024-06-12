@@ -33,12 +33,12 @@ StructuredMetricsRecorder::StructuredMetricsRecorder(
       event_storage_(std::move(event_storage)) {
   CHECK(key_data_provider_);
   CHECK(event_storage_);
-  Recorder::GetInstance()->AddObserver(this);
+  Recorder::GetInstance()->SetRecorder(this);
   key_data_provider_->AddObserver(this);
 }
 
 StructuredMetricsRecorder::~StructuredMetricsRecorder() {
-  Recorder::GetInstance()->RemoveObserver(this);
+  Recorder::GetInstance()->UnsetRecorder(this);
   key_data_provider_->RemoveObserver(this);
 }
 
@@ -64,23 +64,26 @@ void StructuredMetricsRecorder::ProvideUmaEventMetrics(
 
 void StructuredMetricsRecorder::ProvideEventMetrics(
     ChromeUserMetricsExtension& uma_proto) {
-  if (!CanProvideMetrics()) {
+  if (!CanProvideMetrics() || !event_storage_->HasEvents()) {
     return;
   }
+
+  LockStorage();
 
   // Get the events from event storage.
   auto events = event_storage_->TakeEvents();
 
-  if (events.size() == 0) {
-    return;
-  }
+  ReleaseStorage();
 
   StructuredDataProto& structured_data = *uma_proto.mutable_structured_data();
   *structured_data.mutable_events() = std::move(events);
 
   LogUploadSizeBytes(structured_data.ByteSizeLong());
   LogNumEventsInUpload(structured_data.events_size());
+}
 
+void StructuredMetricsRecorder::ProvideLogMetadata(
+    ChromeUserMetricsExtension& uma_proto) {
   // Applies custom metadata providers.
   Recorder::GetInstance()->OnProvideIndependentMetrics(&uma_proto);
 }
@@ -202,8 +205,7 @@ void StructuredMetricsRecorder::RecordEvent(const Event& event) {
   LogEventRecordingState(EventRecordingState::kRecorded);
 
   // Events associated with UMA are deprecated.
-  if (!IsIndependentMetricsUploadEnabled() ||
-      project_validator->id_type() == IdType::kUmaId) {
+  if (project_validator->id_type() == IdType::kUmaId) {
     return;
   }
 
@@ -214,8 +216,7 @@ void StructuredMetricsRecorder::RecordEvent(const Event& event) {
                        *event_validator);
 
   // Sequence-related metadata.
-  if (project_validator->event_type() == StructuredEventProto::SEQUENCE &&
-      base::FeatureList::IsEnabled(kEventSequenceLogging)) {
+  if (project_validator->event_type() == StructuredEventProto::SEQUENCE) {
     AddSequenceMetadata(&event_proto, event, *project_validator, *key_data);
   }
 
@@ -229,7 +230,11 @@ void StructuredMetricsRecorder::RecordEvent(const Event& event) {
   NotifyEventRecorded(event_proto);
 
   // Add new event to storage.
-  event_storage_->AddEvent(event_proto);
+  if (storage_lock_.load()) {
+    locked_events_.push_back(event_proto);
+  } else {
+    event_storage_->AddEvent(event_proto);
+  }
 
   test_callback_on_record_.Run();
 }
@@ -258,7 +263,7 @@ void StructuredMetricsRecorder::InitializeEventProto(
       }
     } break;
     case IdType::kUmaId:
-      // TODO(crbug.com/1148168): Unimplemented.
+      // TODO(crbug.com/40156926): Unimplemented.
       break;
     case IdType::kUnidentified:
       // Do nothing.
@@ -458,6 +463,34 @@ void StructuredMetricsRecorder::NotifyEventRecorded(
   for (Observer& watcher : watchers_) {
     watcher.OnEventRecorded(event);
   }
+}
+
+void StructuredMetricsRecorder::LockStorage() {
+  storage_lock_.store(true);
+}
+
+void StructuredMetricsRecorder::ReleaseStorage() {
+  storage_lock_.store(false);
+
+  StoreLockedEvents();
+}
+
+void StructuredMetricsRecorder::StoreLockedEvents() {
+  base::SequencedTaskRunner* task_runner =
+      Recorder::GetInstance()->GetUiTaskRunner();
+
+  if (!task_runner->RunsTasksInCurrentSequence()) {
+    task_runner->PostTask(
+        FROM_HERE, base::BindOnce(&StructuredMetricsRecorder::StoreLockedEvents,
+                                  weak_factory_.GetWeakPtr()));
+    return;
+  }
+
+  for (const auto& event : locked_events_) {
+    event_storage_->AddEvent(event);
+  }
+
+  locked_events_.clear();
 }
 
 }  // namespace metrics::structured

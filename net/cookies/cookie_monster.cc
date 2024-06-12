@@ -42,6 +42,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/cookies/cookie_monster.h"
 
 #include <functional>
@@ -119,6 +124,19 @@ static const int kMinutesInTenYears = kDaysInTenYears * 24 * 60;
 
 namespace {
 
+// This enum is used to generate a histogramed bitmask measureing the types
+// of stored cookies. Please do not reorder the list when adding new entries.
+// New items MUST be added at the end of the list, just before
+// COOKIE_TYPE_LAST_ENTRY;
+// There will be 2^COOKIE_TYPE_LAST_ENTRY buckets in the linear histogram.
+enum CookieType {
+  COOKIE_TYPE_SAME_SITE = 0,
+  COOKIE_TYPE_HTTPONLY,
+  COOKIE_TYPE_SECURE,
+  COOKIE_TYPE_PERSISTENT,
+  COOKIE_TYPE_LAST_ENTRY
+};
+
 void MaybeRunDeleteCallback(base::WeakPtr<net::CookieMonster> cookie_monster,
                             base::OnceClosure callback) {
   if (cookie_monster && callback)
@@ -174,6 +192,23 @@ size_t NumBytesInCookieItVector(
     result += NameValueSizeBytes(*it->second);
   }
   return result;
+}
+
+void LogStoredCookieToUMA(const net::CanonicalCookie& cc,
+                          const net::CookieAccessResult& access_result) {
+  // Cookie.Type2 collects a bitvector of important cookie attributes.
+  int32_t type_sample =
+      !cc.IsEffectivelySameSiteNone(access_result.access_semantics)
+          ? 1 << COOKIE_TYPE_SAME_SITE
+          : 0;
+  type_sample |= cc.IsHttpOnly() ? 1 << COOKIE_TYPE_HTTPONLY : 0;
+  type_sample |= cc.SecureAttribute() ? 1 << COOKIE_TYPE_SECURE : 0;
+  type_sample |= cc.IsPersistent() ? 1 << COOKIE_TYPE_PERSISTENT : 0;
+  UMA_HISTOGRAM_EXACT_LINEAR("Cookie.Type2", type_sample,
+                             (1 << COOKIE_TYPE_LAST_ENTRY));
+
+  // Cookie.SourceType collects the CookieSourceType of the stored cookie.
+  UMA_HISTOGRAM_ENUMERATION("Cookie.SourceType", cc.SourceType());
 }
 
 }  // namespace
@@ -909,9 +944,18 @@ void CookieMonster::OnLoaded(
     std::vector<std::unique_ptr<CanonicalCookie>> cookies) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   StoreLoadedCookies(std::move(cookies));
+  base::TimeTicks now = base::TimeTicks::Now();
   base::UmaHistogramCustomTimes("Cookie.TimeBlockedOnLoad",
-                                base::TimeTicks::Now() - beginning_time,
-                                base::Milliseconds(1), base::Minutes(1), 50);
+                                now - beginning_time, base::Milliseconds(1),
+                                base::Minutes(1), 50);
+  base::TimeDelta blocked_due_to_global_op = base::Milliseconds(0);
+  if (time_start_block_load_all_.has_value()) {
+    blocked_due_to_global_op = now - *time_start_block_load_all_;
+  }
+
+  base::UmaHistogramCustomTimes("Cookie.TimeOpsBlockedDueToGlobalOp",
+                                blocked_due_to_global_op, base::Milliseconds(1),
+                                base::Minutes(1), 50);
 
   // Invoke the task queue of cookie request.
   InvokeQueue();
@@ -1170,9 +1214,9 @@ void CookieMonster::TrimDuplicateCookiesForKey(
     // duplicates.
     dupes.erase(dupes.begin());
 
-    // TODO(crbug.com/1225444) Include cookie partition key in this log
+    // TODO(crbug.com/40188414) Include cookie partition key in this log
     // statement as well if needed.
-    // TODO(crbug.com/1170548): Include source scheme and source port.
+    // TODO(crbug.com/40165805): Include source scheme and source port.
     LOG(ERROR) << base::StringPrintf(
         "Found %d duplicate cookies for key='%s', "
         "with {name='%s', domain='%s', path='%s'}",
@@ -1221,9 +1265,9 @@ void CookieMonster::TrimDuplicateCookiesForKey(
     // duplicates.
     dupes.erase(dupes.begin());
 
-    // TODO(crbug.com/1225444) Include cookie partition key in this log
+    // TODO(crbug.com/40188414) Include cookie partition key in this log
     // statement as well if needed.
-    // TODO(crbug.com/1170548): Include source scheme and source port.
+    // TODO(crbug.com/40165805): Include source scheme and source port.
     LOG(ERROR) << base::StringPrintf(
         "Found %d duplicate domain cookies for key='%s', "
         "with {name='%s', domain='%s', path='%s'}",
@@ -1562,7 +1606,7 @@ CookieMonster::CookieMap::iterator CookieMonster::InternalInsertCookie(
 
   auto inserted = cookies_.insert(CookieMap::value_type(key, std::move(cc)));
 
-  LogCookieTypeToUMA(cc_ptr, access_result);
+  LogStoredCookieToUMA(*cc_ptr, access_result);
 
   DCHECK(access_result.status.IsInclude());
   if (dispatch_change) {
@@ -1590,19 +1634,6 @@ CookieMonster::CookieMap::iterator CookieMonster::InternalInsertCookie(
 
 bool CookieMonster::ShouldUpdatePersistentStore(CanonicalCookie* cc) {
   return (cc->IsPersistent() || persist_session_cookies_) && store_.get();
-}
-
-void CookieMonster::LogCookieTypeToUMA(
-    CanonicalCookie* cc,
-    const CookieAccessResult& access_result) {
-  int32_t type_sample =
-      !cc->IsEffectivelySameSiteNone(access_result.access_semantics)
-          ? 1 << COOKIE_TYPE_SAME_SITE
-          : 0;
-  type_sample |= cc->IsHttpOnly() ? 1 << COOKIE_TYPE_HTTPONLY : 0;
-  type_sample |= cc->SecureAttribute() ? 1 << COOKIE_TYPE_SECURE : 0;
-  UMA_HISTOGRAM_EXACT_LINEAR("Cookie.Type", type_sample,
-                             (1 << COOKIE_TYPE_LAST_ENTRY));
 }
 
 CookieMonster::PartitionedCookieMapIterators
@@ -1651,7 +1682,7 @@ CookieMonster::InternalInsertPartitionedCookie(
   }
   CHECK_GE(num_partitioned_cookies_, num_nonced_partitioned_cookies_);
 
-  LogCookieTypeToUMA(cc_ptr, access_result);
+  LogStoredCookieToUMA(*cc_ptr, access_result);
 
   DCHECK(access_result.status.IsInclude());
   if (dispatch_change) {
@@ -1670,8 +1701,8 @@ void CookieMonster::SetCanonicalCookie(
     SetCookiesCallback callback,
     std::optional<CookieAccessResult> cookie_access_result) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
-// TODO(crbug.com/1482799): Fix macos specific issue with CHECK_IS_TEST crashing
-// network service process.
+// TODO(crbug.com/40281870): Fix macos specific issue with CHECK_IS_TEST
+// crashing network service process.
 #if !BUILDFLAG(IS_MAC)
   // Only tests should be adding new cookies with source type kUnknown. If this
   // line causes a fatal track down the callsite and have it correctly set the
@@ -1765,8 +1796,9 @@ void CookieMonster::SetCanonicalCookie(
       // http:// URLs, but not cookies that are cleared by http:// URLs, to
       // understand if the former behavior can be deprecated for Secure
       // cookies.
-      // TODO(crbug.com/993120): Consider removing this histogram. The decision
-      // it was added to evaluate has been implemented and standardized.
+      // TODO(crbug.com/40640080): Consider removing this histogram. The
+      // decision it was added to evaluate has been implemented and
+      // standardized.
       CookieSource cookie_source_sample =
           (source_url.SchemeIsCryptographic()
                ? (cc->SecureAttribute()
@@ -2201,7 +2233,7 @@ size_t CookieMonster::GarbageCollectPartitionedCookies(
   if (NumBytesInCookieMapForKey(*cookie_partition_it->second.get(), key) >
           kPerPartitionDomainMaxCookieBytes ||
       cookie_partition_it->second->count(key) > kPerPartitionDomainMaxCookies) {
-    // TODO(crbug.com/1225444): Log garbage collection for partitioned cookies.
+    // TODO(crbug.com/40188414): Log garbage collection for partitioned cookies.
 
     CookieItVector non_expired_cookie_its;
     num_deleted += GarbageCollectExpiredPartitionedCookies(
@@ -2212,7 +2244,7 @@ size_t CookieMonster::GarbageCollectPartitionedCookies(
 
     if (bytes_used > kPerPartitionDomainMaxCookieBytes ||
         non_expired_cookie_its.size() > kPerPartitionDomainMaxCookies) {
-      // TODO(crbug.com/1225444): Log deep garbage collection for partitioned
+      // TODO(crbug.com/40188414): Log deep garbage collection for partitioned
       // cookies.
       std::sort(non_expired_cookie_its.begin(), non_expired_cookie_its.end(),
                 LRACookieSorter);
@@ -2230,7 +2262,7 @@ size_t CookieMonster::GarbageCollectPartitionedCookies(
     }
   }
 
-  // TODO(crbug.com/1225444): Enforce global limit on partitioned cookies.
+  // TODO(crbug.com/40188414): Enforce global limit on partitioned cookies.
 
   return num_deleted;
 }
@@ -2675,6 +2707,9 @@ void CookieMonster::DoCookieCallback(base::OnceClosure callback) {
   seen_global_task_ = true;
 
   if (!finished_fetching_all_cookies_ && store_.get()) {
+    if (tasks_pending_.empty()) {
+      time_start_block_load_all_ = base::TimeTicks::Now();
+    }
     tasks_pending_.push_back(std::move(callback));
     return;
   }

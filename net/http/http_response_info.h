@@ -108,7 +108,7 @@ class NET_EXPORT HttpResponseInfo {
   // If true and this struct was not restored from pickled data, `proxy_chain`
   // contains the proxy chain that was used.
   //
-  // TODO(https://crbug.com/653354): Remove this in favor of `proxy_chain`.
+  // TODO(crbug.com/40487912): Remove this in favor of `proxy_chain`.
   bool was_fetched_via_proxy = false;
 
   // Information about the proxy chain used to fetch this response, if any.
@@ -116,7 +116,7 @@ class NET_EXPORT HttpResponseInfo {
   // This field is not persisted by `Persist()` and not restored by
   // `InitFromPickle()`.
   //
-  // TODO(https://crbug.com/653354): Support this field in `Persist()` and
+  // TODO(crbug.com/40487912): Support this field in `Persist()` and
   // `InitFromPickle()` then use it to replace `was_fetched_via_proxy`.
   ProxyChain proxy_chain;
 
@@ -162,8 +162,8 @@ class NET_EXPORT HttpResponseInfo {
 
   // The reason why Chrome uses a specific transport protocol for HTTP
   // semantics.
-  net::AlternateProtocolUsage alternate_protocol_usage =
-      net::AlternateProtocolUsage::ALTERNATE_PROTOCOL_USAGE_UNSPECIFIED_REASON;
+  AlternateProtocolUsage alternate_protocol_usage =
+      AlternateProtocolUsage::ALTERNATE_PROTOCOL_USAGE_UNSPECIFIED_REASON;
 
   // The type of connection used for this response.
   HttpConnectionInfo connection_info = HttpConnectionInfo::kUNKNOWN;

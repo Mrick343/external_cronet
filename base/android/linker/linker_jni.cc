@@ -2,7 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "base/android/linker/linker_jni.h"
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
 
 #include <android/dlext.h>
 #include <dlfcn.h>
@@ -18,6 +21,9 @@
 #include <unistd.h>
 
 #include <memory>
+
+// Must come after all headers that specialize FromJniType() / ToJniType().
+#include "base/android/linker/linker_jni.h"
 
 namespace chromium_android_linker {
 

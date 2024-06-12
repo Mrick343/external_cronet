@@ -87,10 +87,10 @@ class NET_EXPORT HostResolver {
   // Handler for an individual host resolution request. Created by
   // HostResolver::CreateRequest().
   //
-  // TODO(crbug.com/1290920): Most result retrieval here follows a pattern where
-  // it may return null or empty for requests where that result type is not
-  // available. Clean this up to always return empty for such cases and remove
-  // nullability from the return types.
+  // TODO(crbug.com/40212535): Most result retrieval here follows a pattern
+  // where it may return null or empty for requests where that result type is
+  // not available. Clean this up to always return empty for such cases and
+  // remove nullability from the return types.
   class ResolveHostRequest {
    public:
     // Destruction cancels the request if running asynchronously, causing the
@@ -120,7 +120,7 @@ class NET_EXPORT HostResolver {
     // returning a result other than |ERR_IO_PENDING|. May return nullptr or
     // empty for non-address requests.
     //
-    // TODO(crbug.com/1264933): Remove and replace all usage with
+    // TODO(crbug.com/40203587): Remove and replace all usage with
     // GetEndpointResults().
     virtual const AddressList* GetAddressResults() const = 0;
 
@@ -192,6 +192,65 @@ class NET_EXPORT HostResolver {
     // the request is running (after Start() returns |ERR_IO_PENDING| and before
     // the callback is invoked).
     virtual void ChangeRequestPriority(RequestPriority priority) {}
+  };
+
+  // Handler for a service endpoint resolution request. Unlike
+  // ResolveHostRequest, which waits for all responses, this could provide
+  // intermediate endpoint candidates in the middle of the resolution.
+  //
+  // A client owns an instance of this class. Destruction cancels the request.
+  class ServiceEndpointRequest {
+   public:
+    class Delegate {
+     public:
+      virtual ~Delegate() = default;
+
+      // Called when the request has updated endpoints.
+      virtual void OnServiceEndpointsUpdated() = 0;
+
+      // Called when all queries are responded or an error occurred.
+      // Note that this can be called without OnServiceEndpointsUpdated().
+      virtual void OnServiceEndpointRequestFinished(int rv) = 0;
+    };
+
+    virtual ~ServiceEndpointRequest() = default;
+
+    // Starts resolving service endpoints. `delegate` is used only when this
+    // method returns ERR_IO_PENDING. When the return value is other than
+    // ERR_IO_PENDING, resolution completed (or an error occurred)
+    // synchronously, and GetEndpointResults() will return finalized results.
+    virtual int Start(Delegate* delegate) = 0;
+
+    // The current available service endpoints. These can be changed over time
+    // while resolution is still ongoing. Changes are signaled by a call to the
+    // delegate's OnServiceEndpointsUpdated(). Results are finalized when
+    // Start() finished synchronously (returning other than ERR_IO_PENDING), or
+    // delegate's OnServiceEndpointRequestFinished() is called.
+    virtual const std::vector<ServiceEndpoint>& GetEndpointResults() = 0;
+
+    // Any DNS record aliases, such as CNAME aliases, found as a result of
+    // addresses and HTTPS queries. These can be changed over time while
+    // resolution is still ongoing. See also the comment on
+    // Request::GetDnsAliasResults() for details.
+    virtual const std::set<std::string>& GetDnsAliasResults() = 0;
+
+    // True if the client of this request can attempt cryptographic handshakes.
+    // If false, the provided service endpoints via GetEndpointResults() are not
+    // finalized to the point to allow completing transactions, and data or
+    // cryptographic handshakes must not be sent. This can be changed over time
+    // while resolution is still ongoing.
+    // TODO(crbug.com/41493696): Consider renaming this to
+    // `IsSvcbResolutionCompleted()` when Chrome supports HTTPS follow-up
+    // queries.
+    virtual bool EndpointsCryptoReady() = 0;
+
+    // Returns the error info of this request. This can be changed over time
+    // while resolution is still ongoing. In general, should be called only
+    // after resolution completed.
+    virtual ResolveErrorInfo GetResolveErrorInfo() = 0;
+
+    // Change the priority of this request.
+    virtual void ChangeRequestPriority(RequestPriority priority) = 0;
   };
 
   // Handler for an activation of probes controlled by a HostResolver. Created
@@ -341,11 +400,11 @@ class NET_EXPORT HostResolver {
     // the system resolver, e.g. non-address requests or requests specifying a
     // non-`SYSTEM` `source`.
     //
-    // TODO(crbug.com/1282281): Consider allowing the built-in resolver to still
-    // be used with this parameter. Would then function as a request to just
-    // keep the single final name from the alias chain instead of all aliases,
-    // and also skip the canonicalization unless that canonicalization is found
-    // to be fine for usage.
+    // TODO(crbug.com/40209534): Consider allowing the built-in resolver to
+    // still be used with this parameter. Would then function as a request to
+    // just keep the single final name from the alias chain instead of all
+    // aliases, and also skip the canonicalization unless that canonicalization
+    // is found to be fine for usage.
     bool include_canonical_name = false;
 
     // Hint to the resolver that resolution is only being requested for loopback
@@ -431,12 +490,19 @@ class NET_EXPORT HostResolver {
       std::optional<ResolveHostParameters> optional_parameters) = 0;
 
   // Create requests when scheme is unknown or non-standard.
-  // TODO(crbug.com/1206799): Rename to discourage use when scheme is known.
+  // TODO(crbug.com/40181080): Rename to discourage use when scheme is known.
   virtual std::unique_ptr<ResolveHostRequest> CreateRequest(
       const HostPortPair& host,
       const NetworkAnonymizationKey& network_anonymization_key,
       const NetLogWithSource& net_log,
       const std::optional<ResolveHostParameters>& optional_parameters) = 0;
+
+  // Creates a service endpoint resolution request.
+  virtual std::unique_ptr<ServiceEndpointRequest> CreateServiceEndpointRequest(
+      Host host,
+      NetworkAnonymizationKey network_anonymization_key,
+      NetLogWithSource net_log,
+      ResolveHostParameters parameters) = 0;
 
   // Creates a request to probe configured DoH servers to find which can be used
   // successfully.
@@ -515,7 +581,7 @@ class NET_EXPORT HostResolver {
   // Builds an AddressList from the first non-protocol endpoint found in
   // `endpoints`.
   //
-  // TODO(crbug.com/1264933): Delete once `AddressList` usage is fully replaced
+  // TODO(crbug.com/40203587): Delete once `AddressList` usage is fully replaced
   // in `HostResolver` and results.
   static AddressList EndpointResultToAddressList(
       base::span<const HostResolverEndpointResult> endpoints,

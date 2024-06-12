@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #import "base/message_loop/message_pump_apple.h"
 
 #import <Foundation/Foundation.h>
@@ -472,10 +477,7 @@ void MessagePumpCFRunLoopBase::RunIdleWork() {
   // objects if the app is not currently handling a UI event to ensure they're
   // released promptly even in the absence of UI events.
   OptionalAutoreleasePool autorelease_pool(this);
-  bool did_work = delegate_->DoIdleWork();
-  if (did_work) {
-    CFRunLoopSourceSignal(work_source_.get());
-  }
+  delegate_->DoIdleWork();
 }
 
 // Called from the run loop.
@@ -729,11 +731,11 @@ MessagePumpUIApplication::MessagePumpUIApplication()
 MessagePumpUIApplication::~MessagePumpUIApplication() = default;
 
 void MessagePumpUIApplication::DoRun(Delegate* delegate) {
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
 }
 
 bool MessagePumpUIApplication::DoQuit() {
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return false;
 }
 

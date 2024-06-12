@@ -124,6 +124,7 @@ def __step_config(ctx, step_config):
         ],
     })
     step_config["input_deps"].update(clang_all.input_deps)
+
     step_config["rules"].extend([
         {
             "name": "clang/cxx",
@@ -146,6 +147,17 @@ def __step_config(ctx, step_config):
             ],
             "exclude_input_patterns": ["*.stamp"],
             "remote": True,
+            "canonicalize_dir": True,
+            "timeout": "2m",
+        },
+        {
+            "name": "clang/asm",
+            "action": "(.*_)?asm",
+            "command_prefix": "../../third_party/llvm-build/Release+Asserts/bin/clang",
+            "inputs": [
+                "third_party/llvm-build/Release+Asserts/bin/clang",
+            ],
+            "remote": config.get(ctx, "cog"),
             "canonicalize_dir": True,
             "timeout": "2m",
         },
@@ -196,6 +208,8 @@ def __step_config(ctx, step_config):
                     "*.stamp",
                 ],
                 "remote": config.get(ctx, "remote-library-link"),
+                "canonicalize_dir": True,
+                "timeout": "2m",
                 "platform_ref": "large",
                 "accumulate": True,
             },
@@ -219,7 +233,9 @@ def __step_config(ctx, step_config):
                     "*.stamp",
                 ],
                 "remote": config.get(ctx, "remote-library-link"),
+                "canonicalize_dir": True,
                 "platform_ref": "large",
+                "timeout": "2m",
             },
             {
                 "name": "clang/link/gcc_link_wrapper",
@@ -241,7 +257,9 @@ def __step_config(ctx, step_config):
                     "*.stamp",
                 ],
                 "remote": config.get(ctx, "remote-exec-link"),
+                "canonicalize_dir": True,
                 "platform_ref": "large",
+                "timeout": "10m",
             },
         ])
     return step_config
