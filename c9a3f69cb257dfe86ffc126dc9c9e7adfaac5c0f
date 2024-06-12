@@ -34,6 +34,24 @@
       "parentUuid": "28ca8654_d9e4abc7",
       "revId": "c9a3f69cb257dfe86ffc126dc9c9e7adfaac5c0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ab69a35_76f0df82",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-12T09:47:56Z",
+      "side": 1,
+      "message": "Motomu is doing imports but not merging to main so the main Android.bp has not been updated in a while, I will try doing the LASTCOMMIT.date once I have some time.",
+      "parentUuid": "fff39ef8_a013d09b",
+      "revId": "c9a3f69cb257dfe86ffc126dc9c9e7adfaac5c0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
