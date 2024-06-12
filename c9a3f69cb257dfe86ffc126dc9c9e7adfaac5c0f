@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28ca8654_d9e4abc7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1976566
+      },
+      "writtenOn": "2024-06-12T09:38:35Z",
+      "side": 1,
+      "message": "What happened to the gen_android_bp fix?",
+      "revId": "c9a3f69cb257dfe86ffc126dc9c9e7adfaac5c0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
