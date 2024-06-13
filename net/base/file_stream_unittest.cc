@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/base/file_stream.h"
 
 #include <string>
@@ -517,8 +522,10 @@ class TestWriteReadCompletionCallback {
   int WaitForResult() {
     DCHECK(!waiting_for_result_);
     while (!have_result_) {
+      base::RunLoop loop;
+      quit_closure_ = loop.QuitWhenIdleClosure();
       waiting_for_result_ = true;
-      base::RunLoop().Run();
+      loop.Run();
       waiting_for_result_ = false;
     }
     have_result_ = false;  // auto-reset for next callback
@@ -581,7 +588,7 @@ class TestWriteReadCompletionCallback {
     result_ = *total_bytes_written_;
     have_result_ = true;
     if (waiting_for_result_)
-      base::RunLoop::QuitCurrentWhenIdleDeprecated();
+      std::move(quit_closure_).Run();
   }
 
   int result_ = 0;
@@ -592,6 +599,7 @@ class TestWriteReadCompletionCallback {
   raw_ptr<int> total_bytes_read_;
   raw_ptr<std::string> data_read_;
   scoped_refptr<DrainableIOBuffer> drainable_;
+  base::OnceClosure quit_closure_;
 };
 
 TEST_F(FileStreamTest, WriteRead) {
@@ -657,8 +665,10 @@ class TestWriteCloseCompletionCallback {
   int WaitForResult() {
     DCHECK(!waiting_for_result_);
     while (!have_result_) {
+      base::RunLoop loop;
+      quit_closure_ = loop.QuitWhenIdleClosure();
       waiting_for_result_ = true;
-      base::RunLoop().Run();
+      loop.Run();
       waiting_for_result_ = false;
     }
     have_result_ = false;  // auto-reset for next callback
@@ -692,7 +702,7 @@ class TestWriteCloseCompletionCallback {
     result_ = *total_bytes_written_;
     have_result_ = true;
     if (waiting_for_result_)
-      base::RunLoop::QuitCurrentWhenIdleDeprecated();
+      std::move(quit_closure_).Run();
   }
 
   int result_ = 0;
@@ -701,6 +711,7 @@ class TestWriteCloseCompletionCallback {
   raw_ptr<FileStream> stream_;
   raw_ptr<int> total_bytes_written_;
   scoped_refptr<DrainableIOBuffer> drainable_;
+  base::OnceClosure quit_closure_;
 };
 
 TEST_F(FileStreamTest, WriteClose) {
@@ -839,7 +850,7 @@ TEST_F(FileStreamTest, AsyncFlagMismatch) {
 #endif
 
 #if BUILDFLAG(IS_ANDROID)
-// TODO(https://crbug.com/894599): flaky on both android and cronet bots.
+// TODO(crbug.com/41420277): flaky on both android and cronet bots.
 TEST_F(FileStreamTest, DISABLED_ContentUriRead) {
   base::FilePath test_dir;
   base::PathService::Get(base::DIR_SRC_TEST_DATA_ROOT, &test_dir);

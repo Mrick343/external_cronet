@@ -16,7 +16,6 @@
 #include "base/synchronization/waitable_event.h"
 #include "base/test/test_support_android.h"
 #include "base/threading/thread.h"
-#include "components/cronet/android/cronet_test_apk_jni/QuicTestServer_jni.h"
 #include "components/cronet/android/test/cronet_test_util.h"
 #include "net/base/ip_address.h"
 #include "net/base/ip_endpoint.h"
@@ -24,6 +23,9 @@
 #include "net/test/test_data_directory.h"
 #include "net/third_party/quiche/src/quiche/quic/tools/quic_memory_cache_backend.h"
 #include "net/tools/quic/quic_simple_server.h"
+
+// Must come after all headers that specialize FromJniType() / ToJniType().
+#include "components/cronet/android/cronet_test_apk_jni/QuicTestServer_jni.h"
 
 using base::android::JavaParamRef;
 using base::android::ScopedJavaLocalRef;
@@ -93,7 +95,7 @@ void SetResponseDelayOnServerThread(const std::string& path,
   CHECK(g_quic_server_thread->task_runner()->BelongsToCurrentThread());
   CHECK(g_quic_memory_cache_backend);
 
-  // TODO(crbug.com/1487185): Stop hardcoding server hostname.
+  // TODO(crbug.com/40283192): Stop hardcoding server hostname.
   CHECK(g_quic_memory_cache_backend->SetResponseDelay(
       base::StringPrintf("%s:%d", "test.example.com", kServerPort), path,
       quic::QuicTime::Delta::FromMicroseconds(delay.InMicroseconds())));

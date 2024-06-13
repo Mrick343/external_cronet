@@ -4,9 +4,10 @@
 
 #include "net/cert/internal/cert_issuer_source_aia.h"
 
+#include <string_view>
+
 #include "base/containers/span.h"
 #include "base/logging.h"
-#include "base/strings/string_piece.h"
 #include "net/cert/cert_net_fetcher.h"
 #include "net/cert/x509_util.h"
 #include "third_party/boringssl/src/pki/cert_errors.h"
@@ -28,7 +29,7 @@ bool ParseCertFromDer(base::span<const uint8_t> data,
   if (!bssl::ParsedCertificate::CreateAndAddToVector(
           x509_util::CreateCryptoBuffer(data),
           x509_util::DefaultParseCertificateOptions(), results, &errors)) {
-    // TODO(crbug.com/634443): propagate error info.
+    // TODO(crbug.com/41267838): propagate error info.
     // TODO(mattm): this creates misleading log spam if one of the other Parse*
     // methods is actually able to parse the data.
     LOG(ERROR) << "Error parsing cert retrieved from AIA (as DER):\n"
@@ -57,7 +58,7 @@ bool ParseCertsFromCms(base::span<const uint8_t> data,
     if (!bssl::ParsedCertificate::CreateAndAddToVector(
             std::move(cert_buffer), x509_util::DefaultParseCertificateOptions(),
             results, &errors)) {
-      // TODO(crbug.com/634443): propagate error info.
+      // TODO(crbug.com/41267838): propagate error info.
       LOG(ERROR) << "Error parsing cert extracted from AIA PKCS7:\n"
                  << errors.ToDebugString();
       continue;
@@ -70,14 +71,13 @@ bool ParseCertsFromCms(base::span<const uint8_t> data,
 bool ParseCertFromPem(const uint8_t* data,
                       size_t length,
                       bssl::ParsedCertificateList* results) {
-  base::StringPiece data_strpiece(reinterpret_cast<const char*>(data), length);
+  std::string_view data_strpiece(reinterpret_cast<const char*>(data), length);
 
   bssl::PEMTokenizer pem_tokenizer(data_strpiece, {"CERTIFICATE"});
   if (!pem_tokenizer.GetNext())
     return false;
 
-  return ParseCertFromDer(base::as_bytes(base::make_span(pem_tokenizer.data())),
-                          results);
+  return ParseCertFromDer(base::as_byte_span(pem_tokenizer.data()), results);
 }
 
 class AiaRequest : public bssl::CertIssuerSource::Request {
@@ -143,7 +143,7 @@ bool AiaRequest::AddCompletedFetchToResults(
   //    certificates MUST be able to accept individual DER encoded
   //    certificates and SHOULD be able to accept "certs-only" CMS messages.
 
-  // TODO(https://crbug.com/870359): Some AIA responses are served as PEM, which
+  // TODO(crbug.com/41405652): Some AIA responses are served as PEM, which
   // is not part of RFC 5280's profile.
   return ParseCertFromDer(fetched_bytes, results) ||
          ParseCertsFromCms(fetched_bytes, results) ||

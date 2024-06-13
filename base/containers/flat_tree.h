@@ -2,12 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #ifndef BASE_CONTAINERS_FLAT_TREE_H_
 #define BASE_CONTAINERS_FLAT_TREE_H_
 
 #include <algorithm>
 #include <array>
 #include <compare>
+#include <functional>
 #include <initializer_list>
 #include <iterator>
 #include <type_traits>
@@ -15,7 +21,6 @@
 
 #include "base/check.h"
 #include "base/compiler_specific.h"
-#include "base/functional/not_fn.h"
 #include "base/memory/raw_ptr_exclusion.h"
 #include "base/ranges/algorithm.h"
 
@@ -38,7 +43,7 @@ constexpr bool is_sorted_and_unique(const Range& range, Comp comp) {
   // Being unique implies that there are no adjacent elements that
   // compare equal. So this checks that each element is strictly less
   // than the element after it.
-  return ranges::adjacent_find(range, base::not_fn(comp)) == ranges::end(range);
+  return ranges::adjacent_find(range, std::not_fn(comp)) == ranges::end(range);
 }
 
 // Helper inspired by C++20's std::to_array to convert a C-style array to a
@@ -398,10 +403,9 @@ class flat_tree {
     const K& extract_if_value_type(const K& k) const {
       return k;
     }
-    // This field was not rewritten into `const raw_ref<const key_compare>` due
-    // to binary size increase. There's also little value to rewriting this
-    // member as it points to `flat_tree::comp_`. The flat_tree itself should be
-    // holding raw_ptr/raw_ref if necessary.
+    // RAW_PTR_EXCLUSION: Binary size increase. There's also little value to
+    // rewriting this member as it points to `flat_tree::comp_` and flat_tree
+    // itself should be holding raw_ptr/raw_ref if necessary.
     RAW_PTR_EXCLUSION const key_compare& comp_;
   };
 
@@ -476,7 +480,7 @@ class flat_tree {
     std::stable_sort(first, last, value_comp());
 
     // lhs is already <= rhs due to sort, therefore !(lhs < rhs) <=> lhs == rhs.
-    auto equal_comp = base::not_fn(value_comp());
+    auto equal_comp = std::not_fn(value_comp());
     erase(std::unique(first, last, equal_comp), last);
   }
 

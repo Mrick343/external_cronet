@@ -6,9 +6,7 @@
 
 #if !defined(MEMORY_TOOL_REPLACES_ALLOCATOR)
 
-#include "partition_alloc/starscan/pcscan.h"
-
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc-inl.h"
 #include "partition_alloc/partition_alloc_base/bits.h"
 #include "partition_alloc/partition_alloc_base/compiler_specific.h"
@@ -18,12 +16,15 @@
 #include "partition_alloc/partition_alloc_config.h"
 #include "partition_alloc/partition_alloc_constants.h"
 #include "partition_alloc/partition_alloc_for_testing.h"
+#include "partition_alloc/partition_freelist_entry.h"
 #include "partition_alloc/partition_root.h"
-#include "partition_alloc/starscan/stack/stack.h"
+#include "partition_alloc/stack/stack.h"
+#include "partition_alloc/starscan/pcscan.h"
 #include "partition_alloc/tagging.h"
+#include "partition_alloc/use_death_tests.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
-#if BUILDFLAG(USE_STARSCAN)
+#if PA_BUILDFLAG(USE_STARSCAN)
 
 namespace partition_alloc::internal {
 
@@ -53,7 +54,6 @@ class PartitionAllocPCScanTestBase : public testing::Test {
   PartitionAllocPCScanTestBase()
       : allocator_([]() {
           PartitionOptions opts;
-          opts.aligned_alloc = PartitionOptions::kAllowed;
           opts.star_scan_quarantine = PartitionOptions::kAllowed;
           opts.memory_tagging = {
               .enabled = base::CPU::GetInstanceNoAllocation().has_mte()
@@ -123,10 +123,8 @@ class PartitionAllocPCScanTest : public PartitionAllocPCScanTestBase {
   }
 };
 
-using SlotSpan = PartitionRoot::SlotSpan;
-
 struct FullSlotSpanAllocation {
-  SlotSpan* slot_span;
+  SlotSpanMetadata* slot_span;
   void* first;
   void* last;
 };
@@ -154,7 +152,8 @@ FullSlotSpanAllocation GetFullSlotSpan(PartitionRoot& root,
     }
   }
 
-  EXPECT_EQ(SlotSpan::FromSlotStart(first), SlotSpan::FromSlotStart(last));
+  EXPECT_EQ(SlotSpanMetadata::FromSlotStart(first),
+            SlotSpanMetadata::FromSlotStart(last));
   if (bucket.num_system_pages_per_slot_span ==
       NumSystemPagesPerPartitionPage()) {
     // Pointers are expected to be in the same partition page, but have a
@@ -166,7 +165,7 @@ FullSlotSpanAllocation GetFullSlotSpan(PartitionRoot& root,
   EXPECT_EQ(nullptr, bucket.active_slot_spans_head->get_freelist_head());
   EXPECT_TRUE(bucket.is_valid());
   EXPECT_TRUE(bucket.active_slot_spans_head !=
-              SlotSpan::get_sentinel_slot_span());
+              SlotSpanMetadata::get_sentinel_slot_span());
 
   return {bucket.active_slot_spans_head, root.SlotStartToObject(first),
           root.SlotStartToObject(last)};
@@ -175,9 +174,12 @@ FullSlotSpanAllocation GetFullSlotSpan(PartitionRoot& root,
 bool IsInFreeList(uintptr_t slot_start) {
   // slot_start isn't MTE-tagged, whereas pointers in the freelist are.
   void* slot_start_tagged = SlotStartAddr2Ptr(slot_start);
-  auto* slot_span = SlotSpan::FromSlotStart(slot_start);
+  auto* slot_span = SlotSpanMetadata::FromSlotStart(slot_start);
+  const PartitionFreelistDispatcher* freelist_dispatcher =
+      PartitionRoot::FromSlotSpanMetadata(slot_span)->get_freelist_dispatcher();
   for (auto* entry = slot_span->get_freelist_head(); entry;
-       entry = entry->GetNext(slot_span->bucket->slot_size)) {
+       entry =
+           freelist_dispatcher->GetNext(entry, slot_span->bucket->slot_size)) {
     if (entry == slot_start_tagged) {
       return true;
     }
@@ -338,17 +340,19 @@ TEST_F(PartitionAllocPCScanTest, DanglingReferenceDifferentBucketsAligned) {
     size_t i = 0;
     uintptr_t first_slot_span_end = 0;
     uintptr_t second_slot_span_start = 0;
-    IterateSlotSpans(super_page, true, [&](SlotSpan* slot_span) -> bool {
-      if (i == 0) {
-        first_slot_span_end =
-            SlotSpan::ToSlotSpanStart(slot_span) +
-            slot_span->bucket->get_pages_per_slot_span() * PartitionPageSize();
-      } else {
-        second_slot_span_start = SlotSpan::ToSlotSpanStart(slot_span);
-      }
-      ++i;
-      return false;
-    });
+    IterateSlotSpans(
+        super_page, true, [&](SlotSpanMetadata* slot_span) -> bool {
+          if (i == 0) {
+            first_slot_span_end = SlotSpanMetadata::ToSlotSpanStart(slot_span) +
+                                  slot_span->bucket->get_pages_per_slot_span() *
+                                      PartitionPageSize();
+          } else {
+            second_slot_span_start =
+                SlotSpanMetadata::ToSlotSpanStart(slot_span);
+          }
+          ++i;
+          return false;
+        });
     ASSERT_EQ(i, 2u);
     ASSERT_GT(second_slot_span_start, first_slot_span_end);
   }
@@ -371,8 +375,8 @@ TEST_F(PartitionAllocPCScanTest,
   // Assert that the first and the last objects are in the same slot span but on
   // different partition pages.
   // Converting to slot start also takes care of the MTE-tag difference.
-  ASSERT_EQ(SlotSpan::FromObject(full_slot_span.first),
-            SlotSpan::FromObject(full_slot_span.last));
+  ASSERT_EQ(SlotSpanMetadata::FromObject(full_slot_span.first),
+            SlotSpanMetadata::FromObject(full_slot_span.last));
   uintptr_t first_slot_start = root().ObjectToSlotStart(full_slot_span.first);
   uintptr_t last_slot_start = root().ObjectToSlotStart(full_slot_span.last);
   ASSERT_NE(first_slot_start & PartitionPageBaseMask(),
@@ -400,9 +404,10 @@ TEST_F(PartitionAllocPCScanTest, DanglingReferenceFromFullPage) {
 
   // Assert that the first and the last objects are in different slot spans but
   // in the same bucket.
-  SlotSpan* source_slot_span =
-      PartitionRoot::SlotSpan::FromObject(source_buffer);
-  SlotSpan* value_slot_span = PartitionRoot::SlotSpan::FromObject(value_buffer);
+  SlotSpanMetadata* source_slot_span =
+      PartitionRoot::SlotSpanMetadata::FromObject(source_buffer);
+  SlotSpanMetadata* value_slot_span =
+      PartitionRoot::SlotSpanMetadata::FromObject(value_buffer);
   ASSERT_NE(source_slot_span, value_slot_span);
   ASSERT_EQ(source_slot_span->bucket, value_slot_span->bucket);
 
@@ -433,7 +438,7 @@ struct ListWithInnerReference {
 };
 
 // Disabled due to consistent failure http://crbug.com/1242407
-#if BUILDFLAG(IS_ANDROID)
+#if PA_BUILDFLAG(IS_ANDROID)
 #define MAYBE_DanglingInnerReference DISABLED_DanglingInnerReference
 #else
 #define MAYBE_DanglingInnerReference DanglingInnerReference
@@ -526,16 +531,15 @@ TEST_F(PartitionAllocPCScanTest, DanglingReferenceFromNonScannablePartition) {
   TestDanglingReferenceNotVisited(*this, value, value_root);
 }
 
-// Death tests misbehave on Android, http://crbug.com/643760.
-#if defined(GTEST_HAS_DEATH_TEST) && !BUILDFLAG(IS_ANDROID)
-#if PA_CONFIG(STARSCAN_EAGER_DOUBLE_FREE_DETECTION_ENABLED)
+#if PA_USE_DEATH_TESTS() && \
+    PA_CONFIG(STARSCAN_EAGER_DOUBLE_FREE_DETECTION_ENABLED)
 TEST_F(PartitionAllocPCScanTest, DoubleFree) {
   auto* list = List<1>::Create(root());
   List<1>::Destroy(root(), list);
   EXPECT_DEATH(List<1>::Destroy(root(), list), "");
 }
-#endif  // PA_CONFIG(STARSCAN_EAGER_DOUBLE_FREE_DETECTION_ENABLED)
-#endif  // defined(GTEST_HAS_DEATH_TEST) && !BUILDFLAG(IS_ANDROID)
+#endif  // PA_USE_DEATH_TESTS() &&
+        // PA_CONFIG(STARSCAN_EAGER_DOUBLE_FREE_DETECTION_ENABLED)
 
 template <typename SourceList, typename ValueList>
 void TestDanglingReferenceWithSafepoint(PartitionAllocPCScanTest& test,
@@ -603,7 +607,7 @@ class PartitionAllocPCScanStackScanningTest : public PartitionAllocPCScanTest {
 
   PA_NOINLINE void SetupAndRunTest() {
     // Register the top of the stack to be the current pointer.
-    PCScan::NotifyThreadCreated(GetStackPointer());
+    StackTopRegistry::Get().NotifyThreadCreated();
     RunTest();
   }
 
@@ -725,7 +729,7 @@ TEST_F(PartitionAllocPCScanTest, TwoDanglingPointersToSameObject) {
   EXPECT_TRUE(IsInQuarantine(value));
 
   // Check that accounted size after the cycle is only sizeof ValueList.
-  auto* slot_span_metadata = SlotSpan::FromObject(value);
+  auto* slot_span_metadata = SlotSpanMetadata::FromObject(value);
   const auto& quarantine =
       PCScan::scheduler().scheduling_backend().GetQuarantineData();
   EXPECT_EQ(slot_span_metadata->bucket->slot_size, quarantine.current_size);
@@ -782,7 +786,7 @@ TEST_F(PartitionAllocPCScanTest, DanglingPointerOutsideUsablePart) {
   TestDanglingReference(*this, source, value, root());
 }
 
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
+#if PA_BUILDFLAG(HAS_MEMORY_TAGGING)
 TEST_F(PartitionAllocPCScanWithMTETest, QuarantineOnlyOnTagOverflow) {
   using ListType = List<64>;
 
@@ -824,11 +828,11 @@ TEST_F(PartitionAllocPCScanWithMTETest, QuarantineOnlyOnTagOverflow) {
 
   EXPECT_FALSE(true && "Should never be reached");
 }
-#endif  // PA_CONFIG(HAS_MEMORY_TAGGING)
+#endif  // PA_BUILDFLAG(HAS_MEMORY_TAGGING)
 
 }  // namespace
 
 }  // namespace partition_alloc::internal
 
-#endif  // BUILDFLAG(USE_STARSCAN)
+#endif  // PA_BUILDFLAG(USE_STARSCAN)
 #endif  // defined(MEMORY_TOOL_REPLACES_ALLOCATOR)

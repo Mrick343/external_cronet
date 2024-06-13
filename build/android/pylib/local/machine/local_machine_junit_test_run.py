@@ -155,7 +155,10 @@ class LocalMachineJunitTestRun(test_run.TestRun):
     return os.path.join(constants.GetOutDirectory(), 'bin', 'helper',
                         self._test_instance.suite)
 
-  def _QueryTestJsonConfig(self, temp_dir, allow_debugging=True):
+  def _QueryTestJsonConfig(self,
+                           temp_dir,
+                           allow_debugging=True,
+                           enable_shadow_allowlist=False):
     json_config_path = os.path.join(temp_dir, 'main_test_config.json')
     cmd = [self._wrapper_path]
     # Allow debugging of test listing when run as:
@@ -166,6 +169,8 @@ class LocalMachineJunitTestRun(test_run.TestRun):
       cmd += ['--jvm-args', '"%s"' % ' '.join(jvm_args)]
     cmd += ['--classpath', self._CreatePropertiesJar(temp_dir)]
     cmd += ['--list-tests', '--json-config', json_config_path]
+    if enable_shadow_allowlist and self._test_instance.shadows_allowlist:
+      cmd += ['--shadows-allowlist', self._test_instance.shadows_allowlist]
     cmd += self._GetFilterArgs()
     subprocess.run(cmd, check=True)
     with open(json_config_path) as f:
@@ -224,9 +229,12 @@ class LocalMachineJunitTestRun(test_run.TestRun):
       with open(self._test_instance.json_config) as f:
         json_config = json.load(f)
     else:
-      # TODO(1384204): This step can take 3-4 seconds for chrome_junit_tests.
+      # TODO(crbug.com/40878339): This step can take 3-4 seconds for
+      # chrome_junit_tests.
       try:
-        json_config = self._QueryTestJsonConfig(temp_dir, allow_debugging=False)
+        json_config = self._QueryTestJsonConfig(temp_dir,
+                                                allow_debugging=False,
+                                                enable_shadow_allowlist=True)
       except subprocess.CalledProcessError:
         results.append(_MakeUnknownFailureResult('Filter matched no tests'))
         return
@@ -261,7 +269,7 @@ class LocalMachineJunitTestRun(test_run.TestRun):
     failed_test_logs = {}
     log_lines = []
     current_test = None
-    for line in _RunCommandsAndSerializeOutput(jobs, num_workers):
+    for line in RunCommandsAndSerializeOutput(jobs, num_workers):
       if raw_logs_fh:
         raw_logs_fh.write(line)
       if show_logcat or not _LOGCAT_RE.match(line):
@@ -387,7 +395,7 @@ def _DumpJavaStacks(pid):
   return result.stdout
 
 
-def _RunCommandsAndSerializeOutput(jobs, num_workers):
+def RunCommandsAndSerializeOutput(jobs, num_workers):
   """Runs multiple commands in parallel and yields serialized output lines.
 
   Raises:
@@ -415,7 +423,8 @@ def _RunCommandsAndSerializeOutput(jobs, num_workers):
       s_err = temp_files[idx]
 
     job = jobs[idx]
-    proc = cmd_helper.Popen(job.cmd, stdout=s_out, stderr=s_err)
+    proc = cmd_helper.Popen(job.cmd, stdout=s_out, stderr=s_err,
+                            env=getattr(job, 'env', None))
     # Need to return process so that output can be displayed on stdout
     # in real time.
     if idx == 0:
@@ -452,7 +461,7 @@ def _RunCommandsAndSerializeOutput(jobs, num_workers):
   if timeout_dumps:
     yield '\n'
     yield ('=' * 80) + '\n'
-    yield '\nOne or mord shards timed out.\n'
+    yield '\nOne or more shards timed out.\n'
     yield ('=' * 80) + '\n'
     for i, dump in sorted(timeout_dumps.items()):
       job = jobs[i]

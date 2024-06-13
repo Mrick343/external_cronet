@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/disk_cache/simple/simple_file_tracker.h"
 
 #include <algorithm>
@@ -46,9 +51,9 @@ void SimpleFileTracker::Register(const SimpleSynchronousEntry* owner,
     base::AutoLock hold_lock(lock_);
 
     // Make sure the list of everything with given hash exists.
-    auto insert_status = tracked_files_.insert(
-        std::make_pair(owner->entry_file_key().entry_hash,
-                       std::vector<std::unique_ptr<TrackedFiles>>()));
+    auto insert_status =
+        tracked_files_.emplace(owner->entry_file_key().entry_hash,
+                               std::vector<std::unique_ptr<TrackedFiles>>());
 
     std::vector<std::unique_ptr<TrackedFiles>>& candidates =
         insert_status.first->second;

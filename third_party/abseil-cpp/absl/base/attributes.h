@@ -702,6 +702,11 @@
   _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #define ABSL_INTERNAL_RESTORE_DEPRECATED_DECLARATION_WARNING \
   _Pragma("GCC diagnostic pop")
+#elif defined(_MSC_VER)
+#define ABSL_INTERNAL_DISABLE_DEPRECATED_DECLARATION_WARNING \
+  _Pragma("warning(push)") _Pragma("warning(disable: 4996)")
+#define ABSL_INTERNAL_RESTORE_DEPRECATED_DECLARATION_WARNING \
+  _Pragma("warning(pop)")
 #else
 #define ABSL_INTERNAL_DISABLE_DEPRECATED_DECLARATION_WARNING
 #define ABSL_INTERNAL_RESTORE_DEPRECATED_DECLARATION_WARNING
@@ -816,6 +821,32 @@
 #define ABSL_ATTRIBUTE_LIFETIME_BOUND
 #endif
 
+// ABSL_INTERNAL_ATTRIBUTE_VIEW indicates that a type acts like a view i.e. a
+// raw (non-owning) pointer. This enables diagnoses similar to those enabled by
+// ABSL_ATTRIBUTE_LIFETIME_BOUND.
+//
+// See the following links for details:
+// https://reviews.llvm.org/D64448
+// https://lists.llvm.org/pipermail/cfe-dev/2018-November/060355.html
+#if ABSL_HAVE_CPP_ATTRIBUTE(gsl::Pointer)
+#define ABSL_INTERNAL_ATTRIBUTE_VIEW [[gsl::Pointer]]
+#else
+#define ABSL_INTERNAL_ATTRIBUTE_VIEW
+#endif
+
+// ABSL_INTERNAL_ATTRIBUTE_OWNER indicates that a type acts like a smart
+// (owning) pointer. This enables diagnoses similar to those enabled by
+// ABSL_ATTRIBUTE_LIFETIME_BOUND.
+//
+// See the following links for details:
+// https://reviews.llvm.org/D64448
+// https://lists.llvm.org/pipermail/cfe-dev/2018-November/060355.html
+#if ABSL_HAVE_CPP_ATTRIBUTE(gsl::Owner)
+#define ABSL_INTERNAL_ATTRIBUTE_OWNER [[gsl::Owner]]
+#else
+#define ABSL_INTERNAL_ATTRIBUTE_OWNER
+#endif
+
 // ABSL_ATTRIBUTE_TRIVIAL_ABI
 // Indicates that a type is "trivially relocatable" -- meaning it can be
 // relocated without invoking the constructor/destructor, using a form of move
@@ -843,15 +874,11 @@
 // See also the upstream documentation:
 // https://clang.llvm.org/docs/AttributeReference.html#trivial-abi
 //
-#if ABSL_HAVE_CPP_ATTRIBUTE(clang::trivial_abi)
-#define ABSL_ATTRIBUTE_TRIVIAL_ABI [[clang::trivial_abi]]
-#define ABSL_HAVE_ATTRIBUTE_TRIVIAL_ABI 1
-#elif ABSL_HAVE_ATTRIBUTE(trivial_abi)
-#define ABSL_ATTRIBUTE_TRIVIAL_ABI __attribute__((trivial_abi))
-#define ABSL_HAVE_ATTRIBUTE_TRIVIAL_ABI 1
-#else
+// b/321691395 - This is currently disabled in open-source builds since
+// compiler support differs. If system libraries compiled with GCC are mixed
+// with libraries compiled with Clang, types will have different ideas about
+// their ABI, leading to hard to debug crashes.
 #define ABSL_ATTRIBUTE_TRIVIAL_ABI
-#endif
 
 // ABSL_ATTRIBUTE_NO_UNIQUE_ADDRESS
 //
@@ -873,6 +900,53 @@
 #define ABSL_ATTRIBUTE_NO_UNIQUE_ADDRESS [[no_unique_address]]
 #else
 #define ABSL_ATTRIBUTE_NO_UNIQUE_ADDRESS
+#endif
+
+// ABSL_ATTRIBUTE_UNINITIALIZED
+//
+// GCC and Clang support a flag `-ftrivial-auto-var-init=<option>` (<option>
+// can be "zero" or "pattern") that can be used to initialize automatic stack
+// variables. Variables with this attribute will be left uninitialized,
+// overriding the compiler flag.
+//
+// See https://clang.llvm.org/docs/AttributeReference.html#uninitialized
+// and https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-uninitialized-variable-attribute
+#if ABSL_HAVE_CPP_ATTRIBUTE(clang::uninitialized)
+#define ABSL_ATTRIBUTE_UNINITIALIZED [[clang::uninitialized]]
+#elif ABSL_HAVE_CPP_ATTRIBUTE(gnu::uninitialized)
+#define ABSL_ATTRIBUTE_UNINITIALIZED [[gnu::uninitialized]]
+#elif ABSL_HAVE_ATTRIBUTE(uninitialized)
+#define ABSL_ATTRIBUTE_UNINITIALIZED __attribute__((uninitialized))
+#else
+#define ABSL_ATTRIBUTE_UNINITIALIZED
+#endif
+
+// ABSL_ATTRIBUTE_WARN_UNUSED
+//
+// Compilers routinely warn about trivial variables that are unused.  For
+// non-trivial types, this warning is suppressed since the
+// constructor/destructor may be intentional and load-bearing, for example, with
+// a RAII scoped lock.
+//
+// For example:
+//
+// class ABSL_ATTRIBUTE_WARN_UNUSED MyType {
+//  public:
+//   MyType();
+//   ~MyType();
+// };
+//
+// void foo() {
+//   // Warns with ABSL_ATTRIBUTE_WARN_UNUSED attribute present.
+//   MyType unused;
+// }
+//
+// See https://clang.llvm.org/docs/AttributeReference.html#warn-unused and
+// https://gcc.gnu.org/onlinedocs/gcc/C_002b_002b-Attributes.html#index-warn_005funused-type-attribute
+#if ABSL_HAVE_CPP_ATTRIBUTE(gnu::warn_unused)
+#define ABSL_ATTRIBUTE_WARN_UNUSED [[gnu::warn_unused]]
+#else
+#define ABSL_ATTRIBUTE_WARN_UNUSED
 #endif
 
 #endif  // ABSL_BASE_ATTRIBUTES_H_

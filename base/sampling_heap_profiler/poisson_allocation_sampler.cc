@@ -171,6 +171,14 @@ PoissonAllocationSampler::ScopedMuteHookedSamplesForTesting::
   ResetProfilingStateFlag(ProfilingStateFlag::kHookedSamplesMutedForTesting);
 }
 
+PoissonAllocationSampler::ScopedMuteHookedSamplesForTesting::
+    ScopedMuteHookedSamplesForTesting(ScopedMuteHookedSamplesForTesting&&) =
+        default;
+
+PoissonAllocationSampler::ScopedMuteHookedSamplesForTesting&
+PoissonAllocationSampler::ScopedMuteHookedSamplesForTesting::operator=(
+    ScopedMuteHookedSamplesForTesting&&) = default;
+
 // static
 ABSL_CONST_INIT std::atomic<PoissonAllocationSampler::ProfilingStateFlagMask>
     PoissonAllocationSampler::profiling_state_{0};
@@ -311,7 +319,8 @@ void PoissonAllocationSampler::DoRecordAllocation(
   }
 
   size_t total_allocated = mean_interval * samples;
-  for (auto* observer : observers_copy) {
+  for (base::PoissonAllocationSampler::SamplesObserver* observer :
+       observers_copy) {
     observer->SampleAdded(address, size, total_allocated, type, context);
   }
 }
@@ -328,7 +337,8 @@ void PoissonAllocationSampler::DoRecordFree(void* address) {
     observers_copy = observers_;
     sampled_addresses_set().Remove(address);
   }
-  for (auto* observer : observers_copy) {
+  for (base::PoissonAllocationSampler::SamplesObserver* observer :
+       observers_copy) {
     observer->SampleRemoved(address);
   }
 }
@@ -422,7 +432,7 @@ void PoissonAllocationSampler::RemoveSamplesObserver(
   ScopedMuteThreadSamples no_reentrancy_scope;
   AutoLock lock(mutex_);
   auto it = ranges::find(observers_, observer);
-  DCHECK(it != observers_.end());
+  CHECK(it != observers_.end(), base::NotFatalUntil::M125);
   observers_.erase(it);
 
   // Stop the profiler if there are no more observers. Setting/resetting

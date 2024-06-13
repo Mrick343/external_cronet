@@ -30,6 +30,11 @@ void PrefChangeRegistrar::Init(PrefService* service) {
   service_ = service;
 }
 
+void PrefChangeRegistrar::Reset() {
+  RemoveAll();
+  service_ = nullptr;
+}
+
 void PrefChangeRegistrar::Add(const std::string& path,
                               const base::RepeatingClosure& obs) {
   Add(path,
@@ -39,7 +44,7 @@ void PrefChangeRegistrar::Add(const std::string& path,
 void PrefChangeRegistrar::Add(const std::string& path,
                               const NamedChangeCallback& obs) {
   if (!service_) {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return;
   }
   DCHECK(!IsObserved(path)) << "Already had pref, \"" << path

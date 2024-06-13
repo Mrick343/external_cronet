@@ -7,20 +7,17 @@ package org.chromium.net.urlconnection;
 import org.chromium.net.UploadDataProvider;
 import org.chromium.net.UploadDataSink;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
- * An implementation of {@link java.io.OutputStream} that buffers entire request
- * body in memory. This is used when neither
- * {@link CronetHttpURLConnection#setFixedLengthStreamingMode}
- * nor {@link CronetHttpURLConnection#setChunkedStreamingMode} is set.
+ * An implementation of {@link java.io.OutputStream} that buffers entire request body in memory.
+ * This is used when neither {@link CronetHttpURLConnection#setFixedLengthStreamingMode} nor {@link
+ * CronetHttpURLConnection#setChunkedStreamingMode} is set.
  */
-@VisibleForTesting
-public final class CronetBufferedOutputStream extends CronetOutputStream {
+final class CronetBufferedOutputStream extends CronetOutputStream {
     // QUIC uses a read buffer of 14520 bytes, SPDY uses 2852 bytes, and normal
     // stream uses 16384 bytes. Therefore, use 16384 for now to avoid growing
     // the buffer too many times.
@@ -35,14 +32,13 @@ public final class CronetBufferedOutputStream extends CronetOutputStream {
 
     /**
      * Package protected constructor.
+     *
      * @param connection The CronetHttpURLConnection object.
-     * @param contentLength The content length of the request body. It must not
-     *            be smaller than 0 or bigger than {@link Integer.MAX_VALUE}.
+     * @param contentLength The content length of the request body. It must not be smaller than 0 or
+     *     bigger than {@link Integer.MAX_VALUE}.
      */
     CronetBufferedOutputStream(final CronetHttpURLConnection connection, final long contentLength) {
-        if (connection == null) {
-            throw new NullPointerException("Argument connection cannot be null.");
-        }
+        Objects.requireNonNull(connection, "Argument connection cannot be null.");
 
         if (contentLength > Integer.MAX_VALUE) {
             throw new IllegalArgumentException(
@@ -59,14 +55,11 @@ public final class CronetBufferedOutputStream extends CronetOutputStream {
 
     /**
      * Package protected constructor used when content length is not known.
+     *
      * @param connection The CronetHttpURLConnection object.
      */
     CronetBufferedOutputStream(final CronetHttpURLConnection connection) {
-        if (connection == null) {
-            throw new NullPointerException();
-        }
-
-        mConnection = connection;
+        mConnection = Objects.requireNonNull(connection);
         mInitialContentLength = -1;
         // Buffering without knowing content-length.
         mBuffer = ByteBuffer.allocate(INITIAL_BUFFER_SIZE);

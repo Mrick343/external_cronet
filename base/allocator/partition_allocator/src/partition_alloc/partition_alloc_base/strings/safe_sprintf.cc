@@ -4,13 +4,12 @@
 
 #include "partition_alloc/partition_alloc_base/strings/safe_sprintf.h"
 
-#include <errno.h>
-#include <string.h>
-
 #include <algorithm>
+#include <cerrno>
+#include <cstring>
 #include <limits>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 
 #if !defined(NDEBUG)
 // In debug builds, we use RAW_CHECK() to print useful error messages, if
@@ -119,7 +118,7 @@ class Buffer {
 // MSVS2013's standard library doesn't mark max() as constexpr yet. cl.exe
 // supports static_cast but doesn't really implement constexpr yet so it doesn't
 // complain, but clang does.
-#if __cplusplus >= 201103 && !(defined(__clang__) && BUILDFLAG(IS_WIN))
+#if __cplusplus >= 201103 && !(defined(__clang__) && PA_BUILDFLAG(IS_WIN))
     static_assert(kSSizeMaxConst ==
                       static_cast<size_t>(std::numeric_limits<ssize_t>::max()),
                   "kSSizeMaxConst should be the max value of an ssize_t");
