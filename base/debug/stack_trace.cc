@@ -10,11 +10,12 @@
 #include <sstream>
 
 #include "base/check_op.h"
+#include "base/gtest_prod_util.h"
 #include "build/build_config.h"
 #include "build/config/compiler/compiler_buildflags.h"
 
 #if BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
-#include "third_party/abseil-cpp/absl/types/optional.h"
+#include <optional>
 
 #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID)
 #include <pthread.h>
@@ -163,6 +164,11 @@ void* LinkStackFrames(void* fpp, void* parent_fp) {
 
 #endif  // BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
 
+// True if an OverrideStackTraceOutputForTesting instance is alive to force
+// generation of symbolized stack traces in death tests.
+OverrideStackTraceOutputForTesting::Mode g_override_suppression =
+    OverrideStackTraceOutputForTesting::Mode::kUnset;
+
 }  // namespace
 
 #if BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
@@ -217,15 +223,17 @@ uintptr_t GetStackEnd() {
 
 StackTrace::StackTrace() : StackTrace(std::size(trace_)) {}
 
-StackTrace::StackTrace(size_t count) {
-  count_ = CollectStackTrace(trace_, std::min(count, std::size(trace_)));
-}
+StackTrace::StackTrace(size_t count)
+    : count_(ShouldSuppressOutput()
+                 ? 0
+                 : CollectStackTrace(trace_,
+                                     std::min(count, std::size(trace_)))) {}
 
-StackTrace::StackTrace(const void* const* trace, size_t count) {
-  count = std::min(count, std::size(trace_));
-  if (count)
-    memcpy(trace_, trace, count * sizeof(trace_[0]));
-  count_ = count;
+StackTrace::StackTrace(const void* const* trace, size_t count)
+    : count_(std::min(count, std::size(trace_))) {
+  if (count_) {
+    memcpy(trace_, trace, count_ * sizeof(trace_[0]));
+  }
 }
 
 // static
@@ -280,6 +288,17 @@ std::string StackTrace::ToStringWithPrefix(const char* prefix_string) const {
   return stream.str();
 }
 
+// static
+bool StackTrace::ShouldSuppressOutput() {
+  using Mode = OverrideStackTraceOutputForTesting::Mode;
+  // Backtraces are not visible in death test children, so do not waste
+  // resources by generating any unless an OverrideStackTraceOutputForTesting
+  // instance is alive.
+  return g_override_suppression != Mode::kUnset
+             ? (g_override_suppression == Mode::kSuppressOutput)
+             : ::base::internal::InDeathTestChild();
+}
+
 std::ostream& operator<<(std::ostream& os, const StackTrace& s) {
 #if !defined(__UCLIBC__) && !defined(_AIX)
   s.OutputToStream(&os);
@@ -287,6 +306,18 @@ std::ostream& operator<<(std::ostream& os, const StackTrace& s) {
   os << "StackTrace::OutputToStream not implemented.";
 #endif
   return os;
+}
+
+OverrideStackTraceOutputForTesting::OverrideStackTraceOutputForTesting(
+    Mode mode) {
+  CHECK_NE(mode, Mode::kUnset);
+  CHECK_EQ(g_override_suppression, Mode::kUnset);  // Nesting not supported.
+  g_override_suppression = mode;
+}
+
+OverrideStackTraceOutputForTesting::~OverrideStackTraceOutputForTesting() {
+  CHECK_NE(g_override_suppression, Mode::kUnset);  // Nesting not supported.
+  g_override_suppression = Mode::kUnset;
 }
 
 #if BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
