@@ -80,7 +80,7 @@ public abstract class PathUtils {
         try {
             return sDirPathFetchTask.get();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw JavaUtils.throwUnchecked(e);
         }
     }
 
@@ -89,6 +89,21 @@ public abstract class PathUtils {
             Os.chmod(path, mode);
         } catch (Exception e) {
             Log.e(TAG, "Failed to set permissions for path \"" + path + "\"");
+        }
+    }
+
+    // TODO(crbug.com/41484704): Merge the Chrome and WebView implementations
+    // of isPathUnderAppDir into one.
+    @RequiresApi(Build.VERSION_CODES.N)
+    public static boolean isPathUnderAppDir(String path, Context context) {
+        File file = new File(path);
+        File dataDir = context.getDataDir();
+        File externalDir = ContextUtils.getApplicationContext().getExternalFilesDir(null);
+        try {
+            return (file.toPath().toRealPath().startsWith(dataDir.toPath().toRealPath())
+                    || file.toPath().toRealPath().startsWith(externalDir.toPath().toRealPath()));
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -249,7 +264,7 @@ public abstract class PathUtils {
     @SuppressWarnings("unused")
     @CalledByNative
     public static @NonNull String getDownloadsDirectory() {
-        // TODO(crbug.com/508615): Move calls to getDownloadsDirectory() to background thread.
+        // TODO(crbug.com/41187555): Move calls to getDownloadsDirectory() to background thread.
         try (StrictModeContext ignored = StrictModeContext.allowDiskReads()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 // https://developer.android.com/preview/privacy/scoped-storage

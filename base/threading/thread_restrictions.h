@@ -14,8 +14,9 @@
 #include "build/build_config.h"
 
 #if DCHECK_IS_ON()
+#include <optional>
+
 #include "base/debug/stack_trace.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 #endif
 
 // -----------------------------------------------------------------------------
@@ -140,12 +141,22 @@ class ProfileImpl;
 class ScopedAllowBlockingForProfile;
 class StartupTabProviderImpl;
 class WebEngineBrowserMainParts;
+struct StartupProfilePathInfo;
 
 namespace base {
 class Environment;
 class File;
 class FilePath;
+class CommandLine;
+namespace sequence_manager::internal {
+class WorkTracker;
+}  // namespace sequence_manager::internal
 }  // namespace base
+
+StartupProfilePathInfo GetStartupProfilePath(
+    const base::FilePath& cur_dir,
+    const base::CommandLine& command_line,
+    bool ignore_profile_picker);
 
 bool EnsureBrowserStateDirectoriesCreated(const base::FilePath&,
                                           const base::FilePath&,
@@ -158,18 +169,22 @@ class AwBrowserContext;
 class AwFormDatabaseService;
 class CookieManager;
 class JsSandboxIsolate;
+class OverlayProcessorWebView;
 class ScopedAllowInitGLBindings;
 class VizCompositorThreadRunnerWebView;
 }  // namespace android_webview
 namespace ash {
 class BrowserDataBackMigrator;
 class LoginEventRecorder;
-class MojoUtils;
 class StartupCustomizationDocument;
 class StartupUtils;
 bool CameraAppUIShouldEnableLocalOverride(const std::string&);
+namespace converters::diagnostics {
+class MojoUtils;
+}
 namespace system {
 class StatisticsProviderImpl;
+class ProcStatFile;
 }  // namespace system
 }  // namespace ash
 namespace audio {
@@ -178,7 +193,6 @@ class OutputDevice;
 namespace blink {
 class AudioDestination;
 class DiskDataAllocator;
-class IdentifiabilityActiveSampler;
 class RTCVideoDecoderAdapter;
 class RTCVideoEncoder;
 class SourceStream;
@@ -211,10 +225,6 @@ bool IsCoreSchedulingAvailable();
 int NumberOfPhysicalCores();
 }  // namespace system
 }  // namespace chromeos
-namespace chrome_cleaner {
-class ResetShortcutsComponent;
-class SystemReportComponent;
-}  // namespace chrome_cleaner
 namespace content {
 class BrowserGpuChannelHostFactory;
 class BrowserMainLoop;
@@ -304,16 +314,28 @@ namespace leveldb::port {
 class CondVar;
 }  // namespace leveldb::port
 namespace nearby::chrome {
+class BleV2GattClient;
+class BleV2Medium;
 class ScheduledExecutor;
 class SubmittableExecutor;
+class WifiDirectSocket;
 }  // namespace nearby::chrome
 namespace media {
 class AudioInputDevice;
 class AudioOutputDevice;
 class BlockingUrlProtocol;
+template <class WorkerInterface,
+          class WorkerImpl,
+          class Worker,
+          class WorkerStatus,
+          WorkerStatus StatusNotOk,
+          WorkerStatus StatusOk,
+          WorkerStatus StatusWork>
+class CodecWorkerImpl;
 class FileVideoCaptureDeviceFactory;
 class MojoVideoEncodeAccelerator;
 class PaintCanvasVideoRenderer;
+class V4L2DevicePoller;  // TODO(crbug.com/41486289): remove this.
 }  // namespace media
 namespace memory_instrumentation {
 class OSMetrics;
@@ -345,12 +367,13 @@ namespace net {
 class GSSAPISharedLibrary;
 class MultiThreadedCertVerifierScopedAllowBaseSyncPrimitives;
 class MultiThreadedProxyResolverScopedAllowJoinOnIO;
-class NetworkChangeNotifierMac;
-class NetworkConfigWatcherMacThread;
+class NetworkChangeNotifierApple;
+class NetworkConfigWatcherAppleThread;
 class ProxyConfigServiceWin;
 class ScopedAllowBlockingForSettingGetter;
 namespace internal {
 class AddressTrackerLinux;
+class PemFileCertStore;
 }
 }  // namespace net
 namespace printing {
@@ -412,6 +435,9 @@ class SystemctlLauncherScopedAllowBaseSyncPrimitives;
 namespace viz {
 class HostGpuMemoryBufferManager;
 class ClientGpuMemoryBufferManager;
+class DisplayCompositorMemoryAndTaskController;
+class SkiaOutputSurfaceImpl;
+class SharedImageInterfaceProvider;
 }  // namespace viz
 namespace vr {
 class VrShell;
@@ -432,6 +458,7 @@ namespace base {
 
 namespace android {
 class JavaHandlerThread;
+class PmfUtils;
 class ScopedAllowBlockingForImportantFileWriter;
 }  // namespace android
 
@@ -460,6 +487,7 @@ class PlatformSharedMemoryRegion;
 
 namespace win {
 class OSInfo;
+class ObjectWatcher;
 class ScopedAllowBlockingForUserAccountControl;
 }  // namespace win
 
@@ -499,7 +527,7 @@ class BooleanWithStack {
 
  private:
   bool value_ = false;
-  absl::optional<debug::StackTrace> stack_;
+  std::optional<debug::StackTrace> stack_;
 };
 
 #else
@@ -559,6 +587,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
   // This can only be instantiated by friends. Use ScopedAllowBlockingForTesting
   // in unit tests to avoid the friend requirement.
   // Sorted by class name (with namespace), #if blocks at the bottom.
+  friend class ::BrowserProcessImpl;
   friend class ::BrowserThemePack;  // http://crbug.com/80206
   friend class ::DesktopNotificationBalloon;
   friend class ::FirefoxProfileLock;
@@ -571,9 +600,10 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
   friend class android_webview::ScopedAllowInitGLBindings;
   friend class ash::BrowserDataBackMigrator;
   friend class ash::LoginEventRecorder;
-  friend class ash::MojoUtils;                     // http://crbug.com/1055467
   friend class ash::StartupCustomizationDocument;  // http://crosbug.com/11103
   friend class ash::StartupUtils;
+  friend class ash::converters::diagnostics::MojoUtils;  // http://b/322741627
+  friend class ash::system::ProcStatFile;
   friend class base::AdjustOOMScoreHelper;
   friend class base::ChromeOSVersionInfo;
   friend class base::Process;
@@ -581,6 +611,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
   friend class base::ScopedAllowBlockingForProcessMetrics;
   friend class base::StackSamplingProfiler;
   friend class base::android::ScopedAllowBlockingForImportantFileWriter;
+  friend class base::android::PmfUtils;
   friend class base::debug::StackTrace;
   friend class base::subtle::PlatformSharedMemoryRegion;
   friend class base::win::ScopedAllowBlockingForUserAccountControl;
@@ -617,6 +648,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
   friend class net::ProxyConfigServiceWin;  // http://crbug.com/61453
   friend class net::
       ScopedAllowBlockingForSettingGetter;  // http://crbug.com/69057
+  friend class net::internal::PemFileCertStore;
   friend class printing::LocalPrinterHandlerDefault;
   friend class printing::PrintBackendServiceManager;
   friend class printing::PrintPreviewUIUntrusted;
@@ -647,6 +679,12 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
                                                      const base::FilePath&,
                                                      const base::FilePath&);
   friend Profile* ::GetLastProfileMac();  // http://crbug.com/1176734
+  // Note: This function return syntax is required so the "::" doesn't get
+  // mis-parsed. See https://godbolt.org/z/KGhnPxfc8 for the issue.
+  friend auto ::GetStartupProfilePath(const base::FilePath& cur_dir,
+                                      const base::CommandLine& command_line,
+                                      bool ignore_profile_picker)
+      -> StartupProfilePathInfo;
   friend bool ::HasWaylandDisplay(
       base::Environment* env);  // http://crbug.com/1246928
   friend bool ash::CameraAppUIShouldEnableLocalOverride(const std::string&);
@@ -733,15 +771,12 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBaseSyncPrimitives {
   friend class android_webview::JsSandboxIsolate;
   friend class base::SimpleThread;
   friend class base::internal::GetAppOutputScopedAllowBaseSyncPrimitives;
-  friend class blink::IdentifiabilityActiveSampler;
   friend class blink::SourceStream;
   friend class blink::VideoTrackRecorderImplContextProvider;
   friend class blink::WorkerThread;
   friend class blink::scheduler::NonMainThreadImpl;
   friend class cc::CategorizedWorkerPoolImpl;
   friend class cc::CategorizedWorkerPoolJob;
-  friend class chrome_cleaner::ResetShortcutsComponent;
-  friend class chrome_cleaner::SystemReportComponent;
   friend class content::BrowserMainLoop;
   friend class content::BrowserProcessIOThread;
   friend class content::DWriteFontCollectionProxy;
@@ -754,8 +789,19 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBaseSyncPrimitives {
   friend class leveldb::port::CondVar;
   friend class nearby::chrome::ScheduledExecutor;
   friend class nearby::chrome::SubmittableExecutor;
+  friend class nearby::chrome::BleV2GattClient;
+  friend class nearby::chrome::BleV2Medium;
+  friend class nearby::chrome::WifiDirectSocket;
   friend class media::AudioOutputDevice;
   friend class media::BlockingUrlProtocol;
+  template <class WorkerInterface,
+            class WorkerImpl,
+            class Worker,
+            class WorkerStatus,
+            WorkerStatus StatusNotOk,
+            WorkerStatus StatusOk,
+            WorkerStatus StatusWork>
+  friend class media::CodecWorkerImpl;
   friend class media::MojoVideoEncodeAccelerator;
   friend class mojo::core::ScopedIPCSupport;
   friend class net::MultiThreadedCertVerifierScopedAllowBaseSyncPrimitives;
@@ -770,9 +816,13 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBaseSyncPrimitives {
   // Usage that should be fixed:
   // Sorted by class name (with namespace).
   friend class ::NativeBackendKWallet;  // http://crbug.com/125331
-  friend class ::ash::system::
-      StatisticsProviderImpl;                      // http://crbug.com/125385
+  friend class android_webview::
+      OverlayProcessorWebView;                     // http://crbug.com/341151462
   friend class blink::VideoFrameResourceProvider;  // http://crbug.com/878070
+  friend class viz::
+      DisplayCompositorMemoryAndTaskController;  // http://crbug.com/341151462
+  friend class viz::SkiaOutputSurfaceImpl;       // http://crbug.com/341151462
+  friend class viz::SharedImageInterfaceProvider;  // http://crbug.com/341151462
 
   ScopedAllowBaseSyncPrimitives() DEFAULT_IF_DCHECK_IS_OFF;
   ~ScopedAllowBaseSyncPrimitives() DEFAULT_IF_DCHECK_IS_OFF;
@@ -817,6 +867,8 @@ class BASE_EXPORT
   friend class base::StackSamplingProfiler;
   friend class base::internal::JobTaskSource;
   friend class base::sequence_manager::internal::TaskQueueImpl;
+  friend class base::sequence_manager::internal::WorkTracker;
+  friend class base::win::ObjectWatcher;
   friend class blink::AudioDestination;
   friend class blink::RTCVideoDecoderAdapter;
   friend class blink::RTCVideoEncoder;
@@ -837,15 +889,18 @@ class BASE_EXPORT
   friend class media::AudioInputDevice;
   friend class media::AudioOutputDevice;
   friend class media::PaintCanvasVideoRenderer;
+  friend class media::V4L2DevicePoller;  // TODO(crbug.com/41486289): remove
+                                         // this.
   friend class mojo::SyncCallRestrictions;
   friend class mojo::core::ipcz_driver::MojoTrap;
-  friend class net::NetworkConfigWatcherMacThread;
+  friend class net::NetworkConfigWatcherAppleThread;
   friend class ui::DrmThreadProxy;
   friend class viz::ClientGpuMemoryBufferManager;
   friend class viz::HostGpuMemoryBufferManager;
   friend class vr::VrShell;
 
   // Usage that should be fixed:
+  friend class ::ash::system::StatisticsProviderImpl;  // http://b/261818124
   friend class ::chromeos::BlockingMethodCaller;  // http://crbug.com/125360
   friend class base::Thread;                      // http://crbug.com/918039
   friend class cc::CompletionEvent;               // http://crbug.com/902653
@@ -860,7 +915,7 @@ class BASE_EXPORT
   friend class midi::TaskService;                   // https://crbug.com/796830
   friend class net::
       MultiThreadedProxyResolverScopedAllowJoinOnIO;  // http://crbug.com/69710
-  friend class net::NetworkChangeNotifierMac;         // http://crbug.com/125097
+  friend class net::NetworkChangeNotifierApple;       // http://crbug.com/125097
   friend class net::internal::AddressTrackerLinux;    // http://crbug.com/125097
   friend class proxy_resolver::
       ScopedAllowThreadJoinForProxyResolverV8Tracing;  // http://crbug.com/69710

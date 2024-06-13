@@ -4,19 +4,20 @@
 
 #include "partition_alloc/partition_alloc_base/debug/stack_trace.h"
 
+#include <fcntl.h>
+#include <unistd.h>
+
+#include <cstring>
+
 #include "partition_alloc/partition_alloc_base/logging.h"
 #include "partition_alloc/partition_alloc_base/posix/eintr_wrapper.h"
 #include "partition_alloc/partition_alloc_base/strings/safe_sprintf.h"
 
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
-
-#if !BUILDFLAG(IS_ANDROID) && !BUILDFLAG(IS_APPLE)
+#if !PA_BUILDFLAG(IS_ANDROID) && !PA_BUILDFLAG(IS_APPLE)
 #include <link.h>  // For ElfW() macro.
 #endif
 
-#if BUILDFLAG(IS_APPLE)
+#if PA_BUILDFLAG(IS_APPLE)
 #include <dlfcn.h>
 #endif
 
@@ -24,7 +25,17 @@ namespace partition_alloc::internal::base::debug {
 
 namespace {
 
-#if !BUILDFLAG(IS_APPLE)
+#if !PA_BUILDFLAG(IS_APPLE)
+
+// On Android the 'open' function has two versions:
+// int open(const char *pathname, int flags);
+// int open(const char *pathname, int flags, mode_t mode);
+//
+// This doesn't play well with WrapEINTR template. This alias helps the compiler
+// to make a decision.
+int OpenFile(const char* pathname, int flags) {
+  return open(pathname, flags);
+}
 
 constexpr size_t kBufferSize = 4096u;
 
@@ -192,7 +203,7 @@ bool ParseMapsLine(const char* line_start,
   return true;
 }
 
-#if !BUILDFLAG(IS_ANDROID)
+#if !PA_BUILDFLAG(IS_ANDROID)
 
 ssize_t ReadFromOffset(const int fd,
                        void* buf,
@@ -202,8 +213,8 @@ ssize_t ReadFromOffset(const int fd,
   size_t num_bytes = 0;
   while (num_bytes < count) {
     ssize_t len;
-    len = PA_HANDLE_EINTR(pread(fd, buf0 + num_bytes, count - num_bytes,
-                                static_cast<off_t>(offset + num_bytes)));
+    len = WrapEINTR(pread)(fd, buf0 + num_bytes, count - num_bytes,
+                           static_cast<off_t>(offset + num_bytes));
     if (len < 0) {  // There was an error other than EINTR.
       return -1;
     }
@@ -224,7 +235,7 @@ void UpdateBaseAddress(unsigned permissions,
     return;
   }
 
-  int mem_fd = PA_HANDLE_EINTR(open("/proc/self/mem", O_RDONLY));
+  int mem_fd = WrapEINTR(OpenFile)("/proc/self/mem", O_RDONLY);
   if (mem_fd == -1) {
     PA_RAW_LOG(ERROR, "Failed to open /proc/self/mem\n");
     return;
@@ -271,10 +282,10 @@ void UpdateBaseAddress(unsigned permissions,
   close(mem_fd);
 }
 
-#endif  // !BUILDFLAG(IS_ANDROID)
+#endif  // !PA_BUILDFLAG(IS_ANDROID)
 
 void PrintStackTraceInternal(const void** trace, size_t count) {
-  int fd = PA_HANDLE_EINTR(open("/proc/self/maps", O_RDONLY));
+  int fd = WrapEINTR(OpenFile)("/proc/self/maps", O_RDONLY);
   if (fd == -1) {
     PA_RAW_LOG(ERROR, "Failed to open /proc/self/maps\n");
     return;
@@ -283,12 +294,12 @@ void PrintStackTraceInternal(const void** trace, size_t count) {
   char buffer[kBufferSize];
   char* dest = buffer;
   char* buffer_end = buffer + kBufferSize;
-#if !BUILDFLAG(IS_ANDROID) && !BUILDFLAG(IS_APPLE)
+#if !PA_BUILDFLAG(IS_ANDROID) && !PA_BUILDFLAG(IS_APPLE)
   uintptr_t base_address = 0u;
 #endif
 
   while (dest < buffer_end) {
-    ssize_t bytes_read = PA_HANDLE_EINTR(read(fd, dest, buffer_end - dest));
+    ssize_t bytes_read = WrapEINTR(read)(fd, dest, buffer_end - dest);
     if (bytes_read == 0) {
       break;
     }
@@ -317,12 +328,12 @@ void PrintStackTraceInternal(const void** trace, size_t count) {
             ParseMapsLine(line_start, line_end, &start_address, &end_address,
                           &permissions, &offset, &module_name);
         if (ok) {
-#if !BUILDFLAG(IS_ANDROID)
+#if !PA_BUILDFLAG(IS_ANDROID)
           UpdateBaseAddress(permissions, start_address, &base_address);
 #endif
           if (module_name && *module_name != '\0') {
             for (size_t i = 0; i < count; i++) {
-#if BUILDFLAG(IS_ANDROID)
+#if PA_BUILDFLAG(IS_ANDROID)
               // Subtract one as return address of function may be in the next
               // function when a function is annotated as noreturn.
               uintptr_t address = reinterpret_cast<uintptr_t>(trace[i]) - 1;
@@ -356,9 +367,9 @@ void PrintStackTraceInternal(const void** trace, size_t count) {
   }
   close(fd);
 }
-#endif  // !BUILDFLAG(IS_APPLE)
+#endif  // !PA_BUILDFLAG(IS_APPLE)
 
-#if BUILDFLAG(IS_APPLE)
+#if PA_BUILDFLAG(IS_APPLE)
 // Since /proc/self/maps is not available, use dladdr() to obtain module
 // names and offsets inside the modules from the given addresses.
 void PrintStackTraceInternal(const void* const* trace, size_t size) {
@@ -387,7 +398,7 @@ void PrintStackTraceInternal(const void* const* trace, size_t size) {
     }
   }
 }
-#endif  // BUILDFLAG(IS_APPLE)
+#endif  // PA_BUILDFLAG(IS_APPLE)
 
 }  // namespace
 
@@ -396,7 +407,7 @@ void PrintStackTrace(const void** trace, size_t count) {
 }
 
 // stack_trace_android.cc defines its own OutputStackTrace.
-#if !BUILDFLAG(IS_ANDROID)
+#if !PA_BUILDFLAG(IS_ANDROID)
 void OutputStackTrace(unsigned index,
                       uintptr_t address,
                       uintptr_t base_address,
@@ -407,6 +418,6 @@ void OutputStackTrace(unsigned index,
                        module_name, address - base_address);
   PA_RAW_LOG(INFO, buffer);
 }
-#endif  // !BUILDFLAG(IS_ANDROID)
+#endif  // !PA_BUILDFLAG(IS_ANDROID)
 
 }  // namespace partition_alloc::internal::base::debug

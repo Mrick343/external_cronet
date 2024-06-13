@@ -13,7 +13,6 @@ import static org.chromium.net.truth.UrlResponseInfoSubject.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.android.testutils.SkipPresubmit;
 
 import org.junit.After;
 import org.junit.Before;
@@ -110,7 +109,6 @@ public class DiskStorageTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 Tests that enable disk cache are flaky")
     // Crashing on Android Cronet Builder, see crbug.com/601409.
     public void testPurgeOldVersion() throws Exception {
         String testStorage = getTestStorage(mTestRule.getTestFramework().getContext());
@@ -179,7 +177,6 @@ public class DiskStorageTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 Tests that enable disk cache are flaky")
     // Tests that if cache version is current, Cronet does not purge the directory.
     public void testCacheVersionCurrent() throws Exception {
         // Initialize a CronetEngine and shut it down.

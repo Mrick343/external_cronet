@@ -29,6 +29,10 @@ class QUICHE_EXPORT CallbackVisitor : public Http2VisitorInterface {
                            void* user_data);
 
   int64_t OnReadyToSend(absl::string_view serialized) override;
+  DataFrameHeaderInfo OnReadyToSendDataForStream(Http2StreamId stream_id,
+                                                 size_t max_length) override;
+  bool SendDataFrame(Http2StreamId stream_id, absl::string_view frame_header,
+                     size_t payload_bytes) override;
   void OnConnectionError(ConnectionError error) override;
   bool OnFrameHeader(Http2StreamId stream_id, size_t length, uint8_t type,
                      uint8_t flags) override;
@@ -107,6 +111,8 @@ class QUICHE_EXPORT CallbackVisitor : public Http2VisitorInterface {
   nghttp2_frame current_frame_;
   std::vector<nghttp2_settings_entry> settings_;
   size_t remaining_data_ = 0;
+  // Any new stream must have an ID greater than the watermark.
+  Http2StreamId stream_id_watermark_ = 0;
 };
 
 }  // namespace adapter

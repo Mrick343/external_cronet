@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/disk_cache/disk_cache_test_util.h"
 
 #include "base/check_op.h"
@@ -39,6 +44,14 @@ void CacheTestFillBuffer(char* buffer, size_t len, bool no_nulls) {
   }
   if (len && !buffer[0])
     buffer[0] = 'g';
+}
+
+scoped_refptr<net::IOBufferWithSize> CacheTestCreateAndFillBuffer(
+    size_t len,
+    bool no_nulls) {
+  auto buffer = base::MakeRefCounted<net::IOBufferWithSize>(len);
+  CacheTestFillBuffer(buffer->data(), len, no_nulls);
+  return buffer;
 }
 
 bool CreateCacheTestFile(const base::FilePath& name) {
