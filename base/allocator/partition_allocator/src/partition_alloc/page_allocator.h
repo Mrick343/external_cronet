@@ -33,6 +33,9 @@ struct PageAccessibilityConfiguration {
     // that don't support Arm's BTI.
     kReadExecuteProtected,
     kReadExecute,
+    // This flag is mapped to `kReadWriteExecute` on systems that do not support
+    // Arm's BTI.
+    kReadWriteExecuteProtected,
     // This flag is deprecated and will go away soon.
     // TODO(bbudge) Remove this as soon as V8 doesn't need RWX pages.
     kReadWriteExecute,
@@ -243,14 +246,12 @@ void DecommitSystemPages(
 // In contrast to |DecommitSystemPages|, this API guarantees that the pages are
 // zeroed and will always mark the region as inaccessible (the equivalent of
 // setting them to PageAccessibilityConfiguration::kInaccessible).
-//
-// This API will crash if the operation cannot be performed.
 PA_COMPONENT_EXPORT(PARTITION_ALLOC)
-void DecommitAndZeroSystemPages(uintptr_t address,
+bool DecommitAndZeroSystemPages(uintptr_t address,
                                 size_t length,
                                 PageTag page_tag = PageTag::kChromium);
 PA_COMPONENT_EXPORT(PARTITION_ALLOC)
-void DecommitAndZeroSystemPages(void* address,
+bool DecommitAndZeroSystemPages(void* address,
                                 size_t length,
                                 PageTag page_tag = PageTag::kChromium);
 
