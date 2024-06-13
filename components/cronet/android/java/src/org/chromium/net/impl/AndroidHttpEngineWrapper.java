@@ -92,6 +92,7 @@ class AndroidHttpEngineWrapper extends ExperimentalCronetEngine {
         return mBackend.createUrlStreamHandlerFactory();
     }
 
+
     @Override
     public org.chromium.net.ExperimentalBidirectionalStream.Builder newBidirectionalStreamBuilder(
             String url, org.chromium.net.BidirectionalStream.Callback callback, Executor executor) {

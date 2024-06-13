@@ -94,4 +94,5 @@ class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBid
     public String getHttpMethod() {
         return mBackend.getHttpMethod();
     }
+
 }
