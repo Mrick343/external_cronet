@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/spdy/spdy_http_stream.h"
 
 #include <stdint.h>
@@ -21,6 +26,7 @@
 #include "net/base/features.h"
 #include "net/base/load_timing_info.h"
 #include "net/base/load_timing_info_test_util.h"
+#include "net/base/session_usage.h"
 #include "net/base/test_completion_callback.h"
 #include "net/cert/asn1_util.h"
 #include "net/dns/public/secure_dns_policy.h"
@@ -135,12 +141,13 @@ class SpdyHttpStreamTest : public testing::TestWithParam<bool>,
         url_(kDefaultUrl),
         host_port_pair_(HostPortPair::FromURL(url_)),
         key_(host_port_pair_,
-             ProxyChain::Direct(),
              PRIVACY_MODE_DISABLED,
-             SpdySessionKey::IsProxySession::kFalse,
+             ProxyChain::Direct(),
+             SessionUsage::kDestination,
              SocketTag(),
              NetworkAnonymizationKey(),
-             SecureDnsPolicy::kAllow),
+             SecureDnsPolicy::kAllow,
+             /*disable_cert_verification_network_fetches=*/false),
         ssl_(SYNCHRONOUS, OK) {
     if (PriorityHeaderEnabled()) {
       feature_list_.InitAndEnableFeature(net::features::kPriorityHeader);
@@ -167,6 +174,7 @@ class SpdyHttpStreamTest : public testing::TestWithParam<bool>,
 
     ssl_.ssl_info.cert =
         ImportCertFromFile(GetTestCertsDirectory(), "spdy_pooling.pem");
+    ssl_.next_proto = NextProto::kProtoHTTP2;
     ASSERT_TRUE(ssl_.ssl_info.cert);
     session_deps_.socket_factory->AddSSLSocketDataProvider(&ssl_);
 

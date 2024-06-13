@@ -20,7 +20,6 @@
 #include "base/metrics/histogram_macros.h"
 #include "base/posix/eintr_wrapper.h"
 #include "base/strings/string_number_conversions.h"
-#include "base/strings/string_piece.h"
 #include "base/time/time.h"
 #include "build/build_config.h"
 #include "net/base/address_list.h"
@@ -54,7 +53,7 @@
 #endif
 
 // Fuchsia defines TCP_INFO, but it's not implemented.
-// TODO(crbug.com/758294): Enable TCP_INFO on Fuchsia once it's implemented
+// TODO(crbug.com/42050612): Enable TCP_INFO on Fuchsia once it's implemented
 // there (see NET-160).
 #if defined(TCP_INFO) && !BUILDFLAG(IS_FUCHSIA)
 #define HAVE_TCP_INFO
@@ -138,18 +137,6 @@ base::TimeDelta GetTransportRtt(SocketDescriptor fd) {
 }
 
 #endif  // defined(TCP_INFO)
-
-#if BUILDFLAG(IS_APPLE) && !BUILDFLAG(CRONET_BUILD)
-// Returns true if `socket` is connected to 0.0.0.0, false otherwise.
-// For detecting slow socket close due to a MacOS bug
-// (https://crbug.com/1194888).
-bool PeerIsZeroIPv4(const TCPSocketPosix& socket) {
-  IPEndPoint peer;
-  if (socket.GetPeerAddress(&peer) != OK)
-    return false;
-  return peer.address().IsIPv4() && peer.address().IsZero();
-}
-#endif  // BUILDFLAG(IS_APPLE) && !BUILDFLAG(CRONET_BUILD)
 
 }  // namespace
 
@@ -466,15 +453,7 @@ int TCPSocketPosix::SetIPv6Only(bool ipv6_only) {
 }
 
 void TCPSocketPosix::Close() {
-#if BUILDFLAG(IS_APPLE) && !BUILDFLAG(CRONET_BUILD)
-  // A MacOS bug can cause sockets to 0.0.0.0 to take 1 second to close. Log a
-  // trace event for this case so that it can be correlated with jank in traces.
-  // Use the "base" category since "net" isn't enabled by default. See
-  // https://crbug.com/1194888.
-  TRACE_EVENT("base", PeerIsZeroIPv4(*this)
-                          ? perfetto::StaticString{"CloseSocketTCP.PeerIsZero"}
-                          : perfetto::StaticString{"CloseSocketTCP"});
-#endif  // BUILDFLAG(IS_APPLE) && !BUILDFLAG(CRONET_BUILD)
+  TRACE_EVENT("base", perfetto::StaticString{"CloseSocketTCP"});
   socket_.reset();
   tag_ = SocketTag();
 }
@@ -493,7 +472,7 @@ void TCPSocketPosix::StartLoggingMultipleConnectAttempts(
     logging_multiple_connect_attempts_ = true;
     LogConnectBegin(addresses);
   } else {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
 }
 
@@ -502,7 +481,7 @@ void TCPSocketPosix::EndLoggingMultipleConnectAttempts(int net_error) {
     LogConnectEnd(net_error);
     logging_multiple_connect_attempts_ = false;
   } else {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
 }
 

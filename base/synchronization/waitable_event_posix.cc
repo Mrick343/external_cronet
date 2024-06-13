@@ -2,22 +2,29 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
+#include "base/synchronization/waitable_event.h"
+
 #include <stddef.h>
 
 #include <limits>
+#include <optional>
 #include <vector>
 
 #include "base/check_op.h"
-#include "base/memory/raw_ptr.h"
+#include "base/memory/stack_allocated.h"
 #include "base/ranges/algorithm.h"
 #include "base/synchronization/condition_variable.h"
 #include "base/synchronization/lock.h"
-#include "base/synchronization/waitable_event.h"
+#include "base/synchronization/lock_subtle.h"
 #include "base/threading/scoped_blocking_call.h"
 #include "base/threading/thread_restrictions.h"
 #include "base/time/time.h"
 #include "base/time/time_override.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 
 // -----------------------------------------------------------------------------
 // A WaitableEvent on POSIX is implemented as a wait-list. Currently we don't
@@ -48,8 +55,6 @@ namespace base {
 WaitableEvent::WaitableEvent(ResetPolicy reset_policy,
                              InitialState initial_state)
     : kernel_(new WaitableEventKernel(reset_policy, initial_state)) {}
-
-WaitableEvent::~WaitableEvent() = default;
 
 void WaitableEvent::Reset() {
   base::AutoLock locked(kernel_->lock_);
@@ -90,6 +95,8 @@ bool WaitableEvent::IsSignaled() {
 // variable and the fired flag in this object.
 // -----------------------------------------------------------------------------
 class SyncWaiter : public WaitableEvent::Waiter {
+  STACK_ALLOCATED();
+
  public:
   SyncWaiter()
       : fired_(false), signaling_event_(nullptr), lock_(), cv_(&lock_) {}
@@ -148,7 +155,7 @@ class SyncWaiter : public WaitableEvent::Waiter {
 
  private:
   bool fired_;
-  raw_ptr<WaitableEvent> signaling_event_;  // The WaitableEvent which woke us
+  WaitableEvent* signaling_event_ = nullptr;  // The WaitableEvent which woke us
   base::Lock lock_;
   base::ConditionVariable cv_;
 };
@@ -229,11 +236,8 @@ cmp_fst_addr(const std::pair<WaitableEvent*, unsigned> &a,
 
 // static
 // NO_THREAD_SAFETY_ANALYSIS: Complex control flow.
-size_t WaitableEvent::WaitMany(WaitableEvent** raw_waitables,
-                               size_t count) NO_THREAD_SAFETY_ANALYSIS {
-  DCHECK(count) << "Cannot wait on no events";
-  internal::ScopedBlockingCallWithBaseSyncPrimitives scoped_blocking_call(
-      FROM_HERE, BlockingType::MAY_BLOCK);
+size_t WaitableEvent::WaitManyImpl(WaitableEvent** raw_waitables,
+                                   size_t count) NO_THREAD_SAFETY_ANALYSIS {
   // We need to acquire the locks in a globally consistent order. Thus we sort
   // the array of waitables by address. We actually sort a pairs so that we can
   // map back to the original index values later.
@@ -321,6 +325,13 @@ size_t WaitableEvent::WaitMany(WaitableEvent** raw_waitables,
 size_t WaitableEvent::EnqueueMany(std::pair<WaitableEvent*, size_t>* waitables,
                                   size_t count,
                                   Waiter* waiter) NO_THREAD_SAFETY_ANALYSIS {
+  // This scope may bring the number of locks held on the thread above the
+  // fixed-sized thread local storage used by `GetLocksHeldByCurrentThread()`
+  // (this was observed with the "WaitSetTest.NoStarvation" test but not in
+  // production). Disable tracking, at the cost of not being able to use these
+  // locks to guarantee mutual exclusion in `SequenceChecker`.
+  subtle::DoNotTrackLocks do_not_track_locks;
+
   size_t winner = count;
   size_t winner_index = count;
   for (size_t i = 0; i < count; ++i) {
@@ -374,7 +385,7 @@ WaitableEvent::WaitableEventKernel::~WaitableEventKernel() = default;
 bool WaitableEvent::SignalAll() {
   bool signaled_at_least_one = false;
 
-  for (auto* i : kernel_->waiters_) {
+  for (Waiter* i : kernel_->waiters_) {
     if (i->Fire(this))
       signaled_at_least_one = true;
   }

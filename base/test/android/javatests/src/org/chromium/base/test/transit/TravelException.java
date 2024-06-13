@@ -4,32 +4,37 @@
 
 package org.chromium.base.test.transit;
 
-import androidx.annotation.Nullable;
-
 /**
  * {@link RuntimeException}s thrown by Public Transit transitions; the message of the wrapping
  * Exception give context to when the underlying Exception happened.
  */
 public class TravelException extends RuntimeException {
-    public TravelException(
-            @Nullable TransitStation fromStation, TransitStation toStation, Throwable cause) {
-        super(
-                "Did not complete transition from "
-                        + (fromStation != null ? fromStation.toString() : "<entry point>")
-                        + " to "
-                        + toStation,
-                cause);
+
+    // Private, call one of the public factory methods instead.
+    private TravelException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public TravelException(String message, StationFacility facility, Throwable cause) {
-        super(message + " " + facility, cause);
+    /**
+     * Factory method for TravelException from a raw String message.
+     *
+     * @param message the error message
+     * @return a new TravelException instance
+     */
+    public static TravelException newTravelException(String message) {
+        return newTravelException(message, /* cause= */ null);
     }
 
-    static TravelException newEnterFacilityException(StationFacility facility, Throwable cause) {
-        return new TravelException("Did not enter", facility, cause);
-    }
-
-    static TravelException newExitFacilityException(StationFacility facility, Throwable cause) {
-        return new TravelException("Did not exit", facility, cause);
+    /**
+     * Factory method for TravelException from a raw String message with an underlying cause.
+     *
+     * @param message the error message
+     * @param cause the root cause
+     * @return a new TravelException instance
+     */
+    public static TravelException newTravelException(String message, Throwable cause) {
+        TravelException travelException = new TravelException(message, cause);
+        PublicTransitConfig.onTravelException(travelException);
+        return travelException;
     }
 }

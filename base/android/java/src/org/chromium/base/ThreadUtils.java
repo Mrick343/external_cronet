@@ -12,6 +12,7 @@ import org.jni_zero.CalledByNative;
 
 import org.chromium.base.task.PostTask;
 import org.chromium.base.task.TaskTraits;
+import org.chromium.build.BuildConfig;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -32,9 +33,8 @@ public class ThreadUtils {
      * A helper object to ensure that interactions with a particular object only happens on a
      * particular thread.
      *
-     * Example:
-     * <pre>
-     * {@code
+     * <pre>Example:
+     *
      * class Foo {
      *     // Valid thread is set during construction here.
      *     private final ThreadChecker mThreadChecker = new ThreadChecker();
@@ -43,19 +43,46 @@ public class ThreadUtils {
      *         mThreadChecker.assertOnValidThread();
      *     }
      * }
-     * }
      * </pre>
      */
+    // TODO(b/274802355): Add @CheckDiscard once R8 can remove this.
     public static class ThreadChecker {
-        private final long mThreadId = Process.myTid();
+        private Thread mThread;
+
+        public ThreadChecker() {
+            resetThreadId();
+        }
+
+        public void resetThreadId() {
+            if (BuildConfig.ENABLE_ASSERTS) {
+                mThread = Thread.currentThread();
+            }
+        }
 
         /**
          * Asserts that the current thread is the same as the one the ThreadChecker was constructed
          * on.
          */
         public void assertOnValidThread() {
-            assert sThreadAssertsDisabledForTesting || mThreadId == Process.myTid()
-                    : "Must only be used on a single thread.";
+            if (BuildConfig.ENABLE_ASSERTS && !sThreadAssertsDisabledForTesting) {
+                Thread curThread = Thread.currentThread();
+                if (curThread != mThread) {
+                    Thread uiThread = getUiThreadLooper().getThread();
+                    if (curThread == uiThread) {
+                        assert false
+                                : "Background-only class called from UI thread (expected: "
+                                        + mThread
+                                        + ")";
+                    } else if (mThread == uiThread) {
+                        assert false : "UI-only class called from background thread: " + curThread;
+                    }
+                    assert false
+                            : "Method called from wrong background thread. Expected: "
+                                    + mThread
+                                    + " Actual: "
+                                    + curThread;
+                }
+            }
         }
     }
 
@@ -131,7 +158,7 @@ public class ThreadUtils {
         try {
             return runOnUiThreadBlocking(c);
         } catch (ExecutionException e) {
-            throw new RuntimeException("Error occurred waiting for callable", e);
+            throw JavaUtils.throwUnchecked(e);
         }
     }
 

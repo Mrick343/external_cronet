@@ -2,16 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_ALLOC_CONSTANTS_H_
-#define BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_ALLOC_CONSTANTS_H_
+#ifndef PARTITION_ALLOC_PARTITION_ALLOC_CONSTANTS_H_
+#define PARTITION_ALLOC_PARTITION_ALLOC_CONSTANTS_H_
 
 #include <algorithm>
 #include <climits>
 #include <cstddef>
 #include <limits>
 
-#include "build/build_config.h"
 #include "partition_alloc/address_pool_manager_types.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/flags.h"
 #include "partition_alloc/page_allocator_constants.h"
 #include "partition_alloc/partition_alloc_base/compiler_specific.h"
@@ -19,11 +19,11 @@
 #include "partition_alloc/partition_alloc_config.h"
 #include "partition_alloc/partition_alloc_forward.h"
 
-#if BUILDFLAG(IS_APPLE) && defined(ARCH_CPU_64_BITS)
+#if PA_BUILDFLAG(IS_APPLE) && PA_BUILDFLAG(PA_ARCH_CPU_64_BITS)
 #include <mach/vm_page_size.h>
 #endif
 
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
+#if PA_BUILDFLAG(HAS_MEMORY_TAGGING)
 #include "partition_alloc/tagging.h"
 #endif
 
@@ -100,18 +100,18 @@ constexpr size_t kPartitionCachelineSize = 64;
 // other constant values, we pack _all_ `PartitionRoot::Alloc` sizes perfectly
 // up against the end of a system page.
 
-#if defined(_MIPS_ARCH_LOONGSON) || defined(ARCH_CPU_LOONGARCH64)
+#if defined(_MIPS_ARCH_LOONGSON) || PA_BUILDFLAG(PA_ARCH_CPU_LOONGARCH64)
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 PartitionPageShift() {
   return 16;  // 64 KiB
 }
-#elif defined(ARCH_CPU_PPC64)
+#elif PA_BUILDFLAG(PA_ARCH_CPU_PPC64)
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 PartitionPageShift() {
   return 18;  // 256 KiB
 }
-#elif (BUILDFLAG(IS_APPLE) && defined(ARCH_CPU_64_BITS)) || \
-    (BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_ARM64))
+#elif (PA_BUILDFLAG(IS_APPLE) && PA_BUILDFLAG(PA_ARCH_CPU_64_BITS)) || \
+    defined(PARTITION_ALLOCATOR_CONSTANTS_POSIX_NONCONST_PAGE_SIZE)
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 PartitionPageShift() {
   return PageAllocationGranularityShift() + 2;
@@ -210,14 +210,17 @@ constexpr size_t kHighThresholdForAlternateDistribution =
 // Free Slot Bitmap is only present when USE_FREESLOT_BITMAP is true. State
 // Bitmap is inserted for partitions that may have quarantine enabled.
 //
-// If refcount_at_end_allocation is enabled, RefcountBitmap(4KiB) is inserted
-// after the Metadata page for BackupRefPtr. The guard pages after the bitmap
-// will be 4KiB.
+// If ENABLE_BACKUP_REF_PTR_SUPPORT is on, InSlotMetadataTable(4KiB) is inserted
+// after the Metadata page, which hosts what normally would be in-slot metadata,
+// but for reasons described in InSlotMetadataPointer() can't always be placed
+// inside the slot. BRP ref-count is there, hence the connection with
+// ENABLE_BACKUP_REF_PTR_SUPPORT.
+// The guard page after the table is reduced to 4KiB.
 //
 //...
-//     | Metadata page (4 KiB) |
-//     | RefcountBitmap (4 KiB)|
-//     | Guard pages (4 KiB)   |
+//     | Metadata page (4 KiB)       |
+//     | InSlotMetadataTable (4 KiB) |
+//     | Guard pages (4 KiB)         |
 //...
 //
 // Each slot span is a contiguous range of one or more `PartitionPage`s. Note
@@ -283,13 +286,13 @@ enum pool_handle : unsigned {
 
   kRegularPoolHandle,
   kBRPPoolHandle,
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
   kConfigurablePoolHandle,
 #endif
 
 // New pool_handles will be added here.
 
-#if BUILDFLAG(ENABLE_THREAD_ISOLATION)
+#if PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
   // The thread isolated pool must come last since we write-protect its entry in
   // the metadata tables, e.g. AddressPoolManager::aligned_pools_
   kThreadIsolatedPoolHandle,
@@ -299,6 +302,19 @@ enum pool_handle : unsigned {
 
 // kNullPoolHandle doesn't have metadata, hence - 1
 constexpr size_t kNumPools = kMaxPoolHandle - 1;
+
+enum class PoolHandleMask {
+  kNone = 0u,
+  kRegular = 1u << (kRegularPoolHandle - 1),
+  kBRP = 1u << (kBRPPoolHandle - 1),
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
+  kConfigurable = 1u << (kConfigurablePoolHandle - 1),
+  kMaxValue = kConfigurable
+#else
+  kMaxValue = kBRP
+#endif
+};
+PA_DEFINE_OPERATORS_FOR_FLAGS(PoolHandleMask);
 
 // Maximum pool size. With exception of Configurable Pool, it is also
 // the actual size, unless PA_DYNAMICALLY_SELECT_POOL_SIZE is set, which
@@ -311,19 +327,19 @@ constexpr size_t kNumPools = kMaxPoolHandle - 1;
 //
 // When pointer compression is enabled, we cannot use large pools (at most
 // 8GB for each of the glued pools).
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
-#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_IOS) || \
-    BUILDFLAG(ENABLE_POINTER_COMPRESSION)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(IS_ANDROID) || PA_BUILDFLAG(IS_IOS) || \
+    PA_BUILDFLAG(ENABLE_POINTER_COMPRESSION)
 constexpr size_t kPoolMaxSize = 8 * kGiB;
 #else
 constexpr size_t kPoolMaxSize = 16 * kGiB;
 #endif
-#else  // BUILDFLAG(HAS_64_BIT_POINTERS)
+#else  // PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 constexpr size_t kPoolMaxSize = 4 * kGiB;
 #endif
 constexpr size_t kMaxSuperPagesInPool = kPoolMaxSize / kSuperPageSize;
 
-#if BUILDFLAG(ENABLE_THREAD_ISOLATION)
+#if PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
 static_assert(kThreadIsolatedPoolHandle == kNumPools,
               "The thread isolated pool must come last since we write-protect "
               "its metadata.");
@@ -335,7 +351,7 @@ static_assert(kThreadIsolatedPoolHandle == kNumPools,
 // of large areas which are less likely to benefit from MTE protection.
 constexpr size_t kMaxMemoryTaggingSize = 1024;
 
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
+#if PA_BUILDFLAG(HAS_MEMORY_TAGGING)
 // Returns whether the tag of |object| overflowed, meaning the containing slot
 // needs to be moved to quarantine.
 PA_ALWAYS_INLINE bool HasOverflowTag(void* object) {
@@ -345,7 +361,7 @@ PA_ALWAYS_INLINE bool HasOverflowTag(void* object) {
                 "Overflow tag must be in tag bits");
   return (reinterpret_cast<uintptr_t>(object) & kPtrTagMask) == kOverflowTag;
 }
-#endif  // PA_CONFIG(HAS_MEMORY_TAGGING)
+#endif  // PA_BUILDFLAG(HAS_MEMORY_TAGGING)
 
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 NumPartitionPagesPerSuperPage() {
@@ -356,7 +372,7 @@ PA_ALWAYS_INLINE constexpr size_t MaxSuperPagesInPool() {
   return kMaxSuperPagesInPool;
 }
 
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 // In 64-bit mode, the direct map allocation granularity is super page size,
 // because this is the reservation granularity of the pools.
 PA_ALWAYS_INLINE constexpr size_t DirectMapAllocationGranularity() {
@@ -366,7 +382,7 @@ PA_ALWAYS_INLINE constexpr size_t DirectMapAllocationGranularity() {
 PA_ALWAYS_INLINE constexpr size_t DirectMapAllocationGranularityShift() {
   return kSuperPageShift;
 }
-#else   // BUILDFLAG(HAS_64_BIT_POINTERS)
+#else   // PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 // In 32-bit mode, address space is space is a scarce resource. Use the system
 // allocation granularity, which is the lowest possible address space allocation
 // unit. However, don't go below partition page size, so that pool bitmaps
@@ -380,7 +396,7 @@ PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 DirectMapAllocationGranularityShift() {
   return std::max(PageAllocationGranularityShift(), PartitionPageShift());
 }
-#endif  // BUILDFLAG(HAS_64_BIT_POINTERS)
+#endif  // PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 
 PA_ALWAYS_INLINE PAGE_ALLOCATOR_CONSTANTS_DECLARE_CONSTEXPR size_t
 DirectMapAllocationGranularityOffsetMask() {
@@ -467,10 +483,22 @@ constexpr size_t kBitsPerSizeT = sizeof(void*) * CHAR_BIT;
 // PurgeFlags::kDecommitEmptySlotSpans flag will eagerly decommit all entries
 // in the ring buffer, so with periodic purge enabled, this typically happens
 // every few seconds.
-constexpr size_t kEmptyCacheIndexBits = 7;
+#if PA_BUILDFLAG(USE_LARGE_EMPTY_SLOT_SPAN_RING)
+// USE_LARGE_EMPTY_SLOT_SPAN_RING results in two size. kMaxEmptyCacheIndexBits,
+// which is used when the renderer is in the foreground, and
+// kMinEmptyCacheIndexBits which is used when the renderer is in the background.
+constexpr size_t kMaxEmptyCacheIndexBits = 10;
+constexpr size_t kMinEmptyCacheIndexBits = 7;
+#else
+constexpr size_t kMaxEmptyCacheIndexBits = 7;
+constexpr size_t kMinEmptyCacheIndexBits = 7;
+#endif
+static_assert(kMinEmptyCacheIndexBits <= kMaxEmptyCacheIndexBits,
+              "min size must be <= max size");
 // kMaxFreeableSpans is the buffer size, but is never used as an index value,
 // hence <= is appropriate.
-constexpr size_t kMaxFreeableSpans = 1 << kEmptyCacheIndexBits;
+constexpr size_t kMaxFreeableSpans = 1 << kMaxEmptyCacheIndexBits;
+constexpr size_t kMinFreeableSpans = 1 << kMinEmptyCacheIndexBits;
 constexpr size_t kDefaultEmptySlotSpanRingSize = 16;
 
 // If the total size in bytes of allocated but not committed pages exceeds this
@@ -491,11 +519,23 @@ constexpr unsigned char kQuarantinedByte = 0xEF;
 // static_cast<uint32_t>(-1) is too close to a "real" size.
 constexpr size_t kInvalidBucketSize = 1;
 
-#if PA_CONFIG(ENABLE_MAC11_MALLOC_SIZE_HACK)
-// Requested size that require the hack.
+#if PA_CONFIG(MAYBE_ENABLE_MAC11_MALLOC_SIZE_HACK)
+// Requested size that requires the hack.
 constexpr size_t kMac11MallocSizeHackRequestedSize = 32;
-#endif  // PA_CONFIG(ENABLE_MAC11_MALLOC_SIZE_HACK)
+#endif
+
 }  // namespace internal
+
+// When trying to conserve memory, set the thread cache limit to this.
+static inline constexpr size_t kThreadCacheDefaultSizeThreshold = 512;
+
+// 32kiB is chosen here as from local experiments, "zone" allocation in
+// V8 is performance-sensitive, and zones can (and do) grow up to 32kiB for
+// each individual allocation.
+static inline constexpr size_t kThreadCacheLargeSizeThreshold = 1 << 15;
+static_assert(kThreadCacheLargeSizeThreshold <=
+                  std::numeric_limits<uint16_t>::max(),
+              "");
 
 // These constants are used outside PartitionAlloc itself, so we provide
 // non-internal aliases here.
@@ -509,4 +549,4 @@ using ::partition_alloc::internal::PartitionPageSize;
 
 }  // namespace partition_alloc
 
-#endif  // BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_ALLOC_CONSTANTS_H_
+#endif  // PARTITION_ALLOC_PARTITION_ALLOC_CONSTANTS_H_

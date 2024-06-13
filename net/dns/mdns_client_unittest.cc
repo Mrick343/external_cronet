@@ -480,6 +480,7 @@ class MDnsTest : public TestWithTaskEnvironment {
   std::unique_ptr<MDnsTransaction> transaction_;
   std::unique_ptr<MDnsListener> listener1_;
   std::unique_ptr<MDnsListener> listener2_;
+  base::RunLoop loop_;
 };
 
 class MockListenerDelegate : public MDnsListener::Delegate {
@@ -520,12 +521,12 @@ void MDnsTest::RunFor(base::TimeDelta time_period) {
   base::SingleThreadTaskRunner::GetCurrentDefault()->PostDelayedTask(
       FROM_HERE, callback.callback(), time_period);
 
-  base::RunLoop().Run();
+  loop_.Run();
   callback.Cancel();
 }
 
 void MDnsTest::Stop() {
-  base::RunLoop::QuitCurrentWhenIdleDeprecated();
+  loop_.QuitWhenIdle();
 }
 
 TEST_F(MDnsTest, PassiveListeners) {
@@ -1235,7 +1236,7 @@ TEST_F(MDnsTest, NsecConflictRemoval) {
   EXPECT_EQ(record1, record2);
 }
 
-// TODO(https://crbug.com/1274091): Flaky on fuchsia.
+// TODO(crbug.com/40807339): Flaky on fuchsia.
 #if BUILDFLAG(IS_FUCHSIA)
 #define MAYBE_RefreshQuery DISABLED_RefreshQuery
 #else

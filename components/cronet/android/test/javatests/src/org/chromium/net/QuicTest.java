@@ -13,7 +13,6 @@ import static org.chromium.net.truth.UrlResponseInfoSubject.assertThat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SmallTest;
-import com.android.testutils.SkipPresubmit;
 
 import org.json.JSONObject;
 import org.junit.After;
@@ -25,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.chromium.base.test.util.DoNotBatch;
 import org.chromium.net.CronetTestRule.CronetImplementation;
 import org.chromium.net.CronetTestRule.IgnoreFor;
+import org.chromium.net.impl.CronetUrlRequestContext;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -125,7 +125,7 @@ public class QuicTest {
         assertThat(callback.getResponseInfoWithChecks())
                 .hasReceivedByteCountThat()
                 .isGreaterThan((long) expectedContent.length());
-        CronetTestUtil.nativeFlushWritePropertiesForTesting(cronetEngine);
+        ((CronetUrlRequestContext) cronetEngine).flushWritePropertiesForTesting();
         assertThat(
                         fileContainsString(
                                 "local_prefs.json",
@@ -240,16 +240,16 @@ public class QuicTest {
         assertThat(cronetEngine.getTransportRttMs()).isAtLeast(0);
         assertThat(cronetEngine.getDownstreamThroughputKbps()).isAtLeast(0);
 
-        CronetTestUtil.nativeFlushWritePropertiesForTesting(cronetEngine);
+        ((CronetUrlRequestContext) cronetEngine).flushWritePropertiesForTesting();
         assertThat(fileContainsString("local_prefs.json", "network_qualities")).isTrue();
         cronetEngine.shutdown();
     }
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 Tests that enable disk cache are flaky")
     public void testMetricsWithQuic() throws Exception {
         ExperimentalCronetEngine cronetEngine = mTestRule.getTestFramework().getEngine();
+        CronetImplementation implementationUnderTest = mTestRule.implementationUnderTest();
         TestRequestFinishedListener requestFinishedListener = new TestRequestFinishedListener();
         cronetEngine.addRequestFinishedListener(requestFinishedListener);
 
@@ -268,9 +268,11 @@ public class QuicTest {
         assertIsQuic(callback.getResponseInfoWithChecks());
 
         RequestFinishedInfo requestInfo = requestFinishedListener.getRequestInfo();
-        MetricsTestUtil.checkRequestFinishedInfo(requestInfo, quicURL, startTime, endTime);
+        MetricsTestUtil.checkRequestFinishedInfo(
+                implementationUnderTest, requestInfo, quicURL, startTime, endTime);
         assertThat(requestInfo.getFinishedReason()).isEqualTo(RequestFinishedInfo.SUCCEEDED);
-        MetricsTestUtil.checkHasConnectTiming(requestInfo.getMetrics(), startTime, endTime, true);
+        MetricsTestUtil.checkHasConnectTiming(
+                implementationUnderTest, requestInfo.getMetrics(), startTime, endTime, true);
 
         // Second request should use the same connection and not have ConnectTiming numbers
         callback = new TestUrlRequestCallback();
@@ -287,9 +289,10 @@ public class QuicTest {
         assertIsQuic(callback.getResponseInfoWithChecks());
 
         requestInfo = requestFinishedListener.getRequestInfo();
-        MetricsTestUtil.checkRequestFinishedInfo(requestInfo, quicURL, startTime, endTime);
+        MetricsTestUtil.checkRequestFinishedInfo(
+                implementationUnderTest, requestInfo, quicURL, startTime, endTime);
         assertThat(requestInfo.getFinishedReason()).isEqualTo(RequestFinishedInfo.SUCCEEDED);
-        MetricsTestUtil.checkNoConnectTiming(requestInfo.getMetrics());
+        MetricsTestUtil.checkNoConnectTiming(implementationUnderTest, requestInfo.getMetrics());
 
         cronetEngine.shutdown();
     }

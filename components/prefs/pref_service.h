@@ -16,6 +16,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -24,7 +25,6 @@
 #include "base/memory/raw_ptr.h"
 #include "base/memory/ref_counted.h"
 #include "base/sequence_checker.h"
-#include "base/strings/string_piece.h"
 #include "base/time/time.h"
 #include "base/values.h"
 #include "build/build_config.h"
@@ -58,6 +58,15 @@ namespace subtle {
 class PrefMemberBase;
 class ScopedUserPrefUpdateBase;
 }
+
+#if BUILDFLAG(IS_CHROMEOS_ASH)
+namespace pref_service_util {
+// Gets all the dotted paths from `dict`. For example if values stored are
+// `{"a" : { "b" : true, "c": false }}`, then `paths` gets ["a.b", "a.c"].
+void COMPONENTS_PREFS_EXPORT GetAllDottedPaths(const base::Value::Dict& dict,
+                                               std::vector<std::string>& paths);
+}  // namespace pref_service_util
+#endif
 
 // Base class for PrefServices. You can use the base class to read and
 // interact with preferences, but not to register new preferences; for
@@ -243,25 +252,25 @@ class COMPONENTS_PREFS_EXPORT PrefService {
   // If the path is valid and the value at the end of the path matches the type
   // specified, it will return the specified value.  Otherwise, the default
   // value (set when the pref was registered) will be returned.
-  bool GetBoolean(base::StringPiece path) const;
-  int GetInteger(base::StringPiece path) const;
-  double GetDouble(base::StringPiece path) const;
-  const std::string& GetString(base::StringPiece path) const;
-  base::FilePath GetFilePath(base::StringPiece path) const;
+  bool GetBoolean(std::string_view path) const;
+  int GetInteger(std::string_view path) const;
+  double GetDouble(std::string_view path) const;
+  const std::string& GetString(std::string_view path) const;
+  base::FilePath GetFilePath(std::string_view path) const;
 
   // Returns the branch if it exists, or the registered default value otherwise.
   // `path` must point to a registered preference (DCHECK).
-  const base::Value& GetValue(base::StringPiece path) const;
+  const base::Value& GetValue(std::string_view path) const;
 
   // Returns the branch if it exists, or the registered default value otherwise.
   // `path` must point to a registered preference whose value and registered
   // default are of type `base::Value::Type::DICT (DCHECK).
-  const base::Value::Dict& GetDict(base::StringPiece path) const;
+  const base::Value::Dict& GetDict(std::string_view path) const;
 
   // Returns the branch if it exists, or the registered default value otherwise.
   // `path` must point to a registered preference whose value and registered
   // default are of type `base::Value::Type::LIST (DCHECK).
-  const base::Value::List& GetList(base::StringPiece path) const;
+  const base::Value::List& GetList(std::string_view path) const;
 
   // Removes a user pref and restores the pref to its default value.
   void ClearPref(const std::string& path);
@@ -280,7 +289,7 @@ class COMPONENTS_PREFS_EXPORT PrefService {
   void SetBoolean(const std::string& path, bool value);
   void SetInteger(const std::string& path, int value);
   void SetDouble(const std::string& path, double value);
-  void SetString(const std::string& path, base::StringPiece value);
+  void SetString(const std::string& path, std::string_view value);
   void SetDict(const std::string& path, base::Value::Dict dict);
   void SetList(const std::string& path, base::Value::List list);
   void SetFilePath(const std::string& path, const base::FilePath& value);
@@ -403,6 +412,10 @@ class COMPONENTS_PREFS_EXPORT PrefService {
                                 const base::Value& value);
   // Clear extension-controlled prefs from Lacros in ash.
   void RemoveStandaloneBrowserPref(const std::string& path);
+
+  // Clear all prefs in standalone_browser_pref_store_. Use it when rolling back
+  // to Ash (i.e. disabling Lacros).
+  void RemoveAllStandaloneBrowserPrefs();
 #endif
 
 #if BUILDFLAG(IS_ANDROID)
@@ -516,8 +529,7 @@ class COMPONENTS_PREFS_EXPORT PrefService {
   // not need to find or create a Preference object to get the
   // value (GetValue() calls back though the preference service to
   // actually get the value.).
-  const base::Value* GetPreferenceValue(base::StringPiece path) const;
-  const base::Value* GetPreferenceValueChecked(base::StringPiece path) const;
+  const base::Value* GetPreferenceValue(std::string_view path) const;
 
   const scoped_refptr<PrefRegistry> pref_registry_;
 

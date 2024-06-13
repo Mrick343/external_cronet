@@ -10,6 +10,7 @@ import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
  *
  * <p>Once FINISHED, the ConditionalState does not change state anymore.
  *
- * <p>This is the base class for {@link TransitStation} and {@link StationFacility}.
+ * <p>This is the base class for {@link Station} and {@link Facility}.
  */
 public abstract class ConditionalState {
     @Phase private int mLifecyclePhase = Phase.NEW;
@@ -59,73 +60,67 @@ public abstract class ConditionalState {
     /**
      * Declare the {@link Elements} that define this ConditionalState, such as Views.
      *
-     * <p>Transit-layer {@link TransitStation}s and {@link StationFacility}s should override this
-     * and use the |elements| param to declare what elements need to be waited for for the state to
-     * be considered active.
+     * <p>Transit-layer {@link Station}s and {@link Facility}s should override this and use the
+     * |elements| param to declare what elements need to be waited for for the state to be
+     * considered active.
      *
      * @param elements use the #declare___() methods to describe the Elements that define the state.
      */
     public abstract void declareElements(Elements.Builder elements);
 
-    List<Condition> getEnterConditions() {
+    Elements getElements() {
         initElements();
-        return mElements.getEnterConditions();
-    }
-
-    List<Condition> getExitConditions() {
-        initElements();
-        return mElements.getExitConditions();
+        return mElements;
     }
 
     private void initElements() {
         if (mElements == null) {
-            Elements.Builder builder = new Elements.Builder();
+            Elements.Builder builder = Elements.newBuilder();
             declareElements(builder);
-            mElements = builder.build(this);
+            mElements = builder.build();
         }
     }
 
     void setStateTransitioningTo() {
         assertInPhase(Phase.NEW);
         mLifecyclePhase = Phase.TRANSITIONING_TO;
-        onStartMonitoringTransitionTo();
-        for (Condition condition : getEnterConditions()) {
-            condition.onStartMonitoring();
-        }
+        onTransitionToStarted();
     }
 
-    /** Hook to setup observers for the transition into the ConditionalState. */
-    protected void onStartMonitoringTransitionTo() {}
+    /** Hook to run code before a transition to the ConditionalState. */
+    protected void onTransitionToStarted() {}
 
     void setStateActive() {
         assertInPhase(Phase.TRANSITIONING_TO);
         mLifecyclePhase = Phase.ACTIVE;
-        onStopMonitoringTransitionTo();
+        onTransitionToFinished();
     }
 
-    /** Hook to cleanup observers for the transition into the ConditionalState. */
-    protected void onStopMonitoringTransitionTo() {}
+    /** Hook to run code after a transition to the ConditionalState. */
+    protected void onTransitionToFinished() {}
 
     void setStateTransitioningFrom() {
         assertInPhase(Phase.ACTIVE);
         mLifecyclePhase = Phase.TRANSITIONING_FROM;
-        onStartMonitoringTransitionFrom();
-        for (Condition condition : getExitConditions()) {
-            condition.onStartMonitoring();
-        }
+        onTransitionFromStarted();
     }
 
-    /** Hook to setup observers for the transition from the ConditionalState. */
-    protected void onStartMonitoringTransitionFrom() {}
+    /** Hook to run code before a transition from the ConditionalState. */
+    protected void onTransitionFromStarted() {}
 
     void setStateFinished() {
         assertInPhase(Phase.TRANSITIONING_FROM);
         mLifecyclePhase = Phase.FINISHED;
-        onStopMonitoringTransitionFrom();
+        onTransitionFromFinished();
     }
 
-    /** Hook to cleanup observers for the transition from the ConditionalState. */
-    protected void onStopMonitoringTransitionFrom() {}
+    /** Hook to run code after a transition from the ConditionalState. */
+    protected void onTransitionFromFinished() {}
+
+    /**
+     * @return the name of the State for use in debugging/error messages.
+     */
+    public abstract String getName();
 
     /**
      * @return the lifecycle {@link Phase} this ConditionalState is in.
@@ -144,10 +139,20 @@ public abstract class ConditionalState {
         }
     }
 
-    /** Check the enter Conditions are still fulfilled. */
-    public final void recheckEnterConditions() {
+    /** Check the declared Elements still exist. */
+    public final void recheckActiveConditions() {
         assertInPhase(Phase.ACTIVE);
-        ConditionChecker.check(getEnterConditions());
+
+        List<Condition> enterConditions = new ArrayList<>();
+        Elements elements = getElements();
+        for (ElementInState element : elements.getElementsInState()) {
+            Condition enterCondition = element.getEnterCondition();
+            if (enterCondition != null) {
+                enterConditions.add(enterCondition);
+            }
+        }
+
+        ConditionChecker.check(getName(), enterConditions);
     }
 
     /**
@@ -186,5 +191,10 @@ public abstract class ConditionalState {
                 throw new IllegalArgumentException(
                         "No short string representation for phase " + phase);
         }
+    }
+
+    /** Should be used only by {@link EntryPointSentinelStation}. */
+    void setStateActiveWithoutTransition() {
+        mLifecyclePhase = Phase.ACTIVE;
     }
 }

@@ -7,12 +7,11 @@ package org.chromium.base.test.transit;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.any;
-import static org.hamcrest.CoreMatchers.is;
 
-import android.content.res.Resources;
 import android.view.View;
 
 import androidx.test.espresso.AmbiguousViewMatcherException;
@@ -21,41 +20,87 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
+import org.chromium.base.ApplicationStatus;
+import org.chromium.base.test.util.RawFailureHandler;
 
 /** {@link Condition}s related to Android {@link View}s. */
 public class ViewConditions {
-    /** Fulfilled when a single matching View exists and is displayed. */
-    public static class DisplayedCondition extends ExistsCondition {
-        public DisplayedCondition(Matcher<View> matcher) {
-            super(allOf(matcher, isDisplayed()));
-        }
-    }
+    /**
+     * Fulfilled when a single matching View exists and is displayed, but ignored if |gate| returns
+     * true.
+     */
+    public static class GatedDisplayedCondition extends InstrumentationThreadCondition {
 
-    /** Fulfilled when a single matching View exists. */
-    public static class ExistsCondition extends InstrumentationThreadCondition {
-        private final Matcher<View> mMatcher;
-        private View mViewMatched;
+        private final DisplayedCondition mDisplayedCondition;
+        private final Condition mGate;
 
-        public ExistsCondition(Matcher<View> matcher) {
+        public GatedDisplayedCondition(
+                Matcher<View> matcher, Condition gate, DisplayedCondition.Options options) {
             super();
-            this.mMatcher = matcher;
+            mDisplayedCondition = new DisplayedCondition(matcher, options);
+            mGate = gate;
+        }
+
+        @Override
+        protected ConditionStatus checkWithSuppliers() throws Exception {
+            ConditionStatus gateStatus = mGate.check();
+            String gateMessage = gateStatus.getMessageAsGate();
+            if (gateStatus.isAwaiting()) {
+                return notFulfilled(gateMessage);
+            }
+
+            if (!gateStatus.isFulfilled()) {
+                return fulfilled(gateMessage);
+            }
+
+            ConditionStatus status = mDisplayedCondition.check();
+            status.amendMessage(gateMessage);
+            return status;
         }
 
         @Override
         public String buildDescription() {
-            return "View: " + ViewConditions.createMatcherDescription(mMatcher);
+            return String.format(
+                    "%s (if %s)", mDisplayedCondition.buildDescription(), mGate.buildDescription());
+        }
+    }
+
+    /** Fulfilled when a single matching View exists and is displayed. */
+    public static class DisplayedCondition extends InstrumentationThreadCondition {
+        private final Matcher<View> mMatcher;
+        private final Options mOptions;
+        private View mViewMatched;
+
+        private static final String VERBOSE_DESCRIPTION =
+                "(view has effective visibility <VISIBLE> and view.getGlobalVisibleRect() covers at"
+                        + " least <90> percent of the view's area)";
+        private static final String SUCCINCT_DESCRIPTION = "(getGlobalVisibleRect() > 90%)";
+
+        public DisplayedCondition(Matcher<View> matcher, Options options) {
+            super();
+            mMatcher = allOf(matcher, isDisplayingAtLeast(options.mDisplayedPercentageRequired));
+            mOptions = options;
         }
 
         @Override
-        public boolean check() {
-            ViewInteraction viewInteraction = onView(mMatcher);
+        public String buildDescription() {
+            return "View: "
+                    + createMatcherDescription(mMatcher, VERBOSE_DESCRIPTION, SUCCINCT_DESCRIPTION);
+        }
+
+        @Override
+        protected ConditionStatus checkWithSuppliers() {
+            if (!ApplicationStatus.hasVisibleActivities()) {
+                return awaiting("No visible activities");
+            }
+
+            ViewInteraction viewInteraction =
+                    onView(mMatcher).withFailureHandler(RawFailureHandler.getInstance());
+            String[] message = new String[1];
             try {
                 viewInteraction.perform(
                         new ViewAction() {
@@ -72,15 +117,24 @@ public class ViewConditions {
                             @Override
                             public void perform(UiController uiController, View view) {
                                 if (mViewMatched != null && mViewMatched != view) {
-                                    throw new IllegalStateException(
+                                    message[0] =
                                             String.format(
                                                     "Matched a different view, was %s, now %s",
-                                                    mViewMatched, view));
+                                                    mViewMatched, view);
                                 }
                                 mViewMatched = view;
                             }
                         });
-                return true;
+                if (mOptions.mExpectEnabled) {
+                    if (!mViewMatched.isEnabled()) {
+                        return notFulfilled("View displayed but disabled");
+                    }
+                } else { // Expected a displayed but disabled View.
+                    if (mViewMatched.isEnabled()) {
+                        return notFulfilled("View displayed but enabled");
+                    }
+                }
+                return fulfilled(message[0]);
             } catch (NoMatchingViewException
                     | NoMatchingRootException
                     | AmbiguousViewMatcherException e) {
@@ -91,109 +145,87 @@ public class ViewConditions {
                                     mViewMatched, e.getClass().getSimpleName()),
                             e);
                 }
-                return false;
+                return notFulfilled(e.getClass().getSimpleName());
             }
         }
 
-        public View getViewMatched() {
-            return mViewMatched;
+        /**
+         * @return an Options builder to customize the ViewCondition.
+         */
+        public static Options.Builder newOptions() {
+            return new Options().new Builder();
+        }
+
+        /** Extra options for declaring DisplayedCondition. */
+        public static class Options {
+            boolean mExpectEnabled = true;
+            int mDisplayedPercentageRequired = ViewElement.MIN_DISPLAYED_PERCENT;
+
+            private Options() {}
+
+            public class Builder {
+                public Options build() {
+                    return Options.this;
+                }
+
+                /** Whether the View is expected to be enabled or disabled. */
+                public Builder withExpectEnabled(boolean state) {
+                    mExpectEnabled = state;
+                    return this;
+                }
+
+                /** Minimum percentage of the View that needs to be displayed. */
+                public Builder withDisplayingAtLeast(int displayedPercentageRequired) {
+                    mDisplayedPercentageRequired = displayedPercentageRequired;
+                    return this;
+                }
+            }
         }
     }
 
-    /** Fulfilled when no matching Views exist. */
-    public static class DoesNotExistAnymoreCondition extends InstrumentationThreadCondition {
+    /** Fulfilled when no matching Views exist and are displayed. */
+    public static class NotDisplayedAnymoreCondition extends InstrumentationThreadCondition {
         private final Matcher<View> mMatcher;
-        private Matcher<View> mStricterMatcher;
-        private final ExistsCondition mExistsCondition;
 
-        public DoesNotExistAnymoreCondition(
-                Matcher<View> matcher, ExistsCondition existsCondition) {
+        private static final String VERBOSE_DESCRIPTION =
+                "(view has effective visibility <VISIBLE> and view.getGlobalVisibleRect() to return"
+                        + " non-empty rectangle)";
+        private static final String SUCCINCT_DESCRIPTION = "(getGlobalVisibleRect() > 0%)";
+
+        public NotDisplayedAnymoreCondition(Matcher<View> matcher) {
             super();
-            mMatcher = matcher;
-            mExistsCondition = existsCondition;
+            mMatcher = allOf(matcher, isDisplayed());
         }
 
         @Override
         public String buildDescription() {
-            if (mStricterMatcher != null) {
-                return "No more view: "
-                        + ViewConditions.createMatcherDescription(mMatcher)
-                        + " that exactly "
-                        + ViewConditions.createMatcherDescription(mStricterMatcher);
-            } else {
-                return "No more view: " + ViewConditions.createMatcherDescription(mMatcher);
-            }
+            return "No more view: "
+                    + createMatcherDescription(mMatcher, VERBOSE_DESCRIPTION, SUCCINCT_DESCRIPTION);
         }
 
         @Override
-        public boolean check() {
-            Matcher<View> matcherToUse;
-            if (mStricterMatcher != null) {
-                matcherToUse = mStricterMatcher;
-            } else if (mExistsCondition.getViewMatched() != null) {
-                mStricterMatcher = is(mExistsCondition.getViewMatched());
-                rebuildDescription();
-                matcherToUse = mStricterMatcher;
-            } else {
-                matcherToUse = mMatcher;
+        protected ConditionStatus checkWithSuppliers() {
+            if (!ApplicationStatus.hasVisibleActivities()) {
+                return fulfilled("No visible activities");
             }
 
             try {
-                onView(matcherToUse).check(doesNotExist());
-                return true;
+                onView(mMatcher)
+                        .withFailureHandler(RawFailureHandler.getInstance())
+                        .check(doesNotExist());
+                return fulfilled();
             } catch (AssertionError e) {
-                return false;
+                return notFulfilled();
             }
         }
     }
 
-    private static String getResourceName(int resId) {
-        return InstrumentationRegistry.getInstrumentation()
-                .getContext()
-                .getResources()
-                .getResourceName(resId);
-    }
-
-    /** Generates a description for the matcher that replaces raw ids with resource names. */
-    private static String createMatcherDescription(Matcher<View> matcher) {
+    /** Returns a less verbose view matcher description. */
+    private static String createMatcherDescription(
+            Matcher<View> matcher, String verboseString, String succinctString) {
         StringDescription d = new StringDescription();
         matcher.describeTo(d);
         String description = d.toString();
-        Pattern numberPattern = Pattern.compile("[0-9]+");
-        java.util.regex.Matcher numberMatcher = numberPattern.matcher(description);
-        ArrayList<Integer> starts = new ArrayList<>();
-        ArrayList<Integer> ends = new ArrayList<>();
-        ArrayList<String> resourceNames = new ArrayList<>();
-        while (numberMatcher.find()) {
-            int resourceId = Integer.parseInt(numberMatcher.group());
-            if (resourceId > 0xFFFFFF) {
-                // Build-time Android resources have ids > 0xFFFFFF
-                starts.add(numberMatcher.start());
-                ends.add(numberMatcher.end());
-                String resourceDescription = createResourceDescription(resourceId);
-                resourceNames.add(resourceDescription);
-            } else {
-                resourceNames.add(numberMatcher.group());
-            }
-        }
-
-        if (starts.size() == 0) return description;
-
-        String newDescription = description.substring(0, starts.get(0));
-        for (int i = 0; i < starts.size(); i++) {
-            newDescription += resourceNames.get(i);
-            int nextStart = (i == starts.size() - 1) ? description.length() : starts.get(i + 1);
-            newDescription += description.substring(ends.get(i), nextStart);
-        }
-
-        return newDescription;
-    }
-
-    private static String createResourceDescription(int possibleResourceId) {
-        try {
-            return getResourceName(possibleResourceId);
-        } catch (Resources.NotFoundException e) {
-            return String.valueOf(possibleResourceId);
-        }
+        return description.replace(verboseString, succinctString);
     }
 }
