@@ -16,7 +16,7 @@
 #include "base/test/scoped_feature_list.h"
 #include "base/test/task_environment.h"
 #include "build/build_config.h"
-#include "components/metrics/structured/storage.pb.h"
+#include "components/metrics/structured/proto/event_storage.pb.h"
 #include "testing/gmock/include/gmock/gmock.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
@@ -112,7 +112,7 @@ class ExternalMetricsTest : public testing::Test {
   base::test::ScopedFeatureList scoped_feature_list_;
   base::ScopedTempDir temp_dir_;
   std::unique_ptr<ExternalMetrics> external_metrics_;
-  absl::optional<EventsProto> proto_;
+  std::optional<EventsProto> proto_;
 
   base::test::TaskEnvironment task_environment_{
       base::test::TaskEnvironment::MainThreadType::UI,
@@ -324,7 +324,7 @@ TEST_F(ExternalMetricsTest, MAYBE_ProducedAndDroppedEventMetricCollected) {
   // verify that the number of histograms produced are what is expected.
   base::HistogramTester::CountsMap produced_map =
       histogram_tester_.GetTotalCountsForPrefix(
-          "StructuredMetrics.ExternalMetricsProduced.");
+          "StructuredMetrics.ExternalMetricsProduced2.");
   int produced_acc = 0;
   for (const auto& hist : produced_map) {
     produced_acc += hist.second;
@@ -332,7 +332,7 @@ TEST_F(ExternalMetricsTest, MAYBE_ProducedAndDroppedEventMetricCollected) {
 
   base::HistogramTester::CountsMap dropped_map =
       histogram_tester_.GetTotalCountsForPrefix(
-          "StructuredMetrics.ExternalMetricsDropped.");
+          "StructuredMetrics.ExternalMetricsDropped2.");
 
   int dropped_acc = 0;
   for (const auto& hist : dropped_map) {

@@ -1,25 +1,20 @@
 # Building BoringSSL
 
+## Checking out BoringSSL
+
+    git clone "https://boringssl.googlesource.com/boringssl"
+
 ## Build Prerequisites
 
 The standalone CMake build is primarily intended for developers. If embedding
 BoringSSL into another project with a pre-existing build system, see
-[INCORPORATING.md](/INCORPORATING.md).
+[INCORPORATING.md](./INCORPORATING.md).
 
 Unless otherwise noted, build tools must at most five years old, matching
 [Abseil guidelines](https://abseil.io/about/compatibility). If in doubt, use the
 most recent stable version of each tool.
 
   * [CMake](https://cmake.org/download/) 3.12 or later is required.
-
-  * A recent version of Perl is required. On Windows,
-    [Active State Perl](http://www.activestate.com/activeperl/) has been
-    reported to work, as has MSYS Perl.
-    [Strawberry Perl](http://strawberryperl.com/) also works but it adds GCC
-    to `PATH`, which can confuse some build tools when identifying the compiler
-    (removing `C:\Strawberry\c\bin` from `PATH` should resolve any problems).
-    If Perl is not found by CMake, it may be configured explicitly by setting
-    `PERL_EXECUTABLE`.
 
   * Building with [Ninja](https://ninja-build.org/) instead of Make is
     recommended, because it makes builds faster. On Windows, CMake's Visual
@@ -56,13 +51,12 @@ Using Make (does not work on Windows):
     cmake -B build
     make -C build
 
-You usually don't need to run `cmake` again after changing `CMakeLists.txt`
-files because the build scripts will detect changes to them and rebuild
-themselves automatically.
+This produces a debug build by default. Optimisation isn't enabled, and debug
+assertions are included. Pass `-DCMAKE_BUILD_TYPE=Release` to `cmake` to
+configure a release build:
 
-Note that the default build flags in the top-level `CMakeLists.txt` are for
-debugging—optimisation isn't enabled. Pass `-DCMAKE_BUILD_TYPE=Release` to
-`cmake` to configure a release build.
+    cmake -GNinja -B build -DCMAKE_BUILD_TYPE=Release
+    ninja -C build
 
 If you want to cross-compile then there is an example toolchain file for 32-bit
 Intel in `util/`. Wipe out the build directory, run `cmake` like this:
@@ -80,6 +74,10 @@ remove some code that is especially large.
 
 See [CMake's documentation](https://cmake.org/cmake/help/v3.4/manual/cmake-variables.7.html)
 for other variables which may be used to configure the build.
+
+You usually don't need to run `cmake` again after changing `CMakeLists.txt`
+files because the build scripts will detect changes to them and rebuild
+themselves automatically.
 
 ### Building for Android
 
@@ -204,3 +202,17 @@ from within `ssl/test/runner`.
 
 Both sets of tests may also be run with `ninja -C build run_tests`, but CMake
 3.2 or later is required to avoid Ninja's output buffering.
+
+# Pre-generated Files
+
+If modifying perlasm files, or `util/pregenerate/build.json`, you will need to
+run `go run ./util/pregenerate` to refresh some pre-generated files. To do this,
+you will need a recent version of Perl.
+
+On Windows, [Active State Perl](http://www.activestate.com/activeperl/) has been
+reported to work, as has MSYS Perl.
+[Strawberry Perl](http://strawberryperl.com/) also works but it adds GCC
+to `PATH`, which can confuse some build tools when identifying the compiler
+(removing `C:\Strawberry\c\bin` from `PATH` should resolve any problems).
+
+See (gen/README.md)[./gen/README.md] for more details.
