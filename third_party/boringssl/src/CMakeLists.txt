@@ -18,7 +18,7 @@ endif()
 include(sources.cmake)
 include(cmake/go.cmake)
 include(cmake/paths.cmake)
-include(cmake/perlasm.cmake)
+include(gen/sources.cmake)
 
 enable_language(C)
 enable_language(CXX)
@@ -43,16 +43,6 @@ function(install_if_enabled)
   endif()
 endfunction()
 
-if(ANDROID)
-  # Android-NDK CMake files reconfigure the path and so Perl won't be found.
-  # However, ninja will still find them in $PATH if we just name them.
-  if(NOT PERL_EXECUTABLE)
-    set(PERL_EXECUTABLE "perl")
-  endif()
-else()
-  find_package(Perl REQUIRED)
-endif()
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING)
   find_package(PkgConfig QUIET)
   if (PkgConfig_FOUND)
@@ -65,14 +55,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING)
   else()
     message("pkgconfig not found. Disabling unwind tests.")
   endif()
-endif()
-
-if(USE_CUSTOM_LIBCXX)
-  set(BORINGSSL_ALLOW_CXX_RUNTIME 1)
-endif()
-
-if(BORINGSSL_ALLOW_CXX_RUNTIME)
-  add_definitions(-DBORINGSSL_ALLOW_CXX_RUNTIME)
 endif()
 
 string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
@@ -139,8 +121,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
   # Note clang-cl is odd and sets both CLANG and MSVC. We base our configuration
   # primarily on our normal Clang one.
-  # TODO(bbe) took out -Wmissing-field-initializers for pki - fix and put back or disable only for pki
-  set(C_CXX_FLAGS "-Werror -Wformat=2 -Wsign-compare -Wwrite-strings -Wvla -Wshadow -Wtype-limits")
+  set(C_CXX_FLAGS "-Werror -Wformat=2 -Wsign-compare -Wwrite-strings -Wvla -Wshadow -Wtype-limits -Wmissing-field-initializers")
   if(MSVC)
     # clang-cl sets different default warnings than clang. It also treats -Wall
     # as -Weverything, to match MSVC. Instead -W3 is the alias for -Wall.
@@ -175,6 +156,18 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
     set(C_CXX_FLAGS "${C_CXX_FLAGS} -Wstring-concatenation")
   endif()
 
+  # Clang 12's -Wframe-larger-than reportedly does not work in clang-cl. See
+  # https://crbug.com/boringssl/709. Clang 13 includes the following fix, which
+  # may be related. Speculatively gate on Clang 13. That corresponds to
+  # AppleClang 13.1.6.
+  # https://github.com/llvm/llvm-project/commit/6aaf4fa2885600b0e31042071ad06f78218ab0f2
+  if((CMAKE_C_COMPILER_ID STREQUAL "Clang" AND
+      CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "13.0.0") OR
+     (CMAKE_C_COMPILER_ID STREQUAL "AppleClang" AND
+      CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "13.1.6"))
+    set(C_CXX_FLAGS "${C_CXX_FLAGS} -Wframe-larger-than=25344")
+  endif()
+
   if(CLANG OR CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "7.0.0")
     set(C_CXX_FLAGS "${C_CXX_FLAGS} -Wimplicit-fallthrough")
   endif()
@@ -185,10 +178,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
 
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_CXX_FLAGS} -Wmissing-prototypes -Wold-style-definition -Wstrict-prototypes")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${C_CXX_FLAGS} -Wmissing-declarations")
-
-  if(NOT MSVC AND NOT BORINGSSL_ALLOW_CXX_RUNTIME)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
-  endif()
 
   # In GCC, -Wmissing-declarations is the C++ spelling of -Wmissing-prototypes
   # and using the wrong one is an error. In Clang, -Wmissing-prototypes is the
@@ -212,7 +201,11 @@ elseif(MSVC)
   string(REPLACE "C" " -wd" MSVC_DISABLED_WARNINGS_STR
                             ${MSVC_DISABLED_WARNINGS_LIST})
   set(CMAKE_C_FLAGS   "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR}")
-  set(CMAKE_CXX_FLAGS "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR}")
+  # Without /Zc:__cplusplus, MSVC does not define the right value for
+  # __cplusplus. See https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+  # If this becomes too problematic for downstream code, we can look at
+  # _MSVC_LANG.
+  set(CMAKE_CXX_FLAGS "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR} -Zc:__cplusplus")
 endif()
 
 if(WIN32)
@@ -361,8 +354,6 @@ endif()
 
 if(CONSTANT_TIME_VALIDATION)
   add_definitions(-DBORINGSSL_CONSTANT_TIME_VALIDATION)
-  # Asserts will often test secret data.
-  add_definitions(-DNDEBUG)
 endif()
 
 if(MALLOC_FAILURE_TESTING)
@@ -521,14 +512,29 @@ add_custom_command(
 add_library(crypto_test_data OBJECT crypto_test_data.cc)
 
 add_subdirectory(crypto)
-add_subdirectory(ssl)
 add_subdirectory(ssl/test)
 add_subdirectory(util/fipstools)
 add_subdirectory(util/fipstools/acvp/modulewrapper)
-add_subdirectory(decrepit)
+
+add_library(ssl ${SSL_SOURCES})
+# Although libssl also provides headers that require an include directory, the
+# flag is already specified by libcrypto, so we omit target_include_directories
+# here.
+install_if_enabled(TARGETS ssl EXPORT OpenSSLTargets ${INSTALL_DESTINATION_DEFAULT})
+set_property(TARGET ssl PROPERTY EXPORT_NAME SSL)
+target_link_libraries(ssl crypto)
+
+add_library(decrepit ${DECREPIT_SOURCES})
+target_link_libraries(decrepit crypto ssl)
 
 add_library(test_support_lib STATIC ${TEST_SUPPORT_SOURCES})
-if (LIBUNWIND_FOUND)
+if(OPENSSL_ASM)
+  target_sources(test_support_lib PRIVATE ${TEST_SUPPORT_SOURCES_ASM})
+endif()
+if(OPENSSL_NASM)
+  target_sources(test_support_lib PRIVATE ${TEST_SUPPORT_SOURCES_NASM})
+endif()
+if(LIBUNWIND_FOUND)
   target_compile_options(test_support_lib PRIVATE ${LIBUNWIND_CFLAGS_OTHER})
   target_include_directories(test_support_lib PRIVATE ${LIBUNWIND_INCLUDE_DIRS})
   target_link_libraries(test_support_lib ${LIBUNWIND_LDFLAGS})
@@ -552,7 +558,6 @@ add_dependencies(all_tests crypto_test)
 add_executable(ssl_test ${SSL_TEST_SOURCES})
 target_link_libraries(ssl_test test_support_lib boringssl_gtest ssl crypto)
 add_dependencies(all_tests ssl_test)
-
 add_executable(decrepit_test ${DECREPIT_TEST_SOURCES})
 target_link_libraries(decrepit_test test_support_lib boringssl_gtest
                       decrepit crypto)
@@ -563,11 +568,9 @@ if(APPLE)
 endif()
 
 add_library(pki ${PKI_SOURCES})
-target_compile_definitions(pki PRIVATE _BORINGSSL_LIBPKI_)
 target_link_libraries(pki crypto)
 
 add_executable(pki_test ${PKI_TEST_SOURCES})
-target_compile_definitions(pki_test PRIVATE _BORINGSSL_LIBPKI_)
 target_link_libraries(pki_test test_support_lib boringssl_gtest pki crypto)
 add_dependencies(all_tests pki_test)
 
@@ -587,8 +590,8 @@ target_link_libraries(bssl ssl crypto)
 # existing tools, we, for now, copy the targets into the subdirectories. This
 # will be removed sometime in 2024.
 copy_post_build(crypto crypto_test urandom_test)
-copy_post_build(ssl ssl_test)
-copy_post_build(decrepit decrepit_test)
+copy_post_build(ssl ssl ssl_test)
+copy_post_build(decrepit decrepit decrepit_test)
 copy_post_build(tool bssl)
 
 if(FUZZ)
@@ -646,9 +649,14 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
 
 add_custom_target(
     run_tests
+    COMMAND ${CMAKE_COMMAND} -E echo "Running Go tests"
     COMMAND ${GO_EXECUTABLE} test ${GO_TESTS}
+    COMMAND ${CMAKE_COMMAND} -E echo
+    COMMAND ${CMAKE_COMMAND} -E echo "Running unit tests"
     COMMAND ${GO_EXECUTABLE} run util/all_tests.go -build-dir
             ${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E echo
+    COMMAND ${CMAKE_COMMAND} -E echo "Running SSL tests"
     COMMAND cd ssl/test/runner &&
             ${GO_EXECUTABLE} test -shim-path $<TARGET_FILE:bssl_shim>
               ${HANDSHAKER_ARGS} ${RUNNER_ARGS}
