@@ -10,12 +10,14 @@
 
 #include "build/build_config.h"
 #include "partition_alloc/extended_api.h"
+#include "partition_alloc/internal_allocator.h"
 #include "partition_alloc/partition_address_space.h"
 #include "partition_alloc/partition_alloc_base/thread_annotations.h"
 #include "partition_alloc/partition_alloc_base/threading/platform_thread_for_testing.h"
 #include "partition_alloc/partition_alloc_buildflags.h"
 #include "partition_alloc/partition_alloc_config.h"
 #include "partition_alloc/partition_alloc_for_testing.h"
+#include "partition_alloc/partition_freelist_entry.h"
 #include "partition_alloc/partition_lock.h"
 #include "partition_alloc/partition_root.h"
 #include "partition_alloc/tagging.h"
@@ -61,7 +63,6 @@ class DeltaCounter {
 // Forbid extras, since they make finding out which bucket is used harder.
 std::unique_ptr<PartitionAllocatorForTesting> CreateAllocator() {
   PartitionOptions opts;
-  opts.aligned_alloc = PartitionOptions::kAllowed;
 #if !BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC)
   opts.thread_cache = PartitionOptions::kEnabled;
 #endif  // BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC)
@@ -128,8 +129,7 @@ class PartitionAllocThreadCacheTest
     ASSERT_TRUE(tcache);
     tcache->Purge();
 
-    ASSERT_EQ(root()->get_total_size_of_allocated_bytes(),
-              GetBucketSizeForThreadCache());
+    ASSERT_EQ(root()->get_total_size_of_allocated_bytes(), 0u);
   }
 
   PartitionRoot* root() { return allocator_->root(); }
@@ -275,7 +275,6 @@ TEST_P(PartitionAllocThreadCacheTest, Purge) {
 
 TEST_P(PartitionAllocThreadCacheTest, NoCrossPartitionCache) {
   PartitionOptions opts;
-  opts.aligned_alloc = PartitionOptions::kAllowed;
   opts.star_scan_quarantine = PartitionOptions::kAllowed;
   PartitionAllocatorForTesting allocator(opts);
 
@@ -375,7 +374,7 @@ size_t FillThreadCacheAndReturnIndex(PartitionRoot* root,
   return bucket_index;
 }
 
-// TODO(1151236): To remove callback from partition allocator's DEPS,
+// TODO(1151236): To remove callback from PartitionAlloc's DEPS,
 // rewrite the tests without BindLambdaForTesting and RepeatingClosure.
 // However this makes a little annoying to add more tests using their
 // own threads. Need to support an easier way to implement tests using
@@ -1171,12 +1170,19 @@ TEST_P(PartitionAllocThreadCacheTest, DISABLED_DynamicSizeThresholdPurge) {
 }
 
 TEST_P(PartitionAllocThreadCacheTest, ClearFromTail) {
-  auto count_items = [](ThreadCache* tcache, size_t index) {
+  auto count_items = [this](ThreadCache* tcache, size_t index) {
+    const internal::PartitionFreelistDispatcher* freelist_dispatcher =
+        this->root()->get_freelist_dispatcher();
     uint8_t count = 0;
     auto* head = tcache->bucket_for_testing(index).freelist_head;
     while (head) {
-      head = head->GetNextForThreadCache<true>(
-          tcache->bucket_for_testing(index).slot_size);
+#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+      head = freelist_dispatcher->GetNextForThreadCacheTrue(
+          head, tcache->bucket_for_testing(index).slot_size);
+#else
+      head = freelist_dispatcher->GetNextForThreadCache<true>(
+          head, tcache->bucket_for_testing(index).slot_size);
+#endif  // USE_FREELIST_POOL_OFFSETS
       count++;
     }
     return count;
@@ -1212,16 +1218,8 @@ TEST_P(PartitionAllocThreadCacheTest, MAYBE_Bookkeeping) {
                       PurgeFlags::kDiscardUnusedSystemPages);
   root()->ResetBookkeepingForTesting();
 
-  // The ThreadCache is allocated before we change buckets, so its size is
-  // always based on the neutral distribution.
-  size_t tc_bucket_index = root()->SizeToBucketIndex(
-      sizeof(ThreadCache), PartitionRoot::BucketDistribution::kNeutral);
-  auto* tc_bucket = &root()->buckets[tc_bucket_index];
-  size_t expected_allocated_size =
-      tc_bucket->slot_size;  // For the ThreadCache itself.
-  size_t expected_committed_size = kUseLazyCommit
-                                       ? internal::SystemPageSize()
-                                       : tc_bucket->get_bytes_per_span();
+  size_t expected_allocated_size = 0;
+  size_t expected_committed_size = 0;
 
   EXPECT_EQ(expected_committed_size, root()->total_size_of_committed_pages);
   EXPECT_EQ(expected_committed_size, root()->max_size_of_committed_pages);
@@ -1271,8 +1269,6 @@ TEST_P(PartitionAllocThreadCacheTest, MAYBE_Bookkeeping) {
   EXPECT_EQ(root()->get_total_size_of_allocated_bytes(),
             expected_allocated_size);
   tcache->Purge();
-  EXPECT_EQ(root()->get_total_size_of_allocated_bytes(),
-            GetBucketSizeForThreadCache());
 }
 
 TEST_P(PartitionAllocThreadCacheTest, TryPurgeNoAllocs) {
@@ -1289,10 +1285,16 @@ TEST_P(PartitionAllocThreadCacheTest, TryPurgeMultipleCorrupted) {
   auto* medium_bucket = root()->buckets + SizeToIndex(kMediumSize);
 
   auto* curr = medium_bucket->active_slot_spans_head->get_freelist_head();
-  curr = curr->GetNextForThreadCache<true>(kMediumSize);
-  curr->CorruptNextForTesting(0x12345678);
+  const internal::PartitionFreelistDispatcher* freelist_dispatcher =
+      root()->get_freelist_dispatcher();
+#if BUILDFLAG(USE_FREELIST_POOL_OFFSETS)
+  curr = freelist_dispatcher->GetNextForThreadCacheTrue(curr, kMediumSize);
+#else
+  curr = freelist_dispatcher->GetNextForThreadCache<true>(curr, kMediumSize);
+#endif  // USE_FREELIST_POOL_OFFSETS
+  freelist_dispatcher->CorruptNextForTesting(curr, 0x12345678);
   tcache->TryPurge();
-  curr->SetNext(nullptr);
+  freelist_dispatcher->SetNext(curr, nullptr);
   root()->Free(ptr);
 }
 

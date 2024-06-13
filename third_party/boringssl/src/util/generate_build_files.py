@@ -23,47 +23,6 @@ import sys
 import json
 
 
-# OS_ARCH_COMBOS maps from OS and platform to the OpenSSL assembly "style" for
-# that platform and the extension used by asm files.
-#
-# TODO(https://crbug.com/boringssl/542): This probably should be a map, but some
-# downstream scripts import this to find what folders to add/remove from git.
-OS_ARCH_COMBOS = [
-    ('apple', 'arm', 'ios32', [], 'S'),
-    ('apple', 'aarch64', 'ios64', [], 'S'),
-    ('apple', 'x86', 'macosx', ['-fPIC', '-DOPENSSL_IA32_SSE2'], 'S'),
-    ('apple', 'x86_64', 'macosx', [], 'S'),
-    ('linux', 'arm', 'linux32', [], 'S'),
-    ('linux', 'aarch64', 'linux64', [], 'S'),
-    ('linux', 'x86', 'elf', ['-fPIC', '-DOPENSSL_IA32_SSE2'], 'S'),
-    ('linux', 'x86_64', 'elf', [], 'S'),
-    ('win', 'x86', 'win32n', ['-DOPENSSL_IA32_SSE2'], 'asm'),
-    ('win', 'x86_64', 'nasm', [], 'asm'),
-    ('win', 'aarch64', 'win64', [], 'S'),
-]
-
-# NON_PERL_FILES enumerates assembly files that are not processed by the
-# perlasm system.
-NON_PERL_FILES = {
-    ('apple', 'x86_64'): [
-        'src/third_party/fiat/asm/fiat_curve25519_adx_mul.S',
-        'src/third_party/fiat/asm/fiat_curve25519_adx_square.S',
-        'src/third_party/fiat/asm/fiat_p256_adx_mul.S',
-        'src/third_party/fiat/asm/fiat_p256_adx_sqr.S',
-    ],
-    ('linux', 'arm'): [
-        'src/crypto/curve25519/asm/x25519-asm-arm.S',
-        'src/crypto/poly1305/poly1305_arm_asm.S',
-    ],
-    ('linux', 'x86_64'): [
-        'src/crypto/hrss/asm/poly_rq_mul.S',
-        'src/third_party/fiat/asm/fiat_curve25519_adx_mul.S',
-        'src/third_party/fiat/asm/fiat_curve25519_adx_square.S',
-        'src/third_party/fiat/asm/fiat_p256_adx_mul.S',
-        'src/third_party/fiat/asm/fiat_p256_adx_sqr.S',
-    ],
-}
-
 PREFIX = None
 EMBED_TEST_DATA = True
 
@@ -265,9 +224,12 @@ class Bazel(object):
       self.PrintVariableSection(out, 'crypto_sources', files['crypto'])
       self.PrintVariableSection(out, 'crypto_sources_asm', files['crypto_asm'])
       self.PrintVariableSection(out, 'crypto_sources_nasm', files['crypto_nasm'])
+      self.PrintVariableSection(out, 'pki_headers', files['pki_headers'])
       self.PrintVariableSection(
           out, 'pki_internal_headers', files['pki_internal_headers'])
       self.PrintVariableSection(out, 'pki_sources', files['pki'])
+      self.PrintVariableSection(out, 'rust_bssl_sys', files['rust_bssl_sys'])
+      self.PrintVariableSection(out, 'rust_bssl_crypto', files['rust_bssl_crypto'])
       self.PrintVariableSection(out, 'tool_sources', files['tool'])
       self.PrintVariableSection(out, 'tool_headers', files['tool_headers'])
 
@@ -339,10 +301,15 @@ class GN(object):
       out.write('\n')
     self.firstSection = False
 
-    out.write('%s = [\n' % name)
-    for f in sorted(files):
-      out.write('  "%s",\n' % f)
-    out.write(']\n')
+    if len(files) == 0:
+      out.write('%s = []\n' % name)
+    elif len(files) == 1:
+      out.write('%s = [ "%s" ]\n' % (name, files[0]))
+    else:
+      out.write('%s = [\n' % name)
+      for f in sorted(files):
+        out.write('  "%s",\n' % f)
+      out.write(']\n')
 
   def WriteFiles(self, files):
     with open('BUILD.generated.gni', 'w+') as out:
@@ -354,15 +321,17 @@ class GN(object):
       self.PrintVariableSection(out, 'crypto_sources_asm', files['crypto_asm'])
       self.PrintVariableSection(out, 'crypto_sources_nasm',
                                 files['crypto_nasm'])
-      self.PrintVariableSection(out, 'crypto_headers',
-                                files['crypto_headers'])
+      self.PrintVariableSection(out, 'crypto_headers', files['crypto_headers'])
+      self.PrintVariableSection(out, 'rust_bssl_sys', files['rust_bssl_sys'])
+      self.PrintVariableSection(out, 'rust_bssl_crypto',
+                                files['rust_bssl_crypto'])
       self.PrintVariableSection(out, 'ssl_sources',
                                 files['ssl'] + files['ssl_internal_headers'])
       self.PrintVariableSection(out, 'ssl_headers', files['ssl_headers'])
-      self.PrintVariableSection(out, 'pki_sources',
-                                files['pki'])
+      self.PrintVariableSection(out, 'pki_sources', files['pki'])
       self.PrintVariableSection(out, 'pki_internal_headers',
                                 files['pki_internal_headers'])
+      self.PrintVariableSection(out, 'pki_headers', files['pki_headers'])
       self.PrintVariableSection(out, 'tool_sources',
                                 files['tool'] + files['tool_headers'])
 
@@ -544,7 +513,7 @@ endif()
       self.PrintExe(cmake, 'bssl', files['tool'], ['ssl', 'crypto'])
 
       cmake.write(
-R'''if(NOT ANDROID)
+R'''if(NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
   find_package(Threads REQUIRED)
   target_link_libraries(crypto Threads::Threads)
 endif()
@@ -559,17 +528,6 @@ class JSON(object):
   def WriteFiles(self, files):
     with open('sources.json', 'w+') as f:
       json.dump(files, f, sort_keys=True, indent=2)
-
-def FindCMakeFiles(directory):
-  """Returns list of all CMakeLists.txt files recursively in directory."""
-  cmakefiles = []
-
-  for (path, _, filenames) in os.walk(directory):
-    for filename in filenames:
-      if filename == 'CMakeLists.txt':
-        cmakefiles.append(os.path.join(path, filename))
-
-  return cmakefiles
 
 def OnlyFIPSFragments(path, dent, is_dir):
   return is_dir or (path.startswith(
@@ -606,6 +564,14 @@ def SSLHeaderFiles(path, dent, is_dir):
   return dent in ['ssl.h', 'tls1.h', 'ssl23.h', 'ssl3.h', 'dtls1.h', 'srtp.h']
 
 
+def CryptoHeaderFiles(path, dent, is_dir):
+  if SSLHeaderFiles(path, dent, is_dir):
+    return False
+  if is_dir and dent == 'pki':
+    return False
+  return True
+
+
 def FindCFiles(directory, filter_func):
   """Recurses through directory and returns a list of paths to all the C source
   files that pass filter_func."""
@@ -627,6 +593,21 @@ def FindCFiles(directory, filter_func):
   return cfiles
 
 
+def FindRustFiles(directory):
+  """Recurses through directory and returns a list of paths to all the Rust source
+  files."""
+  rust_files = []
+
+  for (path, dirnames, filenames) in os.walk(directory):
+    for filename in filenames:
+      if not filename.endswith('.rs'):
+        continue
+      rust_files.append(os.path.join(path, filename))
+
+  rust_files.sort()
+  return rust_files
+
+
 def FindHeaderFiles(directory, filter_func):
   """Recurses through directory and returns a list of paths to all the header files that pass filter_func."""
   hfiles = []
@@ -645,85 +626,6 @@ def FindHeaderFiles(directory, filter_func):
 
   hfiles.sort()
   return hfiles
-
-
-def ExtractPerlAsmFromCMakeFile(cmakefile):
-  """Parses the contents of the CMakeLists.txt file passed as an argument and
-  returns a list of all the perlasm() directives found in the file."""
-  perlasms = []
-  with open(cmakefile) as f:
-    for line in f:
-      line = line.strip()
-      if not line.startswith('perlasm('):
-        continue
-      if not line.endswith(')'):
-        raise ValueError('Bad perlasm line in %s' % cmakefile)
-      # Remove "perlasm(" from start and ")" from end
-      params = line[8:-1].split()
-      if len(params) < 4:
-        raise ValueError('Bad perlasm line in %s' % cmakefile)
-      perlasms.append({
-          'arch': params[1],
-          'output': os.path.join(os.path.dirname(cmakefile), params[2]),
-          'input': os.path.join(os.path.dirname(cmakefile), params[3]),
-          'extra_args': params[4:],
-      })
-
-  return perlasms
-
-
-def ReadPerlAsmOperations():
-  """Returns a list of all perlasm() directives found in CMake config files in
-  src/."""
-  perlasms = []
-  cmakefiles = FindCMakeFiles('src')
-
-  for cmakefile in cmakefiles:
-    perlasms.extend(ExtractPerlAsmFromCMakeFile(cmakefile))
-
-  return perlasms
-
-
-def PerlAsm(output_filename, input_filename, perlasm_style, extra_args):
-  """Runs the a perlasm script and puts the output into output_filename."""
-  base_dir = os.path.dirname(output_filename)
-  if not os.path.isdir(base_dir):
-    os.makedirs(base_dir)
-  subprocess.check_call(
-      ['perl', input_filename, perlasm_style] + extra_args + [output_filename])
-
-
-def WriteAsmFiles(perlasms):
-  """Generates asm files from perlasm directives for each supported OS x
-  platform combination."""
-  asmfiles = {}
-
-  for perlasm in perlasms:
-    for (osname, arch, perlasm_style, extra_args, asm_ext) in OS_ARCH_COMBOS:
-      if arch != perlasm['arch']:
-        continue
-      # TODO(https://crbug.com/boringssl/542): Now that we incorporate osname in
-      # the output filename, the asm files can just go in a single directory.
-      # For now, we keep them in target-specific directories to avoid breaking
-      # downstream scripts.
-      key = (osname, arch)
-      outDir = '%s-%s' % key
-      output = perlasm['output']
-      if not output.startswith('src'):
-        raise ValueError('output missing src: %s' % output)
-      output = os.path.join(outDir, output[4:])
-      output = '%s-%s.%s' % (output, osname, asm_ext)
-      PerlAsm(output, perlasm['input'], perlasm_style,
-              extra_args + perlasm['extra_args'])
-      asmfiles.setdefault(key, []).append(output)
-
-  for (key, non_perl_asm_files) in NON_PERL_FILES.items():
-    asmfiles.setdefault(key, []).extend(non_perl_asm_files)
-
-  for files in asmfiles.values():
-    files.sort()
-
-  return asmfiles
 
 
 def ExtractVariablesFromCMakeFile(cmakefile):
@@ -760,24 +662,25 @@ def PrefixWithSrc(files):
 
 
 def main(platforms):
+  # TODO(crbug.com/boringssl/542): Move everything to util/pregenerate and the
+  # new JSON file.
   cmake = ExtractVariablesFromCMakeFile(os.path.join('src', 'sources.cmake'))
+  with open(os.path.join('src', 'gen', 'sources.json')) as f:
+    sources = json.load(f)
+
   crypto_c_files = (FindCFiles(os.path.join('src', 'crypto'), NoTestsNorFIPSFragments) +
                     FindCFiles(os.path.join('src', 'third_party', 'fiat'), NoTestsNorFIPSFragments))
   fips_fragments = FindCFiles(os.path.join('src', 'crypto', 'fipsmodule'), OnlyFIPSFragments)
-  ssl_source_files = FindCFiles(os.path.join('src', 'ssl'), NoTests)
   tool_h_files = FindHeaderFiles(os.path.join('src', 'tool'), AllFiles)
+  bssl_sys_files = FindRustFiles(os.path.join('src', 'rust', 'bssl-sys', 'src'))
+  bssl_crypto_files = FindRustFiles(os.path.join('src', 'rust', 'bssl-crypto', 'src'))
 
   # BCM shared library C files
   bcm_crypto_c_files = [
       os.path.join('src', 'crypto', 'fipsmodule', 'bcm.c')
   ]
 
-  # Generate err_data.c
-  with open('err_data.c', 'w+') as err_data:
-    subprocess.check_call(['go', 'run', 'err_data_generate.go'],
-                          cwd=os.path.join('src', 'crypto', 'err'),
-                          stdout=err_data)
-  crypto_c_files.append('err_data.c')
+  crypto_c_files += PrefixWithSrc(sources['crypto']['srcs'])
   crypto_c_files.sort()
 
   test_support_h_files = (
@@ -802,40 +705,31 @@ def main(platforms):
   ssl_h_files = FindHeaderFiles(os.path.join('src', 'include', 'openssl'),
                                 SSLHeaderFiles)
 
-  pki_internal_h_files = FindHeaderFiles(os.path.join('src', 'pki'), AllFiles);
+  pki_internal_h_files = FindHeaderFiles(os.path.join('src', 'pki'), AllFiles)
 
-  def NotSSLHeaderFiles(path, filename, is_dir):
-    return not SSLHeaderFiles(path, filename, is_dir)
   crypto_h_files = FindHeaderFiles(os.path.join('src', 'include', 'openssl'),
-                                   NotSSLHeaderFiles)
+                                   CryptoHeaderFiles)
+  pki_h_files = FindHeaderFiles(
+      os.path.join('src', 'include', 'openssl', 'pki'), AllFiles)
 
   ssl_internal_h_files = FindHeaderFiles(os.path.join('src', 'ssl'), NoTests)
   crypto_internal_h_files = (
       FindHeaderFiles(os.path.join('src', 'crypto'), NoTests) +
       FindHeaderFiles(os.path.join('src', 'third_party', 'fiat'), NoTests))
 
-  asm_outputs = sorted(WriteAsmFiles(ReadPerlAsmOperations()).items())
-
-  # Generate combined source lists for gas and nasm. Some files appear in
-  # multiple per-platform lists, so we de-duplicate.
-  #
-  # TODO(https://crbug.com/boringssl/542): It would be simpler to build the
-  # combined source lists directly. This is a remnant of the previous assembly
-  # strategy. When we move to pre-generated assembly files, this will be
-  # removed.
-  asm_sources = set()
-  nasm_sources = set()
-  for ((osname, arch), asm_files) in asm_outputs:
-    if (osname, arch) in (('win', 'x86'), ('win', 'x86_64')):
-      nasm_sources.update(asm_files)
-    else:
-      asm_sources.update(asm_files)
+  # TODO(crbug.com/boringssl/542): generate_build_files.py historically reported
+  # all the assembly files as part of libcrypto. Merge them for now, but we
+  # should split them out later.
+  crypto_asm = sorted(sources['bcm']['asm'] + sources['crypto']['asm'] +
+                      sources['test_support']['asm'])
+  crypto_nasm = sorted(sources['bcm']['nasm'] + sources['crypto']['nasm'] +
+                       sources['test_support']['nasm'])
 
   files = {
       'bcm_crypto': bcm_crypto_c_files,
       'crypto': crypto_c_files,
-      'crypto_asm': sorted(list(asm_sources)),
-      'crypto_nasm': sorted(list(nasm_sources)),
+      'crypto_asm': PrefixWithSrc(crypto_asm),
+      'crypto_nasm': PrefixWithSrc(crypto_nasm),
       'crypto_headers': crypto_h_files,
       'crypto_internal_headers': crypto_internal_h_files,
       'crypto_test': crypto_test_files,
@@ -843,10 +737,13 @@ def main(platforms):
       'fips_fragments': fips_fragments,
       'fuzz': fuzz_c_files,
       'pki': PrefixWithSrc(cmake['PKI_SOURCES']),
+      'pki_headers': pki_h_files,
       'pki_internal_headers': sorted(list(pki_internal_h_files)),
       'pki_test': PrefixWithSrc(cmake['PKI_TEST_SOURCES']),
       'pki_test_data': PrefixWithSrc(cmake['PKI_TEST_DATA']),
-      'ssl': ssl_source_files,
+      'rust_bssl_crypto': bssl_crypto_files,
+      'rust_bssl_sys': bssl_sys_files,
+      'ssl': PrefixWithSrc(cmake['SSL_SOURCES']),
       'ssl_headers': ssl_h_files,
       'ssl_internal_headers': ssl_internal_h_files,
       'ssl_test': PrefixWithSrc(cmake['SSL_TEST_SOURCES']),

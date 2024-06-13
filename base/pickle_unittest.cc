@@ -12,6 +12,7 @@
 #include <string>
 #include <tuple>
 
+#include "base/containers/span.h"
 #include "base/strings/utf_string_conversions.h"
 #include "build/build_config.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -109,6 +110,16 @@ void VerifyResult(const Pickle& pickle) {
 
 }  // namespace
 
+TEST(PickleTest, UnownedVsOwned) {
+  const uint8_t buffer[1] = {0x00};
+
+  Pickle unowned_pickle = Pickle::WithUnownedBuffer(buffer);
+  EXPECT_EQ(unowned_pickle.GetTotalAllocatedSize(), 0u);
+
+  Pickle owned_pickle = Pickle::WithData(buffer);
+  EXPECT_GE(unowned_pickle.GetTotalAllocatedSize(), 0u);
+}
+
 TEST(PickleTest, EncodeDecode) {
   Pickle pickle;
 
@@ -126,7 +137,7 @@ TEST(PickleTest, EncodeDecode) {
   pickle.WriteString16(teststring16);
   pickle.WriteString(testrawstring);
   pickle.WriteString16(testrawstring16);
-  pickle.WriteData(testdata, testdatalen);
+  pickle.WriteData(std::string_view(testdata, testdatalen));
   VerifyResult(pickle);
 
   // test copy constructor
@@ -162,10 +173,10 @@ TEST(PickleTest, LongFrom64Bit) {
 
 // Tests that we can handle really small buffers.
 TEST(PickleTest, SmallBuffer) {
-  std::unique_ptr<char[]> buffer(new char[1]);
+  const uint8_t buffer[] = {0x00};
 
   // We should not touch the buffer.
-  Pickle pickle(buffer.get(), 1);
+  Pickle pickle = Pickle::WithUnownedBuffer(buffer);
 
   PickleIterator iter(pickle);
   int data;
@@ -174,9 +185,9 @@ TEST(PickleTest, SmallBuffer) {
 
 // Tests that we can handle improper headers.
 TEST(PickleTest, BigSize) {
-  int buffer[] = { 0x56035200, 25, 40, 50 };
+  const int buffer[4] = {0x56035200, 25, 40, 50};
 
-  Pickle pickle(reinterpret_cast<char*>(buffer), sizeof(buffer));
+  Pickle pickle = Pickle::WithUnownedBuffer(as_byte_span(buffer));
   EXPECT_EQ(0U, pickle.size());
 
   PickleIterator iter(pickle);
@@ -191,8 +202,7 @@ TEST(PickleTest, CopyWithInvalidHeader) {
   // buffer size. Which results in Pickle's internal |header_| = null.
   {
     Pickle::Header header = {.payload_size = 100};
-    const char* data = reinterpret_cast<char*>(&header);
-    const Pickle pickle(data, sizeof(header));
+    const Pickle pickle = Pickle::WithUnownedBuffer(byte_span_from_ref(header));
 
     EXPECT_EQ(0U, pickle.size());
     EXPECT_FALSE(pickle.data());
@@ -208,8 +218,8 @@ TEST(PickleTest, CopyWithInvalidHeader) {
   // 2. Input buffer's size < sizeof(Pickle::Header). Which must also result in
   // Pickle's internal |header_| = null.
   {
-    const char data[2] = {0x00, 0x00};
-    const Pickle pickle(data, sizeof(data));
+    const uint8_t data[] = {0x00, 0x00};
+    const Pickle pickle = Pickle::WithUnownedBuffer(data);
     static_assert(sizeof(Pickle::Header) > sizeof(data));
 
     EXPECT_EQ(0U, pickle.size());
@@ -228,7 +238,7 @@ TEST(PickleTest, CopyWithInvalidHeader) {
 TEST(PickleTest, UnalignedSize) {
   int buffer[] = { 10, 25, 40, 50 };
 
-  Pickle pickle(reinterpret_cast<char*>(buffer), sizeof(buffer));
+  Pickle pickle = Pickle::WithUnownedBuffer(as_byte_span(buffer));
 
   PickleIterator iter(pickle);
   int data;
@@ -440,7 +450,8 @@ TEST(PickleTest, Resize) {
   // note that any data will have a 4-byte header indicating the size
   const size_t payload_size_after_header = unit - sizeof(uint32_t);
   Pickle pickle;
-  pickle.WriteData(data_ptr, payload_size_after_header - sizeof(uint32_t));
+  pickle.WriteData(
+      std::string_view(data_ptr, payload_size_after_header - sizeof(uint32_t)));
   size_t cur_payload = payload_size_after_header;
 
   // note: we assume 'unit' is a power of 2
@@ -448,13 +459,13 @@ TEST(PickleTest, Resize) {
   EXPECT_EQ(pickle.payload_size(), payload_size_after_header);
 
   // fill out a full page (noting data header)
-  pickle.WriteData(data_ptr, unit - sizeof(uint32_t));
+  pickle.WriteData(std::string_view(data_ptr, unit - sizeof(uint32_t)));
   cur_payload += unit;
   EXPECT_EQ(unit * 2, pickle.capacity_after_header());
   EXPECT_EQ(cur_payload, pickle.payload_size());
 
   // one more byte should double the capacity
-  pickle.WriteData(data_ptr, 1);
+  pickle.WriteData(std::string_view(data_ptr, 1u));
   cur_payload += 8;
   EXPECT_EQ(unit * 4, pickle.capacity_after_header());
   EXPECT_EQ(cur_payload, pickle.payload_size());
@@ -488,7 +499,7 @@ TEST(PickleTest, EqualsOperator) {
   Pickle source;
   source.WriteInt(1);
 
-  Pickle copy_refs_source_buffer(source.data_as_char(), source.size());
+  Pickle copy_refs_source_buffer = Pickle::WithUnownedBuffer(source);
   Pickle copy;
   copy = copy_refs_source_buffer;
   ASSERT_EQ(source.size(), copy.size());
@@ -497,7 +508,7 @@ TEST(PickleTest, EqualsOperator) {
 TEST(PickleTest, EvilLengths) {
   Pickle source;
   std::string str(100000, 'A');
-  source.WriteData(str.c_str(), 100000);
+  source.WriteData(std::string_view(str.c_str(), 100000u));
   // ReadString16 used to have its read buffer length calculation wrong leading
   // to out-of-bounds reading.
   PickleIterator iter(source);
@@ -505,7 +516,7 @@ TEST(PickleTest, EvilLengths) {
   EXPECT_FALSE(iter.ReadString16(&str16));
 
   // And check we didn't break ReadString16.
-  str16 = (wchar_t) 'A';
+  str16 = u"A";
   Pickle str16_pickle;
   str16_pickle.WriteString16(str16);
   iter = PickleIterator(str16_pickle);
@@ -523,7 +534,7 @@ TEST(PickleTest, EvilLengths) {
 // Check we can write zero bytes of data and 'data' can be NULL.
 TEST(PickleTest, ZeroLength) {
   Pickle pickle;
-  pickle.WriteData(nullptr, 0);
+  pickle.WriteData(std::string_view());
 
   PickleIterator iter(pickle);
   const char* outdata;

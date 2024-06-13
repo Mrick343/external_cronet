@@ -4,9 +4,10 @@
 
 #include "net/ssl/ssl_platform_key_util.h"
 
+#include <string_view>
+
 #include "base/lazy_instance.h"
 #include "base/logging.h"
-#include "base/strings/string_piece.h"
 #include "base/task/single_thread_task_runner.h"
 #include "base/threading/thread.h"
 #include "crypto/openssl_util.h"
@@ -56,7 +57,7 @@ bssl::UniquePtr<EVP_PKEY> GetClientCertPublicKey(
     const X509Certificate* certificate) {
   crypto::OpenSSLErrStackTracer tracker(FROM_HERE);
 
-  base::StringPiece spki;
+  std::string_view spki;
   if (!asn1::ExtractSPKIFromDERCert(
           x509_util::CryptoBufferAsStringPiece(certificate->cert_buffer()),
           &spki)) {
@@ -88,19 +89,19 @@ bool GetClientCertInfo(const X509Certificate* certificate,
   return true;
 }
 
-absl::optional<std::vector<uint8_t>> AddPSSPadding(
+std::optional<std::vector<uint8_t>> AddPSSPadding(
     EVP_PKEY* pubkey,
     const EVP_MD* md,
     base::span<const uint8_t> digest) {
   RSA* rsa = EVP_PKEY_get0_RSA(pubkey);
   if (!rsa) {
-    return absl::nullopt;
+    return std::nullopt;
   }
   std::vector<uint8_t> ret(RSA_size(rsa));
   if (digest.size() != EVP_MD_size(md) ||
       !RSA_padding_add_PKCS1_PSS_mgf1(rsa, ret.data(), digest.data(), md, md,
                                       -1 /* salt length is digest length */)) {
-    return absl::nullopt;
+    return std::nullopt;
   }
   return ret;
 }

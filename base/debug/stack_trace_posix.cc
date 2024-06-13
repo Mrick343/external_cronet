@@ -79,10 +79,10 @@
 #include "build/build_config.h"
 
 #if defined(USE_SYMBOLIZE)
-#include "base/third_party/symbolize/symbolize.h"
+#include "base/third_party/symbolize/symbolize.h"  // nogncheck
 
 #if BUILDFLAG(ENABLE_STACK_TRACE_LINE_NUMBERS)
-#include "base/debug/dwarf_line_no.h"
+#include "base/debug/dwarf_line_no.h"  // nogncheck
 #endif
 
 #endif
@@ -200,8 +200,7 @@ void ProcessBacktrace(const void* const* trace,
 
 #if defined(USE_SYMBOLIZE)
 #if BUILDFLAG(ENABLE_STACK_TRACE_LINE_NUMBERS)
-  uint64_t* cu_offsets =
-      static_cast<uint64_t*>(alloca(sizeof(uint64_t) * size));
+  uint64_t cu_offsets[StackTrace::kMaxTraces] = {};
   GetDwarfCompileUnitOffsets(trace, cu_offsets, size);
 #endif
 
@@ -1046,7 +1045,9 @@ size_t CollectStackTrace(const void** trace, size_t count) {
 void StackTrace::PrintWithPrefix(const char* prefix_string) const {
 // NOTE: This code MUST be async-signal safe (it's used by in-process
 // stack dumping signal handler). NO malloc or stdio is allowed here.
-
+if (!count_ || ShouldSuppressOutput()) {
+  return;
+}
 #if defined(HAVE_BACKTRACE)
   PrintBacktraceOutputHandler handler;
   ProcessBacktrace(trace_, count_, prefix_string, &handler);
@@ -1056,6 +1057,9 @@ void StackTrace::PrintWithPrefix(const char* prefix_string) const {
 #if defined(HAVE_BACKTRACE)
 void StackTrace::OutputToStreamWithPrefix(std::ostream* os,
                                           const char* prefix_string) const {
+  if (!count_ || ShouldSuppressOutput()) {
+    return;
+  }
   StreamBacktraceOutputHandler handler(os);
   ProcessBacktrace(trace_, count_, prefix_string, &handler);
 }
