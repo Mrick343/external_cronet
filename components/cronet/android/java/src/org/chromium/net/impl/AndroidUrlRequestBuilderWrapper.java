@@ -10,6 +10,7 @@ import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_VERSION;
 import android.net.Network;
 
 import androidx.annotation.RequiresExtension;
+import androidx.annotation.VisibleForTesting;
 
 import org.chromium.net.CronetEngine;
 
@@ -18,7 +19,6 @@ import java.util.concurrent.Executor;
 @RequiresExtension(extension = EXT_API_LEVEL, version = EXT_VERSION)
 class AndroidUrlRequestBuilderWrapper extends org.chromium.net.ExperimentalUrlRequest.Builder {
     private final android.net.http.UrlRequest.Builder mBackend;
-
     public AndroidUrlRequestBuilderWrapper(android.net.http.UrlRequest.Builder backend) {
         this.mBackend = backend;
     }

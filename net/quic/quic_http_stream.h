@@ -10,10 +10,10 @@
 
 #include <set>
 #include <string>
+#include <string_view>
 
 #include "base/memory/raw_ptr.h"
 #include "base/memory/weak_ptr.h"
-#include "base/strings/string_piece.h"
 #include "base/time/time.h"
 #include "net/base/completion_once_callback.h"
 #include "net/base/idempotency.h"
@@ -74,9 +74,9 @@ class NET_EXPORT_PRIVATE QuicHttpStream : public MultiplexedHttpStream {
   void SetPriority(RequestPriority priority) override;
   void SetRequestIdempotency(Idempotency idempotency) override;
   const std::set<std::string>& GetDnsAliases() const override;
-  base::StringPiece GetAcceptChViaAlps() const override;
-  absl::optional<quic::QuicErrorCode> GetQuicErrorCode() const override;
-  absl::optional<quic::QuicRstStreamErrorCode> GetQuicRstStreamErrorCode()
+  std::string_view GetAcceptChViaAlps() const override;
+  std::optional<quic::QuicErrorCode> GetQuicErrorCode() const override;
+  std::optional<quic::QuicRstStreamErrorCode> GetQuicRstStreamErrorCode()
       const override;
 
   static HttpConnectionInfo ConnectionInfoFromQuicVersion(
@@ -204,8 +204,8 @@ class NET_EXPORT_PRIVATE QuicHttpStream : public MultiplexedHttpStream {
   // the default value of false.
   bool closed_is_first_stream_ = false;
 
-  absl::optional<quic::QuicErrorCode> connection_error_;
-  absl::optional<quic::QuicRstStreamErrorCode> stream_error_;
+  std::optional<quic::QuicErrorCode> connection_error_;
+  std::optional<quic::QuicRstStreamErrorCode> stream_error_;
 
   // The caller's callback to be used for asynchronous operations.
   CompletionOnceCallback callback_;

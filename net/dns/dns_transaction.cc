@@ -6,14 +6,15 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <set>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
 #include "base/base64url.h"
-#include "base/big_endian.h"
 #include "base/containers/circular_deque.h"
 #include "base/containers/span.h"
 #include "base/functional/bind.h"
@@ -26,9 +27,9 @@
 #include "base/memory/weak_ptr.h"
 #include "base/metrics/histogram_functions.h"
 #include "base/metrics/histogram_macros.h"
+#include "base/numerics/byte_conversions.h"
 #include "base/rand_util.h"
 #include "base/ranges/algorithm.h"
-#include "base/strings/string_piece.h"
 #include "base/strings/stringprintf.h"
 #include "base/task/sequenced_task_runner.h"
 #include "base/task/single_thread_task_runner.h"
@@ -79,7 +80,6 @@
 #include "net/url_request/url_request.h"
 #include "net/url_request/url_request_context.h"
 #include "net/url_request/url_request_context_builder.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 #include "url/url_constants.h"
 
 namespace net {
@@ -413,8 +413,8 @@ class DnsHTTPAttempt : public DnsAttempt, public URLRequest::Delegate {
       std::string url_string;
       std::unordered_map<string, string> parameters;
       std::string encoded_query;
-      base::Base64UrlEncode(base::StringPiece(query_->io_buffer()->data(),
-                                              query_->io_buffer()->size()),
+      base::Base64UrlEncode(std::string_view(query_->io_buffer()->data(),
+                                             query_->io_buffer()->size()),
                             base::Base64UrlEncodePolicy::OMIT_PADDING,
                             &encoded_query);
       parameters.emplace("dns", encoded_query);
@@ -426,7 +426,7 @@ class DnsHTTPAttempt : public DnsAttempt, public URLRequest::Delegate {
       if (is_probe) {
         return NetLogStartParams("(probe)", query_->qtype());
       }
-      absl::optional<std::string> hostname =
+      std::optional<std::string> hostname =
           dns_names_util::NetworkToDottedName(query_->qname());
       DCHECK(hostname.has_value());
       return NetLogStartParams(*hostname, query_->qtype());
@@ -813,7 +813,8 @@ class DnsTCPAttempt : public DnsAttempt {
     uint16_t query_size = static_cast<uint16_t>(query_->io_buffer()->size());
     if (static_cast<int>(query_size) != query_->io_buffer()->size())
       return ERR_FAILED;
-    base::WriteBigEndian<uint16_t>(length_buffer_->data(), query_size);
+    base::as_writable_bytes(length_buffer_->span())
+        .copy_from(base::numerics::U16ToBigEndian(query_size));
     buffer_ = base::MakeRefCounted<DrainableIOBuffer>(length_buffer_,
                                                       length_buffer_->size());
     next_state_ = STATE_SEND_LENGTH;
@@ -878,9 +879,8 @@ class DnsTCPAttempt : public DnsAttempt {
       return OK;
     }
 
-    base::ReadBigEndian(
-        reinterpret_cast<const uint8_t*>(length_buffer_->data()),
-        &response_length_);
+    response_length_ = base::numerics::U16FromBigEndian(
+        base::as_bytes(length_buffer_->span().first<2u>()));
     // Check if advertised response is too short. (Optimization only.)
     if (response_length_ < query_->io_buffer()->size())
       return ERR_DNS_MALFORMED_RESPONSE;
@@ -986,7 +986,7 @@ class DnsOverHttpsProbeRunner : public DnsProbeRunner {
     DCHECK(!session_->config().doh_config.servers().empty());
     DCHECK(context_);
 
-    absl::optional<std::vector<uint8_t>> qname =
+    std::optional<std::vector<uint8_t>> qname =
         dns_names_util::DottedNameToNetwork(kDohProbeHostname);
     DCHECK(qname.has_value());
     formatted_probe_qname_ = std::move(qname).value();
@@ -1269,7 +1269,7 @@ class DnsTransactionImpl : public DnsTransaction,
   int PrepareSearch() {
     const DnsConfig& config = session_->config();
 
-    absl::optional<std::vector<uint8_t>> labeled_qname =
+    std::optional<std::vector<uint8_t>> labeled_qname =
         dns_names_util::DottedNameToNetwork(
             hostname_,
             /*require_valid_internet_hostname=*/true);
@@ -1298,7 +1298,7 @@ class DnsTransactionImpl : public DnsTransaction,
     }
 
     for (const auto& suffix : config.search) {
-      absl::optional<std::vector<uint8_t>> qname =
+      std::optional<std::vector<uint8_t>> qname =
           dns_names_util::DottedNameToNetwork(
               hostname_ + "." + suffix,
               /*require_valid_internet_hostname=*/true);
@@ -1522,7 +1522,7 @@ class DnsTransactionImpl : public DnsTransaction,
 
   // Begins query for the current name. Makes the first attempt.
   AttemptResult StartQuery() {
-    absl::optional<std::string> dotted_qname =
+    std::optional<std::string> dotted_qname =
         dns_names_util::NetworkToDottedName(qnames_.front());
     net_log_.BeginEventWithStringParams(
         NetLogEventType::DNS_TRANSACTION_QUERY, "qname",
