@@ -9,6 +9,7 @@
 
 #include "base/containers/contains.h"
 #include "base/functional/bind.h"
+#include "base/memory/raw_ptr.h"
 #include "base/strings/string_number_conversions.h"
 #include "base/strings/stringprintf.h"
 #include "base/test/scoped_feature_list.h"
@@ -61,10 +62,10 @@ class ReportingCacheTest : public ReportingTestBase,
  protected:
   ReportingCacheTest() {
     // This is a private API of the reporting service, so no need to test the
-    // case kPartitionNelAndReportingByNetworkIsolationKey is disabled - the
+    // case kPartitionConnectionsByNetworkIsolationKey is disabled - the
     // feature is only applied at the entry points of the service.
     feature_list_.InitAndEnableFeature(
-        features::kPartitionNelAndReportingByNetworkIsolationKey);
+        features::kPartitionConnectionsByNetworkIsolationKey);
 
     ReportingPolicy policy;
     policy.max_report_count = 5;
@@ -73,10 +74,12 @@ class ReportingCacheTest : public ReportingTestBase,
     policy.max_group_staleness = base::Days(3);
     UsePolicy(policy);
 
-    if (GetParam())
-      store_ = std::make_unique<MockPersistentReportingStore>();
-
-    UseStore(store_.get());
+    std::unique_ptr<MockPersistentReportingStore> store;
+    if (GetParam()) {
+      store = std::make_unique<MockPersistentReportingStore>();
+    }
+    store_ = store.get();
+    UseStore(std::move(store));
 
     context()->AddCacheObserver(&observer_);
   }
@@ -96,7 +99,7 @@ class ReportingCacheTest : public ReportingTestBase,
   TestReportingCacheObserver* observer() { return &observer_; }
 
   size_t report_count() {
-    std::vector<const ReportingReport*> reports;
+    std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
     cache()->GetReports(&reports);
     return reports.size();
   }
@@ -120,17 +123,16 @@ class ReportingCacheTest : public ReportingTestBase,
     // the cache.  So we need to grab the list before we add, and the list after
     // we add, and return the one element that's different.  This is only used
     // in test cases, so I've optimized for readability over execution speed.
-    std::vector<const ReportingReport*> before;
+    std::vector<raw_ptr<const ReportingReport, VectorExperimental>> before;
     cache()->GetReports(&before);
-    cache()->AddReport(absl::nullopt, network_anonymization_key, url,
-                       user_agent, group, type, std::move(body), depth, queued,
-                       attempts);
-    std::vector<const ReportingReport*> after;
+    cache()->AddReport(std::nullopt, network_anonymization_key, url, user_agent,
+                       group, type, std::move(body), depth, queued, attempts);
+    std::vector<raw_ptr<const ReportingReport, VectorExperimental>> after;
     cache()->GetReports(&after);
 
     for (const ReportingReport* report : after) {
       // If report isn't in before, we've found the new instance.
-      if (std::find(before.begin(), before.end(), report) == before.end()) {
+      if (!base::Contains(before, report)) {
         EXPECT_EQ(network_anonymization_key, report->network_anonymization_key);
         EXPECT_EQ(url, report->url);
         EXPECT_EQ(user_agent, report->user_agent);
@@ -182,7 +184,7 @@ class ReportingCacheTest : public ReportingTestBase,
   const GURL kUrl2_ = GURL("https://origin2/path");
   const url::Origin kOrigin1_ = url::Origin::Create(GURL("https://origin1/"));
   const url::Origin kOrigin2_ = url::Origin::Create(GURL("https://origin2/"));
-  const absl::optional<base::UnguessableToken> kReportingSource_ =
+  const std::optional<base::UnguessableToken> kReportingSource_ =
       base::UnguessableToken::Create();
   const NetworkAnonymizationKey kNak_;
   const NetworkAnonymizationKey kOtherNak_ =
@@ -229,7 +231,7 @@ class ReportingCacheTest : public ReportingTestBase,
       ReportingEndpointGroupKey(kOtherNak_, kOrigin2_, kGroup2_);
 
   TestReportingCacheObserver observer_;
-  std::unique_ptr<MockPersistentReportingStore> store_;
+  raw_ptr<MockPersistentReportingStore> store_;
 };
 
 // Note: These tests exercise both sides of the cache (reports and clients),
@@ -240,7 +242,7 @@ class ReportingCacheTest : public ReportingTestBase,
 TEST_P(ReportingCacheTest, Reports) {
   LoadReportingClients();
 
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   cache()->GetReports(&reports);
   EXPECT_TRUE(reports.empty());
 
@@ -288,7 +290,7 @@ TEST_P(ReportingCacheTest, RemoveAllReports) {
                      kType_, base::Value::Dict(), 0, kNowTicks_, 0);
   EXPECT_EQ(2, observer()->cached_reports_update_count());
 
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   cache()->GetReports(&reports);
   EXPECT_EQ(2u, reports.size());
 
@@ -306,7 +308,7 @@ TEST_P(ReportingCacheTest, RemovePendingReports) {
                      kType_, base::Value::Dict(), 0, kNowTicks_, 0);
   EXPECT_EQ(1, observer()->cached_reports_update_count());
 
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   cache()->GetReports(&reports);
   ASSERT_EQ(1u, reports.size());
   EXPECT_FALSE(cache()->IsReportPendingForTesting(reports[0]));
@@ -326,7 +328,8 @@ TEST_P(ReportingCacheTest, RemovePendingReports) {
   EXPECT_EQ(2, observer()->cached_reports_update_count());
 
   // After removing report, future calls to GetReports should not return it.
-  std::vector<const ReportingReport*> visible_reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>>
+      visible_reports;
   cache()->GetReports(&visible_reports);
   EXPECT_TRUE(visible_reports.empty());
   EXPECT_EQ(1u, cache()->GetFullReportCountForTesting());
@@ -343,7 +346,7 @@ TEST_P(ReportingCacheTest, RemoveAllPendingReports) {
                      kType_, base::Value::Dict(), 0, kNowTicks_, 0);
   EXPECT_EQ(1, observer()->cached_reports_update_count());
 
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   cache()->GetReports(&reports);
   ASSERT_EQ(1u, reports.size());
   EXPECT_FALSE(cache()->IsReportPendingForTesting(reports[0]));
@@ -363,7 +366,8 @@ TEST_P(ReportingCacheTest, RemoveAllPendingReports) {
   EXPECT_EQ(2, observer()->cached_reports_update_count());
 
   // After removing report, future calls to GetReports should not return it.
-  std::vector<const ReportingReport*> visible_reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>>
+      visible_reports;
   cache()->GetReports(&visible_reports);
   EXPECT_TRUE(visible_reports.empty());
   EXPECT_EQ(1u, cache()->GetFullReportCountForTesting());
@@ -499,11 +503,11 @@ TEST_P(ReportingCacheTest, GetReportsToDeliverForSource) {
                      base::Value::Dict(), 0, kNowTicks_, 0);
   cache()->AddReport(source2, kNak_, kUrl1_, kUserAgent_, kGroup1_, kType_,
                      base::Value::Dict(), 0, kNowTicks_, 0);
-  cache()->AddReport(absl::nullopt, kNak_, kUrl1_, kUserAgent_, kGroup1_,
-                     kType_, base::Value::Dict(), 0, kNowTicks_, 0);
+  cache()->AddReport(std::nullopt, kNak_, kUrl1_, kUserAgent_, kGroup1_, kType_,
+                     base::Value::Dict(), 0, kNowTicks_, 0);
   EXPECT_EQ(3, observer()->cached_reports_update_count());
 
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   cache()->GetReports(&reports);
   ASSERT_EQ(3u, reports.size());
 
@@ -513,12 +517,13 @@ TEST_P(ReportingCacheTest, GetReportsToDeliverForSource) {
   const auto report2 =
       base::ranges::find(reports, source2, &ReportingReport::reporting_source);
   DCHECK(report2 != reports.end());
-  const auto report3 = base::ranges::find(reports, absl::nullopt,
+  const auto report3 = base::ranges::find(reports, std::nullopt,
                                           &ReportingReport::reporting_source);
   DCHECK(report3 != reports.end());
 
   // Get the reports for Source 1 and check the status of all reports.
-  EXPECT_EQ(std::vector<const ReportingReport*>{*report1},
+  EXPECT_EQ((std::vector<raw_ptr<const ReportingReport, VectorExperimental>>{
+                *report1}),
             cache()->GetReportsToDeliverForSource(source1));
   EXPECT_TRUE(cache()->IsReportPendingForTesting(*report1));
   EXPECT_FALSE(cache()->IsReportDoomedForTesting(*report1));
@@ -542,7 +547,8 @@ TEST_P(ReportingCacheTest, GetReportsToDeliverForSource) {
                     ReportingReport::Status::QUEUED));
 
   // Get the reports for Source 2 and check the status again.
-  EXPECT_EQ(std::vector<const ReportingReport*>{*report2},
+  EXPECT_EQ((std::vector<raw_ptr<const ReportingReport, VectorExperimental>>{
+                *report2}),
             cache()->GetReportsToDeliverForSource(source2));
   EXPECT_TRUE(cache()->IsReportPendingForTesting(*report1));
   EXPECT_FALSE(cache()->IsReportDoomedForTesting(*report1));
@@ -667,7 +673,7 @@ TEST_P(ReportingCacheTest, ClientsKeyedByEndpointGroupKey) {
 
   // SetEndpointInCache doesn't update store counts, which is why we start from
   // zero and they go negative.
-  // TODO(crbug.com/895821): Populate the cache via the store so we don't
+  // TODO(crbug.com/40598339): Populate the cache via the store so we don't
   // need negative counts.
   MockPersistentReportingStore::CommandList expected_commands;
   int stored_group_count = 0;
@@ -755,8 +761,8 @@ TEST_P(ReportingCacheTest, RemoveClientsForOrigin) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-3, store()->StoredEndpointsCount());
     EXPECT_EQ(-3, store()->StoredEndpointGroupsCount());
     MockPersistentReportingStore::CommandList expected_commands;
@@ -802,8 +808,8 @@ TEST_P(ReportingCacheTest, RemoveAllClients) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-4, store()->StoredEndpointsCount());
     EXPECT_EQ(-3, store()->StoredEndpointGroupsCount());
     MockPersistentReportingStore::CommandList expected_commands;
@@ -869,8 +875,8 @@ TEST_P(ReportingCacheTest, RemoveEndpointGroup) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-2, store()->StoredEndpointsCount());
     EXPECT_EQ(-2, store()->StoredEndpointGroupsCount());
     EXPECT_EQ(2,
@@ -928,8 +934,8 @@ TEST_P(ReportingCacheTest, RemoveEndpointsForUrl) {
     store()->Flush();
     // SetEndpointInCache doesn't update store counts, which is why they go
     // negative here.
-    // TODO(crbug.com/895821): Populate the cache via the store so we don't need
-    // negative counts.
+    // TODO(crbug.com/40598339): Populate the cache via the store so we don't
+    // need negative counts.
     EXPECT_EQ(-2, store()->StoredEndpointsCount());
     EXPECT_EQ(-1, store()->StoredEndpointGroupsCount());
     EXPECT_EQ(2,
@@ -1128,7 +1134,7 @@ TEST_P(ReportingCacheTest, GetCandidateEndpointsFromDocumentForNetworkReports) {
   SetV1EndpointInCache(kDocumentGroupKey, reporting_source, kIsolationInfo1_,
                        kEndpoint1_);
   const ReportingEndpointGroupKey kNetworkReportGroupKey =
-      ReportingEndpointGroupKey(network_anonymization_key, absl::nullopt,
+      ReportingEndpointGroupKey(network_anonymization_key, std::nullopt,
                                 kOrigin1_, kGroup1_);
   std::vector<ReportingEndpoint> candidate_endpoints =
       cache()->GetCandidateEndpointsForDelivery(kNetworkReportGroupKey);
@@ -1206,7 +1212,7 @@ TEST_P(ReportingCacheTest, GetMixedCandidateEndpointsForDelivery) {
   // returned.
   candidate_endpoints =
       cache()->GetCandidateEndpointsForDelivery(ReportingEndpointGroupKey(
-          network_anonymization_key1, absl::nullopt, kOrigin1_, kGroup1_));
+          network_anonymization_key1, std::nullopt, kOrigin1_, kGroup1_));
   ASSERT_EQ(2u, candidate_endpoints.size());
   EXPECT_EQ(group_key_11, candidate_endpoints[0].group_key);
   EXPECT_EQ(group_key_11, candidate_endpoints[1].group_key);
@@ -1451,7 +1457,7 @@ TEST_P(ReportingCacheTest, EvictOldestReport) {
 
   // Make sure the cache evicted a report to make room for the new one, and make
   // sure the report evicted was the earliest-queued one.
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   cache()->GetReports(&reports);
   EXPECT_EQ(max_report_count, reports.size());
   for (const ReportingReport* report : reports)
@@ -1467,7 +1473,7 @@ TEST_P(ReportingCacheTest, DontEvictPendingReports) {
   ASSERT_GT(std::numeric_limits<size_t>::max(), max_report_count);
 
   // Enqueue the maximum number of reports, spaced apart in time.
-  std::vector<const ReportingReport*> reports;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>> reports;
   for (size_t i = 0; i < max_report_count; ++i) {
     reports.push_back(AddAndReturnReport(kNak_, kUrl1_, kUserAgent_, kGroup1_,
                                          kType_, base::Value::Dict(), 0,
@@ -1487,7 +1493,8 @@ TEST_P(ReportingCacheTest, DontEvictPendingReports) {
 
   // Make sure the cache evicted a report, and make sure the report evicted was
   // the new, non-pending one.
-  std::vector<const ReportingReport*> reports_after_eviction;
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>>
+      reports_after_eviction;
   cache()->GetReports(&reports_after_eviction);
   EXPECT_EQ(max_report_count, reports_after_eviction.size());
   for (const ReportingReport* report : reports_after_eviction) {

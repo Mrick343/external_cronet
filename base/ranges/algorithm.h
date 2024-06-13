@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #ifndef BASE_RANGES_ALGORITHM_H_
 #define BASE_RANGES_ALGORITHM_H_
 
@@ -33,6 +38,25 @@ constexpr auto ProjectedUnaryPredicate(Pred& pred, Proj& proj) noexcept {
   };
 }
 
+// Helper concept that is true if the binary predicate can be invoked on the
+// result of projecting T and projecting U. See `BinaryPredicateProjector` for
+// additional background.
+template <typename BinaryPred,
+          typename ProjT,
+          typename ProjU,
+          typename T,
+          typename U>
+concept BinaryPredicateProjectorIsInvokable = requires(BinaryPred& predicate,
+                                                       ProjT& project_t,
+                                                       ProjU& project_u,
+                                                       T&& t,
+                                                       U&& u) {
+  {
+    std::invoke(predicate, std::invoke(project_t, std::forward<T>(t)),
+                std::invoke(project_u, std::forward<U>(u)))
+  } -> std::same_as<bool>;
+};
+
 // Returns a transformed version of the binary predicate `pred` applying `proj1`
 // and `proj2` to its arguments before invoking `pred` on them.
 //
@@ -49,9 +73,10 @@ constexpr auto ProjectedUnaryPredicate(Pred& pred, Proj& proj) noexcept {
 // to {LHS, RHS} compiles for all members of the range. This can be done by
 // adding the following constraint:
 //
-//   typename = indirect_result_t<Pred&,
-//                                projected<iterator_t<Range1>, Proj1>,
-//                                projected<iterator_t<Range2>, Proj2>>
+//   typename =
+//       std::indirect_result_t<Pred&,
+//                              std::projected<iterator_t<Range1>, Proj1>,
+//                              std::projected<iterator_t<Range2>, Proj2>>
 //
 // Ensures that the return type of `invoke(pred, ...)` is convertible to bool.
 template <typename Pred, typename Proj1, typename Proj2, bool kPermute = false>
@@ -61,60 +86,38 @@ class BinaryPredicateProjector {
       : pred_(pred), proj1_(proj1), proj2_(proj2) {}
 
  private:
-  template <typename ProjT, typename ProjU, typename T, typename U>
-  using InvokeResult = std::invoke_result_t<Pred&,
-                                            std::invoke_result_t<ProjT&, T&&>,
-                                            std::invoke_result_t<ProjU&, U&&>>;
-
-  template <typename T, typename U, typename = InvokeResult<Proj1, Proj2, T, U>>
-  constexpr std::pair<Proj1&, Proj2&> GetProjs(priority_tag<3>) const {
-    return {proj1_, proj2_};
-  }
-
-  template <typename T,
-            typename U,
-            bool LazyPermute = kPermute,
-            typename = std::enable_if_t<LazyPermute>,
-            typename = InvokeResult<Proj2, Proj1, T, U>>
-  constexpr std::pair<Proj2&, Proj1&> GetProjs(priority_tag<2>) const {
-    return {proj2_, proj1_};
-  }
-
-  template <typename T,
-            typename U,
-            bool LazyPermute = kPermute,
-            typename = std::enable_if_t<LazyPermute>,
-            typename = InvokeResult<Proj1, Proj1, T, U>>
-  constexpr std::pair<Proj1&, Proj1&> GetProjs(priority_tag<1>) const {
-    return {proj1_, proj1_};
-  }
-
-  template <typename T,
-            typename U,
-            bool LazyPermute = kPermute,
-            typename = std::enable_if_t<LazyPermute>,
-            typename = InvokeResult<Proj2, Proj2, T, U>>
-  constexpr std::pair<Proj2&, Proj2&> GetProjs(priority_tag<0>) const {
-    return {proj2_, proj2_};
+  template <typename T, typename U>
+  constexpr auto GetProjs() const {
+    if constexpr (BinaryPredicateProjectorIsInvokable<Pred, Proj1, Proj2, T,
+                                                      U>) {
+      return std::pair<Proj1&, Proj2&>(proj1_, proj2_);
+    } else if constexpr (kPermute &&
+                         BinaryPredicateProjectorIsInvokable<Pred, Proj2, Proj1,
+                                                             T, U>) {
+      return std::pair<Proj2&, Proj1&>(proj2_, proj1_);
+    } else if constexpr (kPermute &&
+                         BinaryPredicateProjectorIsInvokable<Pred, Proj1, Proj1,
+                                                             T, U>) {
+      return std::pair<Proj1&, Proj1&>(proj1_, proj1_);
+    } else if constexpr (kPermute &&
+                         BinaryPredicateProjectorIsInvokable<Pred, Proj2, Proj2,
+                                                             T, U>) {
+      return std::pair<Proj2&, Proj2&>(proj2_, proj2_);
+    }
   }
 
  public:
   template <typename T, typename U>
   constexpr bool operator()(T&& lhs, U&& rhs) const {
-    auto projs = GetProjs<T, U>(priority_tag<3>());
+    auto projs = GetProjs<T, U>();
     return std::invoke(pred_, std::invoke(projs.first, std::forward<T>(lhs)),
                        std::invoke(projs.second, std::forward<U>(rhs)));
   }
 
  private:
-  // This field is not a raw_ref<> because it was filtered by the rewriter for:
-  // #constexpr-ctor-field-initializer
+  // RAW_PTR_EXCLUSION: Binary size increase (~120K on Android).
   RAW_PTR_EXCLUSION Pred& pred_;
-  // This field is not a raw_ref<> because it was filtered by the rewriter for:
-  // #constexpr-ctor-field-initializer
   RAW_PTR_EXCLUSION Proj1& proj1_;
-  // This field is not a raw_ref<> because it was filtered by the rewriter for:
-  // #constexpr-ctor-field-initializer
   RAW_PTR_EXCLUSION Proj2& proj2_;
 };
 
@@ -182,7 +185,7 @@ struct in_fun_result {
   }
 };
 
-// TODO(crbug.com/1071094): Implement the other result types.
+// TODO(crbug.com/40126606): Implement the other result types.
 
 // [alg.nonmodifying] Non-modifying sequence operations
 // Reference: https://wg21.link/alg.nonmodifying
@@ -554,16 +557,17 @@ constexpr auto find_if_not(Range&& range, Pred pred, Proj proj = {}) {
 // applications of the corresponding predicate and any projections.
 //
 // Reference: https://wg21.link/alg.find.end#:~:text=ranges::find_end(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Pred = ranges::equal_to,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Pred = ranges::equal_to,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Pred&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr auto find_end(ForwardIterator1 first1,
                         ForwardIterator1 last1,
                         ForwardIterator2 first2,
@@ -600,9 +604,10 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<Pred&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr auto find_end(Range1&& range1,
                         Range2&& range2,
                         Pred pred = {},
@@ -629,16 +634,17 @@ constexpr auto find_end(Range1&& range1,
 //
 // Reference:
 // https://wg21.link/alg.find.first.of#:~:text=ranges::find_first_of(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Pred = ranges::equal_to,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Pred = ranges::equal_to,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Pred&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr auto find_first_of(ForwardIterator1 first1,
                              ForwardIterator1 last1,
                              ForwardIterator2 first2,
@@ -671,9 +677,10 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<Pred&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr auto find_first_of(Range1&& range1,
                              Range2&& range2,
                              Pred pred = {},
@@ -845,16 +852,17 @@ constexpr auto count_if(Range&& range, Pred pred, Proj proj = {}) {
 // projections.
 //
 // Reference: https://wg21.link/mismatch#:~:text=ranges::mismatch(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Pred = ranges::equal_to,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Pred = ranges::equal_to,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Pred&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr auto mismatch(ForwardIterator1 first1,
                         ForwardIterator1 last1,
                         ForwardIterator2 first2,
@@ -886,9 +894,10 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<Pred&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr auto mismatch(Range1&& range1,
                         Range2&& range2,
                         Pred pred = {},
@@ -916,16 +925,17 @@ constexpr auto mismatch(Range1&& range1,
 // corresponding predicate and any projections.
 //
 // Reference: https://wg21.link/alg.equal#:~:text=ranges::equal(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Pred = ranges::equal_to,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Pred = ranges::equal_to,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Pred&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr bool equal(ForwardIterator1 first1,
                      ForwardIterator1 last1,
                      ForwardIterator2 first2,
@@ -971,9 +981,10 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<Pred&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr bool equal(Range1&& range1,
                      Range2&& range2,
                      Pred pred = {},
@@ -1003,16 +1014,17 @@ constexpr bool equal(Range1&& range1,
 //
 // Reference:
 // https://wg21.link/alg.is.permutation#:~:text=ranges::is_permutation(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Pred = ranges::equal_to,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Pred = ranges::equal_to,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Pred&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr bool is_permutation(ForwardIterator1 first1,
                               ForwardIterator1 last1,
                               ForwardIterator2 first2,
@@ -1049,9 +1061,10 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<Pred&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr bool is_permutation(Range1&& range1,
                               Range2&& range2,
                               Pred pred = {},
@@ -1078,16 +1091,17 @@ constexpr bool is_permutation(Range1&& range1,
 // corresponding predicate and projections.
 //
 // Reference: https://wg21.link/alg.search#:~:text=ranges::search(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Pred = ranges::equal_to,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Pred = ranges::equal_to,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Pred&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr auto search(ForwardIterator1 first1,
                       ForwardIterator1 last1,
                       ForwardIterator2 first2,
@@ -1119,9 +1133,10 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Pred&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<Pred&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr auto search(Range1&& range1,
                       Range2&& range2,
                       Pred pred = {},
@@ -1547,14 +1562,15 @@ constexpr auto swap_ranges(Range1&& range1, Range2&& range2) {
 // Remarks: result may be equal to `first1`.
 //
 // Reference: https://wg21.link/alg.transform#:~:text=ranges::transform(I
-template <typename InputIterator,
-          typename OutputIterator,
-          typename UnaryOperation,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<InputIterator>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<UnaryOperation&,
-                                       projected<InputIterator, Proj>>>
+template <
+    typename InputIterator,
+    typename OutputIterator,
+    typename UnaryOperation,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<InputIterator>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<UnaryOperation&,
+                                      std::projected<InputIterator, Proj>>>
 constexpr auto transform(InputIterator first1,
                          InputIterator last1,
                          OutputIterator result,
@@ -1582,14 +1598,15 @@ constexpr auto transform(InputIterator first1,
 // Remarks: result may be equal to `begin(range)`.
 //
 // Reference: https://wg21.link/alg.transform#:~:text=ranges::transform(R
-template <typename Range,
-          typename OutputIterator,
-          typename UnaryOperation,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<UnaryOperation&,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename OutputIterator,
+    typename UnaryOperation,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<UnaryOperation&,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto transform(Range&& range,
                          OutputIterator result,
                          UnaryOperation op,
@@ -1617,18 +1634,19 @@ constexpr auto transform(Range&& range,
 // Remarks: `result` may be equal to `first1` or `first2`.
 //
 // Reference: https://wg21.link/alg.transform#:~:text=ranges::transform(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename OutputIterator,
-          typename BinaryOperation,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<BinaryOperation&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename OutputIterator,
+    typename BinaryOperation,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<BinaryOperation&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>>
 constexpr auto transform(ForwardIterator1 first1,
                          ForwardIterator1 last1,
                          ForwardIterator2 first2,
@@ -1678,9 +1696,10 @@ template <typename Range1,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
           typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<BinaryOperation&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>>
+          typename =
+              std::indirect_result_t<BinaryOperation&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>>
 constexpr auto transform(Range1&& range1,
                          Range2&& range2,
                          OutputIterator result,
@@ -2334,13 +2353,14 @@ constexpr auto remove_copy_if(Range&& range,
 // any projection.
 //
 // Reference: https://wg21.link/alg.unique#:~:text=ranges::unique(I
-template <typename ForwardIterator,
-          typename Comp = ranges::equal_to,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator, Proj>,
-                                       projected<ForwardIterator, Proj>>>
+template <
+    typename ForwardIterator,
+    typename Comp = ranges::equal_to,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator, Proj>,
+                                      std::projected<ForwardIterator, Proj>>>
 constexpr auto unique(ForwardIterator first,
                       ForwardIterator last,
                       Comp comp = {},
@@ -2362,13 +2382,14 @@ constexpr auto unique(ForwardIterator first,
 // any projection.
 //
 // Reference: https://wg21.link/alg.unique#:~:text=ranges::unique(R
-template <typename Range,
-          typename Comp = ranges::equal_to,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::equal_to,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto unique(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::unique(ranges::begin(range), ranges::end(range),
                         std::move(comp), std::move(proj));
@@ -2608,7 +2629,7 @@ constexpr auto rotate_copy(Range&& range,
 // Reference: https://wg21.link/alg.random.sample
 
 // Currently not implemented due to lack of std::sample in C++14.
-// TODO(crbug.com/1071094): Consider implementing a hand-rolled version.
+// TODO(crbug.com/40126606): Consider implementing a hand-rolled version.
 
 // [alg.random.shuffle] Shuffle
 // Reference: https://wg21.link/alg.random.shuffle
@@ -2683,9 +2704,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto sort(RandomAccessIterator first,
                     RandomAccessIterator last,
                     Comp comp = {},
@@ -2702,13 +2724,14 @@ constexpr auto sort(RandomAccessIterator first,
 // projections.
 //
 // Reference: https://wg21.link/sort#:~:text=ranges::sort(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto sort(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::sort(ranges::begin(range), ranges::end(range), std::move(comp),
                       std::move(proj));
@@ -2733,9 +2756,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto stable_sort(RandomAccessIterator first,
                            RandomAccessIterator last,
                            Comp comp = {},
@@ -2756,13 +2780,14 @@ constexpr auto stable_sort(RandomAccessIterator first,
 // Remarks: Stable.
 //
 // Reference: https://wg21.link/stable.sort#:~:text=ranges::stable_sort(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto stable_sort(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::stable_sort(ranges::begin(range), ranges::end(range),
                              std::move(comp), std::move(proj));
@@ -2788,9 +2813,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto partial_sort(RandomAccessIterator first,
                             RandomAccessIterator middle,
                             RandomAccessIterator last,
@@ -2815,13 +2841,14 @@ constexpr auto partial_sort(RandomAccessIterator first,
 // comparisons, and twice as many projections.
 //
 // Reference: https://wg21.link/partial.sort#:~:text=ranges::partial_sort(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto partial_sort(Range&& range,
                             iterator_t<Range> middle,
                             Comp comp = {},
@@ -2852,19 +2879,22 @@ constexpr auto partial_sort(Range&& range,
 //
 // Reference:
 // https://wg21.link/partial.sort.copy#:~:text=ranges::partial_sort_copy(I1
-template <typename InputIterator,
-          typename RandomAccessIterator,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator>,
-          typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator, Proj1>,
-                                       projected<RandomAccessIterator, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj2>,
-                                       projected<InputIterator, Proj1>>>
+template <
+    typename InputIterator,
+    typename RandomAccessIterator,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator>,
+    typename = internal::iterator_category_t<RandomAccessIterator>,
+    typename =
+        std::indirect_result_t<Comp&,
+                               std::projected<InputIterator, Proj1>,
+                               std::projected<RandomAccessIterator, Proj2>>,
+    typename =
+        std::indirect_result_t<Comp&,
+                               std::projected<RandomAccessIterator, Proj2>,
+                               std::projected<InputIterator, Proj1>>>
 constexpr auto partial_sort_copy(InputIterator first,
                                  InputIterator last,
                                  RandomAccessIterator result_first,
@@ -2905,12 +2935,14 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto partial_sort_copy(Range1&& range,
                                  Range2&& result_range,
                                  Comp comp = {},
@@ -2931,13 +2963,14 @@ constexpr auto partial_sort_copy(Range1&& range,
 // Complexity: Linear.
 //
 // Reference: https://wg21.link/is.sorted#:~:text=ranges::is_sorted_until(I
-template <typename ForwardIterator,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator, Proj>,
-                                       projected<ForwardIterator, Proj>>>
+template <
+    typename ForwardIterator,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator, Proj>,
+                                      std::projected<ForwardIterator, Proj>>>
 constexpr auto is_sorted_until(ForwardIterator first,
                                ForwardIterator last,
                                Comp comp = {},
@@ -2967,13 +3000,14 @@ constexpr auto is_sorted_until(ForwardIterator first,
 // Complexity: Linear.
 //
 // Reference: https://wg21.link/is.sorted#:~:text=ranges::is_sorted_until(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto is_sorted_until(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::is_sorted_until(ranges::begin(range), ranges::end(range),
                                  std::move(comp), std::move(proj));
@@ -2985,13 +3019,14 @@ constexpr auto is_sorted_until(Range&& range, Comp comp = {}, Proj proj = {}) {
 // Complexity: Linear.
 //
 // Reference: https://wg21.link/is.sorted#:~:text=ranges::is_sorted(I
-template <typename ForwardIterator,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator, Proj>,
-                                       projected<ForwardIterator, Proj>>>
+template <
+    typename ForwardIterator,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator, Proj>,
+                                      std::projected<ForwardIterator, Proj>>>
 constexpr auto is_sorted(ForwardIterator first,
                          ForwardIterator last,
                          Comp comp = {},
@@ -3005,13 +3040,14 @@ constexpr auto is_sorted(ForwardIterator first,
 // Complexity: Linear.
 //
 // Reference: https://wg21.link/is.sorted#:~:text=ranges::is_sorted(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto is_sorted(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::is_sorted(ranges::begin(range), ranges::end(range),
                            std::move(comp), std::move(proj));
@@ -3038,9 +3074,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto nth_element(RandomAccessIterator first,
                            RandomAccessIterator nth,
                            RandomAccessIterator last,
@@ -3066,13 +3103,14 @@ constexpr auto nth_element(RandomAccessIterator first,
 // Complexity: Linear on average.
 //
 // Reference: https://wg21.link/alg.nth.element#:~:text=ranges::nth_element(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto nth_element(Range&& range,
                            iterator_t<Range> nth,
                            Comp comp = {},
@@ -3579,21 +3617,22 @@ constexpr auto partition_point(Range&& range, Pred pred, Proj proj = {}) {
 // Remarks: Stable.
 //
 // Reference: https://wg21.link/alg.merge#:~:text=ranges::merge(I1
-template <typename InputIterator1,
-          typename InputIterator2,
-          typename OutputIterator,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator1>,
-          typename = internal::iterator_category_t<InputIterator2>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator1, Proj1>,
-                                       projected<InputIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator2, Proj2>,
-                                       projected<InputIterator1, Proj1>>>
+template <
+    typename InputIterator1,
+    typename InputIterator2,
+    typename OutputIterator,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator1>,
+    typename = internal::iterator_category_t<InputIterator2>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator1, Proj1>,
+                                      std::projected<InputIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator2, Proj2>,
+                                      std::projected<InputIterator1, Proj1>>>
 constexpr auto merge(InputIterator1 first1,
                      InputIterator1 last1,
                      InputIterator2 first2,
@@ -3638,12 +3677,14 @@ template <typename Range1,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
           typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto merge(Range1&& range1,
                      Range2&& range2,
                      OutputIterator result,
@@ -3730,19 +3771,20 @@ constexpr auto inplace_merge(Range&& range,
 // comparisons and applications of each projection.
 //
 // Reference: https://wg21.link/includes#:~:text=ranges::includes(I1
-template <typename InputIterator1,
-          typename InputIterator2,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator1>,
-          typename = internal::iterator_category_t<InputIterator2>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator1, Proj1>,
-                                       projected<InputIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator2, Proj2>,
-                                       projected<InputIterator1, Proj1>>>
+template <
+    typename InputIterator1,
+    typename InputIterator2,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator1>,
+    typename = internal::iterator_category_t<InputIterator2>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator1, Proj1>,
+                                      std::projected<InputIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator2, Proj2>,
+                                      std::projected<InputIterator1, Proj1>>>
 constexpr auto includes(InputIterator1 first1,
                         InputIterator1 last1,
                         InputIterator2 first2,
@@ -3775,12 +3817,14 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto includes(Range1&& range1,
                         Range2&& range2,
                         Comp comp = {},
@@ -3813,21 +3857,22 @@ constexpr auto includes(Range1&& range1,
 // the second range are copied to the output range, in order.
 //
 // Reference: https://wg21.link/set.union#:~:text=ranges::set_union(I1
-template <typename InputIterator1,
-          typename InputIterator2,
-          typename OutputIterator,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator1>,
-          typename = internal::iterator_category_t<InputIterator2>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator1, Proj1>,
-                                       projected<InputIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator2, Proj2>,
-                                       projected<InputIterator1, Proj1>>>
+template <
+    typename InputIterator1,
+    typename InputIterator2,
+    typename OutputIterator,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator1>,
+    typename = internal::iterator_category_t<InputIterator2>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator1, Proj1>,
+                                      std::projected<InputIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator2, Proj2>,
+                                      std::projected<InputIterator1, Proj1>>>
 constexpr auto set_union(InputIterator1 first1,
                          InputIterator1 last1,
                          InputIterator2 first2,
@@ -3871,12 +3916,14 @@ template <typename Range1,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
           typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto set_union(Range1&& range1,
                          Range2&& range2,
                          OutputIterator result,
@@ -3910,21 +3957,22 @@ constexpr auto set_union(Range1&& range1,
 //
 // Reference:
 // https://wg21.link/set.intersection#:~:text=ranges::set_intersection(I1
-template <typename InputIterator1,
-          typename InputIterator2,
-          typename OutputIterator,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator1>,
-          typename = internal::iterator_category_t<InputIterator2>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator1, Proj1>,
-                                       projected<InputIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator2, Proj2>,
-                                       projected<InputIterator1, Proj1>>>
+template <
+    typename InputIterator1,
+    typename InputIterator2,
+    typename OutputIterator,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator1>,
+    typename = internal::iterator_category_t<InputIterator2>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator1, Proj1>,
+                                      std::projected<InputIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator2, Proj2>,
+                                      std::projected<InputIterator1, Proj1>>>
 constexpr auto set_intersection(InputIterator1 first1,
                                 InputIterator1 last1,
                                 InputIterator2 first2,
@@ -3968,12 +4016,14 @@ template <typename Range1,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
           typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto set_intersection(Range1&& range1,
                                 Range2&& range2,
                                 OutputIterator result,
@@ -4009,21 +4059,22 @@ constexpr auto set_intersection(Range1&& range1,
 //
 // Reference:
 // https://wg21.link/set.difference#:~:text=ranges::set_difference(I1
-template <typename InputIterator1,
-          typename InputIterator2,
-          typename OutputIterator,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator1>,
-          typename = internal::iterator_category_t<InputIterator2>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator1, Proj1>,
-                                       projected<InputIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator2, Proj2>,
-                                       projected<InputIterator1, Proj1>>>
+template <
+    typename InputIterator1,
+    typename InputIterator2,
+    typename OutputIterator,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator1>,
+    typename = internal::iterator_category_t<InputIterator2>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator1, Proj1>,
+                                      std::projected<InputIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator2, Proj2>,
+                                      std::projected<InputIterator1, Proj1>>>
 constexpr auto set_difference(InputIterator1 first1,
                               InputIterator1 last1,
                               InputIterator2 first2,
@@ -4068,12 +4119,14 @@ template <typename Range1,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
           typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto set_difference(Range1&& range1,
                               Range2&& range2,
                               OutputIterator result,
@@ -4113,21 +4166,22 @@ constexpr auto set_difference(Range1&& range1,
 //
 // Reference:
 // https://wg21.link/set.symmetric.difference#:~:text=set_symmetric_difference(I1
-template <typename InputIterator1,
-          typename InputIterator2,
-          typename OutputIterator,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<InputIterator1>,
-          typename = internal::iterator_category_t<InputIterator2>,
-          typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator1, Proj1>,
-                                       projected<InputIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<InputIterator2, Proj2>,
-                                       projected<InputIterator1, Proj1>>>
+template <
+    typename InputIterator1,
+    typename InputIterator2,
+    typename OutputIterator,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<InputIterator1>,
+    typename = internal::iterator_category_t<InputIterator2>,
+    typename = internal::iterator_category_t<OutputIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator1, Proj1>,
+                                      std::projected<InputIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<InputIterator2, Proj2>,
+                                      std::projected<InputIterator1, Proj1>>>
 constexpr auto set_symmetric_difference(InputIterator1 first1,
                                         InputIterator1 last1,
                                         InputIterator2 first2,
@@ -4175,12 +4229,14 @@ template <typename Range1,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
           typename = internal::iterator_category_t<OutputIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr auto set_symmetric_difference(Range1&& range1,
                                         Range2&& range2,
                                         OutputIterator result,
@@ -4215,9 +4271,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto push_heap(RandomAccessIterator first,
                          RandomAccessIterator last,
                          Comp comp = {},
@@ -4239,13 +4296,14 @@ constexpr auto push_heap(RandomAccessIterator first,
 // projections.
 //
 // Reference: https://wg21.link/push.heap#:~:text=ranges::push_heap(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto push_heap(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::push_heap(ranges::begin(range), ranges::end(range),
                            std::move(comp), std::move(proj));
@@ -4271,9 +4329,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto pop_heap(RandomAccessIterator first,
                         RandomAccessIterator last,
                         Comp comp = {},
@@ -4296,13 +4355,14 @@ constexpr auto pop_heap(RandomAccessIterator first,
 // projections.
 //
 // Reference: https://wg21.link/pop.heap#:~:text=ranges::pop_heap(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto pop_heap(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::pop_heap(ranges::begin(range), ranges::end(range),
                           std::move(comp), std::move(proj));
@@ -4324,9 +4384,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto make_heap(RandomAccessIterator first,
                          RandomAccessIterator last,
                          Comp comp = {},
@@ -4344,13 +4405,14 @@ constexpr auto make_heap(RandomAccessIterator first,
 // projections.
 //
 // Reference: https://wg21.link/make.heap#:~:text=ranges::make_heap(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto make_heap(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::make_heap(ranges::begin(range), ranges::end(range),
                            std::move(comp), std::move(proj));
@@ -4375,9 +4437,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto sort_heap(RandomAccessIterator first,
                          RandomAccessIterator last,
                          Comp comp = {},
@@ -4398,13 +4461,14 @@ constexpr auto sort_heap(RandomAccessIterator first,
 // twice as many projections.
 //
 // Reference: https://wg21.link/sort.heap#:~:text=ranges::sort_heap(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto sort_heap(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::sort_heap(ranges::begin(range), ranges::end(range),
                            std::move(comp), std::move(proj));
@@ -4423,9 +4487,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto is_heap(RandomAccessIterator first,
                        RandomAccessIterator last,
                        Comp comp = {},
@@ -4439,13 +4504,14 @@ constexpr auto is_heap(RandomAccessIterator first,
 // Complexity: Linear.
 //
 // Reference: https://wg21.link/is.heap#:~:text=ranges::is_heap(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto is_heap(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::is_heap(ranges::begin(range), ranges::end(range),
                          std::move(comp), std::move(proj));
@@ -4461,9 +4527,10 @@ template <typename RandomAccessIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<RandomAccessIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<RandomAccessIterator, Proj>,
-                                       projected<RandomAccessIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<RandomAccessIterator, Proj>,
+              std::projected<RandomAccessIterator, Proj>>>
 constexpr auto is_heap_until(RandomAccessIterator first,
                              RandomAccessIterator last,
                              Comp comp = {},
@@ -4478,13 +4545,14 @@ constexpr auto is_heap_until(RandomAccessIterator first,
 // Complexity: Linear.
 //
 // Reference: https://wg21.link/is.heap#:~:text=ranges::is_heap_until(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto is_heap_until(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::is_heap_until(ranges::begin(range), ranges::end(range),
                                std::move(comp), std::move(proj));
@@ -4667,13 +4735,14 @@ constexpr auto minmax(Range&& range, Comp comp = {}, Proj proj = {}) {
 // many projections.
 //
 // Reference: https://wg21.link/alg.min.max#:~:text=ranges::min_element(I
-template <typename ForwardIterator,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator, Proj>,
-                                       projected<ForwardIterator, Proj>>>
+template <
+    typename ForwardIterator,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator, Proj>,
+                                      std::projected<ForwardIterator, Proj>>>
 constexpr auto min_element(ForwardIterator first,
                            ForwardIterator last,
                            Comp comp = {},
@@ -4690,13 +4759,14 @@ constexpr auto min_element(ForwardIterator first,
 // projections.
 //
 // Reference: https://wg21.link/alg.min.max#:~:text=ranges::min_element(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto min_element(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::min_element(ranges::begin(range), ranges::end(range),
                              std::move(comp), std::move(proj));
@@ -4711,13 +4781,14 @@ constexpr auto min_element(Range&& range, Comp comp = {}, Proj proj = {}) {
 // many projections.
 //
 // Reference: https://wg21.link/alg.min.max#:~:text=ranges::max_element(I
-template <typename ForwardIterator,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator, Proj>,
-                                       projected<ForwardIterator, Proj>>>
+template <
+    typename ForwardIterator,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator, Proj>,
+                                      std::projected<ForwardIterator, Proj>>>
 constexpr auto max_element(ForwardIterator first,
                            ForwardIterator last,
                            Comp comp = {},
@@ -4734,13 +4805,14 @@ constexpr auto max_element(ForwardIterator first,
 // projections.
 //
 // Reference: https://wg21.link/alg.min.max#:~:text=ranges::max_element(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto max_element(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::max_element(ranges::begin(range), ranges::end(range),
                              std::move(comp), std::move(proj));
@@ -4757,13 +4829,14 @@ constexpr auto max_element(Range&& range, Comp comp = {}, Proj proj = {}) {
 // comparisons and twice as many applications of the projection, if any.
 //
 // Reference: https://wg21.link/alg.min.max#:~:text=ranges::minmax_element(I
-template <typename ForwardIterator,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator, Proj>,
-                                       projected<ForwardIterator, Proj>>>
+template <
+    typename ForwardIterator,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator, Proj>,
+                                      std::projected<ForwardIterator, Proj>>>
 constexpr auto minmax_element(ForwardIterator first,
                               ForwardIterator last,
                               Comp comp = {},
@@ -4782,13 +4855,14 @@ constexpr auto minmax_element(ForwardIterator first,
 // comparisons and twice as many applications of the projection, if any.
 //
 // Reference: https://wg21.link/alg.min.max#:~:text=ranges::minmax_element(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto minmax_element(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::minmax_element(ranges::begin(range), ranges::end(range),
                                 std::move(comp), std::move(proj));
@@ -4844,19 +4918,20 @@ constexpr const T& clamp(const T& v,
 //
 // Reference:
 // https://wg21.link/alg.lex.comparison#:~:text=lexicographical_compare(I1
-template <typename ForwardIterator1,
-          typename ForwardIterator2,
-          typename Comp = ranges::less,
-          typename Proj1 = std::identity,
-          typename Proj2 = std::identity,
-          typename = internal::iterator_category_t<ForwardIterator1>,
-          typename = internal::iterator_category_t<ForwardIterator2>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator1, Proj1>,
-                                       projected<ForwardIterator2, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<ForwardIterator2, Proj2>,
-                                       projected<ForwardIterator1, Proj1>>>
+template <
+    typename ForwardIterator1,
+    typename ForwardIterator2,
+    typename Comp = ranges::less,
+    typename Proj1 = std::identity,
+    typename Proj2 = std::identity,
+    typename = internal::iterator_category_t<ForwardIterator1>,
+    typename = internal::iterator_category_t<ForwardIterator2>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator1, Proj1>,
+                                      std::projected<ForwardIterator2, Proj2>>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<ForwardIterator2, Proj2>,
+                                      std::projected<ForwardIterator1, Proj1>>>
 constexpr bool lexicographical_compare(ForwardIterator1 first1,
                                        ForwardIterator1 last1,
                                        ForwardIterator2 first2,
@@ -4903,12 +4978,14 @@ template <typename Range1,
           typename Proj2 = std::identity,
           typename = internal::range_category_t<Range1>,
           typename = internal::range_category_t<Range2>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range1>, Proj1>,
-                                       projected<iterator_t<Range2>, Proj2>>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range2>, Proj2>,
-                                       projected<iterator_t<Range1>, Proj1>>>
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range1>, Proj1>,
+                                     std::projected<iterator_t<Range2>, Proj2>>,
+          typename =
+              std::indirect_result_t<Comp&,
+                                     std::projected<iterator_t<Range2>, Proj2>,
+                                     std::projected<iterator_t<Range1>, Proj1>>>
 constexpr bool lexicographical_compare(Range1&& range1,
                                        Range2&& range2,
                                        Comp comp = {},
@@ -4938,9 +5015,10 @@ template <typename BidirectionalIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<BidirectionalIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<BidirectionalIterator, Proj>,
-                                       projected<BidirectionalIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<BidirectionalIterator, Proj>,
+              std::projected<BidirectionalIterator, Proj>>>
 constexpr auto next_permutation(BidirectionalIterator first,
                                 BidirectionalIterator last,
                                 Comp comp = {},
@@ -4961,13 +5039,14 @@ constexpr auto next_permutation(BidirectionalIterator first,
 //
 // Reference:
 // https://wg21.link/alg.permutation.generators#:~:text=next_permutation(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto next_permutation(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::next_permutation(ranges::begin(range), ranges::end(range),
                                   std::move(comp), std::move(proj));
@@ -4989,9 +5068,10 @@ template <typename BidirectionalIterator,
           typename Comp = ranges::less,
           typename Proj = std::identity,
           typename = internal::iterator_category_t<BidirectionalIterator>,
-          typename = indirect_result_t<Comp&,
-                                       projected<BidirectionalIterator, Proj>,
-                                       projected<BidirectionalIterator, Proj>>>
+          typename = std::indirect_result_t<
+              Comp&,
+              std::projected<BidirectionalIterator, Proj>,
+              std::projected<BidirectionalIterator, Proj>>>
 constexpr auto prev_permutation(BidirectionalIterator first,
                                 BidirectionalIterator last,
                                 Comp comp = {},
@@ -5012,13 +5092,14 @@ constexpr auto prev_permutation(BidirectionalIterator first,
 //
 // Reference:
 // https://wg21.link/alg.permutation.generators#:~:text=prev_permutation(R
-template <typename Range,
-          typename Comp = ranges::less,
-          typename Proj = std::identity,
-          typename = internal::range_category_t<Range>,
-          typename = indirect_result_t<Comp&,
-                                       projected<iterator_t<Range>, Proj>,
-                                       projected<iterator_t<Range>, Proj>>>
+template <
+    typename Range,
+    typename Comp = ranges::less,
+    typename Proj = std::identity,
+    typename = internal::range_category_t<Range>,
+    typename = std::indirect_result_t<Comp&,
+                                      std::projected<iterator_t<Range>, Proj>,
+                                      std::projected<iterator_t<Range>, Proj>>>
 constexpr auto prev_permutation(Range&& range, Comp comp = {}, Proj proj = {}) {
   return ranges::prev_permutation(ranges::begin(range), ranges::end(range),
                                   std::move(comp), std::move(proj));

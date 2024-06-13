@@ -18,19 +18,37 @@ enum class CookieSettingOverride {
   // TopLevelStorageAccess grants.
   kTopLevelStorageAccessGrantEligible = kMinValue,
   // When present, the caller may use an existing Storage Access API grant (if
-  // a matching grant exists) to access third-party cookies. Otherwise, Storage
-  // Access API grants do not apply.
+  // a matching grant exists) to access third-party cookies. This "opt-in"
+  // signal is from script execution, i.e. `document.requestStorageAccess()`.
   kStorageAccessGrantEligible = 1,
   // Allows TPCD mitigations to be skipped when checking if third party cookies
   // are allowed, meaning cookies will be blocked despite the presence of any of
   // these grants/heuristics.
   kSkipTPCDHeuristicsGrant = 2,
-  // Corresponds to skipping checks on the TPCD_SUPPORT content setting, which
+  kSkipTPCDMetadataGrant = 3,
+  // Corresponds to skipping checks on the TPCD_TRIAL content setting, which
   // backs 3PC accesses granted via 3PC deprecation trial.
-  kSkipTPCDSupport = 3,
-  kSkipTPCDMetadataGrant = 4,
+  kSkipTPCDTrial = 4,
+  // Corresponds to skipping checks on the TOP_LEVEL_TPCD_TRIAL content setting,
+  // which backs 3PC accesses granted via top-level 3PC deprecation trial.
+  kSkipTopLevelTPCDTrial = 5,
+  // Corresponds to checks that may grant 3PCs when a request opts into
+  // credentials and CORS protection.
+  // One example are subresource requests that are same-site with the top-level
+  // site but originate from a cross-site embed.
+  kCrossSiteCredentialedWithCORS = 6,
+  // When specified, third party cookies should be forced disabled.
+  // Other cookie exceptions like the storage access API could result in
+  // third party cookies still being used when this is forced disabled.
+  // Used by WebView.
+  kForceDisableThirdPartyCookies = 7,
+  // When present, the caller may use an existing Storage Access API grant to
+  // access third-party cookies. Note that some integrations which have more
+  // stringent requirements, such as the FedCM/SAA integration (which requires
+  // the `identity-credentials-get` policy), are not in scope for this variant.
+  kStorageAccessGrantEligibleViaHeader = 8,
 
-  kMaxValue = kSkipTPCDMetadataGrant,
+  kMaxValue = kStorageAccessGrantEligibleViaHeader,
 };
 
 using CookieSettingOverrides = base::EnumSet<CookieSettingOverride,

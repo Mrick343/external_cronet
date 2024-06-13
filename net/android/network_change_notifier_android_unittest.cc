@@ -256,7 +256,7 @@ class BaseNetworkChangeNotifierAndroidTest : public TestWithTaskEnvironment {
         delegate_.FakeDefaultNetwork(network, type);
         break;
       case NONE:
-        NOTREACHED();
+        NOTREACHED_IN_MIGRATION();
         break;
     }
     // See comment above.
@@ -362,7 +362,7 @@ TEST_F(NetworkChangeNotifierDelegateAndroidTest, DelegateObserverNotified) {
 // NetworkChangeNotifierDelegateAndroid's connectivity state changes, the
 // NetworkChangeNotifierAndroid should reflect that state.
 TEST_F(NetworkChangeNotifierAndroidTest,
-       DISABLED_NotificationsSentToNetworkChangeNotifierAndroid) {
+       NotificationsSentToNetworkChangeNotifierAndroid) {
   RunTest(
       base::BindRepeating(&NetworkChangeNotifierObserver::notifications_count,
                           base::Unretained(&connection_type_observer_)),
@@ -374,7 +374,7 @@ TEST_F(NetworkChangeNotifierAndroidTest,
 // When a NetworkChangeNotifierAndroid's connection state changes, it should
 // notify all of its observers.
 TEST_F(NetworkChangeNotifierAndroidTest,
-       DISABLED_NotificationsSentToClientsOfNetworkChangeNotifier) {
+       NotificationsSentToClientsOfNetworkChangeNotifier) {
   RunTest(
       base::BindRepeating(&NetworkChangeNotifierObserver::notifications_count,
                           base::Unretained(&connection_type_observer_)),

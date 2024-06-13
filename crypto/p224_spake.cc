@@ -173,11 +173,10 @@ namespace crypto {
 P224EncryptedKeyExchange::P224EncryptedKeyExchange(PeerType peer_type,
                                                    std::string_view password)
     : state_(kStateInitial), is_server_(peer_type == kPeerTypeServer) {
-  memset(&x_, 0, sizeof(x_));
-  memset(&expected_authenticator_, 0, sizeof(expected_authenticator_));
+  std::ranges::fill(expected_authenticator_, 0u);
 
   // x_ is a random scalar.
-  RandBytes(x_, sizeof(x_));
+  RandBytes(x_);
 
   // Calculate |password| hash to get SPAKE password value.
   SHA256HashString(std::string(password.data(), password.length()),
@@ -220,8 +219,6 @@ const std::string& P224EncryptedKeyExchange::GetNextMessage() {
 
   LOG(FATAL) << "P224EncryptedKeyExchange::GetNextMessage called in"
                 " bad state " << state_;
-  next_message_ = "";
-  return next_message_;
 }
 
 P224EncryptedKeyExchange::Result P224EncryptedKeyExchange::ProcessMessage(
@@ -245,8 +242,6 @@ P224EncryptedKeyExchange::Result P224EncryptedKeyExchange::ProcessMessage(
   if (state_ != kStateRecvDH) {
     LOG(FATAL) << "P224EncryptedKeyExchange::ProcessMessage called in"
                   " bad state " << state_;
-    error_ = "internal error";
-    return kResultFailed;
   }
 
   const EC_GROUP* p224 = EC_group_p224();

@@ -6,7 +6,11 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <memory>
+#include <optional>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "quiche/quic/core/congestion_control/general_loss_algorithm.h"
 #include "quiche/quic/core/congestion_control/pacing_sender.h"
@@ -82,7 +86,7 @@ QuicSentPacketManager::QuicSentPacketManager(
       largest_mtu_acked_(0),
       handshake_finished_(false),
       peer_max_ack_delay_(
-          QuicTime::Delta::FromMilliseconds(kDefaultDelayedAckTimeMs)),
+          QuicTime::Delta::FromMilliseconds(kDefaultPeerDelayedAckTimeMs)),
       rtt_updated_(false),
       acked_packets_iter_(last_ack_frame_.packets.rbegin()),
       consecutive_pto_count_(0),
@@ -203,6 +207,9 @@ void QuicSentPacketManager::SetFromConfig(const QuicConfig& config) {
   }
   if (config.HasClientSentConnectionOption(kCONH, perspective)) {
     conservative_handshake_retransmits_ = true;
+  }
+  if (config.HasClientSentConnectionOption(kRNIB, perspective)) {
+    pacing_sender_.set_remove_non_initial_burst();
   }
   send_algorithm_->SetFromConfig(config, perspective);
   loss_algorithm_->SetFromConfig(config, perspective);
@@ -369,7 +376,7 @@ void QuicSentPacketManager::MaybeInvokeCongestionEvent(
   // is necessary.
   QuicPacketCount newly_acked_ect = 0, newly_acked_ce = 0;
   if (ecn_counts.has_value()) {
-    QUICHE_DCHECK(GetQuicReloadableFlag(quic_send_ect1));
+    QUICHE_DCHECK(GetQuicRestartFlag(quic_support_ect1));
     newly_acked_ect = ecn_counts->ect1 - previous_counts.ect1;
     if (newly_acked_ect == 0) {
       newly_acked_ect = ecn_counts->ect0 - previous_counts.ect0;
@@ -634,7 +641,7 @@ QuicAckFrequencyFrame QuicSentPacketManager::GetUpdatedAckFrequencyFrame()
   frame.packet_tolerance = kMaxRetransmittablePacketsBeforeAck;
   auto rtt = use_smoothed_rtt_in_ack_delay_ ? rtt_stats_.SmoothedOrInitialRtt()
                                             : rtt_stats_.MinOrInitialRtt();
-  frame.max_ack_delay = rtt * kAckDecimationDelay;
+  frame.max_ack_delay = rtt * kPeerAckDecimationDelay;
   frame.max_ack_delay = std::max(frame.max_ack_delay, peer_min_ack_delay_);
   // TODO(haoyuewang) Remove this once kDefaultMinAckDelayTimeMs is updated to
   // 5 ms on the client side.
@@ -1391,6 +1398,7 @@ AckResult QuicSentPacketManager::OnAckFrameEnd(
     if (info->in_flight) {
       acked_packet.bytes_acked = info->bytes_sent;
     } else {
+      acked_packet.spurious_loss = (info->state == LOST);
       // Unackable packets are skipped earlier.
       largest_newly_acked_ = acked_packet.packet_number;
     }
@@ -1424,8 +1432,8 @@ AckResult QuicSentPacketManager::OnAckFrameEnd(
   }
   // Validate ECN feedback.
   std::optional<QuicEcnCounts> valid_ecn_counts;
-  if (GetQuicReloadableFlag(quic_send_ect1)) {
-    QUIC_RELOADABLE_FLAG_COUNT_N(quic_send_ect1, 1, 8);
+  if (GetQuicRestartFlag(quic_support_ect1)) {
+    QUIC_RESTART_FLAG_COUNT_N(quic_support_ect1, 1, 9);
     if (IsEcnFeedbackValid(acked_packet_number_space, ecn_counts,
                            newly_acked_ect0, newly_acked_ect1)) {
       valid_ecn_counts = ecn_counts;
