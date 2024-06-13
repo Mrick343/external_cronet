@@ -7,6 +7,8 @@
 #include <time.h>
 
 #include <ctime>
+#include <memory>
+#include <utility>
 
 #include "quiche/quic/core/quic_linux_socket_utils.h"
 #include "quiche/quic/platform/api/quic_server_stats.h"
@@ -32,9 +34,6 @@ QuicGsoBatchWriter::QuicGsoBatchWriter(int fd,
                                                   clockid_for_release_time)) {
   if (supports_release_time_) {
     QUIC_RESTART_FLAG_COUNT(quic_support_release_time_for_gso);
-    QUIC_LOG_FIRST_N(INFO, 5) << "Release time is enabled.";
-  } else {
-    QUIC_LOG_FIRST_N(INFO, 5) << "Release time is not enabled.";
   }
 }
 
@@ -149,8 +148,8 @@ void QuicGsoBatchWriter::BuildCmsg(QuicMsgHdr* hdr,
   if (release_time != 0) {
     *hdr->GetNextCmsgData<uint64_t>(SOL_SOCKET, SO_TXTIME) = release_time;
   }
-  if (ecn_codepoint != ECN_NOT_ECT && GetQuicReloadableFlag(quic_send_ect1)) {
-    QUIC_RELOADABLE_FLAG_COUNT_N(quic_send_ect1, 8, 8);
+  if (ecn_codepoint != ECN_NOT_ECT && GetQuicRestartFlag(quic_support_ect1)) {
+    QUIC_RESTART_FLAG_COUNT_N(quic_support_ect1, 8, 9);
     if (self_address.IsIPv4()) {
       *hdr->GetNextCmsgData<int>(IPPROTO_IP, IP_TOS) =
           static_cast<int>(ecn_codepoint);

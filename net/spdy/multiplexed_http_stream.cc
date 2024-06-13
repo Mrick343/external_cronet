@@ -30,15 +30,8 @@ void MultiplexedHttpStream::SaveSSLInfo() {
   session_->SaveSSLInfo();
 }
 
-void MultiplexedHttpStream::GetSSLCertRequestInfo(
-    SSLCertRequestInfo* cert_request_info) {
-  // A multiplexed stream cannot request client certificates. Client
-  // authentication may only occur during the initial SSL handshake.
-  NOTREACHED();
-}
-
 void MultiplexedHttpStream::Drain(HttpNetworkSession* session) {
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   Close(false);
   delete this;
 }

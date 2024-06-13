@@ -14,7 +14,6 @@
 #include "base/run_loop.h"
 #include "base/synchronization/lock.h"
 #include "net/cert/cert_net_fetcher.h"
-#include "net/cert/ct_policy_enforcer.h"
 #include "net/cert/mock_cert_verifier.h"
 #include "net/cert/multi_log_ct_verifier.h"
 #include "net/dns/mock_host_resolver.h"
@@ -527,7 +526,6 @@ TEST_F(CertNetFetcherURLRequestTest, CancelAfterRunningMessageLoop) {
 
 // Fetch the same URLs in parallel and verify that only 1 request is made per
 // URL.
-// b/283075390
 TEST_F(CertNetFetcherURLRequestTest, ParallelFetchDuplicates) {
   ASSERT_TRUE(test_server_.Start());
 

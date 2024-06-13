@@ -15,6 +15,7 @@
 #include "base/numerics/safe_conversions.h"
 #include "base/strings/strcat.h"
 #include "base/strings/string_number_conversions.h"
+#include "base/strings/string_util.h"
 #include "net/base/proxy_string_util.h"
 #include "url/third_party/mozilla/url_parse.h"
 #include "url/url_canon.h"
@@ -24,7 +25,7 @@ namespace net {
 
 ProxyServer::ProxyServer(Scheme scheme, const HostPortPair& host_port_pair)
       : scheme_(scheme), host_port_pair_(host_port_pair) {
-  if (scheme_ == SCHEME_DIRECT || scheme_ == SCHEME_INVALID) {
+  if (scheme_ == SCHEME_INVALID) {
     // |host_port_pair| isn't relevant for these special schemes, so none should
     // have been specified. It is important for this to be consistent since we
     // do raw field comparisons in the equality and comparison functions.
@@ -39,9 +40,6 @@ ProxyServer ProxyServer::FromSchemeHostAndPort(Scheme scheme,
                                                std::string_view port_str) {
   // Create INVALID proxies directly using `ProxyServer()`.
   DCHECK_NE(scheme, SCHEME_INVALID);
-
-  // Create DIRECT proxies directly using `Direct()`.
-  DCHECK_NE(scheme, SCHEME_DIRECT);
 
   int port_number =
       url::ParsePort(port_str.data(), url::Component(0, port_str.size()));
@@ -63,8 +61,10 @@ ProxyServer ProxyServer::FromSchemeHostAndPort(Scheme scheme,
   // Create INVALID proxies directly using `ProxyServer()`.
   DCHECK_NE(scheme, SCHEME_INVALID);
 
-  // Create DIRECT proxies directly using `Direct()`.
-  DCHECK_NE(scheme, SCHEME_DIRECT);
+  // Trim host which may have been pasted with excess whitespace.
+  if (!host.empty()) {
+    host = base::TrimWhitespaceASCII(host, base::TRIM_ALL);
+  }
 
   // Add brackets to IPv6 literals if missing, as required by url
   // canonicalization.
@@ -111,7 +111,6 @@ const HostPortPair& ProxyServer::host_port_pair() const {
   // Doesn't make sense to call this if the URI scheme doesn't
   // have concept of a host.
   DCHECK(is_valid());
-  DCHECK(!is_direct());
   return host_port_pair_;
 }
 
@@ -127,7 +126,6 @@ int ProxyServer::GetDefaultPortForScheme(Scheme scheme) {
     case SCHEME_QUIC:
       return 443;
     case SCHEME_INVALID:
-    case SCHEME_DIRECT:
       break;
   }
   return -1;

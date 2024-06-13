@@ -19,6 +19,7 @@ import androidx.collection.ArraySet;
 
 import org.chromium.base.BuildInfo;
 import org.chromium.base.ContextUtils;
+import org.chromium.base.JavaUtils;
 import org.chromium.base.Log;
 import org.chromium.base.ResettersForTesting;
 import org.chromium.base.SysUtils;
@@ -118,9 +119,11 @@ public abstract class ChildConnectionAllocator {
 
     private static void checkServiceExists(
             Context context, String packageName, String serviceClassName) {
-        // On R+ it's possible for the app to lose visibility of the WebView package in rare cases;
-        // see crbug.com/1363832 - we attempt to get re-granted visibility here to work around it.
+        // On R/S/T it's possible for the app to lose visibility of the WebView package in rare
+        // cases; see crbug.com/1363832 - we attempt to get re-granted visibility here to work
+        // around it.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
                 && !packageName.equals(context.getPackageName())) {
             workAroundWebViewPackageVisibility();
         }
@@ -132,7 +135,7 @@ public abstract class ChildConnectionAllocator {
             packageManager.getServiceInfo(
                     new ComponentName(packageName, serviceClassName + "0"), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Illegal meta data value: the child service doesn't exist");
+            JavaUtils.throwUnchecked(e);
         }
     }
 
@@ -159,11 +162,11 @@ public abstract class ChildConnectionAllocator {
                 numServices = appInfo.metaData.getInt(numChildServicesManifestKey, -1);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Could not get application info.");
+            JavaUtils.throwUnchecked(e);
         }
 
         if (numServices < 0) {
-            throw new RuntimeException("Illegal meta data value for number of child services");
+            throw new RuntimeException();
         }
 
         checkServiceExists(context, packageName, serviceClassName);

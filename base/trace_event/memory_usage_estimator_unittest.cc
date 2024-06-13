@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/341324165): Fix and remove.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "base/trace_event/memory_usage_estimator.h"
 
 #include <stdlib.h>
@@ -98,7 +103,7 @@ TEST(EstimateMemoryUsageTest, Arrays) {
       char payload[10];
     };
     Item* array = new Item[7];
-    EXPECT_EQ(70u, EstimateMemoryUsage(array, 7));
+    EXPECT_EQ(70u, EstimateMemoryUsage(base::span<const Item>(array, 7u)));
     delete[] array;
   }
 }
@@ -121,15 +126,6 @@ TEST(EstimateMemoryUsageTest, UniquePtr) {
     std::unique_ptr<Data*> ptr(new Data*());
     EXPECT_EQ(sizeof(void*), EstimateMemoryUsage(ptr));
   }
-
-  // With an array
-  {
-    struct Item {
-      uint32_t payload[10];
-    };
-    std::unique_ptr<Item[]> ptr(new Item[7]);
-    EXPECT_EQ(280u, EstimateMemoryUsage(ptr, 7));
-  }
 }
 
 TEST(EstimateMemoryUsageTest, Vector) {
@@ -148,6 +144,30 @@ TEST(EstimateMemoryUsageTest, Vector) {
     expected_size += EstimateMemoryUsage(vector.back());
   }
   EXPECT_EQ(expected_size, EstimateMemoryUsage(vector));
+}
+
+TEST(EstimateMemoryUsageTest, Vector_of_Pointers) {
+  {
+    std::unique_ptr<Data> u_ptr = std::make_unique<Data>(11);
+    std::vector<Data*> vector;
+    vector.reserve(1000);
+    vector.push_back(u_ptr.get());
+
+    size_t capacity = vector.capacity();
+    size_t expected_size = capacity * sizeof(Data*);
+    EXPECT_EQ(expected_size, EstimateMemoryUsage(vector));
+  }
+
+  {
+    std::unique_ptr<Data> u_ptr = std::make_unique<Data>(11);
+    std::vector<raw_ptr<Data>> vector;
+    vector.reserve(1000);
+    vector.push_back(u_ptr.get());
+
+    size_t capacity = vector.capacity();
+    size_t expected_size = capacity * sizeof(raw_ptr<Data>);
+    EXPECT_EQ(expected_size, EstimateMemoryUsage(vector));
+  }
 }
 
 TEST(EstimateMemoryUsageTest, List) {
@@ -247,19 +267,18 @@ TEST(EstimateMemoryUsageTest, IsStandardContainerComplexIteratorTest) {
   };
 
   static_assert(
-      internal::IsStandardContainerComplexIterator<std::list<int>::iterator>(),
+      internal::IsIteratorOfStandardContainer<std::list<int>::iterator>, "");
+  static_assert(
+      internal::IsIteratorOfStandardContainer<std::list<int>::const_iterator>,
       "");
-  static_assert(internal::IsStandardContainerComplexIterator<
-                    std::list<int>::const_iterator>(),
+  static_assert(
+      internal::IsIteratorOfStandardContainer<std::list<int>::reverse_iterator>,
+      "");
+  static_assert(internal::IsIteratorOfStandardContainer<
+                    std::list<int>::const_reverse_iterator>,
                 "");
-  static_assert(internal::IsStandardContainerComplexIterator<
-                    std::list<int>::reverse_iterator>(),
-                "");
-  static_assert(internal::IsStandardContainerComplexIterator<
-                    std::list<int>::const_reverse_iterator>(),
-                "");
-  static_assert(!internal::IsStandardContainerComplexIterator<int>(), "");
-  static_assert(!internal::IsStandardContainerComplexIterator<abstract*>(), "");
+  static_assert(!internal::IsIteratorOfStandardContainer<int>, "");
+  static_assert(!internal::IsIteratorOfStandardContainer<abstract*>, "");
 }
 
 }  // namespace trace_event

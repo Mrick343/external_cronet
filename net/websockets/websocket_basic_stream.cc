@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/websockets/websocket_basic_stream.h"
 
 #include <stddef.h>
@@ -96,7 +101,7 @@ constexpr double kThresholdInBytesPerSecond = 1200 * 1000;
 // masked bit of the frames on.
 int CalculateSerializedSizeAndTurnOnMaskBit(
     std::vector<std::unique_ptr<WebSocketFrame>>* frames) {
-  const uint64_t kMaximumTotalSize = std::numeric_limits<int>::max();
+  constexpr uint64_t kMaximumTotalSize = std::numeric_limits<int>::max();
 
   uint64_t total_size = 0;
   for (const auto& frame : *frames) {

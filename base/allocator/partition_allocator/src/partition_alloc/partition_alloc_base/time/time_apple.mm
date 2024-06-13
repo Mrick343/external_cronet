@@ -7,18 +7,19 @@
 #import <Foundation/Foundation.h>
 #include <mach/mach.h>
 #include <mach/mach_time.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <sys/sysctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <time.h>
 
-#if BUILDFLAG(IS_IOS)
-#include <errno.h>
+#include <cstddef>
+#include <cstdint>
+#include <ctime>
+
+#if PA_BUILDFLAG(IS_IOS)
+#include <cerrno>
 #endif
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc_base/check.h"
 #include "partition_alloc/partition_alloc_base/logging.h"
 #include "partition_alloc/partition_alloc_base/numerics/safe_conversions.h"

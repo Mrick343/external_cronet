@@ -14,9 +14,9 @@
 #include "base/check.h"
 #include "base/functional/bind.h"
 #include "base/functional/callback.h"
-#include "base/functional/callback_helpers.h"
 #include "base/memory/weak_ptr.h"
 #include "base/ranges/algorithm.h"
+#include "base/types/is_instantiation.h"
 
 // OVERVIEW:
 //
@@ -132,7 +132,7 @@ class CallbackListBase {
   using CallbackType =
       typename CallbackListTraits<CallbackListImpl>::CallbackType;
 
-  // TODO(crbug.com/1103086): Update references to use this directly and by
+  // TODO(crbug.com/40139093): Update references to use this directly and by
   // value, then remove.
   using Subscription = CallbackListSubscription;
 
@@ -236,8 +236,9 @@ class CallbackListBase {
     // that were executed above have all been removed regardless of whether
     // they're counted in |erased_callbacks_|.
     if (removal_callback_ &&
-        (erased_callbacks || IsOnceCallback<CallbackType>::value))
+        (erased_callbacks || is_instantiation<OnceCallback, CallbackType>)) {
       removal_callback_.Run();  // May delete |this|!
+    }
   }
 
  protected:

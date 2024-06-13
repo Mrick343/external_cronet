@@ -5,6 +5,9 @@
 #include "quiche/quic/core/quic_types.h"
 
 #include <cstdint>
+#include <ostream>
+#include <string>
+#include <type_traits>
 
 #include "absl/strings/str_cat.h"
 #include "quiche/quic/core/quic_error_codes.h"
@@ -157,6 +160,7 @@ std::string QuicFrameTypeToString(QuicFrameType t) {
     RETURN_STRING_LITERAL(NEW_TOKEN_FRAME)
     RETURN_STRING_LITERAL(RETIRE_CONNECTION_ID_FRAME)
     RETURN_STRING_LITERAL(ACK_FREQUENCY_FRAME)
+    RETURN_STRING_LITERAL(RESET_STREAM_AT_FRAME)
     RETURN_STRING_LITERAL(NUM_FRAME_TYPES)
   }
   return absl::StrCat("Unknown(", static_cast<int>(t), ")");
@@ -463,6 +467,15 @@ std::string EcnCodepointToString(QuicEcnCodepoint ecn) {
       return "CE";
   }
   return "";  // Handle compilation on windows for invalid enums
+}
+
+bool operator==(const QuicSSLConfig& lhs, const QuicSSLConfig& rhs) {
+  return lhs.early_data_enabled == rhs.early_data_enabled &&
+         lhs.disable_ticket_support == rhs.disable_ticket_support &&
+         lhs.signing_algorithm_prefs == rhs.signing_algorithm_prefs &&
+         lhs.client_cert_mode == rhs.client_cert_mode &&
+         lhs.ech_config_list == rhs.ech_config_list &&
+         lhs.ech_grease_enabled == rhs.ech_grease_enabled;
 }
 
 #undef RETURN_STRING_LITERAL  // undef for jumbo builds

@@ -48,24 +48,6 @@ def _copy_coverage_files(test_runner: FfxTestRunner, dest: str) -> None:
     shutil.copytree(coverage_dir, dest, dirs_exist_ok=True)
 
 
-def _get_vulkan_args(use_vulkan: Optional[str]) -> List[str]:
-    """Helper function to set vulkan related flag."""
-
-    vulkan_args = []
-    if not use_vulkan:
-        if get_host_arch() == 'x64':
-            # TODO(crbug.com/1261646) Remove once Vulkan is enabled by
-            # default.
-            use_vulkan = 'native'
-        else:
-            # Use swiftshader on arm64 by default because most arm64 bots
-            # currently don't support Vulkan emulation.
-            use_vulkan = 'swiftshader'
-            vulkan_args.append('--ozone-platform=headless')
-    vulkan_args.append(f'--use-vulkan={use_vulkan}')
-    return vulkan_args
-
-
 class ExecutableTestRunner(TestRunner):
     """Test runner for running standalone test executables."""
 
@@ -79,7 +61,7 @@ class ExecutableTestRunner(TestRunner):
         if not self._test_args:
             self._test_args = []
         self._test_name = test_name
-        self._code_coverage_dir = os.path.basename(code_coverage_dir)
+        self._code_coverage_dir = code_coverage_dir
         self._custom_artifact_directory = None
         self._isolated_script_test_output = None
         self._isolated_script_test_perf_output = None
@@ -126,8 +108,6 @@ class ExecutableTestRunner(TestRunner):
                             help='Legacy flag to pass in arguments for '
                             'the test process. These arguments can now be '
                             'passed in without a preceding "--" flag.')
-        parser.add_argument('--use-vulkan',
-                            help='\'native\', \'swiftshader\' or \'none\'.')
         args, child_args = parser.parse_known_args(self._test_args)
         if args.isolated_script_test_output:
             self._isolated_script_test_output = args.isolated_script_test_output
@@ -174,7 +154,15 @@ class ExecutableTestRunner(TestRunner):
                 self._target_id, test_concurrency)
             child_args.append('--remote-test-server-spawner-url-base=%s' %
                               spawner_url_base)
-        child_args.extend(_get_vulkan_args(args.use_vulkan))
+        if get_host_arch() == 'x64':
+            # TODO(crbug.com/40202294) Remove once Vulkan is enabled by
+            # default.
+            child_args.append('--use-vulkan=native')
+        else:
+            # TODO(crbug.com/42050042, crbug.com/42050537) Remove swiftshader
+            # once the vulkan is enabled by default.
+            child_args.extend(
+                ['--use-vulkan=swiftshader', '--ozone-platform=headless'])
         if args.test_args:
             child_args.extend(args.test_args)
         return child_args
@@ -197,7 +185,9 @@ class ExecutableTestRunner(TestRunner):
                 test_runner,
                 os.path.basename(self._isolated_script_test_perf_output),
                 self._isolated_script_test_perf_output)
-        _copy_coverage_files(test_runner, self._code_coverage_dir)
+        if self._code_coverage_dir:
+            _copy_coverage_files(test_runner,
+                                 os.path.basename(self._code_coverage_dir))
 
     def run_test(self) -> subprocess.Popen:
         test_args = self._get_args()
@@ -242,11 +232,10 @@ def register_executable_test_args(parser: argparse.ArgumentParser) -> None:
 
     test_args = parser.add_argument_group('test', 'arguments for test running')
     test_args.add_argument('--code-coverage-dir',
-                           default=os.getcwd(),
+                           default=None,
                            help='Directory to place code coverage '
                            'information. Only relevant when the target was '
-                           'built with |fuchsia_code_coverage| set to true. '
-                           'Defaults to current directory.')
+                           'built with |fuchsia_code_coverage| set to true.')
     test_args.add_argument('--test-name',
                            dest='test_type',
                            help='Name of the test package (e.g. '

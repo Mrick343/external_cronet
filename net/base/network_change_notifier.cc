@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/base/network_change_notifier.h"
 
 #include <limits>
@@ -36,7 +41,7 @@
 #elif BUILDFLAG(IS_LINUX)
 #include "net/base/network_change_notifier_linux.h"
 #elif BUILDFLAG(IS_APPLE)
-#include "net/base/network_change_notifier_mac.h"
+#include "net/base/network_change_notifier_apple.h"
 #elif BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID)
 #include "net/base/network_change_notifier_passive.h"
 #elif BUILDFLAG(IS_FUCHSIA)
@@ -325,7 +330,7 @@ std::unique_ptr<NetworkChangeNotifier> NetworkChangeNotifier::CreateIfNeeded(
   return std::make_unique<NetworkChangeNotifierLinux>(
       std::unordered_set<std::string>());
 #elif BUILDFLAG(IS_APPLE)
-  return std::make_unique<NetworkChangeNotifierMac>();
+  return std::make_unique<NetworkChangeNotifierApple>();
 #elif BUILDFLAG(IS_FUCHSIA)
   return std::make_unique<NetworkChangeNotifierFuchsia>(
       /*require_wlan=*/false);
@@ -445,7 +450,7 @@ double NetworkChangeNotifier::GetMaxBandwidthMbpsForConnectionSubtype(
     case SUBTYPE_OTHER:
       return std::numeric_limits<double>::infinity();
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return std::numeric_limits<double>::infinity();
 }
 
@@ -514,7 +519,7 @@ const char* NetworkChangeNotifier::ConnectionTypeToString(
                     NetworkChangeNotifier::CONNECTION_LAST + 1,
                 "ConnectionType name count should match");
   if (type < CONNECTION_UNKNOWN || type > CONNECTION_LAST) {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return "CONNECTION_INVALID";
   }
   return kConnectionTypeNames[type];
