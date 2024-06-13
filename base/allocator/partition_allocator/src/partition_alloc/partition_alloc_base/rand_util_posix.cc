@@ -4,35 +4,46 @@
 
 #include "partition_alloc/partition_alloc_base/rand_util.h"
 
-#include <errno.h>
 #include <fcntl.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <sys/syscall.h>
 #include <unistd.h>
+
+#include <cerrno>
+#include <cstddef>
+#include <cstdint>
 #include <sstream>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc_base/check.h"
 #include "partition_alloc/partition_alloc_base/compiler_specific.h"
 #include "partition_alloc/partition_alloc_base/files/file_util.h"
 #include "partition_alloc/partition_alloc_base/no_destructor.h"
 #include "partition_alloc/partition_alloc_base/posix/eintr_wrapper.h"
 
-#if BUILDFLAG(IS_MAC)
-// TODO(crbug.com/995996): Waiting for this header to appear in the iOS SDK.
+#if PA_BUILDFLAG(IS_MAC)
+// TODO(crbug.com/40641285): Waiting for this header to appear in the iOS SDK.
 // (See below.)
 #include <sys/random.h>
 #endif
 
 namespace {
 
-#if BUILDFLAG(IS_AIX)
+#if PA_BUILDFLAG(IS_AIX)
 // AIX has no 64-bit support for O_CLOEXEC.
 static constexpr int kOpenFlags = O_RDONLY;
 #else
 static constexpr int kOpenFlags = O_RDONLY | O_CLOEXEC;
 #endif
+
+// On Android the 'open' function has two versions:
+// int open(const char *pathname, int flags);
+// int open(const char *pathname, int flags, mode_t mode);
+//
+// This doesn't play well with WrapEINTR template. This alias helps the compiler
+// to make a decision.
+int OpenFile(const char* pathname, int flags) {
+  return open(pathname, flags);
+}
 
 // We keep the file descriptor for /dev/urandom around so we don't need to
 // reopen it (which is expensive), and since we may not even be able to reopen
@@ -40,7 +51,8 @@ static constexpr int kOpenFlags = O_RDONLY | O_CLOEXEC;
 // we can use a static-local variable to handle opening it on the first access.
 class URandomFd {
  public:
-  URandomFd() : fd_(PA_HANDLE_EINTR(open("/dev/urandom", kOpenFlags))) {
+  URandomFd()
+      : fd_(partition_alloc::WrapEINTR(OpenFile)("/dev/urandom", kOpenFlags)) {
     PA_BASE_CHECK(fd_ >= 0) << "Cannot open /dev/urandom";
   }
 
@@ -62,12 +74,12 @@ int GetUrandomFD() {
 namespace partition_alloc::internal::base {
 
 // NOTE: In an ideal future, all implementations of this function will just
-// wrap BoringSSL's `RAND_bytes`. TODO(crbug.com/995996): Figure out the
+// wrap BoringSSL's `RAND_bytes`. TODO(crbug.com/40641285): Figure out the
 // build/test/performance issues with dcheng's CL
 // (https://chromium-review.googlesource.com/c/chromium/src/+/1545096) and land
 // it or some form of it.
 void RandBytes(void* output, size_t output_length) {
-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+#if PA_BUILDFLAG(IS_LINUX) || PA_BUILDFLAG(IS_CHROMEOS)
   // Use `syscall(__NR_getrandom...` to avoid a dependency on
   // `third_party/linux_syscall_support.h`.
   //
@@ -76,7 +88,7 @@ void RandBytes(void* output, size_t output_length) {
   // that do have this syscall defined. This diverges from upstream
   // `//base` behavior both here and below.
   const ssize_t r =
-      PA_HANDLE_EINTR(syscall(__NR_getrandom, output, output_length, 0));
+      WrapEINTR(syscall)(__NR_getrandom, output, output_length, 0);
 
   // Return success only on total success. In case errno == ENOSYS (or any other
   // error), we'll fall through to reading from urandom below.
@@ -84,8 +96,8 @@ void RandBytes(void* output, size_t output_length) {
     PA_MSAN_UNPOISON(output, output_length);
     return;
   }
-#elif BUILDFLAG(IS_MAC)
-  // TODO(crbug.com/995996): Enable this on iOS too, when sys/random.h arrives
+#elif PA_BUILDFLAG(IS_MAC)
+  // TODO(crbug.com/40641285): Enable this on iOS too, when sys/random.h arrives
   // in its SDK.
   if (getentropy(output, output_length) == 0) {
     return;

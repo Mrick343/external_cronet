@@ -154,7 +154,7 @@ static int64_t QuotaInterfaceFtruncateRequest(NaClDescQuotaInterface* ndqi,
                                               int64_t length) {
   // We can't implement SetLength on the plugin side due to sandbox limitations.
   // See crbug.com/156077.
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return 0;
 }
 
@@ -780,7 +780,7 @@ void NaClIPCAdapter::ClearToBeSent() {
 
 void NaClIPCAdapter::ConnectChannelOnIOThread() {
   if (!io_thread_data_.channel_->Connect())
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
 }
 
 void NaClIPCAdapter::CloseChannelOnIOThread() {
@@ -831,7 +831,8 @@ void NaClIPCAdapter::SaveMessage(
   header.flags = msg.flags();
   header.num_fds = static_cast<uint16_t>(rewritten_msg->desc_count());
 
-  rewritten_msg->SetData(header, msg.payload(), msg.payload_size());
+  rewritten_msg->SetData(header, msg.payload_bytes().data(),
+                         msg.payload_bytes().size());
   locked_data_.to_be_received_.push(std::move(rewritten_msg));
 }
 

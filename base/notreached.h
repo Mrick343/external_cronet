@@ -10,46 +10,46 @@
 #include "base/dcheck_is_on.h"
 #include "base/logging_buildflags.h"
 
+// TODO(crbug.com/41493641): Remove once NOTIMPLEMENTED() call sites include
+// base/notimplemented.h.
+#include "base/notimplemented.h"
+
 namespace logging {
 
-// NOTREACHED() annotates should-be unreachable code. Under the
-// kNotReachedIsFatal experiment all NOTREACHED()s that happen after FeatureList
-// initialization are fatal. As of 2023-06-06 this experiment is disabled
-// everywhere.
+// Migration in progress: For new code call either NOTREACHED_NORETURN() or
+// NOTREACHED(base::NotFatalUntil::M*). Do not add new callers to NOTREACHED()
+// without a parameter until this comment is updated. Existing NOTREACHED()
+// instances will be renamed to NOTREACHED_IN_MIGRATION() ASAP, then
+// NOTREACHED() without a parameter will refer to the [[noreturn]]
+// always-fatal version which is currently spelled NOTREACHED_NORETURN().
 //
-// For paths that are intended to eventually be NOTREACHED() but are not yet
-// ready for migration (stability risk, known pre-existing failures), consider
-// the DUMP_WILL_BE_NOTREACHED_NORETURN() macro below.
+// NOTREACHED() annotates should-be unreachable code. When a base::NotFatalUntil
+// milestone is provided the instance is non-fatal (dumps without crashing)
+// until that milestone is hit. That is: `NOTREACHED(base::NotFatalUntil::M120)`
+// starts crashing in M120. See base/check.h.
 //
-// Outside the kNotReachedIsFatal experiment behavior is as follows:
+// Under the kNotReachedIsFatal experiment all NOTREACHED() without a milestone
+// argument are fatal. As of 2024-03-19 this experiment is 50/50 enabled on M124
+// Canary and Dev with intent to roll out to stable in M124 absent any blocking
+// issues that come up.
 //
-// On DCHECK builds NOTREACHED() match the fatality of DCHECKs. When DCHECKs are
-// non-FATAL a crash report will be generated for the first NOTREACHED() that
-// hits per process.
-//
-// Outside DCHECK builds NOTREACHED() will LOG(ERROR) and also upload a crash
-// report without crashing in order to weed out prevalent NOTREACHED()s in the
-// wild before always turning NOTREACHED()s FATAL.
-//
-// TODO(crbug.com/851128): Migrate NOTREACHED() callers to NOTREACHED_NORETURN()
-// which is [[noreturn]] and always FATAL. Once that's done, rename
-// NOTREACHED_NORETURN() back to NOTREACHED() and remove the non-FATAL version.
-// This migration will likely happen through the kNotReachedIsFatal experiment
-// for most code as we'll be able to avoid stability issues for pre-existing
-// failures.
+// TODO(crbug.com/40580068): After kNotReachedIsFatal is universally rolled out
+// then move callers without a non-fatal milestone argument to
+// NOTREACHED_NORETURN(). Then rename the [[noreturn]] version back to
+// NOTREACHED().
 #if CHECK_WILL_STREAM() || BUILDFLAG(ENABLE_LOG_ERROR_NOT_REACHED)
-#define NOTREACHED() \
+#define NOTREACHED_IN_MIGRATION() \
   LOGGING_CHECK_FUNCTION_IMPL(::logging::NotReachedError::NotReached(), false)
 #else
-#define NOTREACHED()                                       \
+#define NOTREACHED_IN_MIGRATION()                          \
   (true) ? ::logging::NotReachedError::TriggerNotReached() \
          : EAT_CHECK_STREAM_PARAMS()
 #endif
 
 // NOTREACHED_NORETURN() annotates paths that are supposed to be unreachable.
 // They crash if they are ever hit.
-// TODO(crbug.com/851128): Rename back to NOTREACHED() once there are no callers
-// of the old non-CHECK-fatal macro.
+// TODO(crbug.com/40580068): Merge this with NOTREACHED() once
+// NOTREACHED_NORETURN() callers are renamed NOTREACHED().
 #if CHECK_WILL_STREAM()
 #define NOTREACHED_NORETURN() ::logging::NotReachedNoreturnError()
 #else
@@ -64,34 +64,16 @@ namespace logging {
   (true) ? ::logging::NotReachedFailure() : EAT_CHECK_STREAM_PARAMS()
 #endif
 
-// The DUMP_WILL_BE_NOTREACHED_NORETURN() macro provides a convenient way to
+#define NOTREACHED(...)                                      \
+  BASE_IF(BASE_IS_EMPTY(__VA_ARGS__), NOTREACHED_NORETURN(), \
+          LOGGING_CHECK_FUNCTION_IMPL(                       \
+              ::logging::NotReachedError::NotReached(__VA_ARGS__), false))
+
+// The DUMP_WILL_BE_NOTREACHED() macro provides a convenient way to
 // non-fatally dump in official builds if ever hit. See DUMP_WILL_BE_CHECK for
 // suggested usage.
-#define DUMP_WILL_BE_NOTREACHED_NORETURN() \
+#define DUMP_WILL_BE_NOTREACHED() \
   ::logging::CheckError::DumpWillBeNotReachedNoreturn()
-
-// The NOTIMPLEMENTED() macro annotates codepaths which have not been
-// implemented yet. If output spam is a serious concern,
-// NOTIMPLEMENTED_LOG_ONCE() can be used.
-#if DCHECK_IS_ON()
-#define NOTIMPLEMENTED() \
-  ::logging::CheckError::NotImplemented(__PRETTY_FUNCTION__)
-
-// The lambda returns false the first time it is run, and true every other time.
-#define NOTIMPLEMENTED_LOG_ONCE()                                \
-  LOGGING_CHECK_FUNCTION_IMPL(NOTIMPLEMENTED(), []() {           \
-    bool old_value = true;                                       \
-    [[maybe_unused]] static const bool call_once = [](bool* b) { \
-      *b = false;                                                \
-      return true;                                               \
-    }(&old_value);                                               \
-    return old_value;                                            \
-  }())
-
-#else
-#define NOTIMPLEMENTED() EAT_CHECK_STREAM_PARAMS()
-#define NOTIMPLEMENTED_LOG_ONCE() EAT_CHECK_STREAM_PARAMS()
-#endif
 
 }  // namespace logging
 

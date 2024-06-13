@@ -4,8 +4,11 @@
 
 #include "quiche/quic/core/batch_writer/quic_batch_writer_buffer.h"
 
+#include <algorithm>
 #include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "quiche/quic/core/quic_constants.h"
 #include "quiche/quic/platform/api/quic_ip_address.h"
@@ -108,9 +111,9 @@ TEST_F(QuicBatchWriterBufferTest, InPlacePushes) {
   std::vector<BufferSizeSequence> buffer_size_sequences = {
       // Push large writes until the buffer is near full, then switch to 1-byte
       // writes. This covers the edge cases when detecting insufficient buffer.
-      BufferSizeSequence({{{1350}, kBatchBufferSize - 3000}, {{1}, 1e6}}),
+      BufferSizeSequence({{{1350}, kBatchBufferSize - 3000}, {{1}, 1000000}}),
       // A sequence that looks real.
-      BufferSizeSequence({{{1, 39, 97, 150, 1350, 1350, 1350, 1350}, 1e6}}),
+      BufferSizeSequence({{{1, 39, 97, 150, 1350, 1350, 1350, 1350}, 1000000}}),
   };
 
   for (auto& buffer_size_sequence : buffer_size_sequences) {

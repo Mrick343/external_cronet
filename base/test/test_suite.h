@@ -10,11 +10,11 @@
 // any gtest based tests that are linked into your executable.
 
 #include <memory>
+#include <string_view>
 
 #include "base/at_exit.h"
 #include "base/check.h"
 #include "base/memory/raw_ptr.h"
-#include "base/strings/string_piece.h"
 #include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
@@ -72,8 +72,8 @@ class TestSuite {
   // terminates the process.
   void UnitTestAssertHandler(const char* file,
                              int line,
-                             const base::StringPiece summary,
-                             const base::StringPiece stack_trace);
+                             const std::string_view summary,
+                             const std::string_view stack_trace);
 
   // Disable crash dialogs so that it doesn't gum up the buildbot
   virtual void SuppressErrorDialogs();
@@ -115,6 +115,15 @@ class TestSuite {
   std::vector<std::string> argv_as_strings_;
 #endif
   raw_ptr<char*> argv_;
+  // An extra copy of the command line for FuzzTest, since it stores
+  // it and relies on using it later, after other Chromium code might
+  // have modified the real argv/argc.
+  // We need fuzztest_argv_raw_.data() to have type char**, so we can't use
+  // raw_ptr here.
+  RAW_PTR_EXCLUSION std::vector<char*> fuzztest_argv_raw_;
+  int fuzztest_argc_;
+  // We need fuzztest_argv_ptr_ to have type char**,
+  RAW_PTR_EXCLUSION char** fuzztest_argv_ptr_;
 };
 
 }  // namespace base
