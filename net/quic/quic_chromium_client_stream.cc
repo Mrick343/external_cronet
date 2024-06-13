@@ -4,6 +4,7 @@
 
 #include "net/quic/quic_chromium_client_stream.h"
 
+#include <string_view>
 #include <utility>
 
 #include "base/functional/bind.h"
@@ -249,7 +250,7 @@ int QuicChromiumClientStream::Handle::WriteHeaders(
 }
 
 int QuicChromiumClientStream::Handle::WriteStreamData(
-    base::StringPiece data,
+    std::string_view data,
     bool fin,
     CompletionOnceCallback callback) {
   ScopedBoolSaver saver(&may_invoke_callbacks_, false);
@@ -278,6 +279,43 @@ int QuicChromiumClientStream::Handle::WritevStreamData(
 
   SetCallback(std::move(callback), &write_callback_);
   return ERR_IO_PENDING;
+}
+
+int QuicChromiumClientStream::Handle::WriteConnectUdpPayload(
+    absl::string_view packet) {
+  ScopedBoolSaver saver(&may_invoke_callbacks_, false);
+  if (!stream_) {
+    return net_error_;
+  }
+
+  // Set Context ID to zero as per RFC 9298
+  // (https://datatracker.ietf.org/doc/html/rfc9298#name-http-datagram-payload-forma)
+  // and copy packet data.
+  std::string http_payload;
+  http_payload.resize(1 + packet.size());
+  http_payload[0] = 0;
+  memcpy(&http_payload[1], packet.data(), packet.size());
+
+  // Attempt to send the HTTP payload as a datagram over the stream.
+  quic::MessageStatus message_status = stream_->SendHttp3Datagram(http_payload);
+
+  // If the attempt was successful or blocked (e.g., due to buffer constraints),
+  // proceed to handle the I/O completion with an OK status.
+  if (message_status == quic::MessageStatus::MESSAGE_STATUS_SUCCESS ||
+      message_status == quic::MessageStatus::MESSAGE_STATUS_BLOCKED) {
+    return HandleIOComplete(OK);
+  }
+  // If the attempt failed due to a unsupported feature, internal error, or
+  // unexpected condition (encryption not established or message too large),
+  // reset the stream and close the connection.
+  else {
+    DCHECK(message_status !=
+               quic::MessageStatus::MESSAGE_STATUS_ENCRYPTION_NOT_ESTABLISHED ||
+           message_status != quic::MessageStatus::MESSAGE_STATUS_TOO_LARGE);
+    DLOG(ERROR) << "Failed to send Http3 Datagram on " << stream_->id();
+    stream_->Reset(quic::QUIC_STREAM_CANCELLED);
+    return ERR_CONNECTION_CLOSED;
+  }
 }
 
 int QuicChromiumClientStream::Handle::Read(IOBuffer* buf, int buf_len) {
@@ -309,6 +347,19 @@ void QuicChromiumClientStream::Handle::Reset(
     quic::QuicRstStreamErrorCode error_code) {
   if (stream_)
     stream_->Reset(error_code);
+}
+
+void QuicChromiumClientStream::Handle::RegisterHttp3DatagramVisitor(
+    Http3DatagramVisitor* visitor) {
+  if (stream_) {
+    stream_->RegisterHttp3DatagramVisitor(visitor);
+  }
+}
+
+void QuicChromiumClientStream::Handle::UnregisterHttp3DatagramVisitor() {
+  if (stream_) {
+    stream_->UnregisterHttp3DatagramVisitor();
+  }
 }
 
 quic::QuicStreamId QuicChromiumClientStream::Handle::id() const {

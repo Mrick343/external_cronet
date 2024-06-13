@@ -84,6 +84,7 @@ zx_vm_option_t PageAccessibilityToZxVmOptions(
     case PageAccessibilityConfiguration::kReadExecuteProtected:
     case PageAccessibilityConfiguration::kReadExecute:
       return ZX_VM_PERM_READ | ZX_VM_PERM_EXECUTE;
+    case PageAccessibilityConfiguration::kReadWriteExecuteProtected:
     case PageAccessibilityConfiguration::kReadWriteExecute:
       return ZX_VM_PERM_READ | ZX_VM_PERM_WRITE | ZX_VM_PERM_EXECUTE;
     case PageAccessibilityConfiguration::kInaccessible:
@@ -223,7 +224,7 @@ void DecommitSystemPagesInternal(
   DiscardSystemPagesInternal(address, length);
 }
 
-void DecommitAndZeroSystemPagesInternal(uintptr_t address,
+bool DecommitAndZeroSystemPagesInternal(uintptr_t address,
                                         size_t length,
                                         PageTag page_tag) {
   SetSystemPagesAccess(address, length,
@@ -231,6 +232,7 @@ void DecommitAndZeroSystemPagesInternal(uintptr_t address,
                            PageAccessibilityConfiguration::kInaccessible));
 
   DiscardSystemPagesInternal(address, length);
+  return true;
 }
 
 void RecommitSystemPagesInternal(

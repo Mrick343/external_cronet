@@ -4,6 +4,7 @@
 
 #include "base/task/sequence_manager/thread_controller_with_message_pump_impl.h"
 
+#include <optional>
 #include <queue>
 #include <string>
 #include <utility>
@@ -24,7 +25,6 @@
 #include "build/build_config.h"
 #include "testing/gmock/include/gmock/gmock.h"
 #include "testing/gtest/include/gtest/gtest.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 
 using testing::_;
 using testing::Invoke;
@@ -77,7 +77,7 @@ class ThreadControllerForTest : public ThreadControllerWithMessagePumpImpl {
   }
 
   // Optionally emplaced, strict from then on.
-  absl::optional<testing::StrictMock<MockTraceObserver>> trace_observer_;
+  std::optional<testing::StrictMock<MockTraceObserver>> trace_observer_;
 };
 
 class MockMessagePump : public MessagePump {
@@ -122,16 +122,18 @@ class FakeSequencedTaskSource : public SequencedTaskSource {
   explicit FakeSequencedTaskSource(TickClock* clock) : clock_(clock) {}
   ~FakeSequencedTaskSource() override = default;
 
-  absl::optional<SelectedTask> SelectNextTask(
-      LazyNow& lazy_now,
-      SelectTaskOption option) override {
+  void SetRunTaskSynchronouslyAllowed(
+      bool can_run_tasks_synchronously) override {}
+
+  std::optional<SelectedTask> SelectNextTask(LazyNow& lazy_now,
+                                             SelectTaskOption option) override {
     if (tasks_.empty())
-      return absl::nullopt;
+      return std::nullopt;
     if (tasks_.front().delayed_run_time > clock_->NowTicks())
-      return absl::nullopt;
+      return std::nullopt;
     if (option == SequencedTaskSource::SelectTaskOption::kSkipDelayedTask &&
         !tasks_.front().delayed_run_time.is_null()) {
-      return absl::nullopt;
+      return std::nullopt;
     }
     task_execution_stack_.push_back(std::move(tasks_.front()));
     tasks_.pop();
@@ -146,13 +148,13 @@ class FakeSequencedTaskSource : public SequencedTaskSource {
     task_execution_stack_.pop_back();
   }
 
-  absl::optional<WakeUp> GetPendingWakeUp(LazyNow* lazy_now,
-                                          SelectTaskOption option) override {
+  std::optional<WakeUp> GetPendingWakeUp(LazyNow* lazy_now,
+                                         SelectTaskOption option) override {
     if (tasks_.empty())
-      return absl::nullopt;
+      return std::nullopt;
     if (option == SequencedTaskSource::SelectTaskOption::kSkipDelayedTask &&
         !tasks_.front().delayed_run_time.is_null()) {
-      return absl::nullopt;
+      return std::nullopt;
     }
     if (tasks_.front().delayed_run_time.is_null())
       return WakeUp{};
@@ -177,11 +179,13 @@ class FakeSequencedTaskSource : public SequencedTaskSource {
     return has_pending_high_resolution_tasks;
   }
 
+  void OnBeginWork() override {}
+
   void SetHasPendingHighResolutionTasks(bool state) {
     has_pending_high_resolution_tasks = state;
   }
 
-  bool OnSystemIdle() override { return false; }
+  bool OnIdle() override { return false; }
 
   void MaybeEmitTaskDetails(perfetto::EventContext& ctx,
                             const SelectedTask& selected_task) const override {}

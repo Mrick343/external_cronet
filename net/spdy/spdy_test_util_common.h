@@ -11,11 +11,11 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "base/containers/span.h"
 #include "base/memory/raw_ptr.h"
-#include "base/strings/string_piece.h"
 #include "crypto/ec_private_key.h"
 #include "net/base/completion_once_callback.h"
 #include "net/base/proxy_server.h"
@@ -45,7 +45,6 @@ class GURL;
 
 namespace net {
 
-class CTPolicyEnforcer;
 class ClientSocketFactory;
 class HashValue;
 class HostPortPair;
@@ -58,6 +57,7 @@ class SpdyStream;
 class SpdyStreamRequest;
 class TransportSecurityState;
 class URLRequestContextBuilder;
+class ProxyDelegate;
 
 // Default upload data used by both, mock objects and framer when creating
 // data frames.
@@ -182,7 +182,8 @@ struct SpdySessionDependencies {
   std::unique_ptr<HostResolver> alternate_host_resolver;
   std::unique_ptr<MockCertVerifier> cert_verifier;
   std::unique_ptr<TransportSecurityState> transport_security_state;
-  std::unique_ptr<CTPolicyEnforcer> ct_policy_enforcer;
+  // NOTE: `proxy_delegate` must be ordered before `proxy_resolution_service`.
+  std::unique_ptr<ProxyDelegate> proxy_delegate;
   std::unique_ptr<ProxyResolutionService> proxy_resolution_service;
   std::unique_ptr<HttpUserAgentSettings> http_user_agent_settings;
   std::unique_ptr<SSLConfigService> ssl_config_service;
@@ -205,7 +206,7 @@ struct SpdySessionDependencies {
   SpdySession::TimeFunc time_func;
   bool enable_http2_alternative_service = false;
   bool enable_http2_settings_grease = false;
-  absl::optional<SpdySessionPool::GreasedHttp2Frame> greased_http2_frame;
+  std::optional<SpdySessionPool::GreasedHttp2Frame> greased_http2_frame;
   bool http2_end_stream_with_data_frame = false;
   raw_ptr<NetLog> net_log = nullptr;
   bool disable_idle_sockets_close_on_memory_pressure = false;
@@ -268,7 +269,7 @@ class SpdyTestUtil {
   ~SpdyTestUtil();
 
   // Add the appropriate headers to put |url| into |block|.
-  void AddUrlToHeaderBlock(base::StringPiece url,
+  void AddUrlToHeaderBlock(std::string_view url,
                            spdy::Http2HeaderBlock* headers) const;
 
   // Add the appropriate priority header if PriorityHeaders is enabled.
@@ -276,16 +277,16 @@ class SpdyTestUtil {
                                 bool priority_incremental,
                                 spdy::Http2HeaderBlock* headers) const;
 
-  static spdy::Http2HeaderBlock ConstructGetHeaderBlock(base::StringPiece url);
+  static spdy::Http2HeaderBlock ConstructGetHeaderBlock(std::string_view url);
   static spdy::Http2HeaderBlock ConstructGetHeaderBlockForProxy(
-      base::StringPiece url);
+      std::string_view url);
   static spdy::Http2HeaderBlock ConstructHeadHeaderBlock(
-      base::StringPiece url,
+      std::string_view url,
       int64_t content_length);
   static spdy::Http2HeaderBlock ConstructPostHeaderBlock(
-      base::StringPiece url,
+      std::string_view url,
       int64_t content_length);
-  static spdy::Http2HeaderBlock ConstructPutHeaderBlock(base::StringPiece url,
+  static spdy::Http2HeaderBlock ConstructPutHeaderBlock(std::string_view url,
                                                         int64_t content_length);
 
   // Construct an expected SPDY reply string from the given headers.
@@ -343,7 +344,7 @@ class SpdyTestUtil {
       spdy::SpdyStreamId stream_id,
       RequestPriority request_priority,
       bool priority_incremental = kDefaultPriorityIncremental,
-      absl::optional<RequestPriority> header_request_priority = absl::nullopt);
+      std::optional<RequestPriority> header_request_priority = std::nullopt);
 
   // Constructs a standard SPDY GET HEADERS frame with header compression.
   // |extra_headers| are the extra header-value pairs, which typically
@@ -355,7 +356,7 @@ class SpdyTestUtil {
       int stream_id,
       RequestPriority request_priority,
       bool priority_incremental = kDefaultPriorityIncremental,
-      absl::optional<RequestPriority> header_request_priority = absl::nullopt);
+      std::optional<RequestPriority> header_request_priority = std::nullopt);
 
   // Constructs a SPDY HEADERS frame for a CONNECT request.
   spdy::SpdySerializedFrame ConstructSpdyConnect(
@@ -385,7 +386,7 @@ class SpdyTestUtil {
       RequestPriority priority,
       bool fin,
       bool priority_incremental = kDefaultPriorityIncremental,
-      absl::optional<RequestPriority> header_request_priority = absl::nullopt);
+      std::optional<RequestPriority> header_request_priority = std::nullopt);
 
   // Construct a reply HEADERS frame carrying exactly the given headers and the
   // default priority.
@@ -444,12 +445,12 @@ class SpdyTestUtil {
 
   // Constructs a single SPDY data frame with the given content.
   spdy::SpdySerializedFrame ConstructSpdyDataFrame(int stream_id,
-                                                   base::StringPiece data,
+                                                   std::string_view data,
                                                    bool fin);
 
   // Constructs a single SPDY data frame with the given content and padding.
   spdy::SpdySerializedFrame ConstructSpdyDataFrame(int stream_id,
-                                                   base::StringPiece data,
+                                                   std::string_view data,
                                                    bool fin,
                                                    int padding_length);
 
@@ -471,8 +472,8 @@ class SpdyTestUtil {
  private:
   // |content_length| may be NULL, in which case the content-length
   // header will be omitted.
-  static spdy::Http2HeaderBlock ConstructHeaderBlock(base::StringPiece method,
-                                                     base::StringPiece url,
+  static spdy::Http2HeaderBlock ConstructHeaderBlock(std::string_view method,
+                                                     std::string_view url,
                                                      int64_t* content_length);
 
   // Multiple SpdyFramers are required to keep track of header compression

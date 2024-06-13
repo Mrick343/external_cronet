@@ -7,8 +7,10 @@
 #include <stddef.h>
 
 #include <algorithm>
+#include <optional>
 #include <utility>
 
+#include "base/containers/contains.h"
 #include "base/json/json_reader.h"
 #include "base/json/json_writer.h"
 #include "base/logging.h"
@@ -18,7 +20,6 @@
 #include "base/trace_event/memory_dump_manager.h"
 #include "base/trace_event/memory_dump_request_args.h"
 #include "base/trace_event/trace_event.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 
 #if BUILDFLAG(USE_PERFETTO_CLIENT_LIBRARY)
 #include "third_party/perfetto/protos/perfetto/config/track_event/track_event_config.gen.h"  // nogncheck
@@ -480,7 +481,7 @@ void TraceConfig::InitializeFromConfigDict(const Value::Dict& dict) {
 }
 
 void TraceConfig::InitializeFromConfigString(StringPiece config_string) {
-  absl::optional<Value> dict = JSONReader::Read(config_string);
+  std::optional<Value> dict = JSONReader::Read(config_string);
   if (dict && dict->is_dict())
     InitializeFromConfigDict(dict->GetDict());
   else
@@ -571,7 +572,7 @@ void TraceConfig::SetMemoryDumpConfigFromConfigDict(
       const Value::Dict& trigger_dict = trigger.GetDict();
 
       MemoryDumpConfig::Trigger dump_config;
-      absl::optional<int> interval = trigger_dict.FindInt(kMinTimeBetweenDumps);
+      std::optional<int> interval = trigger_dict.FindInt(kMinTimeBetweenDumps);
       if (!interval) {
         // If "min_time_between_dumps_ms" param was not given, then the trace
         // config uses old format where only periodic dumps are supported.
@@ -601,7 +602,7 @@ void TraceConfig::SetMemoryDumpConfigFromConfigDict(
   const Value::Dict* heap_profiler_options =
       memory_dump_config.FindDict(kHeapProfilerOptions);
   if (heap_profiler_options) {
-    absl::optional<int> min_size_bytes =
+    std::optional<int> min_size_bytes =
         heap_profiler_options->FindInt(kBreakdownThresholdBytes);
     if (min_size_bytes && *min_size_bytes >= 0) {
       memory_dump_config_.heap_profiler_options.breakdown_threshold_bytes =
@@ -785,10 +786,17 @@ std::string TraceConfig::ToTraceOptionsString() const {
 std::string TraceConfig::ToPerfettoTrackEventConfigRaw(
     bool privacy_filtering_enabled) const {
   perfetto::protos::gen::TrackEventConfig te_cfg;
-  // If no categories are explicitly enabled, enable the default ones.
-  // Otherwise only matching categories are enabled.
-  if (!category_filter_.included_categories().empty())
-    te_cfg.add_disabled_categories("*");
+  if (!base::Contains(category_filter_.excluded_categories(), "*") &&
+      !base::Contains(category_filter_.included_categories(), "*")) {
+    // In the case when the default behavior is not specified, apply the
+    // following rule: if no categories are explicitly enabled, enable the
+    // default ones; otherwise only enable matching categories.
+    if (category_filter_.included_categories().empty()) {
+      te_cfg.add_enabled_categories("*");
+    } else {
+      te_cfg.add_disabled_categories("*");
+    }
+  }
   for (const auto& excluded : category_filter_.excluded_categories()) {
     te_cfg.add_disabled_categories(excluded);
   }
