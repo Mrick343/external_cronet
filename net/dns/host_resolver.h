@@ -9,12 +9,13 @@
 #include <stdint.h>
 
 #include <memory>
+#include <optional>
 #include <set>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "base/containers/span.h"
-#include "base/strings/string_piece.h"
 #include "base/values.h"
 #include "net/base/address_family.h"
 #include "net/base/completion_once_callback.h"
@@ -32,7 +33,6 @@
 #include "net/dns/public/resolve_error_info.h"
 #include "net/dns/public/secure_dns_policy.h"
 #include "net/log/net_log_with_source.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 #include "third_party/abseil-cpp/absl/types/variant.h"
 #include "url/scheme_host_port.h"
 
@@ -69,12 +69,16 @@ class NET_EXPORT HostResolver {
     bool HasScheme() const;
     const std::string& GetScheme() const;
     std::string GetHostname() const;  // With brackets for IPv6 literals.
-    base::StringPiece GetHostnameWithoutBrackets() const;
+    std::string_view GetHostnameWithoutBrackets() const;
     uint16_t GetPort() const;
 
     std::string ToString() const;
 
     const url::SchemeHostPort& AsSchemeHostPort() const;
+
+    bool operator==(const Host& other) const { return host_ == other.host_; }
+
+    bool operator<(const Host& other) const { return host_ < other.host_; }
 
    private:
     absl::variant<url::SchemeHostPort, HostPortPair> host_;
@@ -181,7 +185,7 @@ class NET_EXPORT HostResolver {
     // Should only be called after Start() signals completion, either by
     // invoking the callback or by returning a result other than
     // |ERR_IO_PENDING|.
-    virtual const absl::optional<HostCache::EntryStaleness>& GetStaleInfo()
+    virtual const std::optional<HostCache::EntryStaleness>& GetStaleInfo()
         const = 0;
 
     // Changes the priority of the specified request. Can only be called while
@@ -269,7 +273,7 @@ class NET_EXPORT HostResolver {
 
     // An experimental options for features::kUseDnsHttpsSvcb
     // and features::kUseDnsHttpsSvcbAlpn.
-    absl::optional<HostResolver::HttpsSvcbOptions> https_svcb_options;
+    std::optional<HostResolver::HttpsSvcbOptions> https_svcb_options;
   };
 
   // Factory class. Useful for classes that need to inject and override resolver
@@ -281,14 +285,14 @@ class NET_EXPORT HostResolver {
     // See HostResolver::CreateResolver.
     virtual std::unique_ptr<HostResolver> CreateResolver(
         HostResolverManager* manager,
-        base::StringPiece host_mapping_rules,
+        std::string_view host_mapping_rules,
         bool enable_caching);
 
     // See HostResolver::CreateStandaloneResolver.
     virtual std::unique_ptr<HostResolver> CreateStandaloneResolver(
         NetLog* net_log,
         const ManagerOptions& options,
-        base::StringPiece host_mapping_rules,
+        std::string_view host_mapping_rules,
         bool enable_caching);
   };
 
@@ -351,7 +355,7 @@ class NET_EXPORT HostResolver {
     // Set |true| iff the host resolve request is only being made speculatively
     // to fill the cache and the result addresses will not be used. The request
     // will receive special logging/observer treatment, and the result addresses
-    // will always be |absl::nullopt|.
+    // will always be |std::nullopt|.
     bool is_speculative = false;
 
     // If `true`, resolver may (but is not guaranteed to) take steps to avoid
@@ -424,7 +428,7 @@ class NET_EXPORT HostResolver {
       url::SchemeHostPort host,
       NetworkAnonymizationKey network_anonymization_key,
       NetLogWithSource net_log,
-      absl::optional<ResolveHostParameters> optional_parameters) = 0;
+      std::optional<ResolveHostParameters> optional_parameters) = 0;
 
   // Create requests when scheme is unknown or non-standard.
   // TODO(crbug.com/1206799): Rename to discourage use when scheme is known.
@@ -432,7 +436,7 @@ class NET_EXPORT HostResolver {
       const HostPortPair& host,
       const NetworkAnonymizationKey& network_anonymization_key,
       const NetLogWithSource& net_log,
-      const absl::optional<ResolveHostParameters>& optional_parameters) = 0;
+      const std::optional<ResolveHostParameters>& optional_parameters) = 0;
 
   // Creates a request to probe configured DoH servers to find which can be used
   // successfully.
@@ -465,7 +469,7 @@ class NET_EXPORT HostResolver {
   // requests.  See MappedHostResolver for details.
   static std::unique_ptr<HostResolver> CreateResolver(
       HostResolverManager* manager,
-      base::StringPiece host_mapping_rules = "",
+      std::string_view host_mapping_rules = "",
       bool enable_caching = true);
 
   // Creates a HostResolver independent of any global HostResolverManager. Only
@@ -475,15 +479,15 @@ class NET_EXPORT HostResolver {
   // requests.  See MappedHostResolver for details.
   static std::unique_ptr<HostResolver> CreateStandaloneResolver(
       NetLog* net_log,
-      absl::optional<ManagerOptions> options = absl::nullopt,
-      base::StringPiece host_mapping_rules = "",
+      std::optional<ManagerOptions> options = std::nullopt,
+      std::string_view host_mapping_rules = "",
       bool enable_caching = true);
   // Same, but explicitly returns the implementing ContextHostResolver. Only
   // used by tests and by StaleHostResolver in Cronet. No mapping rules can be
   // applied because doing so requires wrapping the ContextHostResolver.
   static std::unique_ptr<ContextHostResolver> CreateStandaloneContextResolver(
       NetLog* net_log,
-      absl::optional<ManagerOptions> options = absl::nullopt,
+      std::optional<ManagerOptions> options = std::nullopt,
       bool enable_caching = true);
   // Same, but bind the resolver to `target_network`: all lookups will be
   // performed exclusively for `target_network`, lookups will fail if
@@ -495,8 +499,8 @@ class NET_EXPORT HostResolver {
   static std::unique_ptr<HostResolver> CreateStandaloneNetworkBoundResolver(
       NetLog* net_log,
       handles::NetworkHandle network,
-      absl::optional<ManagerOptions> options = absl::nullopt,
-      base::StringPiece host_mapping_rules = "",
+      std::optional<ManagerOptions> options = std::nullopt,
+      std::string_view host_mapping_rules = "",
       bool enable_caching = true);
 
   // Helpers for interacting with HostCache and ProcResolver.
@@ -522,6 +526,12 @@ class NET_EXPORT HostResolver {
   // guidance in section 10.1 of draft-ietf-dnsop-svcb-https-11.
   static bool AllProtocolEndpointsHaveEch(
       base::span<const HostResolverEndpointResult> endpoints);
+
+  // Returns true if NAT64 can be used in place of an IPv4 address during host
+  // resolution.
+  static bool MayUseNAT64ForIPv4Literal(HostResolverFlags flags,
+                                        HostResolverSource source,
+                                        const IPAddress& ip_address);
 
  protected:
   HostResolver();

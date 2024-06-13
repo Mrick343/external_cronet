@@ -6,6 +6,7 @@
 #define NET_HTTP_HTTP_PROXY_CONNECT_JOB_H_
 
 #include <memory>
+#include <optional>
 #include <string>
 
 #include "base/functional/callback_forward.h"
@@ -36,18 +37,21 @@ class ProxyClientSocket;
 class SpdyStreamRequest;
 class SSLSocketParams;
 class TransportSocketParams;
-class QuicStreamRequest;
+class QuicSessionRequest;
 
 // HttpProxySocketParams only needs the socket params for one of the proxy
 // types.  The other param must be NULL.  When using an HTTP proxy,
-// |transport_params| must be set.  When using an HTTPS proxy or QUIC proxy,
-// |ssl_params| must be set.
+// `transport_params` must be set.  When using an HTTPS proxy, `ssl_params` must
+// be set. When using a QUIC proxy, both must be `nullptr` but `quic_ssl_config`
+// must be set.
+
 class NET_EXPORT_PRIVATE HttpProxySocketParams
     : public base::RefCounted<HttpProxySocketParams> {
  public:
   HttpProxySocketParams(
       scoped_refptr<TransportSocketParams> transport_params,
       scoped_refptr<SSLSocketParams> ssl_params,
+      std::optional<SSLConfig> quic_ssl_config,
       const HostPortPair& endpoint,
       const ProxyChain& proxy_chain,
       size_t proxy_chain_index,
@@ -64,6 +68,9 @@ class NET_EXPORT_PRIVATE HttpProxySocketParams
   }
   const scoped_refptr<SSLSocketParams>& ssl_params() const {
     return ssl_params_;
+  }
+  const std::optional<SSLConfig>& quic_ssl_config() const {
+    return quic_ssl_config_;
   }
   const HostPortPair& endpoint() const { return endpoint_; }
   const ProxyChain& proxy_chain() const { return proxy_chain_; }
@@ -86,6 +93,7 @@ class NET_EXPORT_PRIVATE HttpProxySocketParams
 
   const scoped_refptr<TransportSocketParams> transport_params_;
   const scoped_refptr<SSLSocketParams> ssl_params_;
+  const std::optional<SSLConfig> quic_ssl_config_;
   const HostPortPair endpoint_;
   const ProxyChain proxy_chain_;
   const size_t proxy_chain_index_;
@@ -249,7 +257,7 @@ class NET_EXPORT_PRIVATE HttpProxyConnectJob : public ConnectJob,
 
   std::unique_ptr<SpdyStreamRequest> spdy_stream_request_;
 
-  std::unique_ptr<QuicStreamRequest> quic_stream_request_;
+  std::unique_ptr<QuicSessionRequest> quic_session_request_;
   std::unique_ptr<QuicChromiumClientSession::Handle> quic_session_;
 
   scoped_refptr<HttpAuthController> http_auth_controller_;
