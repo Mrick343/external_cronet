@@ -10,6 +10,7 @@
 #include <stddef.h>
 
 #include <memory>
+#include <string_view>
 #include <vector>
 
 #include "base/containers/circular_deque.h"
@@ -91,7 +92,7 @@ class NET_EXPORT_PRIVATE QuicChromiumClientStream
     // Writes |data| to the peer. Closes the write side if |fin| is true.
     // If the data could not be written immediately, returns ERR_IO_PENDING
     // and invokes |callback| asynchronously when the write completes.
-    int WriteStreamData(base::StringPiece data,
+    int WriteStreamData(std::string_view data,
                         bool fin,
                         CompletionOnceCallback callback);
 
@@ -101,6 +102,10 @@ class NET_EXPORT_PRIVATE QuicChromiumClientStream
                          const std::vector<int>& lengths,
                          bool fin,
                          CompletionOnceCallback callback);
+
+    // Writes |packet| to server by constructing a UDP payload from
+    // packet and sending the datagram on the stream.
+    int WriteConnectUdpPayload(absl::string_view packet);
 
     // Reads at most |buf_len| bytes into |buf|. Returns the number of bytes
     // read.
@@ -118,6 +123,12 @@ class NET_EXPORT_PRIVATE QuicChromiumClientStream
 
     // Sends a RST_STREAM frame to the peer and closes the streams.
     void Reset(quic::QuicRstStreamErrorCode error_code);
+
+    // Registers |visitor| to receive HTTP/3 datagrams on the stream.
+    void RegisterHttp3DatagramVisitor(Http3DatagramVisitor* visitor);
+
+    // Unregisters an HTTP/3 datagram visitor.
+    void UnregisterHttp3DatagramVisitor();
 
     quic::QuicStreamId id() const;
     quic::QuicErrorCode connection_error() const;

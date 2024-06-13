@@ -11,6 +11,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -24,7 +25,6 @@
 #include "base/memory/weak_ptr.h"
 #include "base/ranges/algorithm.h"
 #include "base/run_loop.h"
-#include "base/strings/string_piece.h"
 #include "base/task/single_thread_task_runner.h"
 #include "base/time/time.h"
 #include "net/base/auth.h"
@@ -85,7 +85,7 @@ std::ostream& operator<<(std::ostream& os, const WebSocketFrame& frame) {
   os << "{" << frame.header << ", ";
   if (frame.payload) {
     return os << "\""
-              << base::StringPiece(frame.payload, frame.header.payload_length)
+              << std::string_view(frame.payload, frame.header.payload_length)
               << "\"}";
   }
   return os << "NULL}";
@@ -171,6 +171,7 @@ class MockWebSocketEventInterface : public WebSocketEventInterface {
   }
 
   MOCK_METHOD1(OnCreateURLRequest, void(URLRequest*));
+  MOCK_METHOD2(OnURLRequestConnected, void(URLRequest*, const TransportInfo&));
   MOCK_METHOD3(OnAddChannelResponse,
                void(std::unique_ptr<WebSocketHandshakeResponseInfo> response,
                     const std::string&,
@@ -183,7 +184,7 @@ class MockWebSocketEventInterface : public WebSocketEventInterface {
   MOCK_METHOD0(OnSendDataFrameDone, void(void));          // NOLINT
   MOCK_METHOD0(OnClosingHandshake, void(void));           // NOLINT
   MOCK_METHOD3(OnFailChannel,
-               void(const std::string&, int, absl::optional<int>));  // NOLINT
+               void(const std::string&, int, std::optional<int>));  // NOLINT
   MOCK_METHOD3(OnDropChannel,
                void(bool, uint16_t, const std::string&));  // NOLINT
 
@@ -205,7 +206,7 @@ class MockWebSocketEventInterface : public WebSocketEventInterface {
                      scoped_refptr<HttpResponseHeaders> response_headers,
                      const IPEndPoint& remote_endpoint,
                      base::OnceCallback<void(const AuthCredentials*)> callback,
-                     absl::optional<AuthCredentials>* credentials) override {
+                     std::optional<AuthCredentials>* credentials) override {
     return OnAuthRequiredCalled(std::move(auth_info),
                                 std::move(response_headers), remote_endpoint,
                                 credentials);
@@ -219,13 +220,15 @@ class MockWebSocketEventInterface : public WebSocketEventInterface {
                int(const AuthChallengeInfo&,
                    scoped_refptr<HttpResponseHeaders>,
                    const IPEndPoint&,
-                   absl::optional<AuthCredentials>*));
+                   std::optional<AuthCredentials>*));
 };
 
 // This fake EventInterface is for tests which need a WebSocketEventInterface
 // implementation but are not verifying how it is used.
 class FakeWebSocketEventInterface : public WebSocketEventInterface {
   void OnCreateURLRequest(URLRequest* request) override {}
+  void OnURLRequestConnected(URLRequest* request,
+                             const TransportInfo& info) override {}
   void OnAddChannelResponse(
       std::unique_ptr<WebSocketHandshakeResponseInfo> response,
       const std::string& selected_protocol,
@@ -238,7 +241,7 @@ class FakeWebSocketEventInterface : public WebSocketEventInterface {
   void OnClosingHandshake() override {}
   void OnFailChannel(const std::string& message,
                      int net_error,
-                     absl::optional<int> response_code) override {}
+                     std::optional<int> response_code) override {}
   void OnDropChannel(bool was_clean,
                      uint16_t code,
                      const std::string& reason) override {}
@@ -254,8 +257,8 @@ class FakeWebSocketEventInterface : public WebSocketEventInterface {
                      scoped_refptr<HttpResponseHeaders> response_headers,
                      const IPEndPoint& remote_endpoint,
                      base::OnceCallback<void(const AuthCredentials*)> callback,
-                     absl::optional<AuthCredentials>* credentials) override {
-    *credentials = absl::nullopt;
+                     std::optional<AuthCredentials>* credentials) override {
+    *credentials = std::nullopt;
     return OK;
   }
 };
@@ -780,14 +783,14 @@ struct WebSocketStreamCreationCallbackArgumentSaver {
   std::unique_ptr<WebSocketStream::ConnectDelegate> connect_delegate;
 };
 
-std::vector<char> AsVector(base::StringPiece s) {
+std::vector<char> AsVector(std::string_view s) {
   return std::vector<char>(s.begin(), s.end());
 }
 
-// Converts a base::StringPiece to a IOBuffer. For test purposes, it is
+// Converts a std::string_view to a IOBuffer. For test purposes, it is
 // convenient to be able to specify data as a string, but the
 // WebSocketEventInterface requires the IOBuffer type.
-scoped_refptr<IOBuffer> AsIOBuffer(base::StringPiece s) {
+scoped_refptr<IOBuffer> AsIOBuffer(std::string_view s) {
   auto buffer = base::MakeRefCounted<IOBufferWithSize>(s.size());
   base::ranges::copy(s, buffer->data());
   return buffer;
@@ -1034,7 +1037,7 @@ TEST_F(WebSocketChannelEventInterfaceTest, ConnectFailureReported) {
   CreateChannelAndConnect();
 
   connect_data_.argument_saver.connect_delegate->OnFailure("hello", ERR_FAILED,
-                                                           absl::nullopt);
+                                                           std::nullopt);
 }
 
 TEST_F(WebSocketChannelEventInterfaceTest, NonWebSocketSchemeRejected) {
@@ -1595,7 +1598,7 @@ TEST_F(WebSocketChannelEventInterfaceTest, FailJustAfterHandshake) {
       url, response_headers, IPEndPoint(), base::Time());
   connect_delegate->OnStartOpeningHandshake(std::move(request_info));
 
-  connect_delegate->OnFailure("bye", ERR_FAILED, absl::nullopt);
+  connect_delegate->OnFailure("bye", ERR_FAILED, std::nullopt);
   base::RunLoop().RunUntilIdle();
 }
 
@@ -2669,7 +2672,7 @@ TEST_F(WebSocketChannelEventInterfaceTest, OnAuthRequiredCalled) {
   const GURL wss_url("wss://example.com/on_auth_required");
   connect_data_.socket_url = wss_url;
   AuthChallengeInfo auth_info;
-  absl::optional<AuthCredentials> credentials;
+  std::optional<AuthCredentials> credentials;
   auto response_headers =
       base::MakeRefCounted<HttpResponseHeaders>("HTTP/1.1 200 OK");
   IPEndPoint remote_endpoint(net::IPAddress(127, 0, 0, 1), 80);

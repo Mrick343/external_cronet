@@ -57,7 +57,7 @@ TEST(FixedFlatMapTest, MakeFixedFlatMap_UnsortedInput) {
 // Tests that even though the keys are immutable, the values of a non-const map
 // can still be changed.
 TEST(FixedFlatMapTest, MutableValues) {
-  auto map = MakeFixedFlatMap<std::string, int>({{"bar", 1}, {"foo", 2}});
+  auto map = MakeFixedFlatMap<StringPiece, int>({{"bar", 1}, {"foo", 2}});
   EXPECT_THAT(map, ElementsAre(Pair("bar", 1), Pair("foo", 2)));
   map.at("bar") = 2;
   EXPECT_THAT(map, ElementsAre(Pair("bar", 2), Pair("foo", 2)));
@@ -76,15 +76,6 @@ TEST(FixedFlatMapTest, UnsortableValues) {
   });
   EXPECT_THAT(kSquares, ElementsAre(PairType(1, {1}), PairType(2, {4}),
                                     PairType(3, {9}), PairType(4, {16})));
-}
-
-// Verifies that passing repeated keys to MakeFixedFlatMap results in a CHECK
-// failure.
-TEST(FixedFlatMapTest, RepeatedKeys) {
-  // Note: The extra pair of parens is needed to escape the nested commas in the
-  // type list.
-  EXPECT_CHECK_DEATH((MakeFixedFlatMap<StringPiece, int>(
-      {{"foo", 1}, {"bar", 2}, {"foo", 3}})));
 }
 
 }  // namespace base

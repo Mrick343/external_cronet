@@ -65,6 +65,7 @@ BASE_EXPORT uintptr_t GetStackEnd();
 // can later see where the given object was created from.
 class BASE_EXPORT StackTrace {
  public:
+  // LINT.IfChange(max_stack_frames)
 #if BUILDFLAG(IS_ANDROID)
   // TODO(https://crbug.com/925525): Testing indicates that Android has issues
   // with a larger value here, so leave Android at 62.
@@ -74,6 +75,7 @@ class BASE_EXPORT StackTrace {
   // being huge.
   static constexpr size_t kMaxTraces = 250;
 #endif
+  // LINT.ThenChange(dwarf_line_no.cc:max_stack_frames)
 
   // Creates a stacktrace from the current location.
   StackTrace();
@@ -133,14 +135,17 @@ class BASE_EXPORT StackTrace {
   std::string ToStringWithPrefix(const char* prefix_string) const;
 
  private:
+  // Returns true if generation of symbolized stack traces is to be suppressed.
+  static bool ShouldSuppressOutput();
+
 #if BUILDFLAG(IS_WIN)
   void InitTrace(const _CONTEXT* context_record);
 #endif
 
   const void* trace_[kMaxTraces];
 
-  // The number of valid frames in |trace_|.
-  size_t count_;
+  // The number of valid frames in |trace_|, or 0 if collection was suppressed.
+  size_t count_ = 0;
 };
 
 // Forwards to StackTrace::OutputToStream().
@@ -149,6 +154,24 @@ BASE_EXPORT std::ostream& operator<<(std::ostream& os, const StackTrace& s);
 // Record a stack trace with up to |count| frames into |trace|. Returns the
 // number of frames read.
 BASE_EXPORT size_t CollectStackTrace(const void** trace, size_t count);
+
+// A helper for tests that must either override the default suppression of
+// symbolized stack traces in death tests, or the default generation of them in
+// normal tests.
+class BASE_EXPORT OverrideStackTraceOutputForTesting {
+ public:
+  enum class Mode {
+    kUnset,
+    kForceOutput,
+    kSuppressOutput,
+  };
+  explicit OverrideStackTraceOutputForTesting(Mode mode);
+  OverrideStackTraceOutputForTesting(
+      const OverrideStackTraceOutputForTesting&) = delete;
+  OverrideStackTraceOutputForTesting& operator=(
+      const OverrideStackTraceOutputForTesting&) = delete;
+  ~OverrideStackTraceOutputForTesting();
+};
 
 #if BUILDFLAG(CAN_UNWIND_WITH_FRAME_POINTERS)
 

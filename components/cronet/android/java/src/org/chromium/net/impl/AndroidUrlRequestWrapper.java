@@ -100,4 +100,5 @@ class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     public String getHttpMethod() {
         return mBackend.getHttpMethod();
     }
+
 }
