@@ -160,6 +160,24 @@
       "parentUuid": "f3f210ad_3b43f756",
       "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77244790_23f1f749",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-14T17:36:31Z",
+      "side": 1,
+      "message": "Yes, we need generated C++ JNI to call android.net.connectivity.org.chromium.base.Token but generated Java code to call chromium.base.Token.\nGenerated Java code will be built with chromium.base.Token and jarjared later.\n\nI will see what change is required in jni_zero and also consider if there is a better solution next week.",
+      "parentUuid": "000aa191_150a9f20",
+      "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
