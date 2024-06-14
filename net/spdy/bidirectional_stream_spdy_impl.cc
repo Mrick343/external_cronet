@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/spdy/bidirectional_stream_spdy_impl.h"
 
 #include <utility>
@@ -76,7 +81,7 @@ void BidirectionalStreamSpdyImpl::Start(
 
 void BidirectionalStreamSpdyImpl::SendRequestHeaders() {
   // Request headers will be sent automatically.
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
 }
 
 int BidirectionalStreamSpdyImpl::ReadData(IOBuffer* buf, int buf_len) {
@@ -198,7 +203,7 @@ void BidirectionalStreamSpdyImpl::OnHeadersSent() {
 void BidirectionalStreamSpdyImpl::OnEarlyHintsReceived(
     const spdy::Http2HeaderBlock& headers) {
   DCHECK(stream_);
-  // TODO(crbug.com/671310): Plumb Early Hints to `delegate_` if needed.
+  // TODO(crbug.com/40496584): Plumb Early Hints to `delegate_` if needed.
 }
 
 void BidirectionalStreamSpdyImpl::OnHeadersReceived(
@@ -291,7 +296,7 @@ int BidirectionalStreamSpdyImpl::SendRequestHeadersHelper() {
   http_request_info.method = request_info_->method;
   http_request_info.extra_headers = request_info_->extra_headers;
 
-  CreateSpdyHeadersFromHttpRequest(http_request_info, absl::nullopt,
+  CreateSpdyHeadersFromHttpRequest(http_request_info, std::nullopt,
                                    http_request_info.extra_headers, &headers);
   written_end_of_stream_ = request_info_->end_stream_on_headers;
   return stream_->SendRequestHeaders(std::move(headers),

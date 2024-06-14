@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_STARSCAN_SCAN_LOOP_H_
-#define BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_STARSCAN_SCAN_LOOP_H_
+#ifndef PARTITION_ALLOC_STARSCAN_SCAN_LOOP_H_
+#define PARTITION_ALLOC_STARSCAN_SCAN_LOOP_H_
 
 #include <cstddef>
 #include <cstdint>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc_base/compiler_specific.h"
 #include "partition_alloc/partition_alloc_buildflags.h"
 #include "partition_alloc/partition_alloc_check.h"
@@ -16,7 +16,7 @@
 #include "partition_alloc/starscan/starscan_fwd.h"
 #include "partition_alloc/tagging.h"
 
-#if defined(ARCH_CPU_X86_64)
+#if PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
 // Include order is important, so we disable formatting.
 // clang-format off
 // Including these headers directly should generally be avoided. For the
@@ -60,7 +60,7 @@ class ScanLoop {
   const Derived& derived() const { return static_cast<const Derived&>(*this); }
   Derived& derived() { return static_cast<Derived&>(*this); }
 
-#if defined(ARCH_CPU_X86_64)
+#if PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
   __attribute__((target("avx2"))) void RunAVX2(uintptr_t, uintptr_t);
   __attribute__((target("sse4.1"))) void RunSSE4(uintptr_t, uintptr_t);
 #endif
@@ -78,7 +78,7 @@ void ScanLoop<Derived>::Run(uintptr_t begin, uintptr_t end) {
 // We allow vectorization only for 64bit since they require support of the
 // 64bit regular pool, and only for x86 because a special instruction set is
 // required.
-#if defined(ARCH_CPU_X86_64)
+#if PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
   if (simd_type_ == SimdSupport::kAVX2) {
     return RunAVX2(begin, end);
   }
@@ -97,12 +97,12 @@ template <typename Derived>
 void ScanLoop<Derived>::RunUnvectorized(uintptr_t begin, uintptr_t end) {
   PA_SCAN_DCHECK(!(begin % sizeof(uintptr_t)));
   PA_SCAN_DCHECK(!(end % sizeof(uintptr_t)));
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
   // If the read value is a pointer into the PA region, it's likely
   // MTE-tagged. Piggyback on |mask| to untag, for efficiency.
   const uintptr_t mask = Derived::RegularPoolMask() & kPtrUntagMask;
   const uintptr_t base = Derived::RegularPoolBase();
-#endif  // BUILDFLAG(HAS_64_BIT_POINTERS)
+#endif  // PA_BUILDFLAG(HAS_64_BIT_POINTERS)
   for (; begin < end; begin += sizeof(uintptr_t)) {
     // Read the region word-by-word. Everything that we read is a potential
     // pointer to or inside an object on heap. Such an object should be
@@ -110,7 +110,7 @@ void ScanLoop<Derived>::RunUnvectorized(uintptr_t begin, uintptr_t end) {
     //
     // Keep it MTE-untagged. See DisableMTEScope for details.
     const uintptr_t maybe_ptr = *reinterpret_cast<uintptr_t*>(begin);
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
     if (PA_LIKELY((maybe_ptr & mask) != base)) {
       continue;
     }
@@ -118,12 +118,12 @@ void ScanLoop<Derived>::RunUnvectorized(uintptr_t begin, uintptr_t end) {
     if (!maybe_ptr) {
       continue;
     }
-#endif  // BUILDFLAG(HAS_64_BIT_POINTERS)
+#endif  // PA_BUILDFLAG(HAS_64_BIT_POINTERS)
     derived().CheckPointer(maybe_ptr);
   }
 }
 
-#if defined(ARCH_CPU_X86_64)
+#if PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
 template <typename Derived>
 __attribute__((target("avx2"))) void ScanLoop<Derived>::RunAVX2(uintptr_t begin,
                                                                 uintptr_t end) {
@@ -212,7 +212,7 @@ __attribute__((target("sse4.1"))) void ScanLoop<Derived>::RunSSE4(
   // Run unvectorized on the remainder of the region.
   RunUnvectorized(begin, end);
 }
-#endif  // defined(ARCH_CPU_X86_64)
+#endif  // PA_BUILDFLAG(PA_ARCH_CPU_X86_64)
 
 #if PA_CONFIG(STARSCAN_NEON_SUPPORTED)
 template <typename Derived>
@@ -252,4 +252,4 @@ void ScanLoop<Derived>::RunNEON(uintptr_t begin, uintptr_t end) {
 
 }  // namespace partition_alloc::internal
 
-#endif  // BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_STARSCAN_SCAN_LOOP_H_
+#endif  // PARTITION_ALLOC_STARSCAN_SCAN_LOOP_H_

@@ -2,12 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "base/containers/intrusive_heap.h"
 
 #include "base/check_op.h"
 #include "base/functional/callback_helpers.h"
 #include "base/memory/ptr_util.h"
-#include "base/memory/raw_ptr_exclusion.h"
+#include "base/memory/raw_ptr.h"
 #include "base/notreached.h"
 #include "base/rand_util.h"
 #include "base/test/bind.h"
@@ -131,7 +136,7 @@ void DoGrowingOperation(IntrusiveHeap<T>* heap) {
     }
 
     case kGrowingOperationsCount:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
   }
 
   EXPECT_EQ(old_size + 1, heap->size());
@@ -215,7 +220,7 @@ void DoShrinkingOperation(IntrusiveHeap<T>* heap) {
     }
 
     case kShrinkingOperationsCount:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
   }
 
   EXPECT_EQ(old_size - 1, heap->size());
@@ -254,7 +259,7 @@ void DoSameSizeOperation(IntrusiveHeap<T>* heap) {
     }
 
     case kSameSizeOperationsCount:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
   }
 
   EXPECT_EQ(old_size, heap->size());
@@ -291,7 +296,7 @@ void DoRandomHeapOperation(IntrusiveHeap<T>* heap) {
       DoSameSizeOperation(heap);
       break;
     case kOperationTypesCount:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
   }
 }
 
@@ -527,9 +532,7 @@ void ValidateValueType() {
 // the contract expected of the DefaultHeapHandleAccessor.
 struct TestElement {
   int key;
-  // This field is not a raw_ptr<> because it was filtered by the rewriter for:
-  // #reinterpret-cast-trivial-type
-  RAW_PTR_EXCLUSION HeapHandle* handle;
+  raw_ptr<HeapHandle> handle;
 
   // Make this a min-heap by return > instead of <.
   bool operator<(const TestElement& other) const { return key > other.key; }

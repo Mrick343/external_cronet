@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include <utility>
 
 #include "base/files/file.h"
@@ -2042,9 +2047,8 @@ TEST_F(DiskCacheEntryTest, MemoryOnlyMisalignedSparseIO) {
 
   // This loop writes back to back starting from offset 0 and 9000.
   for (int i = 0; i < kSize; i += 1024) {
-    scoped_refptr<net::WrappedIOBuffer> buf_3 =
-        base::MakeRefCounted<net::WrappedIOBuffer>(buf_1->data() + i,
-                                                   kSize - i);
+    auto buf_3 =
+        base::MakeRefCounted<net::WrappedIOBuffer>(buf_1->span().subspan(i));
     VerifySparseIO(entry, i, buf_3.get(), 1024, buf_2.get());
     VerifySparseIO(entry, 9000 + i, buf_3.get(), 1024, buf_2.get());
   }

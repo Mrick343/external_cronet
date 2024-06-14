@@ -148,7 +148,7 @@ def check_distro(options):
   distro_id = subprocess.check_output(["lsb_release", "--id",
                                        "--short"]).decode().strip()
 
-  supported_codenames = ["bionic", "focal", "jammy"]
+  supported_codenames = ["focal", "jammy", "noble"]
   supported_ids = ["Debian"]
 
   if (distro_codename() not in supported_codenames
@@ -156,10 +156,12 @@ def check_distro(options):
     print(
         "WARNING: The following distributions are supported,",
         "but distributions not in the list below can also try to install",
-        "dependencies by passing the `--unsupported` parameter",
-        "\tUbuntu 18.04 LTS (bionic with EoL April 2028)",
-        "\tUbuntu 20.04 LTS (focal with EoL April 2030)",
-        "\tUbuntu 22.04 LTS (jammy with EoL April 2032)",
+        "dependencies by passing the `--unsupported` parameter.",
+        "EoS refers to end of standard support and does not include",
+        "extended security support.",
+        "\tUbuntu 20.04 LTS (focal with EoS April 2025)",
+        "\tUbuntu 22.04 LTS (jammy with EoS June 2027)",
+        "\tUbuntu 24.04 LTS (noble with EoS June 2029)",
         "\tDebian 10 (buster) or later",
         sep="\n",
         file=sys.stderr,
@@ -169,8 +171,9 @@ def check_distro(options):
 
 def check_architecture():
   architecture = subprocess.check_output(["uname", "-m"]).decode().strip()
-  if architecture not in ["i686", "x86_64"]:
-    print("Only x86 architectures are currently supported", file=sys.stderr)
+  if architecture not in ["i686", "x86_64", 'aarch64']:
+    print("Only x86 and ARM64 architectures are currently supported",
+          file=sys.stderr)
     sys.exit(1)
 
 
@@ -231,7 +234,6 @@ def dev_list():
       "libsctp-dev",
       "libspeechd-dev",
       "libsqlite3-dev",
-      "libssl-dev",
       "libsystemd-dev",
       "libudev-dev",
       "libva-dev",
@@ -312,7 +314,11 @@ def dev_list():
   # pre-built NaCl binaries.
   if "ELF 64-bit" in subprocess.check_output(["file", "-L",
                                               "/sbin/init"]).decode():
-    packages.extend(["libc6-i386", "lib32stdc++6"])
+    # ARM64 may not support these.
+    if package_exists("libc6-i386"):
+      packages.append("libc6-i386")
+    if package_exists("lib32stdc++6"):
+      packages.append("lib32stdc++6")
 
     # lib32gcc-s1 used to be called lib32gcc1 in older distros.
     if package_exists("lib32gcc-s1"):
@@ -320,14 +326,23 @@ def dev_list():
     elif package_exists("lib32gcc1"):
       packages.append("lib32gcc1")
 
+  # TODO(b/339091434): Remove this workaround once this bug is fixed.  This
+  # workaround ensures the newer libssl-dev is used to prevent package conficts.
+  apt_cache_cmd = ["apt-cache", "show", "libssl-dev"]
+  output = subprocess.check_output(apt_cache_cmd).decode()
+  pattern = re.compile(r'^Version: (.+?)$', re.M)
+  versions = re.findall(pattern, output)
+  if set(versions) == {"3.2.1-3", "3.0.10-1"}:
+    packages.append("libssl-dev=3.2.1-3")
+  else:
+    packages.append("libssl-dev")
+
   return packages
 
 
 # List of required run-time libraries
 def lib_list():
   packages = [
-      "lib32z1",
-      "libasound2",
       "libatk1.0-0",
       "libatspi2.0-0",
       "libc6",
@@ -345,7 +360,6 @@ def lib_list():
       "libglib2.0-0",
       "libgl1",
       "libgtk-3-0",
-      "libncurses5",
       "libpam0g",
       "libpango-1.0-0",
       "libpangocairo-1.0-0",
@@ -374,7 +388,9 @@ def lib_list():
       "libxrender1",
       "libxtst6",
       "x11-utils",
-      "xorg", # TODO(crbug.com/1417069): Experimental.
+      "x11-xserver-utils",
+      "xserver-xorg-core",
+      "xserver-xorg-video-dummy",
       "xvfb",
       "zlib1g",
   ]
@@ -385,6 +401,10 @@ def lib_list():
       "libbz2-1.0",
   ]
 
+  # May not exist (e.g. ARM64)
+  if package_exists("lib32z1"):
+    packages.append("lib32z1")
+
   if package_exists("libffi8"):
     packages.append("libffi8")
   elif package_exists("libffi7"):
@@ -392,7 +412,10 @@ def lib_list():
   elif package_exists("libffi6"):
     packages.append("libffi6")
 
-  if package_exists("libpng16-16"):
+  # Workaround for dependency On Ubuntu 24.04 LTS (noble)
+  if distro_codename() == "noble":
+    packages.append("libpng16-16t64")
+  elif package_exists("libpng16-16"):
     packages.append("libpng16-16")
   else:
     packages.append("libpng12-0")
@@ -412,6 +435,14 @@ def lib_list():
     packages.append("libvulkan1")
   if package_exists("libinput10"):
     packages.append("libinput10")
+
+  # Work around for dependency On Ubuntu 24.04 LTS (noble)
+  if distro_codename() == "noble":
+    packages.append("libncurses6")
+    packages.append("libasound2t64")
+  else:
+    packages.append("libncurses5")
+    packages.append("libasound2")
 
   return packages
 
@@ -434,7 +465,6 @@ def lib32_list(options):
       "libegl1:i386",
       "libgl1:i386",
       "libglib2.0-0:i386",
-      "libncurses5:i386",
       "libnss3:i386",
       "libpango-1.0-0:i386",
       "libpangocairo-1.0-0:i386",
@@ -449,6 +479,7 @@ def lib32_list(options):
       "zlib1g:i386",
       # 32-bit libraries needed e.g. to compile V8 snapshot for Android or armhf
       "linux-libc-dev:i386",
+      "libexpat1:i386",
       "libpci3:i386",
   ]
 
@@ -465,6 +496,12 @@ def lib32_list(options):
         ["apt-cache", "depends", "g++-multilib", "--important"]).decode()
     pattern = re.compile(r"g\+\+-[0-9.]+-multilib")
     packages += re.findall(pattern, lines)
+
+  # Work around for 32-bit dependency On Ubuntu 24.04 LTS (noble)
+  if distro_codename() == "noble":
+    packages.append("libncurses6:i386")
+  else:
+    packages.append("libncurses5:i386")
 
   return packages
 
@@ -595,30 +632,11 @@ def arm_list(options):
 
   # arm cross toolchain packages needed to build chrome on armhf
   packages = [
+      "g++-arm-linux-gnueabihf",
+      "gcc-arm-linux-gnueabihf",
       "libc6-dev-armhf-cross",
       "linux-libc-dev-armhf-cross",
-      "g++-arm-linux-gnueabihf",
   ]
-
-  # Work around for dependency issue Ubuntu: http://crbug.com/435056
-  if distro_codename() == "bionic":
-    packages.extend([
-        "g++-5-multilib-arm-linux-gnueabihf",
-        "gcc-5-multilib-arm-linux-gnueabihf",
-        "gcc-arm-linux-gnueabihf",
-    ])
-  elif distro_codename() == "focal":
-    packages.extend([
-        "g++-10-multilib-arm-linux-gnueabihf",
-        "gcc-10-multilib-arm-linux-gnueabihf",
-        "gcc-arm-linux-gnueabihf",
-    ])
-  elif distro_codename() == "jammy":
-    packages.extend([
-        "gcc-arm-linux-gnueabihf",
-        "g++-11-arm-linux-gnueabihf",
-        "gcc-11-arm-linux-gnueabihf",
-    ])
 
   return packages
 
@@ -640,8 +658,6 @@ def nacl_list(options):
       "libfontconfig1:i386",
       "libglib2.0-0:i386",
       "libgpm2:i386",
-      "libncurses5:i386",
-      "lib32ncurses5-dev",
       "libnss3:i386",
       "libpango-1.0-0:i386",
       "libssl-dev:i386",
@@ -686,6 +702,14 @@ def nacl_list(options):
     packages.append("libudev1:i386")
   else:
     packages.append("libudev0:i386")
+
+  # Work around for nacl dependency On Ubuntu 24.04 LTS (noble)
+  if distro_codename() == "noble":
+    packages.append("libncurses6:i386")
+    packages.append("lib32ncurses-dev")
+  else:
+    packages.append("libncurses5:i386")
+    packages.append("lib32ncurses5-dev")
 
   return packages
 

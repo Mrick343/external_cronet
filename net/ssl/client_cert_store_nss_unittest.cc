@@ -107,9 +107,8 @@ TEST(ClientCertStoreNSSTest, BuildsCertificateChain) {
     ClientCertIdentityList selected_identities;
     base::RunLoop loop;
     store->GetClientCerts(
-        *request.get(),
-        base::BindOnce(SaveIdentitiesAndQuitCallback, &selected_identities,
-                       loop.QuitClosure()));
+        request, base::BindOnce(SaveIdentitiesAndQuitCallback,
+                                &selected_identities, loop.QuitClosure()));
     loop.Run();
 
     // The result be |client_1| with no intermediates.
@@ -142,9 +141,8 @@ TEST(ClientCertStoreNSSTest, BuildsCertificateChain) {
     ClientCertIdentityList selected_identities;
     base::RunLoop loop;
     store->GetClientCerts(
-        *request.get(),
-        base::BindOnce(SaveIdentitiesAndQuitCallback, &selected_identities,
-                       loop.QuitClosure()));
+        request, base::BindOnce(SaveIdentitiesAndQuitCallback,
+                                &selected_identities, loop.QuitClosure()));
     loop.Run();
 
     // The result be |client_1| with |client_1_ca| as an intermediate.
@@ -194,8 +192,8 @@ TEST(ClientCertStoreNSSTest, SubjectPrintableStringContainingUTF8) {
   std::string cert_der(pem_tokenizer.data());
   ASSERT_FALSE(pem_tokenizer.GetNext());
 
-  ScopedCERTCertificate cert(x509_util::CreateCERTCertificateFromBytes(
-      base::as_bytes(base::make_span(cert_der))));
+  ScopedCERTCertificate cert(
+      x509_util::CreateCERTCertificateFromBytes(base::as_byte_span(cert_der)));
   ASSERT_TRUE(cert);
 
   ASSERT_TRUE(ImportClientCertToSlot(cert.get(), test_db.slot()));
@@ -221,8 +219,8 @@ TEST(ClientCertStoreNSSTest, SubjectPrintableStringContainingUTF8) {
   ClientCertIdentityList selected_identities;
   base::RunLoop loop;
   store->GetClientCerts(
-      *request.get(), base::BindOnce(SaveIdentitiesAndQuitCallback,
-                                     &selected_identities, loop.QuitClosure()));
+      request, base::BindOnce(SaveIdentitiesAndQuitCallback,
+                              &selected_identities, loop.QuitClosure()));
   loop.Run();
 
   // The result be |cert| with no intermediates.

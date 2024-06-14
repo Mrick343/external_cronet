@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_ALLOC_CONFIG_H_
-#define BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_ALLOC_CONFIG_H_
+#ifndef PARTITION_ALLOC_PARTITION_ALLOC_CONFIG_H_
+#define PARTITION_ALLOC_PARTITION_ALLOC_CONFIG_H_
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc_base/debug/debugging_buildflags.h"
 #include "partition_alloc/partition_alloc_buildflags.h"
 
@@ -30,20 +30,20 @@
 
 // Assert that the heuristic in partition_alloc.gni is accurate on supported
 // configurations.
-#if BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 static_assert(sizeof(void*) == 8, "");
 #else
 static_assert(sizeof(void*) != 8, "");
 #endif  // PA_CONFIG(HAS_64_BITS_POINTERS)
 
-#if BUILDFLAG(HAS_64_BIT_POINTERS) && \
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS) && \
     (defined(__ARM_NEON) || defined(__ARM_NEON__)) && defined(__ARM_FP)
 #define PA_CONFIG_STARSCAN_NEON_SUPPORTED() 1
 #else
 #define PA_CONFIG_STARSCAN_NEON_SUPPORTED() 0
 #endif
 
-#if BUILDFLAG(HAS_64_BIT_POINTERS) && BUILDFLAG(IS_IOS)
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS) && PA_BUILDFLAG(IS_IOS)
 // Allow PA to select an alternate pool size at run-time before initialization,
 // rather than using a single constexpr value.
 //
@@ -54,20 +54,20 @@ static_assert(sizeof(void*) != 8, "");
 #define PA_CONFIG_DYNAMICALLY_SELECT_POOL_SIZE() 1
 #else
 #define PA_CONFIG_DYNAMICALLY_SELECT_POOL_SIZE() 0
-#endif  // BUILDFLAG(HAS_64_BIT_POINTERS) && BUILDFLAG(IS_IOS)
+#endif  // PA_BUILDFLAG(HAS_64_BIT_POINTERS) && PA_BUILDFLAG(IS_IOS)
 
-#if BUILDFLAG(HAS_64_BIT_POINTERS) && \
-    (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_ANDROID))
+#if PA_BUILDFLAG(HAS_64_BIT_POINTERS) && \
+    (PA_BUILDFLAG(IS_LINUX) || PA_BUILDFLAG(IS_ANDROID))
 #include <linux/version.h>
 // TODO(bikineev): Enable for ChromeOS.
 #define PA_CONFIG_STARSCAN_UFFD_WRITE_PROTECTOR_SUPPORTED() \
   (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0))
 #else
 #define PA_CONFIG_STARSCAN_UFFD_WRITE_PROTECTOR_SUPPORTED() 0
-#endif  // BUILDFLAG(HAS_64_BIT_POINTERS) &&
-        // (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_ANDROID))
+#endif  // PA_BUILDFLAG(HAS_64_BIT_POINTERS) &&
+        // (PA_BUILDFLAG(IS_LINUX) || PA_BUILDFLAG(IS_ANDROID))
 
-#if BUILDFLAG(USE_STARSCAN)
+#if PA_BUILDFLAG(USE_STARSCAN)
 // Use card table to avoid races for PCScan configuration without safepoints.
 // The card table provides the guaranteee that for a marked card the underling
 // super-page is fully initialized.
@@ -75,7 +75,7 @@ static_assert(sizeof(void*) != 8, "");
 #else
 // The card table is permanently disabled for 32-bit.
 #define PA_CONFIG_STARSCAN_USE_CARD_TABLE() 0
-#endif  // BUILDFLAG(USE_STARSCAN)
+#endif  // PA_BUILDFLAG(USE_STARSCAN)
 
 // Use batched freeing when sweeping pages. This builds up a freelist in the
 // scanner thread and appends to the slot-span's freelist only once.
@@ -95,8 +95,9 @@ static_assert(sizeof(void*) != 8, "");
 
 // POSIX is not only UNIX, e.g. macOS and other OSes. We do use Linux-specific
 // features such as futex(2).
-#define PA_CONFIG_HAS_LINUX_KERNEL() \
-  (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID))
+#define PA_CONFIG_HAS_LINUX_KERNEL()                      \
+  (PA_BUILDFLAG(IS_LINUX) || PA_BUILDFLAG(IS_CHROMEOS) || \
+   PA_BUILDFLAG(IS_ANDROID))
 
 // On some platforms, we implement locking by spinning in userspace, then going
 // into the kernel only if there is contention. This requires platform support,
@@ -107,14 +108,15 @@ static_assert(sizeof(void*) != 8, "");
 // - On macOS, pthread_mutex_trylock() is fast by default starting with macOS
 //   10.14. Chromium targets an earlier version, so it cannot be known at
 //   compile-time. So we use something different.
-//   TODO(https://crbug.com/1459032): macOS 10.15 is now required; switch to
+//   TODO(crbug.com/40274152): macOS 10.15 is now required; switch to
 //   better locking.
 // - Otherwise, on POSIX we assume that a fast userspace pthread_mutex_trylock()
 //   is available.
 //
 // Otherwise, a userspace spinlock implementation is used.
-#if PA_CONFIG(HAS_LINUX_KERNEL) || BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || \
-    BUILDFLAG(IS_POSIX) || BUILDFLAG(IS_FUCHSIA)
+#if PA_CONFIG(HAS_LINUX_KERNEL) || PA_BUILDFLAG(IS_WIN) || \
+    PA_BUILDFLAG(IS_APPLE) || PA_BUILDFLAG(IS_POSIX) ||    \
+    PA_BUILDFLAG(IS_FUCHSIA)
 #define PA_CONFIG_HAS_FAST_MUTEX() 1
 #else
 #define PA_CONFIG_HAS_FAST_MUTEX() 0
@@ -128,12 +130,12 @@ static_assert(sizeof(void*) != 8, "");
 
 // Need TLS support.
 #define PA_CONFIG_THREAD_CACHE_SUPPORTED() \
-  (BUILDFLAG(IS_POSIX) || BUILDFLAG(IS_WIN) || BUILDFLAG(IS_FUCHSIA))
+  (PA_BUILDFLAG(IS_POSIX) || PA_BUILDFLAG(IS_WIN) || PA_BUILDFLAG(IS_FUCHSIA))
 
 // Too expensive for official builds, as it adds cache misses to all
 // allocations. On the other hand, we want wide metrics coverage to get
 // realistic profiles.
-#if BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && !defined(OFFICIAL_BUILD)
+#if PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && !defined(OFFICIAL_BUILD)
 #define PA_CONFIG_THREAD_CACHE_ALLOC_STATS() 1
 #else
 #define PA_CONFIG_THREAD_CACHE_ALLOC_STATS() 0
@@ -146,46 +148,22 @@ static_assert(sizeof(void*) != 8, "");
 // Enable free list shadow entry to strengthen hardening as much as possible.
 // The shadow entry is an inversion (bitwise-NOT) of the encoded `next` pointer.
 //
-// Disabled when ref-count is placed in the previous slot, as it will overlap
-// with the shadow for the smallest slots.
-//
 // Disabled on Big Endian CPUs, because encoding is also a bitwise-NOT there,
 // making the shadow entry equal to the original, valid pointer to the next
 // slot. In case Use-after-Free happens, we'd rather not hand out a valid,
 // ready-to-use pointer.
-#if !BUILDFLAG(PUT_REF_COUNT_IN_PREVIOUS_SLOT) && \
-    defined(ARCH_CPU_LITTLE_ENDIAN)
+#if PA_BUILDFLAG(PA_ARCH_CPU_LITTLE_ENDIAN)
 #define PA_CONFIG_HAS_FREELIST_SHADOW_ENTRY() 1
 #else
 #define PA_CONFIG_HAS_FREELIST_SHADOW_ENTRY() 0
 #endif
 
-#if defined(ARCH_CPU_ARM64) && defined(__clang__) && \
-    !defined(ADDRESS_SANITIZER) &&                   \
-    (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_ANDROID))
-#define PA_CONFIG_HAS_MEMORY_TAGGING() 1
-#else
-#define PA_CONFIG_HAS_MEMORY_TAGGING() 0
-#endif
-
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
+#if PA_BUILDFLAG(HAS_MEMORY_TAGGING)
 static_assert(sizeof(void*) == 8);
 #endif
 
-// If memory tagging is enabled with BRP previous slot, the MTE tag and BRP ref
-// count will cause a race (crbug.com/1445816). To prevent this, the
-// ref_count_size is increased to the MTE granule size and the ref count is not
-// tagged.
-#if PA_CONFIG(HAS_MEMORY_TAGGING) &&            \
-    BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT) && \
-    BUILDFLAG(PUT_REF_COUNT_IN_PREVIOUS_SLOT)
-#define PA_CONFIG_INCREASE_REF_COUNT_SIZE_FOR_MTE() 1
-#else
-#define PA_CONFIG_INCREASE_REF_COUNT_SIZE_FOR_MTE() 0
-#endif
-
 // Specifies whether allocation extras need to be added.
-#if BUILDFLAG(PA_DCHECK_IS_ON) || BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
+#if PA_BUILDFLAG(PA_DCHECK_IS_ON) || PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)
 #define PA_CONFIG_EXTRAS_REQUIRED() 1
 #else
 #define PA_CONFIG_EXTRAS_REQUIRED() 0
@@ -214,8 +192,9 @@ static_assert(sizeof(void*) == 8);
 //
 // Regardless, the "normal" TLS access is fast on x86_64 (see partition_tls.h),
 // so don't bother with thread_local anywhere.
-#if !(BUILDFLAG(IS_WIN) && defined(COMPONENT_BUILD)) && \
-    !BUILDFLAG(IS_APPLE) && !BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CHROMEOS)
+#if !(PA_BUILDFLAG(IS_WIN) && defined(COMPONENT_BUILD)) && \
+    !PA_BUILDFLAG(IS_APPLE) && !PA_BUILDFLAG(IS_LINUX) &&  \
+    !PA_BUILDFLAG(IS_CHROMEOS)
 #define PA_CONFIG_THREAD_LOCAL_TLS() 1
 #else
 #define PA_CONFIG_THREAD_LOCAL_TLS() 0
@@ -225,11 +204,12 @@ static_assert(sizeof(void*) == 8);
 // calling malloc() again.
 //
 // Limitations:
-// - BUILDFLAG(PA_DCHECK_IS_ON) due to runtime cost
+// - PA_BUILDFLAG(PA_DCHECK_IS_ON) due to runtime cost
 // - thread_local TLS to simplify the implementation
 // - Not on Android due to bot failures
-#if BUILDFLAG(PA_DCHECK_IS_ON) && BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && \
-    PA_CONFIG(THREAD_LOCAL_TLS) && !BUILDFLAG(IS_ANDROID)
+#if PA_BUILDFLAG(PA_DCHECK_IS_ON) &&               \
+    PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && \
+    PA_CONFIG(THREAD_LOCAL_TLS) && !PA_BUILDFLAG(IS_ANDROID)
 #define PA_CONFIG_HAS_ALLOCATION_GUARD() 1
 #else
 #define PA_CONFIG_HAS_ALLOCATION_GUARD() 0
@@ -237,7 +217,7 @@ static_assert(sizeof(void*) == 8);
 
 // On Android, we have to go through emutls, since this is always a shared
 // library, so don't bother.
-#if PA_CONFIG(THREAD_LOCAL_TLS) && !BUILDFLAG(IS_ANDROID)
+#if PA_CONFIG(THREAD_LOCAL_TLS) && !PA_BUILDFLAG(IS_ANDROID)
 #define PA_CONFIG_THREAD_CACHE_FAST_TLS() 1
 #else
 #define PA_CONFIG_THREAD_CACHE_FAST_TLS() 0
@@ -246,7 +226,7 @@ static_assert(sizeof(void*) == 8);
 // Lazy commit should only be enabled on Windows, because commit charge is
 // only meaningful and limited on Windows. It affects performance on other
 // platforms and is simply not needed there due to OS supporting overcommit.
-#if BUILDFLAG(IS_WIN)
+#if PA_BUILDFLAG(IS_WIN)
 constexpr bool kUseLazyCommit = true;
 #else
 constexpr bool kUseLazyCommit = false;
@@ -254,40 +234,42 @@ constexpr bool kUseLazyCommit = false;
 
 // On these platforms, lock all the partitions before fork(), and unlock after.
 // This may be required on more platforms in the future.
-#define PA_CONFIG_HAS_ATFORK_HANDLER() \
-  (BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
+#define PA_CONFIG_HAS_ATFORK_HANDLER()                 \
+  (PA_BUILDFLAG(IS_APPLE) || PA_BUILDFLAG(IS_LINUX) || \
+   PA_BUILDFLAG(IS_CHROMEOS))
 
 // PartitionAlloc uses PartitionRootEnumerator to acquire all
 // PartitionRoots at BeforeFork and to release at AfterFork.
-#if BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && PA_CONFIG(HAS_ATFORK_HANDLER)
+#if PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && PA_CONFIG(HAS_ATFORK_HANDLER)
 #define PA_CONFIG_USE_PARTITION_ROOT_ENUMERATOR() 1
 #else
 #define PA_CONFIG_USE_PARTITION_ROOT_ENUMERATOR() 0
 #endif
 
-// Due to potential conflict with the free list pointer in the "previous slot"
-// mode in the smallest bucket, we can't check both the cookie and the dangling
-// raw_ptr at the same time.
-#define PA_CONFIG_REF_COUNT_CHECK_COOKIE()         \
-  (!(BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS) &&  \
-     BUILDFLAG(PUT_REF_COUNT_IN_PREVIOUS_SLOT)) && \
-   (BUILDFLAG(PA_DCHECK_IS_ON) ||                  \
-    BUILDFLAG(ENABLE_BACKUP_REF_PTR_SLOW_CHECKS)))
+// Enable in-slot metadata cookie checks when dcheck_is_on or BRP slow checks
+// are on. However, don't do this if that would cause InSlotMetadata to grow
+// past the size that would fit in InSlotMetadataTable (see
+// partition_alloc_constants.h), which currently can happen only when DPD is on.
+#define PA_CONFIG_IN_SLOT_METADATA_CHECK_COOKIE()    \
+  (!(PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS) && \
+     PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT)) && \
+   (PA_BUILDFLAG(PA_DCHECK_IS_ON) ||                 \
+    PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SLOW_CHECKS)))
 
 // Use available space in the reference count to store the initially requested
 // size from the application. This is used for debugging.
-#if !PA_CONFIG(REF_COUNT_CHECK_COOKIE) && \
-    !BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
+#if !PA_CONFIG(IN_SLOT_METADATA_CHECK_COOKIE) && \
+    !PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS)
 // Set to 1 when needed.
-#define PA_CONFIG_REF_COUNT_STORE_REQUESTED_SIZE() 0
+#define PA_CONFIG_IN_SLOT_METADATA_STORE_REQUESTED_SIZE() 0
 #else
 // You probably want it at 0, outside of local testing, or else
 // PartitionRefCount will grow past 8B.
-#define PA_CONFIG_REF_COUNT_STORE_REQUESTED_SIZE() 0
+#define PA_CONFIG_IN_SLOT_METADATA_STORE_REQUESTED_SIZE() 0
 #endif
 
-#if PA_CONFIG(REF_COUNT_STORE_REQUESTED_SIZE) && \
-    PA_CONFIG(REF_COUNT_CHECK_COOKIE)
+#if PA_CONFIG(IN_SLOT_METADATA_STORE_REQUESTED_SIZE) && \
+    PA_CONFIG(IN_SLOT_METADATA_CHECK_COOKIE)
 #error "Cannot use a cookie *and* store the allocation size"
 #endif
 
@@ -299,9 +281,10 @@ constexpr bool kUseLazyCommit = false;
 // This is intended to roll out more broadly, but only enabled on Linux for now
 // to get performance bot and real-world data pre-A/B experiment.
 //
-// Also enabled on ARM64 macOS, as the 16kiB pages on this platform lead to
-// larger slot spans.
-#if BUILDFLAG(IS_LINUX) || (BUILDFLAG(IS_MAC) && defined(ARCH_CPU_ARM64))
+// Also enabled on ARM64 macOS and iOS, as the 16kiB pages on this platform lead
+// to larger slot spans.
+#if PA_BUILDFLAG(IS_LINUX) || \
+    (PA_BUILDFLAG(IS_APPLE) && PA_BUILDFLAG(PA_ARCH_CPU_ARM64))
 #define PA_CONFIG_PREFER_SMALLER_SLOT_SPANS() 1
 #else
 #define PA_CONFIG_PREFER_SMALLER_SLOT_SPANS() 0
@@ -313,14 +296,14 @@ constexpr bool kUseLazyCommit = false;
 // metadatas are placed, and the real metadatas are set to read-only instead.
 // This feature is only enabled with 64-bit environment because pools work
 // differently with 32-bits pointers (see glossary).
-#if BUILDFLAG(ENABLE_SHADOW_METADATA_FOR_64_BITS_POINTERS) && \
-    BUILDFLAG(HAS_64_BIT_POINTERS)
+#if PA_BUILDFLAG(ENABLE_SHADOW_METADATA_FOR_64_BITS_POINTERS) && \
+    PA_BUILDFLAG(HAS_64_BIT_POINTERS)
 #define PA_CONFIG_ENABLE_SHADOW_METADATA() 1
 #else
 #define PA_CONFIG_ENABLE_SHADOW_METADATA() 0
 #endif
 
-// According to crbug.com/1349955#c24, macOS 11 has a bug where they asset that
+// According to crbug.com/1349955#c24, macOS 11 has a bug where they assert that
 // malloc_size() of an allocation is equal to the requested size. This is
 // generally not true. The assert passed only because it happened to be true for
 // the sizes they requested. BRP changes that, hence can't be deployed without a
@@ -328,28 +311,44 @@ constexpr bool kUseLazyCommit = false;
 //
 // The bug has been fixed in macOS 12. Here we can only check the platform, and
 // the version is checked dynamically later.
-#define PA_CONFIG_ENABLE_MAC11_MALLOC_SIZE_HACK() \
-  (BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT) && BUILDFLAG(IS_MAC))
+//
+// The settings has MAYBE_ in the name, because the final decision to enable is
+// based on the operarting system version check done at run-time.
+#if PA_BUILDFLAG(ENABLE_BACKUP_REF_PTR_SUPPORT) && PA_BUILDFLAG(IS_MAC)
+#define PA_CONFIG_MAYBE_ENABLE_MAC11_MALLOC_SIZE_HACK() 1
+#else
+#define PA_CONFIG_MAYBE_ENABLE_MAC11_MALLOC_SIZE_HACK() 0
+#endif
 
-#if BUILDFLAG(ENABLE_POINTER_COMPRESSION)
+#if PA_BUILDFLAG(ENABLE_POINTER_COMPRESSION)
 
 #if PA_CONFIG(DYNAMICALLY_SELECT_POOL_SIZE)
 #error "Dynamically selected pool size is currently not supported"
 #endif
-#if PA_CONFIG(HAS_MEMORY_TAGGING)
-// TODO(1376980): Address MTE once it's enabled.
+#if PA_BUILDFLAG(HAS_MEMORY_TAGGING)
+// TODO(crbug.com/40243421): Address MTE once it's enabled.
 #error "Compressed pointers don't support tag in the upper bits"
 #endif
 
-#endif  // BUILDFLAG(ENABLE_POINTER_COMPRESSION)
+#endif  // PA_BUILDFLAG(ENABLE_POINTER_COMPRESSION)
 
 // PA_CONFIG(IS_NONCLANG_MSVC): mimics the compound condition used by
 // Chromium's `//base/compiler_specific.h` to detect true (non-Clang)
 // MSVC.
-#if defined(COMPILER_MSVC) && !defined(__clang__)
+#if PA_BUILDFLAG(PA_COMPILER_MSVC) && !defined(__clang__)
 #define PA_CONFIG_IS_NONCLANG_MSVC() 1
 #else
 #define PA_CONFIG_IS_NONCLANG_MSVC() 0
 #endif
 
-#endif  // BASE_ALLOCATOR_PARTITION_ALLOCATOR_SRC_PARTITION_ALLOC_PARTITION_ALLOC_CONFIG_H_
+// Set GN build override 'assert_cpp_20' to false to disable assertion.
+#if PA_BUILDFLAG(ASSERT_CPP_20)
+static_assert(__cplusplus >= 202002L,
+              "PartitionAlloc targets C++20 or higher.");
+#endif  // PA_BUILDFLAG(ASSERT_CPP_20)
+
+// Named pass-through that determines whether or not PA should generally
+// enforce that `SlotStart` instances are in fact slot starts.
+#define PA_CONFIG_ENFORCE_SLOT_STARTS() PA_BUILDFLAG(PA_DCHECK_IS_ON)
+
+#endif  // PARTITION_ALLOC_PARTITION_ALLOC_CONFIG_H_

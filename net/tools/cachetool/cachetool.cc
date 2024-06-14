@@ -2,8 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include <iostream>
 #include <memory>
+#include <string_view>
 #include <unordered_map>
 
 #include "base/at_exit.h"
@@ -15,7 +21,6 @@
 #include "base/message_loop/message_pump_type.h"
 #include "base/run_loop.h"
 #include "base/strings/string_number_conversions.h"
-#include "base/strings/string_piece.h"
 #include "base/strings/stringprintf.h"
 #include "base/task/single_thread_task_executor.h"
 #include "base/task/thread_pool/thread_pool_instance.h"
@@ -368,7 +373,7 @@ bool GetResponseInfoForEntry(disk_cache::Entry* entry,
     bytes_read += rv;
   }
 
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return false;
 }
 
@@ -401,10 +406,10 @@ std::string GetMD5ForResponseBody(disk_cache::Entry* entry) {
     }
 
     bytes_read += rv;
-    base::MD5Update(&ctx, base::StringPiece(buffer->data(), rv));
+    base::MD5Update(&ctx, std::string_view(buffer->data(), rv));
   }
 
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return "";
 }
 
@@ -472,11 +477,11 @@ void ListDups(CommandMarshal* command_marshal) {
       response_info.headers->GetMimeType(&entry_data.mime_type);
 
     auto iter = md5_entries.find(hash);
-    if (iter == md5_entries.end())
-      md5_entries.insert(
-          std::make_pair(hash, std::vector<EntryData>{entry_data}));
-    else
+    if (iter == md5_entries.end()) {
+      md5_entries.emplace(hash, std::vector<EntryData>{entry_data});
+    } else {
       iter->second.push_back(entry_data);
+    }
 
     entry->Close();
     entry = nullptr;

@@ -7,15 +7,6 @@ package org.chromium.net;
 import android.content.Context;
 import android.os.Build;
 
-import org.chromium.base.Log;
-import org.chromium.net.test.util.CertTestUtil;
-
-import java.io.File;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -38,6 +29,15 @@ import io.netty.handler.ssl.OpenSslServerContext;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SupportedCipherSuiteFilter;
 
+import org.chromium.base.Log;
+import org.chromium.net.test.util.CertTestUtil;
+
+import java.io.File;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /** Wrapper class to start a HTTP/2 test server. */
 public final class Http2TestServer {
     private static Channel sServerChannel;
@@ -55,7 +55,7 @@ public final class Http2TestServer {
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
 
     static {
-        // TODO(crbug/1490552): Fallback to MockCertVerifier when custom CAs are not supported.
+        // TODO(crbug.com/40284777): Fallback to MockCertVerifier when custom CAs are not supported.
         // Currently, MockCertVerifier uses different certificates, so make the server also use
         // those.
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
@@ -151,24 +151,24 @@ public final class Http2TestServer {
     }
 
     public static boolean startHttp2TestServer(Context context, CountDownLatch hangingUrlLatch)
-        throws Exception {
+            throws Exception {
         TestFilesInstaller.installIfNeeded(context);
         return startHttp2TestServer(
-            context, SERVER_CERT_PEM, SERVER_KEY_PKCS8_PEM, hangingUrlLatch);
+                context, SERVER_CERT_PEM, SERVER_KEY_PKCS8_PEM, hangingUrlLatch);
     }
 
     private static boolean startHttp2TestServer(
-        Context context,
-        String certFileName,
-        String keyFileName,
-        CountDownLatch hangingUrlLatch)
-        throws Exception {
+            Context context,
+            String certFileName,
+            String keyFileName,
+            CountDownLatch hangingUrlLatch)
+            throws Exception {
         sReportingCollector = new ReportingCollector();
         Http2TestServerRunnable http2TestServerRunnable =
-            new Http2TestServerRunnable(
-                new File(CertTestUtil.CERTS_DIRECTORY + certFileName),
-                new File(CertTestUtil.CERTS_DIRECTORY + keyFileName),
-                hangingUrlLatch);
+                new Http2TestServerRunnable(
+                        new File(CertTestUtil.CERTS_DIRECTORY + certFileName),
+                        new File(CertTestUtil.CERTS_DIRECTORY + keyFileName),
+                        hangingUrlLatch);
         // This will run synchronously as we can't run the test before we have
         // started the test-server, if the test-server has failed to start then
         // the caller should assert on the value returned to make sure that the test
@@ -183,28 +183,28 @@ public final class Http2TestServer {
         private final CountDownLatch mHangingUrlLatch;
 
         Http2TestServerRunnable(File certFile, File keyFile, CountDownLatch hangingUrlLatch)
-            throws Exception {
+                throws Exception {
             ApplicationProtocolConfig applicationProtocolConfig =
-                new ApplicationProtocolConfig(
-                    Protocol.ALPN, SelectorFailureBehavior.NO_ADVERTISE,
-                    SelectedListenerFailureBehavior.ACCEPT,
-                    ApplicationProtocolNames.HTTP_2);
+                    new ApplicationProtocolConfig(
+                            Protocol.ALPN, SelectorFailureBehavior.NO_ADVERTISE,
+                            SelectedListenerFailureBehavior.ACCEPT,
+                                    ApplicationProtocolNames.HTTP_2);
 
             // Don't make netty use java.security.KeyStore.getInstance("JKS") as it doesn't
             // exist.  Just avoid a KeyManagerFactory as it's unnecessary for our testing.
             System.setProperty("io.netty.handler.ssl.openssl.useKeyManagerFactory", "false");
 
             mSslCtx =
-                new OpenSslServerContext(
-                    certFile,
-                    keyFile,
-                    null,
-                    null,
-                    Http2SecurityUtil.CIPHERS,
-                    SupportedCipherSuiteFilter.INSTANCE,
-                    applicationProtocolConfig,
-                    0,
-                    0);
+                    new OpenSslServerContext(
+                            certFile,
+                            keyFile,
+                            null,
+                            null,
+                            Http2SecurityUtil.CIPHERS,
+                            SupportedCipherSuiteFilter.INSTANCE,
+                            applicationProtocolConfig,
+                            0,
+                            0);
 
             mHangingUrlLatch = hangingUrlLatch;
         }
@@ -218,9 +218,9 @@ public final class Http2TestServer {
                     ServerBootstrap b = new ServerBootstrap();
                     b.option(ChannelOption.SO_BACKLOG, 1024);
                     b.group(group)
-                        .channel(NioServerSocketChannel.class)
-                        .handler(new LoggingHandler(LogLevel.INFO))
-                        .childHandler(new Http2ServerInitializer(mSslCtx, mHangingUrlLatch));
+                            .channel(NioServerSocketChannel.class)
+                            .handler(new LoggingHandler(LogLevel.INFO))
+                            .childHandler(new Http2ServerInitializer(mSslCtx, mHangingUrlLatch));
 
                     sServerChannel = b.bind(PORT).sync().channel();
                     Log.i(TAG, "Netty HTTP/2 server started on " + getServerUrl());
@@ -253,9 +253,9 @@ public final class Http2TestServer {
         @Override
         public void initChannel(SocketChannel ch) {
             ch.pipeline()
-                .addLast(
-                    mSslCtx.newHandler(ch.alloc()),
-                    new Http2NegotiationHandler(mHangingUrlLatch));
+                    .addLast(
+                            mSslCtx.newHandler(ch.alloc()),
+                            new Http2NegotiationHandler(mHangingUrlLatch));
         }
     }
 
@@ -269,15 +269,15 @@ public final class Http2TestServer {
 
         @Override
         protected void configurePipeline(ChannelHandlerContext ctx, String protocol)
-            throws Exception {
+                throws Exception {
             if (ApplicationProtocolNames.HTTP_2.equals(protocol)) {
                 ctx.pipeline()
-                    .addLast(
-                        new Http2TestHandler.Builder()
-                            .setReportingCollector(sReportingCollector)
-                            .setServerUrl(getServerUrl())
-                            .setHangingUrlLatch(mHangingUrlLatch)
-                            .build());
+                        .addLast(
+                                new Http2TestHandler.Builder()
+                                        .setReportingCollector(sReportingCollector)
+                                        .setServerUrl(getServerUrl())
+                                        .setHangingUrlLatch(mHangingUrlLatch)
+                                        .build());
                 return;
             }
 
