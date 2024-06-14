@@ -37,6 +37,25 @@ using StreamErrorCode = uint32_t;
 // Application-specific error code used for closing a WebTransport session.
 using SessionErrorCode = uint32_t;
 
+// WebTransport priority as defined in
+// https://w3c.github.io/webtransport/#webtransportsendstream-write
+// The rules are as follows:
+// - Streams with the same priority are handled in FIFO order.
+// - Streams with the same group_id but different send_order are handled
+//   strictly in order.
+// - Different group_ids are handled in the FIFO order.
+using SendGroupId = uint32_t;
+using SendOrder = int64_t;
+struct QUICHE_EXPORT StreamPriority {
+  SendGroupId send_group_id = 0;
+  SendOrder send_order = 0;
+
+  bool operator==(const StreamPriority& other) const {
+    return send_group_id == other.send_group_id &&
+           send_order == other.send_order;
+  }
+};
+
 // An outcome of a datagram send call.
 enum class DatagramStatusCode {
   // Datagram has been successfully sent or placed into the datagram queue.
@@ -135,6 +154,10 @@ class QUICHE_EXPORT Stream : public quiche::ReadStream,
   // primarily used in the JavaScript API when the stream object has been
   // garbage collected.
   virtual void MaybeResetDueToStreamObjectGone() = 0;
+
+  // Sets the send group and the send order of the stream as defined in
+  // https://w3c.github.io/webtransport/#dictdef-webtransportsendstreamoptions
+  virtual void SetPriority(const StreamPriority& priority) = 0;
 
   virtual StreamVisitor* visitor() = 0;
   virtual void SetVisitor(std::unique_ptr<StreamVisitor> visitor) = 0;

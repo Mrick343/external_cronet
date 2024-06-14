@@ -22,8 +22,6 @@ import androidx.annotation.Nullable;
 
 import org.jni_zero.JNINamespace;
 
-import org.chromium.base.compat.ApiHelperForM;
-import org.chromium.base.compat.ApiHelperForO;
 import org.chromium.build.BuildConfig;
 
 /** This class provides Android application context related utility methods. */
@@ -114,17 +112,19 @@ public class ContextUtils {
      * @param appContext The new application context.
      */
     public static void initApplicationContextForTests(Context appContext) {
+        Context prevValue = sApplicationContext;
         initJavaSideApplicationContext(appContext);
-        Holder.sSharedPreferences = fetchAppSharedPreferences();
-    }
 
-    /**
-     * Tests that use the applicationContext may unintentionally use the Context
-     * set by a previously run test.
-     */
-    public static void clearApplicationContextForTests() {
-        sApplicationContext = null;
-        Holder.sSharedPreferences = null;
+        // initApplicationContext() lets <clinit> create sSharedPreferences, but that does not work
+        // when setting it multiple times.
+        SharedPreferences prevPrefs = Holder.sSharedPreferences;
+        Holder.sSharedPreferences = fetchAppSharedPreferences();
+
+        ResettersForTesting.register(
+                () -> {
+                    sApplicationContext = prevValue;
+                    Holder.sSharedPreferences = prevPrefs;
+                });
     }
 
     private static void initJavaSideApplicationContext(Context appContext) {
@@ -178,9 +178,11 @@ public class ContextUtils {
         return ApiCompatibilityUtils.getProcessName();
     }
 
-    /** @return Whether the current process is 64-bit. */
+    /**
+     * @return Whether the current process is 64-bit.
+     */
     public static boolean isProcess64Bit() {
-        return ApiHelperForM.isProcess64Bit();
+        return Process.is64Bit();
     }
 
     /**
@@ -312,8 +314,7 @@ public class ContextUtils {
             Handler scheduler,
             int flags) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return ApiHelperForO.registerReceiver(
-                    context, receiver, filter, permission, scheduler, flags);
+            return context.registerReceiver(receiver, filter, permission, scheduler, flags);
         } else {
             return context.registerReceiver(receiver, filter, permission, scheduler);
         }

@@ -72,8 +72,8 @@ import tempfile
 # this is helpful.
 
 PATCHES = [
-    'libxml2-2.9.4-security-xpath-nodetab-uaf.patch',
     'undo-sax-deprecation.patch',
+    'remove-getentropy.patch',
 ]
 
 
@@ -108,7 +108,6 @@ SHARED_XML_CONFIGURE_OPTIONS = [
     ('--without-iso8859x', 'iso8859x=no'),
     ('--without-legacy', 'legacy=no'),
     ('--without-lzma', 'lzma=no'),
-    ('--without-mem-debug', 'mem_debug=no'),
     ('--without-modules', 'modules=no'),
     ('--without-pattern', 'pattern=no'),
     ('--without-regexps', 'regexps=no'),
@@ -128,12 +127,12 @@ EXTRA_NIX_XML_CONFIGURE_OPTIONS = [
     '--without-minimum',
     '--without-readline',
     '--without-history',
+    '--without-tls',
 ]
 
 
 # These options are only available in win32/configure.js for Windows.
 EXTRA_WIN32_XML_CONFIGURE_OPTIONS = [
-    'trio=no',
     'walker=no',
 ]
 
@@ -181,10 +180,12 @@ FILES_TO_REMOVE = [
     'src/genChRanges.py',
     'src/global.data',
     'src/include/libxml/Makefile.in',
+    'src/include/libxml/meson.build',
     'src/include/libxml/xmlversion.h',
     'src/include/libxml/xmlwin32version.h',
     'src/include/libxml/xmlwin32version.h.in',
     'src/include/Makefile.in',
+    'src/include/meson.build',
     'src/install-sh',
     'src/legacy.c',
     'src/libxml2.doap',
@@ -192,6 +193,8 @@ FILES_TO_REMOVE = [
     'src/ltmain.sh',
     'src/m4',
     'src/macos/libxml2.mcp.xml.sit.hqx',
+    'src/meson.build',
+    'src/meson_options.txt',
     'src/missing',
     'src/optim',
     'src/os400',
@@ -204,11 +207,6 @@ FILES_TO_REMOVE = [
     'src/testOOM.c',
     'src/testOOMlib.c',
     'src/testOOMlib.h',
-    'src/trio.c',
-    'src/trio.h',
-    'src/triop.h',
-    'src/triostr.c',
-    'src/triostr.h',
     'src/vms',
     'src/win32/VC10/config.h',
     'src/win32/configure.js',

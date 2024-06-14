@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <string_view>
 #include <utility>
 
 #include "base/check_op.h"
@@ -36,7 +37,7 @@ namespace {
 
 base::Value::Dict NetLogSpdyStreamErrorParams(spdy::SpdyStreamId stream_id,
                                               int net_error,
-                                              base::StringPiece description) {
+                                              std::string_view description) {
   return base::Value::Dict()
       .Set("stream_id", static_cast<int>(stream_id))
       .Set("net_error", ErrorToShortString(net_error))
@@ -76,7 +77,7 @@ class SpdyStream::HeadersBufferProducer : public SpdyBufferProducer {
 
   std::unique_ptr<SpdyBuffer> ProduceBuffer() override {
     if (!stream_.get()) {
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return nullptr;
     }
     DCHECK_GT(stream_->stream_id(), 0u);
@@ -456,7 +457,7 @@ void SpdyStream::OnDataReceived(std::unique_ptr<SpdyBuffer> buffer) {
       // Deletes |this|.
       session_->CloseActiveStream(stream_id_, OK);
     } else {
-      NOTREACHED() << io_state_;
+      NOTREACHED_IN_MIGRATION() << io_state_;
     }
     return;
   }
@@ -509,7 +510,7 @@ void SpdyStream::OnFrameWriteComplete(spdy::SpdyFrameType frame_type,
     } else if (io_state_ == STATE_HALF_CLOSED_REMOTE) {
       io_state_ = STATE_CLOSED;
     } else {
-      NOTREACHED() << io_state_;
+      NOTREACHED_IN_MIGRATION() << io_state_;
     }
   }
   // Notify delegate of write completion. Must not destroy |this|.
@@ -561,7 +562,7 @@ int SpdyStream::OnDataSent(size_t frame_size) {
   }
 }
 
-void SpdyStream::LogStreamError(int error, base::StringPiece description) {
+void SpdyStream::LogStreamError(int error, std::string_view description) {
   net_log_.AddEvent(NetLogEventType::HTTP2_STREAM_ERROR, [&] {
     return NetLogSpdyStreamErrorParams(stream_id_, error, description);
   });

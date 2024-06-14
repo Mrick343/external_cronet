@@ -6,17 +6,17 @@
 
 #include <memory>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include "base/observer_list.h"
-#include "base/strings/string_piece.h"
 #include "base/values.h"
 
 InMemoryPrefStore::InMemoryPrefStore() {}
 
 InMemoryPrefStore::~InMemoryPrefStore() {}
 
-bool InMemoryPrefStore::GetValue(base::StringPiece key,
+bool InMemoryPrefStore::GetValue(std::string_view key,
                                  const base::Value** value) const {
   return prefs_.GetValue(key, value);
 }
@@ -81,6 +81,10 @@ PersistentPrefStore::PrefReadError InMemoryPrefStore::ReadPrefs() {
   return PersistentPrefStore::PREF_READ_ERROR_NONE;
 }
 
+void InMemoryPrefStore::ReadPrefsAsync(ReadErrorDelegate* error_delegate) {
+  delete error_delegate;
+}
+
 void InMemoryPrefStore::ReportValueChanged(const std::string& key,
                                            uint32_t flags) {
   for (Observer& observer : observers_)
@@ -89,4 +93,8 @@ void InMemoryPrefStore::ReportValueChanged(const std::string& key,
 
 bool InMemoryPrefStore::IsInMemoryPrefStore() const {
   return true;
+}
+
+bool InMemoryPrefStore::HasReadErrorDelegate() const {
+  return false;
 }

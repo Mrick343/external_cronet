@@ -27,7 +27,6 @@
 #include "base/task/thread_pool/thread_pool_instance.h"
 #include "build/build_config.h"
 #include "components/cronet/android/cronet_base_feature.h"
-#include "components/cronet/android/cronet_jni_headers/CronetLibraryLoader_jni.h"
 #include "components/cronet/android/cronet_jni_registration_generated.h"
 #include "components/cronet/android/cronet_library_loader.h"
 #include "components/cronet/android/proto/base_feature_overrides.pb.h"
@@ -43,6 +42,9 @@
 #if !BUILDFLAG(USE_PLATFORM_ICU_ALTERNATIVES)
 #include "base/i18n/icu_util.h"  // nogncheck
 #endif
+
+// Must come after all headers that specialize FromJniType() / ToJniType().
+#include "components/cronet/android/cronet_jni_headers/CronetLibraryLoader_jni.h"
 
 using base::android::JavaParamRef;
 using base::android::ScopedJavaLocalRef;
@@ -83,7 +85,9 @@ base::WaitableEvent g_init_thread_init_done(
   return overrides;
 }
 
-void NativeInit(JNIEnv* env) {
+}  // namespace
+
+void JNI_CronetLibraryLoader_NativeInit(JNIEnv* env) {
   // Cronet doesn't currently provide any way of using a custom command line
   // (see https://crbug.com/1488393). For now, initialize an empty command line
   // so that code attempting to use the command line doesn't crash.
@@ -108,8 +112,6 @@ void NativeInit(JNIEnv* env) {
     base::ThreadPoolInstance::CreateAndStartWithDefaultParams("Cronet");
 }
 
-}  // namespace
-
 bool OnInitThread() {
   DCHECK(g_init_task_executor);
   return g_init_task_executor->task_runner()->RunsTasksInCurrentSequence();
@@ -124,7 +126,6 @@ jint CronetOnLoad(JavaVM* vm, void* reserved) {
   }
   if (!base::android::OnJNIOnLoadInit())
     return -1;
-  NativeInit(env);
   return JNI_VERSION_1_6;
 }
 
@@ -191,7 +192,6 @@ void EnsureInitialized() {
       JNIEnv* env = base::android::AttachCurrentThread();
       // Ensure initialized from Java side to properly create Init thread.
       cronet::Java_CronetLibraryLoader_ensureInitializedFromNative(env);
-      NativeInit(env);
     }
   } s_run_once;
 }

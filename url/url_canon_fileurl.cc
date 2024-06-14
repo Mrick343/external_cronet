@@ -127,6 +127,8 @@ bool DoCanonicalizeFileURL(const URLComponentSource<CHAR>& source,
                            CharsetConverter* query_converter,
                            CanonOutput* output,
                            Parsed* new_parsed) {
+  DCHECK(!parsed.has_opaque_path);
+
   // Things we don't set in file: URLs.
   new_parsed->username = Component();
   new_parsed->password = Component();
@@ -144,7 +146,7 @@ bool DoCanonicalizeFileURL(const URLComponentSource<CHAR>& source,
   //
   // Note: we do this on every platform per URL Standard, not just Windows.
   //
-  // TODO(https://crbug.com/688961): According to the latest URL spec, this
+  // TODO(crbug.com/41299821): According to the latest URL spec, this
   // transformation should be done regardless of the path.
   Component host_range = parsed.host;
   if (IsLocalhost(source.host, host_range.begin, host_range.end()) &&

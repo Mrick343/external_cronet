@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/cert/x509_util_nss.h"
 
 #include <cert.h>  // Must be included before certdb.h
@@ -179,8 +184,7 @@ ScopedCERTCertificate CreateCERTCertificateFromBytes(
 ScopedCERTCertificate CreateCERTCertificateFromX509Certificate(
     const X509Certificate* cert) {
   return CreateCERTCertificateFromBytes(
-      base::make_span(CRYPTO_BUFFER_data(cert->cert_buffer()),
-                      CRYPTO_BUFFER_len(cert->cert_buffer())));
+      CryptoBufferAsSpan(cert->cert_buffer()));
 }
 
 ScopedCERTCertificateList CreateCERTCertificateListFromX509Certificate(
@@ -200,9 +204,8 @@ ScopedCERTCertificateList CreateCERTCertificateListFromX509Certificate(
     return {};
   nss_chain.push_back(std::move(nss_cert));
   for (const auto& intermediate : cert->intermediate_buffers()) {
-    ScopedCERTCertificate nss_intermediate = CreateCERTCertificateFromBytes(
-        base::make_span(CRYPTO_BUFFER_data(intermediate.get()),
-                        CRYPTO_BUFFER_len(intermediate.get())));
+    ScopedCERTCertificate nss_intermediate =
+        CreateCERTCertificateFromBytes(CryptoBufferAsSpan(intermediate.get()));
     if (!nss_intermediate) {
       if (invalid_intermediate_behavior == InvalidIntermediateBehavior::kFail)
         return {};
@@ -441,8 +444,10 @@ SHA256HashValue CalculateFingerprint256(CERTCertificate* cert) {
   return sha256;
 }
 
-int ImportUserCert(CERTCertificate* cert) {
-  return mozilla_security_manager::ImportUserCert(cert);
+int ImportUserCert(CERTCertificate* cert,
+                   crypto::ScopedPK11Slot preferred_slot) {
+  return mozilla_security_manager::ImportUserCert(cert,
+                                                  std::move(preferred_slot));
 }
 
 }  // namespace net::x509_util

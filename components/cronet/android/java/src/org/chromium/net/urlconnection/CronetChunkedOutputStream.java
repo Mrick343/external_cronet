@@ -7,21 +7,18 @@ package org.chromium.net.urlconnection;
 import org.chromium.net.UploadDataProvider;
 import org.chromium.net.UploadDataSink;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.io.IOException;
 import java.net.HttpRetryException;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
- * An implementation of {@link java.io.OutputStream} to send data to a server,
- * when {@link CronetHttpURLConnection#setChunkedStreamingMode} is used.
- * This implementation does not buffer the entire request body in memory.
- * It does not support rewind. Note that {@link #write} should only be called
- * from the thread on which the {@link #mConnection} is created.
+ * An implementation of {@link java.io.OutputStream} to send data to a server, when {@link
+ * CronetHttpURLConnection#setChunkedStreamingMode} is used. This implementation does not buffer the
+ * entire request body in memory. It does not support rewind. Note that {@link #write} should only
+ * be called from the thread on which the {@link #mConnection} is created.
  */
-@VisibleForTesting
-public final class CronetChunkedOutputStream extends CronetOutputStream {
+final class CronetChunkedOutputStream extends CronetOutputStream {
     private final CronetHttpURLConnection mConnection;
     private final MessageLoop mMessageLoop;
     private final ByteBuffer mBuffer;
@@ -30,15 +27,15 @@ public final class CronetChunkedOutputStream extends CronetOutputStream {
 
     /**
      * Package protected constructor.
+     *
      * @param connection The CronetHttpURLConnection object.
-     * @param chunkLength The chunk length of the request body in bytes. It must
-     *            be a positive number.
+     * @param chunkLength The chunk length of the request body in bytes. It must be a positive
+     *     number.
      */
     CronetChunkedOutputStream(
             CronetHttpURLConnection connection, int chunkLength, MessageLoop messageLoop) {
-        if (connection == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(connection);
+
         if (chunkLength <= 0) {
             throw new IllegalArgumentException("chunkLength should be greater than 0");
         }

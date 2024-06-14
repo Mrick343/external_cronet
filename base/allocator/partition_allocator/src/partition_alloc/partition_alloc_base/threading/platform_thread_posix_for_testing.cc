@@ -2,33 +2,33 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "partition_alloc/partition_alloc_base/threading/platform_thread_for_testing.h"
-
-#include <errno.h>
 #include <pthread.h>
 #include <sched.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <cerrno>
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 #include "partition_alloc/partition_alloc_base/check.h"
 #include "partition_alloc/partition_alloc_base/logging.h"
+#include "partition_alloc/partition_alloc_base/threading/platform_thread_for_testing.h"
 #include "partition_alloc/partition_alloc_base/threading/platform_thread_internal_posix.h"
 #include "partition_alloc/partition_alloc_buildflags.h"
 
-#if BUILDFLAG(IS_FUCHSIA)
+#if PA_BUILDFLAG(IS_FUCHSIA)
 #include <zircon/process.h>
 #else
 #include <sys/resource.h>
 #endif
 
-#if BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && BUILDFLAG(USE_STARSCAN)
+#if PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && PA_BUILDFLAG(USE_STARSCAN)
+#include "partition_alloc/stack/stack.h"
 #include "partition_alloc/starscan/pcscan.h"
-#include "partition_alloc/starscan/stack/stack.h"
 #endif
 
 namespace partition_alloc::internal::base {
@@ -52,15 +52,15 @@ void* ThreadFunc(void* params) {
 
     delegate = thread_params->delegate;
 
-#if BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && BUILDFLAG(USE_STARSCAN)
-    PCScan::NotifyThreadCreated(GetStackPointer());
+#if PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && PA_BUILDFLAG(USE_STARSCAN)
+    StackTopRegistry::Get().NotifyThreadCreated();
 #endif
   }
 
   delegate->ThreadMain();
 
-#if BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && BUILDFLAG(USE_STARSCAN)
-  PCScan::NotifyThreadDestroyed();
+#if PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC) && PA_BUILDFLAG(USE_STARSCAN)
+  StackTopRegistry::Get().NotifyThreadDestroyed();
 #endif
 
   TerminateOnThread();
@@ -109,12 +109,12 @@ bool CreateThread(size_t stack_size,
 
 }  // namespace
 
-#if !BUILDFLAG(IS_APPLE)
+#if !PA_BUILDFLAG(IS_APPLE)
 // static
 void PlatformThreadForTesting::YieldCurrentThread() {
   sched_yield();
 }
-#endif  // !BUILDFLAG(IS_APPLE)
+#endif  // !PA_BUILDFLAG(IS_APPLE)
 
 // static
 bool PlatformThreadForTesting::Create(size_t stack_size,

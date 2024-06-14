@@ -4,11 +4,11 @@
 
 #include "partition_alloc/partition_alloc_base/posix/safe_strerror.h"
 
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
 
-#include "build/build_config.h"
+#include "partition_alloc/build_config.h"
 
 namespace partition_alloc::internal::base {
 

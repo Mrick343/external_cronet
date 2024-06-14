@@ -6,6 +6,7 @@
 
 #include <set>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "base/check_op.h"
@@ -13,7 +14,6 @@
 #include "base/metrics/histogram_functions.h"
 #include "base/metrics/histogram_macros.h"
 #include "base/notreached.h"
-#include "base/strings/string_piece.h"
 #include "crypto/sha2.h"
 #include "net/android/cert_verify_result_android.h"
 #include "net/android/network_library.h"
@@ -91,7 +91,7 @@ std::shared_ptr<const bssl::ParsedCertificate> FindLastCertWithUnknownIssuer(
     // Continue the search for |last_issuer|'s issuer.
     last = last_issuer;
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return nullptr;
 }
 
@@ -238,7 +238,7 @@ android::CertVerifyStatusAndroid TryVerifyWithAIAFetching(
     last_cert_with_unknown_issuer = new_last_cert_with_unknown_issuer;
   }
 
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return android::CERT_VERIFY_STATUS_ANDROID_NO_TRUSTED_ROOT;
 }
 
@@ -285,16 +285,16 @@ bool VerifyFromAndroidTrustManager(
       verify_result->cert_status |= CERT_STATUS_INVALID;
       break;
     default:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       verify_result->cert_status |= CERT_STATUS_INVALID;
       break;
   }
 
   // Save the verified chain.
   if (!verified_chain.empty()) {
-    std::vector<base::StringPiece> verified_chain_pieces(verified_chain.size());
+    std::vector<std::string_view> verified_chain_pieces(verified_chain.size());
     for (size_t i = 0; i < verified_chain.size(); i++) {
-      verified_chain_pieces[i] = base::StringPiece(verified_chain[i]);
+      verified_chain_pieces[i] = std::string_view(verified_chain[i]);
     }
     scoped_refptr<X509Certificate> verified_cert =
         X509Certificate::CreateFromDERCertChain(verified_chain_pieces);
@@ -308,7 +308,7 @@ bool VerifyFromAndroidTrustManager(
   // roots. Walk from the end of the chain (root) to leaf, to optimize for
   // known root checks.
   for (const auto& cert : base::Reversed(verified_chain)) {
-    base::StringPiece spki_bytes;
+    std::string_view spki_bytes;
     if (!asn1::ExtractSPKIFromDERCert(cert, &spki_bytes)) {
       verify_result->cert_status |= CERT_STATUS_INVALID;
       continue;
@@ -352,14 +352,14 @@ CertVerifyProcAndroid::CertVerifyProcAndroid(
 
 CertVerifyProcAndroid::~CertVerifyProcAndroid() = default;
 
-int CertVerifyProcAndroid::VerifyInternal(
-    X509Certificate* cert,
-    const std::string& hostname,
-    const std::string& ocsp_response,
-    const std::string& sct_list,
-    int flags,
-    CertVerifyResult* verify_result,
-    const NetLogWithSource& net_log) {
+int CertVerifyProcAndroid::VerifyInternal(X509Certificate* cert,
+                                          const std::string& hostname,
+                                          const std::string& ocsp_response,
+                                          const std::string& sct_list,
+                                          int flags,
+                                          CertVerifyResult* verify_result,
+                                          const NetLogWithSource& net_log,
+                                          std::optional<base::Time>) {
   std::vector<std::string> cert_bytes;
   GetChainDEREncodedBytes(cert, &cert_bytes);
   if (!VerifyFromAndroidTrustManager(cert_bytes, hostname, flags,
