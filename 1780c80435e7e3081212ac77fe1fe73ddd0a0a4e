@@ -142,6 +142,24 @@
       "parentUuid": "a6408593_f7c950f5",
       "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "000aa191_150a9f20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-14T17:23:08Z",
+      "side": 1,
+      "message": "Yeah, the problem here is that the java import should not be package-prefixed, only the C++ JNI calls.\n\nYour understanding is correct, the bug that happened is that Java imports are being packaged-prefixed. So we should change that from jni_zero.py",
+      "parentUuid": "f3f210ad_3b43f756",
+      "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
