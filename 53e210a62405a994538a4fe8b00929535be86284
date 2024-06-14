@@ -46,6 +46,30 @@
       },
       "revId": "53e210a62405a994538a4fe8b00929535be86284",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9f5e786_7205df2e",
+        "filename": "android/tools/gn2bp/gen_android_bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1258,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-14T16:21:17Z",
+      "side": 1,
+      "message": "So basically it is an empty shell of classes? This entire JNI is full of tricks that we need to support 😞",
+      "parentUuid": "0e74afaf_ffdb7655",
+      "range": {
+        "startLine": 1255,
+        "startChar": 6,
+        "endLine": 1258,
+        "endChar": 16
+      },
+      "revId": "53e210a62405a994538a4fe8b00929535be86284",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
