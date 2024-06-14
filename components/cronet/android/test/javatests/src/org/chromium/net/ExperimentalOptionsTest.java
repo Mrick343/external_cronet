@@ -19,8 +19,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 
-import com.android.testutils.SkipPresubmit;
-
 import org.jni_zero.JNINamespace;
 import org.jni_zero.NativeMethods;
 import org.json.JSONObject;
@@ -71,7 +69,7 @@ public class ExperimentalOptionsTest {
     @Before
     public void setUp() throws Exception {
         mHangingUrlLatch = new CountDownLatch(1);
-        // TODO(crbug/1490552): Fallback to MockCertVerifier when custom CAs are not supported.
+        // TODO(crbug.com/40284777): Fallback to MockCertVerifier when custom CAs are not supported.
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             mTestRule
                     .getTestFramework()
@@ -126,31 +124,6 @@ public class ExperimentalOptionsTest {
         assertFileContainsString(logfile, "HostResolverRules");
         assertThat(logfile.delete()).isTrue();
         assertThat(logfile.exists()).isFalse();
-    }
-
-    @Test
-    @MediumTest
-    public void testEnableTelemetryFalse() throws Exception {
-        mTestRule
-                .getTestFramework()
-                .applyEngineBuilderPatch(
-                        (builder) -> {
-                            JSONObject experimentalOptions =
-                                    new JSONObject().put("enable_telemetry", false);
-                            builder.setExperimentalOptions(experimentalOptions.toString());
-                        });
-
-        CronetUrlRequestContext context =
-                (CronetUrlRequestContext) mTestRule.getTestFramework().startEngine();
-        assertThat(context.getEnableTelemetryForTesting()).isFalse();
-    }
-
-    @Test
-    @MediumTest
-    public void testEnableTelemetryDefault() throws Exception {
-        CronetUrlRequestContext context =
-                (CronetUrlRequestContext) mTestRule.getTestFramework().startEngine();
-        assertThat(context.getEnableTelemetryForTesting()).isTrue();
     }
 
     @Test
@@ -226,7 +199,6 @@ public class ExperimentalOptionsTest {
 
     @Test
     @MediumTest
-    @SkipPresubmit(reason = "b/293141085 Tests that enable disk cache are flaky")
     // Tests that basic Cronet functionality works when host cache persistence is enabled, and that
     // persistence works.
     public void testHostCachePersistence() throws Exception {

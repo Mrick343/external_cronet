@@ -4,8 +4,10 @@
 
 #include "net/reporting/reporting_endpoint_manager.h"
 
+#include <optional>
 #include <string>
 
+#include "base/memory/raw_ptr.h"
 #include "base/strings/stringprintf.h"
 #include "base/test/simple_test_tick_clock.h"
 #include "base/time/time.h"
@@ -19,7 +21,6 @@
 #include "net/reporting/reporting_policy.h"
 #include "net/reporting/reporting_test_util.h"
 #include "testing/gtest/include/gtest/gtest.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 #include "url/gurl.h"
 #include "url/origin.h"
 
@@ -55,7 +56,7 @@ class TestReportingCache : public ReportingCache {
   }
 
   // Everything below is NOTREACHED.
-  void AddReport(const absl::optional<base::UnguessableToken>& reporting_source,
+  void AddReport(const std::optional<base::UnguessableToken>& reporting_source,
                  const NetworkAnonymizationKey& network_anonymization_key,
                  const GURL& url,
                  const std::string& user_agent,
@@ -65,161 +66,171 @@ class TestReportingCache : public ReportingCache {
                  int depth,
                  base::TimeTicks queued,
                  int attempts) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   void GetReports(
-      std::vector<const ReportingReport*>* reports_out) const override {
-    NOTREACHED();
+      std::vector<raw_ptr<const ReportingReport, VectorExperimental>>*
+          reports_out) const override {
+    NOTREACHED_IN_MIGRATION();
   }
   base::Value GetReportsAsValue() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return base::Value();
   }
-  std::vector<const ReportingReport*> GetReportsToDeliver() override {
-    NOTREACHED();
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>>
+  GetReportsToDeliver() override {
+    NOTREACHED_IN_MIGRATION();
     return {};
   }
-  std::vector<const ReportingReport*> GetReportsToDeliverForSource(
+  std::vector<raw_ptr<const ReportingReport, VectorExperimental>>
+  GetReportsToDeliverForSource(
       const base::UnguessableToken& reporting_source) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return {};
   }
   void ClearReportsPending(
-      const std::vector<const ReportingReport*>& reports) override {
-    NOTREACHED();
+      const std::vector<raw_ptr<const ReportingReport, VectorExperimental>>&
+          reports) override {
+    NOTREACHED_IN_MIGRATION();
   }
   void IncrementReportsAttempts(
-      const std::vector<const ReportingReport*>& reports) override {
-    NOTREACHED();
+      const std::vector<raw_ptr<const ReportingReport, VectorExperimental>>&
+          reports) override {
+    NOTREACHED_IN_MIGRATION();
   }
   base::flat_map<url::Origin, std::vector<ReportingEndpoint>>
   GetV1ReportingEndpointsByOrigin() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return base::flat_map<url::Origin, std::vector<ReportingEndpoint>>();
   }
   void IncrementEndpointDeliveries(const ReportingEndpointGroupKey& group_key,
                                    const GURL& url,
                                    int reports_delivered,
                                    bool successful) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   void SetExpiredSource(
       const base::UnguessableToken& reporting_source) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   const base::flat_set<base::UnguessableToken>& GetExpiredSources()
       const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return expired_sources_;
   }
   void RemoveReports(
-      const std::vector<const ReportingReport*>& reports) override {
-    NOTREACHED();
+      const std::vector<raw_ptr<const ReportingReport, VectorExperimental>>&
+          reports) override {
+    NOTREACHED_IN_MIGRATION();
   }
-  void RemoveReports(const std::vector<const ReportingReport*>& reports,
-                     bool delivery_success) override {
-    NOTREACHED();
+  void RemoveReports(
+      const std::vector<raw_ptr<const ReportingReport, VectorExperimental>>&
+          reports,
+      bool delivery_success) override {
+    NOTREACHED_IN_MIGRATION();
   }
-  void RemoveAllReports() override { NOTREACHED(); }
+  void RemoveAllReports() override { NOTREACHED_IN_MIGRATION(); }
   size_t GetFullReportCountForTesting() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return 0;
   }
   size_t GetReportCountWithStatusForTesting(
       ReportingReport::Status status) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return 0;
   }
   bool IsReportPendingForTesting(const ReportingReport* report) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return false;
   }
   bool IsReportDoomedForTesting(const ReportingReport* report) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return false;
   }
   void OnParsedHeader(
       const NetworkAnonymizationKey& network_anonymization_key,
       const url::Origin& origin,
       std::vector<ReportingEndpointGroup> parsed_header) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   void OnParsedReportingEndpointsHeader(
       const base::UnguessableToken& reporting_source,
       const IsolationInfo& isolation_info,
       std::vector<ReportingEndpoint> endpoints) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   std::set<url::Origin> GetAllOrigins() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return std::set<url::Origin>();
   }
   void RemoveClient(const NetworkAnonymizationKey& network_anonymization_key,
                     const url::Origin& origin) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   void RemoveClientsForOrigin(const url::Origin& origin) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
-  void RemoveAllClients() override { NOTREACHED(); }
+  void RemoveAllClients() override { NOTREACHED_IN_MIGRATION(); }
   void RemoveEndpointGroup(
       const ReportingEndpointGroupKey& group_key) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
-  void RemoveEndpointsForUrl(const GURL& url) override { NOTREACHED(); }
+  void RemoveEndpointsForUrl(const GURL& url) override {
+    NOTREACHED_IN_MIGRATION();
+  }
   void RemoveSourceAndEndpoints(
       const base::UnguessableToken& reporting_source) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   void AddClientsLoadedFromStore(
       std::vector<ReportingEndpoint> loaded_endpoints,
       std::vector<CachedReportingEndpointGroup> loaded_endpoint_groups)
       override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   base::Value GetClientsAsValue() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return base::Value();
   }
   size_t GetEndpointCount() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return 0;
   }
-  void Flush() override { NOTREACHED(); }
+  void Flush() override { NOTREACHED_IN_MIGRATION(); }
   ReportingEndpoint GetV1EndpointForTesting(
       const base::UnguessableToken& reporting_source,
       const std::string& endpoint_name) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return ReportingEndpoint();
   }
   ReportingEndpoint GetEndpointForTesting(
       const ReportingEndpointGroupKey& group_key,
       const GURL& url) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return ReportingEndpoint();
   }
   bool EndpointGroupExistsForTesting(const ReportingEndpointGroupKey& group_key,
                                      OriginSubdomains include_subdomains,
                                      base::Time expires) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return false;
   }
   bool ClientExistsForTesting(
       const NetworkAnonymizationKey& network_anonymization_key,
       const url::Origin& origin) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return false;
   }
   size_t GetEndpointGroupCountForTesting() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return 0;
   }
   size_t GetClientCountForTesting() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return 0;
   }
   size_t GetReportingSourceCountForTesting() const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return 0;
   }
   void SetEndpointForTesting(const ReportingEndpointGroupKey& group_key,
@@ -228,17 +239,17 @@ class TestReportingCache : public ReportingCache {
                              base::Time expires,
                              int priority,
                              int weight) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   void SetV1EndpointForTesting(const ReportingEndpointGroupKey& group_key,
                                const base::UnguessableToken& reporting_source,
                                const IsolationInfo& isolation_info,
                                const GURL& url) override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
   }
   IsolationInfo GetIsolationInfoForEndpoint(
       const ReportingEndpoint& endpoint) const override {
-    NOTREACHED();
+    NOTREACHED_IN_MIGRATION();
     return IsolationInfo();
   }
 
@@ -282,12 +293,12 @@ class ReportingEndpointManagerTest : public testing::Test {
         ReportingEndpoint::EndpointInfo{endpoint, priority, weight}));
   }
 
-  const NetworkAnonymizationKey kNik;
+  const NetworkAnonymizationKey kNak;
   const url::Origin kOrigin = url::Origin::Create(GURL("https://origin/"));
   const SchemefulSite kSite = SchemefulSite(kOrigin);
   const std::string kGroup = "group";
   const ReportingEndpointGroupKey kGroupKey =
-      ReportingEndpointGroupKey(kNik, kOrigin, kGroup);
+      ReportingEndpointGroupKey(kNak, kOrigin, kGroup);
   const GURL kEndpoint = GURL("https://endpoint/");
 
   ReportingPolicy policy_;

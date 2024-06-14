@@ -9,27 +9,24 @@ import androidx.annotation.VisibleForTesting;
 import org.chromium.net.UploadDataProvider;
 import org.chromium.net.UploadDataSink;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.io.IOException;
 import java.net.HttpRetryException;
 import java.net.ProtocolException;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
- * An implementation of {@link java.io.OutputStream} to send data to a server,
- * when {@link CronetHttpURLConnection#setFixedLengthStreamingMode} is used.
- * This implementation does not buffer the entire request body in memory.
- * It does not support rewind. Note that {@link #write} should only be called
- * from the thread on which the {@link #mConnection} is created.
+ * An implementation of {@link java.io.OutputStream} to send data to a server, when {@link
+ * CronetHttpURLConnection#setFixedLengthStreamingMode} is used. This implementation does not buffer
+ * the entire request body in memory. It does not support rewind. Note that {@link #write} should
+ * only be called from the thread on which the {@link #mConnection} is created.
  */
-@VisibleForTesting
-public final class CronetFixedModeOutputStream extends CronetOutputStream {
+final class CronetFixedModeOutputStream extends CronetOutputStream {
     // CronetFixedModeOutputStream buffers up to this value and wait for UploadDataStream
     // to consume the data. This field is non-final, so it can be changed for tests.
     // Using 16384 bytes is because the internal read buffer is 14520 for QUIC,
     // 16384 for SPDY, and 16384 for normal HTTP/1.1 stream.
-    @VisibleForTesting public static int sDefaultBufferLength = 16384;
+    @VisibleForTesting private static int sDefaultBufferLength = 16384;
     private final CronetHttpURLConnection mConnection;
     private final MessageLoop mMessageLoop;
     private final long mContentLength;
@@ -53,15 +50,14 @@ public final class CronetFixedModeOutputStream extends CronetOutputStream {
 
     /**
      * Package protected constructor.
+     *
      * @param connection The CronetHttpURLConnection object.
-     * @param contentLength The content length of the request body. Non-zero for
-     *            non-chunked upload.
+     * @param contentLength The content length of the request body. Non-zero for non-chunked upload.
      */
     CronetFixedModeOutputStream(
             CronetHttpURLConnection connection, long contentLength, MessageLoop messageLoop) {
-        if (connection == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(connection);
+
         if (contentLength < 0) {
             throw new IllegalArgumentException(
                     "Content length must be larger than 0 for non-chunked upload.");
@@ -201,10 +197,8 @@ public final class CronetFixedModeOutputStream extends CronetOutputStream {
         }
     }
 
-    /**
-     * Sets the default buffer length for use in tests.
-     */
-    public static void setDefaultBufferLengthForTesting(int length) {
+    /** Sets the default buffer length for use in tests. */
+    static void setDefaultBufferLengthForTesting(int length) {
         sDefaultBufferLength = length;
     }
 }
