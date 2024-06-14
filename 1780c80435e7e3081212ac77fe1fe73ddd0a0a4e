@@ -52,6 +52,24 @@
       "parentUuid": "59ee1db7_e9f23551",
       "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b45d8c20_baa1c6c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-14T16:55:36Z",
+      "side": 1,
+      "message": "I think it\u0027s just because our usecase is hacky.\nWe are trying to make jni code to call java code with prefix but we also want generated code to use java code without prefix for some situation.",
+      "parentUuid": "7353958a_a837905d",
+      "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
