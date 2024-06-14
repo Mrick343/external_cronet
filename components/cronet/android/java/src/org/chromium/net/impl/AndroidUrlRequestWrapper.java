@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     private final android.net.http.UrlRequest mBackend;
 
-    private AndroidUrlRequestWrapper(android.net.http.UrlRequest backend) {
+    AndroidUrlRequestWrapper(android.net.http.UrlRequest backend) {
         this.mBackend = backend;
     }
 
@@ -53,6 +53,7 @@ class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     public void getStatus(StatusListener listener) {
         mBackend.getStatus(new AndroidUrlRequestStatusListenerWrapper(listener));
     }
+<<<<<<< HEAD   (b3f90a Import Cronet 126.0.6423.0: merge 'aosp/main' into upstream-)
 
     @Override
     public int getTrafficStatsUid() {
@@ -118,4 +119,6 @@ class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     android.net.http.UrlRequest getBackend() {
         return mBackend;
     }
+=======
+>>>>>>> BRANCH (390e68 3126374: Import Cronet version 126.0.6423.0)
 }
