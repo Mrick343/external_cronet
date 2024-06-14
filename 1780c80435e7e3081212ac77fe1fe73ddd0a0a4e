@@ -88,6 +88,24 @@
       "parentUuid": "b45d8c20_baa1c6c3",
       "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "381c7f86_993f0919",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-14T17:07:17Z",
+      "side": 1,
+      "message": "\u003e it somehow happened that a non-generated file got prefixed.\n\nThis is not true.\nWe are adding `--package-prefix` to tell generated code to call java class with prefix.\nFor example, when we call jni_zero.py agains Token.java with --package-prefix \"android.net.connectivity.org\",\nGenerated Token_jni.h calls Token.java as `android.net.connectivity.org.chromium.base.Token`.\nGenerated TokenJni.java imports Token as `import android.net.connectivity.org.chromium.base.Token;`.\n\nSo I think generated code is consistent.",
+      "parentUuid": "0edf6aa1_c3b703a7",
+      "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
