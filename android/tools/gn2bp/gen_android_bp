@@ -1067,10 +1067,12 @@ class BaseActionSanitizer():
     self.target.args.pop(i)
     self.target.args.pop(i)
 
-  def _append_arg(self, arg, value):
+  def _append_value_arg(self, arg, value):
     self.target.args.append(arg)
     self.target.args.append(value)
 
+  def _append_arg(self, arg):
+    self.target.args.append(arg)
   def _sanitize_filepath_with_location_tag(self, arg):
     if arg.startswith('../../'):
       arg = self._sanitize_filepath(arg)
@@ -1246,7 +1248,8 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
       # from those genrule can simply call into the original class as it exists outside
       # of cronet's jar.
       # Only jarjar platform code
-      self._append_arg('--package-prefix', 'android.net.connectivity')
+      self._append_value_arg('--package-prefix', 'android.net.connectivity')
+      self._append_arg('--skip-prefix-java')
     super()._sanitize_args()
 
   def get_outputs(self):
@@ -1282,7 +1285,6 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
     if self._has_arg('--jar-file'):
       tools.add(":javap")
     return tools
-
 
 class JavaJniGeneratorSanitizer(JniGeneratorSanitizer):
   def __init__(self, target, arch, is_test_target):
@@ -1338,7 +1340,7 @@ class JniRegistrationGeneratorSanitizer(BaseActionSanitizer):
     self._set_value_arg('--java-sources-file', '$(genDir)/java.sources')
     if not self.is_test_target:
       # Only jarjar platform code
-      self._append_arg('--package-prefix', 'android.net.connectivity')
+      self._append_value_arg('--package-prefix', 'android.net.connectivity')
     super()._sanitize_args()
 
   def get_cmd(self):
