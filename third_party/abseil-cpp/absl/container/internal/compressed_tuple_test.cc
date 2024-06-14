@@ -15,7 +15,11 @@
 #include "absl/container/internal/compressed_tuple.h"
 
 #include <memory>
+#include <set>
 #include <string>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -54,6 +58,7 @@ namespace {
 
 using absl::test_internal::CopyableMovableInstance;
 using absl::test_internal::InstanceTracker;
+using ::testing::Each;
 
 TEST(CompressedTupleTest, Sizeof) {
   EXPECT_EQ(sizeof(int), sizeof(CompressedTuple<int>));
@@ -68,6 +73,30 @@ TEST(CompressedTupleTest, Sizeof) {
             sizeof(CompressedTuple<int, Empty<0>, NotEmpty<double>>));
   EXPECT_EQ(sizeof(TwoValues<int, double>),
             sizeof(CompressedTuple<int, Empty<0>, NotEmpty<double>, Empty<1>>));
+}
+
+TEST(CompressedTupleTest, PointerToEmpty) {
+  auto to_void_ptrs = [](const auto&... objs) {
+    return std::vector<const void*>{static_cast<const void*>(&objs)...};
+  };
+  {
+    using Tuple = CompressedTuple<int, Empty<0>>;
+    EXPECT_EQ(sizeof(int), sizeof(Tuple));
+    Tuple t;
+    EXPECT_THAT(to_void_ptrs(t.get<1>()), Each(&t));
+  }
+  {
+    using Tuple = CompressedTuple<int, Empty<0>, Empty<1>>;
+    EXPECT_EQ(sizeof(int), sizeof(Tuple));
+    Tuple t;
+    EXPECT_THAT(to_void_ptrs(t.get<1>(), t.get<2>()), Each(&t));
+  }
+  {
+    using Tuple = CompressedTuple<int, Empty<0>, Empty<1>, Empty<2>>;
+    EXPECT_EQ(sizeof(int), sizeof(Tuple));
+    Tuple t;
+    EXPECT_THAT(to_void_ptrs(t.get<1>(), t.get<2>(), t.get<3>()), Each(&t));
+  }
 }
 
 TEST(CompressedTupleTest, OneMoveOnRValueConstructionTemp) {
@@ -358,7 +387,6 @@ TEST(CompressedTupleTest, Constexpr) {
   EXPECT_EQ(x2, 5);
   EXPECT_EQ(x3, CallType::kConstRef);
 
-#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ > 4
   constexpr CompressedTuple<Empty<0>, TrivialStruct, int> trivial = {};
   constexpr CallType trivial0 = trivial.get<0>().value();
   constexpr int trivial1 = trivial.get<1>().value();
@@ -367,7 +395,6 @@ TEST(CompressedTupleTest, Constexpr) {
   EXPECT_EQ(trivial0, CallType::kConstRef);
   EXPECT_EQ(trivial1, 0);
   EXPECT_EQ(trivial2, 0);
-#endif
 
   constexpr CompressedTuple<Empty<0>, NonTrivialStruct, absl::optional<int>>
       non_trivial = {};
@@ -386,8 +413,8 @@ TEST(CompressedTupleTest, Constexpr) {
 
 #if defined(__clang__)
   // An apparent bug in earlier versions of gcc claims these are ambiguous.
-  constexpr int x2m = absl::move(x.get<2>()).get<0>();
-  constexpr CallType x3m = absl::move(x).get<3>().value();
+  constexpr int x2m = std::move(x.get<2>()).get<0>();
+  constexpr CallType x3m = std::move(x).get<3>().value();
   EXPECT_EQ(x2m, 5);
   EXPECT_EQ(x3m, CallType::kConstMove);
 #endif

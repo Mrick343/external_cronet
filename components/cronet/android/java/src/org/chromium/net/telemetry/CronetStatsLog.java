@@ -57,34 +57,28 @@ public final class CronetStatsLog {
      * response_body_size, int http_status_code, long negotiated_protocol_hash, int
      * headers_latency_millis, int overall_latency_millis, boolean connection_migration_attempted,
      * boolean connection_migration_successful, int samples_rate_limited, int terminal_state, int
-     * user_callback_exception_count, long total_idle_time_millis, long
+     * nonfinal_user_callback_exception_count, long total_idle_time_millis, long
      * total_user_executor_execute_latency_millis, int read_count, int on_upload_read_count, int
-     * is_bidi_stream);<br>
+     * is_bidi_stream, int final_user_callback_threw);<br>
      */
     public static final int CRONET_TRAFFIC_REPORTED = 704;
 
     /**
      * CronetEngineBuilderInitialized cronet_engine_builder_initialized<br>
      * Usage: StatsLog.write(StatsLog.CRONET_ENGINE_BUILDER_INITIALIZED, long
-     * cronet_initialization_ref, int engine_builder_created_latency_millis, int source, int
-     * creation_successful, long cronet_http_flags_ref, int cronet_api_level, int
-     * cronet_impl_api_level, int major_version, int minor_version, int build_version, int
-     * patch_version, int uid);<br>
+     * cronet_initialization_ref, int author, int engine_builder_created_latency_millis, int source,
+     * int creation_successful, int api_major_version, int api_minor_version, int api_build_version,
+     * int api_patch_version, int impl_major_version, int impl_minor_version, int
+     * impl_build_version, int impl_patch_version, int uid);<br>
      */
     public static final int CRONET_ENGINE_BUILDER_INITIALIZED = 762;
 
     /**
-     * CronetHttpFlagsInitialized cronet_http_flags_initialized<br>
-     * Usage: StatsLog.write(StatsLog.CRONET_HTTP_FLAGS_INITIALIZED, long cronet_http_flags_ref, int
-     * http_flags_latency_millis, int flags_successful, long[] http_flags_names, long[]
-     * http_flags_values);<br>
-     */
-    public static final int CRONET_HTTP_FLAGS_INITIALIZED = 763;
-
-    /**
      * CronetInitialized cronet_initialized<br>
      * Usage: StatsLog.write(StatsLog.CRONET_INITIALIZED, long cronet_initialization_ref, int
-     * engine_creation_latency_millis, int engine_async_latency_millis);<br>
+     * engine_creation_latency_millis, int engine_async_latency_millis, int
+     * http_flags_latency_millis, int http_flags_successful, long[] http_flags_names, long[]
+     * http_flags_values);<br>
      */
     public static final int CRONET_INITIALIZED = 764;
 
@@ -350,15 +344,28 @@ public final class CronetStatsLog {
     public static final int CRONET_TRAFFIC_REPORTED__IS_BIDI_STREAM__OPTIONAL_BOOLEAN_TRUE = 1;
     public static final int CRONET_TRAFFIC_REPORTED__IS_BIDI_STREAM__OPTIONAL_BOOLEAN_FALSE = 2;
 
+    // Values for CronetTrafficReported.final_user_callback_threw
+    public static final int
+            CRONET_TRAFFIC_REPORTED__FINAL_USER_CALLBACK_THREW__OPTIONAL_BOOLEAN_UNSET = 0;
+    public static final int
+            CRONET_TRAFFIC_REPORTED__FINAL_USER_CALLBACK_THREW__OPTIONAL_BOOLEAN_TRUE = 1;
+    public static final int
+            CRONET_TRAFFIC_REPORTED__FINAL_USER_CALLBACK_THREW__OPTIONAL_BOOLEAN_FALSE = 2;
+
+    // Values for CronetEngineBuilderInitialized.author
+    public static final int CRONET_ENGINE_BUILDER_INITIALIZED__AUTHOR__AUTHOR_UNSPECIFIED = 0;
+    public static final int CRONET_ENGINE_BUILDER_INITIALIZED__AUTHOR__AUTHOR_API = 1;
+    public static final int CRONET_ENGINE_BUILDER_INITIALIZED__AUTHOR__AUTHOR_IMPL = 2;
+
     // Values for CronetEngineBuilderInitialized.source
     public static final int CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_UNSPECIFIED =
             0;
     public static final int
             CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_EMBEDDED_NATIVE = 1;
-    public static final int CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_EMBEDDED_JAVA =
-            2;
     public static final int
-            CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_GMSCORE_NATIVE = 3;
+            CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_GMSCORE_NATIVE = 2;
+    public static final int CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_EMBEDDED_JAVA =
+            3;
     public static final int
             CRONET_ENGINE_BUILDER_INITIALIZED__SOURCE__CRONET_SOURCE_HTTPENGINE_NATIVE = 4;
 
@@ -370,39 +377,40 @@ public final class CronetStatsLog {
     public static final int
             CRONET_ENGINE_BUILDER_INITIALIZED__CREATION_SUCCESSFUL__OPTIONAL_BOOLEAN_FALSE = 2;
 
-    // Values for CronetHttpFlagsInitialized.flags_successful
-    public static final int
-            CRONET_HTTP_FLAGS_INITIALIZED__FLAGS_SUCCESSFUL__OPTIONAL_BOOLEAN_UNSET = 0;
-    public static final int CRONET_HTTP_FLAGS_INITIALIZED__FLAGS_SUCCESSFUL__OPTIONAL_BOOLEAN_TRUE =
-            1;
-    public static final int
-            CRONET_HTTP_FLAGS_INITIALIZED__FLAGS_SUCCESSFUL__OPTIONAL_BOOLEAN_FALSE = 2;
+    // Values for CronetInitialized.http_flags_successful
+    public static final int CRONET_INITIALIZED__HTTP_FLAGS_SUCCESSFUL__OPTIONAL_BOOLEAN_UNSET = 0;
+    public static final int CRONET_INITIALIZED__HTTP_FLAGS_SUCCESSFUL__OPTIONAL_BOOLEAN_TRUE = 1;
+    public static final int CRONET_INITIALIZED__HTTP_FLAGS_SUCCESSFUL__OPTIONAL_BOOLEAN_FALSE = 2;
 
     // Annotation constants.
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_IS_UID = StatsLog.ANNOTATION_ID_IS_UID;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_TRUNCATE_TIMESTAMP =
             StatsLog.ANNOTATION_ID_TRUNCATE_TIMESTAMP;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_PRIMARY_FIELD = StatsLog.ANNOTATION_ID_PRIMARY_FIELD;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_EXCLUSIVE_STATE = StatsLog.ANNOTATION_ID_EXCLUSIVE_STATE;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_PRIMARY_FIELD_FIRST_UID =
             StatsLog.ANNOTATION_ID_PRIMARY_FIELD_FIRST_UID;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_DEFAULT_STATE = StatsLog.ANNOTATION_ID_DEFAULT_STATE;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_TRIGGER_STATE_RESET =
             StatsLog.ANNOTATION_ID_TRIGGER_STATE_RESET;
+
+    @android.annotation.SuppressLint("InlinedApi")
     public static final byte ANNOTATION_ID_STATE_NESTED = StatsLog.ANNOTATION_ID_STATE_NESTED;
 
     // Write methods
-    public static void write(int code, long arg1, int arg2, int arg3) {
-        final StatsEvent.Builder builder = StatsEvent.newBuilder();
-        builder.setAtomId(code);
-        builder.writeLong(arg1);
-        builder.writeInt(arg2);
-        builder.writeInt(arg3);
-
-        builder.usePooledBuffer();
-        StatsLog.write(builder.build());
-    }
-
     public static void write(
             int code,
             long arg1,
@@ -492,6 +500,46 @@ public final class CronetStatsLog {
             int arg4,
             int arg5,
             int arg6,
+            int arg7,
+            int arg8,
+            int arg9,
+            int arg10,
+            int arg11,
+            int arg12,
+            int arg13,
+            int arg14) {
+        final StatsEvent.Builder builder = StatsEvent.newBuilder();
+        builder.setAtomId(code);
+        builder.writeLong(arg1);
+        builder.writeInt(arg2);
+        builder.writeInt(arg3);
+        builder.writeInt(arg4);
+        builder.writeInt(arg5);
+        builder.writeInt(arg6);
+        builder.writeInt(arg7);
+        builder.writeInt(arg8);
+        builder.writeInt(arg9);
+        builder.writeInt(arg10);
+        builder.writeInt(arg11);
+        builder.writeInt(arg12);
+        builder.writeInt(arg13);
+        builder.writeInt(arg14);
+        if (CRONET_ENGINE_BUILDER_INITIALIZED == code) {
+            builder.addBooleanAnnotation(ANNOTATION_ID_IS_UID, true);
+        }
+
+        builder.usePooledBuffer();
+        StatsLog.write(builder.build());
+    }
+
+    public static void write(
+            int code,
+            long arg1,
+            int arg2,
+            int arg3,
+            int arg4,
+            int arg5,
+            int arg6,
             long arg7,
             int arg8,
             int arg9,
@@ -504,7 +552,8 @@ public final class CronetStatsLog {
             long arg16,
             int arg17,
             int arg18,
-            int arg19) {
+            int arg19,
+            int arg20) {
         final StatsEvent.Builder builder = StatsEvent.newBuilder();
         builder.setAtomId(code);
         builder.writeLong(arg1);
@@ -526,58 +575,25 @@ public final class CronetStatsLog {
         builder.writeInt(arg17);
         builder.writeInt(arg18);
         builder.writeInt(arg19);
+        builder.writeInt(arg20);
 
         builder.usePooledBuffer();
         StatsLog.write(builder.build());
     }
 
+    @android.annotation.SuppressLint("ObsoleteSdkInt")
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public static void write(
-            int code,
-            long arg1,
-            int arg2,
-            int arg3,
-            int arg4,
-            long arg5,
-            int arg6,
-            int arg7,
-            int arg8,
-            int arg9,
-            int arg10,
-            int arg11,
-            int arg12) {
+            int code, long arg1, int arg2, int arg3, int arg4, int arg5, long[] arg6, long[] arg7) {
         final StatsEvent.Builder builder = StatsEvent.newBuilder();
         builder.setAtomId(code);
         builder.writeLong(arg1);
         builder.writeInt(arg2);
         builder.writeInt(arg3);
         builder.writeInt(arg4);
-        builder.writeLong(arg5);
-        builder.writeInt(arg6);
-        builder.writeInt(arg7);
-        builder.writeInt(arg8);
-        builder.writeInt(arg9);
-        builder.writeInt(arg10);
-        builder.writeInt(arg11);
-        builder.writeInt(arg12);
-        if (CRONET_ENGINE_BUILDER_INITIALIZED == code) {
-            builder.addBooleanAnnotation(ANNOTATION_ID_IS_UID, true);
-        }
-
-        builder.usePooledBuffer();
-        StatsLog.write(builder.build());
-    }
-
-    // **The @RequiresApi annotation below needs to be added back after regenerating this file.**
-    // TODO(b/313088483): Autogenerate the @RequiresApi annotation
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    public static void write(int code, long arg1, int arg2, int arg3, long[] arg4, long[] arg5) {
-        final StatsEvent.Builder builder = StatsEvent.newBuilder();
-        builder.setAtomId(code);
-        builder.writeLong(arg1);
-        builder.writeInt(arg2);
-        builder.writeInt(arg3);
-        builder.writeLongArray(null == arg4 ? new long[0] : arg4);
-        builder.writeLongArray(null == arg5 ? new long[0] : arg5);
+        builder.writeInt(arg5);
+        builder.writeLongArray(null == arg6 ? new long[0] : arg6);
+        builder.writeLongArray(null == arg7 ? new long[0] : arg7);
 
         builder.usePooledBuffer();
         StatsLog.write(builder.build());

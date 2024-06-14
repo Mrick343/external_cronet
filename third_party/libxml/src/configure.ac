@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.63])
 
 m4_define([MAJOR_VERSION], 2)
-m4_define([MINOR_VERSION], 12)
+m4_define([MINOR_VERSION], 13)
 m4_define([MICRO_VERSION], 0)
 
 AC_INIT([libxml2],[MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION])
@@ -21,7 +21,7 @@ LIBXML_VERSION_INFO=`expr $LIBXML_MAJOR_VERSION + $LIBXML_MINOR_VERSION`:$LIBXML
 LIBXML_VERSION_NUMBER=`expr $LIBXML_MAJOR_VERSION \* 10000 + $LIBXML_MINOR_VERSION \* 100 + $LIBXML_MICRO_VERSION`
 
 if test -d .git ; then
-  extra=`git describe 2>/dev/null | sed 's+LIBXML[[0-9.]]*-++'`
+  extra=`git describe 2>/dev/null`
   echo extra=$extra
   if test "$extra" != ""
   then
@@ -86,9 +86,7 @@ AC_ARG_WITH(icu,
 AC_ARG_WITH(iso8859x,
 [  --with-iso8859x         ISO-8859-X support if no iconv (on)])
 AC_ARG_WITH(lzma,
-[  --with-lzma[[=DIR]]       use liblzma in DIR (on)])
-AC_ARG_WITH(mem_debug,
-[  --with-mem-debug        memory debugging module (off)])
+[  --with-lzma[[=DIR]]       use liblzma in DIR (off)])
 AC_ARG_WITH(modules,
 [  --with-modules          dynamic modules support (on)])
 AC_ARG_WITH(output,
@@ -103,8 +101,6 @@ AC_ARG_WITH(reader,
 [  --with-reader           xmlReader parsing interface (on)])
 AC_ARG_WITH(regexps,
 [  --with-regexps          regular expressions support (on)])
-AC_ARG_WITH(run_debug,
-[  --with-run-debug        runtime debugging module (off)])
 AC_ARG_WITH(sax1,
 [  --with-sax1             older SAX1 interface (on)])
 AC_ARG_WITH(schemas,
@@ -127,8 +123,10 @@ AC_ARG_WITH(xpath,
 [  --with-xpath            XPath 1.0 support (on)])
 AC_ARG_WITH(xptr,
 [  --with-xptr             XPointer support (on)])
+AC_ARG_WITH(xptr-locs,
+[  --with-xptr-locs        XPointer ranges and points (off)])
 AC_ARG_WITH(zlib,
-[  --with-zlib[[=DIR]]       use libz in DIR (on)])
+[  --with-zlib[[=DIR]]       use libz in DIR (off)])
 
 AC_ARG_WITH(minimum,
 [  --with-minimum          build a minimally sized library (off)])
@@ -136,7 +134,7 @@ AC_ARG_WITH(legacy,
 [  --with-legacy           maximum ABI compatibility (off)])
 
 AC_ARG_WITH(tls,
-[  --with-tls              thread-local storage (on)])
+[  --with-tls              thread-local storage (off)])
 AC_ARG_WITH(fexceptions,
 [  --with-fexceptions      add GCC flag -fexceptions for C++ exceptions (off)])
 AC_ARG_WITH(coverage,
@@ -233,7 +231,6 @@ if test "$with_minimum" = "yes"; then
     test "$with_iconv" = "" && with_iconv=no
     test "$with_iso8859x" = "" && with_iso8859x=no
     test "$with_lzma" = "" && with_lzma=no
-    test "$with_mem_debug" = "" && with_mem_debug=no
     test "$with_output" = "" && with_output=no
     test "$with_pattern" = "" && with_pattern=no
     test "$with_push" = "" && with_push=no
@@ -241,7 +238,6 @@ if test "$with_minimum" = "yes"; then
     test "$with_reader" = "" && with_reader=no
     test "$with_readline" = "" && with_readline=no
     test "$with_regexps" = "" && with_regexps=no
-    test "$with_run_debug" = "" && with_run_debug=no
     test "$with_sax1" = "" && with_sax1=no
     test "$with_schemas" = "" && with_schemas=no
     test "$with_schematron" = "" && with_schematron=no
@@ -300,6 +296,7 @@ AC_CHECK_HEADERS([sys/mman.h])
 AC_CHECK_HEADERS([sys/socket.h netinet/in.h arpa/inet.h netdb.h])
 AC_CHECK_HEADERS([sys/select.h poll.h])
 AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
+AC_CHECK_HEADERS([sys/random.h])
 AC_CHECK_HEADERS([dl.h dlfcn.h])
 AC_CHECK_HEADERS([glob.h])
 AM_CONDITIONAL(WITH_GLOB, test "$ac_cv_header_glob_h" = "yes")
@@ -309,49 +306,13 @@ dnl Checking types
 dnl
 AC_TYPE_UINT32_T
 
-dnl
-dnl Checking libraries
-dnl
-AC_CHECK_FUNCS(snprintf vsnprintf,, NEED_TRIO=1)
-
 dnl Checks for library functions.
-AC_CHECK_FUNCS([gettimeofday ftime stat isascii mmap munmap])
+AC_CHECK_FUNCS([getentropy gettimeofday ftime isascii stat mmap munmap])
 
 AH_VERBATIM([HAVE_MUNMAP_AFTER],[/* mmap() is no good without munmap() */
 #if defined(HAVE_MMAP) && !defined(HAVE_MUNMAP)
 #  undef /**/ HAVE_MMAP
 #endif])
-
-dnl Checking for va_copy availability
-AC_MSG_CHECKING([for va_copy])
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdarg.h>
-va_list ap1,ap2;]], [[va_copy(ap1,ap2);]])],
-have_va_copy=yes,
-have_va_copy=no)
-AC_MSG_RESULT($have_va_copy)
-if test x"$have_va_copy" = x"yes"; then
-    AC_DEFINE(HAVE_VA_COPY,1,[Whether va_copy() is available])
-else
-    AC_MSG_CHECKING([for __va_copy])
-    AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdarg.h>
-    va_list ap1,ap2;]], [[__va_copy(ap1,ap2);]])],
-    have___va_copy=yes,
-    have___va_copy=no)
-    AC_MSG_RESULT($have___va_copy)
-    if test x"$have___va_copy" = x"yes"; then
-        AC_DEFINE(HAVE___VA_COPY,1,[Whether __va_copy() is available])
-    fi
-fi
-
-dnl Checking whether va_list is an array type
-AC_MSG_CHECKING([whether va_list is an array type])
-AC_TRY_COMPILE2([
-#include <stdarg.h>
-void a(va_list * ap) {}],[
-va_list ap1, ap2; a(&ap1); ap2 = (va_list) ap1],[
-  AC_MSG_RESULT(no)],[
-  AC_MSG_RESULT(yes)
-  AC_DEFINE([VA_LIST_IS_ARRAY], [1],[Define if va_list is an array type])])
 
 dnl
 dnl Checks for inet libraries
@@ -444,7 +405,7 @@ XML_INCLUDEDIR='-I${includedir}/libxml2'
 XML_CFLAGS=""
 
 dnl Thread-local storage
-if test "$with_tls" != "no"; then
+if test "$with_tls" = "yes"; then
     AC_COMPILE_IFELSE([
         AC_LANG_SOURCE([_Thread_local int v;]) ], [
         AC_DEFINE([XML_THREAD_LOCAL], [_Thread_local], [TLS specifier]) ], [
@@ -535,9 +496,6 @@ case ${host} in
     *-*-solaris*)
         XML_LIBDIR="${XML_LIBDIR} -R${libdir}"
         ;;
-    hppa*-hp-mpeix)
-        NEED_TRIO=1
-	;;
     *-*-cygwin* | *-*-mingw* | *-*-msys* )
         # If the host is Windows, and shared libraries are disabled, we
         # need to add -DLIBXML_STATIC to AM_CFLAGS in order for linking to
@@ -760,19 +718,6 @@ fi
 AC_SUBST(WITH_DEBUG)
 AM_CONDITIONAL(WITH_DEBUG_SOURCES, test "$WITH_DEBUG" = "1")
 
-if test "$with_mem_debug" = "yes" ; then
-    if test "$with_thread_alloc" = "yes" ; then
-        echo Disabling memory debug - cannot use mem-debug with thread-alloc!
-	WITH_MEM_DEBUG=0
-    else
-        echo Enabling memory debug support
-        WITH_MEM_DEBUG=1
-    fi
-else
-    WITH_MEM_DEBUG=0
-fi
-AC_SUBST(WITH_MEM_DEBUG)
-
 dnl
 dnl Check for Python
 dnl
@@ -845,24 +790,11 @@ AC_SUBST(MODULE_EXTENSION)
 AM_CONDITIONAL(WITH_MODULES_SOURCES, test "$WITH_MODULES" = "1")
 
 dnl
-dnl Check for trio string functions
-dnl
-if test "${NEED_TRIO}" = "1" ; then
-    echo Adding trio library for string functions
-    WITH_TRIO=1
-else
-    WITH_TRIO=0
-fi
-AM_CONDITIONAL(WITH_TRIO_SOURCES, test "${NEED_TRIO}" = "1")
-AC_SUBST(WITH_TRIO)
-
-dnl
 dnl Thread-related stuff
 dnl
 THREAD_LIBS=""
 BASE_THREAD_LIBS=""
 WITH_THREADS=0
-THREAD_CFLAGS=""
 WITH_THREAD_ALLOC=0
 
 if test "$with_threads" = "no" ; then
@@ -896,10 +828,6 @@ else
             fi
             ;;
     esac
-
-    if test "$WITH_THREADS" = "1" ; then
-	THREAD_CFLAGS="$THREAD_CFLAGS -D_REENTRANT"
-    fi
 fi
 if test "$with_thread_alloc" = "yes" && test "$WITH_THREADS" = "1" ; then
     WITH_THREAD_ALLOC=1
@@ -908,7 +836,6 @@ fi
 AC_SUBST(THREAD_LIBS)
 AC_SUBST(BASE_THREAD_LIBS)
 AC_SUBST(WITH_THREADS)
-AC_SUBST(THREAD_CFLAGS)
 AC_SUBST(WITH_THREAD_ALLOC)
 
 dnl
@@ -958,9 +885,11 @@ dnl Checks for zlib library.
 dnl
 WITH_ZLIB=0
 
-if test "$with_zlib" = "no"; then
-    echo "Disabling zlib compression support"
-else
+if test "$with_zlib" != "no" && \
+   (test "$with_zlib" != "" || test "$with_legacy" = "yes")
+then
+    echo "Enabling zlib compression support"
+
     if test "$with_zlib" != "yes"; then
         Z_DIR=$with_zlib
     fi
@@ -1010,9 +939,11 @@ dnl Checks for lzma library.
 dnl
 WITH_LZMA=0
 
-if test "$with_lzma" = "no"; then
-    echo "Disabling lzma compression support"
-else
+if test "$with_lzma" != "no" && \
+   (test "$with_lzma" != "" || test "$with_legacy" = "yes")
+then
+    echo "Enabling lzma compression support"
+
     if test "$with_lzma" != "yes"; then
         LZMA_DIR=$with_lzma
     fi
@@ -1155,6 +1086,15 @@ else
 fi
 AC_SUBST(WITH_ICU)
 
+dnl
+dnl Crypto libraries
+dnl
+case "$host" in
+    *-*-mingw*)
+        CRYPTO_LIBS="-lbcrypt"
+        ;;
+esac
+
 if test "$with_coverage" = "yes" && test "${GCC}" = "yes"
 then
     echo Enabling code coverage for GCC
@@ -1166,10 +1106,10 @@ fi
 
 XML_LIBS="-lxml2"
 XML_LIBTOOLLIBS="libxml2.la"
-NON_PC_LIBS="${THREAD_LIBS} ${ICONV_LIBS} ${LIBM} ${NET_LIBS}"
+NON_PC_LIBS="${THREAD_LIBS} ${ICONV_LIBS} ${LIBM} ${NET_LIBS} ${CRYPTO_LIBS}"
 XML_PC_LIBS="${XML_PC_LIBS} ${NON_PC_LIBS}"
 XML_PRIVATE_LIBS="${XML_PRIVATE_LIBS} ${NON_PC_LIBS}"
-XML_PRIVATE_CFLAGS="${XML_PRIVATE_CFLAGS} ${THREAD_CFLAGS} ${ICONV_CFLAGS}"
+XML_PRIVATE_CFLAGS="${XML_PRIVATE_CFLAGS} ${ICONV_CFLAGS}"
 
 dnl When static-only:
 dnl * Duplicate xml-config static --libs into --dynamic.
@@ -1212,7 +1152,7 @@ RELDATE=`date +'%a %b %e %Y'`
 AC_SUBST(RELDATE)
 
 # keep on one line for cygwin c.f. #130896
-AC_CONFIG_FILES([Makefile include/Makefile include/libxml/Makefile include/private/Makefile doc/Makefile doc/examples/Makefile doc/devhelp/Makefile example/Makefile fuzz/Makefile python/Makefile python/tests/Makefile xstc/Makefile include/libxml/xmlversion.h libxml-2.0.pc libxml-2.0-uninstalled.pc libxml2-config.cmake])
+AC_CONFIG_FILES([Makefile include/Makefile include/libxml/Makefile include/private/Makefile doc/Makefile doc/devhelp/Makefile example/Makefile fuzz/Makefile python/Makefile python/tests/Makefile xstc/Makefile include/libxml/xmlversion.h libxml-2.0.pc libxml-2.0-uninstalled.pc libxml2-config.cmake])
 AC_CONFIG_FILES([python/setup.py], [chmod +x python/setup.py])
 AC_CONFIG_FILES([xml2-config], [chmod +x xml2-config])
 AC_OUTPUT

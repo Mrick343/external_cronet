@@ -14,7 +14,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "base/template_util.h"
 #include "base/types/supports_ostream_operator.h"
 
 namespace base {
@@ -116,8 +115,9 @@ struct ToStringHelper<std::tuple<T...>> {
 template <typename... Ts>
 std::string ToString(const Ts&... values) {
   std::ostringstream ss;
-  (..., internal::ToStringHelper<remove_cvref_t<decltype(values)>>::Stringify(
-            values, ss));
+  (...,
+   internal::ToStringHelper<std::remove_cvref_t<decltype(values)>>::Stringify(
+       values, ss));
   return ss.str();
 }
 

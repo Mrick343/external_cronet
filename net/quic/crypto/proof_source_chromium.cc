@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/quic/crypto/proof_source_chromium.h"
 
 #include "base/strings/string_number_conversions.h"
@@ -32,7 +37,7 @@ bool ProofSourceChromium::Initialize(const base::FilePath& cert_path,
   }
 
   certs_in_file_ = X509Certificate::CreateCertificateListFromBytes(
-      base::as_bytes(base::make_span(cert_data)), X509Certificate::FORMAT_AUTO);
+      base::as_byte_span(cert_data), X509Certificate::FORMAT_AUTO);
 
   if (certs_in_file_.empty()) {
     DLOG(FATAL) << "No certificates.";
@@ -122,8 +127,7 @@ bool ProofSourceChromium::GetProofInner(
   proof->signature.assign(reinterpret_cast<const char*>(signature.data()),
                           signature.size());
   *out_chain = chain_;
-  VLOG(1) << "signature: "
-          << base::HexEncode(proof->signature.data(), proof->signature.size());
+  VLOG(1) << "signature: " << base::HexEncode(proof->signature);
   proof->leaf_cert_scts = signed_certificate_timestamp_;
   return true;
 }
