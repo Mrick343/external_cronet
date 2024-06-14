@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBidirectionalStream {
     private final android.net.http.BidirectionalStream mBackend;
 
-    private AndroidBidirectionalStreamWrapper(android.net.http.BidirectionalStream backend) {
+    AndroidBidirectionalStreamWrapper(android.net.http.BidirectionalStream backend) {
         this.mBackend = backend;
     }
 
@@ -52,6 +52,7 @@ class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBid
     public boolean isDone() {
         return mBackend.isDone();
     }
+<<<<<<< HEAD   (b3f90a Import Cronet 126.0.6423.0: merge 'aosp/main' into upstream-)
 
     @Override
     public boolean isDelayRequestHeadersUntilFirstFlushEnabled() {
@@ -114,4 +115,6 @@ class AndroidBidirectionalStreamWrapper extends org.chromium.net.ExperimentalBid
     android.net.http.BidirectionalStream getBackend() {
         return mBackend;
     }
+=======
+>>>>>>> BRANCH (12b8ae Import Cronet version 126.0.6423.0)
 }
