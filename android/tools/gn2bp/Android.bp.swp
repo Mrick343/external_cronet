@@ -4618,7 +4618,13 @@ cc_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/base/base_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/base_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/base_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/base_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/base_jni.srcjar",
         "base/base_jni/ApkAssets_jni.h",
@@ -4925,7 +4931,13 @@ java_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/base/base_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/base_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/base_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/base_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/base_jni.srcjar",
         "base/base_jni/ApkAssets_jni.h",
@@ -5227,7 +5239,13 @@ cc_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/task/PostTask.java) " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java)",
+         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java); " +
+         "if zipinfo $(genDir)/base/base_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/base_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/base_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/base_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/base_jni.srcjar",
         "base/base_jni/ApkAssets_jni.h",
@@ -5532,7 +5550,13 @@ java_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/task/PostTask.java) " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java)",
+         "$(location base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java); " +
+         "if zipinfo $(genDir)/base/base_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/base_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/base_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/base_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/base_jni.srcjar",
         "base/base_jni/ApkAssets_jni.h",
@@ -5649,7 +5673,13 @@ cc_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/base/base_shared_preferences_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/base_shared_preferences_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/base_shared_preferences_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/base_shared_preferences_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/base_shared_preferences_jni.srcjar",
         "base/base_shared_preferences_jni/SharedPreferencesManager_jni.h",
@@ -5696,7 +5726,13 @@ cc_genrule {
          "--output-name " +
          "SharedPreferencesManager_jni.h " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java)",
+         "$(location base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java); " +
+         "if zipinfo $(genDir)/base/base_shared_preferences_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/base_shared_preferences_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/base_shared_preferences_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/base_shared_preferences_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/base_shared_preferences_jni.srcjar",
         "base/base_shared_preferences_jni/SharedPreferencesManager_jni.h",
@@ -7328,7 +7364,13 @@ cc_genrule {
          "--input-file " +
          "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/base/process_launcher_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/process_launcher_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/process_launcher_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/process_launcher_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/process_launcher_jni.srcjar",
         "base/process_launcher_jni/ChildProcessService_jni.h",
@@ -7375,7 +7417,13 @@ cc_genrule {
          "--output-name " +
          "ChildProcessService_jni.h " +
          "--input-file " +
-         "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java)",
+         "$(location base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java); " +
+         "if zipinfo $(genDir)/base/process_launcher_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/process_launcher_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/process_launcher_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/process_launcher_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/process_launcher_jni.srcjar",
         "base/process_launcher_jni/ChildProcessService_jni.h",
@@ -7776,7 +7824,13 @@ cc_genrule {
          "--input-file " +
          "$(location base/test/android/java/src/org/chromium/base/ContentUriTestUtils.java) " +
          "--input-file " +
-         "$(location base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java)",
+         "$(location base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java); " +
+         "if zipinfo $(genDir)/base/test/base_unittests_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/test/base_unittests_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/test/base_unittests_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/test/base_unittests_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/test/base_unittests_jni_headers.srcjar",
         "base/test/base_unittests_jni_headers/ContentUriTestUtils_jni.h",
@@ -8441,7 +8495,13 @@ cc_genrule {
          "--input-file " +
          "$(location base/test/android/javatests/src/org/chromium/base/test/task/ThreadPoolTestHelpers.java) " +
          "--input-file " +
-         "$(location base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java)",
+         "$(location base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java); " +
+         "if zipinfo $(genDir)/base/test/test_support_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/base/test/test_support_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/base/test/test_support_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/base/test/test_support_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "base/test/test_support_jni_headers.srcjar",
         "base/test/test_support_jni_headers/MainReturnCodeResult_jni.h",
@@ -12027,7 +12087,13 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_jni_headers.srcjar",
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
@@ -12100,7 +12166,13 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_jni_headers.srcjar",
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
@@ -12168,7 +12240,13 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java)",
+         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java); " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_jni_headers.srcjar",
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
@@ -12239,7 +12317,13 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java)",
+         "$(location components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequestContext.java); " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_jni_headers.srcjar",
         "components/cronet/android/cronet_jni_headers/CronetBidirectionalStream_jni.h",
@@ -13392,7 +13476,13 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/src/org/chromium/net/QuicTestServer.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java)",
+         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java); " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_test_apk_jni.srcjar",
         "components/cronet/android/cronet_test_apk_jni/CronetTestUtil_jni.h",
@@ -13469,7 +13559,13 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/src/org/chromium/net/QuicTestServer.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java)",
+         "$(location components/cronet/android/test/src/org/chromium/net/TestUploadDataStreamHandler.java); " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_test_apk_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_test_apk_jni.srcjar",
         "components/cronet/android/cronet_test_apk_jni/CronetTestUtil_jni.h",
@@ -13842,7 +13938,13 @@ cc_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java)",
+         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java); " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_tests_jni_headers.srcjar",
         "components/cronet/android/cronet_tests_jni_headers/CronetUrlRequestContextTest_jni.h",
@@ -13901,7 +14003,13 @@ java_genrule {
          "--input-file " +
          "$(location components/cronet/android/test/javatests/src/org/chromium/net/CronetUrlRequestTest.java) " +
          "--input-file " +
-         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java)",
+         "$(location components/cronet/android/test/javatests/src/org/chromium/net/ExperimentalOptionsTest.java); " +
+         "if zipinfo $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/cronet/android/cronet_tests_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/cronet/android/cronet_tests_jni_headers.srcjar",
         "components/cronet/android/cronet_tests_jni_headers/CronetUrlRequestContextTest_jni.h",
@@ -17562,7 +17670,13 @@ cc_genrule {
          "--input-file " +
          "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/components/prefs/android/jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/prefs/android/jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/prefs/android/jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/prefs/android/jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/prefs/android/jni_headers.srcjar",
         "components/prefs/android/jni_headers/PrefService_jni.h",
@@ -17609,7 +17723,13 @@ cc_genrule {
          "--output-name " +
          "PrefService_jni.h " +
          "--input-file " +
-         "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java)",
+         "$(location components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java); " +
+         "if zipinfo $(genDir)/components/prefs/android/jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/components/prefs/android/jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/components/prefs/android/jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/components/prefs/android/jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "components/prefs/android/jni_headers.srcjar",
         "components/prefs/android/jni_headers/PrefService_jni.h",
@@ -19365,7 +19485,13 @@ cc_genrule {
          "--output-name " +
          "AndroidNetworkLibraryTestUtil_jni.h " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java); " +
+         "if zipinfo $(genDir)/net/android/net_test_support_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/android/net_test_support_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/android/net_test_support_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/android/net_test_support_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/android/net_test_support_jni.srcjar",
         "net/android/net_test_support_jni/AndroidNetworkLibraryTestUtil_jni.h",
@@ -19412,7 +19538,13 @@ java_genrule {
          "--output-name " +
          "AndroidNetworkLibraryTestUtil_jni.h " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java); " +
+         "if zipinfo $(genDir)/net/android/net_test_support_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/android/net_test_support_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/android/net_test_support_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/android/net_test_support_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/android/net_test_support_jni.srcjar",
         "net/android/net_test_support_jni/AndroidNetworkLibraryTestUtil_jni.h",
@@ -19490,7 +19622,13 @@ cc_genrule {
          "--input-file " +
          "$(location net/test/android/javatests/src/org/chromium/net/test/DummySpnegoAuthenticator.java) " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java); " +
+         "if zipinfo $(genDir)/net/android/net_test_support_provider_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/android/net_test_support_provider_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/android/net_test_support_provider_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/android/net_test_support_provider_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/android/net_test_support_provider_jni.srcjar",
         "net/android/net_test_support_provider_jni/DummySpnegoAuthenticator_jni.h",
@@ -19543,7 +19681,13 @@ java_genrule {
          "--input-file " +
          "$(location net/test/android/javatests/src/org/chromium/net/test/DummySpnegoAuthenticator.java) " +
          "--input-file " +
-         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java)",
+         "$(location net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java); " +
+         "if zipinfo $(genDir)/net/android/net_test_support_provider_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/android/net_test_support_provider_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/android/net_test_support_provider_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/android/net_test_support_provider_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/android/net_test_support_provider_jni.srcjar",
         "net/android/net_test_support_provider_jni/DummySpnegoAuthenticator_jni.h",
@@ -19637,7 +19781,13 @@ cc_genrule {
          "--input-file " +
          "$(location net/android/javatests/src/org/chromium/net/AndroidKeyStoreTestUtil.java) " +
          "--input-file " +
-         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java)",
+         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java); " +
+         "if zipinfo $(genDir)/net/android/net_tests_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/android/net_tests_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/android/net_tests_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/android/net_tests_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/android/net_tests_jni.srcjar",
         "net/android/net_tests_jni/AndroidKeyStoreTestUtil_jni.h",
@@ -19690,7 +19840,13 @@ java_genrule {
          "--input-file " +
          "$(location net/android/javatests/src/org/chromium/net/AndroidKeyStoreTestUtil.java) " +
          "--input-file " +
-         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java)",
+         "$(location net/android/javatests/src/org/chromium/net/AndroidProxyConfigServiceTestUtil.java); " +
+         "if zipinfo $(genDir)/net/android/net_tests_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/android/net_tests_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/android/net_tests_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/android/net_tests_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/android/net_tests_jni.srcjar",
         "net/android/net_tests_jni/AndroidKeyStoreTestUtil_jni.h",
@@ -26581,7 +26737,13 @@ cc_genrule {
          "--input-file " +
          "$(location net/android/java/src/org/chromium/net/X509Util.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/net/net_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/net_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/net_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/net_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/net_jni_headers.srcjar",
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
@@ -26702,7 +26864,13 @@ java_genrule {
          "--input-file " +
          "$(location net/android/java/src/org/chromium/net/X509Util.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/net/net_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/net_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/net_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/net_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/net_jni_headers.srcjar",
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
@@ -26818,7 +26986,13 @@ cc_genrule {
          "--input-file " +
          "$(location net/android/java/src/org/chromium/net/ProxyChangeListener.java) " +
          "--input-file " +
-         "$(location net/android/java/src/org/chromium/net/X509Util.java)",
+         "$(location net/android/java/src/org/chromium/net/X509Util.java); " +
+         "if zipinfo $(genDir)/net/net_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/net_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/net_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/net_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/net_jni_headers.srcjar",
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
@@ -26937,7 +27111,13 @@ java_genrule {
          "--input-file " +
          "$(location net/android/java/src/org/chromium/net/ProxyChangeListener.java) " +
          "--input-file " +
-         "$(location net/android/java/src/org/chromium/net/X509Util.java)",
+         "$(location net/android/java/src/org/chromium/net/X509Util.java); " +
+         "if zipinfo $(genDir)/net/net_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/net/net_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/net/net_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/net/net_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "net/net_jni_headers.srcjar",
         "net/net_jni_headers/AndroidCertVerifyResult_jni.h",
@@ -34844,7 +35024,13 @@ cc_genrule {
          "--output-name " +
          "MainRunner_jni.h " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java); " +
+         "if zipinfo $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "testing/android/native_test/native_main_runner_jni.srcjar",
         "testing/android/native_test/native_main_runner_jni/MainRunner_jni.h",
@@ -34891,7 +35077,13 @@ java_genrule {
          "--output-name " +
          "MainRunner_jni.h " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java); " +
+         "if zipinfo $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/testing/android/native_test/native_main_runner_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "testing/android/native_test/native_main_runner_jni.srcjar",
         "testing/android/native_test/native_main_runner_jni/MainRunner_jni.h",
@@ -34967,7 +35159,13 @@ cc_genrule {
          "--output-name " +
          "NativeTest_jni.h " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java); " +
+         "if zipinfo $(genDir)/testing/android/native_test/native_test_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/testing/android/native_test/native_test_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/testing/android/native_test/native_test_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/testing/android/native_test/native_test_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "testing/android/native_test/native_test_jni.srcjar",
         "testing/android/native_test/native_test_jni/NativeTest_jni.h",
@@ -35014,7 +35212,13 @@ java_genrule {
          "--output-name " +
          "NativeTest_jni.h " +
          "--input-file " +
-         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java)",
+         "$(location testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java); " +
+         "if zipinfo $(genDir)/testing/android/native_test/native_test_jni.srcjar > /dev/null; then " +
+         "unzip $(genDir)/testing/android/native_test/native_test_jni.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/testing/android/native_test/native_test_jni.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/testing/android/native_test/native_test_jni.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "testing/android/native_test/native_test_jni.srcjar",
         "testing/android/native_test/native_test_jni/NativeTest_jni.h",
@@ -58369,7 +58573,13 @@ cc_genrule {
          "--input-file " +
          "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/url/url_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/url/url_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/url/url_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/url/url_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "url/url_jni_headers.srcjar",
         "url/url_jni_headers/IDNStringUtil_jni.h",
@@ -58418,7 +58628,13 @@ java_genrule {
          "--input-file " +
          "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java) " +
          "--package-prefix " +
-         "android.net.connectivity",
+         "android.net.connectivity; " +
+         "if zipinfo $(genDir)/url/url_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/url/url_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/url/url_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/url/url_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "url/url_jni_headers.srcjar",
         "url/url_jni_headers/IDNStringUtil_jni.h",
@@ -58462,7 +58678,13 @@ cc_genrule {
          "--output-name " +
          "IDNStringUtil_jni.h " +
          "--input-file " +
-         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java)",
+         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java); " +
+         "if zipinfo $(genDir)/url/url_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/url/url_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/url/url_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/url/url_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "url/url_jni_headers.srcjar",
         "url/url_jni_headers/IDNStringUtil_jni.h",
@@ -58509,7 +58731,13 @@ java_genrule {
          "--output-name " +
          "IDNStringUtil_jni.h " +
          "--input-file " +
-         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java)",
+         "$(location url/android/java/src/org/chromium/url/IDNStringUtil.java); " +
+         "if zipinfo $(genDir)/url/url_jni_headers.srcjar > /dev/null; then " +
+         "unzip $(genDir)/url/url_jni_headers.srcjar -d $(genDir)/tmp; " +
+         "rm $(genDir)/url/url_jni_headers.srcjar; " +
+         "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\.net\\.connectivity\\.\\(\\.*\\)/import \\1/'; " +
+         "zip -r $(genDir)/url/url_jni_headers.srcjar $(genDir)/tmp; " +
+         "fi",
     out: [
         "url/url_jni_headers.srcjar",
         "url/url_jni_headers/IDNStringUtil_jni.h",
