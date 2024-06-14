@@ -1283,6 +1283,30 @@ class JniGeneratorSanitizer(BaseActionSanitizer):
       tools.add(":javap")
     return tools
 
+  def get_cmd(self):
+    if not self._has_arg('--srcjar-path'):
+      return super().get_cmd()
+
+    # Generated java file could import original Java file with 'android.net.connectivity' prefix.
+    # But original java code does not have prefix and build fails since jarjaring will be done after
+    # the compile.
+    # HACK: Following commands remove 'android.net.connectivity' prefix from the import of original
+    # java code.
+    # "import android.net.connectivity.org.chromium.base.Token" to "import chromium.base.Token"
+    # Note that '--package-prefix' needs to be specified since generated jni codes need to call
+    # java code that is jarjared.
+    # TODO: Consider to fix this issue cleanly possibly by adding arguments to jni_zero.py and
+    #       specifying different prefix for original java code import
+    srcjar_path = self._get_value_arg('--srcjar-path')
+    commands = [super().get_cmd() + ";",
+                "if zipinfo " + srcjar_path +" > /dev/null; then",
+                "unzip " + srcjar_path + " -d $(genDir)/tmp;",
+                "rm " + srcjar_path + ";",
+                "find $(genDir)/tmp -type f | xargs sed -i '/GEN_JNI;$$/!s/^import android\\\.net\\\.connectivity\\\.\\\(\\\.*\\\)/import \\\\1/';",
+                "zip -r " + srcjar_path + " $(genDir)/tmp;",
+                "fi",
+                ]
+    return NEWLINE.join(commands)
 
 class JavaJniGeneratorSanitizer(JniGeneratorSanitizer):
   def __init__(self, target, arch, is_test_target):
