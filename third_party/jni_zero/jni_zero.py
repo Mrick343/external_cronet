@@ -141,6 +141,13 @@ def _add_codegen_args(parser, *, is_final=False, is_javap=False):
         '--package-prefix',
         help='Adds a prefix to the classes fully qualified-name. Effectively '
         'changing a class name from foo.bar -> prefix.foo.bar')
+    group.add_argument(
+        '--skip-prefix-java',
+        default=False,
+        action='store_true',
+        help='Skips adding package-prefix to input java classes when generated java code import '
+             'them. This can be used when the prefix will be added to input java classes later by '
+             'repackaging (e.g. jarjar, r8)')
 
   if not is_final:
     if is_javap:
