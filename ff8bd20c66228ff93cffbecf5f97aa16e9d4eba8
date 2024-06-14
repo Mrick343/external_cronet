@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c181db51_ad8166a6",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidBidirectionalStreamWrapper.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-14T10:15:18Z",
+      "side": 0,
+      "message": "withRecordingToCallback and withRecordingToCallback were removed in 126.0.6423.0\n\nhttps://source.chromium.org/chromium/chromium/src/+/refs/tags/125.0.6383.0:components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlRequestWrapper.java\n\nhttps://source.chromium.org/chromium/chromium/src/+/refs/tags/126.0.6423.0:components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlRequestWrapper.java",
+      "parentUuid": "ba3155ee_6dd65fc1",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 117,
+        "endChar": 5
+      },
+      "revId": "ff8bd20c66228ff93cffbecf5f97aa16e9d4eba8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9a030d2e_7150b026",
         "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlRequestWrapper.java",
         "patchSetId": 2
