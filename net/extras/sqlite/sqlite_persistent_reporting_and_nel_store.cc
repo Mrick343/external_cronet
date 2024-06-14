@@ -79,7 +79,7 @@ base::TaskPriority GetReportingAndNelStoreBackgroundSequencePriority() {
 [[nodiscard]] bool NetworkAnonymizationKeyFromString(
     const std::string& string,
     NetworkAnonymizationKey* out_network_anonymization_key) {
-  absl::optional<base::Value> value = base::JSONReader::Read(string);
+  std::optional<base::Value> value = base::JSONReader::Read(string);
   if (!value)
     return false;
 
@@ -188,7 +188,7 @@ class SQLitePersistentReportingAndNelStore::Backend
 
   // SQLitePersistentStoreBackendBase implementation
   bool CreateDatabaseSchema() override;
-  absl::optional<int> DoMigrateDatabaseSchema() override;
+  std::optional<int> DoMigrateDatabaseSchema() override;
   void DoCommit() override;
 
   // Commit a pending operation pertaining to a NEL policy.
@@ -288,7 +288,7 @@ namespace {
 bool CreateV2NelPoliciesSchema(sql::Database* db) {
   DCHECK(!db->DoesTableExist("nel_policies"));
 
-  std::string stmt =
+  const char stmt[] =
       "CREATE TABLE nel_policies ("
       "  nik TEXT NOT NULL,"
       "  origin_scheme TEXT NOT NULL,"
@@ -305,13 +305,13 @@ bool CreateV2NelPoliciesSchema(sql::Database* db) {
       "  UNIQUE (origin_scheme, origin_host, origin_port, nik)"
       ")";
 
-  return db->Execute(stmt.c_str());
+  return db->Execute(stmt);
 }
 
 bool CreateV2ReportingEndpointsSchema(sql::Database* db) {
   DCHECK(!db->DoesTableExist("reporting_endpoints"));
 
-  std::string stmt =
+  const char stmt[] =
       "CREATE TABLE reporting_endpoints ("
       "  nik TEXT NOT NULL,"
       "  origin_scheme TEXT NOT NULL,"
@@ -325,13 +325,13 @@ bool CreateV2ReportingEndpointsSchema(sql::Database* db) {
       "  UNIQUE (origin_scheme, origin_host, origin_port, group_name, url, nik)"
       ")";
 
-  return db->Execute(stmt.c_str());
+  return db->Execute(stmt);
 }
 
 bool CreateV2ReportingEndpointGroupsSchema(sql::Database* db) {
   DCHECK(!db->DoesTableExist("reporting_endpoint_groups"));
 
-  std::string stmt =
+  const char stmt[] =
       "CREATE TABLE reporting_endpoint_groups ("
       "  nik TEXT NOT NULL,"
       "  origin_scheme TEXT NOT NULL,"
@@ -345,7 +345,7 @@ bool CreateV2ReportingEndpointGroupsSchema(sql::Database* db) {
       "  UNIQUE (origin_scheme, origin_host, origin_port, group_name, nik)"
       ")";
 
-  return db->Execute(stmt.c_str());
+  return db->Execute(stmt);
 }
 
 }  // namespace
@@ -583,8 +583,7 @@ void SQLitePersistentReportingAndNelStore::Backend::AddReportingEndpoint(
       PendingOperationType::ADD, endpoint);
   if (!po)
     return;
-  ReportingEndpointKey key =
-      std::make_pair(endpoint.group_key, endpoint.info.url);
+  ReportingEndpointKey key = std::pair(endpoint.group_key, endpoint.info.url);
   BatchOperation(std::move(key), std::move(po),
                  &reporting_endpoint_pending_ops_);
 }
@@ -616,8 +615,7 @@ void SQLitePersistentReportingAndNelStore::Backend::
       PendingOperationType::UPDATE_DETAILS, endpoint);
   if (!po)
     return;
-  ReportingEndpointKey key =
-      std::make_pair(endpoint.group_key, endpoint.info.url);
+  ReportingEndpointKey key = std::pair(endpoint.group_key, endpoint.info.url);
   BatchOperation(std::move(key), std::move(po),
                  &reporting_endpoint_pending_ops_);
 }
@@ -639,8 +637,7 @@ void SQLitePersistentReportingAndNelStore::Backend::DeleteReportingEndpoint(
       PendingOperationType::DELETE, endpoint);
   if (!po)
     return;
-  ReportingEndpointKey key =
-      std::make_pair(endpoint.group_key, endpoint.info.url);
+  ReportingEndpointKey key = std::pair(endpoint.group_key, endpoint.info.url);
   BatchOperation(std::move(key), std::move(po),
                  &reporting_endpoint_pending_ops_);
 }
@@ -694,7 +691,7 @@ bool SQLitePersistentReportingAndNelStore::Backend::CreateDatabaseSchema() {
   return true;
 }
 
-absl::optional<int>
+std::optional<int>
 SQLitePersistentReportingAndNelStore::Backend::DoMigrateDatabaseSchema() {
   int cur_version = meta_table()->GetVersionNumber();
 
@@ -702,26 +699,26 @@ SQLitePersistentReportingAndNelStore::Backend::DoMigrateDatabaseSchema() {
   //
   // For migration purposes, the NetworkAnonymizationKey field of the stored
   // policies will be populated with an empty list, which corresponds to an
-  // empty NIK. This matches the behavior when NIKs are disabled. This will
-  // result in effectively clearing all policies once NIKs are enabled, at
+  // empty NAK. This matches the behavior when NAKs are disabled. This will
+  // result in effectively clearing all policies once NAKs are enabled, at
   // which point the the migration code should just be switched to deleting
   // the old tables instead.
   if (cur_version == 1) {
     sql::Transaction transaction(db());
     if (!transaction.Begin())
-      return absl::nullopt;
+      return std::nullopt;
 
     // Migrate NEL policies table.
     if (!db()->Execute("DROP TABLE IF EXISTS nel_policies_old; "
                        "ALTER TABLE nel_policies RENAME TO nel_policies_old")) {
-      return absl::nullopt;
+      return std::nullopt;
     }
     if (!CreateV2NelPoliciesSchema(db()))
-      return absl::nullopt;
+      return std::nullopt;
     // clang-format off
     // The "report_to" field is renamed to "group_name" for consistency with
     // the other tables.
-    std::string nel_policies_migrate_stmt =
+    const char nel_policies_migrate_stmt[] =
       "INSERT INTO nel_policies (nik, origin_scheme, origin_host, "
       "  origin_port, group_name, received_ip_address, expires_us_since_epoch, "
       "  success_fraction, failure_fraction, is_include_subdomains, "
@@ -732,42 +729,44 @@ SQLitePersistentReportingAndNelStore::Backend::DoMigrateDatabaseSchema() {
       "  last_access_us_since_epoch "
       "FROM nel_policies_old" ;
     // clang-format on
-    if (!db()->Execute(nel_policies_migrate_stmt.c_str()))
-      return absl::nullopt;
+    if (!db()->Execute(nel_policies_migrate_stmt)) {
+      return std::nullopt;
+    }
     if (!db()->Execute("DROP TABLE nel_policies_old"))
-      return absl::nullopt;
+      return std::nullopt;
 
     // Migrate Reporting endpoints table.
     if (!db()->Execute("DROP TABLE IF EXISTS reporting_endpoints_old; "
                        "ALTER TABLE reporting_endpoints RENAME TO "
                        "reporting_endpoints_old")) {
-      return absl::nullopt;
+      return std::nullopt;
     }
     if (!CreateV2ReportingEndpointsSchema(db()))
-      return absl::nullopt;
+      return std::nullopt;
     // clang-format off
-    std::string reporting_endpoints_migrate_stmt =
+    const char reporting_endpoints_migrate_stmt[] =
       "INSERT INTO reporting_endpoints (nik,  origin_scheme, origin_host, "
       "  origin_port, group_name, url, priority, weight) "
       "SELECT '[]', origin_scheme, origin_host, origin_port, group_name, "
       "  url, priority, weight "
       "FROM reporting_endpoints_old" ;
     // clang-format on
-    if (!db()->Execute(reporting_endpoints_migrate_stmt.c_str()))
-      return absl::nullopt;
+    if (!db()->Execute(reporting_endpoints_migrate_stmt)) {
+      return std::nullopt;
+    }
     if (!db()->Execute("DROP TABLE reporting_endpoints_old"))
-      return absl::nullopt;
+      return std::nullopt;
 
     // Migrate Reporting endpoint groups table.
     if (!db()->Execute("DROP TABLE IF EXISTS reporting_endpoint_groups_old; "
                        "ALTER TABLE reporting_endpoint_groups RENAME TO "
                        "reporting_endpoint_groups_old")) {
-      return absl::nullopt;
+      return std::nullopt;
     }
     if (!CreateV2ReportingEndpointGroupsSchema(db()))
-      return absl::nullopt;
+      return std::nullopt;
     // clang-format off
-    std::string reporting_endpoint_groups_migrate_stmt =
+    const char reporting_endpoint_groups_migrate_stmt[] =
       "INSERT INTO reporting_endpoint_groups (nik,  origin_scheme, "
       "  origin_host, origin_port, group_name, is_include_subdomains, "
       "  expires_us_since_epoch, last_access_us_since_epoch) "
@@ -776,23 +775,24 @@ SQLitePersistentReportingAndNelStore::Backend::DoMigrateDatabaseSchema() {
       "  last_access_us_since_epoch "
       "FROM reporting_endpoint_groups_old" ;
     // clang-format on
-    if (!db()->Execute(reporting_endpoint_groups_migrate_stmt.c_str()))
-      return absl::nullopt;
+    if (!db()->Execute(reporting_endpoint_groups_migrate_stmt)) {
+      return std::nullopt;
+    }
     if (!db()->Execute("DROP TABLE reporting_endpoint_groups_old"))
-      return absl::nullopt;
+      return std::nullopt;
 
     ++cur_version;
     if (!meta_table()->SetVersionNumber(cur_version) ||
         !meta_table()->SetCompatibleVersionNumber(
             std::min(cur_version, kCompatibleVersionNumber)) ||
         !transaction.Commit()) {
-      return absl::nullopt;
+      return std::nullopt;
     }
   }
 
   // Future database upgrade statements go here.
 
-  return absl::make_optional(cur_version);
+  return std::make_optional(cur_version);
 }
 
 void SQLitePersistentReportingAndNelStore::Backend::DoCommit() {
@@ -937,7 +937,7 @@ bool SQLitePersistentReportingAndNelStore::Backend::CommitNelPolicyOperation(
       // There are no UPDATE_DETAILS operations for NEL policies.
       // TODO(chlily): Maybe add the ability to update details as opposed to
       // removing and re-adding every time; it might be slightly more efficient.
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       break;
   }
 
@@ -1032,7 +1032,7 @@ bool SQLitePersistentReportingAndNelStore::Backend::
     default:
       // There are no UPDATE_ACCESS_TIME operations for Reporting endpoints
       // because their access times are not tracked.
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       break;
   }
 
@@ -1178,8 +1178,8 @@ void SQLitePersistentReportingAndNelStore::Backend::BatchOperation(
     base::AutoLock locked(lock_);
 
     std::pair<typename QueueType<KeyType, DataType>::iterator, bool>
-        iter_and_result = queue->insert(std::make_pair(
-            std::move(key), PendingOperationsVector<DataType>()));
+        iter_and_result =
+            queue->emplace(std::move(key), PendingOperationsVector<DataType>());
     PendingOperationsVector<DataType>* ops_for_key =
         &iter_and_result.first->second;
     // If the insert failed, then we already have operations for this
@@ -1252,7 +1252,7 @@ void SQLitePersistentReportingAndNelStore::Backend::OnOperationBatched(
     if (!background_task_runner()->PostDelayedTask(
             FROM_HERE, base::BindOnce(&Backend::Commit, this),
             base::Milliseconds(kCommitIntervalMs))) {
-      NOTREACHED() << "background_task_runner_ is not running.";
+      NOTREACHED_IN_MIGRATION() << "background_task_runner_ is not running.";
     }
   } else if (num_pending >= kCommitAfterBatchSize) {
     // We've reached a big enough batch, fire off a commit now.
@@ -1463,20 +1463,23 @@ void SQLitePersistentReportingAndNelStore::Backend::
     RecordNumberOfLoadedNelPolicies(size_t count) {
   // The NetworkErrorLoggingService stores up to 1000 policies.
   UMA_HISTOGRAM_COUNTS_1000(kNumberOfLoadedNelPoliciesHistogramName, count);
-  // TODO(crbug.com/1165308): Remove this metric once the investigation is done.
+  // TODO(crbug.com/40054414): Remove this metric once the investigation is
+  // done.
   UMA_HISTOGRAM_COUNTS_10000(kNumberOfLoadedNelPolicies2HistogramName, count);
 }
 
 void SQLitePersistentReportingAndNelStore::Backend::
     RecordNumberOfLoadedReportingEndpoints(size_t count) {
-  // TODO(crbug.com/1165308): Remove this metric once the investigation is done.
+  // TODO(crbug.com/40054414): Remove this metric once the investigation is
+  // done.
   UMA_HISTOGRAM_COUNTS_10000(kNumberOfLoadedReportingEndpoints2HistogramName,
                              count);
 }
 
 void SQLitePersistentReportingAndNelStore::Backend::
     RecordNumberOfLoadedReportingEndpointGroups(size_t count) {
-  // TODO(crbug.com/1165308): Remove this metric once the investigation is done.
+  // TODO(crbug.com/40054414): Remove this metric once the investigation is
+  // done.
   UMA_HISTOGRAM_COUNTS_10000(
       kNumberOfLoadedReportingEndpointGroups2HistogramName, count);
 }

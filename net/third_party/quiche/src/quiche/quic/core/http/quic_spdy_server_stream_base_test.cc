@@ -4,6 +4,9 @@
 
 #include "quiche/quic/core/http/quic_spdy_server_stream_base.h"
 
+#include <memory>
+#include <string>
+
 #include "absl/memory/memory.h"
 #include "quiche/quic/core/crypto/null_encrypter.h"
 #include "quiche/quic/platform/api/quic_flags.h"
@@ -301,8 +304,8 @@ TEST_F(QuicSpdyServerStreamBaseTest, EmptyHeaders) {
   spdy::Http2HeaderBlock empty_header;
   quic::test::NoopQpackStreamSenderDelegate encoder_stream_sender_delegate;
   NoopDecoderStreamErrorDelegate decoder_stream_error_delegate;
-  auto qpack_encoder =
-      std::make_unique<quic::QpackEncoder>(&decoder_stream_error_delegate);
+  auto qpack_encoder = std::make_unique<quic::QpackEncoder>(
+      &decoder_stream_error_delegate, HuffmanEncoding::kEnabled);
   qpack_encoder->set_qpack_stream_sender_delegate(
       &encoder_stream_sender_delegate);
   std::string payload =

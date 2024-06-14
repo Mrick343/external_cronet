@@ -9,12 +9,12 @@
 #include <string.h>
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "base/containers/span.h"
 #include "base/gtest_prod_util.h"
 #include "base/memory/ref_counted.h"
-#include "base/strings/string_piece.h"
 #include "base/time/time.h"
 #include "net/base/hash_value.h"
 #include "net/base/net_export.h"
@@ -44,10 +44,7 @@ class NET_EXPORT X509Certificate
   enum PublicKeyType {
     kPublicKeyTypeUnknown,
     kPublicKeyTypeRSA,
-    kPublicKeyTypeDSA,
     kPublicKeyTypeECDSA,
-    kPublicKeyTypeDH,
-    kPublicKeyTypeECDH
   };
 
   enum Format {
@@ -99,13 +96,13 @@ class NET_EXPORT X509Certificate
   // handle is returned. The other certificates in the chain are intermediate
   // certificates.
   static scoped_refptr<X509Certificate> CreateFromDERCertChain(
-      const std::vector<base::StringPiece>& der_certs);
+      const std::vector<std::string_view>& der_certs);
 
   // Create an X509Certificate from a chain of DER encoded certificates with
   // non-standard parsing options.
   // Do not use without consulting //net owners.
   static scoped_refptr<X509Certificate> CreateFromDERCertChainUnsafeOptions(
-      const std::vector<base::StringPiece>& der_certs,
+      const std::vector<std::string_view>& der_certs,
       UnsafeCreateOptions options);
 
   // Create an X509Certificate from the DER-encoded representation.
@@ -206,12 +203,12 @@ class NET_EXPORT X509Certificate
   // Verifies that |hostname| matches this certificate.
   // Does not verify that the certificate is valid, only that the certificate
   // matches this host.
-  bool VerifyNameMatch(const std::string& hostname) const;
+  bool VerifyNameMatch(std::string_view hostname) const;
 
   // Returns the PEM encoded data from a DER encoded certificate. If the
   // return value is true, then the PEM encoded certificate is written to
   // |pem_encoded|.
-  static bool GetPEMEncodedFromDER(base::StringPiece der_encoded,
+  static bool GetPEMEncodedFromDER(std::string_view der_encoded,
                                    std::string* pem_encoded);
 
   // Returns the PEM encoded data from a CRYPTO_BUFFER. If the return value is
@@ -233,9 +230,16 @@ class NET_EXPORT X509Certificate
                                size_t* size_bits,
                                PublicKeyType* type);
 
+  // Returns the bytes in CRYPTO_BUFFER that hold this certificate's DER encoded
+  // data. The data is not guaranteed to be valid DER or to encode a valid
+  // Certificate object.
+  base::span<const uint8_t> cert_span() const;
+
   // Returns the CRYPTO_BUFFER holding this certificate's DER encoded data. The
   // data is not guaranteed to be valid DER or to encode a valid Certificate
   // object.
+  //
+  // To access the CRYPTO_BUFFER's bytes, use `cert_span()` above.
   CRYPTO_BUFFER* cert_buffer() const { return cert_buffer_.get(); }
 
   // Returns the associated intermediate certificates that were specified
@@ -320,7 +324,7 @@ class NET_EXPORT X509Certificate
   // extension, if present. Note these IP addresses are NOT ascii-encoded:
   // they must be 4 or 16 bytes of network-ordered data, for IPv4 and IPv6
   // addresses, respectively.
-  static bool VerifyHostname(const std::string& hostname,
+  static bool VerifyHostname(std::string_view hostname,
                              const std::vector<std::string>& cert_san_dns_names,
                              const std::vector<std::string>& cert_san_ip_addrs);
 

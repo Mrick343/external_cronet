@@ -13,7 +13,7 @@ import org.junit.runners.model.Statement;
 import org.chromium.base.ApplicationStatus;
 import org.chromium.base.BundleUtils;
 import org.chromium.base.ContextUtils;
-import org.chromium.base.Flag;
+import org.chromium.base.FeatureList;
 import org.chromium.base.LifetimeAssert;
 import org.chromium.base.PathUtils;
 import org.chromium.base.ResettersForTesting;
@@ -63,29 +63,35 @@ public class BaseRobolectricTestRule implements TestRule {
                     testFailed = false;
                 } finally {
                     tearDown(testFailed);
-                    // We cannot guarantee that this Rule will be evaluated first, so never
-                    // call setMethodMode(), and reset class resetters after each method.
-                    ResettersForTesting.onAfterClass();
                 }
             }
         };
     }
 
     static void setUp(Method method) {
+        // Some of this logic seems like it would be more appropriate in @BeforeClass, but
+        // Robolectric doesn't really support @BeforeClass (maybe because @Config can be applied to
+        // individual methods). It does run the annotated methods, but does does so before
+        // configuring the Application instance, and it does so from within methodBlock rather than
+        // classBlock().
+        ResettersForTesting.beforeHooksWillExecute();
+        FeatureList.setDisableNativeForTesting(true);
+        CommandLineFlags.ensureInitialized();
         UmaRecorderHolder.setUpNativeUmaRecorder(false);
+        UmaRecorderHolder.resetForTesting();
         ContextUtils.initApplicationContextForTests(ApplicationProvider.getApplicationContext());
         LibraryLoader.getInstance().setLibraryProcessType(LibraryProcessType.PROCESS_BROWSER);
+        ApplicationStatus.initialize(ApplicationProvider.getApplicationContext());
+
+        Class<?> testClass = method.getDeclaringClass();
+        CommandLineFlags.reset(testClass.getAnnotations(), method.getAnnotations());
+
+        BundleUtils.resetForTesting();
         // Whether or not native is loaded is a global one-way switch, so do it automatically so
         // that it is always in the same state.
         if (NativeLibraries.LIBRARIES.length > 0) {
             LibraryLoader.getInstance().ensureMainDexInitialized();
         }
-        ApplicationStatus.initialize(ApplicationProvider.getApplicationContext());
-        UmaRecorderHolder.resetForTesting();
-        CommandLineFlags.setUpClass(method.getDeclaringClass());
-        CommandLineFlags.setUpMethod(method);
-        BundleUtils.resetForTesting();
-        Flag.resetAllInMemoryCachedValuesForTesting();
     }
 
     static void tearDown(boolean testFailed) {
@@ -96,15 +102,12 @@ public class BaseRobolectricTestRule implements TestRule {
             HelperTestRunner.sTestFailed = true;
             throw new RuntimeException(e);
         } finally {
-            CommandLineFlags.tearDownMethod();
-            CommandLineFlags.tearDownClass();
-            ResettersForTesting.onAfterMethod();
             ApplicationStatus.destroyForJUnitTests();
-            ContextUtils.clearApplicationContextForTests();
             PathUtils.resetForTesting();
             ThreadUtils.clearUiThreadForTesting();
             Locale.setDefault(ORIG_LOCALE);
             TimeZone.setDefault(ORIG_TIMEZONE);
+            ResettersForTesting.afterHooksDidExecute();
             // Run assertions only when the test has not already failed so as to not mask
             // failures. https://crbug.com/1466313
             if (testFailed) {

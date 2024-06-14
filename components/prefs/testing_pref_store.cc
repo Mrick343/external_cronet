@@ -6,11 +6,11 @@
 
 #include <memory>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include "base/json/json_writer.h"
 #include "base/run_loop.h"
-#include "base/strings/string_piece.h"
 #include "base/values.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
@@ -34,7 +34,7 @@ class ChangedValueWaiter : public PrefStore::Observer {
 
  private:
   void QuitRunLoopIfNewValueIsPresent() {
-    absl::optional<base::Value> new_value;
+    std::optional<base::Value> new_value;
     {
       const base::Value* value = nullptr;
       if (store_->GetValue(key_, &value)) {
@@ -59,14 +59,14 @@ class ChangedValueWaiter : public PrefStore::Observer {
 
   scoped_refptr<PrefStore> store_;
   std::string key_;
-  absl::optional<base::Value> old_value_;
+  std::optional<base::Value> old_value_;
   base::RunLoop run_loop_;
 };
 
 }  // namespace
 
 TestingPrefStore::TestingPrefStore()
-    : read_only_(true),
+    : read_only_(false),
       read_success_(true),
       read_error_(PersistentPrefStore::PREF_READ_ERROR_NONE),
       block_async_read_(false),
@@ -74,7 +74,7 @@ TestingPrefStore::TestingPrefStore()
       init_complete_(false),
       committed_(true) {}
 
-bool TestingPrefStore::GetValue(base::StringPiece key,
+bool TestingPrefStore::GetValue(std::string_view key,
                                 const base::Value** value) const {
   return prefs_.GetValue(key, value);
 }
@@ -147,7 +147,7 @@ PersistentPrefStore::PrefReadError TestingPrefStore::ReadPrefs() {
 
 void TestingPrefStore::ReadPrefsAsync(ReadErrorDelegate* error_delegate) {
   DCHECK(!pending_async_read_);
-  error_delegate_.reset(error_delegate);
+  error_delegate_.emplace(error_delegate);
   if (block_async_read_)
     pending_async_read_ = true;
   else
@@ -176,8 +176,10 @@ void TestingPrefStore::NotifyPrefValueChanged(const std::string& key) {
 void TestingPrefStore::NotifyInitializationCompleted() {
   DCHECK(!init_complete_);
   init_complete_ = true;
-  if (read_success_ && read_error_ != PREF_READ_ERROR_NONE && error_delegate_)
-    error_delegate_->OnError(read_error_);
+  if (read_success_ && read_error_ != PREF_READ_ERROR_NONE &&
+      error_delegate_.has_value() && error_delegate_.value()) {
+    error_delegate_.value()->OnError(read_error_);
+  }
   for (Observer& observer : observers_)
     observer.OnInitializationCompleted(read_success_);
 }
@@ -293,4 +295,8 @@ void TestingPrefStore::CheckPrefIsSerializable(const std::string& key,
   std::string json;
   EXPECT_TRUE(base::JSONWriter::Write(value, &json))
       << "Pref \"" << key << "\" is not serializable as JSON.";
+}
+
+bool TestingPrefStore::HasReadErrorDelegate() const {
+  return error_delegate_.has_value();
 }

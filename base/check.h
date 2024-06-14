@@ -6,12 +6,16 @@
 #define BASE_CHECK_H_
 
 #include <iosfwd>
+#include <memory>
 
 #include "base/base_export.h"
 #include "base/compiler_specific.h"
 #include "base/dcheck_is_on.h"
 #include "base/immediate_crash.h"
 #include "base/location.h"
+#include "base/macros/if.h"
+#include "base/macros/is_empty.h"
+#include "base/not_fatal_until.h"
 
 // This header defines the CHECK, DCHECK, and DPCHECK macros.
 //
@@ -34,6 +38,15 @@
 // The condition is evaluated exactly once. Even in build modes where e.g.
 // DCHECK is disabled, the condition and any stream arguments are still
 // referenced to avoid warnings about unused variables and functions.
+//
+// An optional base::NotFatalUntil argument can be provided to make the
+// instance non-fatal (dumps without crashing) before a provided milestone. That
+// is: CHECK(false, base::NotFatalUntil::M120); starts crashing in M120. CHECKs
+// with a milestone argument preserve logging even in official builds, and
+// will upload the CHECK's log message in crash reports for remote diagnostics.
+// This is recommended for use in situations that are not flag guarded, or where
+// we have low pre-stable coverage. Using this lets us probe for would-be CHECK
+// failures for a milestone or two before rolling out a CHECK.
 //
 // For the (D)CHECK_EQ, etc. macros, see base/check_op.h. However, that header
 // is *significantly* larger than check.h, so try to avoid including it in
@@ -64,11 +77,15 @@ class BASE_EXPORT CheckError {
  public:
   static CheckError Check(
       const char* condition,
+      base::NotFatalUntil fatal_milestone =
+          base::NotFatalUntil::NoSpecifiedMilestoneInternal,
       const base::Location& location = base::Location::Current());
   // Takes ownership over (free()s after using) `log_message_str`, for use with
   // CHECK_op macros.
   static CheckError CheckOp(
       char* log_message_str,
+      base::NotFatalUntil fatal_milestone =
+          base::NotFatalUntil::NoSpecifiedMilestoneInternal,
       const base::Location& location = base::Location::Current());
 
   static CheckError DCheck(
@@ -123,21 +140,23 @@ class BASE_EXPORT CheckError {
 
  protected:
   // Takes ownership of `log_message`.
-  explicit CheckError(LogMessage* log_message) : log_message_(log_message) {}
+  explicit CheckError(LogMessage* log_message);
 
-  LogMessage* const log_message_;
+  std::unique_ptr<LogMessage> log_message_;
 };
 
 class BASE_EXPORT NotReachedError : public CheckError {
  public:
   static NotReachedError NotReached(
+      base::NotFatalUntil fatal_milestone =
+          base::NotFatalUntil::NoSpecifiedMilestoneInternal,
       const base::Location& location = base::Location::Current());
 
-  // Used to trigger a NOTREACHED() without providing file or line while also
-  // discarding log-stream arguments. See base/notreached.h.
+  // Used to trigger a NOTREACHED_IN_MIGRATION() without providing file or line
+  // while also discarding log-stream arguments. See base/notreached.h.
   NOMERGE NOINLINE NOT_TAIL_CALLED static void TriggerNotReached();
 
-  // TODO(crbug.com/851128): Mark [[noreturn]] once this is CHECK-fatal on all
+  // TODO(crbug.com/40580068): Mark [[noreturn]] once this is CHECK-fatal on all
   // builds.
   NOMERGE NOINLINE NOT_TAIL_CALLED ~NotReachedError();
 
@@ -145,8 +164,9 @@ class BASE_EXPORT NotReachedError : public CheckError {
   using CheckError::CheckError;
 };
 
-// TODO(crbug.com/851128): This should take the name of the above class once all
-// callers of NOTREACHED() have migrated to the CHECK-fatal version.
+// TODO(crbug.com/40580068): This should take the name of the above class once
+// all callers of NOTREACHED_IN_MIGRATION() have migrated to the CHECK-fatal
+// version.
 class BASE_EXPORT NotReachedNoreturnError : public CheckError {
  public:
   explicit NotReachedNoreturnError(
@@ -159,14 +179,14 @@ class BASE_EXPORT NotReachedNoreturnError : public CheckError {
 // compiler to identify and warn about dead code, e.g.:
 //
 //   return 2;
-//   NOTREACHED();
+//   NOTREACHED_IN_MIGRATION();
 //
 // The 'switch' is used to prevent the 'else' from being ambiguous when the
 // macro is used in an 'if' clause such as:
 // if (a == 1)
 //   CHECK(Foo());
 //
-// TODO(crbug.com/1380930): Remove the const bool when the blink-gc plugin has
+// TODO(crbug.com/40244950): Remove the const bool when the blink-gc plugin has
 // been updated to accept `if (LIKELY(!field_))` as well as `if (!field_)`.
 #define LOGGING_CHECK_FUNCTION_IMPL(check_stream, condition)              \
   switch (0)                                                              \
@@ -192,15 +212,21 @@ class BASE_EXPORT NotReachedNoreturnError : public CheckError {
   base::ImmediateCrash();
 }
 
-// Discard log strings to reduce code bloat.
+// Discard log strings to reduce code bloat when there is no NotFatalUntil
+// argument (which temporarily preserves logging both locally and in crash
+// reports).
 //
 // This is not calling BreakDebugger since this is called frequently, and
 // calling an out-of-line function instead of a noreturn inline macro prevents
 // compiler optimizations. Unlike the other check macros, this one does not use
 // LOGGING_CHECK_FUNCTION_IMPL(), since it is incompatible with
 // EAT_CHECK_STREAM_PARAMETERS().
-#define CHECK(condition) \
-  UNLIKELY(!(condition)) ? logging::CheckFailure() : EAT_CHECK_STREAM_PARAMS()
+#define CHECK(condition, ...)                                 \
+  BASE_IF(BASE_IS_EMPTY(__VA_ARGS__),                         \
+          UNLIKELY(!(condition)) ? logging::CheckFailure()    \
+                                 : EAT_CHECK_STREAM_PARAMS(), \
+          LOGGING_CHECK_FUNCTION_IMPL(                        \
+              logging::CheckError::Check(#condition, __VA_ARGS__), condition))
 
 #define CHECK_WILL_STREAM() false
 
@@ -212,9 +238,10 @@ class BASE_EXPORT NotReachedNoreturnError : public CheckError {
 
 #define CHECK_WILL_STREAM() true
 
-#define CHECK(condition)                                                \
-  LOGGING_CHECK_FUNCTION_IMPL(::logging::CheckError::Check(#condition), \
-                              condition)
+#define CHECK(condition, ...)                                              \
+  LOGGING_CHECK_FUNCTION_IMPL(                                             \
+      ::logging::CheckError::Check(#condition __VA_OPT__(, ) __VA_ARGS__), \
+      condition)
 
 #define PCHECK(condition)                                                \
   LOGGING_CHECK_FUNCTION_IMPL(::logging::CheckError::PCheck(#condition), \
@@ -260,9 +287,10 @@ class BASE_EXPORT NotReachedNoreturnError : public CheckError {
 // invocations as it communicates intent to eventually end up as a CHECK. It
 // also preserves the log message so setting crash keys to get additional debug
 // info isn't required as often.
-#define DUMP_WILL_BE_CHECK(condition) \
-  LOGGING_CHECK_FUNCTION_IMPL(        \
-      ::logging::CheckError::DumpWillBeCheck(#condition), condition)
+#define DUMP_WILL_BE_CHECK(condition, ...)                                \
+  LOGGING_CHECK_FUNCTION_IMPL(::logging::CheckError::DumpWillBeCheck(     \
+                                  #condition __VA_OPT__(, ) __VA_ARGS__), \
+                              condition)
 
 // Async signal safe checking mechanism.
 [[noreturn]] BASE_EXPORT void RawCheckFailure(const char* message);
