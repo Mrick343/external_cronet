@@ -124,6 +124,24 @@
       "parentUuid": "381c7f86_993f0919",
       "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3f210ad_3b43f756",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-14T17:14:00Z",
+      "side": 1,
+      "message": "I thought we are adding --package-prefix since JNI needs to call java class by package path that match with the package path after jarjared.\n\nIn my understanding, at the end, org.chromium.base.Token will be jarjared to android.net.connectivity.org.chromium.base.Token.\n\nSo Token_jni.h nees to call android.net.connectivity.org.chromium.base.Token.",
+      "parentUuid": "a6408593_f7c950f5",
+      "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
