@@ -5909,7 +5909,11 @@ cc_library_static {
 cc_genrule {
     name: "cronet_aml_base_build_date",
     cmd: "mkdir -p $(genDir)/base && $(location base/write_build_date_header.py) $(out) " +
+<<<<<<< HEAD   (6aae17 Cronet 125.0.6383.0: Update LASTCHANGE.committime and Androi)
          "1718268465",
+=======
+         "1718184676",
+>>>>>>> BRANCH (823ff3 Update the build timestamp. am: c9a3f69cb2)
     out: [
         "base/generated_build_date.h",
     ],
@@ -5925,7 +5929,11 @@ cc_genrule {
 cc_genrule {
     name: "cronet_aml_base_build_date__testing",
     cmd: "mkdir -p $(genDir)/base && $(location base/write_build_date_header.py) $(out) " +
+<<<<<<< HEAD   (6aae17 Cronet 125.0.6383.0: Update LASTCHANGE.committime and Androi)
          "1718268465",
+=======
+         "1718184676",
+>>>>>>> BRANCH (823ff3 Update the build timestamp. am: c9a3f69cb2)
     host_supported: true,
     out: [
         "base/generated_build_date.h",
