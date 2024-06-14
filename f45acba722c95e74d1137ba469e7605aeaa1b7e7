@@ -16,6 +16,24 @@
       "message": "I left some comments, please do answer them and feel free to fix them if needed in a different CL.",
       "revId": "f45acba722c95e74d1137ba469e7605aeaa1b7e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a61986b_2cf3f0da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-14T10:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f128db76_4d04f9ef",
+      "revId": "f45acba722c95e74d1137ba469e7605aeaa1b7e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

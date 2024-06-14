@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc8cff56_72c60e93",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidBidirectionalStreamWrapper.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-14T10:17:15Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "050c446e_2c3d52dc",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 117,
+        "endChar": 5
+      },
+      "revId": "ff8bd20c66228ff93cffbecf5f97aa16e9d4eba8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a030d2e_7150b026",
@@ -85,6 +109,30 @@
       "writtenOn": "2024-06-14T10:01:15Z",
       "side": 0,
       "message": "Why did you remove this?",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 5
+      },
+      "revId": "ff8bd20c66228ff93cffbecf5f97aa16e9d4eba8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6eb1d8e5_0acf4b93",
+        "filename": "components/cronet/android/java/src/org/chromium/net/impl/AndroidUrlRequestWrapper.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-14T10:17:15Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "9a030d2e_7150b026",
       "range": {
         "startLine": 105,
         "startChar": 4,
