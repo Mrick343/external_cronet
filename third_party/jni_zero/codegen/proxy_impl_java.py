@@ -15,7 +15,8 @@ def _implicit_array_class_param(native, type_resolver):
   return ret
 
 
-def Generate(jni_obj, *, gen_jni_class, script_name, per_file_natives=False):
+def Generate(jni_obj, *, gen_jni_class, script_name,
+             per_file_natives=False, skip_prefix_java=False):
   proxy_class = java_types.JavaClass(
       f'{jni_obj.java_class.full_name_with_slashes}Jni')
   visibility = 'public ' if jni_obj.proxy_visibility == 'public' else ''
@@ -41,6 +42,8 @@ package {jni_obj.java_class.class_without_prefix.package_with_dots};
     import_classes.add(gen_jni_class.full_name_with_dots)
 
   for c in type_resolver.imports:
+    if (skip_prefix_java):
+      c = c.class_without_prefix
     if c.is_nested:
       # We will refer to all nested classes by OuterClass.InnerClass. We do this
       # to reduce risk of naming collisions.

@@ -499,7 +499,8 @@ def _CreateSrcJar(srcjar_path,
                   jni_objs,
                   *,
                   script_name,
-                  per_file_natives=False):
+                  per_file_natives=False,
+                  skip_prefix_java=False):
   with common.atomic_output(srcjar_path) as f:
     with zipfile.ZipFile(f, 'w') as srcjar:
       for jni_obj in jni_objs:
@@ -508,7 +509,8 @@ def _CreateSrcJar(srcjar_path,
         content = proxy_impl_java.Generate(jni_obj,
                                            gen_jni_class=gen_jni_class,
                                            script_name=script_name,
-                                           per_file_natives=per_file_natives)
+                                           per_file_natives=per_file_natives,
+                                           skip_prefix_java=skip_prefix_java)
         zip_path = f'{jni_obj.java_class.class_without_prefix.full_name_with_slashes}Jni.java'
         common.add_to_zip_hermetic(srcjar, zip_path, data=content)
 
@@ -609,7 +611,8 @@ def GenerateFromSource(parser, args):
                     gen_jni_class,
                     jni_objs_with_proxy_natives,
                     script_name=GetScriptName(),
-                    per_file_natives=args.per_file_natives)
+                    per_file_natives=args.per_file_natives,
+                    skip_prefix_java=args.skip_prefix_java)
     else:
       # Only @CalledByNatives.
       zipfile.ZipFile(args.srcjar_path, 'w').close()
