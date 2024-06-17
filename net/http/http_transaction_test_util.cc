@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/http/http_transaction_test_util.h"
 
 #include <algorithm>
@@ -41,6 +46,17 @@ namespace {
 using MockTransactionMap =
     std::unordered_map<std::string, const MockTransaction*>;
 static MockTransactionMap mock_transactions;
+
+void AddMockTransaction(const MockTransaction* trans) {
+  auto result =
+      mock_transactions.insert(std::make_pair(GURL(trans->url).spec(), trans));
+  CHECK(result.second) << "Transaction already exists: " << trans->url;
+}
+
+void RemoveMockTransaction(const MockTransaction* trans) {
+  mock_transactions.erase(GURL(trans->url).spec());
+}
+
 }  // namespace
 
 TransportInfo DefaultTransportInfo() {
@@ -65,8 +81,8 @@ const MockTransaction kSimpleGET_Transaction = {
     base::Time(),
     "<html><body>Google Blah Blah</body></html>",
     {},
-    absl::nullopt,
-    absl::nullopt,
+    std::nullopt,
+    std::nullopt,
     TEST_MODE_NORMAL,
     MockTransactionHandler(),
     MockTransactionReadHandler(),
@@ -89,8 +105,8 @@ const MockTransaction kSimplePOST_Transaction = {
     base::Time(),
     "<html><body>Google Blah Blah</body></html>",
     {},
-    absl::nullopt,
-    absl::nullopt,
+    std::nullopt,
+    std::nullopt,
     TEST_MODE_NORMAL,
     MockTransactionHandler(),
     MockTransactionReadHandler(),
@@ -114,8 +130,8 @@ const MockTransaction kTypicalGET_Transaction = {
     base::Time(),
     "<html><body>Google Blah Blah</body></html>",
     {},
-    absl::nullopt,
-    absl::nullopt,
+    std::nullopt,
+    std::nullopt,
     TEST_MODE_NORMAL,
     MockTransactionHandler(),
     MockTransactionReadHandler(),
@@ -139,8 +155,8 @@ const MockTransaction kETagGET_Transaction = {
     base::Time(),
     "<html><body>Google Blah Blah</body></html>",
     {},
-    absl::nullopt,
-    absl::nullopt,
+    std::nullopt,
+    std::nullopt,
     TEST_MODE_NORMAL,
     MockTransactionHandler(),
     MockTransactionReadHandler(),
@@ -163,8 +179,8 @@ const MockTransaction kRangeGET_Transaction = {
     base::Time(),
     "<html><body>Google Blah Blah</body></html>",
     {},
-    absl::nullopt,
-    absl::nullopt,
+    std::nullopt,
+    std::nullopt,
     TEST_MODE_NORMAL,
     MockTransactionHandler(),
     MockTransactionReadHandler(),
@@ -197,12 +213,24 @@ const MockTransaction* FindMockTransaction(const GURL& url) {
   return nullptr;
 }
 
-void AddMockTransaction(const MockTransaction* trans) {
-  mock_transactions[GURL(trans->url).spec()] = trans;
+ScopedMockTransaction::ScopedMockTransaction(const char* url)
+    : MockTransaction({nullptr}) {
+  CHECK(url);
+  this->url = url;
+  AddMockTransaction(this);
 }
 
-void RemoveMockTransaction(const MockTransaction* trans) {
-  mock_transactions.erase(GURL(trans->url).spec());
+ScopedMockTransaction::ScopedMockTransaction(const MockTransaction& t,
+                                             const char* url)
+    : MockTransaction(t) {
+  if (url) {
+    this->url = url;
+  }
+  AddMockTransaction(this);
+}
+
+ScopedMockTransaction::~ScopedMockTransaction() {
+  RemoveMockTransaction(this);
 }
 
 MockHttpRequest::MockHttpRequest(const MockTransaction& t) {
@@ -224,15 +252,11 @@ std::string MockHttpRequest::CacheKey() {
 
 //-----------------------------------------------------------------------------
 
-// static
-int TestTransactionConsumer::quit_counter_ = 0;
-
 TestTransactionConsumer::TestTransactionConsumer(
     RequestPriority priority,
     HttpTransactionFactory* factory) {
   // Disregard the error code.
   factory->CreateTransaction(priority, &trans_);
-  ++quit_counter_;
 }
 
 TestTransactionConsumer::~TestTransactionConsumer() = default;
@@ -247,6 +271,10 @@ void TestTransactionConsumer::Start(const HttpRequestInfo* request,
                     net_log);
   if (result != ERR_IO_PENDING)
     DidStart(result);
+
+  base::RunLoop loop;
+  quit_closure_ = loop.QuitClosure();
+  loop.Run();
 }
 
 void TestTransactionConsumer::DidStart(int result) {
@@ -269,8 +297,9 @@ void TestTransactionConsumer::DidRead(int result) {
 void TestTransactionConsumer::DidFinish(int result) {
   state_ = State::kDone;
   error_ = result;
-  if (--quit_counter_ == 0)
-    base::RunLoop::QuitCurrentWhenIdleDeprecated();
+  if (!quit_closure_.is_null()) {
+    std::move(quit_closure_).Run();
+  }
 }
 
 void TestTransactionConsumer::Read() {
@@ -293,7 +322,7 @@ void TestTransactionConsumer::OnIOComplete(int result) {
       DidRead(result);
       break;
     default:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
   }
 }
 
@@ -363,7 +392,7 @@ bool MockNetworkTransaction::IsReadyToRestartForAuth() {
       status_line.find(" 407 ") != std::string::npos;
 }
 
-int MockNetworkTransaction::Read(net::IOBuffer* buf,
+int MockNetworkTransaction::Read(IOBuffer* buf,
                                  int buf_len,
                                  CompletionOnceCallback callback) {
   const MockTransaction* t = FindMockTransaction(current_request_.url);
@@ -408,6 +437,10 @@ int64_t MockNetworkTransaction::GetTotalReceivedBytes() const {
 
 int64_t MockNetworkTransaction::GetTotalSentBytes() const {
   return sent_bytes_;
+}
+
+int64_t MockNetworkTransaction::GetReceivedBodyBytes() const {
+  return received_body_bytes_;
 }
 
 void MockNetworkTransaction::DoneReading() {
@@ -472,6 +505,9 @@ const int64_t MockNetworkTransaction::kTotalReceivedBytes = 1000;
 
 // static
 const int64_t MockNetworkTransaction::kTotalSentBytes = 100;
+
+// static
+const int64_t MockNetworkTransaction::kReceivedBodyBytes = 500;
 
 int MockNetworkTransaction::StartInternal(HttpRequestInfo request,
                                           CompletionOnceCallback callback) {
@@ -569,6 +605,7 @@ int MockNetworkTransaction::DoSendRequest() {
 
   sent_bytes_ = kTotalSentBytes;
   received_bytes_ = kTotalReceivedBytes;
+  received_body_bytes_ = kReceivedBodyBytes;
 
   const MockTransaction* t = FindMockTransaction(current_request_.url);
   CHECK(t);
@@ -684,7 +721,7 @@ int MockNetworkTransaction::DoLoop(int result) {
         rv = DoReadHeadersComplete(rv);
         break;
       default:
-        NOTREACHED() << "bad state";
+        NOTREACHED_IN_MIGRATION() << "bad state";
         rv = ERR_FAILED;
         break;
     }
@@ -707,7 +744,7 @@ void MockNetworkTransaction::SetBeforeNetworkStartCallback(
 }
 
 void MockNetworkTransaction::SetModifyRequestHeadersCallback(
-    base::RepeatingCallback<void(net::HttpRequestHeaders*)> callback) {
+    base::RepeatingCallback<void(HttpRequestHeaders*)> callback) {
   modify_request_headers_callback_ = std::move(callback);
 }
 
@@ -728,6 +765,10 @@ ConnectionAttempts MockNetworkTransaction::GetConnectionAttempts() const {
 
 void MockNetworkTransaction::CloseConnectionOnDestruction() {
   NOTIMPLEMENTED();
+}
+
+bool MockNetworkTransaction::IsMdlMatchForMetrics() const {
+  return false;
 }
 
 void MockNetworkTransaction::CallbackLater(CompletionOnceCallback callback,
@@ -835,7 +876,7 @@ int ConnectedHandler::OnConnected(const TransportInfo& info,
   if (run_callback_) {
     base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
         FROM_HERE, base::BindOnce(std::move(callback), result_));
-    return net::ERR_IO_PENDING;
+    return ERR_IO_PENDING;
   }
   return result_;
 }

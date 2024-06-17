@@ -4,8 +4,10 @@
 #ifndef COMPONENTS_METRICS_STRUCTURED_STRUCTURED_METRICS_RECORDER_H_
 #define COMPONENTS_METRICS_STRUCTURED_STRUCTURED_METRICS_RECORDER_H_
 
+#include <atomic>
 #include <deque>
 #include <memory>
+#include <optional>
 
 #include "base/containers/enum_set.h"
 #include "base/containers/flat_set.h"
@@ -14,11 +16,12 @@
 #include "base/memory/weak_ptr.h"
 #include "components/metrics/metrics_provider.h"
 #include "components/metrics/structured/event.h"
-#include "components/metrics/structured/event_storage.h"
-#include "components/metrics/structured/key_data.h"
-#include "components/metrics/structured/key_data_provider.h"
+#include "components/metrics/structured/lib/event_storage.h"
+#include "components/metrics/structured/lib/key_data.h"
+#include "components/metrics/structured/lib/key_data_provider.h"
 #include "components/metrics/structured/project_validator.h"
 #include "components/metrics/structured/recorder.h"
+#include "third_party/metrics_proto/structured_data.pb.h"
 
 namespace metrics::structured {
 
@@ -37,8 +40,15 @@ namespace metrics::structured {
 class StructuredMetricsRecorder : public Recorder::RecorderImpl,
                                   KeyDataProvider::Observer {
  public:
-  StructuredMetricsRecorder(std::unique_ptr<KeyDataProvider> key_data_provider,
-                            std::unique_ptr<EventStorage> event_storage);
+  // Interface for watching for the recording of Structured Metrics Events.
+  class Observer : public base::CheckedObserver {
+   public:
+    virtual void OnEventRecorded(const StructuredEventProto& event) = 0;
+  };
+
+  StructuredMetricsRecorder(
+      std::unique_ptr<KeyDataProvider> key_data_provider,
+      std::unique_ptr<EventStorage<StructuredEventProto>> event_storage);
   ~StructuredMetricsRecorder() override;
   StructuredMetricsRecorder(const StructuredMetricsRecorder&) = delete;
   StructuredMetricsRecorder& operator=(const StructuredMetricsRecorder&) =
@@ -62,6 +72,12 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   // fields.
   virtual void ProvideEventMetrics(ChromeUserMetricsExtension& uma_proto);
 
+  // Provides any additional metadata needed by the UMA proto.
+  //
+  // This should be called on the UI thread.
+  // If this method is overwritten the base implementation must be called.
+  virtual void ProvideLogMetadata(ChromeUserMetricsExtension& uma_proto);
+
   // Returns true if ready to provide metrics via ProvideEventMetrics.
   bool CanProvideMetrics();
 
@@ -71,7 +87,13 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   // KeyDataProvider::Observer:
   void OnKeyReady() override;
 
-  EventStorage* event_storage() { return event_storage_.get(); }
+  // Interface for adding and remove watchers.
+  void AddEventsObserver(Observer* watcher);
+  void RemoveEventsObserver(Observer* watcher);
+
+  EventStorage<StructuredEventProto>* event_storage() {
+    return event_storage_.get();
+  }
 
   KeyDataProvider* key_data_provider() { return key_data_provider_.get(); }
 
@@ -80,7 +102,6 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   friend class StructuredMetricsMixin;
 
   // Recorder::RecorderImpl:
-  void OnProfileAdded(const base::FilePath& profile_path) override;
   void OnEventRecord(const Event& event) override;
 
   // Different initialization states for the recorder.
@@ -88,8 +109,6 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
     kUninitialized,
     // Set once OnKeyReady has been called once.
     kKeyDataInitialized,
-    // Set once OnProfileAdded has been called once.
-    kProfileAdded,
     // Set once the profile key data has been initialized.
     kProfileKeyDataInitialized,
     kMaxValue = kProfileKeyDataInitialized,
@@ -114,9 +133,6 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   friend class TestStructuredMetricsRecorder;
   friend class TestStructuredMetricsProvider;
   friend class StructuredMetricsServiceTest;
-
-  // Recorder::RecorderImpl:
-  void OnReportingStateChanged(bool enabled) override;
 
   // Records events before IsInitialized().
   void RecordEventBeforeInitialization(const Event& event);
@@ -144,12 +160,6 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
                                    const Event& event,
                                    const ProjectValidator& project_validator,
                                    const KeyData& key_data) {}
-
-  // Populates system profile needed for Structured Metrics.
-  // Independent metric uploads will rely on a SystemProfileProvider
-  // to supply the system profile since ChromeOSMetricsProvider will
-  // not be called to populate the SystemProfile.
-  void ProvideSystemProfile(SystemProfileProto* system_profile);
 
   // Hashes events and persists the events to disk. Should be called once |this|
   // has been initialized.
@@ -181,7 +191,7 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   bool IsProfileEvent(const Event& event) const;
 
   // Helper function to get the validators for |event|.
-  absl::optional<std::pair<const ProjectValidator*, const EventValidator*>>
+  std::optional<std::pair<const ProjectValidator*, const EventValidator*>>
   GetEventValidators(const Event& event) const;
 
   void SetOnReadyToRecord(base::OnceClosure callback);
@@ -195,11 +205,13 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   void AddDisallowedProjectForTest(uint64_t project_name_hash);
 
  protected:
+  void NotifyEventRecorded(const StructuredEventProto& event);
+
   // Key data provider that provides device and profile keys.
   std::unique_ptr<KeyDataProvider> key_data_provider_;
 
   // Storage for events while on device.
-  std::unique_ptr<EventStorage> event_storage_;
+  std::unique_ptr<EventStorage<StructuredEventProto>> event_storage_;
 
   // Whether the metrics provider has completed initialization. Initialization
   // occurs across OnProfileAdded and OnKeyReady. No incoming
@@ -220,16 +232,22 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   InitState init_state_;
 
  private:
+  // Lock and release event storage. This is to mitigate a potential race
+  // condition between TakeEvents() and RecordEvent().
+  //
+  // If storage is locked then recorded events are stored in-memory until
+  // storage is released.
+  void LockStorage();
+  void ReleaseStorage();
+
+  // Once storage is released then record in-memory events into storage.
+  void StoreLockedEvents();
+
   // Tracks the recording state signalled to the metrics provider by
   // OnRecordingEnabled and OnRecordingDisabled. This is false until
   // OnRecordingEnabled is called, which sets it true if structured metrics'
   // feature flag is enabled.
   bool recording_enabled_ = false;
-
-  // Set by OnReportingStateChanged if all keys and events should be deleted,
-  // but the files backing that state haven't been initialized yet. If set,
-  // state will be purged upon initialization.
-  bool purge_state_on_init_ = false;
 
   // Store for events that were recorded before keys are loaded.
   std::deque<Event> unhashed_events_;
@@ -240,6 +258,15 @@ class StructuredMetricsRecorder : public Recorder::RecorderImpl,
   // A set of projects that are not allowed to be recorded. This is a cache of
   // GetDisabledProjects().
   base::flat_set<uint64_t> disallowed_projects_;
+
+  base::ObserverList<Observer> watchers_;
+
+  // A flag to determine if the storage has been locked without actually
+  // acquiring a lock.
+  std::atomic_bool storage_lock_;
+
+  // Events recorded while recording was locked.
+  std::vector<StructuredEventProto> locked_events_;
 
   // Callbacks for tests whenever an event is recorded.
   base::RepeatingClosure test_callback_on_record_ = base::DoNothing();

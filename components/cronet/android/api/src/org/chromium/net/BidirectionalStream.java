@@ -5,7 +5,6 @@
 package org.chromium.net;
 
 import android.annotation.SuppressLint;
-import androidx.annotation.NonNull;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executor;
@@ -280,48 +279,6 @@ public abstract class BidirectionalStream {
     }
 
     /**
-     * See {@link BidirectionalStream.Builder#setHttpMethod(String)}.
-     */
-    @NonNull
-    public abstract String getHttpMethod();
-
-    /**
-     * See {@link BidirectionalStream.Builder#setTrafficStatsTag(int)}
-     */
-    public abstract boolean hasTrafficStatsTag();
-
-    /**
-     * See {@link BidirectionalStream.Builder#setTrafficStatsTag(int)}
-     */
-    public abstract int getTrafficStatsTag();
-
-    /**
-     * See {@link BidirectionalStream.Builder#setTrafficStatsUid(int)}
-     */
-    public abstract boolean hasTrafficStatsUid();
-
-    /**
-     * See {@link BidirectionalStream.Builder#setTrafficStatsUid(int)}
-     */
-    public abstract int getTrafficStatsUid();
-
-    /**
-     * See {@link Builder#addHeader(String, String)}
-     */
-    @NonNull
-    public abstract UrlResponseInfo.HeaderBlock getHeaders();
-
-    /**
-     * See {@link Builder#setPriority(int)}
-     */
-    public abstract int getPriority();
-
-    /**
-     * See {@link Builder#setDelayRequestHeadersUntilFirstFlushEnabled(boolean)}
-     */
-    public abstract boolean isDelayRequestHeadersUntilFirstFlushEnabled();
-
-    /**
      * Starts the stream, all callbacks go to the {@code callback} argument passed to {@link
      * BidirectionalStream.Builder}'s constructor. Should only be called once.
      */
@@ -349,24 +306,23 @@ public abstract class BidirectionalStream {
     public abstract void read(ByteBuffer buffer);
 
     /**
-     * Attempts to write data from the provided buffer into the stream. If auto flush is disabled,
-     * data will be sent only after {@link #flush flush()} is called. Each call will result in an
-     * invocation of one of the {@link Callback Callback}'s {@link Callback#onWriteCompleted
-     * onWriteCompleted()} method if data is sent, or its {@link Callback#onFailed onFailed()}
-     * method if there's an error.
+     * Adds data to be written to the stream. Data will be sent only after {@link #flush flush()} is
+     * called. Each call will result in an invocation of one of the {@link Callback Callback}'s
+     * {@link Callback#onWriteCompleted onWriteCompleted()} method if data is sent, or its {@link
+     * Callback#onFailed onFailed()} method if there's an error.
      *
-     * An attempt to write data from {@code buffer} starting at {@code buffer.position()} is begun.
-     * {@code buffer.remaining()} bytes will be written. {@link Callback#onWriteCompleted
+     * <p>An attempt to write data from {@code buffer} starting at {@code buffer.position()} is
+     * begun. {@code buffer.remaining()} bytes will be written. {@link Callback#onWriteCompleted
      * onWriteCompleted()} will be invoked only when the full ByteBuffer is written.
      *
      * @param buffer the {@link ByteBuffer} to write data from. Must be a direct ByteBuffer. The
-     * embedder must not read or modify buffer's position, limit, or data between its position and
-     * limit until {@link Callback#onWriteCompleted onWriteCompleted()}, {@link Callback#onCanceled
-     * onCanceled()}, or {@link Callback#onFailed onFailed()} are invoked. Can be empty when {@code
-     * endOfStream} is {@code true}.
+     *     embedder must not read or modify buffer's position, limit, or data between its position
+     *     and limit until {@link Callback#onWriteCompleted onWriteCompleted()}, {@link
+     *     Callback#onCanceled onCanceled()}, or {@link Callback#onFailed onFailed()} are invoked.
+     *     Can be empty when {@code endOfStream} is {@code true}.
      * @param endOfStream if {@code true}, then {@code buffer} is the last buffer to be written, and
-     * once written, stream is closed from the client side, resulting in half-closed stream or a
-     * fully closed stream if the remote side has already closed.
+     *     once written, stream is closed from the client side, resulting in half-closed stream or a
+     *     fully closed stream if the remote side has already closed.
      */
     public abstract void write(ByteBuffer buffer, boolean endOfStream);
 

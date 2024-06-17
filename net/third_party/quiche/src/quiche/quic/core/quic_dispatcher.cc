@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <list>
 #include <memory>
 #include <optional>
@@ -62,6 +63,7 @@
 #include "quiche/quic/platform/api/quic_socket_address.h"
 #include "quiche/quic/platform/api/quic_stack_trace.h"
 #include "quiche/common/platform/api/quiche_logging.h"
+#include "quiche/common/print_elements.h"
 #include "quiche/common/quiche_buffer_allocator.h"
 #include "quiche/common/quiche_callbacks.h"
 #include "quiche/common/quiche_text_utils.h"
@@ -108,77 +110,6 @@ class ClearStatelessResetAddressesAlarm
  private:
   // Not owned.
   QuicDispatcher* dispatcher_;
-};
-
-// Collects packets serialized by a QuicPacketCreator in order
-// to be handed off to the time wait list manager.
-class PacketCollector : public QuicPacketCreator::DelegateInterface,
-                        public QuicStreamFrameDataProducer {
- public:
-  explicit PacketCollector(quiche::QuicheBufferAllocator* allocator)
-      : send_buffer_(allocator) {}
-  ~PacketCollector() override = default;
-
-  // QuicPacketCreator::DelegateInterface methods:
-  void OnSerializedPacket(SerializedPacket serialized_packet) override {
-    // Make a copy of the serialized packet to send later.
-    packets_.emplace_back(
-        new QuicEncryptedPacket(CopyBuffer(serialized_packet),
-                                serialized_packet.encrypted_length, true));
-  }
-
-  QuicPacketBuffer GetPacketBuffer() override {
-    // Let QuicPacketCreator to serialize packets on stack buffer.
-    return {nullptr, nullptr};
-  }
-
-  void OnUnrecoverableError(QuicErrorCode /*error*/,
-                            const std::string& /*error_details*/) override {}
-
-  bool ShouldGeneratePacket(HasRetransmittableData /*retransmittable*/,
-                            IsHandshake /*handshake*/) override {
-    QUICHE_DCHECK(false);
-    return true;
-  }
-
-  void MaybeBundleOpportunistically() override { QUICHE_DCHECK(false); }
-
-  QuicByteCount GetFlowControlSendWindowSize(QuicStreamId /*id*/) override {
-    QUICHE_DCHECK(false);
-    return std::numeric_limits<QuicByteCount>::max();
-  }
-
-  SerializedPacketFate GetSerializedPacketFate(
-      bool /*is_mtu_discovery*/,
-      EncryptionLevel /*encryption_level*/) override {
-    return SEND_TO_WRITER;
-  }
-
-  // QuicStreamFrameDataProducer
-  WriteStreamDataResult WriteStreamData(QuicStreamId /*id*/,
-                                        QuicStreamOffset offset,
-                                        QuicByteCount data_length,
-                                        QuicDataWriter* writer) override {
-    if (send_buffer_.WriteStreamData(offset, data_length, writer)) {
-      return WRITE_SUCCESS;
-    }
-    return WRITE_FAILED;
-  }
-  bool WriteCryptoData(EncryptionLevel /*level*/, QuicStreamOffset offset,
-                       QuicByteCount data_length,
-                       QuicDataWriter* writer) override {
-    return send_buffer_.WriteStreamData(offset, data_length, writer);
-  }
-
-  std::vector<std::unique_ptr<QuicEncryptedPacket>>* packets() {
-    return &packets_;
-  }
-
- private:
-  std::vector<std::unique_ptr<QuicEncryptedPacket>> packets_;
-  // This is only needed until the packets are encrypted. Once packets are
-  // encrypted, the stream data is no longer required.
-  QuicStreamSendBuffer send_buffer_;
 };
 
 // Helper for statelessly closing connections by generating the
@@ -401,14 +332,13 @@ void QuicDispatcher::ProcessPacket(const QuicSocketAddress& self_address,
   }
   // The framer might have extracted the incorrect Connection ID length from a
   // short header. |packet| could be gQUIC; if Q043, the connection ID has been
-  // parsed correctly thanks to the fixed bit. If a Q046 or Q050 short header,
+  // parsed correctly thanks to the fixed bit. If a Q046 short header,
   // the dispatcher might have assumed it was a long connection ID when (because
   // it was gQUIC) it actually issued or kept an 8-byte ID. The other case is
   // where NEW_CONNECTION_IDs are not using the generator, and the dispatcher
   // is, due to flag misconfiguration.
   if (!packet_info.version_flag &&
-      (IsSupportedVersion(ParsedQuicVersion::Q046()) ||
-       IsSupportedVersion(ParsedQuicVersion::Q050()))) {
+      IsSupportedVersion(ParsedQuicVersion::Q046())) {
     ReceivedPacketInfo gquic_packet_info(self_address, peer_address, packet);
     // Try again without asking |connection_id_generator_| for the length.
     const QuicErrorCode gquic_error = QuicFramer::ParsePublicHeaderDispatcher(
@@ -435,7 +365,8 @@ namespace {
 constexpr bool IsSourceUdpPortBlocked(uint16_t port) {
   // These UDP source ports have been observed in large scale denial of service
   // attacks and are not expected to ever carry user traffic, they are therefore
-  // blocked as a safety measure. See draft-ietf-quic-applicability for details.
+  // blocked as a safety measure. See section 8.1 of RFC 9308 for details.
+  // https://www.rfc-editor.org/rfc/rfc9308.html#section-8.1
   constexpr uint16_t blocked_ports[] = {
       0,      // We cannot send to port 0 so drop that source port.
       17,     // Quote of the Day, can loop with QUIC.
@@ -791,7 +722,7 @@ void QuicDispatcher::CleanUpSession(QuicConnectionId server_connection_id,
                                     QuicErrorCode /*error*/,
                                     const std::string& /*error_details*/,
                                     ConnectionCloseSource /*source*/) {
-  write_blocked_list_.erase(connection);
+  write_blocked_list_.Remove(*connection);
   QuicTimeWaitListManager::TimeWaitAction action =
       QuicTimeWaitListManager::SEND_STATELESS_RESET;
   if (connection->termination_packets() != nullptr &&
@@ -869,9 +800,9 @@ std::unique_ptr<QuicPerPacketContext> QuicDispatcher::GetPerPacketContext()
 }
 
 void QuicDispatcher::DeleteSessions() {
-  if (!write_blocked_list_.empty()) {
+  if (!write_blocked_list_.Empty()) {
     for (const auto& session : closed_session_list_) {
-      if (write_blocked_list_.erase(session->connection()) != 0) {
+      if (write_blocked_list_.Remove(*session->connection())) {
         QUIC_BUG(quic_bug_12724_2)
             << "QuicConnection was in WriteBlockedList before destruction "
             << session->connection()->connection_id();
@@ -889,32 +820,11 @@ void QuicDispatcher::OnCanWrite() {
   // The socket is now writable.
   writer_->SetWritable();
 
-  // Move every blocked writer in |write_blocked_list_| to a temporary list.
-  const size_t num_blocked_writers_before = write_blocked_list_.size();
-  WriteBlockedList temp_list;
-  temp_list.swap(write_blocked_list_);
-  QUICHE_DCHECK(write_blocked_list_.empty());
-
-  // Give each blocked writer a chance to write what they intended to write.
-  // If they are blocked again, they will call |OnWriteBlocked| to add
-  // themselves back into |write_blocked_list_|.
-  while (!temp_list.empty()) {
-    QuicBlockedWriterInterface* blocked_writer = temp_list.begin()->first;
-    temp_list.erase(temp_list.begin());
-    blocked_writer->OnBlockedWriterCanWrite();
-  }
-  const size_t num_blocked_writers_after = write_blocked_list_.size();
-  if (num_blocked_writers_after != 0) {
-    if (num_blocked_writers_before == num_blocked_writers_after) {
-      QUIC_CODE_COUNT(quic_zero_progress_on_can_write);
-    } else {
-      QUIC_CODE_COUNT(quic_blocked_again_on_can_write);
-    }
-  }
+  write_blocked_list_.OnWriterUnblocked();
 }
 
 bool QuicDispatcher::HasPendingWrites() const {
-  return !write_blocked_list_.empty();
+  return !write_blocked_list_.Empty();
 }
 
 void QuicDispatcher::Shutdown() {
@@ -996,17 +906,7 @@ void QuicDispatcher::OnConnectionClosed(QuicConnectionId server_connection_id,
 
 void QuicDispatcher::OnWriteBlocked(
     QuicBlockedWriterInterface* blocked_writer) {
-  if (!blocked_writer->IsWriterBlocked()) {
-    // It is a programming error if this ever happens. When we are sure it is
-    // not happening, replace it with a QUICHE_DCHECK.
-    QUIC_BUG(quic_bug_12724_4)
-        << "Tried to add writer into blocked list when it shouldn't be added";
-    // Return without adding the connection to the blocked list, to avoid
-    // infinite loops in OnCanWrite.
-    return;
-  }
-
-  write_blocked_list_.insert(std::make_pair(blocked_writer, true));
+  write_blocked_list_.Add(*blocked_writer);
 }
 
 void QuicDispatcher::OnRstStreamReceived(const QuicRstStreamFrame& /*frame*/) {}
@@ -1189,9 +1089,7 @@ void QuicDispatcher::BufferEarlyPacket(const ReceivedPacketInfo& packet_info) {
   // The connection ID generator will only be set for CHLOs, not for early
   // packets.
   EnqueuePacketResult rs = buffered_packets_.EnqueuePacket(
-      packet_info.destination_connection_id,
-      packet_info.form != GOOGLE_QUIC_PACKET, packet_info.packet,
-      packet_info.self_address, packet_info.peer_address, packet_info.version,
+      packet_info,
       /*parsed_chlo=*/std::nullopt, /*connection_id_generator=*/nullptr);
   if (rs != EnqueuePacketResult::SUCCESS) {
     OnBufferPacketFailure(rs, packet_info.destination_connection_id);
@@ -1206,10 +1104,7 @@ void QuicDispatcher::ProcessChlo(ParsedClientHello parsed_chlo,
     QUIC_BUG_IF(quic_bug_12724_7, buffered_packets_.HasChloForConnection(
                                       packet_info->destination_connection_id));
     EnqueuePacketResult rs = buffered_packets_.EnqueuePacket(
-        packet_info->destination_connection_id,
-        packet_info->form != GOOGLE_QUIC_PACKET, packet_info->packet,
-        packet_info->self_address, packet_info->peer_address,
-        packet_info->version, std::move(parsed_chlo), &ConnectionIdGenerator());
+        *packet_info, std::move(parsed_chlo), &ConnectionIdGenerator());
     if (rs != EnqueuePacketResult::SUCCESS) {
       OnBufferPacketFailure(rs, packet_info->destination_connection_id);
     }
@@ -1303,17 +1198,29 @@ std::shared_ptr<QuicSession> QuicDispatcher::CreateSessionFromChlo(
   if (!replaced_connection_id) {
     server_connection_id = original_connection_id;
   }
+  QUIC_CODE_COUNT(quic_connection_id_chosen);
   if (reference_counted_session_map_.count(*server_connection_id) > 0) {
     // The new connection ID is owned by another session. Avoid creating one
     // altogether, as this connection attempt cannot possibly succeed.
-    if (replaced_connection_id) {
+    QUIC_CODE_COUNT(quic_connection_id_collision);
+    QuicConnection* other_connection =
+        reference_counted_session_map_[*server_connection_id]->connection();
+    if (other_connection != nullptr) {  // Just make sure there is no crash.
       QUIC_LOG_EVERY_N_SEC(ERROR, 10)
           << "QUIC Connection ID collision. original_connection_id:"
           << original_connection_id.ToString()
           << " server_connection_id:" << server_connection_id->ToString()
           << ", version:" << version << ", self_address:" << self_address
           << ", peer_address:" << peer_address
-          << ", parsed_chlo:" << parsed_chlo;
+          << ", parsed_chlo:" << parsed_chlo
+          << ", other peer address: " << other_connection->peer_address()
+          << ", other CIDs: "
+          << quiche::PrintElements(
+                 other_connection->GetActiveServerConnectionIds())
+          << ", other stats: " << other_connection->GetStats();
+    }
+    if (replaced_connection_id) {
+      QUIC_CODE_COUNT(quic_replaced_connection_id_collision);
       // The original connection ID does not correspond to an existing
       // session. It is safe to send CONNECTION_CLOSE and add to TIME_WAIT.
       StatelesslyTerminateConnection(

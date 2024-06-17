@@ -18,6 +18,7 @@
 #include "base/time/default_tick_clock.h"
 #include "base/values.h"
 #include "net/base/features.h"
+#include "net/base/network_anonymization_key.h"
 #include "net/base/url_util.h"
 #include "net/http/http_network_session.h"
 #include "net/http/http_server_properties_manager.h"
@@ -204,7 +205,7 @@ void HttpServerProperties::Clear(base::OnceClosure callback) {
 
 bool HttpServerProperties::SupportsRequestPriority(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   if (server.host().empty())
     return false;
@@ -224,7 +225,7 @@ bool HttpServerProperties::SupportsRequestPriority(
 
 bool HttpServerProperties::GetSupportsSpdy(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   return GetSupportsSpdyInternal(NormalizeSchemeHostPort(server),
                                  network_anonymization_key);
@@ -232,7 +233,7 @@ bool HttpServerProperties::GetSupportsSpdy(
 
 void HttpServerProperties::SetSupportsSpdy(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& network_anonymization_key,
     bool supports_spdy) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   SetSupportsSpdyInternal(NormalizeSchemeHostPort(server),
@@ -241,7 +242,7 @@ void HttpServerProperties::SetSupportsSpdy(
 
 bool HttpServerProperties::RequiresHTTP11(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   return RequiresHTTP11Internal(NormalizeSchemeHostPort(server),
                                 network_anonymization_key);
@@ -249,7 +250,7 @@ bool HttpServerProperties::RequiresHTTP11(
 
 void HttpServerProperties::SetHTTP11Required(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   SetHTTP11RequiredInternal(NormalizeSchemeHostPort(server),
                             network_anonymization_key);
@@ -257,7 +258,7 @@ void HttpServerProperties::SetHTTP11Required(
 
 void HttpServerProperties::MaybeForceHTTP11(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& network_anonymization_key,
     SSLConfig* ssl_config) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   MaybeForceHTTP11Internal(NormalizeSchemeHostPort(server),
@@ -266,7 +267,7 @@ void HttpServerProperties::MaybeForceHTTP11(
 
 AlternativeServiceInfoVector HttpServerProperties::GetAlternativeServiceInfos(
     const url::SchemeHostPort& origin,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   return GetAlternativeServiceInfosInternal(NormalizeSchemeHostPort(origin),
                                             network_anonymization_key);
@@ -304,7 +305,7 @@ void HttpServerProperties::SetQuicAlternativeService(
 
 void HttpServerProperties::SetAlternativeServices(
     const url::SchemeHostPort& origin,
-    const net::NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& network_anonymization_key,
     const AlternativeServiceInfoVector& alternative_service_info_vector) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   SetAlternativeServicesInternal(NormalizeSchemeHostPort(origin),
@@ -314,7 +315,7 @@ void HttpServerProperties::SetAlternativeServices(
 
 void HttpServerProperties::MarkAlternativeServiceBroken(
     const AlternativeService& alternative_service,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   broken_alternative_services_.MarkBroken(
       BrokenAlternativeService(alternative_service, network_anonymization_key,
                                use_network_anonymization_key_));
@@ -324,7 +325,7 @@ void HttpServerProperties::MarkAlternativeServiceBroken(
 void HttpServerProperties::
     MarkAlternativeServiceBrokenUntilDefaultNetworkChanges(
         const AlternativeService& alternative_service,
-        const net::NetworkAnonymizationKey& network_anonymization_key) {
+        const NetworkAnonymizationKey& network_anonymization_key) {
   broken_alternative_services_.MarkBrokenUntilDefaultNetworkChanges(
       BrokenAlternativeService(alternative_service, network_anonymization_key,
                                use_network_anonymization_key_));
@@ -333,7 +334,7 @@ void HttpServerProperties::
 
 void HttpServerProperties::MarkAlternativeServiceRecentlyBroken(
     const AlternativeService& alternative_service,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   broken_alternative_services_.MarkRecentlyBroken(
       BrokenAlternativeService(alternative_service, network_anonymization_key,
                                use_network_anonymization_key_));
@@ -342,7 +343,7 @@ void HttpServerProperties::MarkAlternativeServiceRecentlyBroken(
 
 bool HttpServerProperties::IsAlternativeServiceBroken(
     const AlternativeService& alternative_service,
-    const net::NetworkAnonymizationKey& network_anonymization_key) const {
+    const NetworkAnonymizationKey& network_anonymization_key) const {
   return broken_alternative_services_.IsBroken(
       BrokenAlternativeService(alternative_service, network_anonymization_key,
                                use_network_anonymization_key_));
@@ -350,7 +351,7 @@ bool HttpServerProperties::IsAlternativeServiceBroken(
 
 bool HttpServerProperties::WasAlternativeServiceRecentlyBroken(
     const AlternativeService& alternative_service,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   return broken_alternative_services_.WasRecentlyBroken(
       BrokenAlternativeService(alternative_service, network_anonymization_key,
                                use_network_anonymization_key_));
@@ -358,7 +359,7 @@ bool HttpServerProperties::WasAlternativeServiceRecentlyBroken(
 
 void HttpServerProperties::ConfirmAlternativeService(
     const AlternativeService& alternative_service,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   bool old_value = IsAlternativeServiceBroken(alternative_service,
                                               network_anonymization_key);
   broken_alternative_services_.Confirm(
@@ -572,8 +573,8 @@ void HttpServerProperties::SetMaxServerConfigsStoredInProperties(
 }
 
 void HttpServerProperties::SetBrokenAlternativeServicesDelayParams(
-    absl::optional<base::TimeDelta> initial_delay,
-    absl::optional<bool> exponential_backoff_on_initial_delay) {
+    std::optional<base::TimeDelta> initial_delay,
+    std::optional<bool> exponential_backoff_on_initial_delay) {
   broken_alternative_services_.SetDelayParams(
       initial_delay, exponential_backoff_on_initial_delay);
 }
@@ -629,7 +630,7 @@ base::TimeDelta HttpServerProperties::GetUpdatePrefsDelayForTesting() {
 
 bool HttpServerProperties::GetSupportsSpdyInternal(
     url::SchemeHostPort server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(server.scheme(), url::kWsScheme);
   DCHECK_NE(server.scheme(), url::kWssScheme);
@@ -644,7 +645,7 @@ bool HttpServerProperties::GetSupportsSpdyInternal(
 
 void HttpServerProperties::SetSupportsSpdyInternal(
     url::SchemeHostPort server,
-    const net::NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& network_anonymization_key,
     bool supports_spdy) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(server.scheme(), url::kWsScheme);
@@ -666,7 +667,7 @@ void HttpServerProperties::SetSupportsSpdyInternal(
 
 bool HttpServerProperties::RequiresHTTP11Internal(
     url::SchemeHostPort server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(server.scheme(), url::kWsScheme);
   DCHECK_NE(server.scheme(), url::kWssScheme);
@@ -681,7 +682,7 @@ bool HttpServerProperties::RequiresHTTP11Internal(
 
 void HttpServerProperties::SetHTTP11RequiredInternal(
     url::SchemeHostPort server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(server.scheme(), url::kWsScheme);
   DCHECK_NE(server.scheme(), url::kWssScheme);
@@ -698,7 +699,7 @@ void HttpServerProperties::SetHTTP11RequiredInternal(
 
 void HttpServerProperties::MaybeForceHTTP11Internal(
     url::SchemeHostPort server,
-    const net::NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& network_anonymization_key,
     SSLConfig* ssl_config) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(server.scheme(), url::kWsScheme);
@@ -712,7 +713,7 @@ void HttpServerProperties::MaybeForceHTTP11Internal(
 AlternativeServiceInfoVector
 HttpServerProperties::GetAlternativeServiceInfosInternal(
     const url::SchemeHostPort& origin,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(origin.scheme(), url::kWsScheme);
   DCHECK_NE(origin.scheme(), url::kWssScheme);
@@ -813,7 +814,7 @@ HttpServerProperties::GetAlternativeServiceInfosInternal(
 
 void HttpServerProperties::SetAlternativeServicesInternal(
     const url::SchemeHostPort& origin,
-    const net::NetworkAnonymizationKey& network_anonymization_key,
+    const NetworkAnonymizationKey& network_anonymization_key,
     const AlternativeServiceInfoVector& alternative_service_info_vector) {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   DCHECK_NE(origin.scheme(), url::kWsScheme);
@@ -978,7 +979,7 @@ HttpServerProperties::CreateServerInfoKey(
 HttpServerProperties::ServerInfoMap::const_iterator
 HttpServerProperties::GetIteratorWithAlternativeServiceInfo(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) {
+    const NetworkAnonymizationKey& network_anonymization_key) {
   ServerInfoMap::const_iterator it = server_info_map_.Get(
       CreateServerInfoKey(server, network_anonymization_key));
   if (it != server_info_map_.end() && it->second.alternative_services)
@@ -1015,7 +1016,7 @@ HttpServerProperties::GetIteratorWithAlternativeServiceInfo(
 HttpServerProperties::CanonicalMap::const_iterator
 HttpServerProperties::GetCanonicalAltSvcHost(
     const url::SchemeHostPort& server,
-    const net::NetworkAnonymizationKey& network_anonymization_key) const {
+    const NetworkAnonymizationKey& network_anonymization_key) const {
   const char* kCanonicalScheme = "https";
   if (server.scheme() != kCanonicalScheme)
     return canonical_alt_svc_map_.end();

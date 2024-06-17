@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+// TODO(crbug.com/40284755): Remove this and spanify to fix the errors.
+#pragma allow_unsafe_buffers
+#endif
+
 #include "net/nqe/network_quality_estimator.h"
 
 #include <algorithm>
@@ -23,7 +28,6 @@
 #include "base/notreached.h"
 #include "base/observer_list.h"
 #include "base/strings/string_number_conversions.h"
-#include "base/strings/string_piece.h"
 #include "base/task/lazy_thread_pool_task_runner.h"
 #include "base/task/single_thread_task_runner.h"
 #include "base/time/default_tick_clock.h"
@@ -69,7 +73,7 @@ NetworkQualityObservationSource ProtocolSourceToObservationSource(
     case SocketPerformanceWatcherFactory::PROTOCOL_QUIC:
       return NETWORK_QUALITY_OBSERVATION_SOURCE_QUIC;
   }
-  NOTREACHED();
+  NOTREACHED_IN_MIGRATION();
   return NETWORK_QUALITY_OBSERVATION_SOURCE_TCP;
 }
 
@@ -467,7 +471,7 @@ void NetworkQualityEstimator::OnConnectionTypeChanged(
 
   current_network_id_.signal_strength = INT32_MIN;
   network_quality_ = nqe::internal::NetworkQuality();
-  end_to_end_rtt_ = absl::nullopt;
+  end_to_end_rtt_ = std::nullopt;
   effective_connection_type_ = EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
   rtt_observations_size_at_last_ect_computation_ = 0;
   throughput_observations_size_at_last_ect_computation_ = 0;
@@ -551,7 +555,7 @@ void NetworkQualityEstimator::ComputeEffectiveConnectionType() {
                         network_quality_.http_rtt());
   }
 
-  end_to_end_rtt_ = absl::nullopt;
+  end_to_end_rtt_ = std::nullopt;
   if (end_to_end_rtt != nqe::internal::InvalidRTT()) {
     end_to_end_rtt_ = end_to_end_rtt;
   }
@@ -574,9 +578,9 @@ void NetworkQualityEstimator::ComputeEffectiveConnectionType() {
   new_throughput_observations_since_last_ect_computation_ = 0;
 }
 
-absl::optional<net::EffectiveConnectionType>
+std::optional<net::EffectiveConnectionType>
 NetworkQualityEstimator::GetOverrideECT() const {
-  return absl::nullopt;
+  return std::nullopt;
 }
 
 void NetworkQualityEstimator::ClampKbpsBasedOnEct() {
@@ -655,7 +659,7 @@ EffectiveConnectionType NetworkQualityEstimator::GetEffectiveConnectionType()
     const {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
-  absl::optional<net::EffectiveConnectionType> override_ect = GetOverrideECT();
+  std::optional<net::EffectiveConnectionType> override_ect = GetOverrideECT();
   if (override_ect) {
     return override_ect.value();
   }
@@ -918,7 +922,7 @@ base::TimeDelta NetworkQualityEstimator::GetRTTEstimateInternal(
                              percentile, observations_count)
               .value_or(nqe::internal::INVALID_RTT_THROUGHPUT));
     case nqe::internal::OBSERVATION_CATEGORY_COUNT:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return base::TimeDelta();
   }
 }
@@ -1040,7 +1044,7 @@ void NetworkQualityEstimator::SetTickClockForTesting(
 void NetworkQualityEstimator::OnUpdatedTransportRTTAvailable(
     SocketPerformanceWatcherFactory::Protocol protocol,
     const base::TimeDelta& rtt,
-    const absl::optional<nqe::internal::IPHash>& host) {
+    const std::optional<nqe::internal::IPHash>& host) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
   DCHECK_LT(nqe::internal::INVALID_RTT_THROUGHPUT, rtt.InMilliseconds());
   Observation observation(rtt.InMilliseconds(), tick_clock_->NowTicks(),
@@ -1205,7 +1209,7 @@ void NetworkQualityEstimator::
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
   DCHECK_NE(EFFECTIVE_CONNECTION_TYPE_LAST, effective_connection_type_);
 
-  absl::optional<net::EffectiveConnectionType> override_ect = GetOverrideECT();
+  std::optional<net::EffectiveConnectionType> override_ect = GetOverrideECT();
 
   // TODO(tbansal): Add hysteresis in the notification.
   for (auto& observer : effective_connection_type_observer_list_)
@@ -1236,7 +1240,7 @@ void NetworkQualityEstimator::NotifyEffectiveConnectionTypeObserverIfPresent(
   if (!effective_connection_type_observer_list_.HasObserver(observer))
     return;
 
-  absl::optional<net::EffectiveConnectionType> override_ect = GetOverrideECT();
+  std::optional<net::EffectiveConnectionType> override_ect = GetOverrideECT();
   if (override_ect) {
     observer->OnEffectiveConnectionTypeChanged(override_ect.value());
     return;
@@ -1285,7 +1289,6 @@ void NetworkQualityEstimator::OnPrefsRead(
                    nqe::internal::CachedNetworkQuality> read_prefs) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
-  UMA_HISTOGRAM_COUNTS_1M("NQE.Prefs.ReadSize", read_prefs.size());
   for (auto& it : read_prefs) {
     EffectiveConnectionType effective_connection_type =
         it.second.effective_connection_type();
@@ -1318,30 +1321,30 @@ void NetworkQualityEstimator::EnableGetNetworkIdAsynchronously() {
 }
 #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
 
-absl::optional<base::TimeDelta> NetworkQualityEstimator::GetHttpRTT() const {
+std::optional<base::TimeDelta> NetworkQualityEstimator::GetHttpRTT() const {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   if (network_quality_.http_rtt() == nqe::internal::InvalidRTT())
-    return absl::optional<base::TimeDelta>();
+    return std::optional<base::TimeDelta>();
   return network_quality_.http_rtt();
 }
 
-absl::optional<base::TimeDelta> NetworkQualityEstimator::GetTransportRTT()
+std::optional<base::TimeDelta> NetworkQualityEstimator::GetTransportRTT()
     const {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   if (network_quality_.transport_rtt() == nqe::internal::InvalidRTT())
-    return absl::optional<base::TimeDelta>();
+    return std::optional<base::TimeDelta>();
   return network_quality_.transport_rtt();
 }
 
-absl::optional<int32_t> NetworkQualityEstimator::GetDownstreamThroughputKbps()
+std::optional<int32_t> NetworkQualityEstimator::GetDownstreamThroughputKbps()
     const {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   if (network_quality_.downstream_throughput_kbps() ==
       nqe::internal::INVALID_RTT_THROUGHPUT) {
-    return absl::optional<int32_t>();
+    return std::optional<int32_t>();
   }
   return network_quality_.downstream_throughput_kbps();
 }

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -29,7 +30,6 @@
 #include "net/dns/public/util.h"
 #include "net/dns/record_rdata.h"
 #include "net/socket/datagram_socket.h"
-#include "third_party/abseil-cpp/absl/types/optional.h"
 
 // TODO(gene): Remove this temporary method of disabling NSEC support once it
 // becomes clear whether this feature should be
@@ -143,7 +143,7 @@ void MDnsConnection::SocketHandler::OnDatagramReceived(int rv) {
 void MDnsConnection::SocketHandler::Send(const scoped_refptr<IOBuffer>& buffer,
                                          unsigned size) {
   if (send_in_progress_) {
-    send_queue_.push(std::make_pair(buffer, size));
+    send_queue_.emplace(buffer, size);
     return;
   }
   int rv =
@@ -256,7 +256,7 @@ int MDnsClientImpl::Core::Init(MDnsSocketFactory* socket_factory) {
 }
 
 bool MDnsClientImpl::Core::SendQuery(uint16_t rrtype, const std::string& name) {
-  absl::optional<std::vector<uint8_t>> name_dns =
+  std::optional<std::vector<uint8_t>> name_dns =
       dns_names_util::DottedNameToNetwork(name);
   if (!name_dns.has_value())
     return false;
@@ -317,7 +317,7 @@ void MDnsClientImpl::Core::HandlePacket(DnsResponse* response,
     // Cleanup time may have changed.
     ScheduleCleanup(cache_.next_expiration());
 
-    update_keys.insert(std::make_pair(update_key, update));
+    update_keys.emplace(update_key, update);
   }
 
   for (const auto& update_key : update_keys) {
@@ -423,7 +423,7 @@ void MDnsClientImpl::Core::RemoveListener(MDnsListenerImpl* listener) {
     // happens while iterating over the observer list.
     base::SingleThreadTaskRunner::GetCurrentDefault()->PostTask(
         FROM_HERE, base::BindOnce(&MDnsClientImpl::Core::CleanupObserverList,
-                                  AsWeakPtr(), key));
+                                  weak_ptr_factory_.GetWeakPtr(), key));
   }
 }
 
@@ -601,7 +601,7 @@ void MDnsListenerImpl::HandleRecordUpdate(MDnsCache::UpdateType update_type,
         break;
       case MDnsCache::NoChange:
       default:
-        NOTREACHED();
+        NOTREACHED_IN_MIGRATION();
         // Dummy assignment to suppress compiler warning.
         update_external = MDnsListener::RECORD_CHANGED;
         break;
@@ -628,8 +628,8 @@ void MDnsListenerImpl::ScheduleNextRefresh() {
     return;
   }
 
-  next_refresh_.Reset(
-      base::BindRepeating(&MDnsListenerImpl::DoRefresh, AsWeakPtr()));
+  next_refresh_.Reset(base::BindRepeating(&MDnsListenerImpl::DoRefresh,
+                                          weak_ptr_factory_.GetWeakPtr()));
 
   // Schedule refreshes at both 85% and 95% of the original TTL. These will both
   // be canceled and rescheduled if the record's TTL is updated due to a
@@ -680,7 +680,7 @@ bool MDnsTransactionImpl::Start() {
   DCHECK(!started_);
   started_ = true;
 
-  base::WeakPtr<MDnsTransactionImpl> weak_this = AsWeakPtr();
+  base::WeakPtr<MDnsTransactionImpl> weak_this = weak_ptr_factory_.GetWeakPtr();
   if (flags_ & MDnsTransaction::QUERY_CACHE) {
     ServeRecordsFromCache();
 
@@ -754,7 +754,7 @@ void MDnsTransactionImpl::SignalTransactionOver() {
 
 void MDnsTransactionImpl::ServeRecordsFromCache() {
   std::vector<const RecordParsed*> records;
-  base::WeakPtr<MDnsTransactionImpl> weak_this = AsWeakPtr();
+  base::WeakPtr<MDnsTransactionImpl> weak_this = weak_ptr_factory_.GetWeakPtr();
 
   if (client_->core()) {
     client_->core()->QueryCache(rrtype_, name_, &records);
@@ -788,8 +788,8 @@ bool MDnsTransactionImpl::QueryAndListen() {
   if (!client_->core()->SendQuery(rrtype_, name_))
     return false;
 
-  timeout_.Reset(
-      base::BindOnce(&MDnsTransactionImpl::SignalTransactionOver, AsWeakPtr()));
+  timeout_.Reset(base::BindOnce(&MDnsTransactionImpl::SignalTransactionOver,
+                                weak_ptr_factory_.GetWeakPtr()));
   base::SingleThreadTaskRunner::GetCurrentDefault()->PostDelayedTask(
       FROM_HERE, timeout_.callback(), kTransactionTimeout);
 

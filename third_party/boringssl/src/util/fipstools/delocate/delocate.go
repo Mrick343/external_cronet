@@ -35,7 +35,7 @@ import (
 // inputFile represents a textual assembly file.
 type inputFile struct {
 	path string
-	// index is a unique identifer given to this file. It's used for
+	// index is a unique identifier given to this file. It's used for
 	// mapping local symbols.
 	index int
 	// isArchive indicates that the input should be processed as an ar
@@ -923,6 +923,12 @@ func (d *delocation) isRIPRelative(node *node32) bool {
 }
 
 func (d *delocation) processIntelInstruction(statement, instruction *node32) (*node32, error) {
+	var prefix string
+	if instruction.pegRule == ruleInstructionPrefix {
+		prefix = d.contents(instruction)
+		instruction = skipWS(instruction.next)
+	}
+
 	assertNodeType(instruction, ruleInstructionName)
 	instructionName := d.contents(instruction)
 
@@ -1163,6 +1169,22 @@ Args:
 
 			args = append(args, argStr)
 
+		case ruleGOTAddress:
+			if instructionName != "leaq" {
+				return nil, fmt.Errorf("_GLOBAL_OFFSET_TABLE_ used outside of lea")
+			}
+			if i != 0 || len(argNodes) != 2 {
+				return nil, fmt.Errorf("Load of _GLOBAL_OFFSET_TABLE_ address didn't have expected form")
+			}
+			d.gotDeltaNeeded = true
+			changed = true
+			targetReg := d.contents(argNodes[1])
+			args = append(args, ".Lboringssl_got_delta(%rip)")
+			wrappers = append(wrappers, func(k func()) {
+				k()
+				d.output.WriteString(fmt.Sprintf("\taddq .Lboringssl_got_delta(%%rip), %s\n", targetReg))
+			})
+
 		case ruleGOTLocation:
 			if instructionName != "movabsq" {
 				return nil, fmt.Errorf("_GLOBAL_OFFSET_TABLE_ lookup didn't use movabsq")
@@ -1224,6 +1246,9 @@ Args:
 	if changed {
 		d.writeCommentedNode(statement)
 		replacement := "\t" + instructionName + "\t" + strings.Join(args, ", ") + "\n"
+		if len(prefix) != 0 {
+			replacement = "\t" + prefix + replacement
+		}
 		wrappers.do(func() {
 			d.output.WriteString(replacement)
 		})

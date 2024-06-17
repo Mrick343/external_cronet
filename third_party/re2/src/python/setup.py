@@ -3,10 +3,10 @@
 # license that can be found in the LICENSE file.
 
 import os
+import re
 import setuptools
 import setuptools.command.build_ext
 import shutil
-import sys
 
 long_description = r"""A drop-in replacement for the re module.
 
@@ -48,14 +48,25 @@ class BuildExt(setuptools.command.build_ext.build_ext):
     if 'GITHUB_ACTIONS' not in os.environ:
       return super().build_extension(ext)
 
-    # For @pybind11_bazel's `python_configure()`.
-    os.environ['PYTHON_BIN_PATH'] = sys.executable
-
     cmd = ['bazel', 'build']
     try:
-      cmd.append(f'--cpu={os.environ["BAZEL_CPU"].lower()}')
+      cpu = os.environ['BAZEL_CPU']
+      cmd.append(f'--cpu={cpu}')
+      cmd.append(f'--platforms=//python:{cpu}')
+      if cpu == 'x64_x86_windows':
+        # Register the local 32-bit C++ toolchain with highest priority.
+        # (This is likely to break in some release of Bazel after 7.0.0,
+        # but this special case can hopefully be entirely removed then.)
+        cmd.append(f'--extra_toolchains=@local_config_cc//:cc-toolchain-{cpu}')
     except KeyError:
       pass
+    try:
+      ver = os.environ['MACOSX_DEPLOYMENT_TARGET']
+      cmd.append(f'--macos_minimum_os={ver}')
+    except KeyError:
+      pass
+    # Register the local Python toolchains with highest priority.
+    cmd.append('--extra_toolchains=//python/toolchains:all')
     cmd += ['--compilation_mode=opt', '--', ':all']
     self.spawn(cmd)
 
@@ -93,16 +104,27 @@ ext_module = setuptools.Extension(
     extra_compile_args=['-fvisibility=hidden'],
 )
 
+# We need `re2` to be a package, not a module, because it appears that
+# modules can't have `.pyi` files, so munge the module into a package.
+os.makedirs('re2')
+with open('re2.py', 'r') as file:
+  contents = file.read()
+contents = re.sub(r'^(?=import _)', 'from . ', contents, flags=re.MULTILINE)
+with open(f're2/__init__.py', 'x') as file:
+  file.write(contents)
+# TODO(junyer): `.pyi` files as per https://github.com/google/re2/issues/496.
+
 setuptools.setup(
     name='google-re2',
-    version='1.1',
+    version='1.1.20240601',
     description='RE2 Python bindings',
     long_description=long_description,
     long_description_content_type='text/plain',
     author='The RE2 Authors',
     author_email='re2-dev@googlegroups.com',
     url='https://github.com/google/re2',
-    py_modules=['re2'],
+    packages=['re2'],
+    ext_package='re2',
     ext_modules=[ext_module],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -115,3 +137,5 @@ setuptools.setup(
     cmdclass={'build_ext': BuildExt},
     python_requires='~=3.8',
 )
+
+shutil.rmtree('re2')

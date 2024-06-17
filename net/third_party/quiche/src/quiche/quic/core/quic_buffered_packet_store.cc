@@ -10,6 +10,7 @@
 #include <optional>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "absl/strings/string_view.h"
 #include "quiche/quic/core/connection_id_generator.h"
@@ -102,11 +103,15 @@ QuicBufferedPacketStore::~QuicBufferedPacketStore() {
 }
 
 EnqueuePacketResult QuicBufferedPacketStore::EnqueuePacket(
-    QuicConnectionId connection_id, bool ietf_quic,
-    const QuicReceivedPacket& packet, QuicSocketAddress self_address,
-    QuicSocketAddress peer_address, const ParsedQuicVersion& version,
+    const ReceivedPacketInfo& packet_info,
     std::optional<ParsedClientHello> parsed_chlo,
     ConnectionIdGeneratorInterface* connection_id_generator) {
+  QuicConnectionId connection_id = packet_info.destination_connection_id;
+  const QuicReceivedPacket& packet = packet_info.packet;
+  const QuicSocketAddress& self_address = packet_info.self_address;
+  const QuicSocketAddress& peer_address = packet_info.peer_address;
+  const ParsedQuicVersion& version = packet_info.version;
+  const bool ietf_quic = packet_info.form != GOOGLE_QUIC_PACKET;
   const bool is_chlo = parsed_chlo.has_value();
   QUIC_BUG_IF(quic_bug_12410_1, !GetQuicFlag(quic_allow_chlo_buffering))
       << "Shouldn't buffer packets if disabled via flag.";

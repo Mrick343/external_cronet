@@ -13,7 +13,9 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/escaping.h"
 #include "absl/strings/string_view.h"
+#include "absl/time/clock.h"
 #include "absl/time/time.h"
+#include "absl/types/span.h"
 #include "anonymous_tokens/cpp/crypto/crypto_utils.h"
 #include "anonymous_tokens/cpp/privacy_pass/token_encodings.h"
 #include "anonymous_tokens/cpp/testing/utils.h"
@@ -21,9 +23,9 @@
 #include "openssl/digest.h"
 #include "quiche/blind_sign_auth/blind_sign_auth_interface.h"
 #include "quiche/blind_sign_auth/blind_sign_auth_protos.h"
-#include "quiche/blind_sign_auth/blind_sign_http_interface.h"
-#include "quiche/blind_sign_auth/blind_sign_http_response.h"
-#include "quiche/blind_sign_auth/test_tools/mock_blind_sign_http_interface.h"
+#include "quiche/blind_sign_auth/blind_sign_message_interface.h"
+#include "quiche/blind_sign_auth/blind_sign_message_response.h"
+#include "quiche/blind_sign_auth/test_tools/mock_blind_sign_message_interface.h"
 #include "quiche/common/platform/api/quiche_mutex.h"
 #include "quiche/common/platform/api/quiche_test.h"
 #include "quiche/common/test_tools/quiche_test_utils.h"
@@ -71,8 +73,8 @@ class BlindSignAuthTest : public QuicheTest {
     public_key_proto_.set_salt_length(48);
     public_key_proto_.set_key_size(256);
     public_key_proto_.set_message_mask_type(
-        anonymous_tokens::AT_MESSAGE_MASK_CONCAT);
-    public_key_proto_.set_message_mask_size(32);
+        anonymous_tokens::AT_MESSAGE_MASK_NO_MASK);
+    public_key_proto_.set_message_mask_size(0);
 
     // Create expected GetInitialDataRequest.
     expected_get_initial_data_request_.set_use_attestation(false);
@@ -86,20 +88,6 @@ class BlindSignAuthTest : public QuicheTest {
     privacy::ppn::GetInitialDataResponse fake_get_initial_data_response;
     *fake_get_initial_data_response.mutable_at_public_metadata_public_key() =
         public_key_proto_;
-
-    // Create public metadata info.
-    privacy::ppn::PublicMetadata::Location location;
-    location.set_country("US");
-    anonymous_tokens::Timestamp expiration;
-    expiration.set_seconds(absl::ToUnixSeconds(absl::Now() + absl::Hours(1)));
-    privacy::ppn::PublicMetadata public_metadata;
-    *public_metadata.mutable_exit_location() = location;
-    public_metadata.set_service_type("chromeipblinding");
-    *public_metadata.mutable_expiration() = expiration;
-    public_metadata_info_.set_validation_version(1);
-    *public_metadata_info_.mutable_public_metadata() = public_metadata;
-    *fake_get_initial_data_response.mutable_public_metadata_info() =
-        public_metadata_info_;
     fake_get_initial_data_response_ = fake_get_initial_data_response;
 
     // Create PrivacyPassData.
@@ -170,15 +158,13 @@ class BlindSignAuthTest : public QuicheTest {
 
     // Create BlindSignAuthOptions.
     privacy::ppn::BlindSignAuthOptions options;
-    options.set_enable_privacy_pass(false);
+    options.set_enable_privacy_pass(true);
 
     blind_sign_auth_ =
-        std::make_unique<BlindSignAuth>(&mock_http_interface_, options);
+        std::make_unique<BlindSignAuth>(&mock_message_interface_, options);
   }
 
-  void TearDown() override {
-    blind_sign_auth_.reset(nullptr);
-  }
+  void TearDown() override { blind_sign_auth_.reset(nullptr); }
 
  public:
   void CreateSignResponse(const std::string& body, bool use_privacy_pass) {
@@ -186,7 +172,6 @@ class BlindSignAuthTest : public QuicheTest {
     ASSERT_TRUE(request.ParseFromString(body));
 
     // Validate AuthAndSignRequest.
-    EXPECT_EQ(request.oauth_token(), oauth_token_);
     EXPECT_EQ(request.service_type(), "chromeipblinding");
     // Phosphor does not need the public key hash if the KeyType is
     // privacy::ppn::AT_PUBLIC_METADATA_KEY_TYPE.
@@ -260,10 +245,15 @@ class BlindSignAuthTest : public QuicheTest {
       std::string decoded_extensions;
       ASSERT_TRUE(absl::WebSafeBase64Unescape(
           privacy_pass_token_data.encoded_extensions(), &decoded_extensions));
+      // Validate GeoHint in BlindSignToken.
+      EXPECT_EQ(token.geo_hint.geo_hint, "US,US-AL,ALABASTER");
+      EXPECT_EQ(token.geo_hint.country_code, "US");
+      EXPECT_EQ(token.geo_hint.region, "US-AL");
+      EXPECT_EQ(token.geo_hint.city, "ALABASTER");
     }
   }
 
-  MockBlindSignHttpInterface mock_http_interface_;
+  MockBlindSignMessageInterface mock_message_interface_;
   std::unique_ptr<BlindSignAuth> blind_sign_auth_;
   anonymous_tokens::RSABlindSignaturePublicKey
       public_key_proto_;
@@ -278,54 +268,9 @@ class BlindSignAuthTest : public QuicheTest {
   privacy::ppn::GetInitialDataRequest expected_get_initial_data_request_;
 };
 
-TEST_F(BlindSignAuthTest, TestGetTokensSuccessful) {
-  BlindSignHttpResponse fake_public_key_response(
-      200, fake_get_initial_data_response_.SerializeAsString());
-
-  {
-    InSequence seq;
-
-    EXPECT_CALL(
-        mock_http_interface_,
-        DoRequest(
-            Eq(BlindSignHttpRequestType::kGetInitialData), Eq(oauth_token_),
-            Eq(expected_get_initial_data_request_.SerializeAsString()), _))
-        .Times(1)
-        .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
-          std::move(get_initial_data_cb)(fake_public_key_response);
-        });
-
-    EXPECT_CALL(mock_http_interface_,
-                DoRequest(Eq(BlindSignHttpRequestType::kAuthAndSign),
-                          Eq(oauth_token_), _, _))
-        .Times(1)
-        .WillOnce(Invoke([this](Unused, Unused, const std::string& body,
-                                BlindSignHttpCallback callback) {
-          CreateSignResponse(body, false);
-          BlindSignHttpResponse http_response(
-              200, sign_response_.SerializeAsString());
-          std::move(callback)(http_response);
-        }));
-  }
-
-  int num_tokens = 1;
-  QuicheNotification done;
-  SignedTokenCallback callback =
-      [this, &done,
-       num_tokens](absl::StatusOr<absl::Span<BlindSignToken>> tokens) {
-        QUICHE_EXPECT_OK(tokens);
-        EXPECT_EQ(tokens->size(), num_tokens);
-        ValidateGetTokensOutput(*tokens);
-        done.Notify();
-      };
-  blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
-                              std::move(callback));
-  done.WaitForNotification();
-}
-
 TEST_F(BlindSignAuthTest, TestGetTokensFailedNetworkError) {
-  EXPECT_CALL(mock_http_interface_,
-              DoRequest(Eq(BlindSignHttpRequestType::kGetInitialData),
+  EXPECT_CALL(mock_message_interface_,
+              DoRequest(Eq(BlindSignMessageRequestType::kGetInitialData),
                         Eq(oauth_token_), _, _))
       .Times(1)
       .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
@@ -333,8 +278,8 @@ TEST_F(BlindSignAuthTest, TestGetTokensFailedNetworkError) {
             absl::InternalError("Failed to create socket"));
       });
 
-  EXPECT_CALL(mock_http_interface_,
-              DoRequest(Eq(BlindSignHttpRequestType::kAuthAndSign), _, _, _))
+  EXPECT_CALL(mock_message_interface_,
+              DoRequest(Eq(BlindSignMessageRequestType::kAuthAndSign), _, _, _))
       .Times(0);
 
   int num_tokens = 1;
@@ -345,6 +290,7 @@ TEST_F(BlindSignAuthTest, TestGetTokensFailedNetworkError) {
         done.Notify();
       };
   blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
+                              BlindSignAuthServiceType::kChromeIpBlinding,
                               std::move(callback));
   done.WaitForNotification();
 }
@@ -353,20 +299,22 @@ TEST_F(BlindSignAuthTest, TestGetTokensFailedBadGetInitialDataResponse) {
   *fake_get_initial_data_response_.mutable_at_public_metadata_public_key()
        ->mutable_use_case() = "SPAM";
 
-  BlindSignHttpResponse fake_public_key_response(
-      200, fake_get_initial_data_response_.SerializeAsString());
+  BlindSignMessageResponse fake_public_key_response(
+      absl::StatusCode::kOk,
+      fake_get_initial_data_response_.SerializeAsString());
 
   EXPECT_CALL(
-      mock_http_interface_,
-      DoRequest(Eq(BlindSignHttpRequestType::kGetInitialData), Eq(oauth_token_),
+      mock_message_interface_,
+      DoRequest(Eq(BlindSignMessageRequestType::kGetInitialData),
+                Eq(oauth_token_),
                 Eq(expected_get_initial_data_request_.SerializeAsString()), _))
       .Times(1)
       .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
         std::move(get_initial_data_cb)(fake_public_key_response);
       });
 
-  EXPECT_CALL(mock_http_interface_,
-              DoRequest(Eq(BlindSignHttpRequestType::kAuthAndSign), _, _, _))
+  EXPECT_CALL(mock_message_interface_,
+              DoRequest(Eq(BlindSignMessageRequestType::kAuthAndSign), _, _, _))
       .Times(0);
 
   int num_tokens = 1;
@@ -377,74 +325,40 @@ TEST_F(BlindSignAuthTest, TestGetTokensFailedBadGetInitialDataResponse) {
         done.Notify();
       };
   blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
-                              std::move(callback));
-  done.WaitForNotification();
-}
-
-TEST_F(BlindSignAuthTest, TestGetTokensFailedBadRSABlindSignaturePublicKey) {
-  anonymous_tokens::Timestamp start_time;
-  start_time.set_seconds(absl::ToUnixSeconds(absl::Now() + absl::Hours(1)));
-  *public_key_proto_.mutable_key_validity_start_time() = start_time;
-  *fake_get_initial_data_response_.mutable_at_public_metadata_public_key() =
-      public_key_proto_;
-
-  BlindSignHttpResponse fake_public_key_response(
-      200, fake_get_initial_data_response_.SerializeAsString());
-
-  EXPECT_CALL(
-      mock_http_interface_,
-      DoRequest(Eq(BlindSignHttpRequestType::kGetInitialData), Eq(oauth_token_),
-                Eq(expected_get_initial_data_request_.SerializeAsString()), _))
-      .Times(1)
-      .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
-        std::move(get_initial_data_cb)(fake_public_key_response);
-      });
-
-  EXPECT_CALL(mock_http_interface_,
-              DoRequest(Eq(BlindSignHttpRequestType::kAuthAndSign), _, _, _))
-      .Times(0);
-
-  int num_tokens = 1;
-  QuicheNotification done;
-  SignedTokenCallback callback =
-      [&done](absl::StatusOr<absl::Span<BlindSignToken>> tokens) {
-        EXPECT_THAT(tokens.status().code(),
-                    absl::StatusCode::kFailedPrecondition);
-        done.Notify();
-      };
-  blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
+                              BlindSignAuthServiceType::kChromeIpBlinding,
                               std::move(callback));
   done.WaitForNotification();
 }
 
 TEST_F(BlindSignAuthTest, TestGetTokensFailedBadAuthAndSignResponse) {
-  BlindSignHttpResponse fake_public_key_response(
-      200, fake_get_initial_data_response_.SerializeAsString());
+  BlindSignMessageResponse fake_public_key_response(
+      absl::StatusCode::kOk,
+      fake_get_initial_data_response_.SerializeAsString());
   {
     InSequence seq;
 
     EXPECT_CALL(
-        mock_http_interface_,
+        mock_message_interface_,
         DoRequest(
-            Eq(BlindSignHttpRequestType::kGetInitialData), Eq(oauth_token_),
+            Eq(BlindSignMessageRequestType::kGetInitialData), Eq(oauth_token_),
             Eq(expected_get_initial_data_request_.SerializeAsString()), _))
         .Times(1)
         .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
           std::move(get_initial_data_cb)(fake_public_key_response);
         });
 
-    EXPECT_CALL(mock_http_interface_,
-                DoRequest(Eq(BlindSignHttpRequestType::kAuthAndSign),
+    EXPECT_CALL(mock_message_interface_,
+                DoRequest(Eq(BlindSignMessageRequestType::kAuthAndSign),
                           Eq(oauth_token_), _, _))
         .Times(1)
         .WillOnce(Invoke([this](Unused, Unused, const std::string& body,
-                                BlindSignHttpCallback callback) {
+                                BlindSignMessageCallback callback) {
           CreateSignResponse(body, false);
           // Add an invalid signature that can't be Base64 decoded.
           sign_response_.add_blinded_token_signature("invalid_signature%");
-          BlindSignHttpResponse http_response(
-              200, sign_response_.SerializeAsString());
-          std::move(callback)(http_response);
+          BlindSignMessageResponse response(absl::StatusCode::kOk,
+                                            sign_response_.SerializeAsString());
+          std::move(callback)(response);
         }));
   }
 
@@ -456,46 +370,38 @@ TEST_F(BlindSignAuthTest, TestGetTokensFailedBadAuthAndSignResponse) {
         done.Notify();
       };
   blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
+                              BlindSignAuthServiceType::kChromeIpBlinding,
                               std::move(callback));
   done.WaitForNotification();
 }
 
 TEST_F(BlindSignAuthTest, TestPrivacyPassGetTokensSucceeds) {
-  privacy::ppn::BlindSignAuthOptions options;
-  options.set_enable_privacy_pass(true);
-  blind_sign_auth_ =
-      std::make_unique<BlindSignAuth>(&mock_http_interface_, options);
-
-  public_key_proto_.set_message_mask_type(
-      anonymous_tokens::AT_MESSAGE_MASK_NO_MASK);
-  public_key_proto_.set_message_mask_size(0);
-  *fake_get_initial_data_response_.mutable_at_public_metadata_public_key() =
-      public_key_proto_;
-  BlindSignHttpResponse fake_public_key_response(
-      200, fake_get_initial_data_response_.SerializeAsString());
+  BlindSignMessageResponse fake_public_key_response(
+      absl::StatusCode::kOk,
+      fake_get_initial_data_response_.SerializeAsString());
   {
     InSequence seq;
 
     EXPECT_CALL(
-        mock_http_interface_,
+        mock_message_interface_,
         DoRequest(
-            Eq(BlindSignHttpRequestType::kGetInitialData), Eq(oauth_token_),
+            Eq(BlindSignMessageRequestType::kGetInitialData), Eq(oauth_token_),
             Eq(expected_get_initial_data_request_.SerializeAsString()), _))
         .Times(1)
         .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
           std::move(get_initial_data_cb)(fake_public_key_response);
         });
 
-    EXPECT_CALL(mock_http_interface_,
-                DoRequest(Eq(BlindSignHttpRequestType::kAuthAndSign),
+    EXPECT_CALL(mock_message_interface_,
+                DoRequest(Eq(BlindSignMessageRequestType::kAuthAndSign),
                           Eq(oauth_token_), _, _))
         .Times(1)
         .WillOnce(Invoke([this](Unused, Unused, const std::string& body,
-                                BlindSignHttpCallback callback) {
+                                BlindSignMessageCallback callback) {
           CreateSignResponse(body, /*use_privacy_pass=*/true);
-          BlindSignHttpResponse http_response(
-              200, sign_response_.SerializeAsString());
-          std::move(callback)(http_response);
+          BlindSignMessageResponse response(absl::StatusCode::kOk,
+                                            sign_response_.SerializeAsString());
+          std::move(callback)(response);
         }));
   }
 
@@ -508,6 +414,7 @@ TEST_F(BlindSignAuthTest, TestPrivacyPassGetTokensSucceeds) {
         done.Notify();
       };
   blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
+                              BlindSignAuthServiceType::kChromeIpBlinding,
                               std::move(callback));
   done.WaitForNotification();
 }
@@ -516,7 +423,7 @@ TEST_F(BlindSignAuthTest, TestPrivacyPassGetTokensFailsWithBadExtensions) {
   privacy::ppn::BlindSignAuthOptions options;
   options.set_enable_privacy_pass(true);
   blind_sign_auth_ =
-      std::make_unique<BlindSignAuth>(&mock_http_interface_, options);
+      std::make_unique<BlindSignAuth>(&mock_message_interface_, options);
 
   public_key_proto_.set_message_mask_type(
       anonymous_tokens::AT_MESSAGE_MASK_NO_MASK);
@@ -525,12 +432,14 @@ TEST_F(BlindSignAuthTest, TestPrivacyPassGetTokensFailsWithBadExtensions) {
       public_key_proto_;
   fake_get_initial_data_response_.mutable_privacy_pass_data()
       ->set_public_metadata_extensions("spam");
-  BlindSignHttpResponse fake_public_key_response(
-      200, fake_get_initial_data_response_.SerializeAsString());
+  BlindSignMessageResponse fake_public_key_response(
+      absl::StatusCode::kOk,
+      fake_get_initial_data_response_.SerializeAsString());
 
   EXPECT_CALL(
-      mock_http_interface_,
-      DoRequest(Eq(BlindSignHttpRequestType::kGetInitialData), Eq(oauth_token_),
+      mock_message_interface_,
+      DoRequest(Eq(BlindSignMessageRequestType::kGetInitialData),
+                Eq(oauth_token_),
                 Eq(expected_get_initial_data_request_.SerializeAsString()), _))
       .Times(1)
       .WillOnce([=](auto&&, auto&&, auto&&, auto get_initial_data_cb) {
@@ -545,6 +454,7 @@ TEST_F(BlindSignAuthTest, TestPrivacyPassGetTokensFailsWithBadExtensions) {
         done.Notify();
       };
   blind_sign_auth_->GetTokens(oauth_token_, num_tokens, ProxyLayer::kProxyA,
+                              BlindSignAuthServiceType::kChromeIpBlinding,
                               std::move(callback));
   done.WaitForNotification();
 }

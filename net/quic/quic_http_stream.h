@@ -10,10 +10,10 @@
 
 #include <set>
 #include <string>
+#include <string_view>
 
 #include "base/memory/raw_ptr.h"
 #include "base/memory/weak_ptr.h"
-#include "base/strings/string_piece.h"
 #include "base/time/time.h"
 #include "net/base/completion_once_callback.h"
 #include "net/base/idempotency.h"
@@ -74,10 +74,8 @@ class NET_EXPORT_PRIVATE QuicHttpStream : public MultiplexedHttpStream {
   void SetPriority(RequestPriority priority) override;
   void SetRequestIdempotency(Idempotency idempotency) override;
   const std::set<std::string>& GetDnsAliases() const override;
-  base::StringPiece GetAcceptChViaAlps() const override;
-  absl::optional<quic::QuicErrorCode> GetQuicErrorCode() const override;
-  absl::optional<quic::QuicRstStreamErrorCode> GetQuicRstStreamErrorCode()
-      const override;
+  std::string_view GetAcceptChViaAlps() const override;
+  std::optional<QuicErrorDetails> GetQuicErrorDetails() const override;
 
   static HttpConnectionInfo ConnectionInfoFromQuicVersion(
       quic::ParsedQuicVersion quic_version);
@@ -164,9 +162,7 @@ class NET_EXPORT_PRIVATE QuicHttpStream : public MultiplexedHttpStream {
   bool can_send_early_ = false;
 
   // The request body to send, if any, owned by the caller.
-  // DanglingUntriaged because it is assigned a DanglingUntriaged pointer.
-  raw_ptr<UploadDataStream, AcrossTasksDanglingUntriaged> request_body_stream_ =
-      nullptr;
+  raw_ptr<UploadDataStream> request_body_stream_ = nullptr;
   // Time the request was issued.
   base::Time request_time_;
   // The priority of the request.
@@ -204,8 +200,10 @@ class NET_EXPORT_PRIVATE QuicHttpStream : public MultiplexedHttpStream {
   // the default value of false.
   bool closed_is_first_stream_ = false;
 
-  absl::optional<quic::QuicErrorCode> connection_error_;
-  absl::optional<quic::QuicRstStreamErrorCode> stream_error_;
+  quic::QuicErrorCode connection_error_ = quic::QUIC_NO_ERROR;
+  quic::QuicRstStreamErrorCode stream_error_ = quic::QUIC_STREAM_NO_ERROR;
+  uint64_t connection_wire_error_ = 0;
+  uint64_t ietf_application_error_ = 0;
 
   // The caller's callback to be used for asynchronous operations.
   CompletionOnceCallback callback_;
