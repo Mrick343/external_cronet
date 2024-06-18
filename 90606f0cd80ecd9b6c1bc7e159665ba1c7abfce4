@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b41c762_b1b8d7a7",
+        "filename": "third_party/jni_zero/codegen/proxy_impl_java.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-18T10:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "268bfab4_ba411c29",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 26
+      },
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68a2323b_e9d18d49",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b9bfc82_7fee88fb",
+        "filename": "third_party/jni_zero/jni_generator.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-18T10:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68a2323b_e9d18d49",
+      "range": {
+        "startLine": 615,
+        "startChar": 20,
+        "endLine": 615,
+        "endChar": 58
+      },
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41f602ee_0168d4f0",
@@ -77,6 +125,30 @@
       "writtenOn": "2024-06-18T09:58:28Z",
       "side": 1,
       "message": "I don\u0027t think this needs to be flag, it should be the default behavior. No one uses \"package-prefix\" except Cronet and changing the default behavior will only affect us.",
+      "range": {
+        "startLine": 148,
+        "startChar": 14,
+        "endLine": 150,
+        "endChar": 43
+      },
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62cef769_8cc4156c",
+        "filename": "third_party/jni_zero/jni_zero.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-18T10:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41f602ee_0168d4f0",
       "range": {
         "startLine": 148,
         "startChar": 14,
