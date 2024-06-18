@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97fb494c_d41d0d3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-18T09:58:28Z",
+      "side": 1,
+      "message": "Can I ask you to also do this code change on Chromium side? to make sure that the JNI generator people has no complaints (usually they don\u0027t) + we need to add unit-tests here to make sure it does not break again.",
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "268bfab4_ba411c29",
+        "filename": "third_party/jni_zero/codegen/proxy_impl_java.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-18T09:58:28Z",
+      "side": 1,
+      "message": "Remove this if statement and keep the underlying `c \u003d c.class_without_prefix`",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 26
+      },
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68a2323b_e9d18d49",
+        "filename": "third_party/jni_zero/jni_generator.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-18T09:58:28Z",
+      "side": 1,
+      "message": "As the other comment, We should never jarjar imported Java classes that are not generated. This is a bug in the code 😄",
+      "range": {
+        "startLine": 615,
+        "startChar": 20,
+        "endLine": 615,
+        "endChar": 58
+      },
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41f602ee_0168d4f0",
+        "filename": "third_party/jni_zero/jni_zero.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-18T09:58:28Z",
+      "side": 1,
+      "message": "I don\u0027t think this needs to be flag, it should be the default behavior. No one uses \"package-prefix\" except Cronet and changing the default behavior will only affect us.",
+      "range": {
+        "startLine": 148,
+        "startChar": 14,
+        "endLine": 150,
+        "endChar": 43
+      },
+      "revId": "90606f0cd80ecd9b6c1bc7e159665ba1c7abfce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
