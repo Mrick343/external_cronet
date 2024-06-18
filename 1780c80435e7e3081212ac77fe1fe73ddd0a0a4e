@@ -178,6 +178,24 @@
       "parentUuid": "000aa191_150a9f20",
       "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92e60d13_aeea5eec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1947461
+      },
+      "writtenOn": "2024-06-18T06:33:04Z",
+      "side": 1,
+      "message": "I have added \"--skip-prefix-java\" option to jni_zero.py",
+      "parentUuid": "77244790_23f1f749",
+      "revId": "1780c80435e7e3081212ac77fe1fe73ddd0a0a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
