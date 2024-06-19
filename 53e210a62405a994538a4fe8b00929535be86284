@@ -46,6 +46,30 @@
       },
       "revId": "53e210a62405a994538a4fe8b00929535be86284",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba5f17fc_015deaeb",
+        "filename": "third_party/jni_zero/java_types.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-19T10:08:56Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "d23723a5_f272b365",
+      "range": {
+        "startLine": 405,
+        "startChar": 11,
+        "endLine": 405,
+        "endChar": 70
+      },
+      "revId": "53e210a62405a994538a4fe8b00929535be86284",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
