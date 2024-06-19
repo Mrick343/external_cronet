@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27ef8984_f50642cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1750078
+      },
+      "writtenOn": "2024-06-19T10:10:25Z",
+      "side": 1,
+      "message": "Thanks for the hard work on this Motomu! I will leave this comment open with a -1 Lint to prevent submitting 😊",
+      "revId": "ff5b13d7a642bda5e596a69f766d3b4ceacedd19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
