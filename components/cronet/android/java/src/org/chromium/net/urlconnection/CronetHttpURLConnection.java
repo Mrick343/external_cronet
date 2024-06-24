@@ -15,8 +15,6 @@ import org.chromium.net.ExperimentalUrlRequest;
 import org.chromium.net.UrlRequest;
 import org.chromium.net.UrlResponseInfo;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -445,8 +443,7 @@ public class CronetHttpURLConnection extends HttpURLConnection {
      * Since byteBuffer is passed to the UrlRequest, it must be a direct
      * ByteBuffer.
      */
-    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-    public void getMoreData(ByteBuffer byteBuffer) throws IOException {
+    void getMoreData(ByteBuffer byteBuffer) throws IOException {
         mRequest.read(byteBuffer);
         mMessageLoop.loop(getReadTimeout());
     }
