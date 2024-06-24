@@ -23,7 +23,6 @@ import android.os.Process;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.android.testutils.SkipPresubmit;
 
 import org.jni_zero.JNINamespace;
 import org.jni_zero.NativeMethods;
@@ -860,7 +859,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 flaky test")
     @IgnoreFor(
             implementations = {CronetImplementation.AOSP_PLATFORM},
             reason = "ActiveRequestCount is not available in AOSP")
@@ -1039,10 +1037,9 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 flaky test")
     @IgnoreFor(
-        implementations = {CronetImplementation.AOSP_PLATFORM},
-        reason = "ActiveRequestCount is not available in AOSP")
+            implementations = {CronetImplementation.AOSP_PLATFORM},
+            reason = "ActiveRequestCount is not available in AOSP")
     public void testGetActiveRequestCountWithError() throws Exception {
         final String badUrl = "www.unreachable-url.com";
         ExperimentalCronetEngine cronetEngine = mTestRule.getTestFramework().startEngine();
@@ -1305,7 +1302,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 flaky test")
     @IgnoreFor(
             implementations = {CronetImplementation.FALLBACK},
             reason = "Fallback implementation does not have a network thread.")
@@ -1366,7 +1362,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 flaky test")
     @IgnoreFor(
             implementations = {CronetImplementation.FALLBACK},
             reason = "Fallback implementation has no support for caches")
@@ -1756,7 +1751,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 flaky test")
     @IgnoreFor(
             implementations = {CronetImplementation.FALLBACK},
             reason = "No caches support for fallback implementation")
@@ -1780,7 +1774,6 @@ public class CronetUrlRequestContextTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 flaky test")
     @IgnoreFor(
             implementations = {CronetImplementation.FALLBACK},
             reason = "No caches support for fallback implementation")
