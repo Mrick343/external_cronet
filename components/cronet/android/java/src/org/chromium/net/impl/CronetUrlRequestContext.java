@@ -4,7 +4,6 @@
 
 package org.chromium.net.impl;
 
-import org.chromium.net.ApiVersion;
 import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Process;
@@ -500,7 +499,12 @@ public class CronetUrlRequestContext extends CronetEngineBase {
     }
 
     private CronetVersion buildCronetVersion() {
-        return new CronetVersion(ApiVersion.getCronetVersion());
+        String version = getVersionString();
+        // getVersionString()'s output looks like "Cronet/w.x.y.z@hash". CronetVersion only cares
+        // about the "w.x.y.z" bit.
+        version = version.split("/")[1];
+        version = version.split("@")[0];
+        return new CronetVersion(version);
     }
 
     @Override
