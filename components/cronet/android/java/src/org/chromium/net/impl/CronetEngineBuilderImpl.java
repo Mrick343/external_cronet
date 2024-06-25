@@ -69,7 +69,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
 
     /** Mapping between public builder view of HttpCacheMode and internal builder one. */
     @VisibleForTesting
-    public enum HttpCacheMode {
+    static enum HttpCacheMode {
         DISABLED(HttpCacheType.DISABLED, false),
         DISK(HttpCacheType.DISK, true),
         DISK_NO_HTTP(HttpCacheType.DISK, false),
@@ -92,8 +92,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
         }
 
         @HttpCacheSetting
-        @VisibleForTesting
-        public int toPublicBuilderCacheMode() {
+        int toPublicBuilderCacheMode() {
             switch (this) {
                 case DISABLED:
                     return CronetEngine.Builder.HTTP_CACHE_DISABLED;
@@ -109,7 +108,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
         }
 
         @VisibleForTesting
-        public static HttpCacheMode fromPublicBuilderCacheMode(@HttpCacheSetting int cacheMode) {
+        static HttpCacheMode fromPublicBuilderCacheMode(@HttpCacheSetting int cacheMode) {
             switch (cacheMode) {
                 case CronetEngine.Builder.HTTP_CACHE_DISABLED:
                     return DISABLED;
@@ -218,7 +217,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
 
     @Override
     public String getDefaultUserAgent() {
-        return UserAgent.getDefault();
+        return UserAgent.from(mApplicationContext);
     }
 
     @Override
@@ -228,7 +227,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public String getUserAgent() {
+    String getUserAgent() {
         return mUserAgent;
     }
 
@@ -242,7 +241,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public String storagePath() {
+    String storagePath() {
         return mStoragePath;
     }
 
@@ -271,7 +270,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public boolean quicEnabled() {
+    boolean quicEnabled() {
         return mQuicEnabled;
     }
 
@@ -282,7 +281,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
      * @return QUIC User Agent ID string.
      */
     String getDefaultQuicUserAgentId() {
-        return mQuicEnabled ? UserAgent.getDefaultQuicUserAgentId() : "";
+        return mQuicEnabled ? UserAgent.getQuicUserAgentIdFrom(mApplicationContext) : "";
     }
 
     @Override
@@ -292,7 +291,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public boolean http2Enabled() {
+    boolean http2Enabled() {
         return mHttp2Enabled;
     }
 
@@ -308,7 +307,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public boolean brotliEnabled() {
+    boolean brotliEnabled() {
         return mBrotiEnabled;
     }
 
@@ -344,13 +343,12 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public int httpCacheMode() {
+    int httpCacheMode() {
         return mHttpCacheMode.getType();
     }
 
     @HttpCacheSetting
-    @VisibleForTesting
-    public int publicBuilderHttpCacheMode() {
+    int publicBuilderHttpCacheMode() {
         return mHttpCacheMode.toPublicBuilderCacheMode();
     }
 
@@ -416,7 +414,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
     }
 
     @VisibleForTesting
-    public boolean publicKeyPinningBypassForLocalTrustAnchorsEnabled() {
+    boolean publicKeyPinningBypassForLocalTrustAnchorsEnabled() {
         return mPublicKeyPinningBypassForLocalTrustAnchorsEnabled;
     }
 
@@ -494,7 +492,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
      * this builder.
      */
     @VisibleForTesting
-    public boolean networkQualityEstimatorEnabled() {
+    boolean networkQualityEstimatorEnabled() {
         return mNetworkQualityEstimatorEnabled;
     }
 
@@ -522,7 +520,7 @@ public abstract class CronetEngineBuilderImpl extends ICronetEngineBuilder {
      * @return thread priority provided by user, or {@code defaultThreadPriority} if none provided.
      */
     @VisibleForTesting
-    public int threadPriority(int defaultThreadPriority) {
+    int threadPriority(int defaultThreadPriority) {
         return mThreadPriority == INVALID_THREAD_PRIORITY ? defaultThreadPriority : mThreadPriority;
     }
 

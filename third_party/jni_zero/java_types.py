@@ -98,14 +98,6 @@ class JavaClass:
     return self._fqn.replace('/', '.').replace('$', '.')
 
   @property
-  def prefix(self):
-    if self._class_without_prefix == None:
-      return ""
-    full_name_with_dots_without_prefix = self._class_without_prefix.full_name_with_dots
-    index = self.full_name_with_dots.find(full_name_with_dots_without_prefix)
-    return self.full_name_with_dots[:index-1] if index > 0 else ""
-
-  @property
   def class_without_prefix(self):
     return self._class_without_prefix if self._class_without_prefix else self
 
@@ -410,8 +402,7 @@ class TypeResolver:
       return JavaClass(f'java/lang/{name}')
 
     # Type not found, falling back to same package as this class.
-    ret = JavaClass(f'{self.java_class.class_without_prefix.package_with_slashes}/{name}')
-    return ret if self.java_class.prefix == "" else ret.make_prefixed(self.java_class.prefix)
+    return JavaClass(f'{self.java_class.package_with_slashes}/{name}')
 
 
 CLASS_CLASS = JavaClass('java/lang/Class')

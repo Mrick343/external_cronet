@@ -923,10 +923,10 @@ public class NetworkChangeNotifierTest {
                         return mNetworks;
                     }
 
-            @Override
-            public Network getDefaultNetwork() {
-                return mNetworks[1];
-            }
+                    @Override
+                    Network getDefaultNetwork() {
+                        return mNetworks[1];
+                    }
 
                     @Override
                     protected NetworkCapabilities getNetworkCapabilities(Network network) {
