@@ -13,7 +13,6 @@ import static org.chromium.net.truth.UrlResponseInfoSubject.assertThat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SmallTest;
-import com.android.testutils.SkipPresubmit;
 
 import org.json.JSONObject;
 import org.junit.After;
@@ -248,7 +247,6 @@ public class QuicTest {
 
     @Test
     @SmallTest
-    @SkipPresubmit(reason = "b/293141085 Tests that enable disk cache are flaky")
     public void testMetricsWithQuic() throws Exception {
         ExperimentalCronetEngine cronetEngine = mTestRule.getTestFramework().getEngine();
         TestRequestFinishedListener requestFinishedListener = new TestRequestFinishedListener();
