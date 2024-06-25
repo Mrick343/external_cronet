@@ -9398,7 +9398,7 @@ cc_library_static {
         "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/cxx.cc",
     ],
     static_libs: [
-        "libcxx_cronet_aml_third_party_rust_cxx_v1_lib",
+        "libcxx_cronet_aml_third_party_rust_cxx_v1_lib__FFI",
     ],
     defaults: [
         "cronet_aml_defaults",
@@ -9479,7 +9479,7 @@ cc_library_static {
         "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/cxx.cc",
     ],
     static_libs: [
-        "libcxx_cronet_aml_third_party_rust_cxx_v1_lib__testing",
+        "libcxx_cronet_aml_third_party_rust_cxx_v1_lib__testing__FFI",
     ],
     host_supported: true,
     defaults: [
@@ -33989,7 +33989,7 @@ cc_binary {
         "cronet_aml_buildtools_third_party_libc__abi_libc__abi__testing",
         "cronet_aml_crypto_crypto__testing",
         "cronet_aml_net_tools_huffman_trie_huffman_trie_generator_sources__testing",
-        "cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator_sources__",
+        "cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator_sources__testing",
         "cronet_aml_third_party_abseil_cpp_absl__testing",
         "cronet_aml_third_party_abseil_cpp_absl_base_base__testing",
         "cronet_aml_third_party_abseil_cpp_absl_base_log_severity__testing",
@@ -34125,7 +34125,7 @@ cc_binary {
 
 // GN: //net/tools/transport_security_state_generator:transport_security_state_generator_sources__testing
 cc_library_static {
-    name: "cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator_sources__",
+    name: "cronet_aml_net_tools_transport_security_state_generator_transport_security_state_generator_sources__testing",
     srcs: [
         "net/tools/transport_security_state_generator/cert_util.cc",
         "net/tools/transport_security_state_generator/input_file_parsers.cc",
@@ -58854,7 +58854,7 @@ java_genrule {
 
 // GN: //build/rust/tests/test_rust_static_library:test_rust_static_library__testing
 rust_library_rlib {
-    name: "libbuild_srust_stests_stest_urust_ustatic_ulibrary_ctest_urust_ustatic_ulibrary_cronet_aml_build_rus",
+    name: "libbuild_srust_stests_stest_urust_ustatic_ulibrary_ct_CUT__cronet_aml_build_rust_tests_test_rust_static_library_test_rust_static_library__testing",
     srcs: [
         "build/rust/tests/test_rust_static_library/src/lib.rs",
     ],
@@ -58870,7 +58870,7 @@ rust_library_rlib {
         "//external/cronet:__subpackages__",
         "//packages/modules/Connectivity:__subpackages__",
     ],
-    crate_name: "build_srust_stests_stest_urust_ustatic_ulibrary_ctest_urust_ustatic_ulibrary",
+    crate_name: "build_srust_stests_stest_urust_ustatic_ulibrary_ct_CUT_",
     crate_root: "build/rust/tests/test_rust_static_library/src/lib.rs",
     rustlibs: [
         "libchromium_cronet_aml_build_rust_chromium_prelude_chromium_prelude__testing",
@@ -59095,8 +59095,8 @@ rust_library_rlib {
 }
 
 // GN: //third_party/rust/cxx/v1:lib
-rust_library_rlib {
-    name: "libcxx_cronet_aml_third_party_rust_cxx_v1_lib",
+rust_ffi_static {
+    name: "libcxx_cronet_aml_third_party_rust_cxx_v1_lib__FFI",
     srcs: [
         "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/c_char.rs",
         "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/cxx_string.rs",
@@ -59278,6 +59278,209 @@ rust_library_rlib {
 // GN: //third_party/rust/cxx/v1:lib__testing
 rust_library_rlib {
     name: "libcxx_cronet_aml_third_party_rust_cxx_v1_lib__testing",
+    srcs: [
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/c_char.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/cxx_string.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/cxx_vector.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/exception.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/extern_type.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/fmt.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/function.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/hash.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/lib.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/lossy.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/macros/assert.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/macros/mod.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/memory.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/opaque.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/result.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/rust_slice.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/rust_str.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/rust_string.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/rust_type.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/rust_vec.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/shared_ptr.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/sip.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/symbols/exception.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/symbols/mod.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/symbols/rust_slice.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/symbols/rust_str.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/symbols/rust_string.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/symbols/rust_vec.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/type_id.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/unique_ptr.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/unwind.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/vector.rs",
+        "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/weak_ptr.rs",
+    ],
+    host_supported: true,
+    apex_available: [
+        "com.android.tethering",
+    ],
+    min_sdk_version: "30",
+    crate_name: "cxx",
+    crate_root: "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/lib.rs",
+    proc_macros: [
+        "libcxxbridge_macro_cronet_aml_third_party_rust_cxxbridge_macro_v1_lib__proc_macro__testing",
+    ],
+    target: {
+        android_arm: {
+            edition: "2021",
+            cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
+            ],
+            features: [
+                "alloc",
+                "std",
+            ],
+            flags: [
+                "-Cmetadata=cxx-1",
+                "-Cforce-unwind-tables=no",
+                "-Crelocation-model=pic",
+                "-Coverflow-checks=on",
+                "-Cdefault-linker-libraries",
+                "-Clto=no",
+                "-Ccodegen-units=1",
+                "-Copt-level=s",
+                "-Cdebuginfo=1",
+                "--cap-lints=allow",
+                "-Dunsafe_op_in_unsafe_fn",
+                "-Dwarnings",
+                "-Aunused-imports",
+            ],
+        },
+        android_arm64: {
+            edition: "2021",
+            cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
+            ],
+            features: [
+                "alloc",
+                "std",
+            ],
+            flags: [
+                "-Cmetadata=cxx-1",
+                "-Cforce-unwind-tables=no",
+                "-Crelocation-model=pic",
+                "-Coverflow-checks=on",
+                "-Cdefault-linker-libraries",
+                "-Clto=no",
+                "-Ccodegen-units=1",
+                "-Copt-level=3",
+                "-Cdebuginfo=1",
+                "--cap-lints=allow",
+                "-Dunsafe_op_in_unsafe_fn",
+                "-Dwarnings",
+                "-Aunused-imports",
+            ],
+        },
+        android_riscv64: {
+            edition: "2021",
+            cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
+            ],
+            features: [
+                "alloc",
+                "std",
+            ],
+            flags: [
+                "-Cmetadata=cxx-1",
+                "-Cforce-unwind-tables=no",
+                "-Crelocation-model=pic",
+                "-Coverflow-checks=on",
+                "-Cdefault-linker-libraries",
+                "-Clto=no",
+                "-Ccodegen-units=1",
+                "-Copt-level=s",
+                "-Cdebuginfo=1",
+                "--cap-lints=allow",
+                "-Dunsafe_op_in_unsafe_fn",
+                "-Dwarnings",
+                "-Aunused-imports",
+            ],
+        },
+        android_x86: {
+            edition: "2021",
+            cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
+            ],
+            features: [
+                "alloc",
+                "std",
+            ],
+            flags: [
+                "-Cmetadata=cxx-1",
+                "-Cforce-unwind-tables=no",
+                "-Crelocation-model=pic",
+                "-Coverflow-checks=on",
+                "-Cdefault-linker-libraries",
+                "-Clto=no",
+                "-Ccodegen-units=1",
+                "-Copt-level=s",
+                "-Cdebuginfo=1",
+                "--cap-lints=allow",
+                "-Dunsafe_op_in_unsafe_fn",
+                "-Dwarnings",
+                "-Aunused-imports",
+            ],
+        },
+        android_x86_64: {
+            edition: "2021",
+            cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
+            ],
+            features: [
+                "alloc",
+                "std",
+            ],
+            flags: [
+                "-Cmetadata=cxx-1",
+                "-Cforce-unwind-tables=no",
+                "-Crelocation-model=pic",
+                "-Coverflow-checks=on",
+                "-Cdefault-linker-libraries",
+                "-Clto=no",
+                "-Ccodegen-units=1",
+                "-Copt-level=s",
+                "-Cdebuginfo=1",
+                "--cap-lints=allow",
+                "-Dunsafe_op_in_unsafe_fn",
+                "-Dwarnings",
+                "-Aunused-imports",
+            ],
+        },
+        host: {
+            edition: "2021",
+            cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
+            ],
+            features: [
+                "alloc",
+                "std",
+            ],
+            flags: [
+                "-Cmetadata=cxx-1",
+                "-Cforce-unwind-tables=no",
+                "-Crelocation-model=pic",
+                "-Coverflow-checks=on",
+                "-Cdefault-linker-libraries",
+                "-Clto=no",
+                "-Ccodegen-units=1",
+                "-Copt-level=3",
+                "-Cdebuginfo=1",
+                "--cap-lints=allow",
+                "-Dunsafe_op_in_unsafe_fn",
+                "-Dwarnings",
+                "-Aunused-imports",
+            ],
+            compile_multilib: "64",
+        },
+    },
+}
+
+// GN: //third_party/rust/cxx/v1:lib__testing
+rust_ffi_static {
+    name: "libcxx_cronet_aml_third_party_rust_cxx_v1_lib__testing__FFI",
     srcs: [
         "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/c_char.rs",
         "third_party/rust/chromium_crates_io/vendor/cxx-1.0.120/src/cxx_string.rs",
