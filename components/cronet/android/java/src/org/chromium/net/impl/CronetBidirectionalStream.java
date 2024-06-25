@@ -4,12 +4,6 @@
 
 package org.chromium.net.impl;
 
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_IDLE;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_LOWEST;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_LOW;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_MEDIUM;
-import static org.chromium.net.BidirectionalStream.Builder.STREAM_PRIORITY_HIGHEST;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.VisibleForTesting;
 
@@ -110,7 +104,6 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
     private final int mInitialPriority;
     private final String mInitialMethod;
     private final String mRequestHeaders[];
-    private final UrlResponseInfo.HeaderBlock mRequestHeaderBlock;
     private final boolean mDelayRequestHeadersUntilFirstFlush;
     private final Collection<Object> mRequestAnnotations;
     private final boolean mTrafficStatsTagSet;
@@ -278,7 +271,6 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mExecutor = executor;
         mInitialMethod = httpMethod;
         mRequestHeaders = stringsFromHeaderList(requestHeaders);
-        mRequestHeaderBlock = new UrlResponseInfoImpl.HeaderBlockImpl(requestHeaders);
         mDelayRequestHeadersUntilFirstFlush = delayRequestHeadersUntilNextFlush;
         mPendingData = new LinkedList<>();
         mFlushData = new LinkedList<>();
@@ -288,65 +280,6 @@ public class CronetBidirectionalStream extends ExperimentalBidirectionalStream {
         mTrafficStatsUidSet = trafficStatsUidSet;
         mTrafficStatsUid = trafficStatsUid;
         mNetworkHandle = networkHandle;
-    }
-
-    @Override
-    public String getHttpMethod() {
-        return mInitialMethod;
-    }
-
-    @Override
-    public boolean hasTrafficStatsTag() {
-        return mTrafficStatsTagSet;
-    }
-
-    @Override
-    public int getTrafficStatsTag() {
-        if (!hasTrafficStatsTag()) {
-            throw new IllegalStateException("TrafficStatsTag is not set");
-        }
-        return mTrafficStatsTag;
-    }
-
-    @Override
-    public boolean hasTrafficStatsUid() {
-        return mTrafficStatsUidSet;
-    }
-
-    @Override
-    public int getTrafficStatsUid() {
-        if (!hasTrafficStatsUid()) {
-            throw new IllegalStateException("TrafficStatsUid is not set");
-        }
-        return mTrafficStatsUid;
-    }
-
-    @Override
-    public UrlResponseInfo.HeaderBlock getHeaders() {
-        return mRequestHeaderBlock;
-    }
-
-    @Override
-    public int getPriority() {
-        switch (mInitialPriority) {
-            case RequestPriority.IDLE:
-                return STREAM_PRIORITY_IDLE;
-            case RequestPriority.LOWEST:
-                return STREAM_PRIORITY_LOWEST;
-            case RequestPriority.LOW:
-                return STREAM_PRIORITY_LOW;
-            case RequestPriority.MEDIUM:
-                return STREAM_PRIORITY_MEDIUM;
-            case RequestPriority.HIGHEST:
-                return STREAM_PRIORITY_HIGHEST;
-            default:
-                throw new IllegalStateException("Invalid stream priority: " + mInitialPriority);
-        }
-    }
-
-    @Override
-    public boolean isDelayRequestHeadersUntilFirstFlushEnabled() {
-        return mDelayRequestHeadersUntilFirstFlush;
     }
 
     @Override
