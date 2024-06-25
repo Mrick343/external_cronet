@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- test of non ascii comments like là et très -->
-<!--à another one -->
-<!-- another one à-->
+<!-- test of non ascii comments like lï¿½ et trï¿½s -->
+<!--ï¿½ another one -->
+<!-- another one ï¿½-->
 <doc/>
