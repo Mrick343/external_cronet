@@ -5,11 +5,6 @@
 package org.chromium.net.impl;
 
 import static java.lang.Math.max;
-import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_IDLE;
-import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_LOWEST;
-import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_LOW;
-import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_MEDIUM;
-import static org.chromium.net.UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST;
 
 import android.os.Build;
 
@@ -31,7 +26,6 @@ import org.chromium.net.RequestFinishedInfo;
 import org.chromium.net.RequestPriority;
 import org.chromium.net.UploadDataProvider;
 import org.chromium.net.UrlRequest;
-import org.chromium.net.UrlResponseInfo.HeaderBlock;
 import org.chromium.net.impl.CronetLogger.CronetTrafficInfo;
 
 import java.nio.ByteBuffer;
@@ -129,7 +123,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
     private Runnable mOnDestroyedCallbackForTesting;
 
     @VisibleForTesting
-    public static final class HeadersList extends ArrayList<Map.Entry<String, String>> {}
+    static final class HeadersList extends ArrayList<Map.Entry<String, String>> {}
 
     private final class OnReadCompletedRunnable implements Runnable {
         // Buffer passed back from current invocation of onReadCompleted.
@@ -223,69 +217,6 @@ public final class CronetUrlRequest extends UrlRequestBase {
             mInitialMethod = "POST";
         }
         mUploadDataStream = new CronetUploadDataStream(uploadDataProvider, executor, this);
-    }
-
-    @Override
-    public String getHttpMethod() {
-        return mInitialMethod;
-    }
-
-    @Override
-    public boolean isDirectExecutorAllowed() {
-        return mAllowDirectExecutor;
-    }
-
-    @Override
-    public boolean isCacheDisabled() {
-        return mDisableCache;
-    }
-
-    @Override
-    public boolean hasTrafficStatsTag() {
-        return mTrafficStatsTagSet;
-    }
-
-    @Override
-    public int getTrafficStatsTag() {
-        if (!hasTrafficStatsTag()) {
-            throw new IllegalStateException("TrafficStatsTag is not set");
-        }
-        return mTrafficStatsTag;
-    }
-
-    @Override
-    public boolean hasTrafficStatsUid() {
-        return mTrafficStatsUidSet;
-    }
-
-    @Override
-    public int getTrafficStatsUid() {
-        if (!hasTrafficStatsUid()) {
-            throw new IllegalStateException("TrafficStatsUid is not set");
-        }
-        return mTrafficStatsUid;
-    }
-    @Override
-    public int getPriority() {
-        switch (mPriority) {
-            case RequestPriority.IDLE:
-                return REQUEST_PRIORITY_IDLE;
-            case RequestPriority.LOWEST:
-                return REQUEST_PRIORITY_LOWEST;
-            case RequestPriority.LOW:
-                return REQUEST_PRIORITY_LOW;
-            case RequestPriority.MEDIUM:
-                return REQUEST_PRIORITY_MEDIUM;
-            case RequestPriority.HIGHEST:
-                return REQUEST_PRIORITY_HIGHEST;
-            default:
-                throw new IllegalStateException("Invalid request priority: " + mPriority);
-        }
-    }
-
-    @Override
-    public HeaderBlock getHeaders() {
-        return new UrlResponseInfoImpl.HeaderBlockImpl(mRequestHeaders);
     }
 
     @Override
@@ -543,7 +474,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
      * We are not really interested in their specific size but something which is close enough.
      */
     @VisibleForTesting
-    public static long estimateHeadersSizeInBytes(Map<String, List<String>> headers) {
+    static long estimateHeadersSizeInBytes(Map<String, List<String>> headers) {
         if (headers == null) return 0;
 
         long responseHeaderSizeInBytes = 0;
@@ -564,7 +495,7 @@ public final class CronetUrlRequest extends UrlRequestBase {
      * We are not really interested in their specific size but something which is close enough.
      */
     @VisibleForTesting
-    public static long estimateHeadersSizeInBytes(HeadersList headers) {
+    static long estimateHeadersSizeInBytes(HeadersList headers) {
         if (headers == null) return 0;
         long responseHeaderSizeInBytes = 0;
         for (Map.Entry<String, String> entry : headers) {

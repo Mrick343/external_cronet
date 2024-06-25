@@ -438,7 +438,7 @@ public class CronetTestRule implements TestRule {
             mBuilder =
                     implementation
                             .createBuilder(sContextWrapper)
-                            .setUserAgent(UserAgent.getDefault())
+                            .setUserAgent(UserAgent.from(sContextWrapper))
                             .enableQuic(true);
             mImplementation = implementation;
             mTestName = testName;
