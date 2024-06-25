@@ -98,9 +98,9 @@
 	<xsd:attributeGroup name="attrGr.inters.2_1">
 		<xsd:anyAttribute namespace="##local ##targetNamespace"/>
 	</xsd:attributeGroup>
-	<!-- 3. If either O1 or O2 is a pair of not and a value (a namespace name or ·absent·) 
-	  and the other is a set of (namespace names or ·absent·), then that set, minus the 
-	  negated value if it was in the set, minus ·absent· if it was in the set, must be the value. -->
+	<!-- 3. If either O1 or O2 is a pair of not and a value (a namespace name or ï¿½absentï¿½) 
+	  and the other is a set of (namespace names or ï¿½absentï¿½), then that set, minus the 
+	  negated value if it was in the set, minus ï¿½absentï¿½ if it was in the set, must be the value. -->
 	<xsd:complexType name="type.inters.3_1">	
 		<xsd:attributeGroup ref="foo:attrGr.inters.3_1"/>			
 		<xsd:anyAttribute namespace="##other" processContents="lax"/>	
@@ -108,7 +108,7 @@
 	<xsd:attributeGroup name="attrGr.inters.3_1">
 		<xsd:anyAttribute namespace="##local ##targetNamespace http://BAR"/>
 	</xsd:attributeGroup>
-	<!-- 4. If both O1 and O2 are sets of (namespace names or ·absent·), then the 
+	<!-- 4. If both O1 and O2 are sets of (namespace names or ï¿½absentï¿½), then the 
 	  intersection of those sets must be the value. -->
 	<xsd:complexType name="type.inters.4_1">	
 		<xsd:attributeGroup ref="foo:attrGr.inters.4_1"/>			
@@ -125,7 +125,7 @@
 		<xsd:anyAttribute namespace="##other" processContents="lax"/>	
 	</xsd:complexType>
 	-->
-	<!--6. If the one is a negation of a namespace name and the other is a negation of ·absent·, 
+	<!--6. If the one is a negation of a namespace name and the other is a negation of ï¿½absentï¿½, 
 	  then the one which is the negation of a namespace name must be the value. 
 
 	  This one uses an attribute group from an imported schema with no targetNamespace.

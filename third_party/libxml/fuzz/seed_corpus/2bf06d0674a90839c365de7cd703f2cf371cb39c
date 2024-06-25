@@ -29,7 +29,7 @@ publication.  -->
 <!ENTITY como   "--">
 <!ENTITY comc   "--">
 <!ENTITY hcro   "&amp;#x">
-<!-- <!ENTITY nbsp " "> -->
+<!-- <!ENTITY nbsp "ï¿½"> -->
 <!ENTITY nbsp   "&#160;">
 <!ENTITY magicents "<code>amp</code>,
 <code>lt</code>,
@@ -1433,7 +1433,7 @@ are case insensitive.</p>
   <l>Habe nun, ach! Philosophie,</l>
   <l>Juristerei, und Medizin</l>
   <l>und leider auch Theologie</l>
-  <l>durchaus studiert mit heißem Bemüh'n.</l>
+  <l>durchaus studiert mit heiï¿½em Bemï¿½h'n.</l>
   </sp>]]></eg></p>
 <!--<p>The xml:lang value is considered to apply both to the contents of an
 element and 
