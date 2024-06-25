@@ -18,4 +18,5 @@ $BASEDIR/gen_android_bp \
     --desc $BASEDIR/desc_arm.json \
     --desc $BASEDIR/desc_arm64.json \
     --desc $BASEDIR/desc_riscv64.json \
+    --build_script_output $BASEDIR/build_script_outputs.json \
     --out $BASEDIR/Android.bp

@@ -59706,8 +59706,12 @@ rust_library_rlib {
         host: {
             edition: "2021",
             cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
                 "no_literal_byte_character",
                 "no_literal_c_string",
+                "proc_macro_span",
+                "span_locations",
+                "wrap_proc_macro",
             ],
             features: [
                 "proc-macro",
@@ -59761,8 +59765,12 @@ rust_library_rlib {
         host: {
             edition: "2021",
             cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
                 "no_literal_byte_character",
                 "no_literal_c_string",
+                "proc_macro_span",
+                "span_locations",
+                "wrap_proc_macro",
             ],
             features: [
                 "proc-macro",
