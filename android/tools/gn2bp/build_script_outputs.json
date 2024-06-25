@@ -1,0 +1,243 @@
+{
+  "//build/rust/std/rules:libc": {
+    "x86": [
+      "--cfg",
+      "freebsd11",
+      "--cfg",
+      "libc_priv_mod_use",
+      "--cfg",
+      "libc_union",
+      "--cfg",
+      "libc_const_size_of",
+      "--cfg",
+      "libc_align",
+      "--cfg",
+      "libc_int128",
+      "--cfg",
+      "libc_core_cvoid",
+      "--cfg",
+      "libc_packedN",
+      "--cfg",
+      "libc_cfg_target_vendor",
+      "--cfg",
+      "libc_non_exhaustive",
+      "--cfg",
+      "libc_long_array",
+      "--cfg",
+      "libc_ptr_addr_of",
+      "--cfg",
+      "libc_underscore_const_names",
+      "--cfg",
+      "libc_thread_local",
+      "--cfg",
+      "libc_const_extern_fn"
+    ],
+    "x64": [
+      "--cfg",
+      "freebsd11",
+      "--cfg",
+      "libc_priv_mod_use",
+      "--cfg",
+      "libc_union",
+      "--cfg",
+      "libc_const_size_of",
+      "--cfg",
+      "libc_align",
+      "--cfg",
+      "libc_int128",
+      "--cfg",
+      "libc_core_cvoid",
+      "--cfg",
+      "libc_packedN",
+      "--cfg",
+      "libc_cfg_target_vendor",
+      "--cfg",
+      "libc_non_exhaustive",
+      "--cfg",
+      "libc_long_array",
+      "--cfg",
+      "libc_ptr_addr_of",
+      "--cfg",
+      "libc_underscore_const_names",
+      "--cfg",
+      "libc_thread_local",
+      "--cfg",
+      "libc_const_extern_fn"
+    ],
+    "arm": [
+      "--cfg",
+      "freebsd11",
+      "--cfg",
+      "libc_priv_mod_use",
+      "--cfg",
+      "libc_union",
+      "--cfg",
+      "libc_const_size_of",
+      "--cfg",
+      "libc_align",
+      "--cfg",
+      "libc_int128",
+      "--cfg",
+      "libc_core_cvoid",
+      "--cfg",
+      "libc_packedN",
+      "--cfg",
+      "libc_cfg_target_vendor",
+      "--cfg",
+      "libc_non_exhaustive",
+      "--cfg",
+      "libc_long_array",
+      "--cfg",
+      "libc_ptr_addr_of",
+      "--cfg",
+      "libc_underscore_const_names",
+      "--cfg",
+      "libc_thread_local",
+      "--cfg",
+      "libc_const_extern_fn"
+    ],
+    "arm64": [
+      "--cfg",
+      "freebsd11",
+      "--cfg",
+      "libc_priv_mod_use",
+      "--cfg",
+      "libc_union",
+      "--cfg",
+      "libc_const_size_of",
+      "--cfg",
+      "libc_align",
+      "--cfg",
+      "libc_int128",
+      "--cfg",
+      "libc_core_cvoid",
+      "--cfg",
+      "libc_packedN",
+      "--cfg",
+      "libc_cfg_target_vendor",
+      "--cfg",
+      "libc_non_exhaustive",
+      "--cfg",
+      "libc_long_array",
+      "--cfg",
+      "libc_ptr_addr_of",
+      "--cfg",
+      "libc_underscore_const_names",
+      "--cfg",
+      "libc_thread_local",
+      "--cfg",
+      "libc_const_extern_fn"
+    ],
+    "host": [
+      "--cfg",
+      "freebsd11",
+      "--cfg",
+      "libc_priv_mod_use",
+      "--cfg",
+      "libc_union",
+      "--cfg",
+      "libc_const_size_of",
+      "--cfg",
+      "libc_align",
+      "--cfg",
+      "libc_int128",
+      "--cfg",
+      "libc_core_cvoid",
+      "--cfg",
+      "libc_packedN",
+      "--cfg",
+      "libc_cfg_target_vendor",
+      "--cfg",
+      "libc_non_exhaustive",
+      "--cfg",
+      "libc_long_array",
+      "--cfg",
+      "libc_ptr_addr_of",
+      "--cfg",
+      "libc_underscore_const_names",
+      "--cfg",
+      "libc_thread_local",
+      "--cfg",
+      "libc_const_extern_fn"
+    ]
+  },
+  "//build/rust/std/rules:compiler_builtins": {
+    "x86": [
+      "--cfg",
+      "feature=\"unstable\"",
+      "--cfg",
+      "feature=\"mem-unaligned\""
+    ],
+    "x64": [
+      "--cfg",
+      "feature=\"unstable\"",
+      "--cfg",
+      "feature=\"mem-unaligned\""
+    ],
+    "arm": [
+      "--cfg",
+      "feature=\"unstable\""
+    ],
+    "arm64": [
+      "--cfg",
+      "feature=\"unstable\"",
+      "--cfg",
+      "feature=\"mem-unaligned\""
+    ],
+    "host": [
+      "--cfg",
+      "feature=\"unstable\"",
+      "--cfg",
+      "feature=\"mem-unaligned\""
+    ]
+  },
+  "//build/rust/std/rules:memchr": {
+    "x86": [
+      ""
+    ],
+    "x64": [
+      ""
+    ],
+    "arm": [
+      ""
+    ],
+    "arm64": [
+      ""
+    ],
+    "host": [
+      ""
+    ]
+  },
+  "//build/rust/std/rules:std": {
+    "x86": [
+      "--cfg",
+      "backtrace_in_libstd"
+    ],
+    "x64": [
+      "--cfg",
+      "backtrace_in_libstd"
+    ],
+    "arm": [
+      "--cfg",
+      "backtrace_in_libstd"
+    ],
+    "arm64": [
+      "--cfg",
+      "backtrace_in_libstd"
+    ],
+    "host": [
+      "--cfg",
+      "backtrace_in_libstd"
+    ]
+  },
+  "//third_party/rust/proc_macro2/v1:lib": {
+    "host": [
+      "--cfg",
+      "span_locations",
+      "--cfg",
+      "wrap_proc_macro",
+      "--cfg",
+      "proc_macro_span"
+    ]
+  }
+}

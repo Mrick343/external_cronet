@@ -59703,6 +59703,7 @@ rust_library_rlib {
         host: {
             edition: "2021",
             cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
                 "no_literal_byte_character",
                 "no_literal_c_string",
                 "proc_macro_span",
@@ -59725,6 +59726,7 @@ rust_library_rlib {
                 "--cap-lints=allow",
                 "-Dunsafe_op_in_unsafe_fn",
                 "-Dwarnings",
+                "-Aunused-imports",
             ],
             compile_multilib: "64",
         },
@@ -59760,6 +59762,7 @@ rust_library_rlib {
         host: {
             edition: "2021",
             cfgs: [
+                "cr_rustc_revision=\"ab71ee7a9214c2793108a41efb065aa77aeb7326-2-llvmorg-19-init-8091-gab037c4f\"",
                 "no_literal_byte_character",
                 "no_literal_c_string",
                 "proc_macro_span",
@@ -59782,6 +59785,7 @@ rust_library_rlib {
                 "--cap-lints=allow",
                 "-Dunsafe_op_in_unsafe_fn",
                 "-Dwarnings",
+                "-Aunused-imports",
             ],
             compile_multilib: "64",
         },

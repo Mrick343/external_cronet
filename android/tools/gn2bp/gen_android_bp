@@ -148,18 +148,16 @@ additional_args = {
     ],
     # no_literal_* should be removed once AOSP starts using rustc version >= 1.79
     'libproc_macro2_cronet_aml_third_party_rust_proc_macro2_v1_lib__testing': [
-        ('target', ("host", {
-                "cfgs": {"span_locations", "wrap_proc_macro", "proc_macro_span",
-                         "no_literal_byte_character", "no_literal_c_string"}
-            }),
+        ('target', ("host", (
+              "cfgs", {"no_literal_byte_character", "no_literal_c_string"}
+            )),
         )
     ],
     # no_literal_* should be removed once AOSP starts using rustc version >= 1.79
     'libproc_macro2_cronet_aml_third_party_rust_proc_macro2_v1_lib': [
-        ('target', ("host", {
-            "cfgs": {"span_locations", "wrap_proc_macro", "proc_macro_span",
-                     "no_literal_byte_character", "no_literal_c_string"}
-        }),
+        ('target', ("host", (
+              "cfgs", {"no_literal_byte_character", "no_literal_c_string"}
+            )),
          )
     ],
     'cronet_aml_net_third_party_quiche_net_quic_test_tools_proto_gen__testing_headers': [
@@ -210,7 +208,7 @@ additional_args = {
         ('sdk_version', ""),
     ],
     'cronet_aml_components_cronet_android_cronet__testing': [
-        ('target',  ('android_riscv64', {'stem': "libmainlinecronet_riscv64"})),
+        ('target',  ('android_riscv64', ('stem', "libmainlinecronet_riscv64"))),
         ('comment', """TODO: remove stem for riscv64
 // This is essential as there can't be two different modules
 // with the same output. We usually got away with that because
@@ -901,6 +899,8 @@ def _normalize_flags(rust_flags: List[str]) -> Dict[str, Set[str] | None]:
         # Assume this is a key-only string. This will be resolved in the next
         # iteration.
         previous_key = rust_flag
+  if previous_key:
+    args_mapping[previous_key] = set()
   return args_mapping
 
 
@@ -2285,8 +2285,14 @@ def create_blueprint_for_targets(gn, targets, test_targets):
         setattr(module, key, add_val)
       elif isinstance(add_val, dict) and isinstance(curr, dict):
         curr.update(add_val)
-      elif isinstance(add_val[1], dict) and isinstance(curr[add_val[0]], Module.Target):
-        curr[add_val[0]].__dict__.update(add_val[1])
+      elif isinstance(curr[add_val[0]], Module.Target):
+        arch = add_val[0]
+        field = add_val[1][0]
+        cur_field = getattr(curr[arch], field)
+        if isinstance(cur_field, set):
+          cur_field.update(add_val[1][1])
+        else:
+          setattr(curr[arch], field, add_val[1][1])
       else:
         raise Exception('Unimplemented type %r of additional_args: %r' % (type(add_val), key))
 
@@ -2308,6 +2314,12 @@ def main():
            'You can specify multiple --desc options for different target_cpu',
       required=True,
       action='append'
+  )
+  parser.add_argument(
+      '--build_script_output',
+      help='JSON-formatted file containing output of build scripts broken down' +
+        'by architecture.',
+      required=True
   )
   parser.add_argument(
       '--extras',
@@ -2336,7 +2348,10 @@ def main():
     log.basicConfig(format='%(levelname)s:%(funcName)s:%(message)s', level=log.DEBUG)
 
   targets = args.targets or DEFAULT_TARGETS
-  gn = gn_utils.GnParser(builtin_deps)
+  build_scripts_output = None
+  with open(args.build_script_output) as f:
+    build_scripts_output = json.load(f)
+  gn = gn_utils.GnParser(builtin_deps, build_scripts_output)
   for desc_file in args.desc:
     with open(desc_file) as f:
       desc = json.load(f)
