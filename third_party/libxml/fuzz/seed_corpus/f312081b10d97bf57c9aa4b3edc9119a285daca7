@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- 3.2.3 : 2 
-    If default and use are both present, use must have the ·actual value· optional
+    If default and use are both present, use must have the ï¿½actual valueï¿½ optional
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://foo" xmlns:foo="http://foo">
 	

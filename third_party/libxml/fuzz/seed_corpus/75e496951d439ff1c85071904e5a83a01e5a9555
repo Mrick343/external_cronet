@@ -8,9 +8,9 @@
 
 	4.2 The complex type definition's {attribute wildcard}'s {namespace constraint} 
 	must be a subset of the {base type definition}'s {attribute wildcard}'s {namespace 
-	constraint}, as defined by Wildcard Subset (§3.10.6).
+	constraint}, as defined by Wildcard Subset (ï¿½3.10.6).
 
-	4.3 Unless the {base type definition} is the ·ur-type definition·, the complex type 
+	4.3 Unless the {base type definition} is the ï¿½ur-type definitionï¿½, the complex type 
 	definition's {attribute wildcard}'s {process contents} must be identical to or stronger 
 	than the {base type definition}'s {attribute wildcard}'s {process contents}, 
 	where strict is stronger than lax is stronger than skip.
