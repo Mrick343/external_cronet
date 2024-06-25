@@ -198,12 +198,12 @@ class QUICHE_NO_EXPORT QuicIntervalDeque {
     Iterator operator+(difference_type amount) const {
       Iterator copy = *this;
       copy.index_ += amount;
-      QUICHE_DCHECK(copy.index_ < copy.deque_->Size());
+      QUICHE_DCHECK(copy.index_ < copy.deque_->size());
       return copy;
     }
     Iterator& operator+=(difference_type amount) {
       index_ += amount;
-      QUICHE_DCHECK(index_ < deque_->Size());
+      QUICHE_DCHECK(index_ < deque_->size());
       return *this;
     }
     difference_type operator-(const Iterator& rhs) const {

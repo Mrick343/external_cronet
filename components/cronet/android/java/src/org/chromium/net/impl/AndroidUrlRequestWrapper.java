@@ -4,15 +4,10 @@
 
 package org.chromium.net.impl;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_API_LEVEL;
 import static org.chromium.net.impl.HttpEngineNativeProvider.EXT_VERSION;
 
 import androidx.annotation.RequiresExtension;
-
-import org.chromium.net.UrlResponseInfo;
 
 import java.nio.ByteBuffer;
 
@@ -52,52 +47,5 @@ class AndroidUrlRequestWrapper extends org.chromium.net.ExperimentalUrlRequest {
     @Override
     public void getStatus(StatusListener listener) {
         mBackend.getStatus(new AndroidUrlRequestStatusListenerWrapper(listener));
-    }
-
-    @Override
-    public int getTrafficStatsUid() {
-        return mBackend.getTrafficStatsUid();
-    }
-
-    @Override
-    public int getPriority() {
-        return mBackend.getPriority();
-    }
-
-    @Override
-    public boolean hasTrafficStatsTag() {
-        return mBackend.hasTrafficStatsTag();
-    }
-
-    @Override
-    public boolean hasTrafficStatsUid() {
-        return mBackend.hasTrafficStatsUid();
-    }
-
-    @Override
-    public int getTrafficStatsTag() {
-        return mBackend.getTrafficStatsTag();
-    }
-
-    @Override
-    public boolean isDirectExecutorAllowed() {
-        return mBackend.isDirectExecutorAllowed();
-    }
-
-    @Override
-    public boolean isCacheDisabled() {
-        return mBackend.isCacheDisabled();
-    }
-
-    @NonNull
-    @Override
-    public UrlResponseInfo.HeaderBlock getHeaders() {
-        return new AndroidHeaderBlockWrapper(mBackend.getHeaders());
-    }
-
-    @Nullable
-    @Override
-    public String getHttpMethod() {
-        return mBackend.getHttpMethod();
     }
 }
