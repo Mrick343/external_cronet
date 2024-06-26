@@ -1,0 +1,229 @@
+
+# Copybara for Cronet
+# Workflow for copying code from Chromium to AOSP Gerrit as a pending CL
+common_excludes = [
+    # Exclude all Android build files
+    "**/Android.bp",
+    "**/Android.mk",
+    # Exclude existing *OWNERS files
+    "**/*OWNERS",
+    "**/.git/**",
+    "**/.gitignore",
+    # Exclude Android Manifest and pycache files (added by gabriellelau@)
+    "**/AndroidManifest.xml",
+    "**/__pycache__/**",
+    "base/tracing/test/data/.*", # Exclude hidden files
+]
+cronet_origin_files = glob(
+    include = [
+        "base/**",
+        "build/**",
+        "build/buildflag.h",
+        "chrome/VERSION",
+        "components/cronet/**",
+        "components/metrics/**",
+        # See https://chromium-review.googlesource.com/c/chromium/src/+/4896104
+        "components/miracle_parameter/**",
+        "components/nacl/**",
+        "components/prefs/**",
+        "crypto/**",
+        "ipc/**",
+        "net/**",
+        # Note: Only used for tests.
+        "testing/**",
+        "url/**",
+        "LICENSE",
+    ],
+    exclude = common_excludes + [
+        # Per aosp/2367109
+        "build/android/CheckInstallApk-debug.apk",
+        "build/android/unused_resources/**",
+        "build/linux/**",
+        # Per aosp/2374766
+        "components/cronet/ios/**",
+        "components/cronet/native/**",
+        # Per aosp/2399270
+        "testing/buildbot/**",
+        # Exclude all third-party directories. Those are specified explicitly
+        # below, so no dependency can accidentally creep in.
+        "**/third_party/**",
+    ],
+) + glob(
+    # Explicitly include third-party dependencies.
+    # Note: some third-party dependencies include a third_party folder within
+    # them. So far, this has not become a problem.
+    include = [
+        "base/third_party/cityhash/**",
+        "base/third_party/cityhash_v103/**",
+        "base/third_party/double_conversion/**",
+        "base/third_party/dynamic_annotations/**",
+        "base/third_party/icu/**",
+        "base/third_party/nspr/**",
+        "base/third_party/superfasthash/**",
+        "base/third_party/valgrind/**",
+        # Those are temporarily needed until Chromium finish the migration
+        # of libc++[abi]
+        "buildtools/third_party/libc++/**", # Question: aosp-main only has build files buildtools/third_party/libc++/*
+        "buildtools/third_party/libc++abi/**",
+        # Note: Only used for tests.
+        "net/third_party/nist-pkits/**",
+        "net/third_party/quiche/**",
+        "net/third_party/uri_template/**",
+        "third_party/abseil-cpp/**",
+        "third_party/android_ndk/sources/android/cpufeatures/**",
+        # See https://chromium-review.googlesource.com/c/chromium/src/+/4885470
+        # Note: Only used for tests.
+        "third_party/anonymous_tokens/**",
+        "third_party/ashmem/**",
+        # Note: Only used for tests.
+        "third_party/apache-portable-runtime/**",
+        "third_party/boringssl/**",
+        "third_party/brotli/**",
+        # Note: Only used for tests.
+        "third_party/ced/**",
+        "third_party/cpu_features/**",
+        # Note: Only used for tests.
+        "third_party/google_benchmark/**",
+        # Note: Only used for tests.
+        "third_party/googletest/**",
+        "third_party/icu/**",
+        "third_party/jni_zero/**",
+        "third_party/libc++/**",
+        "third_party/libc++abi/**",
+        "third_party/libevent/**",
+        # Note: Only used for tests.
+        "third_party/libxml/**",
+        # Note: Only used for tests.
+        "third_party/lss/**",
+        "third_party/metrics_proto/**",
+        "third_party/modp_b64/**",
+        # Note: Only used for tests.
+        "third_party/netty4/**",
+        # Note: Only used for tests.
+        "third_party/netty-tcnative/**",
+        "third_party/protobuf/**",
+        # Note: Only used for tests.
+        "third_party/quic_trace/**",
+        # Note: Only used for tests.
+        "third_party/re2/**",
+        # Note: Cronet currently uses Android's zlib
+        # "third_party/zlib/**",
+        "url/third_party/mozilla/**",
+    ],
+    exclude = common_excludes,
+)
+core.workflow(
+    name = "import_cronet_to_aosp_gerrit",
+    authoring = authoring.overwrite("Cronet Mainline Eng <cronet-mainline-eng+copybara@google.com>"),
+    # Origin folder is specified via source_ref argument, see import_cronet.sh
+    origin = folder.origin(),
+    origin_files = cronet_origin_files + glob(
+        include = [
+          "Android.bp",
+          "third_party/boringssl/sources.bp",
+          "third_party/boringssl/sources.mk",
+        ]
+      ),
+    destination = git.gerrit_destination( # To AOSP Gerrit review
+      url = "rpc://android.googlesource.com/platform/external/cronet",
+      fetch = "main",
+      push_to_refs_for = "main",
+      reviewers = ["gabriellelau@google.com"], # Change to "cronet-team@google.com" when ready
+      labels = ["Presubmit-Ready+1"],
+    ),
+    destination_files = cronet_origin_files + glob(
+        include = [
+          "Android.bp",
+          "third_party/boringssl/sources.bp",
+          "third_party/boringssl/sources.mk",
+        ]
+      ),
+    # mode = "SQUASH",
+    mode = "CHANGE_REQUEST",
+    transformations = [
+      metadata.squash_notes(
+        prefix= "Import Cronet version " + "126.0.6423.0"
+          + " generated by Copybara" + "\n\n"+ "Included changes:\n\n",),
+    ],
+    merge_import = core.merge_import_config(
+        package_path = "platform/external/cronet",
+        paths = glob(["**"],
+        exclude = [ # Exclude binary files or files containing symbols
+          "**/*.png",
+          "**/*.bin",
+          "**/*.dll",
+          "**/*.exe",
+          "**/base/test/data/pma_corpus/**",
+          "**/*.res",
+          "**/base/tracing/test/data/**",
+          "**/*.pyc",
+          "**/*.keystore",
+          "**/*.jar",
+          "**/*.so",
+          "**/components/cronet/testing/test_server/data/gzipped.html",
+          "**/net/data/cache_tests/**",
+          "**/net/data/cert_net_fetcher_impl_unittest/gzipped_crl",
+          "**/*.br",
+          "**/*.sbr",
+          "**/*.szst",
+          "**/*.zst",
+          "**/net/data/fuzzer_data/**",
+          "**/net/data/pac_file_fetcher_unittest/gzipped_pac",
+          "**/*.pk8",
+          "**/*.ico",
+          "**/*.jpg",
+          "**/*.hpack",
+          "**/*.p12",
+          "**/*.raw",
+          "**/*.key",
+          "**/*.der",
+          "**/*.p7b",
+          "**/*.keychain",
+          "**/*.deflate",
+          "**/net/data/url_request_unittest/gzip-encoded",
+          "**/*.pyd",
+          "**/*.mon",
+          "**/testing/libfuzzer/fuzzers/woff2_corpus/**",
+          "**/testing/scripts/variations_smoke_test_data/webview_test_seed",
+          "**/third_party/abseil-cpp/absl/time/internal/cctz/testdata/zoneinfo/**",
+          "**/*.binarypb",
+          "**/*.docx",
+          "**/third_party/boringssl/src/fuzz/*_corpus*/**",
+          "**/*.crt",
+          "**/*.crl",
+          "**/*.o",
+          "**/*.a",
+          "**/*.obj",
+          "**/*.lib",
+          "**/*.bz2",
+          "**/third_party/ced/compact_enc_det_corpus/**",
+          "**/*.xcf",
+          "**/*.dat",
+          "**/*.hash",
+          "**/*.icu",
+          "**/*.nrm",
+          "**/third_party/icu/source/extra/uconv/samples/*.txt",
+          "**/third_party/icu/source/samples/uresb/sr.txt",
+          "**/third_party/icu/source/test/fuzzer/*.txt",
+          "**/*.fuzz",
+          "**/*.otf",
+          "**/third_party/icu/source/test/testdata/encoded.utf16be",
+          "**/third_party/icu/source/test/testdata/idna_conf.txt",
+          "**/*.class",
+          "**/third_party/libxml/fuzz/seed_corpus/**",
+          "**/*.jar",
+          "**/*.pb",
+          "**/*.snk",
+          "**/third_party/protobuf/php/src/GPBMetadata/Google/Protobuf/*.php",
+          "**/third_party/protobuf/objectivec/Tests/golden_message",
+          "**/third_party/protobuf/objectivec/Tests/golden_packed_fields_message",
+          "**/third_party/protobuf/src/google/protobuf/testdata/bad_utf8_string",
+          "**/third_party/protobuf/src/google/protobuf/testdata/golden_*message*",
+          "**/*.gz",
+          "**/*.qtr",
+          "**/*.ttf",
+          ]
+        ),
+    ),
+    # merge_import = True,
+)
