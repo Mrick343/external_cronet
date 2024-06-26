@@ -1166,6 +1166,7 @@ class BaseActionSanitizer():
 class WriteBuildDateHeaderSanitizer(BaseActionSanitizer):
   def _sanitize_args(self):
     self._set_arg_at(0, '$(out)')
+    self._set_arg_at(1, '`git log -1 --format=%cd`')
     super()._sanitize_args()
 
 class WriteBuildFlagHeaderSanitizer(BaseActionSanitizer):
