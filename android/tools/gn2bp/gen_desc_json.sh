@@ -108,7 +108,6 @@ function gn_desc() (
     "enable_resource_allowlist_generation=false"
     "exclude_unwind_tables=true"
     "symbol_level=1"
-    "enable_rust=false"
     "is_cronet_for_aosp_build=true"
   )
   gn_args+=("target_cpu = \"${target_cpu}\"")
